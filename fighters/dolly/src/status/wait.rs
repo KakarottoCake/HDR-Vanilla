@@ -56,5 +56,5 @@ pub unsafe extern "C" fn fgc_wait_main_loop(fighter: &mut L2CFighterCommon) -> L
 
 pub fn install(agent: &mut Agent) {
     agent.status(Pre, *FIGHTER_STATUS_KIND_WAIT, wait_pre);
-    agent.status(Main, *FIGHTER_STATUS_KIND_WAIT, wait_main);
+    //agent.status(Main, *FIGHTER_STATUS_KIND_WAIT, wait_main);
 }

@@ -492,22 +492,12 @@ pub mod vars {
     pub mod dolly {
         pub mod instance {
             // ints
-            pub const METER_STOCKS: i32 = 0x0150;
-            pub const CURRENT_STOCKS: i32 = 0x0151;
 
             // flags
-            pub const SUPER_CANCEL: i32 = 0x0150;
             pub const DISABLE_SPECIAL_S: i32 = 0x0151;
-            pub const IS_INIT_METER: i32 = 0x0152;
-            pub const INCREASE_METER_STOCKS: i32 = 0x0153;
         }
         pub mod status {
             // flags
-            pub const IS_USE_FIRE_KICK: i32 = 0x1150;
-            pub const UNABLE_CANCEL_S3_DASH: i32 = 0x1151;
-            pub const IS_CHAIN_CANCEL: i32 = 0x1152;
-            pub const IS_SHATTER_STRIKE: i32 = 0x1153;
-            pub const AIR_SPECIAL_F: i32 = 0x1154;
         }
     }
 

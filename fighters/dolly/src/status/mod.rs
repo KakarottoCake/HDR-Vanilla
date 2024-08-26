@@ -3,15 +3,22 @@ use globals::*;
 // status script import
 
 mod wait;
-mod turn_dash;
-mod dash_back;
+mod dash;
 mod landing;
 mod guard_off;
 
 mod special_s;
 mod special_hi;
-mod super_special;
-mod super_special2;
+
+utils::import_noreturn!(common::shoto_status::{
+    fgc_end_dashback
+});
+
+extern "Rust" {
+    // from common::shoto_status
+    fn fgc_dashback_main(fighter: &mut L2CFighterCommon) -> L2CValue;
+    fn fgc_landing_main(fighter: &mut L2CFighterCommon) -> L2CValue;
+}
 
 // Prevents sideB from being used again if it has already been used once in the current airtime
 unsafe extern "C" fn should_use_special_s_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -173,13 +180,10 @@ pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
 
     wait::install(agent);
-    turn_dash::install(agent);
-    dash_back::install(agent);
+    dash::install(agent);
     landing::install(agent);
     guard_off::install(agent);
 
     special_s::install(agent);
     special_hi::install(agent);
-    super_special::install(agent);
-    super_special2::install(agent);
 }
