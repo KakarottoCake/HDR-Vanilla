@@ -1,3 +1,6 @@
+attack_air_n:
+  extra:
+    cancel_frame: 30
 jump_squat:
   blend_frames: 0
   animations:
