@@ -178,16 +178,6 @@ pub const CHECK_SPECIAL_LW_UNIQ:           i32 = 0x3B;
 pub unsafe extern "C" fn dolly_check_super_special_command(fighter: &mut L2CFighterCommon) -> L2CValue {
     let cat1 =  fighter.global_table[CMD_CAT1].get_i32();
     let cat4 = fighter.global_table[CMD_CAT4].get_i32();
-    let is_special = fighter.is_cat_flag(Cat1::SpecialAny);
-    let is_normal = fighter.is_cat_flag(
-        Cat1::AttackN | 
-        Cat1::AttackHi3 | 
-        Cat1::AttackS3 | 
-        Cat1::AttackLw3 | 
-        Cat1::AttackHi4 | 
-        Cat1::AttackS4 | 
-        Cat1::AttackLw4
-    );
 
     fighter.set_int(cat4, *FIGHTER_DOLLY_INSTANCE_WORK_ID_INT_CAT4_SPECIAL_COMMAND);
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND
@@ -195,14 +185,12 @@ pub unsafe extern "C" fn dolly_check_super_special_command(fighter: &mut L2CFigh
         return false.into();
     }
 
-    if is_special
-    && cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SUPER_SPECIAL2_COMMAND != 0
+    if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SUPER_SPECIAL2_COMMAND != 0
     && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SUPER_SPECIAL2) {
         fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SUPER_SPECIAL2.into(), true.into());
         return true.into();
     }
-    if is_special
-    && cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SUPER_SPECIAL_COMMAND != 0
+    if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SUPER_SPECIAL_COMMAND != 0
     && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SUPER_SPECIAL) {
         fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SUPER_SPECIAL.into(), true.into());
         return true.into();
@@ -231,19 +219,8 @@ pub unsafe extern "C" fn dolly_check_super_special_command(fighter: &mut L2CFigh
 unsafe extern "C" fn dolly_check_special_hi_command(fighter: &mut L2CFighterCommon) -> L2CValue {
     let cat1 =  fighter.global_table[CMD_CAT1].get_i32();
     let cat4 = fighter.global_table[CMD_CAT4].get_i32();
-    let is_special = fighter.is_cat_flag(Cat1::SpecialAny);
-    let is_normal = fighter.is_cat_flag(
-        Cat1::AttackN | 
-        Cat1::AttackHi3 | 
-        Cat1::AttackS3 | 
-        Cat1::AttackLw3 | 
-        Cat1::AttackHi4 | 
-        Cat1::AttackS4 | 
-        Cat1::AttackLw4
-    );
 
-    if is_special
-    && cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SPECIAL_HI2_COMMAND != 0
+    if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SPECIAL_HI2_COMMAND != 0
     && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI_COMMAND)
     && fighter.sub_transition_term_id_cont_disguise(fighter.global_table[CHECK_SPECIAL_HI_UNIQ].clone()).get_bool() {
         fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SPECIAL_HI_COMMAND.into(), true.into());
@@ -255,19 +232,8 @@ unsafe extern "C" fn dolly_check_special_hi_command(fighter: &mut L2CFighterComm
 pub unsafe extern "C" fn dolly_check_other_special_command(fighter: &mut L2CFighterCommon) -> L2CValue {
     let cat1 =  fighter.global_table[CMD_CAT1].get_i32();
     let cat4 = fighter.global_table[CMD_CAT4].get_i32();
-    let is_special = fighter.is_cat_flag(Cat1::SpecialAny);
-    let is_normal = fighter.is_cat_flag(
-        Cat1::AttackN | 
-        Cat1::AttackHi3 | 
-        Cat1::AttackS3 | 
-        Cat1::AttackLw3 | 
-        Cat1::AttackHi4 | 
-        Cat1::AttackS4 | 
-        Cat1::AttackLw4
-    );
 
-    if is_special
-    && cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SPECIAL_HI_COMMAND != 0
+    if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SPECIAL_HI_COMMAND != 0
     && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW_COMMAND)
     && fighter.sub_transition_term_id_cont_disguise(fighter.global_table[CHECK_SPECIAL_LW_UNIQ].clone()).get_bool() {
         fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SPECIAL_LW_COMMAND.into(), true.into());
@@ -281,16 +247,14 @@ pub unsafe extern "C" fn dolly_check_other_special_command(fighter: &mut L2CFigh
     //     return true.into();
     // }
 
-    if is_special
-    && cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SPECIAL_S_COMMAND != 0
+    if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SPECIAL_S_COMMAND != 0
     && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S_COMMAND)
     && fighter.sub_transition_term_id_cont_disguise(fighter.global_table[CHECK_SPECIAL_S_UNIQ].clone()).get_bool() {
         fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SPECIAL_B_COMMAND.into(), true.into());
         return true.into();
     }
     
-    if is_special
-    && cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SPECIAL_N_COMMAND != 0
+    if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SPECIAL_N_COMMAND != 0
     && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S_COMMAND)
     && fighter.sub_transition_term_id_cont_disguise(fighter.global_table[CHECK_SPECIAL_S_UNIQ].clone()).get_bool() {
         fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SPECIAL_S_COMMAND.into(), true.into());
@@ -313,6 +277,14 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     fighter.global_table[globals::USE_SPECIAL_S_CALLBACK].assign(&L2CValue::Ptr(should_use_special_s_callback as *const () as _));
     fighter.global_table[globals::STATUS_CHANGE_CALLBACK].assign(&L2CValue::Ptr(change_status_callback as *const () as _));   
     fighter.global_table[globals::CHECK_SPECIAL_COMMAND].assign(&L2CValue::Ptr(dolly_check_special_command as *const () as _));
+    fighter.set_command_input_button(0, 2);
+    fighter.set_command_input_button(1, 1);
+    fighter.set_command_input_button(2, 2);
+    fighter.set_command_input_button(3, 2);
+    fighter.set_command_input_button(7, 2);
+    fighter.set_command_input_button(8, 2);
+    fighter.set_command_input_button(9, 2);
+    fighter.set_command_input_button(10, 2);
 }
 
 pub fn install(agent: &mut Agent) {
