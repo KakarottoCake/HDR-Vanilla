@@ -53,10 +53,66 @@ unsafe fn disable_special_cancels_on_parry(fighter: &mut L2CFighterCommon) {
     }
 }  
 
+unsafe fn super_special_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, status_kind: i32, situation_kind: i32, motion_kind: u64, frame: f32) {
+    // TODO: doesn't do anything because these conditions are never met
+    if fighter.is_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL)
+    && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) 
+    && !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_PARRY)
+    && fighter.is_status_one_of(&[
+        *FIGHTER_STATUS_KIND_SPECIAL_HI,
+        *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_HI_COMMAND,
+        *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_HI_FALL,
+        *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_HI_JUMP,
+        *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_HI_LANDING,
+        *FIGHTER_STATUS_KIND_SPECIAL_S,
+        *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_S_COMMAND,
+        *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_B,
+        *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_B_ATTACK,
+        *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_B_COMMAND,
+        *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_B_LANDING,
+        *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_F_ATTACK,
+        *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_F_END,
+        *FIGHTER_STATUS_KIND_SPECIAL_LW,
+        *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_LW_ATTACK,
+        *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_LW_COMMAND,
+        *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_LW_LANDING,
+    ]) {
+        check_super_special_cancels(fighter, boma, status_kind, situation_kind, motion_kind, frame);
+    }
+}
+
+unsafe fn check_super_special_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, status_kind: i32, situation_kind: i32, motion_kind: u64, frame: f32) {
+    // Dont use cancels if we're already in cancel frames, if we're in hitlag, or if we didn't connect
+    if CancelModule::is_enable_cancel(boma) 
+    || boma.is_in_hitlag() {
+        return;
+    }
+    
+    let terms = [
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SUPER_SPECIAL,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SUPER_SPECIAL2,
+    ];
+    let mut enableds = [false; 10];
+    for x in 0..terms.len() {
+        enableds[x] = WorkModule::is_enable_transition_term(fighter.module_accessor, terms[x]);
+    }
+    fighter.enable_transition_term_many(&terms);
+    for val in terms.iter() {
+        WorkModule::enable_transition_term(fighter.module_accessor, *val);
+    }
+    status::dolly_check_super_special_command(fighter);
+    for x in 0..terms.len() {
+        if !enableds[x] {
+            WorkModule::unable_transition_term(fighter.module_accessor, terms[x]);
+        }
+    }
+}
+
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
     disable_special_cancels_on_parry(fighter);
     training_mode_full_meter(fighter, boma, status_kind);
     fastfall_specials(fighter);
+    super_special_cancels(fighter, boma, status_kind, situation_kind, motion_kind, frame);
 }
 
 pub extern "C" fn dolly_meter(fighter: &mut smash::lua2cpp::L2CFighterCommon) {

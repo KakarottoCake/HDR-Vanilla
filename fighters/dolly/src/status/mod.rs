@@ -175,7 +175,7 @@ pub const CHECK_SPECIAL_S_UNIQ:            i32 = 0x39;
 pub const CHECK_SPECIAL_HI_UNIQ:           i32 = 0x3A;
 pub const CHECK_SPECIAL_LW_UNIQ:           i32 = 0x3B;
 
-unsafe extern "C" fn dolly_check_super_special_command(fighter: &mut L2CFighterCommon) -> L2CValue {
+pub unsafe extern "C" fn dolly_check_super_special_command(fighter: &mut L2CFighterCommon) -> L2CValue {
     let cat1 =  fighter.global_table[CMD_CAT1].get_i32();
     let cat4 = fighter.global_table[CMD_CAT4].get_i32();
     let is_special = fighter.is_cat_flag(Cat1::SpecialAny);
