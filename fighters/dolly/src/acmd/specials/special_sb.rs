@@ -224,7 +224,14 @@ unsafe extern "C" fn game_specialsbattackw(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_specialsbend(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        agent.on_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialsbattack", game_specialsbattack, Priority::Low);
     agent.acmd("game_specialsbattackw", game_specialsbattackw, Priority::Low);
+    agent.acmd("game_specialsbend", game_specialsbend, Priority::Low);
 }

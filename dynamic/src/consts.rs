@@ -498,6 +498,7 @@ pub mod vars {
         }
         pub mod status {
             // flags
+            pub const INHERIT_FINAL_CANCEL_ON_END: i32 = 0x1150;
         }
     }
 
