@@ -36,6 +36,7 @@ struct KnockbackCalcContext {
     pub y_pos_prev: f32,
     pub decay_x: f32,
     pub decay_y: f32,
+    pub speed_up_mul: f32,
 }
 
 impl KnockbackCalcContext {
@@ -109,6 +110,12 @@ unsafe fn calculate_knockback(ctx: &skyline::hooks::InlineCtx) {
     let ptr = *ctx.registers[20].x.as_ref() as *mut u8;
     let id = *(ptr.add(0x24) as *const u32);
     IS_CALCULATING = Some(((*our_boma).battle_object_id, id));
+
+    if let Some((defender, attacker)) = IS_CALCULATING {
+        // stores the attacker's team color here, since this runs before the spark effects are called
+        // process_knockback occurs after the sparks, so we can't put it there
+        set_attacker_team_color(attacker);
+    }
 }
 
 #[skyline::hook(offset = 0x403950, inline)]
@@ -120,6 +127,33 @@ unsafe fn process_knockback(ctx: &skyline::hooks::InlineCtx) {
             calculate_finishing_hit(defender, attacker, *ctx.registers[19].x.as_ref() as *const f32);
         }
     }
+}
+
+pub unsafe extern "C" fn set_attacker_team_color(attacker:u32) {
+    let attacker_boma = &mut *(*util::get_battle_object_from_id(attacker)).module_accessor;
+    if attacker_boma.is_fighter() {
+        LAST_ATTACK_TEAM_COLOR = FighterUtil::get_team_color(attacker_boma) as i32;
+        // println!("team_color set to {} for team {}", LAST_ATTACK_TEAM_COLOR, FighterUtil::get_team_color(attacker_boma) as i32);
+    }
+    else if attacker_boma.is_weapon() {
+        let owner_id = WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
+        let owner = util::get_battle_object_from_id(owner_id);
+        let mut owner_boma = &mut *(*owner).module_accessor;
+        // weapons can sometimes be owned by another weapon, so we make an additional check
+        if owner_boma.is_weapon() {
+            let owner_id = WorkModule::get_int(owner_boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
+            let owner = util::get_battle_object_from_id(owner_id);
+            owner_boma = &mut *(*owner).module_accessor;
+        }
+        // ensure that we 100% have a fighter now, since if we dont the fn below will cause a crash
+        if !owner_boma.is_fighter(){ return };
+        LAST_ATTACK_TEAM_COLOR = FighterUtil::get_team_color(owner_boma) as i32;
+        // println!("team_color set to {} for team {}", LAST_ATTACK_TEAM_COLOR, FighterUtil::get_team_color(owner_boma) as i32);
+    }
+
+    // optional replacement logic for cycling teams, good for testing colors
+    // LAST_ATTACK_TEAM_COLOR += 1;
+    // if LAST_ATTACK_TEAM_COLOR == 9 { LAST_ATTACK_TEAM_COLOR = 0 };
 }
 
 pub unsafe extern "C" fn process_daisydaikon_knockback(defender: u32, attacker: u32) {
@@ -298,6 +332,12 @@ unsafe extern "C" fn is_valid_finishing_hit(knockback_info: *const f32, defender
     //     println!("{}: {}", off, *knockback_info.add(off));
     // }
 
+    let speed_up_mul = if defender_boma.is_flag(*FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGE_SPEED_UP) {
+        defender_boma.get_float(*FIGHTER_INSTANCE_WORK_ID_FLOAT_DAMAGE_SPEED_UP_MAX_MAG)
+    } else {
+        1.0
+    };
+
     let mut context = KnockbackCalcContext {
         knockback,
         x_launch_speed: initial_speed_x,
@@ -316,6 +356,7 @@ unsafe extern "C" fn is_valid_finishing_hit(knockback_info: *const f32, defender
         y_pos_prev: ecb_bottom.y,
         decay_x: defender_boma.get_param_float("common", "damage_air_brake") * angle.cos().abs(),
         decay_y: defender_boma.get_param_float("common", "damage_air_brake") * angle.sin().abs(),
+        speed_up_mul: speed_up_mul,
     };
     //println!("{:#x}: {:?}", defender, context);
 

@@ -440,6 +440,7 @@ pub trait BomaExt {
     unsafe fn is_motion(&mut self, motion: Hash40) -> bool;
     unsafe fn is_motion_one_of(&mut self, motions: &[Hash40]) -> bool;
     unsafe fn status(&mut self) -> i32;
+    unsafe fn lr(&mut self) -> f32;
 
     /// gets the number of jumps that have been used
     unsafe fn get_num_used_jumps(&mut self) -> i32;
@@ -1017,6 +1018,11 @@ impl BomaExt for BattleObjectModuleAccessor {
         return StatusModule::status_kind(self);
     }
 
+    /// gets the current facing direction of the fighter
+    unsafe fn lr(&mut self) -> f32 {
+        return PostureModule::lr(self);
+    }
+
     /// If update_lr is true, we set your facing direction based on your stick position
     /// If skip_other_checks is true, we do not check for USmash
     unsafe fn check_jump_cancel(&mut self, update_lr: bool, skip_other_checks: bool) -> bool {
@@ -1266,10 +1272,7 @@ impl BomaExt for BattleObjectModuleAccessor {
             let speed_x = KineticModule::get_sum_speed_x(self, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
             let speed_y = KineticModule::get_sum_speed_y(self, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
             // lets make sure not to divide by zero
-            let speed_x_adjust = match speed_x {
-                0.0 => 0.01,
-                _ => 0.0
-            };
+            let speed_x_adjust = if speed_x == 0.0 { 0.01 } else { 0.0 };
             let angle = (speed_y/(speed_x + speed_x_adjust)).atan();
 
             let pos = Vector3f { x: 0., y: 3., z: 0.};
