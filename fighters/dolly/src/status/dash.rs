@@ -1,5 +1,15 @@
 use super::*;
 
+// FIGHTER_STATUS_KIND_DASH
+
+pub unsafe extern "C" fn dash_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let ret = smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_DASH)(fighter);
+    if VarModule::is_flag(fighter.battle_object, vars::common::status::IS_DASH_CANCEL) {
+        MeterModule::drain(fighter.battle_object, 1);
+    }
+    return ret;
+}
+
 // FIGHTER_STATUS_KIND_TURN_DASH
 
 pub unsafe extern "C" fn turn_dash_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -26,7 +36,11 @@ pub unsafe extern "C" fn turn_dash_pre(fighter: &mut L2CFighterCommon) -> L2CVal
 // FIGHTER_DOLLY_STATUS_KIND_DASH_BACK
 
 pub unsafe extern "C" fn dash_back_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fgc_dashback_main(fighter)
+    let ret = fgc_dashback_main(fighter);
+    if VarModule::is_flag(fighter.battle_object, vars::common::status::IS_DASH_CANCEL) {
+        MeterModule::drain(fighter.battle_object, 1);
+    }
+    return ret;
 }
 
 pub unsafe extern "C" fn dash_back_end(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -35,6 +49,7 @@ pub unsafe extern "C" fn dash_back_end(fighter: &mut L2CFighterCommon) -> L2CVal
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.status(Main, *FIGHTER_STATUS_KIND_DASH, dash_main);
     agent.status(Pre, *FIGHTER_STATUS_KIND_TURN_DASH, turn_dash_pre);
     agent.status(Main, *FIGHTER_DOLLY_STATUS_KIND_DASH_BACK, dash_back_main);
     agent.status(End, *FIGHTER_DOLLY_STATUS_KIND_DASH_BACK, dash_back_end);

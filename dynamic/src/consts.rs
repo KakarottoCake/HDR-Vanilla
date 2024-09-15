@@ -498,6 +498,7 @@ pub mod vars {
     pub mod dolly {
         pub mod instance {
             // ints
+            pub const ADDED_METER_LEVELS: i32 = 0x0150;
 
             // flags
             pub const DISABLE_SPECIAL_S: i32 = 0x0151;

@@ -441,7 +441,7 @@ pub unsafe extern "C" fn dolly_super_special_check_param(work: &mut TempModule, 
     if WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) > 7 {
         std::process::abort();
     }
-    if MeterModule::level(module_accessor.as_mut().unwrap().object()) >= 4 {
+    if MeterModule::level(module_accessor.as_mut().unwrap().object()) >= 2 {
         return 1
     }
     0

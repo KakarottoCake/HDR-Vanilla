@@ -6,8 +6,10 @@ mod wait;
 mod dash;
 mod landing;
 mod guard_off;
+mod rebirth;
 
 mod special_s;
+mod special_supers;
 mod special_hi;
 
 utils::import_noreturn!(common::shoto_status::{
@@ -261,17 +263,12 @@ pub unsafe extern "C" fn dolly_check_other_special_command(fighter: &mut L2CFigh
         return true.into();
     }
 
-    if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_ATTACK_S3 {
-        if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_6N6 != 0 {
-            fighter.change_status(FIGHTER_STATUS_KIND_DASH.into(), true.into());
-            VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_ENTER_DASH_CANCEL);
-            return true.into();
-        }
-        if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_4N4 != 0 {
-            fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_DASH_BACK.into(), true.into());
-            VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_ENTER_DASH_CANCEL);
-            return true.into();
-        }
+    if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_6N6 != 0
+    && StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_ATTACK_S3
+    && MeterModule::level(fighter.battle_object) >= 1 {
+        fighter.change_status(FIGHTER_STATUS_KIND_DASH.into(), true.into());
+        VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_ENTER_DASH_CANCEL);
+        return true.into();
     }
 
     return false.into();
@@ -299,6 +296,7 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     fighter.set_command_input_button(8, 2);
     fighter.set_command_input_button(9, 2);
     fighter.set_command_input_button(10, 2);
+    VarModule::set_int(fighter.battle_object, vars::dolly::instance::ADDED_METER_LEVELS, 0);
 }
 
 pub fn install(agent: &mut Agent) {
@@ -308,7 +306,9 @@ pub fn install(agent: &mut Agent) {
     dash::install(agent);
     landing::install(agent);
     guard_off::install(agent);
+    rebirth::install(agent);
 
     special_s::install(agent);
+    special_supers::install(agent);
     special_hi::install(agent);
 }

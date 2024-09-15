@@ -138,7 +138,8 @@ pub extern "C" fn dolly_meter(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
             return;
         }
         MeterModule::update(fighter.battle_object, false);
-        MeterModule::set_meter_cap(fighter.object(), 4);
+        let meter_cap = (VarModule::get_int(fighter.battle_object, vars::dolly::instance::ADDED_METER_LEVELS) + 2).clamp(2, 10);
+        MeterModule::set_meter_cap(fighter.object(), meter_cap);
         MeterModule::set_meter_per_level(fighter.object(), 30.0);
         utils::ui::UiManager::set_ff_meter_enable(fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32, true);
         utils::ui::UiManager::set_ff_meter_info(
