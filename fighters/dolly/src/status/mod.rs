@@ -260,6 +260,20 @@ pub unsafe extern "C" fn dolly_check_other_special_command(fighter: &mut L2CFigh
         fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SPECIAL_S_COMMAND.into(), true.into());
         return true.into();
     }
+
+    if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_ATTACK_S3 {
+        if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_6N6 != 0 {
+            fighter.change_status(FIGHTER_STATUS_KIND_DASH.into(), true.into());
+            VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_ENTER_DASH_CANCEL);
+            return true.into();
+        }
+        if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_4N4 != 0 {
+            fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_DASH_BACK.into(), true.into());
+            VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_ENTER_DASH_CANCEL);
+            return true.into();
+        }
+    }
+
     return false.into();
 }
 

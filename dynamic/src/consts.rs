@@ -183,6 +183,8 @@ pub mod vars {
 
             pub const IS_FLOAT: i32 = 0x0066;
 
+            pub const IS_ENTER_DASH_CANCEL: i32 = 0x0067;
+
             // ints
 
             pub const LAST_ATTACK_RECEIVER_ENTRY_ID: i32 = 0x0000;
@@ -291,6 +293,8 @@ pub mod vars {
             pub const ENABLE_SPECIAL_WALLJUMP: i32 = 0x1050;
 
             pub const HIT_EFFECT_DROP_ITEM: i32 = 0x1051;
+
+            pub const IS_DASH_CANCEL: i32 = 0x1052;
 
             // ints
 
