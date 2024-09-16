@@ -7,11 +7,11 @@ unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
-    frame(lua_state, 5.0);
+    frame(lua_state, 7.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("fire"), 11.0, 60, 90, 0, 40, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_TAIL);
-        ATTACK(agent, 1, 0, Hash40::new("tail4"), 9.0, 60, 100, 0, 30, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_TAIL);
-        ATTACK(agent, 2, 0, Hash40::new("tail3"), 9.0, 60, 100, 0, 40, 3.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_TAIL);
+        ATTACK(agent, 0, 0, Hash40::new("fire"), 11.0, 60, 90, 0, 40, 5.0, -2.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_TAIL);
+        ATTACK(agent, 1, 0, Hash40::new("tail3"), 9.0, 60, 100, 0, 30, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_TAIL);
+        ATTACK(agent, 2, 0, Hash40::new("tail2"), 9.0, 60, 100, 0, 40, 3.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_TAIL);
     }
     frame(lua_state, 26.0);
     if is_excute(agent) {
@@ -26,7 +26,7 @@ unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_attackairn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 7.0);
+    frame(lua_state, 6.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("plizardon_atk_fire_air"), Hash40::new("fire"), 0, 0, 0, 0, 0, 0, 1, true);
         LAST_EFFECT_SET_RATE(agent, 1.3);
@@ -34,6 +34,32 @@ unsafe extern "C" fn effect_attackairn(agent: &mut L2CAgentBase) {
     frame(lua_state, 26.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("plizardon_atk_fire_air"), false, false);
+    }
+}
+
+unsafe extern "C" fn sound_attackairn(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 6.0);
+    if is_excute(agent) {
+        PLAY_SEQUENCE(agent, Hash40::new("seq_plizardon_rnd_attack"));
+    }
+    frame(lua_state, 7.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_plizardon_tailswing"));
+    }
+}
+
+unsafe extern "C" fn expression_attackairn(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 5.0);
+    if is_excute(agent) {
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitl"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(lua_state, 7.0);
+    if is_excute(agent) {
+        RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
     }
 }
 
@@ -70,12 +96,25 @@ unsafe extern "C" fn effect_attackairf(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("plizardon_scratch2_l"), Hash40::new("plizardon_scratch2_r"), Hash40::new("top"), 0, 10, 9, 40, 70, -90, 1.2, true, *EF_FLIP_YZ);
         LAST_EFFECT_SET_COLOR(agent, 0.25, 2.0, 0.25);
-        EFFECT_FOLLOW(agent, Hash40::new("sys_damage_purple"), Hash40::new("havel"), 1.5, 0, 0, 0, 0, 0, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_damage_purple"), Hash40::new("havel"), 0, 0, 2, 0, 0, 0, 1, true);
         LAST_EFFECT_SET_COLOR(agent, 10.0, 1.0, 1.0);
         LAST_EFFECT_SET_ALPHA(agent, 0.8);
-        EFFECT_FOLLOW(agent, Hash40::new("sys_damage_purple"), Hash40::new("havel"), 1.5, 0, 0, 0, 0, 0, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_damage_purple"), Hash40::new("havel"), 0, 0, 2, 0, 0, 0, 1, true);
         LAST_EFFECT_SET_COLOR(agent, 10.0, 1.0, 1.0);
         LAST_EFFECT_SET_ALPHA(agent, 0.8);
+    }
+}
+
+unsafe extern "C" fn sound_attackairf(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 6.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_plizardon_attackair_s01"));
+    }
+    frame(lua_state, 8.0);
+    if is_excute(agent) {
+        PLAY_SEQUENCE(agent, Hash40::new("seq_plizardon_rnd_attack"));
     }
 }
 
@@ -203,9 +242,12 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_attackairn", game_attackairn, Priority::Low);
     agent.acmd("effect_attackairn", effect_attackairn, Priority::Low);
+    agent.acmd("sound_attackairn", sound_attackairn, Priority::Low);
+    agent.acmd("expression_attackairn", expression_attackairn, Priority::Low);
 
     agent.acmd("game_attackairf", game_attackairf, Priority::Low);
     agent.acmd("effect_attackairf", effect_attackairf, Priority::Low);
+    agent.acmd("sound_attackairf", sound_attackairf, Priority::Low);
 
     agent.acmd("game_attackairb", game_attackairb, Priority::Low);
 

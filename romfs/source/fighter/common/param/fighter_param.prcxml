@@ -1249,8 +1249,8 @@
       <float hash="weight">75</float>
       <float hash="landing_attack_air_frame_f">8</float>
       <float hash="landing_attack_air_frame_b">10</float>
-      <float hash="landing_attack_air_frame_hi">7</float>
-      <float hash="landing_attack_air_frame_lw">9</float>
+      <float hash="landing_attack_air_frame_hi">8</float>
+      <float hash="landing_attack_air_frame_lw">11</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="scale">0.97</float>
       <float hash="shield_radius">9.2</float>
@@ -1284,10 +1284,10 @@
       <float hash="dive_speed_y">2.301</float>
       <float hash="weight">91</float>
       <float hash="landing_attack_air_frame_n">10</float>
-      <float hash="landing_attack_air_frame_f">9</float>
-      <float hash="landing_attack_air_frame_b">8</float>
-      <float hash="landing_attack_air_frame_hi">10</float>
-      <float hash="landing_attack_air_frame_lw">12</float>
+      <float hash="landing_attack_air_frame_f">12</float>
+      <float hash="landing_attack_air_frame_b">10</float>
+      <float hash="landing_attack_air_frame_hi">13</float>
+      <float hash="landing_attack_air_frame_lw">14</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="scale">1.14</float>
       <float hash="shield_radius">10</float>
@@ -1323,7 +1323,7 @@
       <float hash="weight">112</float>
       <float hash="landing_attack_air_frame_n">11</float>
       <float hash="landing_attack_air_frame_f">12</float>
-      <float hash="landing_attack_air_frame_b">12</float>
+      <float hash="landing_attack_air_frame_b">14</float>
       <float hash="landing_attack_air_frame_hi">12</float>
       <float hash="landing_attack_air_frame_lw">14</float>
       <int hash="landing_heavy_frame">5</int>
