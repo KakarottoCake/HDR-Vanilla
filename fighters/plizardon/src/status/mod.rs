@@ -2,6 +2,7 @@ use super::*;
 use globals::*;
 // status script import
 
+mod attack_s4;
 mod special_s;
 mod special_lw;
 
@@ -32,6 +33,7 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
 pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
 
+    attack_s4::install(agent);
     special_s::install(agent);
     special_lw::install(agent);
 }

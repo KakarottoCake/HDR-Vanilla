@@ -69,6 +69,9 @@ attack_s3_lw:
     - effect_attacks3
   extra:
     cancel_frame: 31
+attack_s4_s:
+  extra:
+    cancel_frame: 57
 attack_air_n:
   extra:
     cancel_frame: 40

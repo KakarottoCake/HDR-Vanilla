@@ -7,6 +7,9 @@ pub mod acmd;
 pub mod opff;
 pub mod status;
 
+mod rock;
+mod rockstone;
+
 use smash::{
     lib::{
         L2CValue,
@@ -45,4 +48,10 @@ pub fn install() {
     opff::install(agent);
     status::install(agent);
     agent.install();
+
+    rock::install();
+    rockstone::install();
+
+    smashline::clone_weapon("link", *WEAPON_KIND_LINK_BOOMERANG, "plizardon", "rock", false);
+    smashline::clone_weapon("sheik", *WEAPON_KIND_SHEIK_NEEDLE, "plizardon", "rockstone", false);
 }
