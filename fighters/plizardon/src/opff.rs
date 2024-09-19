@@ -5,10 +5,18 @@ use globals::*;
 
 unsafe fn flare_blitz_edge_cancel(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_PLIZARDON_STATUS_KIND_SPECIAL_S_END) {
-        if fighter.global_table[PREV_SITUATION_KIND] == SITUATION_KIND_GROUND
-        && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_AIR {
-            fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL, false);
+        if fighter.is_prev_situation(*SITUATION_KIND_GROUND)
+        && fighter.is_situation(*SITUATION_KIND_AIR) {
+            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         }
+    }
+}
+
+unsafe fn special_lw_track(boma: &mut BattleObjectModuleAccessor) {
+    if boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_LW) && !boma.is_button_on(Buttons::SpecialAll) {
+        let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+        let object = utils::util::get_battle_object_from_id(parent_id);
+        VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_LW_BACKWARDS_SWITCH);
     }
 }
 
@@ -42,18 +50,10 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     }
 }
 
-unsafe fn special_lw_track(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_LW) && !boma.is_button_on(Buttons::SpecialAll) {
-        let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
-        let object = utils::util::get_battle_object_from_id(parent_id);
-        VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_LW_BACKWARDS_SWITCH);
-    }
-}
-
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
     flare_blitz_edge_cancel(fighter);
-    fastfall_specials(fighter);
     special_lw_track(boma);
+    fastfall_specials(fighter);
 }
 
 pub extern "C" fn plizardon_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
