@@ -30,9 +30,6 @@ guard_off:
 attack_11:
   extra:
     cancel_frame: 18
-attack_lw3:
-  flags:
-    move: false
 attack_s3_s:
   game_script: game_attacks3
   flags:
@@ -69,9 +66,14 @@ attack_s3_lw:
     - effect_attacks3
   extra:
     cancel_frame: 31
+attack_lw3:
+  flags:
+    move: false
+  extra:
+    cancel_frame: 32
 attack_s4_s:
   extra:
-    cancel_frame: 57
+    cancel_frame: 64
 attack_air_n:
   extra:
     cancel_frame: 40
