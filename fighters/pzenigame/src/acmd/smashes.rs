@@ -18,9 +18,7 @@ unsafe extern "C" fn game_attacks4(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
     }
     frame(lua_state, 25.0);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 0.700);
-    }
+    FT_MOTION_RATE(agent, 0.7);
 }
 
 unsafe extern "C" fn game_attacks4hi(agent: &mut L2CAgentBase) {
@@ -37,9 +35,7 @@ unsafe extern "C" fn game_attacks4hi(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
     }
     frame(lua_state, 25.0);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 0.700);
-    }
+    FT_MOTION_RATE(agent, 0.7);
 }
 
 unsafe extern "C" fn game_attacks4lw(agent: &mut L2CAgentBase) {
@@ -56,9 +52,7 @@ unsafe extern "C" fn game_attacks4lw(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
     }
     frame(lua_state, 25.0);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 0.700);
-    }
+    FT_MOTION_RATE(agent, 0.7);
 }
 
 unsafe extern "C" fn game_attacklw4(agent: &mut L2CAgentBase) {
@@ -69,16 +63,12 @@ unsafe extern "C" fn game_attacklw4(agent: &mut L2CAgentBase) {
         WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
     }
     frame(lua_state, 8.0);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 0.600);
-    }
+    FT_MOTION_RATE(agent, 0.6);
     frame(lua_state, 17.0);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 1.000);
-    }
+    FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 18.0);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
-        FT_MOTION_RATE(agent, 1.000);
         ATTACK(agent, 0, 0, Hash40::new("top"), 13.0, 28, 83, 0, 50, 4.2, 0.0, 4.0, 6.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_WATER);
         ATTACK(agent, 1, 0, Hash40::new("top"), 13.0, 28, 83, 0, 50, 4.0, 0.0, 3.8, 10.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_WATER);
         ATTACK(agent, 2, 0, Hash40::new("top"), 13.0, 28, 83, 0, 50, 3.8, 0.0, 3.5, 15.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_WATER);
@@ -102,9 +92,7 @@ unsafe extern "C" fn game_attacklw4(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
     }
     frame(lua_state, 30.0);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 0.500);
-    }
+    FT_MOTION_RATE(agent, 0.5);
 }
 
 pub fn install(agent: &mut Agent) {

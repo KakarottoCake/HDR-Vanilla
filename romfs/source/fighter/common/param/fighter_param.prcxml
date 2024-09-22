@@ -1252,7 +1252,7 @@
       <float hash="landing_attack_air_frame_hi">8</float>
       <float hash="landing_attack_air_frame_lw">11</float>
       <int hash="landing_heavy_frame">5</int>
-      <float hash="scale">0.97</float>
+      <float hash="scale">1.067</float>
       <float hash="shield_radius">9.2</float>
       <float hash="tread_jump_speed_y_mul">0.81</float>
       <float hash="tread_mini_jump_speed_y_mul">0.81</float>
