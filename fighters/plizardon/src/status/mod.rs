@@ -27,11 +27,42 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
 unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     // set the callbacks on fighter init
     fighter.global_table[globals::USE_SPECIAL_S_CALLBACK].assign(&L2CValue::Ptr(should_use_special_s_callback as *const () as _));
-    fighter.global_table[globals::STATUS_CHANGE_CALLBACK].assign(&L2CValue::Ptr(change_status_callback as *const () as _));   
+    fighter.global_table[globals::STATUS_CHANGE_CALLBACK].assign(&L2CValue::Ptr(change_status_callback as *const () as _));
+}
+
+unsafe extern "C" fn entry_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let parent_id = LinkModule::get_parent_id(fighter.module_accessor, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+    let object = utils::util::get_battle_object_from_id(parent_id);
+    VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 0);
+    VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
+    VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
+    smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_ENTRY)(fighter)
+}
+
+unsafe extern "C" fn dead_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let parent_id = LinkModule::get_parent_id(fighter.module_accessor, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+    let object = utils::util::get_battle_object_from_id(parent_id);
+    VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 0);
+    VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
+    VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
+    smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_DEAD)(fighter)
+}
+
+unsafe extern "C" fn rebirth_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let parent_id = LinkModule::get_parent_id(fighter.module_accessor, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+    let object = utils::util::get_battle_object_from_id(parent_id);
+    VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 0);
+    VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
+    VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
+    smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_REBIRTH)(fighter)
 }
 
 pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
+
+    agent.status(Main, *FIGHTER_STATUS_KIND_ENTRY, entry_main);
+    agent.status(Main, *FIGHTER_STATUS_KIND_DEAD, dead_main);
+    agent.status(Main, *FIGHTER_STATUS_KIND_REBIRTH, rebirth_main);
 
     attack_s4::install(agent);
     special_s::install(agent);

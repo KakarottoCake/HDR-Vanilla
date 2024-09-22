@@ -654,6 +654,7 @@ dependencies = [
  "pit",
  "pitb",
  "plizardon",
+ "ptrainer",
  "purin",
  "pzenigame",
  "rand 0.7.4",
@@ -1572,6 +1573,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5e719e8df665df0d1c8fbfd238015744736151d4445ec0836b8e628aae103b77"
 dependencies = [
  "unicode-ident",
+]
+
+[[package]]
+name = "ptrainer"
+version = "0.1.0"
+dependencies = [
+ "dynamic",
+ "skyline 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "skyline_smash",
+ "smash_script",
+ "smashline",
 ]
 
 [[package]]

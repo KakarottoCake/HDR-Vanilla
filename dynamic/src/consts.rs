@@ -1176,7 +1176,10 @@ pub mod vars {
     }
 
     pub mod pfushigisou {
-
+        pub mod instance {
+            // ints
+            pub const SPECIAL_N_PLEDGE_EFFECT_HANDLE: i32 = 0x0100;
+        }
     }
 
     pub mod pichu {
@@ -1280,7 +1283,11 @@ pub mod vars {
 
     pub mod plizardon {
         pub mod instance {
+            // flags
             pub const DISABLE_SPECIAL_S: i32 = 0x0100;
+
+            // ints
+            pub const SPECIAL_N_PLEDGE_EFFECT_HANDLE: i32 = 0x0100;
         }
     }
 
@@ -1310,13 +1317,21 @@ pub mod vars {
 
     pub mod ptrainer {
         pub mod instance {
-            pub const SPECIAL_LW_BACKWARDS_SWITCH: i32 = 0x0100;
-            pub const SPECIAL_N_PLEDGE_STATE: i32 = 0x0101; // 0 - None, 1 - Squirtle, 2 - Ivysaur, 3 - Charizard
+            // flags
+            pub const SPECIAL_N_PLEDGE_PAUSE_TIMER: i32 = 0x0100;
+            pub const SPECIAL_LW_BACKWARDS_SWITCH: i32 = 0x0101;
+
+            // ints
+            pub const SPECIAL_N_PLEDGE_STATE: i32 = 0x0100; // 0 - None, 1 - Squirtle, 2 - Ivysaur, 3 - Charizard
+            pub const SPECIAL_N_PLEDGE_TIMER: i32 = 0x0101;
         }
     }
 
     pub mod pzenigame {
-
+        pub mod instance {
+            // ints
+            pub const SPECIAL_N_PLEDGE_EFFECT_HANDLE: i32 = 0x0100;
+        }
     }
 
     pub mod reflet {

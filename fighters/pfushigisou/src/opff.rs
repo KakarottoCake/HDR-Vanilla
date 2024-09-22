@@ -15,6 +15,13 @@ unsafe fn special_lw_track(boma: &mut BattleObjectModuleAccessor) {
         let object = utils::util::get_battle_object_from_id(parent_id);
         VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_LW_BACKWARDS_SWITCH);
     }
+    if is_training_mode() && !sv_information::is_ready_go() {
+        let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+        let object = utils::util::get_battle_object_from_id(parent_id);
+        VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 0);
+        VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
+        VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
+    }
 }
 
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {

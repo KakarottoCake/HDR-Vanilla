@@ -81,6 +81,7 @@ pikmin = { path = "fighters/pikmin" }
 pit = { path = "fighters/pit" }
 pitb = { path = "fighters/pitb" }
 plizardon = { path = "fighters/plizardon" }
+ptrainer = { path = "fighters/ptrainer" }
 purin = { path = "fighters/purin" }
 pzenigame = { path = "fighters/pzenigame" }
 reflet = { path = "fighters/reflet" }
@@ -182,6 +183,7 @@ pikmin = { workspace = true, optional = true }
 pit = { workspace = true, optional = true }
 pitb = { workspace = true, optional = true }
 plizardon = { workspace = true, optional = true }
+ptrainer = { workspace = true, optional = true }
 purin = { workspace = true, optional = true }
 pzenigame = { workspace = true, optional = true }
 reflet = { workspace = true, optional = true }
@@ -291,6 +293,7 @@ default = [
     "pit",
     "pitb",
     "plizardon",
+    "ptrainer",
     "purin",
     "pzenigame",
     "reflet",
