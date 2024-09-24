@@ -13,6 +13,7 @@ pfushigisou  = { path = "./pfushigisou",  optional = true }
 purin        = { path = "./purin",        optional = true }
 younglink    = { path = "./younglink",    optional = true }
 plizardon    = { path = "./plizardon",    optional = true }
+ptrainer     = { path = "./ptrainer",     optional = true }
 shulk        = { path = "./shulk",        optional = true }
 chrom        = { path = "./chrom",        optional = true }
 miifighter   = { path = "./miifighter",   optional = true }
@@ -107,6 +108,7 @@ include-pfushigisou  = ["pfushigisou"]
 include-purin        = ["purin"]
 include-younglink    = ["younglink"]
 include-plizardon    = ["plizardon"]
+include-ptrainer     = ["ptrainer"]
 include-shulk        = ["shulk"]
 include-chrom        = ["chrom"]
 include-miifighter   = ["miifighter"]

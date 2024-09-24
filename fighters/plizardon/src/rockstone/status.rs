@@ -36,8 +36,7 @@ pub unsafe extern "C" fn start_init(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let mut article_pos = Vector3f::zero();
     let mut offset_add = Vector3f::zero();
     let lr = PostureModule::lr(owner);
-    let owner_offset = ModelModule::joint_global_offset_from_top(owner, Hash40{hash: hash40("throw")}, &mut owner_pos);  
-    let cap_offset = ModelModule::joint_global_offset_from_top(weapon.module_accessor, Hash40{hash: hash40("have")}, &mut article_pos);       
+    let owner_offset = ModelModule::joint_global_offset_from_top(owner, Hash40{hash: hash40("throw")}, &mut owner_pos);
     let newPos = Vector3f::new(
         PostureModule::pos_x(owner) + owner_pos.x - article_pos.x + (offset_add.x * lr),
         PostureModule::pos_y(owner) + owner_pos.y - (article_pos.y) + offset_add.y,

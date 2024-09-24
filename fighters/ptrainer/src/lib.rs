@@ -4,8 +4,10 @@
 
 //pub mod acmd;
 
-pub mod opff;
+//pub mod opff;
 //pub mod status;
+
+pub mod ptrainer;
 
 use smash::{
     lib::{
@@ -39,8 +41,8 @@ use utils::{
 use smashline::*;
 
 pub fn install() {
-    //println!("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
     let agent = &mut Agent::new("ptrainer");
-    opff::install(agent);
     agent.install();
+
+    ptrainer::install();
 }

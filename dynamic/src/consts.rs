@@ -1182,6 +1182,17 @@ pub mod vars {
         }
     }
 
+    pub mod pfushigisou_seed {
+        pub mod instance {
+            // ints
+            pub const PLEDGE_TYPE: i32 = 0x0100;
+        }
+        pub mod status {
+            // flags
+            pub const CLASH_REMOVE_INSTANCE: i32 = 0x1100;
+        }
+    }
+
     pub mod pichu {
         pub mod instance {
             //flags
@@ -1291,6 +1302,17 @@ pub mod vars {
         }
     }
 
+    pub mod plizardon_breath {
+        pub mod instance {
+            // ints
+            pub const PLEDGE_TYPE: i32 = 0x0100;
+        }
+        pub mod status {
+            // flags
+            pub const CLASH_REMOVE_INSTANCE: i32 = 0x1100;
+        }
+    }
+
     pub mod plizardon_rock {
         pub mod status {
             // flags
@@ -1331,6 +1353,17 @@ pub mod vars {
         pub mod instance {
             // ints
             pub const SPECIAL_N_PLEDGE_EFFECT_HANDLE: i32 = 0x0100;
+        }
+    }
+
+    pub mod pzenigame_water {
+        pub mod instance {
+            // ints
+            pub const PLEDGE_TYPE: i32 = 0x0100;
+        }
+        pub mod status {
+            // flags
+            pub const CLASH_REMOVE_INSTANCE: i32 = 0x1100;
         }
     }
 
