@@ -1,17 +1,3 @@
-jump_squat:
-  blend_frames: 0
-  animations:
-  - name: a05landingheavy.nuanmb
-fall:
-  blend_frames: 5
-fall_aerial:
-  blend_frames: 5
-fall_special:
-  blend_frames: 10
-guard_off:
-  blend_frames: 4
-  extra:
-    cancel_frame: 12
 attack_11:
   extra:
     cancel_frame: 16
@@ -47,60 +33,74 @@ attack_13:
     intangible_end_frame: 0
     cancel_frame: 34
     freeze_during_hitstop: true
-attack_s3_s:
-  flags:
-    move: false
-attack_lw3:
-  extra:
-    cancel_frame: 32
-attack_dash:
-  extra:
-    cancel_frame: 38
-attack_s4_s:
-  extra:
-    cancel_frame: 65
-attack_s4_hi:
-  extra:
-    cancel_frame: 65
-attack_s4_lw:
-  extra:
-    cancel_frame: 65
-attack_hi4:
-  extra:
-    cancel_frame: 65
-attack_lw4:
-  extra:
-    cancel_frame: 60
-attack_air_f:
-  extra:
-    cancel_frame: 34
 attack_air_b:
   extra:
     cancel_frame: 41
+attack_air_f:
+  extra:
+    cancel_frame: 34
 attack_air_hi:
   extra:
     cancel_frame: 43
 attack_air_lw:
   extra:
     cancel_frame: 54
-special_hi:
+attack_dash:
   extra:
-    cancel_frame: 58
-special_air_hi:
+    cancel_frame: 38
+attack_hi4:
   extra:
-    cancel_frame: 58
+    cancel_frame: 65
+attack_lw3:
+  extra:
+    cancel_frame: 32
+attack_lw4:
+  extra:
+    cancel_frame: 60
+attack_s3_s:
+  flags:
+    move: false
+attack_s4_hi:
+  extra:
+    cancel_frame: 65
+attack_s4_lw:
+  extra:
+    cancel_frame: 65
+attack_s4_s:
+  extra:
+    cancel_frame: 65
 catch_attack:
   extra:
     cancel_frame: 0
-item_light_throw_f:
-  flags:
-    move: false
+fall:
+  blend_frames: 5
+fall_aerial:
+  blend_frames: 5
+fall_special:
+  blend_frames: 10
 furafura_end:
   extra:
     cancel_frame: 34
+guard_off:
+  blend_frames: 4
+  extra:
+    cancel_frame: 12
+item_light_throw_f:
+  flags:
+    move: false
+jump_squat:
+  blend_frames: 0
+  animations:
+  - name: a05landingheavy.nuanmb
 shield_break_fly:
   animations:
-    - name: f04downspotd.nuanmb
+  - name: f04downspotd.nuanmb
+special_air_hi:
+  extra:
+    cancel_frame: 58
+special_hi:
+  extra:
+    cancel_frame: 58
 step_pose_back:
   extra:
     cancel_frame: 6

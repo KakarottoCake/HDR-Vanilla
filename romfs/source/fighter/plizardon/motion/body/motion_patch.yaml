@@ -1,56 +1,43 @@
-jump_squat:
-  blend_frames: 0
-  animations:
-  - name: a05landingheavy.nuanmb
-fall:
-  blend_frames: 5
-fall_aerial:
-  blend_frames: 5
-fall_special:
-  blend_frames: 5
-escape:
-  flags:
-    move: false
-throw_b:
+attack_11:
   extra:
-    cancel_frame: 43
-throw_lw:
-  extra:
-    cancel_frame: 75
+    cancel_frame: 18
 attack_12:
   extra:
     cancel_frame: 24
 attack_13:
   extra:
     cancel_frame: 35
-guard_off:
-  blend_frames: 4
+attack_air_b:
   extra:
-    cancel_frame: 12
-attack_11:
+    cancel_frame: 40
+attack_air_f:
   extra:
-    cancel_frame: 18
-attack_s3_s:
-  game_script: game_attacks3
+    cancel_frame: 36
+attack_air_hi:
+  extra:
+    cancel_frame: 38
+attack_air_lw:
+  extra:
+    cancel_frame: 45
+attack_air_n:
+  extra:
+    cancel_frame: 40
+attack_lw3:
   flags:
     move: false
-  scripts:
-    - expression_attacks3
-    - sound_attacks3
-    - effect_attacks3
   extra:
-    cancel_frame: 31
+    cancel_frame: 32
 attack_s3_hi:
   game_script: game_attacks3
   flags:
     move: false
   animations:
-    - name: c01attacks3s.nuanmb
-      unk: 0
+  - name: c01attacks3s.nuanmb
+    unk: 0
   scripts:
-    - expression_attacks3
-    - sound_attacks3
-    - effect_attacks3
+  - expression_attacks3
+  - sound_attacks3
+  - effect_attacks3
   extra:
     cancel_frame: 31
 attack_s3_lw:
@@ -58,55 +45,68 @@ attack_s3_lw:
   flags:
     move: false
   animations:
-    - name: c01attacks3s.nuanmb
-      unk: 0
+  - name: c01attacks3s.nuanmb
+    unk: 0
   scripts:
-    - expression_attacks3
-    - sound_attacks3
-    - effect_attacks3
+  - expression_attacks3
+  - sound_attacks3
+  - effect_attacks3
   extra:
     cancel_frame: 31
-attack_lw3:
+attack_s3_s:
+  game_script: game_attacks3
   flags:
     move: false
+  scripts:
+  - expression_attacks3
+  - sound_attacks3
+  - effect_attacks3
   extra:
-    cancel_frame: 32
+    cancel_frame: 31
 attack_s4_s:
   extra:
     cancel_frame: 64
-attack_air_n:
-  extra:
-    cancel_frame: 40
-attack_air_f:
-  extra:
-    cancel_frame: 36
-attack_air_b:
-  extra:
-    cancel_frame: 40
-attack_air_hi:
-  extra:
-    cancel_frame: 38
-attack_air_lw:
-  extra:
-    cancel_frame: 45
 catch:
   extra:
     cancel_frame: 39
+catch_attack:
+  extra:
+    cancel_frame: 0
 catch_dash:
   extra:
     cancel_frame: 45
 catch_turn:
   extra:
     cancel_frame: 40
-catch_attack:
-  extra:
-    cancel_frame: 0
+escape:
+  flags:
+    move: false
+fall:
+  blend_frames: 5
+fall_aerial:
+  blend_frames: 5
+fall_special:
+  blend_frames: 5
 furafura_end:
   extra:
     cancel_frame: 34
+guard_off:
+  blend_frames: 4
+  extra:
+    cancel_frame: 12
+jump_squat:
+  blend_frames: 0
+  animations:
+  - name: a05landingheavy.nuanmb
 shield_break_fly:
   animations:
-    - name: f04downspotd.nuanmb
+  - name: f04downspotd.nuanmb
 step_pose_back:
   extra:
     cancel_frame: 6
+throw_b:
+  extra:
+    cancel_frame: 43
+throw_lw:
+  extra:
+    cancel_frame: 75
