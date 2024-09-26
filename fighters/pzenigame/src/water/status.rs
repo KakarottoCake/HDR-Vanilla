@@ -124,7 +124,7 @@ unsafe extern "C" fn clash_end(weapon: &mut L2CWeaponCommon) -> L2CValue {
 pub fn install(agent: &mut Agent) {
     agent.status(Init, *WEAPON_PZENIGAME_WATER_STATUS_KIND_REGULAR, regular_init);
 
-    agent.status(Pre, WEAPON_PZENIGAME_WATER_STATUS_KIND_CLASH, clash_pre);
-    agent.status(Main, WEAPON_PZENIGAME_WATER_STATUS_KIND_CLASH, clash_main);
-    agent.status(End, WEAPON_PZENIGAME_WATER_STATUS_KIND_CLASH, clash_end);
+    agent.status(Pre, *WEAPON_PZENIGAME_WATER_STATUS_KIND_CLASH, clash_pre);
+    agent.status(Main, *WEAPON_PZENIGAME_WATER_STATUS_KIND_CLASH, clash_main);
+    agent.status(End, *WEAPON_PZENIGAME_WATER_STATUS_KIND_CLASH, clash_end);
 }
