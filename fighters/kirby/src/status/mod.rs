@@ -4,6 +4,7 @@ use globals::*;
 
 mod copy;
 mod special_hi_h;
+mod special_lw;
 mod special_s;
 
 unsafe extern "C" fn should_use_special_hi_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -198,13 +199,13 @@ unsafe extern "C" fn special_n_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
             magic_kind = blizzard;
         }
         if ![fire, blizzard, thunder].contains(&magic_kind) {
-            StatusModule::set_status_kind_interrupt(fighter.module_accessor, *FIGHTER_KIRBY_STATUS_KIND_TRAIL_SPECIAL_N1);
+            fighter.set_status_kind_interrupt(*FIGHTER_KIRBY_STATUS_KIND_TRAIL_SPECIAL_N1);
         } else if magic_kind == fire {
-            StatusModule::set_status_kind_interrupt(fighter.module_accessor, *FIGHTER_KIRBY_STATUS_KIND_TRAIL_SPECIAL_N1);
+            fighter.set_status_kind_interrupt(*FIGHTER_KIRBY_STATUS_KIND_TRAIL_SPECIAL_N1);
         } else if magic_kind == blizzard { 
-            StatusModule::set_status_kind_interrupt(fighter.module_accessor, *FIGHTER_KIRBY_STATUS_KIND_TRAIL_SPECIAL_N2);
+            fighter.set_status_kind_interrupt(*FIGHTER_KIRBY_STATUS_KIND_TRAIL_SPECIAL_N2);
         } else if magic_kind == thunder {
-            StatusModule::set_status_kind_interrupt(fighter.module_accessor, *FIGHTER_KIRBY_STATUS_KIND_TRAIL_SPECIAL_N3); 
+            fighter.set_status_kind_interrupt(*FIGHTER_KIRBY_STATUS_KIND_TRAIL_SPECIAL_N3); 
         }
     
         return 1.into();
@@ -242,6 +243,7 @@ pub fn install(agent: &mut Agent) {
     agent.status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_N, special_n_pre);
 
     copy::install(agent);
-    special_s::install(agent);
     special_hi_h::install(agent);
+    special_lw::install(agent);
+    special_s::install(agent);
 }
