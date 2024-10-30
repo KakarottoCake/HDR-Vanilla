@@ -28,7 +28,7 @@ unsafe extern "C" fn game_attackhi4(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
         MeterModule::watch_damage(agent.battle_object, false);
     }
-    wait(lua_state, 10.0);
+    wait(lua_state, 6.0);
     if is_excute(agent) {
         agent.off_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
     }
@@ -59,7 +59,7 @@ unsafe extern "C" fn game_attacklw4(agent: &mut L2CAgentBase) {
         MeterModule::watch_damage(agent.battle_object, false);
         JostleModule::set_team(boma, 0);
     }
-    wait(lua_state, 10.0);
+    wait(lua_state, 6.0);
     if is_excute(agent) {
         agent.off_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
     }
@@ -91,7 +91,7 @@ unsafe extern "C" fn game_attacks4(agent: &mut L2CAgentBase) {
         MeterModule::watch_damage(agent.battle_object, false);
         JostleModule::set_team(boma, 0);
     }
-    wait(lua_state, 10.0);
+    wait(lua_state, 6.0);
     if is_excute(agent) {
         agent.off_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
     }

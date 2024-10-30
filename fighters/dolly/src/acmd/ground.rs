@@ -24,7 +24,7 @@ unsafe extern "C" fn game_attack11(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         agent.on_flag(*FIGHTER_STATUS_ATTACK_FLAG_ENABLE_RESTART);
     }
-    frame(lua_state, 17.0);
+    frame(lua_state, 13.0);
     if is_excute(agent) {
         agent.off_flag(*FIGHTER_DOLLY_STATUS_ATTACK_WORK_FLAG_HIT_CANCEL);
         agent.off_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
@@ -65,7 +65,6 @@ unsafe extern "C" fn game_attack12(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE_RANGE(agent, 11.0, 25.0, 6.0);
     frame(lua_state, 25.0);
     FT_MOTION_RATE(agent, 1.0);
-    frame(lua_state, 27.0);
     if is_excute(agent) {
         agent.off_flag(*FIGHTER_DOLLY_STATUS_ATTACK_WORK_FLAG_HIT_CANCEL);
         agent.off_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
@@ -88,7 +87,7 @@ unsafe extern "C" fn game_attack13(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
         MeterModule::watch_damage(agent.battle_object, false);
     }
-    frame(lua_state, 24.0);
+    wait(lua_state, 6.0);
     if is_excute(agent) {
         agent.off_flag(*FIGHTER_DOLLY_STATUS_ATTACK_WORK_FLAG_HIT_CANCEL);
         agent.off_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);

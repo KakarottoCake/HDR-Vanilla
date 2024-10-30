@@ -26,7 +26,7 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
         MeterModule::watch_damage(agent.battle_object, false);
     }
-    wait(lua_state, 10.0);
+    wait(lua_state, 6.0);
     if is_excute(agent) {
         agent.off_flag(*FIGHTER_DOLLY_STATUS_ATTACK_WORK_FLAG_HIT_CANCEL);
         agent.off_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
@@ -67,14 +67,14 @@ unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
         MeterModule::watch_damage(agent.battle_object, false);
     }
-    frame(lua_state, 24.0);
-    if is_excute(agent) {
-        agent.off_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-    }
-    frame(lua_state, 26.0);
+    frame(lua_state, 22.0);
     if is_excute(agent) {
         agent.off_flag(*FIGHTER_DOLLY_STATUS_ATTACK_WORK_FLAG_HIT_CANCEL);
         agent.off_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
+    }
+    frame(lua_state, 24.0);
+    if is_excute(agent) {
+        agent.off_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
 }
 
@@ -102,14 +102,14 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
         MeterModule::watch_damage(agent.battle_object, false);
     }
-    frame(lua_state, 18.0);
-    if is_excute(agent) {
-        agent.off_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-    }
-    frame(lua_state, 21.0);
+    frame(lua_state, 17.0);
     if is_excute(agent) {
         agent.off_flag(*FIGHTER_DOLLY_STATUS_ATTACK_WORK_FLAG_HIT_CANCEL);
         agent.off_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
+    }
+    frame(lua_state, 18.0);
+    if is_excute(agent) {
+        agent.off_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
 }
 
@@ -134,14 +134,14 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
         MeterModule::watch_damage(agent.battle_object, false);
     }
-    frame(lua_state, 24.0);
-    if is_excute(agent) {
-        agent.off_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-    }
-    frame(lua_state, 27.0);
+    frame(lua_state, 23.0);
     if is_excute(agent) {
         agent.off_flag(*FIGHTER_DOLLY_STATUS_ATTACK_WORK_FLAG_HIT_CANCEL);
         agent.off_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
+    }
+    frame(lua_state, 24.0);
+    if is_excute(agent) {
+        agent.off_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
 }
 
@@ -171,7 +171,7 @@ unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         agent.off_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
-    frame(lua_state, 30.0);
+    frame(lua_state, 26.0);
     if is_excute(agent) {
         WorkModule::off_flag(boma, *FIGHTER_DOLLY_STATUS_ATTACK_WORK_FLAG_HIT_CANCEL);
         WorkModule::off_flag(boma, *FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
