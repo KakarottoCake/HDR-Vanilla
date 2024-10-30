@@ -7,6 +7,8 @@ attack_hi3:
 catch_attack:
   extra:
     cancel_frame: 0
+cliff_wait:
+  blend_frames: 2
 fall:
   blend_frames: 3
 fall_aerial:

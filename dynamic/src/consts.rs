@@ -185,7 +185,9 @@ pub mod vars {
 
             pub const WEIRD_ASS_TURN_RUN_ANIMATION: i32 = 0x0067;
 
-            pub const IS_ENTER_DASH_CANCEL: i32 = 0x0068;
+            pub const ACMD_EFFECT: i32 = 0x0068;
+
+            pub const IS_ENTER_DASH_CANCEL: i32 = 0x0069;
 
             // ints
 
@@ -544,6 +546,9 @@ pub mod vars {
             pub const SPECIAL_HI_JUMP: i32 = 0x0101;
             pub const SPECIAL_HI_ENABLE_SHOT: i32 = 0x1102;
             pub const SPECIAL_HI2_KILLSHOT_BUFFERED: i32 = 0x1103;
+
+            // int
+            pub const SPECIAL_HI_RETICLE_EFFECT_HANDLE: i32 = 0x1100;
         }
     }
 
@@ -601,6 +606,7 @@ pub mod vars {
         pub mod instance {
             // flags
             pub const DISABLE_SPECIAL_HI: i32 = 0x0104;
+            pub const HIT_CANCEL: i32 = 0x0105;
         }
     }
 
@@ -611,6 +617,7 @@ pub mod vars {
             pub const DISABLE_SPECIAL_S: i32 = 0x0101;
             pub const SPECIAL_S_ENABLE_ACTION: i32 = 0x0102;
             pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0103;
+            pub const HIT_CANCEL: i32 = 0x0104;
         }
         pub mod status {
             // ints
@@ -771,7 +778,7 @@ pub mod vars {
             pub const SPECIAL_N_PICKEL_MINING_TIMER: i32 = 0x11F4;
             pub const SPECIAL_N_LITTLEMAC_GRAVITY_ENABLE: i32 = 0x11F5;
             pub const SPECIAL_N_LITTLEMAC_GRAVITY_END: i32 = 0x11F6;
-            pub const SPECIAL_N_LITTLEMAC_CLEAR_CRIT: i32 = 0x11F7;
+            pub const SPECIAL_N_CLEAR_CRIT: i32 = 0x11F7;
             pub const PURIN_SPECIAL_N_HIT: i32 = 0x11F8;
             pub const PURIN_SPECIAL_N_HIT_CANCEL_OK: i32 = 0x11F9;
             pub const PALUTENA_SPECIAL_N_HOLD: i32 = 0x11FA;
