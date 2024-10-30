@@ -4,6 +4,9 @@ attack_air_n:
 attack_hi3:
   extra:
     cancel_frame: 33
+attack_s3_s:
+  extra:
+    cancel_frame: 40
 catch_attack:
   extra:
     cancel_frame: 0
