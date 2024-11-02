@@ -47,6 +47,13 @@ pub unsafe extern "C" fn attack_command_4_main_loop(fighter: &mut L2CFighterComm
         if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             return 1.into();
         }
+    } else {
+        if fighter.is_flag(*FIGHTER_DOLLY_STATUS_ATTACK_WORK_FLAG_HIT_CANCEL)
+        && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) 
+        && !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_PARRY)
+        && !fighter.is_in_hitlag() {
+            check_special_cancels(fighter);
+        }
     }
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
         fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
@@ -69,6 +76,36 @@ pub unsafe extern "C" fn attack_command_4_main_loop(fighter: &mut L2CFighterComm
     }
 
     0.into()
+}
+
+unsafe fn check_special_cancels(fighter: &mut L2CFighterCommon) {
+    let terms = [
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW,
+        // *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N_COMMAND,
+        // *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N2_COMMAND,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S_COMMAND,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI_COMMAND,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW_COMMAND,
+        // *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_COMMAND1,
+    ];
+    let mut enableds = [false; 10];
+    for x in 0..terms.len() {
+        enableds[x] = WorkModule::is_enable_transition_term(fighter.module_accessor, terms[x]);
+    }
+    fighter.enable_transition_term_many(&terms);
+    if fighter.is_situation(*SITUATION_KIND_GROUND) {
+        fighter.sub_transition_group_check_ground_special();
+    } else {
+        fighter.sub_transition_group_check_air_special();
+    };
+    for x in 0..terms.len() {
+        if !enableds[x] {
+            WorkModule::unable_transition_term(fighter.module_accessor, terms[x]);
+        }
+    }
 }
 
 pub fn install(agent: &mut Agent) {

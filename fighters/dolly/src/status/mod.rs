@@ -260,6 +260,7 @@ pub unsafe extern "C" fn dolly_check_other_special_command(fighter: &mut L2CFigh
     if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SPECIAL_N2_COMMAND != 0
     && fighter.is_situation(*SITUATION_KIND_GROUND)
     && !fighter.is_in_hitlag()
+    && StatusModule::status_kind(fighter.module_accessor) != statuses::dolly::ATTACK_COMMAND_4
     && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S_COMMAND) {
         fighter.change_status(statuses::ryu::ATTACK_COMMAND_4.into(), true.into());
         return true.into();

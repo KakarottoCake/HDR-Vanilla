@@ -84,6 +84,7 @@ unsafe fn super_special_cancels(fighter: &mut L2CFighterCommon, boma: &mut Battl
             *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_HI_JUMP,
             *FIGHTER_STATUS_KIND_SPECIAL_LW,
             *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_LW_COMMAND,
+            statuses::dolly::ATTACK_COMMAND_4
         ])
     )
     || {
