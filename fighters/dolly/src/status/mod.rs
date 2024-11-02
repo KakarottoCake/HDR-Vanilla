@@ -8,6 +8,7 @@ mod landing;
 mod guard_off;
 mod rebirth;
 
+mod special_cmd4;
 mod special_s;
 mod special_supers;
 mod special_hi;
@@ -242,13 +243,6 @@ pub unsafe extern "C" fn dolly_check_other_special_command(fighter: &mut L2CFigh
         return true.into();
     }
 
-    // if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND
-    // && cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SPECIAL_N2_COMMAND != 0
-    // && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N2_COMMAND) {
-    //     fighter.change_status(vars::dolly::status::ATTACK_DASH_COMMAND.into(), true.into());
-    //     return true.into();
-    // }
-
     if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SPECIAL_S_COMMAND != 0
     && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S_COMMAND)
     && fighter.sub_transition_term_id_cont_disguise(fighter.global_table[CHECK_SPECIAL_S_UNIQ].clone()).get_bool() {
@@ -260,6 +254,14 @@ pub unsafe extern "C" fn dolly_check_other_special_command(fighter: &mut L2CFigh
     && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S_COMMAND)
     && fighter.sub_transition_term_id_cont_disguise(fighter.global_table[CHECK_SPECIAL_S_UNIQ].clone()).get_bool() {
         fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SPECIAL_S_COMMAND.into(), true.into());
+        return true.into();
+    }
+
+    if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SPECIAL_N2_COMMAND != 0
+    && fighter.is_situation(*SITUATION_KIND_GROUND)
+    && !fighter.is_in_hitlag()
+    && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S_COMMAND) {
+        fighter.change_status(statuses::ryu::ATTACK_COMMAND_4.into(), true.into());
         return true.into();
     }
 
@@ -308,6 +310,7 @@ pub fn install(agent: &mut Agent) {
     guard_off::install(agent);
     rebirth::install(agent);
 
+    special_cmd4::install(agent);
     special_s::install(agent);
     special_supers::install(agent);
     special_hi::install(agent);

@@ -517,6 +517,7 @@ pub mod vars {
         pub mod status {
             // flags
             pub const INHERIT_FINAL_CANCEL_ON_END: i32 = 0x1150;
+            pub const ATTACK_COMMAND_4_RELEASE_BUTTON: i32 = 0x1151;
         }
     }
 
@@ -1760,6 +1761,10 @@ pub mod statuses {
     pub mod diddy {
         pub const SPECIAL_N_CANCEL: i32 = 0x1FF;
         pub const SPECIAL_N_CANCEL_JUMP: i32 = 0x200;
+    }
+
+    pub mod dolly {
+        pub const ATTACK_COMMAND_4: i32 = 0x203;
     }
 
     pub mod edge_flash {
