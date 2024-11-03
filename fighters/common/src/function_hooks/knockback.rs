@@ -1,5 +1,4 @@
 use super::*;
-use energy::Vec3;
 use utils::ext::*;
 use std::arch::asm;
 
@@ -81,15 +80,16 @@ impl KnockbackCalcContext {
 #[repr(simd)]
 #[derive(Debug)]
 struct Rect {
-    left: f32,
-    right: f32,
-    top: f32,
-    bottom: f32,
+    // left: f32,
+    // right: f32,
+    // top: f32,
+    // bottom: f32,
+    vec: [f32; 4]
 }
 
 impl Rect {
     fn contains(&self, x: f32, y: f32) -> bool {
-        (self.left <= x && x <= self.right) && (self.bottom <= y && y <= self.top)
+        (self.vec[0] <= x && x <= self.vec[1]) && (self.vec[3] <= y && y <= self.vec[2])
     }
 }
 
@@ -124,7 +124,7 @@ unsafe fn process_knockback(ctx: &skyline::hooks::InlineCtx) {
     if let Some((defender, attacker)) = IS_CALCULATING {
         let boma = *ctx.registers[20].x.as_ref() as *mut smash::app::BattleObjectModuleAccessor;
         if (*boma).battle_object_id == defender {
-            process_daisydaikon_knockback(defender, attacker);
+            process_item_on_collision(defender, attacker);
             calculate_finishing_hit(defender, attacker, *ctx.registers[19].x.as_ref() as *const f32);
         }
     }
@@ -157,18 +157,54 @@ pub unsafe extern "C" fn set_attacker_team_color(attacker:u32) {
     // if LAST_ATTACK_TEAM_COLOR == 9 { LAST_ATTACK_TEAM_COLOR = 0 };
 }
 
-pub unsafe extern "C" fn process_daisydaikon_knockback(defender: u32, attacker: u32) {
+pub unsafe extern "C" fn process_item_on_collision(defender: u32, attacker: u32) {
     let defender_boma = &mut *(*util::get_battle_object_from_id(defender)).module_accessor;
     let attacker_boma = &mut *(*util::get_battle_object_from_id(attacker)).module_accessor;
     if defender_boma.is_item() {
-        if (defender_boma.kind() == *ITEM_KIND_DAISYDAIKON) {
+        if defender_boma.kind() == *ITEM_KIND_DAISYDAIKON {
             if attacker_boma.is_fighter() {
-                let attacker_team_no = (TeamModule::hit_team_no(attacker_boma) as i32);
+                let attacker_team_no = TeamModule::hit_team_no(attacker_boma) as i32;
                 TeamModule::set_team(defender_boma, attacker_team_no, false);
             } else {
                 HitModule::set_xlu_frame_global(defender_boma, 15, 0);
             }
             StatusModule::change_status_force(defender_boma, *ITEM_STATUS_KIND_THROW, true);
+        }
+        if defender_boma.kind() == *ITEM_KIND_BARREL {
+            if attacker_boma.is_fighter() {
+                let attacker_team_no = TeamModule::hit_team_no(attacker_boma) as i32;
+                let owner_id = attacker_boma.battle_object_id;
+                //println!("swapping barrel team to {} and owner id to {}", attacker_team_no, owner_id);
+                TeamModule::set_team_owner_id(defender_boma, owner_id);
+                TeamModule::set_hit_team(defender_boma, attacker_team_no);
+            }
+            else if attacker_boma.is_weapon() {
+                let mut owner_id = WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
+                let owner = util::get_battle_object_from_id(owner_id);
+                let mut owner_boma = &mut *(*owner).module_accessor;
+                if owner_boma.is_weapon() {
+                    owner_id = WorkModule::get_int(owner_boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
+                    let owner = util::get_battle_object_from_id(owner_id);
+                    owner_boma = &mut *(*owner).module_accessor;
+                }
+                // failsafe in case this somehow isn't a fighter
+                if !owner_boma.is_fighter(){ return };
+                let attacker_team_no = TeamModule::hit_team_no(owner_boma) as i32;
+                //println!("swapping barrel team to {} and owner id to {}", attacker_team_no, owner_id);
+                TeamModule::set_team_owner_id(defender_boma, owner_id);
+                TeamModule::set_hit_team(defender_boma, attacker_team_no);
+            }
+            else if attacker_boma.is_item() {
+                let owner_id = LinkModule::get_parent_id(attacker_boma, *ITEM_LINK_NO_TEAMOWNER, true) as u32;
+                //println!("owner id: {}", owner_id);
+                let owner_boma = &mut *(*utils::util::get_battle_object_from_id(owner_id));
+                // failsafe in case this somehow isn't a fighter
+                if !owner_boma.is_fighter(){ return };
+                let attacker_team_no = TeamModule::hit_team_no(owner_boma) as i32;
+                //println!("swapping barrel team to {} and owner id to {}", attacker_team_no, owner_id);
+                TeamModule::set_team_owner_id(defender_boma, owner_id);
+                TeamModule::set_hit_team(defender_boma, attacker_team_no);
+            }
         }
     }
 }
@@ -509,7 +545,8 @@ pub unsafe extern "C" fn call_finishing_hit_effects(defender_boma: &mut BattleOb
             PostureModule::pos_y(defender_boma) + 10.0,     
             PostureModule::pos_z(defender_boma) + 10.0
         );
-        let handle = EffectModule::req(defender_boma, Hash40::new("sys_dead_ripple"), &pos, &Vector3f::new(0.0, 0.0, 0.0), 0.75, 0, 0, false, 0);
+        let handle = EffectModule::req(defender_boma, Hash40::new("sys_dead_ripple"), &pos, &Vector3f::new(0.0, 0.0, 0.0), 0.5625, 0, 0, false, 0);
+        EffectModule::set_alpha(defender_boma, handle as u32, 0.9);
         EffectModule::set_billboard(defender_boma, handle as u32, true);
         EffectModule::set_disable_render_offset_last(defender_boma);
         EffectModule::set_rate_last(defender_boma, 2.5);

@@ -78,6 +78,14 @@ pub unsafe fn get_param_int_hook(x0: u64, x1: u64, x2 :u64) -> i32 {
             }
         }
 
+        else if fighter_kind == *FIGHTER_KIND_KROOL {
+            if x1 == hash40("param_special_n")
+            && x2 == hash40("special_n_suction_frame_min")
+            && VarModule::is_flag(boma_reference.object(), vars::krool::instance::SPECIAL_N_GRAB) {
+                return 30;
+            }
+        }
+
     }
 
     else if boma_reference.is_weapon() {
@@ -86,7 +94,7 @@ pub unsafe fn get_param_int_hook(x0: u64, x1: u64, x2 :u64) -> i32 {
         let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
 
         if fighter_kind == *WEAPON_KIND_PACKUN_SPIKEBALL {
-            if VarModule::is_flag(owner_module_accessor.object(), vars::packun::instance::PTOOIE_ENABLE_EXPLODE) {
+            if VarModule::is_flag(boma_reference.object(), vars::packun_spikeball::instance::ENABLE_EXPLODE) {
                 if x1 == hash40("param_spikeball") { 
                     if x2 == hash40("hop_life") {
                         return 105;
@@ -360,6 +368,17 @@ pub unsafe fn get_param_float_hook(x0 /*boma*/: u64, x1 /*param_type*/: u64, x2 
                 }
             }
         }
+
+        else if fighter_kind == *FIGHTER_KIND_LUCARIO {
+            if x1 == hash40("param_special_hi")
+            && x2 == hash40("rush_speed") {
+                let rate = VarModule::get_float(boma_reference.object(), vars::lucario::instance::SPECIAL_HI_MOTION_RATE);
+                if rate > 0.0 {
+                    let original = original!()(x0, x1, x2);
+                    return original * rate;
+                }
+            } 
+        }
     
     }
     else if boma_reference.is_weapon() {
@@ -436,7 +455,7 @@ pub unsafe fn get_param_float_hook(x0 /*boma*/: u64, x1 /*param_type*/: u64, x2 
         }
 
         else if fighter_kind == *WEAPON_KIND_PACKUN_SPIKEBALL {
-            if VarModule::is_flag(owner_module_accessor.object(), vars::packun::instance::PTOOIE_ENABLE_EXPLODE) {
+            if VarModule::is_flag(boma_reference.object(), vars::packun_spikeball::instance::ENABLE_EXPLODE) {
                 if x1 == hash40("param_spikeball") {
                     if x2 == hash40("hop_speed_x") {
                         return 0.0;

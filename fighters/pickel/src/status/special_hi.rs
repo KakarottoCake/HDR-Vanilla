@@ -1,12 +1,25 @@
 use super::*;
 
+// FIGHTER_STATUS_KIND_SPECIAL_HI
+
+pub unsafe extern "C" fn special_hi_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.is_situation(*SITUATION_KIND_GROUND) {
+        fighter.set_status_kind_interrupt(*FIGHTER_STATUS_KIND_JUMP_SQUAT);
+        return 1.into();
+    }
+
+    return smashline::original_status(Pre, fighter, *FIGHTER_STATUS_KIND_SPECIAL_HI)(fighter);
+}
+
+// FIGHTER_PICKEL_STATUS_KIND_SPECIAL_HI_GLIDING
+
 pub unsafe extern "C" fn special_hi_gliding_pre(fighter: &mut L2CFighterCommon) -> L2CValue{
     StatusModule::init_settings(
         fighter.module_accessor,
         app::SituationKind(*SITUATION_KIND_NONE),
         *FIGHTER_KINETIC_TYPE_GLIDE_START,
         *GROUND_CORRECT_KIND_KEEP as u32,
-        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
+        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP),
         true,
         *FIGHTER_PICKEL_STATUS_WORK_KEEP_FLAG_SPECIAL_HI_FLAG,
         *FIGHTER_PICKEL_STATUS_WORK_KEEP_FLAG_SPECIAL_HI_INT,
@@ -30,5 +43,7 @@ pub unsafe extern "C" fn special_hi_gliding_pre(fighter: &mut L2CFighterCommon) 
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_HI, special_hi_pre);
+
     agent.status(Pre, *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_HI_GLIDING, special_hi_gliding_pre);
 }

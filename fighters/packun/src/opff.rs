@@ -201,6 +201,20 @@ unsafe fn reverse_switch(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
+unsafe fn game_start_switch(fighter: &mut L2CFighterCommon) {
+    if fighter.is_prev_status_one_of(&[*FIGHTER_STATUS_KIND_ENTRY]) {
+        if fighter.is_button_on(Buttons::AppealSL) {
+            VarModule::set_int(fighter.object(), vars::packun::instance::CURRENT_STANCE, 0);
+        }
+        else if fighter.is_button_on(Buttons::AppealSR) {
+            VarModule::set_int(fighter.object(), vars::packun::instance::CURRENT_STANCE, 2);
+        }
+        else if fighter.is_button_on(Buttons::AppealLw) {
+            VarModule::set_int(fighter.object(), vars::packun::instance::CURRENT_STANCE, 1);
+        }
+    }
+}
+
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
@@ -273,6 +287,21 @@ pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut
     fastfall_specials(fighter);
     reverse_switch(boma);
     monch(fighter);
+    game_start_switch(fighter);
+}
+
+unsafe extern "C" fn plant_meter(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
+    unsafe {
+        if !sv_information::is_ready_go() && fighter.status_frame() < 1 {
+            return;
+        }
+
+        utils::ui::UiManager::set_plant_meter_enable(fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32, true);
+        utils::ui::UiManager::set_plant_meter_info(
+            fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32,
+            VarModule::get_int(fighter.object(), vars::packun::instance::CURRENT_STANCE)
+        );
+    }
 }
 
 pub extern "C" fn packun_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
@@ -290,4 +319,5 @@ pub unsafe fn packun_frame(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
 
 pub fn install(agent: &mut Agent) {
     agent.on_line(Main, packun_frame_wrapper);
+    agent.on_line(Main, plant_meter);
 }
