@@ -148,8 +148,14 @@ unsafe extern "C" fn expression_specialsbattack(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn game_specialsbend(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
     if is_excute(agent) {
         agent.on_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
+    }
+    frame(lua_state, 10.0);
+    if is_excute(agent) {
+        VarModule::off_flag(agent.battle_object, vars::dolly::status::INHERIT_FINAL_CANCEL_ON_END);
     }
 }
 

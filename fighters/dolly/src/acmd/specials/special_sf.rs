@@ -107,6 +107,7 @@ unsafe extern "C" fn game_specialsfend(agent: &mut L2CAgentBase) {
     frame(lua_state, 25.0);
     if is_excute(agent) {
         MotionModule::set_rate(boma, 1.0);
+        VarModule::off_flag(agent.battle_object, vars::dolly::status::INHERIT_FINAL_CANCEL_ON_END);
     }
 }
 

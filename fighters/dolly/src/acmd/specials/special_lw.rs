@@ -275,6 +275,10 @@ unsafe extern "C" fn game_speciallwend(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         SET_SPEED_EX(agent, 1, 0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     }
+    frame(lua_state, 10.0);
+    if is_excute(agent) {
+        VarModule::off_flag(agent.battle_object, vars::dolly::status::INHERIT_FINAL_CANCEL_ON_END);
+    }
 }
 
 pub fn install(agent: &mut Agent) {
