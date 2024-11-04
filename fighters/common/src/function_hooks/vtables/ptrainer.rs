@@ -19,9 +19,54 @@ unsafe fn ptrainer_swap_backwards_hook(ctx: &mut skyline::hooks::InlineCtx) {
 #[skyline::hook(offset = 0xf96330)]
 unsafe fn ptrainer_stub_death_switch() {}
 
+#[skyline::from_offset(0x33bdc30)]
+unsafe extern "C" fn normal_weapon_hit_handler(vtable: u64, weapon: *mut app::Weapon, something: u32) -> u64;
+
+#[skyline::hook(offset = 0x34d0c90)]
+unsafe fn pzenigame_water_on_hit(vtable: u64, weapon: *mut app::Weapon, collision_mask: u32) -> u64 {
+    let boma = (&mut *(weapon)).battle_object.boma();
+    if !boma.is_status(*WEAPON_PZENIGAME_WATER_STATUS_KIND_CLASH) {
+        if collision_mask as i32 & (*COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) != 0 {
+            boma.change_status_req(*WEAPON_PZENIGAME_WATER_STATUS_KIND_CLASH, false);
+            return 0;
+        }
+    }
+    
+    return normal_weapon_hit_handler(vtable, weapon, collision_mask);
+}
+
+#[skyline::hook(offset = 0x348d910)]
+unsafe fn pfushigisou_seed_on_hit(vtable: u64, weapon: *mut app::Weapon, collision_mask: u32) -> u64 {
+    let boma = (&mut *(weapon)).battle_object.boma();
+    if !boma.is_status(*WEAPON_PFUSHIGISOU_SEED_STATUS_KIND_CLASH) {
+        if collision_mask as i32 & (*COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) != 0 {
+            boma.change_status_req(*WEAPON_PFUSHIGISOU_SEED_STATUS_KIND_CLASH, false);
+            return 0;
+        }
+    }
+    
+    return normal_weapon_hit_handler(vtable, weapon, collision_mask);
+}
+
+#[skyline::hook(offset = 0x34bfa30)]
+unsafe fn plizardon_breath_on_hit(vtable: u64, weapon: *mut app::Weapon, collision_mask: u32) -> u64 {
+    let boma = (&mut *(weapon)).battle_object.boma();
+    if !boma.is_status(*WEAPON_PLIZARDON_BREATH_STATUS_KIND_VANISH) {
+        if collision_mask as i32 & (*COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) != 0 {
+            boma.change_status_req(*WEAPON_PLIZARDON_BREATH_STATUS_KIND_VANISH, false);
+            return 0;
+        }
+    }
+    
+    return normal_weapon_hit_handler(vtable, weapon, collision_mask);
+}
+
 pub fn install() {
     skyline::install_hooks!(
         ptrainer_swap_backwards_hook,
-        ptrainer_stub_death_switch
+        ptrainer_stub_death_switch,
+        pzenigame_water_on_hit,
+        pfushigisou_seed_on_hit,
+        plizardon_breath_on_hit,
     );
 }
