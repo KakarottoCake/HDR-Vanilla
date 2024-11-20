@@ -38,9 +38,9 @@
   <float hash="shield_setoff_mul_fighter_shot">0.5156</float>
   <float hash="shield_stiff_mul_attack_4">1</float>
   <float hash="shield_stiff_mul_attack_air">1</float>
-  <float hash="shield_setoff_speed_mul">0.051</float>
-  <float hash="shield_setoff_speed_max">1.2</float>
-  <float hash="shield_rebound_ground_brake">1.15</float>
+  <float hash="shield_setoff_speed_mul">0.075273</float>
+  <float hash="shield_setoff_speed_max">1.6</float>
+  <float hash="shield_rebound_ground_brake">1</float>
   <int hash="guard_off_cancel_frame">14</int>
   <int hash="guard_off_disable_shield_recovery">14</int>
   <int hash="shield_just_frame">6</int>
@@ -102,7 +102,7 @@
   <int hash="cliff_catch_move_frame">0</int>
   <float hash="cliff_next_stick">0.2</float>
   <int hash="cliff_no_catch_frame">25</int>
-  <int hash="damage_cliff_no_catch_frame">25</int>
+  <int hash="damage_cliff_no_catch_frame">10</int>
   <int hash="cliff_wait_air_xlu_max_frame">0</int>
   <int hash="cliff_wait_damage_xlu_max_frame">0</int>
   <int hash="cliff_wait_xlu_min_frame">29</int>
