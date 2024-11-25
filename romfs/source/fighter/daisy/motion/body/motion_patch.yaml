@@ -212,22 +212,19 @@ cliff_escape_quick:
     cancel_frame: 52
 cliff_jump_quick1:
   extra:
-    xlu_end: 16
+    xlu_end: 17
 slip_stand:
   extra:
-    xlu_end: 
+    xlu_end: 18
     cancel_frame: 24
 slip_attack:
   extra:
-    xlu_end: 
     cancel_frame: 52
 slip_escape_f:
   extra:
-    xlu_end: 
     cancel_frame: 31
 slip_escape_b:
   extra:
-    xlu_end: 
     cancel_frame: 31
 jump_squat:
   blend_frames: 0

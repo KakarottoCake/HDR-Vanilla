@@ -31,6 +31,7 @@ mod dead;
 // mod damageflyreflect;
 mod down;
 mod float;
+mod slip;
 // [LUA-REPLACE-REBASE]
 // [SHOULD-CHANGE]
 // Reimplement the whole status script (already done) instead of doing this.
@@ -807,6 +808,7 @@ pub fn install() {
     dead::install();
     // damageflyreflect::install();
     down::install();
+    slip::install();
 
     skyline::nro::add_hook(nro_hook);
 }

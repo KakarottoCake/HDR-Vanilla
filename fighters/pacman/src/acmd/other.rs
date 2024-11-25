@@ -1,5 +1,7 @@
 use super::*;
 
+unsafe extern "C" fn game_cliffescape(agent: &mut L2CAgentBase) {}
+
 unsafe extern "C" fn sound_dash(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -51,6 +53,8 @@ unsafe extern "C" fn game_escapeairslide(agent: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.acmd("game_cliffescape", game_cliffescape, Priority::Low);
+
     agent.acmd("sound_dash", sound_dash, Priority::Low);
     agent.acmd("game_turndash", game_turndash, Priority::Low);
 

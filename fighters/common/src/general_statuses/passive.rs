@@ -12,6 +12,7 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
         skyline::install_hooks!(
             sub_check_passive_button_for_damage,
             status_pre_passive,
+            status_Passive_Main,
             status_pre_passivefb,
             status_PassiveFB_Main
         );
@@ -53,6 +54,29 @@ pub unsafe fn status_pre_passive(fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_Passive_Main)]
+unsafe fn status_Passive_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+    let cancel_frame = FighterMotionModuleImpl::get_cancel_frame(fighter.module_accessor, Hash40::new_raw(motion_kind), true);
+    let end_frame = MotionModule::end_frame(fighter.module_accessor);
+    if cancel_frame > end_frame {
+        if StatusModule::is_changing(fighter.module_accessor) {
+            let mut motion_rate = end_frame / cancel_frame;
+            if motion_rate < 1.0 {
+                motion_rate += 0.001;
+            }
+            MotionModule::set_rate(fighter.module_accessor, motion_rate);
+        }
+        
+        let xlu_end_frame = FighterMotionModuleImpl::get_hit_normal_frame(fighter.module_accessor, Hash40::new_raw(motion_kind), true);
+        if fighter.global_table[CURRENT_FRAME].get_f32() == xlu_end_frame {
+            HitModule::set_whole(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
+        }
+    }
+
+    call_original!(fighter)
+}
+
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_pre_PassiveFB)]
 pub unsafe fn status_pre_passivefb(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(
@@ -86,11 +110,30 @@ pub unsafe fn status_pre_passivefb(fighter: &mut L2CFighterCommon) -> L2CValue {
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_PassiveFB_Main)]
 pub unsafe fn status_PassiveFB_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+    let cancel_frame = FighterMotionModuleImpl::get_cancel_frame(fighter.module_accessor, Hash40::new_raw(motion_kind), true);
+    let end_frame = MotionModule::end_frame(fighter.module_accessor);
+    if cancel_frame > end_frame {
+        if StatusModule::is_changing(fighter.module_accessor) {
+            let mut motion_rate = end_frame / cancel_frame;
+            if motion_rate < 1.0 {
+                motion_rate += 0.001;
+            }
+            MotionModule::set_rate(fighter.module_accessor, motion_rate);
+        }
+        
+        let xlu_end_frame = FighterMotionModuleImpl::get_hit_normal_frame(fighter.module_accessor, Hash40::new_raw(motion_kind), true);
+        if fighter.global_table[CURRENT_FRAME].get_f32() == xlu_end_frame {
+            HitModule::set_whole(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
+        }
+    }
+
     if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_AIR {
         fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL, false);
     }
     else if CancelModule::is_enable_cancel(fighter.module_accessor) || MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status_req(*FIGHTER_STATUS_KIND_WAIT, false);
     }
+
     0.into()
 }
