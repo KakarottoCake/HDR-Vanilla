@@ -38,7 +38,7 @@ down_back_d:
     cancel_frame: 38
 cliff_climb_quick:
   extra:
-    xlu_end: 31
+    xlu_end: 35
     cancel_frame: 37
 cliff_attack_quick:
   extra:
