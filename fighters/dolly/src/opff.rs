@@ -45,6 +45,16 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     }
 }
 
+unsafe fn specials_ledgegrab_fix(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status_one_of(&[
+        *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_F_END,
+        *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_B_ATTACK,
+        *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_B_ATTACK,
+    ]) {
+        fighter.sub_transition_group_check_air_cliff();
+    }
+}
+
 unsafe fn disable_special_cancels_on_parry(fighter: &mut L2CFighterCommon) {
     if (
         fighter.is_flag(*FIGHTER_DOLLY_STATUS_ATTACK_WORK_FLAG_HIT_CANCEL) ||
@@ -139,6 +149,7 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     disable_special_cancels_on_parry(fighter);
     training_mode_full_meter(fighter, boma, status_kind);
     fastfall_specials(fighter);
+    specials_ledgegrab_fix(fighter);
     super_special_cancels(fighter, boma, status_kind, situation_kind, motion_kind, frame);
 }
 

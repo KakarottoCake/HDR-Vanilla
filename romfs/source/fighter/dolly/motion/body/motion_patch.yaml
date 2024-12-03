@@ -1,3 +1,6 @@
+attack_11:
+  extra:
+    cancel_frame: 15
 attack_air_n:
   extra:
     cancel_frame: 30
@@ -65,6 +68,16 @@ jump_squat:
 shield_break_fly:
   animations:
   - name: f04downspotd.nuanmb
+special_b_landing:
+  extra:
+    cancel_frame: 12
+special_air_b_end:
+  extra:
+    cancel_frame: 12
 step_pose_back:
   extra:
     cancel_frame: 6
+throw_b:
+    cancel_frame: 55
+throw_f:
+    cancel_frame: 55

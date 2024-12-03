@@ -73,7 +73,7 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
         *FIGHTER_STATUS_KIND_ITEM_SWING,
         *FIGHTER_STATUS_KIND_SPECIAL_N,
         *FIGHTER_STATUS_KIND_FINAL,
-        *FIGHTER_RYU_STATUS_KIND_WALK_BACK,
+        *FIGHTER_DOLLY_STATUS_KIND_WALK_BACK,
     ].contains(&fighter.global_table[globals::STATUS_KIND].get_i32())
     {
         update_lr(fighter, lr);
@@ -83,7 +83,7 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
     if fighter.global_table[globals::STATUS_KIND] == FIGHTER_STATUS_KIND_WAIT {
         if ![
             *FIGHTER_STATUS_KIND_DASH,
-            *FIGHTER_RYU_STATUS_KIND_DASH_BACK,
+            *FIGHTER_DOLLY_STATUS_KIND_DASH_BACK,
             *FIGHTER_STATUS_KIND_RUN_BRAKE,
             *FIGHTER_STATUS_KIND_TURN_RUN_BRAKE,
             *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL,
@@ -263,7 +263,7 @@ pub unsafe extern "C" fn dolly_check_other_special_command(fighter: &mut L2CFigh
     && !fighter.is_in_hitlag()
     && StatusModule::status_kind(fighter.module_accessor) != statuses::dolly::ATTACK_COMMAND_4
     && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S_COMMAND) {
-        fighter.change_status(statuses::ryu::ATTACK_COMMAND_4.into(), true.into());
+        fighter.change_status(statuses::dolly::ATTACK_COMMAND_4.into(), true.into());
         return true.into();
     }
 
