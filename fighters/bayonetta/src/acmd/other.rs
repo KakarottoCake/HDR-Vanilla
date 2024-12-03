@@ -49,8 +49,6 @@ unsafe extern "C" fn game_dash(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn game_cliffescape(agent: &mut L2CAgentBase) {}
-
 unsafe extern "C" fn sound_dash(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -285,7 +283,7 @@ unsafe extern "C" fn sound_justshieldoff(agent: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut Agent) {
-    agent.acmd("game_cliffescape", game_cliffescape, Priority::Low);
+    agent.acmd("game_cliffescape", acmd_stub, Priority::Low);
 
     agent.acmd("sound_damageflyhi", sound_damageflyhi, Priority::Low);
     agent.acmd("sound_damageflylw", sound_damageflyhi, Priority::Low);
