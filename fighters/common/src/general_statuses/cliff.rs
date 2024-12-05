@@ -23,6 +23,7 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
             status_end_CliffEscape,
             status_CliffJump1,
             status_end_CliffJump1,
+            status_CliffJump2_Main,
             status_end_CliffJump2,
             status_end_CliffJump3,
             sub_cliff_uniq_process_exit_Common,
@@ -183,6 +184,15 @@ unsafe fn status_end_CliffJump1(fighter: &mut L2CFighterCommon) -> L2CValue {
     if StatusModule::status_kind_next(fighter.module_accessor) != *FIGHTER_STATUS_KIND_CLIFF_JUMP2 {
         VarModule::set_int(fighter.object(), vars::common::instance::LEDGE_ID, -1);
     }
+    call_original!(fighter)
+}
+
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_CliffJump2_Main)]
+unsafe fn status_CliffJump2_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.sub_air_check_fall_common().get_bool() {
+        return 1.into();
+    }
+
     call_original!(fighter)
 }
 
