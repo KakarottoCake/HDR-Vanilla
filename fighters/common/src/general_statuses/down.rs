@@ -69,7 +69,32 @@ unsafe fn sub_DamageFlyChkUniq(fighter: &mut L2CFighterCommon) -> L2CValue {
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_Down_Main)]
 unsafe fn status_Down_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[CURRENT_FRAME].get_i32() <= 2 {
+        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE);
+        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE_FB);
+
+        if fighter.sub_AirChkPassive_for_damage().get_bool() {
+            return 1.into();
+        }
+
+        if fighter.global_table[PREV_STATUS_KIND] == FIGHTER_STATUS_KIND_DAMAGE_FALL {
+            if fighter.is_button_trigger(Buttons::AttackAll)
+            || fighter.is_button_trigger(Buttons::TiltAttack) {
+                EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_crown"), true, true);
+                EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_down_smoke"), true, true);
+            
+                ControlModule::stop_rumble_kind(fighter.module_accessor, Hash40::new("rbkind_down"), *BATTLE_OBJECT_ID_INVALID as u32);
+                CameraModule::stop_quake(fighter.module_accessor, *CAMERA_QUAKE_KIND_S);
+                CameraModule::stop_quake(fighter.module_accessor, *CAMERA_QUAKE_KIND_M);
+
+                fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), true.into());
+                return 1.into();
+            }
+        }
+    }
+
     fighter.sub_down_common();
+
     0.into()
 }
 

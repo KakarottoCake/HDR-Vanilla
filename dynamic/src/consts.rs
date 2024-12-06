@@ -187,6 +187,8 @@ pub mod vars {
 
             pub const ACMD_EFFECT: i32 = 0x0068;
 
+            pub const WAS_PREV_STATUS_CANCELABLE: i32 = 0x0069;
+
             // ints
 
             pub const LAST_ATTACK_RECEIVER_ENTRY_ID: i32 = 0x0000;
@@ -222,6 +224,8 @@ pub mod vars {
             pub const RIGHT_STICK_FLICK_X: i32 = 0x0011;
             pub const RIGHT_STICK_FLICK_Y: i32 = 0x0012;
 
+            pub const PREV_STATUS_TRANSITION_FRAME: i32 = 0x0013;
+
             // floats
 
             pub const LAST_ATTACK_DAMAGE_DEALT: i32 = 0x0000;
@@ -236,10 +240,10 @@ pub mod vars {
             pub const CURRENT_MOMENTUM_SPECIALS: i32 = 0x0007;
             pub const DOUBLE_JUMP_TIMER: i32 = 0x0008; // Only used by Lucas, and it's commented out, goes unused.
             pub const ROLL_SPEED: i32 = 0x0009;
-            // pub const LEDGE_POS: i32 = 0x000A;
-            // pub const LEDGE_POS_X: i32 = 0x000A;
-            // pub const LEDGE_POS_Y: i32 = 0x000B;
-            // pub const LEDGE_POS_Z: i32 = 0x000C;
+            pub const LAST_GROUNDED_POS: i32 = 0x000A;
+            // pub const LAST_GROUNDED_POS_X: i32 = 0x000A;
+            // pub const LAST_GROUNDED_POS_y: i32 = 0x000B;
+            // pub const LAST_GROUNDED_POS_Z: i32 = 0x000C;
             pub const GET_DIST_TO_FLOOR: i32 = 0x000D;
             pub const ECB_BOTTOM_Y_OFFSET: i32 = 0x000E;
             pub const CURR_DASH_SPEED: i32 = 0x000F;
