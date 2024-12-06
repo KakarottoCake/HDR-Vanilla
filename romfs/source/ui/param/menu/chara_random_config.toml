@@ -19,7 +19,7 @@ list = [
     # "dolly", "demon", "pacman", "cloud", "edge", "trail", "brave", "pickel"
 ]
 
-# Example tag listing. A player with the tag "mongoose" picking random will always get one of these six characters.
+# Example tag listing. A player with the tag "mongoose" picking random will always get one of these seven characters.
 [mongoose]
 kind = "whitelist"
 list = [
