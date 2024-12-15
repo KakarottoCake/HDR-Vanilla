@@ -19,6 +19,7 @@
   </list>
   <list hash="param_special_s">
     <struct index="0">
+      <int hash="0x2621b21c82">22</int>
       <int hash="monkey_flip_kick_frame">30</int>
     </struct>
     <hash40 index="1">dummy</hash40>
@@ -34,6 +35,7 @@
       <float hash="special_hi_jet_ang_f_max">0.75</float>
       <float hash="special_hi_jet_start_spd_y">3.05</float>
       <float hash="special_hi_jet_start_spd_y_mul">0.021</float>
+      <int hash="special_hi_landing_frame">26</int>
       <float hash="special_hi_ground_hit_explosion_gap">50</float>
       <float hash="special_hi_ground_hit_explosion_gap_wall">100</float>
     </struct>
