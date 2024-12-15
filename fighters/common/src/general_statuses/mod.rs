@@ -135,7 +135,6 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
             sub_is_dive,
             sub_calc_landing_motion_rate,
             sub_landing_cancel_damage_face,
-            sub_landing_fall_special_init,
             sub_air_check_fall_common,
             check_damage_fall_transition
         );
@@ -813,17 +812,6 @@ pub unsafe fn sub_landing_cancel_damage_face(fighter: &mut L2CFighterCommon) -> 
     ControlModule::set_command_life_extend(fighter.module_accessor, 0);
     
     original!()(fighter)
-}
-
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_landing_fall_special_init)]
-pub unsafe fn sub_landing_fall_special_init(fighter: &mut L2CFighterCommon, arg2: L2CValue) {
-    let landing_frame = WorkModule::get_float(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
-
-    if landing_frame != 0.0 {
-        WorkModule::set_float(fighter.module_accessor, landing_frame + 2.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
-    }
-    
-    original!()(fighter, arg2)
 }
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_air_check_fall_common)]
