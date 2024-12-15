@@ -49,6 +49,7 @@ pub unsafe extern "C" fn guard_off_main(fighter: &mut L2CFighterCommon) -> L2CVa
         );
         EffectModule::set_rate_last(fighter.module_accessor, 1.2);
         // EffectModule::set_alpha_last(fighter.module_accessor, 0.4);
+        EffectModule::req_common(fighter.module_accessor, Hash40::new("just_shield"), 0.0);
         // let shield_se = app::FighterUtil::get_just_shield_se(fighter.global_table[0x2].get_i32());
         let sfx_handle = SoundModule::play_se(
             fighter.module_accessor,
