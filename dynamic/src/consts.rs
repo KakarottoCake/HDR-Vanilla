@@ -624,9 +624,8 @@ pub mod vars {
             pub const HIT_CANCEL: i32 = 0x0104;
         }
         pub mod status {
-            // ints
-            /// This is used to determine how to end the SpecialHiJump status script
-            pub const SPECIAL_HI_JUMP_RESERVE_ACTION: i32 = 0x1100;
+            // flag
+            pub const SPECIAL_HI_FREEFALL: i32 = 0x1100;
         }
 
         // not IDs but symbolic consts
@@ -1773,6 +1772,10 @@ pub mod statuses {
     pub mod edge_flash {
         pub const BURST: i32 = 0x2;
         pub const VANISH: i32 = 0x3;
+    }
+
+    pub mod elight {
+        pub const SPECIAL_HI_FINISH2: i32 = 0x1F1;
     }
 
     pub mod falco {

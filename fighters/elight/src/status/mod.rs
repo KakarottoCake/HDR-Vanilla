@@ -2,6 +2,7 @@ use super::*;
 
 mod special_hi_jump;
 mod special_hi_finish;
+mod special_hi_finish2;
 mod special_hi;
 mod special_lw;
 
@@ -101,6 +102,7 @@ pub fn install(agent: &mut Agent) {
 
     special_hi_jump::install(agent);
     special_hi_finish::install(agent);
+    special_hi_finish2::install(agent);
     special_hi::install(agent);
     special_lw::install(agent);
 }

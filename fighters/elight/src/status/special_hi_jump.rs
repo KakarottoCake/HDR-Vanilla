@@ -83,6 +83,10 @@ unsafe extern "C" fn special_hi_jump_end(fighter: &mut L2CFighterCommon) -> L2CV
 
     //Disable up special
     VarModule::on_flag(fighter.battle_object, vars::elight::instance::DISABLE_SPECIAL_HI);
+    if VarModule::is_flag(fighter.battle_object, vars::elight::instance::SPECIAL_HI_ENABLE_FREEFALL) {
+        VarModule::on_flag(fighter.battle_object, vars::elight::status::SPECIAL_HI_FREEFALL);
+    }
+    VarModule::on_flag(fighter.battle_object, vars::elight::instance::SPECIAL_HI_ENABLE_FREEFALL);
     super::Set_Pyra_Up_Special_Cancel(fighter, true);
 
     0.into()
