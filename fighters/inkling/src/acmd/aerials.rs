@@ -169,7 +169,7 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
         ATTACK(agent, 3, 0, Hash40::new("haver"), 12.0, 270, 65, 0, 20, 4.0, 0.0, 1.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_ink_hit"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
         ATTACK(agent, 5, 0, Hash40::new("haver"), 12.0, 270, 65, 0, 20, 4.5, 0.0, 1.0, 5.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_ink_hit"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
         for i in 2..=5 {
-            AttackModule::set_ink_value(boma, i, 40.0);
+            AttackModule::set_ink_value(boma, i, 50.0);
             AttackModule::set_optional_hit_sound(boma, i, Hash40::new("se_common_water_hit_l"));
         }
     }
