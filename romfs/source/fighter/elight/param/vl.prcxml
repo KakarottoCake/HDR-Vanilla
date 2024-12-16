@@ -21,4 +21,14 @@
     <hash40 index="2">dummy</hash40>
     <hash40 index="3">dummy</hash40>
   </list>
+  <list hash="param_exprosiveshot">
+    <struct index="0">
+      <float hash="speed">5.4</float>
+      <int hash="life">14</int>
+      <int hash="life_burst">4</int>
+    </struct>
+    <hash40 index="1">dummy</hash40>
+    <hash40 index="2">dummy</hash40>
+    <hash40 index="3">dummy</hash40>
+  </list>
 </struct>

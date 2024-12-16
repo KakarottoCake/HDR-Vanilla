@@ -1775,10 +1775,6 @@ pub mod statuses {
         pub const VANISH: i32 = 0x3;
     }
 
-    pub mod elight {
-        pub const SPECIAL_HI_FINISH2: i32 = 0x1F1;
-    }
-
     pub mod falco {
         pub const SPECIAL_LW_LOOP: i32 = 0x1e8;
         pub const SPECIAL_LW_END: i32 = 0x1e9;

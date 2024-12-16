@@ -104,19 +104,24 @@ attack_air_f:
 attack_air_n:
   extra:
     cancel_frame: 43
+attack_air_hi:
+  extra:
+    cancel_frame: 49
 attack_air_lw:
   extra:
     cancel_frame: 46
 special_s_end:
   extra:
     cancel_frame: 30
+special_air_hi_end:
+  flags:
+    move: false
+  extra:
+    cancel_frame: 20
 special_lw_in:
   extra:
     intangible_start_frame: 0
     intangible_end_frame: 0
-attack_air_hi:
-  extra:
-    cancel_frame: 49
 special_air_lw_in:
   extra:
     intangible_start_frame: 0
