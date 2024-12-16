@@ -85,7 +85,7 @@ pub mod vars {
             pub const CSTICK_OVERRIDE: i32 = 0x0002;
             pub const CSTICK_OVERRIDE_SECOND: i32 = 0x0003;
 
-            pub const IS_TAP_JUMP: i32 = 0x0004;
+            // pub const IS_TAP_JUMP: i32 = 0x0004;
 
             pub const OMNI_FLOAT: i32 = 0x0005;
             pub const AERIAL_NO_FLOAT: i32 = 0x0006;
@@ -198,7 +198,7 @@ pub mod vars {
 
             pub const HITFALL_BUFFER: i32 = 0x0004;
 
-            pub const JUMP_SQUAT_FRAME: i32 = 0x0005;
+            // pub const JUMP_SQUAT_FRAME: i32 = 0x0005;
 
             pub const GIMMICK_TIMER: i32 = 0x0006;
 
