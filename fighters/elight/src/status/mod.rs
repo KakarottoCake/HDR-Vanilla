@@ -1,5 +1,6 @@
 use super::*;
 
+mod special_s;
 mod special_hi_jump;
 mod special_hi_finish;
 mod special_hi_finish2;
@@ -100,6 +101,7 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
 pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
 
+    special_s::install(agent);
     special_hi_jump::install(agent);
     special_hi_finish::install(agent);
     special_hi_finish2::install(agent);
