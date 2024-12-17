@@ -861,7 +861,8 @@ pub unsafe fn sub_air_check_fall_common(fighter: &mut L2CFighterCommon) -> L2CVa
         let mut damage_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_DAMAGE) as *mut app::KineticEnergy;
         let damage_speed_x = app::lua_bind::KineticEnergy::get_speed_x(damage_energy);
 
-        if damage_speed_x.abs() < 0.75 {
+        if damage_speed_x != 0.0
+        && damage_speed_x.abs() < 0.75 {
             // If your last grounded state was actionable
             if fighter.global_table[PREV_STATUS_KIND] == FIGHTER_STATUS_KIND_WAIT
             || VarModule::is_flag(fighter.battle_object, vars::common::instance::WAS_PREV_STATUS_CANCELABLE) {
@@ -945,7 +946,8 @@ pub unsafe fn check_damage_fall_transition(fighter: &mut L2CFighterCommon) -> L2
         let mut damage_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_DAMAGE) as *mut app::KineticEnergy;
         let damage_speed_x = app::lua_bind::KineticEnergy::get_speed_x(damage_energy);
 
-        if damage_speed_x.abs() < 0.75 {
+        if damage_speed_x != 0.0
+        && damage_speed_x.abs() < 0.75 {
             ControlModule::clear_command(fighter.module_accessor, false);
 
             return false.into();
