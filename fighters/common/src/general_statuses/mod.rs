@@ -361,6 +361,9 @@ unsafe fn sub_transition_group_check_air_escape(fighter: &mut L2CFighterCommon) 
         }
     }
 
+    // Input lag forgiveness mechanic:
+    // Ignore airdodge inputs during your first 2 airborne frames
+    // after slipping off an edge within the first 2 frames of knockdown
     let prev_status_transition_frame = VarModule::get_int(fighter.battle_object, vars::common::instance::PREV_STATUS_TRANSITION_FRAME);
     if fighter.global_table[PREV_STATUS_KIND] == FIGHTER_STATUS_KIND_DOWN
     && prev_status_transition_frame + fighter.global_table[CURRENT_FRAME].get_i32() <= 2 {
@@ -821,6 +824,9 @@ pub unsafe fn sub_air_check_fall_common(fighter: &mut L2CFighterCommon) -> L2CVa
     if fighter.global_table[STATUS_KIND] == FIGHTER_STATUS_KIND_FALL
     && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_AIR
     && frame_in_air <= 2 {
+        // Input lag forgiveness mechanic:
+        // Allow teching during your first 2 airborne frames
+        // after slipping off an edge within the first 2 frames of knockdown
         let prev_status_transition_frame = VarModule::get_int(fighter.battle_object, vars::common::instance::PREV_STATUS_TRANSITION_FRAME);
 
         if fighter.global_table[PREV_STATUS_KIND] == FIGHTER_STATUS_KIND_DOWN
@@ -831,6 +837,8 @@ pub unsafe fn sub_air_check_fall_common(fighter: &mut L2CFighterCommon) -> L2CVa
                 let passive_fb_cont_value = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("passive_fb_cont_value"));
 
                 if fighter.global_table[STICK_X].get_f32().abs() >= passive_fb_cont_value {
+                    // Re-ground your fighter at their last grounded position
+                    // and enter tech roll
                     let last_grounded_pos = VarModule::get_vec3(fighter.battle_object, vars::common::instance::LAST_GROUNDED_POS);
 
                     PostureModule::set_pos(fighter.module_accessor, &last_grounded_pos);
@@ -847,16 +855,22 @@ pub unsafe fn sub_air_check_fall_common(fighter: &mut L2CFighterCommon) -> L2CVa
             }
         }
 
+        // Input lag forgiveness mechanic:
+        // Prevent unintended inputs after slipping off an edge near the end of grounded knockback speed
+        // during first 2 airborne frames
         let mut damage_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_DAMAGE) as *mut app::KineticEnergy;
         let damage_speed_x = app::lua_bind::KineticEnergy::get_speed_x(damage_energy);
 
         if damage_speed_x.abs() < 0.75 {
+            // If your last grounded state was actionable
             if fighter.global_table[PREV_STATUS_KIND] == FIGHTER_STATUS_KIND_WAIT
             || VarModule::is_flag(fighter.battle_object, vars::common::instance::WAS_PREV_STATUS_CANCELABLE) {
                 fighter.sub_wait_ground_check_common_pre();
 
                 fighter.global_table[SITUATION_KIND].assign(&L2CValue::I32(*SITUATION_KIND_GROUND));
                 if fighter.sub_wait_ground_check_common(L2CValue::Bool(false)).get_bool() {
+                    // Re-ground your fighter at their last grounded position
+                    // and enter the action you would have triggered had you been grounded
                     let last_grounded_pos = VarModule::get_vec3(fighter.battle_object, vars::common::instance::LAST_GROUNDED_POS);
 
                     PostureModule::set_pos(fighter.module_accessor, &last_grounded_pos);
@@ -902,11 +916,13 @@ pub unsafe fn sub_air_check_fall_common(fighter: &mut L2CFighterCommon) -> L2CVa
                 fighter.global_table[SITUATION_KIND].assign(&L2CValue::I32(*SITUATION_KIND_AIR));
             }
             else {
+                // If your last grounded state was was not actionable (e.g. in hitstun)
                 if fighter.sub_transition_group_check_air_landing().get_bool()
                 || fighter.sub_transition_group_check_air_cliff().get_bool() {
                     return true.into();
                 }
 
+                // Ignore inputs during first 2 airborne frames
                 ControlModule::clear_command(fighter.module_accessor, false);
 
                 return false.into();
@@ -921,6 +937,9 @@ pub unsafe fn sub_air_check_fall_common(fighter: &mut L2CFighterCommon) -> L2CVa
 pub unsafe fn check_damage_fall_transition(fighter: &mut L2CFighterCommon) -> L2CValue {
     let frame_in_air = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_FRAME_IN_AIR);
 
+    // Input lag forgiveness mechanic:
+    // Ignore inputs during the first 2 frames of tumble
+    // after slipping off an edge near the end of shieldstun
     if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_AIR
     && frame_in_air <= 2 {
         let mut damage_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_DAMAGE) as *mut app::KineticEnergy;

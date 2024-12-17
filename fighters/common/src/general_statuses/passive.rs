@@ -12,7 +12,6 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
         skyline::install_hooks!(
             sub_AirChkPassive_for_damage,
             sub_check_passive_button_for_damage,
-            sub_uniq_process_Passive_init,
             status_pre_passive,
             status_Passive_Main,
             status_pre_passivefb,
@@ -29,6 +28,7 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_AirChkPassive_for_damage)]
 pub unsafe fn sub_AirChkPassive_for_damage(fighter: &mut L2CFighterCommon) -> L2CValue {
+    // Disallow ground bounce teching after frame 2 of connecting with ground
     if fighter.global_table[STATUS_KIND] == FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_D
     && fighter.global_table[CURRENT_FRAME].get_i32() > 2 {
         return false.into();
@@ -41,26 +41,6 @@ pub unsafe fn sub_AirChkPassive_for_damage(fighter: &mut L2CFighterCommon) -> L2
 pub unsafe fn sub_check_passive_button_for_damage(fighter: &mut L2CFighterCommon, trigger_frame: L2CValue) -> L2CValue {
     let is_valid_tech_input = fighter.sub_check_passive_button(trigger_frame).get_bool();
     return L2CValue::Bool(is_valid_tech_input)
-}
-
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_uniq_process_Passive_init)]
-pub unsafe fn sub_uniq_process_Passive_init(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if [*FIGHTER_STATUS_KIND_PASSIVE,
-        *FIGHTER_STATUS_KIND_PASSIVE_FB,
-        *FIGHTER_STATUS_KIND_PASSIVE_WALL,
-        *FIGHTER_STATUS_KIND_PASSIVE_WALL_JUMP,
-        *FIGHTER_STATUS_KIND_PASSIVE_CEIL
-    ].contains(&fighter.global_table[STATUS_KIND].get_i32()) {
-        EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_crown"), true, true);
-        EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_down_smoke"), true, true);
-    
-        ControlModule::stop_rumble_kind(fighter.module_accessor, Hash40::new("rbkind_down"), *BATTLE_OBJECT_ID_INVALID as u32);
-        ControlModule::stop_rumble_kind(fighter.module_accessor, Hash40::new("rbkind_collide"), *BATTLE_OBJECT_ID_INVALID as u32);
-        CameraModule::stop_quake(fighter.module_accessor, *CAMERA_QUAKE_KIND_S);
-        CameraModule::stop_quake(fighter.module_accessor, *CAMERA_QUAKE_KIND_M);
-    }
-
-    call_original!(fighter)
 }
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_pre_Passive)]
@@ -227,6 +207,7 @@ pub unsafe fn status_PassiveFB_Main(fighter: &mut L2CFighterCommon) -> L2CValue 
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_AirChkPassiveWallJump)]
 pub unsafe fn sub_AirChkPassiveWallJump(fighter: &mut L2CFighterCommon) -> L2CValue {
+    // Disallow wall teching after frame 2 of connecting with a wall
     if fighter.global_table[STATUS_KIND] == FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR
     && fighter.global_table[CURRENT_FRAME].get_i32() > 2 {
         return false.into();
@@ -246,6 +227,7 @@ pub unsafe fn status_PassiveWallJump_Main(fighter: &mut L2CFighterCommon) -> L2C
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_AirChkPassiveWall)]
 pub unsafe fn sub_AirChkPassiveWall(fighter: &mut L2CFighterCommon) -> L2CValue {
+    // Disallow wall teching after frame 2 of connecting with a wall
     if fighter.global_table[STATUS_KIND] == FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR
     && fighter.global_table[CURRENT_FRAME].get_i32() > 2 {
         return false.into();
@@ -265,6 +247,7 @@ pub unsafe fn status_PassiveWall_Main(fighter: &mut L2CFighterCommon) -> L2CValu
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_AirChkPassiveCeil)]
 pub unsafe fn sub_AirChkPassiveCeil(fighter: &mut L2CFighterCommon) -> L2CValue {
+    // Disallow ceiling teching after frame 2 of connecting with a ceiling
     if fighter.global_table[STATUS_KIND] == FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_U
     && fighter.global_table[CURRENT_FRAME].get_i32() > 2 {
         return false.into();
