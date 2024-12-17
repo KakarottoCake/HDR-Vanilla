@@ -113,6 +113,7 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
             status_pre_LandingLight,
             status_LandingAttackAirSub,
             status_pre_landing_fall_special,
+            sub_landing_fall_special_init,
             sub_air_transition_group_check_air_attack_hook,
             sub_transition_group_check_air_lasso,
             sub_transition_group_check_air_wall_jump,
@@ -179,6 +180,21 @@ pub unsafe fn status_pre_landing_fall_special(fighter: &mut L2CFighterCommon) ->
         ControlModule::clear_command_one(fighter.module_accessor, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE_B);
     }
     original!()(fighter)
+}
+
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_landing_fall_special_init)]
+pub unsafe fn sub_landing_fall_special_init(fighter: &mut L2CFighterCommon, arg2: L2CValue) {
+    let landing_frame = WorkModule::get_float(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
+
+    // When a special fall LL value isn't defined
+    // the game puts you in 30f of LL
+    if landing_frame == 0.0 {
+        // Increase this default value to 32f
+        // to account for input lag
+        WorkModule::set_float(fighter.module_accessor, 32.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
+    }
+
+    original!()(fighter, arg2)
 }
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_Landing_MainSub)]
