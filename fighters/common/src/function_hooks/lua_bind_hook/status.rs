@@ -269,7 +269,8 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
         if [*FIGHTER_STATUS_KIND_FALL,
             *FIGHTER_STATUS_KIND_DAMAGE_FALL,
             *FIGHTER_STATUS_KIND_MISS_FOOT].contains(&next_status)
-        && boma.is_prev_situation(*SITUATION_KIND_GROUND) {
+        && boma.is_prev_situation(*SITUATION_KIND_GROUND)
+        && !boma.is_status(*FIGHTER_STATUS_KIND_DASH) {
             if !boma.is_status(*FIGHTER_STATUS_KIND_DOWN) {
                 ControlModule::reset_trigger(boma);
             }
