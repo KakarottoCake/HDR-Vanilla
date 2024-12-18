@@ -48,14 +48,12 @@ unsafe extern "C" fn move_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
 
 unsafe extern "C" fn move_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let life = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    let situation_kind = weapon.global_table[SITUATION_KIND].get_i32();
-    let prev_situation_kind = weapon.global_table[PREV_SITUATION_KIND].get_i32();
     let pos = *PostureModule::pos(weapon.module_accessor);
-    if GroundModule::is_wall_touch_line(weapon.module_accessor, *GROUND_TOUCH_FLAG_SIDE as u32)
-    || life <= 0
-    || (situation_kind == *SITUATION_KIND_GROUND && prev_situation_kind == *SITUATION_KIND_AIR) {
-        WorkModule::set_int(weapon.module_accessor, 0, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    if life <= 0
+    || GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_ALL as u32) {
         EffectModule::req(weapon.module_accessor, Hash40::new("sys_erace_smoke"), &Vector3f{x: pos.x, y: pos.y, z: pos.z+5.0}, &Vector3f::zero(), 1.0, 0, -1, false, 0);
+        notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
+        weapon.pop_lua_stack(1);
     }
     0.into()
 }
@@ -70,9 +68,9 @@ unsafe extern "C" fn move_end(weapon: &mut L2CWeaponCommon) -> L2CValue {
 }
 
 pub fn install(agent: &mut Agent) {
-    agent.status(Pre, WEAPON_PALUTENA_METEOR_STATUS_KIND_MOVE, move_pre);
-    agent.status(Init, WEAPON_PALUTENA_METEOR_STATUS_KIND_MOVE, move_init);
-    agent.status(Main, WEAPON_PALUTENA_METEOR_STATUS_KIND_MOVE, move_main);
-    agent.status(Exec, WEAPON_PALUTENA_METEOR_STATUS_KIND_MOVE, move_exec);
-    agent.status(End, WEAPON_PALUTENA_METEOR_STATUS_KIND_MOVE, move_end);
+    agent.status(Pre, status::palutena_meteor::MOVE, move_pre);
+    agent.status(Init, status::palutena_meteor::MOVE, move_init);
+    agent.status(Main, status::palutena_meteor::MOVE, move_main);
+    agent.status(Exec, status::palutena_meteor::MOVE, move_exec);
+    agent.status(End, status::palutena_meteor::MOVE, move_end);
 }
