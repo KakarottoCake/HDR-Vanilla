@@ -346,6 +346,7 @@ pub mod vars {
             pub const PERSIST_RNG: i32 = 0x0100;
             pub const PSYCHE_UP_ACTIVE: i32 = 0x0101;
             pub const MENU_TRAINING_MODE_LOCK: i32 = 0x0102;
+            pub const SPECIAL_LW_CSTICK_BUFFER: i32 = 0x0103;
 
             // ints
             pub const SPELL_SLOT_1: i32 = 0x0100;
@@ -362,6 +363,9 @@ pub mod vars {
             pub const SPELL_SLOT_USED_2_4: i32 = 0x0111;
             pub const CURSOR_SLOT: i32 = 0x0112;
             pub const MENU_TRAINING_MODE_INDEX: i32 = 0x0113;
+            
+            // floats
+            pub const SPECIAL_LW_CSTICK_BUFFER_DIR: i32 = 0x0100;
         }
     }
 
