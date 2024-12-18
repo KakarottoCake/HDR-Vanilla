@@ -56,7 +56,7 @@ unsafe extern "C" fn effect_attackairf(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 16.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_c"), Hash40::new("sys_attack_arc_c"), Hash40::new("top"), 4, 9, 4.5, 0, -50, -90, 1.2, true, *EF_FLIP_YZ);
+        EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_c"), Hash40::new("sys_attack_arc_c"), Hash40::new("top"), 4, 9, 5, 0, -50, -90, 1.25, true, *EF_FLIP_YZ);
         LAST_EFFECT_SET_RATE(agent, 1.7);
     }
 }
