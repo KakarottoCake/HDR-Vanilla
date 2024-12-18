@@ -85,7 +85,7 @@ unsafe fn status_Down_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
         if fighter.global_table[PREV_STATUS_KIND] == FIGHTER_STATUS_KIND_DAMAGE_FALL {
             if fighter.is_button_trigger(Buttons::AttackAll)
             || fighter.is_button_trigger(Buttons::TiltAttack) {
-                fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), true.into());
+                fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_AIR.into(), true.into());
                 return 1.into();
             }
         }
@@ -106,7 +106,7 @@ unsafe fn status_end_Down(fighter: &mut L2CFighterCommon) -> L2CValue {
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_PIT_FALL_TO_DOWN);
     }
 
-    if [*FIGHTER_STATUS_KIND_LANDING,
+    if [*FIGHTER_STATUS_KIND_ATTACK_AIR,
         *FIGHTER_STATUS_KIND_PASSIVE,
         *FIGHTER_STATUS_KIND_PASSIVE_FB,
         *FIGHTER_STATUS_KIND_PASSIVE_WALL,
