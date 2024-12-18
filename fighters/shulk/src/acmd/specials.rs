@@ -120,7 +120,7 @@ unsafe extern "C" fn effect_specials(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     if is_excute(agent) {
         let facing = PostureModule::lr(boma);
-        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 4.0 * facing, 18, -2, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, true);
+        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 6.0 * facing, 18, -2, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, true);
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {
@@ -292,7 +292,6 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 20.0);
     if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07),*GROUND_CLIFF_CHECK_KIND_ALWAYS);
         WorkModule::on_flag(boma,*FIGHTER_SHULK_STATUS_SPECIAL_HI_FLAG_IS_ENABLE_ADD_SHIFT_INPUT);
     }
     frame(lua_state, 25.0);
@@ -300,9 +299,9 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
         WorkModule::on_flag(boma,*FIGHTER_SHULK_STATUS_SPECIAL_HI_FLAG_IS_FALL);
         WorkModule::on_flag(boma,*FIGHTER_SHULK_STATUS_SPECIAL_HI_FLAG_IS_ENABLE_CONTROL);
     }
-    frame(lua_state, 30.0);
+    frame(lua_state, 28.0);
     if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07),*GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07),*GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
     }
     frame(lua_state, 43.0);
     if is_excute(agent) {

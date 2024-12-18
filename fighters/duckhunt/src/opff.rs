@@ -9,8 +9,7 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     && fighter.is_status_one_of(&[
         *FIGHTER_STATUS_KIND_SPECIAL_N,
         *FIGHTER_STATUS_KIND_SPECIAL_S,
-        *FIGHTER_STATUS_KIND_SPECIAL_LW,
-        *FIGHTER_DUCKHUNT_STATUS_KIND_SPECIAL_HI_END
+        *FIGHTER_STATUS_KIND_SPECIAL_LW
         ]) 
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
@@ -39,9 +38,9 @@ extern "Rust" {
 }
 
 unsafe fn gunman_timer(fighter: &mut L2CFighterCommon) {
-    let timer = VarModule::get_int(fighter.object(), vars::duckhunt::instance::GUNMAN_TIMER);
+    let timer = VarModule::get_int(fighter.object(), vars::duckhunt::instance::SPECIAL_LW_GUNMAN_TIMER);
     if  timer != 0 {
-        VarModule::set_int(fighter.object(), vars::duckhunt::instance::GUNMAN_TIMER, (timer-1));
+        VarModule::set_int(fighter.object(), vars::duckhunt::instance::SPECIAL_LW_GUNMAN_TIMER, (timer-1));
     }
     if timer == 1 {
         gimmick_flash(fighter);

@@ -123,8 +123,8 @@ unsafe extern "C" fn game_itemheavyget(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 5.0);
-    if VarModule::is_flag(agent.object(), vars::donkey::instance::DID_SPAWN_BARREL) {
-        VarModule::off_flag(agent.object(), vars::donkey::instance::DID_SPAWN_BARREL);
+    if VarModule::is_flag(agent.object(), vars::donkey::instance::SPECIAL_LW_BARREL_GENERATED) {
+        VarModule::off_flag(agent.object(), vars::donkey::instance::SPECIAL_LW_BARREL_GENERATED);
         FT_MOTION_RATE_RANGE(agent, 5.0, 25.0, 45.0);   //26
     }
     else {
@@ -159,6 +159,8 @@ unsafe extern "C" fn expression_shoulderlanding(agent: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.acmd("game_cliffescape", acmd_stub, Priority::Low);
+
     agent.acmd("sound_damageflyhi", sound_damagefly, Priority::Low);
     agent.acmd("sound_damageflylw", sound_damagefly, Priority::Low);
     agent.acmd("sound_damageflyn", sound_damagefly, Priority::Low);

@@ -7,7 +7,7 @@ unsafe extern "C" fn effect_attacks4charge(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         let eff_handle = EffectModule::req_follow(boma, Hash40::new("sys_explosion_sign"), Hash40::new("haver"), &Vector3f::zero(), &Vector3f::zero(), 0.6, false, 0, 0, 0, 0, 0, false, false);
         EffectModule::set_rate(boma, eff_handle as u32, 0.5);
-        VarModule::set_int64(agent.battle_object, vars::koopa::instance::CHARGE_EFFECT_HANDLER, eff_handle as u64);
+        VarModule::set_int64(agent.battle_object, vars::koopa::instance::ATTACK_S4_EFFECT_HANDLE, eff_handle as u64);
     }
     frame(lua_state, 2.0);
     for _ in 0..34 {
@@ -26,7 +26,7 @@ unsafe extern "C" fn game_attacks4(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     if is_excute(agent) {
-        VarModule::off_flag(agent.battle_object, vars::koopa::instance::IS_EXCELLENT_PUNCH);
+        VarModule::off_flag(agent.battle_object, vars::koopa::instance::ATTACK_S4_EXCELLENT_PUNCH);
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {
@@ -34,7 +34,7 @@ unsafe extern "C" fn game_attacks4(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 22.0);
     if is_excute(agent) {
-        let excellent = VarModule::is_flag(agent.battle_object, vars::koopa::instance::IS_EXCELLENT_PUNCH);
+        let excellent = VarModule::is_flag(agent.battle_object, vars::koopa::instance::ATTACK_S4_EXCELLENT_PUNCH);
         let damage = if excellent { 2.5 } else { 0.0 };
         let attr = if excellent { Hash40::new("collision_attr_magic") } else { Hash40::new("collision_attr_normal") };
         let sound = if excellent { *COLLISION_SOUND_ATTR_HEAVY } else { *COLLISION_SOUND_ATTR_PUNCH };
@@ -45,8 +45,6 @@ unsafe extern "C" fn game_attacks4(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE_RANGE(agent, 26.0, 40.0, 8.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
-        SlowModule::clear_whole(boma);
-        EffectModule::remove_screen(boma, Hash40::new("bg_criticalhit"), 0);
     }
     frame(lua_state, 40.0);
     FT_MOTION_RATE_RANGE(agent, 40.0, 85.0, 36.0);
@@ -68,7 +66,7 @@ unsafe extern "C" fn effect_attacks4(agent: &mut L2CAgentBase) {
     frame(lua_state, 20.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("koopa_smash_line"), Hash40::new("koopa_smash_line"), Hash40::new("top"), 0, 13, -20, 0, 0, 0, 2.3, true, *EF_FLIP_YZ);
-        let eff_handle = VarModule::get_int64(agent.battle_object, vars::koopa::instance::CHARGE_EFFECT_HANDLER);
+        let eff_handle = VarModule::get_int64(agent.battle_object, vars::koopa::instance::ATTACK_S4_EFFECT_HANDLE);
         EffectModule::set_scale(boma, eff_handle as u32, &Vector3f::zero());
         EFFECT_OFF_KIND(agent,Hash40::new("sys_explosion_sign"), false, false);
     }
@@ -85,9 +83,10 @@ unsafe extern "C" fn effect_attacks4(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 26.0);
     if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("sys_attack_line"), true, true);
         SlowModule::clear_whole(boma);
         CameraModule::reset_all(boma);
-        EFFECT_OFF_KIND(agent, Hash40::new("sys_attack_line"), true, true);
+        EffectModule::remove_screen(boma, Hash40::new("bg_criticalhit"), 0);
     }
 }	
 
@@ -137,7 +136,7 @@ unsafe extern "C" fn expression_attacks4(agent: &mut L2CAgentBase) {
     frame(lua_state, 22.0);
     if is_excute(agent) {
         QUAKE(agent, *CAMERA_QUAKE_KIND_S);
-        let excellent = VarModule::is_flag(agent.battle_object, vars::koopa::instance::IS_EXCELLENT_PUNCH);
+        let excellent = VarModule::is_flag(agent.battle_object, vars::koopa::instance::ATTACK_S4_EXCELLENT_PUNCH);
         if excellent {
             RUMBLE_HIT(agent, Hash40::new("rbkind_attack_finish"), 0);
         } else {

@@ -4,7 +4,7 @@ unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        VarModule::set_int(agent.battle_object, vars::reflet::instance::LEVIN_AERIAL_LENIENCY, 5);
+        VarModule::set_int(agent.battle_object, vars::reflet::instance::ATTACK_AIR_LEVIN_LENIENCY, 5);
     }
     frame(lua_state, 1.0);
     FT_MOTION_RATE(agent, 0.75);
@@ -116,7 +116,7 @@ unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        VarModule::set_int(agent.battle_object, vars::reflet::instance::LEVIN_AERIAL_LENIENCY, 5);
+        VarModule::set_int(agent.battle_object, vars::reflet::instance::ATTACK_AIR_LEVIN_LENIENCY, 5);
     }
     frame(lua_state, 1.0);
     FT_MOTION_RATE(agent, 9.0/(12.0));
@@ -222,7 +222,7 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        VarModule::set_int(agent.battle_object, vars::reflet::instance::LEVIN_AERIAL_LENIENCY, 5);
+        VarModule::set_int(agent.battle_object, vars::reflet::instance::ATTACK_AIR_LEVIN_LENIENCY, 5);
     }
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
@@ -302,7 +302,7 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        VarModule::set_int(agent.battle_object, vars::reflet::instance::LEVIN_AERIAL_LENIENCY, 5);
+        VarModule::set_int(agent.battle_object, vars::reflet::instance::ATTACK_AIR_LEVIN_LENIENCY, 5);
     }
     frame(lua_state, 5.0);
     if is_excute(agent) {
@@ -381,7 +381,7 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        VarModule::set_int(agent.battle_object, vars::reflet::instance::LEVIN_AERIAL_LENIENCY, 5);
+        VarModule::set_int(agent.battle_object, vars::reflet::instance::ATTACK_AIR_LEVIN_LENIENCY, 5);
     }
     frame(lua_state, 2.0);
     if is_excute(agent) {
@@ -429,9 +429,17 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
             AttackModule::clear(boma, 2, false);
         }
     }
-    frame(lua_state, 25.0);
+    frame(lua_state, 21.0);
     if is_excute(agent) {
-        AttackModule::clear_all(boma);
+        if !WorkModule::is_flag(boma, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON) {
+            AttackModule::clear_all(boma);
+        }
+    }
+    frame(lua_state, 22.0);
+    if is_excute(agent) {
+        if WorkModule::is_flag(boma, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON) {
+            AttackModule::clear_all(boma);
+        }
     }
     frame(lua_state, 27.0);
     if is_excute(agent) {
@@ -483,7 +491,7 @@ unsafe extern "C" fn effect_attackairlw(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         AFTER_IMAGE_OFF(agent, 2);
     }
-    frame(lua_state, 25.0);
+    frame(lua_state, 21.0);
     if is_excute(agent) {
         if WorkModule::is_flag(boma, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON) {
             EFFECT_OFF_KIND(agent, Hash40::new("reflet_thunderswoed"), false, false);

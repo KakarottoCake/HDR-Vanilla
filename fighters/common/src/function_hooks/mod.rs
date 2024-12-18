@@ -13,7 +13,7 @@ pub mod iceclimber;
 pub mod controls;
 pub mod misc;
 pub mod jumps;
-pub mod killscreen;
+pub mod knockback;
 pub mod stage_hazards;
 pub mod set_fighter_status_data;
 pub mod attack;
@@ -396,7 +396,7 @@ unsafe fn before_collision(object: *mut BattleObject) {
 
             }
             else if (*boma).is_weapon() {
-                let func_addr = (skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as *mut u8).add(0x33a6140);
+                let func_addr = (skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as *mut u8).add(0x33a6160);
                 let battle_object__update_movement: extern "C" fn(*mut app::Weapon, bool) = std::mem::transmute(func_addr);
                 battle_object__update_movement(object as *mut app::Weapon, !is_receiver_in_hitlag);
             }
@@ -436,7 +436,7 @@ unsafe fn before_collision(object: *mut BattleObject) {
 
             }
             else if (*boma).is_weapon() {
-                let func_addr = (skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as *mut u8).add(0x33A6140);
+                let func_addr = (skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as *mut u8).add(0x33A6160);
                 let battle_object__update_movement: extern "C" fn(*mut app::Weapon, bool) = std::mem::transmute(func_addr);
                 battle_object__update_movement(object as *mut app::Weapon, !is_receiver_in_hitlag);
             }
@@ -479,7 +479,7 @@ unsafe fn before_collision(object: *mut BattleObject) {
 
         }
         else if (*boma).is_weapon() {
-            let func_addr = (skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as *mut u8).add(0x33A6140);
+            let func_addr = (skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as *mut u8).add(0x33A6160);
             let battle_object__update_movement: extern "C" fn(*mut app::Weapon, bool) = std::mem::transmute(func_addr);
             battle_object__update_movement(object as *mut app::Weapon, false);
         }
@@ -734,6 +734,45 @@ unsafe fn change_elec_hitlag_for_attacker(ctx: &mut skyline::hooks::InlineCtx) {
     }
 }
 
+static mut DATA_ACCESS_LOCK: [u8; 0x20] = [0; 0x20];
+
+// Reduces rim lighting on fighters to 0.5 strength
+#[skyline::hook(offset = 0x38026f0)]
+unsafe fn set_uniform_buffer(stage: u64, index: u64, buffer: u64) {
+    let cbuf = *((buffer + 8) as *const u64);
+    let buffer_ptr = *((cbuf + 0x98) as *const u64);
+
+    if buffer_ptr == 0 {
+        return call_original!(stage, index, buffer);
+    }
+
+    let size = *((cbuf + 0x10) as *const usize);
+    let addr = *((cbuf + 0xb0) as *const u64);
+
+    let text = skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as *const u8;
+    let func = *(text.add(0x5940d28) as *const u64);
+    let func: extern "C" fn(*mut u8) -> *mut u8 = std::mem::transmute(func);
+    let map = func(buffer_ptr as _);
+
+    let data = std::slice::from_raw_parts_mut(map, size);
+
+    skyline::nn::os::LockMutex(DATA_ACCESS_LOCK.as_mut_ptr().cast());
+
+    if index == 8 {
+        data[0xAC as usize..0xB0 as usize]
+            .copy_from_slice(&vec![0x00, 0x00, 0x00, 0x3F]);  // 0x00, 0x00, 0x00, 0x3F = 0.5 floating point
+    }
+
+    let text = skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as *const u8;
+    let func = *(text.add(0x5940d38) as *const u64);
+    let func: extern "C" fn(*mut u8, isize, usize) = std::mem::transmute(func);
+    func(buffer_ptr as _, 0, size);
+
+    skyline::nn::os::UnlockMutex(DATA_ACCESS_LOCK.as_mut_ptr().cast());
+
+    call_original!(stage, index, buffer);
+}
+
 pub fn install() {
     energy::install();
     effect::install();
@@ -747,9 +786,9 @@ pub fn install() {
     momentum_transfer::install();
     misc::install();
     jumps::install();
-    killscreen::install();
+    knockback::install();
     stage_hazards::install();
-    set_fighter_status_data::install();
+    //set_fighter_status_data::install();
     attack::install();
     collision::install();
     camera::install();
@@ -772,10 +811,6 @@ pub fn install() {
         // removes phantoms
         skyline::patching::Patch::in_text(0x3e6d08).data(0x14000012u32);
 
-        // Resets projectile lifetime on parry, rather than using remaining lifetime
-        skyline::patching::Patch::in_text(0x33bdfd8).nop();
-        skyline::patching::Patch::in_text(0x33bdfdc).data(0x2a0a03e1);
-
         // The following handles disabling the "Weapon Catch" animation for those who have it.
         // You will only enter the weapon catch animation if you are completely idle.
         // Link, Young Link, Toon Link
@@ -785,11 +820,15 @@ pub fn install() {
         // Krool and Pyra are in their respective modules.
         // Gives attacker less clank hitlag than defender
         skyline::patching::Patch::in_text(0x3e0b48).data(0x1E204160);
+
+        // Disables airdodge refresh on hit
+        skyline::patching::Patch::in_text(0x632530).nop();
     }
     skyline::install_hooks!(
         before_collision,
         after_collision,
         status_module__change_status,
-        change_elec_hitlag_for_attacker
+        change_elec_hitlag_for_attacker,
+        set_uniform_buffer
     );
 }

@@ -10,11 +10,14 @@ pub fn install() {
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
         skyline::install_hooks!(
-            sub_AirChkDown,
+            sub_DamageFlyChkUniq,
             status_pre_Down,
             status_Down_Main,
+            status_DownStand_Main,
+            status_DownStandFb_Main,
             status_end_DownStandFb,
             bind_address_call_status_end_DownStandFb,
+            status_DownStandAttack_Main,
             sub_down_wait_common
         );
     }
@@ -50,9 +53,9 @@ unsafe fn status_pre_Down(fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_AirChkDown)]
-unsafe fn sub_AirChkDown(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let ret = original!()(fighter);
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_DamageFlyChkUniq)]
+unsafe fn sub_DamageFlyChkUniq(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let ret = call_original!(fighter);
     if ret.get_bool() {
         // reset speed mul for damage_speed_up when transitioning to down
         // without this, there be crazy momentum shenanigans
@@ -70,6 +73,52 @@ unsafe fn status_Down_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_DownStand_Main)]
+unsafe fn status_DownStand_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+    let cancel_frame = FighterMotionModuleImpl::get_cancel_frame(fighter.module_accessor, Hash40::new_raw(motion_kind), true);
+    let end_frame = MotionModule::end_frame(fighter.module_accessor);
+    if cancel_frame > end_frame {
+        if StatusModule::is_changing(fighter.module_accessor) {
+            let mut motion_rate = end_frame / cancel_frame;
+            if motion_rate < 1.0 {
+                motion_rate += 0.001;
+            }
+            MotionModule::set_rate(fighter.module_accessor, motion_rate);
+        }
+        
+        let xlu_end_frame = FighterMotionModuleImpl::get_hit_normal_frame(fighter.module_accessor, Hash40::new_raw(motion_kind), true);
+        if fighter.global_table[CURRENT_FRAME].get_f32() == xlu_end_frame {
+            HitModule::set_whole(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
+        }
+    }
+
+    call_original!(fighter)
+}
+
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_DownStandFb_Main)]
+unsafe fn status_DownStandFb_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+    let cancel_frame = FighterMotionModuleImpl::get_cancel_frame(fighter.module_accessor, Hash40::new_raw(motion_kind), true);
+    let end_frame = MotionModule::end_frame(fighter.module_accessor);
+    if cancel_frame > end_frame {
+        if StatusModule::is_changing(fighter.module_accessor) {
+            let mut motion_rate = end_frame / cancel_frame;
+            if motion_rate < 1.0 {
+                motion_rate += 0.001;
+            }
+            MotionModule::set_rate(fighter.module_accessor, motion_rate);
+        }
+        
+        let xlu_end_frame = FighterMotionModuleImpl::get_hit_normal_frame(fighter.module_accessor, Hash40::new_raw(motion_kind), true);
+        if fighter.global_table[CURRENT_FRAME].get_f32() == xlu_end_frame {
+            HitModule::set_whole(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
+        }
+    }
+
+    call_original!(fighter)
+}
+
 // This runs at the end of getup rolls
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_end_DownStandFb)]
 unsafe fn status_end_DownStandFb(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -83,6 +132,29 @@ unsafe fn status_end_DownStandFb(fighter: &mut L2CFighterCommon) -> L2CValue {
 unsafe fn bind_address_call_status_end_DownStandFb(fighter: &mut L2CFighterCommon, _agent: &mut L2CAgent) -> L2CValue {
     fighter.status_end_DownStandFb();
     0.into()
+}
+
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_DownStandAttack_Main)]
+unsafe fn status_DownStandAttack_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+    let cancel_frame = FighterMotionModuleImpl::get_cancel_frame(fighter.module_accessor, Hash40::new_raw(motion_kind), true);
+    let end_frame = MotionModule::end_frame(fighter.module_accessor);
+    if cancel_frame > end_frame {
+        if StatusModule::is_changing(fighter.module_accessor) {
+            let mut motion_rate = end_frame / cancel_frame;
+            if motion_rate < 1.0 {
+                motion_rate += 0.001;
+            }
+            MotionModule::set_rate(fighter.module_accessor, motion_rate);
+        }
+        
+        let xlu_end_frame = FighterMotionModuleImpl::get_hit_normal_frame(fighter.module_accessor, Hash40::new_raw(motion_kind), true);
+        if fighter.global_table[CURRENT_FRAME].get_f32() == xlu_end_frame {
+            HitModule::set_whole(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
+        }
+    }
+
+    call_original!(fighter)
 }
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_down_wait_common)]
