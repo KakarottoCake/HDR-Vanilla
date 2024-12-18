@@ -85,6 +85,7 @@ unsafe fn status_DownStand_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
                 motion_rate += 0.001;
             }
             MotionModule::set_rate(fighter.module_accessor, motion_rate);
+            MotionModule::set_whole_rate(fighter.module_accessor, 1.0);
         }
         
         let xlu_end_frame = FighterMotionModuleImpl::get_hit_normal_frame(fighter.module_accessor, Hash40::new_raw(motion_kind), true);
@@ -108,6 +109,7 @@ unsafe fn status_DownStandFb_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
                 motion_rate += 0.001;
             }
             MotionModule::set_rate(fighter.module_accessor, motion_rate);
+            MotionModule::set_whole_rate(fighter.module_accessor, 1.0);
         }
         
         let xlu_end_frame = FighterMotionModuleImpl::get_hit_normal_frame(fighter.module_accessor, Hash40::new_raw(motion_kind), true);
@@ -146,6 +148,7 @@ unsafe fn status_DownStandAttack_Main(fighter: &mut L2CFighterCommon) -> L2CValu
                 motion_rate += 0.001;
             }
             MotionModule::set_rate(fighter.module_accessor, motion_rate);
+            MotionModule::set_whole_rate(fighter.module_accessor, 1.0);
         }
         
         let xlu_end_frame = FighterMotionModuleImpl::get_hit_normal_frame(fighter.module_accessor, Hash40::new_raw(motion_kind), true);
