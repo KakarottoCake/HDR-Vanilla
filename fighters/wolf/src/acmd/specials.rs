@@ -415,7 +415,7 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("expression_specialairsend", expression_specialsend, Priority::Low);
     
     agent.acmd("game_specialhihold", game_specialhihold, Priority::Low);
-    agent.acmd("effect_specialhihold", game_specialhihold, Priority::Low);
+    agent.acmd("effect_specialhihold", effect_specialhihold, Priority::Low);
     agent.acmd("sound_specialhihold", sound_specialhihold, Priority::Low);
     agent.acmd("game_specialhiholdair", game_specialhihold, Priority::Low);
     agent.acmd("effect_specialhiholdair", effect_specialhiholdair, Priority::Low);
