@@ -107,6 +107,13 @@ unsafe fn kaclang_jc(fighter: &mut L2CFighterCommon) {
     }
 }
 
+unsafe fn up_special_startup_ledgegrab(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_HI_HOLD]) {
+        // allows ledgegrab during upB startup
+        fighter.sub_transition_group_check_air_cliff();
+    }
+}
+
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
@@ -158,6 +165,7 @@ pub unsafe extern "C" fn brave_frame_wrapper(fighter: &mut L2CFighterCommon) {
     dash_cancel_frizz(fighter);
     woosh_cancel(fighter);
     kaclang_jc(fighter);
+    up_special_startup_ledgegrab(fighter);
     fastfall_specials(fighter);
 
     // Extend sword length
