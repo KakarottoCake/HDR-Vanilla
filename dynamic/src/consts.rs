@@ -1632,11 +1632,7 @@ pub mod vars {
 
     pub mod tantan {
         pub mod instance {
-            // flags
-            pub const SPECIAL_HI_GROUND_START: i32 = 0x0100;
-            pub const SPECIAL_HI_DISABLE_TETHER: i32 = 0x0101;
-
-            // ints
+            //ints
             pub const ARMR_DRAGONIZE_EFFECT_HANDLE: i32 = 0x0100;
         }
         pub mod status {

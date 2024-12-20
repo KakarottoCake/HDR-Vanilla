@@ -6,9 +6,11 @@ use globals::*;
 /// prevents rocket from despawning in the blastzone
 unsafe extern "C" fn dragon_frame(weapon: &mut L2CFighterBase) {
     let boma = weapon.module_accessor;
+
     let mut is_dragonized = WorkModule::is_flag(boma, *WEAPON_TANTAN_PUNCH1_INSTANCE_WORK_ID_FLAG_IS_DRAGONIZE);
     if !WorkModule::is_flag(boma, *WEAPON_TANTAN_PUNCH1_INSTANCE_WORK_ID_FLAG_IS_LEFT)
-    && !WorkModule::is_flag(boma, *WEAPON_TANTAN_PUNCH1_INSTANCE_WORK_ID_FLAG_IS_KIRBY) {
+    && !WorkModule::is_flag(boma, *WEAPON_TANTAN_PUNCH1_INSTANCE_WORK_ID_FLAG_IS_KIRBY)
+    {
         let minmin_id = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
         if sv_battle_object::is_active(minmin_id) {
             let minmin = utils::util::get_battle_object_from_id(minmin_id);
@@ -32,15 +34,6 @@ unsafe extern "C" fn dragon_frame(weapon: &mut L2CFighterBase) {
     if is_dragonized {
         AttackModule::set_power_mul(boma, 1.15);
     }
-
-    // if StatusModule::status_kind(boma) == *WEAPON_TANTAN_PUNCH1_STATUS_KIND_SHOOT {
-    //     let owner_boma = weapon.get_owner_boma();
-    //     if owner_boma.is_status(*FIGHTER_TANTAN_STATUS_KIND_SPECIAL_HI_AIR_REACH) {
-    //         if AttackModule::is_infliction(boma, *COLLISION_KIND_MASK_HIT) {
-    //             VarModule::off_flag(owner_boma.object(), vars::tantan::instance::SPECIAL_HI_DISABLE_TETHER);
-    //         }
-    //     }
-    // }
 }
 
 pub fn install(agent: &mut Agent) {
