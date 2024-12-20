@@ -1638,6 +1638,7 @@ pub mod vars {
         pub mod status {
             // flags
             pub const ARMS_ATTACK_CANCEL: i32 = 0x1100;
+            pub const ATTACK_S4_CLEAR_CRIT: i32 = 0x1101;
         }
     }
 
