@@ -33,14 +33,12 @@ unsafe extern "C" fn dragon_frame(weapon: &mut L2CFighterBase) {
         AttackModule::set_power_mul(boma, 1.15);
     }
 
-    // if StatusModule::status_kind(boma) == *WEAPON_TANTAN_PUNCH1_STATUS_KIND_SHOOT {
-    //     let owner_boma = weapon.get_owner_boma();
-    //     if owner_boma.is_status(*FIGHTER_TANTAN_STATUS_KIND_SPECIAL_HI_AIR_REACH) {
-    //         if AttackModule::is_infliction(boma, *COLLISION_KIND_MASK_HIT) {
-    //             VarModule::off_flag(owner_boma.object(), vars::tantan::instance::SPECIAL_HI_DISABLE_TETHER);
-    //         }
-    //     }
-    // }
+    if StatusModule::status_kind(boma) == *WEAPON_TANTAN_PUNCH1_STATUS_KIND_BACK {
+        let owner_boma = weapon.get_owner_boma();
+        if owner_boma.is_status(*FIGHTER_TANTAN_STATUS_KIND_SPECIAL_HI_AIR_REACH) {
+            VarModule::off_flag(owner_boma.object(), vars::tantan::instance::SPECIAL_HI_ENABLE_FREEFALL);
+        }
+    }
 }
 
 pub fn install(agent: &mut Agent) {

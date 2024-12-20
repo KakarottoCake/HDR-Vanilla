@@ -181,7 +181,8 @@ unsafe extern "C" fn effect_attacklw3(agent: &mut L2CAgentBase) {
         handle = EffectModule::req_follow(boma, Hash40::new("sys_attack_arc_b"), Hash40::new("top"), &Vector3f::new(-2.0, 3.0, 11.5), &Vector3f::new(-5.0, 0.0, 180.0), 1.25, false, 0, 0, 0, 0, 0, false, false);
         LAST_EFFECT_SET_SCALE_W(agent, 0.9, 1.25, 1.25);
         LAST_EFFECT_SET_RATE(agent, 0.7);
-        EFFECT(agent, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 26, 0, 0, 0, 180, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        // EFFECT_ALPHA(agent, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 21, 0, 0, 0, 180, 0, 0.9, 0, 0, 0, 0, 0, 0, false, 0.8);
+        // LAST_EFFECT_SET_RATE(agent, 1.2);
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {

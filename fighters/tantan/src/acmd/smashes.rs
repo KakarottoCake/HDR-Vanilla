@@ -40,8 +40,8 @@ unsafe extern "C" fn game_attacks4(agent: &mut L2CAgentBase) {
         if is_doubledragon {
             if is_dragonized {
                 // powered double dragon
-                let offsets = [15.0, 25.0, 32.0, 39.0, 46.0];
-                ATTACK(agent, 0, 0, Hash40::new("throw"), 16.0, 361, 70, 0, 60, 5.0, 0.0, 0.0, -offsets[i], Some(0.0), Some(0.0), Some(9.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 10, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_LL, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_ENERGY);
+                let offsets = [11.0, 18.0, 24.0, 31.0, 36.0];
+                ATTACK(agent, 0, 0, Hash40::new("throw"), 16.0, 361, 70, 0, 60, 5.0, 0.0, 0.0, -offsets[i], Some(0.0), Some(0.0), Some(6.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 10, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_LL, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_ENERGY);
                 AttackModule::set_optional_hit_sound(boma, 0, Hash40::new("se_common_heavy_hit_l"));
             }
             else {
@@ -103,6 +103,8 @@ unsafe extern "C" fn effect_attacks4(agent: &mut L2CAgentBase) {
         if is_doubledragon {
             if is_dragonized {
                 // powered double dragon
+                EFFECT_FOLLOW(agent, Hash40::new("tantan_wepon_shot1"), Hash40::new("pl1_gimmickc"), -1.0, 0, 0, 0, 0, -90, 1.0, true);
+                LAST_EFFECT_SET_SCALE_W(agent, 1.0, 0.75, 1.0);
                 EFFECT(agent, Hash40::new("tantan_final_shot"), Hash40::new("pl1_muzzle"), 0, 0, 0, 0, 0, 90, 1, 0, 0, 0, 0, 0, 0, true);
                 EFFECT_FOLLOW(agent, Hash40::new("tantan_final_punch"), Hash40::new("throw"), -0.045, 0, 0, 0, 90, 0, 1, true);
                 LAST_EFFECT_SET_RATE(agent, 1.5);

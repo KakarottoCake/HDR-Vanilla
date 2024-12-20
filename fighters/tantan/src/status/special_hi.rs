@@ -178,6 +178,9 @@ unsafe extern "C" fn special_hi_air_pre(fighter: &mut L2CFighterCommon) -> L2CVa
     if situation == *SITUATION_KIND_GROUND {
         fighter.on_flag(*FIGHTER_TANTAN_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_AIR_HOP);
     }
+    else {
+        VarModule::on_flag(fighter.battle_object, vars::tantan::instance::SPECIAL_HI_ENABLE_FREEFALL);
+    }
     StatusModule::init_settings(
         fighter.module_accessor,
         app::SituationKind(situation),

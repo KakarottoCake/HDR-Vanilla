@@ -43,8 +43,7 @@ pub unsafe extern "C" fn attack_s4_exec(fighter: &mut L2CFighterCommon) -> L2CVa
     && WorkModule::get_int(fighter.module_accessor, *FIGHTER_TANTAN_INSTANCE_WORK_ID_INT_PUNCH_KIND_R) == 0
     && VarModule::get_int(fighter.battle_object, vars::common::instance::LAST_ATTACK_HITBOX_ID) == 1 {
         VarModule::on_flag(fighter.battle_object, vars::tantan::status::ATTACK_S4_CLEAR_CRIT);
-        SlowModule::set_whole(fighter.module_accessor, 8, 15);
-        PLAY_SE(fighter, Hash40::new("se_common_criticalhit"));
+        SlowModule::set_whole(fighter.module_accessor, 8, 5);
         EffectModule::req_screen(fighter.module_accessor, Hash40::new("bg_criticalhit"), false, true, true);
     }
 
