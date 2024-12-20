@@ -29,8 +29,8 @@ unsafe extern "C" fn game_attacks4(agent: &mut L2CAgentBase) {
         if is_doubledragon {
             if is_dragonized {
                 // powered double dragon
-                ATTACK(agent, 0, 0, Hash40::new("throw"), 20.0, 361, 70, 0, 60, 6.0, 0.0, 0.0, 10.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 10, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_LL, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_ENERGY);
-                AttackModule::set_optional_hit_sound(boma, 0, Hash40::new("se_common_heavy_hit_l"));
+                ATTACK(agent, 1, 0, Hash40::new("throw"), 20.0, 361, 70, 0, 60, 6.0, 0.0, 0.0, 10.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 10, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_LL, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_ENERGY);
+                AttackModule::set_optional_hit_sound(boma, 1, Hash40::new("se_common_heavy_hit_l"));
             }
         }
         ATTACK(agent, 3, 0, Hash40::new("shoulderl"), 12.0, 361, 94, 0, 48, 3.0, 1.0, 0.0, 1.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
@@ -40,9 +40,9 @@ unsafe extern "C" fn game_attacks4(agent: &mut L2CAgentBase) {
         if is_doubledragon {
             if is_dragonized {
                 // powered double dragon
-                let offsets = [10.0, 20.0, 27.0, 34.0, 41.0];
-                ATTACK(agent, 1, 0, Hash40::new("throw"), 20.0, 361, 70, 0, 60, 5.0, 0.0, 0.0, -offsets[i], Some(0.0), Some(0.0), Some(9.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 10, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_LL, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_ENERGY);
-                AttackModule::set_optional_hit_sound(boma, 1, Hash40::new("se_common_heavy_hit_l"));
+                let offsets = [15.0, 25.0, 32.0, 39.0, 46.0];
+                ATTACK(agent, 0, 0, Hash40::new("throw"), 16.0, 361, 70, 0, 60, 5.0, 0.0, 0.0, -offsets[i], Some(0.0), Some(0.0), Some(9.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 10, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_LL, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_ENERGY);
+                AttackModule::set_optional_hit_sound(boma, 0, Hash40::new("se_common_heavy_hit_l"));
             }
             else {
                 // normal double dragon
