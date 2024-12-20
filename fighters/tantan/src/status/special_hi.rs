@@ -102,7 +102,7 @@ unsafe extern "C" fn special_hi_ground_main_loop(fighter: &mut L2CFighterCommon)
 unsafe extern "C" fn special_hi_ground_jump_init(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.is_prev_situation(*SITUATION_KIND_AIR) {
         //VarModule::on_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
-        sv_kinetic_energy!(set_speed_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.5);
+        sv_kinetic_energy!(set_speed_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.55);
     }
     else {
         VarModule::on_flag(fighter.battle_object, vars::tantan::instance::SPECIAL_HI_GROUND_START);
