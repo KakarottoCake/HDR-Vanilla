@@ -181,7 +181,6 @@ unsafe extern "C" fn effect_attacklw3(agent: &mut L2CAgentBase) {
         handle = EffectModule::req_follow(boma, Hash40::new("sys_attack_arc_b"), Hash40::new("top"), &Vector3f::new(-2.0, 3.0, 11.5), &Vector3f::new(-5.0, 0.0, 180.0), 1.25, false, 0, 0, 0, 0, 0, false, false);
         LAST_EFFECT_SET_SCALE_W(agent, 0.9, 1.25, 1.25);
         LAST_EFFECT_SET_RATE(agent, 0.7);
-        EFFECT(agent, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 26, 0, 0, 0, 180, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {
@@ -210,7 +209,8 @@ unsafe extern "C" fn sound_attacklw3(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 13.0);
     if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_common_swing_09"));
+        let sfx = if WorkModule::is_flag(boma, *FIGHTER_TANTAN_INSTANCE_WORK_ID_FLAG_DRAGONIZE_L) {Hash40::new("se_tantan_attack01_doragon_smash")} else {Hash40::new("se_tantan_attack01_long")};
+        PLAY_SE(agent, sfx);
     }
     frame(lua_state, 31.0);
     if is_excute(agent) {
