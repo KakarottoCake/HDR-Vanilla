@@ -3,17 +3,13 @@ use super::*;
 unsafe extern "C" fn game_specialairn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let armType =  WorkModule::get_int(boma, *FIGHTER_TANTAN_INSTANCE_WORK_ID_INT_PUNCH_KIND_R);
+    let armType = WorkModule::get_int(boma, *FIGHTER_TANTAN_INSTANCE_WORK_ID_INT_PUNCH_KIND_R);
     frame(lua_state, 1.0);
-    if(armType == 1){
+    if(armType == 1) {
         FT_MOTION_RATE(agent, 1.35);
     }
-    else if (armType==2)
-    {
+    else if (armType == 2) {
         FT_MOTION_RATE(agent, 0.75);
-    }
-    else if WorkModule::is_flag(boma, *FIGHTER_TANTAN_INSTANCE_WORK_ID_FLAG_DRAGONIZE_L) {
-        AttackModule::set_power_mul(boma, 1.1);
     }
     frame(lua_state, 4.0);
     if is_excute(agent) {
@@ -23,23 +19,27 @@ unsafe extern "C" fn game_specialairn(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         HIT_NODE(agent, Hash40::new("handr"), *HIT_STATUS_XLU);
         HIT_NODE(agent, Hash40::new("armr5"), *HIT_STATUS_XLU);
-        if(armType == 1){
+        if (armType == 1) {
+            // Megawatt
             ATTACK(agent, 0, 0, Hash40::new("armr5"), 13.0, 60, 95, 0, 50, 2.5, 1.0, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
             ATTACK(agent, 1, 0, Hash40::new("handr"), 13.0, 60, 95, 0, 50, 5.0, 3.5, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
         }
-        else if(armType == 2){
+        else if (armType == 2) {
             ATTACK(agent, 0, 0, Hash40::new("armr5"), 8.5, 361, 85, 0, 45, 2.5, 1.0, 0.0, 0.0, None, None, None, 0.9, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
             ATTACK(agent, 1, 0, Hash40::new("handr"), 8.5, 361, 85, 0, 45, 3.5, 3.5, 0.0, 0.0, None, None, None, 0.9, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
         }
         else {
             let is_dragonized = WorkModule::is_flag(boma, *FIGHTER_TANTAN_INSTANCE_WORK_ID_FLAG_DRAGONIZE_L);
-            let bigScale = WorkModule::get_param_float(boma,hash40("param_private"),hash40("arm_l_big_scale"));
-            let sizeFactor = if is_dragonized {bigScale} else {1.0};
-            let powerFactor = if is_dragonized {1.15} else {1.0};
-            let sfx_level = if is_dragonized {*ATTACK_SOUND_LEVEL_L} else {*ATTACK_SOUND_LEVEL_M};
-
-            ATTACK(agent, 0, 0, Hash40::new("armr5"), 10.25*powerFactor, 45, 100, 0, 45, 2.5*sizeFactor, 1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), sfx_level, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-            ATTACK(agent, 1, 0, Hash40::new("handr"), 10.25*powerFactor, 45, 100, 0, 45, 4.5*sizeFactor, 3.5, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), sfx_level, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+            let bigScale = WorkModule::get_param_float(boma, hash40("param_private"), hash40("arm_l_big_scale"));
+            let sizeFactor = if is_dragonized { bigScale } else { 1.0 };
+            let powerFactor = if is_dragonized { 1.15 } else { 1.0 };
+            let sfx_level = if is_dragonized { *ATTACK_SOUND_LEVEL_L } else { *ATTACK_SOUND_LEVEL_M };
+            ATTACK(agent, 0, 0, Hash40::new("armr5"), 12.0 * powerFactor, 45, 88, 0, 47, 2.5 * sizeFactor, 1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), sfx_level, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+            ATTACK(agent, 1, 0, Hash40::new("handr"), 12.0 * powerFactor, 45, 88, 0, 47, 4.5 * sizeFactor, 3.5, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), sfx_level, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+            if is_dragonized {
+                AttackModule::set_optional_hit_sound(boma, 0, Hash40::new("se_common_fire_m"));
+                AttackModule::set_optional_hit_sound(boma, 1, Hash40::new("se_common_fire_m"));
+            }
         }
     }
     frame(lua_state, 24.0);
@@ -56,30 +56,29 @@ unsafe extern "C" fn game_specialairn(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_specialairn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let armType =  WorkModule::get_int(boma, *FIGHTER_TANTAN_INSTANCE_WORK_ID_INT_PUNCH_KIND_R);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("tantan_jump_line_s"), false, true);
         EFFECT_OFF_KIND(agent, Hash40::new("tantan_jump_line_l"), false, true);
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {
-        if(armType==1){
+        let armType = WorkModule::get_int(boma, *FIGHTER_TANTAN_INSTANCE_WORK_ID_INT_PUNCH_KIND_R);
+        if (armType == 1) {
             EFFECT_FOLLOW(agent, Hash40::new("tantan_atk_air_n2"), Hash40::new("top"), 0, 10, 4, 0, 0, 0, 1.2, true);
         }
-        else if (armType==2){
+        else if (armType == 2) {
             EFFECT_FOLLOW(agent, Hash40::new("tantan_atk_air_n3"), Hash40::new("top"), 0, 10, 4, 0, 0, 0, 1.2, true);
         }
-        else{
+        else {
             EFFECT_FOLLOW(agent, Hash40::new("tantan_atk_air_n1"), Hash40::new("top"), 0, 10, 4, 0, 0, 0, 1.2, true);
             if WorkModule::is_flag(boma, *FIGHTER_TANTAN_INSTANCE_WORK_ID_FLAG_DRAGONIZE_L) {
-                LAST_EFFECT_SET_COLOR(agent,1.0,0.5,0.5);
+                LAST_EFFECT_SET_COLOR(agent, 1.0, 0.5, 0.5);
                 EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire_fly"), Hash40::new("pr1_gimmickc"), 0, 0, 0, 0, 0, 0, 0.3, true);
-                LAST_EFFECT_SET_RATE(agent,1.5);
+                LAST_EFFECT_SET_RATE(agent, 1.5);
             }
         }
     }
-    frame(lua_state, 22.0);
-    {
+    frame(lua_state, 22.0); {
         EFFECT_DETACH_KIND(agent, Hash40::new("sys_damage_fire_fly"), -1);
     }
 }
@@ -87,15 +86,15 @@ unsafe extern "C" fn effect_specialairn(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_specialairn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let armType =  WorkModule::get_int(boma, *FIGHTER_TANTAN_INSTANCE_WORK_ID_INT_PUNCH_KIND_R);
-    if(armType==1){
+    let armType = WorkModule::get_int(boma, *FIGHTER_TANTAN_INSTANCE_WORK_ID_INT_PUNCH_KIND_R);
+    if (armType == 1) {
         frame(lua_state, 8.0);
         if is_excute(agent) {
             PLAY_STATUS(agent, Hash40::new("se_tantan_attackair_n02"));
             PLAY_SEQUENCE(agent, Hash40::new("seq_tantan_rnd_attack03"));
         }
     }
-    else if (armType==2){
+    else if (armType == 2) {
         frame(lua_state, 7.0);
         if is_excute(agent) {
             PLAY_STATUS(agent, Hash40::new("se_tantan_attackair_n03"));
@@ -105,7 +104,7 @@ unsafe extern "C" fn sound_specialairn(agent: &mut L2CAgentBase) {
             PLAY_SEQUENCE(agent, Hash40::new("seq_tantan_rnd_attack01"));
         }
     }
-    else{
+    else {
         frame(lua_state, 6.0);
         if is_excute(agent) {
             PLAY_STATUS(agent, Hash40::new("se_tantan_attackair_n01"));
@@ -120,7 +119,6 @@ unsafe extern "C" fn sound_specialairn(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn expression_specialairn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let armType =  WorkModule::get_int(boma, *FIGHTER_TANTAN_INSTANCE_WORK_ID_INT_PUNCH_KIND_R);
     if is_excute(agent) {
         ItemModule::set_have_item_visibility(boma, false, 0);
     }
@@ -130,13 +128,14 @@ unsafe extern "C" fn expression_specialairn(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {
-        if(armType==1){
+        let armType = WorkModule::get_int(boma, *FIGHTER_TANTAN_INSTANCE_WORK_ID_INT_PUNCH_KIND_R);
+        if (armType == 1) {
             RUMBLE_HIT(agent, Hash40::new("rbkind_76_megabolthit"), 10);
         }
-        else if (armType==2){
+        else if (armType == 2) {
             RUMBLE_HIT(agent, Hash40::new("rbkind_slashl"), 12);
         }
-        else{
+        else {
             RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 9);
         }
     }
@@ -145,22 +144,21 @@ unsafe extern "C" fn expression_specialairn(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialairnend(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let armType =  WorkModule::get_int(boma, *FIGHTER_TANTAN_INSTANCE_WORK_ID_INT_PUNCH_KIND_R);
-
     frame(lua_state, 1.0);
     FT_MOTION_RATE(agent, 0.5);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
     frame(lua_state, 5.0);
-    if (armType!=2) {
+    let armType = WorkModule::get_int(boma, *FIGHTER_TANTAN_INSTANCE_WORK_ID_INT_PUNCH_KIND_R);
+    if (armType != 2) {
         //Additional landing lag for using Dragon/Megawatt
         FT_MOTION_RATE(agent, 1.0);
-        if (armType==0){
+        if (armType == 0) {
             frame(lua_state, 7.0);
             FT_MOTION_RATE(agent, 0.5);
         }
-        else{
+        else {
             frame(lua_state, 11.0);
             FT_MOTION_RATE(agent, 0.5);
         }
@@ -174,7 +172,6 @@ unsafe extern "C" fn game_specialairnend(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn effect_specialairnend(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
-
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_v_smoke_a"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
     }
@@ -182,7 +179,6 @@ unsafe extern "C" fn effect_specialairnend(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn sound_specialairnend(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
-
     frame(lua_state, 2.0);
     if is_excute(agent) {
         PLAY_LANDING_SE(agent, Hash40::new("se_tantan_landing02"));
@@ -192,7 +188,6 @@ unsafe extern "C" fn sound_specialairnend(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn expression_specialairnend(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 3);
         ControlModule::set_rumble(boma, Hash40::new("rbkind_lands"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
