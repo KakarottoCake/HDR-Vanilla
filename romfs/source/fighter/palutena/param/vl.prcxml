@@ -57,6 +57,12 @@
     <hash40 index="2">dummy</hash40>
     <hash40 index="3">dummy</hash40>
   </list>
+  <struct hash="map_collision_meteor">
+    <hash40 hash="shape_type">grcorrect_shape_rhombus</hash40>
+    <float hash="up">1</float>
+    <float hash="down">-1</float>
+    <float hash="half_width">1</float>
+  </struct>
   <list hash="param_special_hi">
     <struct index="0">
       <float hash="special_hi_wrap_speed_multi">3.25</float>

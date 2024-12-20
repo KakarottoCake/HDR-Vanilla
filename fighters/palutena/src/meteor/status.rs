@@ -2,7 +2,7 @@ use super::*;
 
 unsafe extern "C" fn move_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
     StatusModule::init_settings(
-        fighter.module_accessor,
+        weapon.module_accessor,
         app::SituationKind(*SITUATION_KIND_AIR),
         *WEAPON_KINETIC_TYPE_NORMAL,
         *GROUND_CORRECT_KIND_AIR as u32,
@@ -13,11 +13,11 @@ unsafe extern "C" fn move_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
         0,
         0
     );
-    0.init()
+    0.into()
 }
 
 unsafe extern "C" fn move_init(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    let angle: f32 = 75.0;
+    let angle: f32 = 80.0;
     let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
     let palutena = utils::util::get_battle_object_from_id(owner_id);
     let palutena_boma = &mut *(*palutena).module_accessor;
@@ -36,7 +36,7 @@ unsafe extern "C" fn move_init(weapon: &mut L2CWeaponCommon) -> L2CValue {
     sv_kinetic_energy!(set_stable_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_max*lr, -speed_y/4.5);
     sv_kinetic_energy!(set_accel, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
     KineticModule::enable_energy(weapon.module_accessor, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
-    PostureModule::set_pos(weapon.module_accessor, &Vector3f{x: owner_pos_x+5.0*lr, y: owner_pos_y+17.0, z: owner_pos_z});
+    PostureModule::set_pos(weapon.module_accessor, &Vector3f{x: owner_pos_x+3.0*lr, y: owner_pos_y+4.0, z: owner_pos_z});
     0.into()
 }
 
@@ -68,9 +68,9 @@ unsafe extern "C" fn move_end(weapon: &mut L2CWeaponCommon) -> L2CValue {
 }
 
 pub fn install(agent: &mut Agent) {
-    agent.status(Pre, status::palutena_meteor::MOVE, move_pre);
-    agent.status(Init, status::palutena_meteor::MOVE, move_init);
-    agent.status(Main, status::palutena_meteor::MOVE, move_main);
-    agent.status(Exec, status::palutena_meteor::MOVE, move_exec);
-    agent.status(End, status::palutena_meteor::MOVE, move_end);
+    agent.status(Pre, statuses::palutena_meteor::MOVE, move_pre);
+    agent.status(Init, statuses::palutena_meteor::MOVE, move_init);
+    agent.status(Main, statuses::palutena_meteor::MOVE, move_main);
+    agent.status(Exec, statuses::palutena_meteor::MOVE, move_exec);
+    agent.status(End, statuses::palutena_meteor::MOVE, move_end);
 }

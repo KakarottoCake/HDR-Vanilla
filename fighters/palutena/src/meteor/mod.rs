@@ -1,5 +1,4 @@
 use super::*;
-use globals::*;
 
 mod acmd;
 mod status;
