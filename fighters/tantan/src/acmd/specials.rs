@@ -253,20 +253,16 @@ unsafe extern "C" fn sound_specialhilong(agent: &mut L2CAgentBase) {
         if is_excute(agent) {
             PLAY_SE(agent, Hash40::new("se_tantan_special_h05"));
         }
-        frame(lua_state, 4.0);
-        if is_excute(agent) {
-            PLAY_SE(agent, Hash40::new("vc_tantan_special_h02"));
-        }
     }
     else {
         frame(lua_state, 2.0);
         if is_excute(agent) {
             PLAY_SE(agent, Hash40::new("se_tantan_special_h01"));
         }
-        frame(lua_state, 4.0);
-        if is_excute(agent) {
-            PLAY_SE(agent, Hash40::new("vc_tantan_special_h01"));
-        }
+    }
+    frame(lua_state, 4.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("vc_tantan_special_h02"));
     }
 }
 
