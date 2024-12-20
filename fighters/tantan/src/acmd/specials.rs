@@ -304,49 +304,6 @@ unsafe extern "C" fn expression_specialhilong(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn game_specialhilongend(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    frame(lua_state, 1.0);
-    if is_excute(agent) {
-        HIT_NO(agent, 2, *HIT_STATUS_OFF);
-        HIT_NO(agent, 3, *HIT_STATUS_OFF);
-        HIT_NO(agent, 4, *HIT_STATUS_OFF);
-        HIT_NO(agent, 5, *HIT_STATUS_OFF);
-        HIT_NO(agent, 6, *HIT_STATUS_OFF);
-        HIT_NO(agent, 7, *HIT_STATUS_OFF);
-        HIT_NO(agent, 8, *HIT_STATUS_OFF);
-        HIT_NO(agent, 9, *HIT_STATUS_OFF);
-        HIT_NO(agent, 10, *HIT_STATUS_OFF);
-        HIT_NO(agent, 11, *HIT_STATUS_OFF);
-        HIT_NO(agent, 12, *HIT_STATUS_OFF);
-        HIT_NO(agent, 13, *HIT_STATUS_OFF);
-        HIT_NO(agent, 18, *HIT_STATUS_OFF);
-        HIT_NO(agent, 19, *HIT_STATUS_OFF);
-    }
-    frame(lua_state, 7.0);
-    if is_excute(agent) {
-        HIT_NO(agent, 2, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 3, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 4, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 5, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 6, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 7, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 8, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 9, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 10, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 11, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 12, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 13, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 18, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 19, *HIT_STATUS_NORMAL);
-    }
-    frame(lua_state, 15.0);
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
-    }
-}
-
 unsafe extern "C" fn effect_specialairhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -426,8 +383,6 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("effect_specialhilong", effect_specialhilong, Priority::Low);
     agent.acmd("sound_specialhilong", sound_specialhilong, Priority::Low);
     agent.acmd("expression_specialhilong", expression_specialhilong, Priority::Low);
-
-    agent.acmd("game_specialhilongend", game_specialhilongend, Priority::Low);
 
     agent.acmd("effect_specialairhi", effect_specialairhi, Priority::Low);
     agent.acmd("effect_specialairhi2", effect_specialairhi, Priority::Low);

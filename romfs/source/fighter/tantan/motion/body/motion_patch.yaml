@@ -113,7 +113,7 @@ attack_hi3:
     cancel_frame: 34
 attack_dash:
   extra:
-    cancel_frame: 37
+    cancel_frame: 35
 attack_s4_s:
   game_script: game_attacks4
   flags:
@@ -195,7 +195,7 @@ attack_s3_s:
   extra:
     intangible_start_frame: 0
     intangible_end_frame: 0
-    cancel_frame: 27
+    cancel_frame: 29
     freeze_during_hitstop: false
 attack_s3_lw:
   game_script: game_attacks3lw
@@ -224,7 +224,7 @@ attack_s3_lw:
   extra:
     intangible_start_frame: 0
     intangible_end_frame: 0
-    cancel_frame: 27
+    cancel_frame: 29
     freeze_during_hitstop: false
 attack_air_b:
   game_script: game_attackairb
@@ -260,7 +260,7 @@ attack_air_f:
     cancel_frame: 48
 attack_air_n:
   extra:
-    cancel_frame: 43
+    cancel_frame: 45
 attack_s3_hi:
   game_script: game_attacks3hi
   flags:
@@ -288,7 +288,7 @@ attack_s3_hi:
   extra:
     intangible_start_frame: 0
     intangible_end_frame: 0
-    cancel_frame: 27
+    cancel_frame: 29
     freeze_during_hitstop: false
 special_air_n:
   animations:
