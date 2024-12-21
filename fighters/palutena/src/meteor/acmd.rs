@@ -16,7 +16,7 @@ unsafe extern "C" fn effect_move(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("ryu_hadoken_bullet"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.65, false);
+        EFFECT_FOLLOW(agent, Hash40::new("elight_lay_dust"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.65, false);
         LAST_EFFECT_SET_COLOR(agent, 0.75, 0.01, 0.35);
     }
 }
