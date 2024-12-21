@@ -42,7 +42,7 @@
       <float hash="command_power_mul">1.2</float>
       <float hash="speed_w">0.8</float>
       <float hash="speed_m">1.3</float>
-      <float hash="speed_s">1.8</float>
+      <float hash="speed_s">2.2</float>
       <float hash="speed_w_sp">0.8</float>
       <float hash="speed_m_sp">1.0</float>
       <float hash="speed_s_sp">1.2</float>
