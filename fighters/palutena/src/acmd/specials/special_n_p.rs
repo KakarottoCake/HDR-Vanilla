@@ -5,9 +5,11 @@ unsafe extern "C" fn game_specialnp(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     if is_excute(agent) {
+        FT_MOTION_RATE_RANGE(agent, 1.0, 18.0, 11.0);
     }
     frame(lua_state, 18.0);
     if is_excute(agent) {
+        FT_MOTION_RATE(agent, 1.0);
         ArticleModule::generate_article(boma, articles::palutena::METEOR, false, -1);
     }
 }
