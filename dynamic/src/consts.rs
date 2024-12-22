@@ -683,6 +683,7 @@ pub mod vars {
             pub const SPECIAL_N_CHANGE_FALL_SPEED: i32 = 0x1102;
             pub const SPECIAL_N_DECIDE_ANGLE: i32 = 0x1103;
             pub const SPECIAL_N_END: i32 = 0x1104;
+            pub const SPECIAL_HI_GROUND_START: i32 = 0x1105;
         }
     }
 

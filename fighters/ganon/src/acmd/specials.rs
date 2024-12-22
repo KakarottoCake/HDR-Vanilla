@@ -254,6 +254,9 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     if is_excute(agent) {
         boma.select_cliff_hangdata_from_name("special_hi");
+        if boma.is_situation(*SITUATION_KIND_GROUND) {
+            VarModule::on_flag(boma.object(), vars::ganon::status::SPECIAL_HI_GROUND_START);
+        }
     }
     frame(lua_state, 1.0);
     if is_excute(agent) {
@@ -263,8 +266,8 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     frame(lua_state, 5.0);
     FT_MOTION_RATE_RANGE(agent, 5.0, 8.0, 7.0);
     if is_excute(agent) {
-        if boma.is_situation(*SITUATION_KIND_GROUND) {
-            damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 8);
+        if VarModule::is_flag(boma.object(), vars::ganon::status::SPECIAL_HI_GROUND_START) {
+            damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 10);
         }
     }
     frame(lua_state, 8.0);
