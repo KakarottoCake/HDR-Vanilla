@@ -305,8 +305,8 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 15.0);
     if is_excute(agent) {
-        CATCH(agent, 0, Hash40::new("top"), 4.5, 0.0, 14.25, 5.25, None, None, None, *FIGHTER_STATUS_KIND_CLUNG_CAPTAIN, *COLLISION_SITUATION_MASK_GA);
-        CATCH(agent, 1, Hash40::new("top"), 5.0, 0.0, 11.0, 6.0, None, None, None, *FIGHTER_STATUS_KIND_CLUNG_CAPTAIN, *COLLISION_SITUATION_MASK_GA);
+        grab!(agent, *MA_MSC_CMD_GRAB_CLEAR, 1);
+        CATCH(agent, 0, Hash40::new("top"), 2.75, 0.0, 8.25, 5.75, None, None, None, *FIGHTER_STATUS_KIND_CLUNG_CAPTAIN, *COLLISION_SITUATION_MASK_GA);
     }
     frame(lua_state, 21.0);
     if is_excute(agent) {
