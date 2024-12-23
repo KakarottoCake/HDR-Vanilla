@@ -262,13 +262,6 @@ unsafe fn meter_cap_control(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
-unsafe fn up_special_startup_ledgegrab(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_HI_COMMAND]) {
-        // allows ledgegrab during upB startup
-        fighter.sub_transition_group_check_air_cliff();
-    }
-}
-
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
@@ -321,7 +314,6 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     special_cancels(boma);
     ex_special_scripting(boma);
     meter_cap_control(boma);
-    up_special_startup_ledgegrab(fighter);
     fastfall_specials(fighter);
 
     // Magic Series
