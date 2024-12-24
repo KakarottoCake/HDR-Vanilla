@@ -64,7 +64,7 @@ unsafe extern "C" fn sound_attacks3(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     frame(lua_state, 3.0);
     if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_tantan_attackhard_h01"));
+        PLAY_SE(agent, Hash40::new("se_tantan_swing_l01"));
     }
     frame(lua_state, 5.0);
     if is_excute(agent) {
@@ -212,10 +212,6 @@ unsafe extern "C" fn sound_attacklw3(agent: &mut L2CAgentBase) {
     frame(lua_state, 13.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_common_swing_09"));
-    }
-    frame(lua_state, 31.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_tantan_attack01_catch"));
     }
 }
 
