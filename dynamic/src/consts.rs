@@ -1637,12 +1637,17 @@ pub mod vars {
 
     pub mod tantan {
         pub mod instance {
-            //ints
+            // flags
+            pub const SPECIAL_HI_GROUND_START: i32 = 0x0100;
+            pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0101;
+
+            // ints
             pub const ARMR_DRAGONIZE_EFFECT_HANDLE: i32 = 0x0100;
         }
         pub mod status {
             // flags
             pub const ARMS_ATTACK_CANCEL: i32 = 0x1100;
+            pub const ATTACK_S4_CLEAR_CRIT: i32 = 0x1101;
         }
     }
 
