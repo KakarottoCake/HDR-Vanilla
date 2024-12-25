@@ -85,7 +85,7 @@ pub mod vars {
             pub const CSTICK_OVERRIDE: i32 = 0x0002;
             pub const CSTICK_OVERRIDE_SECOND: i32 = 0x0003;
 
-            pub const IS_TAP_JUMP: i32 = 0x0004;
+            // pub const IS_TAP_JUMP: i32 = 0x0004;
 
             pub const OMNI_FLOAT: i32 = 0x0005;
             pub const AERIAL_NO_FLOAT: i32 = 0x0006;
@@ -200,7 +200,7 @@ pub mod vars {
 
             pub const HITFALL_BUFFER: i32 = 0x0004;
 
-            pub const JUMP_SQUAT_FRAME: i32 = 0x0005;
+            // pub const JUMP_SQUAT_FRAME: i32 = 0x0005;
 
             pub const GIMMICK_TIMER: i32 = 0x0006;
 
@@ -350,6 +350,7 @@ pub mod vars {
             pub const PERSIST_RNG: i32 = 0x0100;
             pub const PSYCHE_UP_ACTIVE: i32 = 0x0101;
             pub const MENU_TRAINING_MODE_LOCK: i32 = 0x0102;
+            pub const SPECIAL_LW_CSTICK_BUFFER: i32 = 0x0103;
 
             // ints
             pub const SPELL_SLOT_1: i32 = 0x0100;
@@ -366,6 +367,9 @@ pub mod vars {
             pub const SPELL_SLOT_USED_2_4: i32 = 0x0111;
             pub const CURSOR_SLOT: i32 = 0x0112;
             pub const MENU_TRAINING_MODE_INDEX: i32 = 0x0113;
+            
+            // floats
+            pub const SPECIAL_LW_CSTICK_BUFFER_DIR: i32 = 0x0100;
         }
     }
 
@@ -683,6 +687,7 @@ pub mod vars {
             pub const SPECIAL_N_CHANGE_FALL_SPEED: i32 = 0x1102;
             pub const SPECIAL_N_DECIDE_ANGLE: i32 = 0x1103;
             pub const SPECIAL_N_END: i32 = 0x1104;
+            pub const SPECIAL_HI_GROUND_START: i32 = 0x1105;
         }
     }
 

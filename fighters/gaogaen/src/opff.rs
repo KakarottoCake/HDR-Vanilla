@@ -11,13 +11,19 @@ unsafe fn cross_chop_techniques(fighter: &mut L2CFighterCommon) {
             VarModule::off_flag(fighter.object(), vars::gaogaen::status::SPECIAL_HI_RISE_END);
         }
     }
+    if fighter.is_status(*FIGHTER_GAOGAEN_STATUS_KIND_SPECIAL_HI_FALL)
+    && StatusModule::is_changing(fighter.module_accessor) {
+        if fighter.get_num_used_jumps() == fighter.get_jump_count_max() {
+            WorkModule::set_int(fighter.module_accessor, fighter.get_jump_count_max() - 1, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
+        }
+    }
 }
 
 // Incineroar Fthrow Movement
 unsafe fn fthrow_movement(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_STATUS_KIND_THROW) 
      && fighter.is_motion(smash::phx::Hash40::new("throw_f"))
-     && fighter.is_situation(*SITUATION_KIND_GROUND) 
+     && fighter.status_frame() <= 58
      && fighter.stick_x() != 0.0 {
         let motion_mul = if WorkModule::is_flag(fighter.boma(), *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_IS_REVENGE) {1.0} else {0.5};
         let motion_vec = x_motion_vec(motion_mul, fighter.stick_x());
@@ -179,6 +185,9 @@ unsafe fn cross_chop_flip_ledgegrab(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_GAOGAEN_STATUS_KIND_SPECIAL_HI_TURN) {
         // allows ledgegrab during the flip at Cross Chop's apex
         fighter.sub_transition_group_check_air_cliff();
+    }
+    if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_S) {
+        fighter.check_wall_jump_cancel();
     }
 }
 
