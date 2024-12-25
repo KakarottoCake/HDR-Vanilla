@@ -295,8 +295,8 @@ unsafe fn before_collision(object: *mut BattleObject) {
             if (*boma).is_fighter() {
                 let motion_kind = MotionModule::motion_kind(boma);
                 if motion_kind != hash40("invalid") {
-                    let motion_module__update_motion_slow: extern "C" fn(*const TempModule, u64) -> u64 = std::mem::transmute(*(((module_accessor.motion_module.vtable as u64) + 0x680) as *const u64));
-                    motion_module__update_motion_slow(module_accessor.motion_module, motion_kind);
+                    let fighter_motion_module_impl__unk: extern "C" fn(*const TempModule, u64) -> u64 = std::mem::transmute(*(((module_accessor.motion_module.vtable as u64) + 0x680) as *const u64));
+                    fighter_motion_module_impl__unk(module_accessor.motion_module, motion_kind);
 
                     let cancel_frame = FighterMotionModuleImpl::get_cancel_frame(boma, Hash40::new_raw(motion_kind), true);
 
@@ -571,7 +571,13 @@ unsafe fn after_collision(object: *mut BattleObject) {
     let module_accessor: *mut ModuleAccessor = std::mem::transmute((*object).module_accessor);
     let module_accessor = *module_accessor;
 
-    if VarModule::has_var_module((*boma).object()) { VarModule::off_flag((*boma).object(), vars::common::instance::BEFORE_GROUND_COLLISION); }
+    if VarModule::has_var_module((*boma).object()) {
+        VarModule::off_flag((*boma).object(), vars::common::instance::BEFORE_GROUND_COLLISION);
+
+        if StatusModule::situation_kind(boma) == *SITUATION_KIND_GROUND {
+            VarModule::set_vec3((*boma).object(), vars::common::instance::LAST_GROUNDED_POS, *PostureModule::pos(boma));
+        }
+    }
 
     if skip_early_main_status(boma, StatusModule::status_kind(boma)) {
         return call_original!(object);
