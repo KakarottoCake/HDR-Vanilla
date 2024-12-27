@@ -94,7 +94,7 @@ unsafe fn status_ShieldBreakFly_Main(fighter: &mut L2CFighterCommon) -> L2CValue
     if fighter.kind() == *FIGHTER_KIND_PURIN {
         return call_original!(fighter);
     }
-    if !fighter.is_situation(*SITUATION_KIND_GROUND) {
+    if fighter.global_table[SITUATION_KIND] != SITUATION_KIND_GROUND {
         fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         ControlModule::clear_command(fighter.module_accessor, true);
         return true.into();

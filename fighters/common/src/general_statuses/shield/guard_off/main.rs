@@ -108,7 +108,7 @@ unsafe fn sub_guard_off_uniq(fighter: &mut L2CFighterCommon, arg: L2CValue) -> L
                 ReflectorModule::set_status(boma, 0, app::ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD);
 
                 // ModelModule::disable_gold_eye(boma);
-                // EffectModule::remove_common(boma, Hash40::new("just_shield"));
+                EffectModule::remove_common(boma, Hash40::new("just_shield"));
                 let end_frame = MotionModule::end_frame_from_hash(boma, Hash40::new("guard_off"));
                 let guard_off_parry_faf = ParamModule::get_int(fighter.object(), ParamType::Common, "guard_off_parry_faf") as f32;
                 let rate = (end_frame * 0.8) / (guard_off_parry_faf - (fighter.status_frame() as f32));
@@ -211,6 +211,7 @@ unsafe fn status_GuardOff(fighter: &mut L2CFighterCommon) -> L2CValue {
         );
         EffectModule::set_rate_last(boma, 1.2);
         // EffectModule::set_alpha_last(boma, 0.4);
+        EffectModule::req_common(boma, Hash40::new("just_shield"), 0.0);
         // let shield_se = app::FighterUtil::get_just_shield_se(fighter.global_table[0x2].get_i32());
         let sfx_handle = SoundModule::play_se(boma, Hash40::new("se_item_backshield_guard01"), true, false, false, false, app::enSEType(0));
         SoundModule::set_se_vol(boma, sfx_handle as i32, 0.9, 0);
