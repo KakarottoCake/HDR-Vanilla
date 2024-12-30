@@ -19,7 +19,6 @@
   </list>
   <list hash="param_special_s">
     <struct index="0">
-      <int hash="0x2621b21c82">22</int>
       <int hash="monkey_flip_kick_frame">30</int>
     </struct>
     <hash40 index="1">dummy</hash40>
