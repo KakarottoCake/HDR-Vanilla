@@ -1,6 +1,7 @@
 use super::*;
 
 mod donkey;
+mod duckhunt;
 mod gamewatch;
 mod ganon;
 mod lucario;
@@ -19,6 +20,7 @@ mod weapon;
 
 pub fn install() {
     donkey::install();
+    duckhunt::install();
     gamewatch::install();
     ganon::install();
     lucario::install();
