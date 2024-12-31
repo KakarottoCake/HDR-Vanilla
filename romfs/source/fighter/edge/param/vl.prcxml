@@ -132,6 +132,7 @@
   </list>
   <list hash="param_special_hi">
     <struct index="0">
+      <int hash="start_stop_y_frame_air">12</int>
       <int hash="rot_decide_frame">15</int>
       <int hash="rot_end_frame">23</int>
       <int hash="rush_frame">5</int>

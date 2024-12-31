@@ -380,7 +380,7 @@ unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         smash::app::FighterSpecializer_Demon::set_devil(boma, true, 2.0);
     }
-    frame(lua_state, 22.0);
+    frame(lua_state, 21.0);
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
     }
@@ -490,7 +490,7 @@ unsafe extern "C" fn game_specialairs(agent: &mut L2CAgentBase) {
     FighterSpecializer_Demon::set_devil(boma, true, 1.0);
     frame(lua_state, 19.0);
     FighterSpecializer_Demon::set_devil(boma, true, 2.0);
-    frame(lua_state, 22.0);
+    frame(lua_state, 21.0);
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
     }
@@ -595,7 +595,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
             AttackModule::clear_all(boma);
             //FT_MOTION_RATE(agent, 15.0/(56.0-15.0));
         }
-        frame(lua_state, 22.0);
+        frame(lua_state, 21.0);
         if is_excute(agent) {
             notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
         }
@@ -652,7 +652,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
             AttackModule::clear_all(boma);
             //FT_MOTION_RATE(agent, 15.0/(56.0-15.0));
         }
-        frame(lua_state, 22.0);
+        frame(lua_state, 21.0);
         if is_excute(agent) {
             notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
         }
@@ -713,7 +713,7 @@ unsafe extern "C" fn game_specialhiair(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
         //FT_MOTION_RATE(agent, 15.0/(56.0-15.0));
     }
-    frame(lua_state, 22.0);
+    frame(lua_state, 21.0);
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
     }

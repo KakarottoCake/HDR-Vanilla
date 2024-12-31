@@ -341,8 +341,8 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {
-        HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_XLU);
-        HIT_NODE(agent, Hash40::new("arml"), *HIT_STATUS_XLU);
+        //HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_XLU);
+        //HIT_NODE(agent, Hash40::new("arml"), *HIT_STATUS_XLU);
     }
     wait(lua_state, 8.0);
     // loop increasingly weak multihits
@@ -361,7 +361,7 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
     frame(lua_state, 68.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
-        HitModule::set_status_all(boma, app::HitStatus(*HIT_STATUS_NORMAL), 0);
+        //HitModule::set_status_all(boma, app::HitStatus(*HIT_STATUS_NORMAL), 0);
         WorkModule::on_flag(boma, *FIGHTER_DONKEY_STATUS_SPECIAL_HI_FLAG_YACL_DEFAULT); // set on 68 in vanilla (this is frame 72 rn)
     }
     frame(lua_state, 75.0);
