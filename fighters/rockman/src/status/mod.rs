@@ -8,7 +8,6 @@ mod walk;
 mod attack;
 mod attack_s3;
 mod attack_s4;
-
 mod attack_air;
 mod ladder_attack;
 
@@ -16,7 +15,6 @@ mod special_n;
 mod rockbuster;
 
 mod special_s;
-
 mod special_lw;
 
 unsafe extern "C" fn check_special_uniq(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -51,26 +49,16 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
 
 pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
-
     rebirth::install(agent);
-
     walk::install(agent);
-
     attack::install(agent);
-
     attack_s3::install(agent);
-
     attack_s4::install(agent);
-
     attack_s4::install(agent);
-
     attack_air::install(agent);
     ladder_attack::install(agent);
-    
     special_n::install(agent);
     rockbuster::install(agent);
-
     special_s::install(agent);
-
     special_lw::install(agent);
 }

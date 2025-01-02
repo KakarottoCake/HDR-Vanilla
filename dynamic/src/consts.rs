@@ -85,7 +85,7 @@ pub mod vars {
             pub const CSTICK_OVERRIDE: i32 = 0x0002;
             pub const CSTICK_OVERRIDE_SECOND: i32 = 0x0003;
 
-            pub const IS_TAP_JUMP: i32 = 0x0004;
+            // pub const IS_TAP_JUMP: i32 = 0x0004;
 
             pub const OMNI_FLOAT: i32 = 0x0005;
             pub const AERIAL_NO_FLOAT: i32 = 0x0006;
@@ -187,7 +187,9 @@ pub mod vars {
 
             pub const ACMD_EFFECT: i32 = 0x0068;
 
-            pub const IS_ENTER_DASH_CANCEL: i32 = 0x0069;
+            pub const WAS_PREV_STATUS_CANCELABLE: i32 = 0x0069;
+
+            pub const IS_ENTER_DASH_CANCEL: i32 = 0x006A;
 
             // ints
 
@@ -200,7 +202,7 @@ pub mod vars {
 
             pub const HITFALL_BUFFER: i32 = 0x0004;
 
-            pub const JUMP_SQUAT_FRAME: i32 = 0x0005;
+            // pub const JUMP_SQUAT_FRAME: i32 = 0x0005;
 
             pub const GIMMICK_TIMER: i32 = 0x0006;
 
@@ -224,6 +226,8 @@ pub mod vars {
             pub const RIGHT_STICK_FLICK_X: i32 = 0x0011;
             pub const RIGHT_STICK_FLICK_Y: i32 = 0x0012;
 
+            pub const PREV_STATUS_TRANSITION_FRAME: i32 = 0x0013;
+
             // floats
 
             pub const LAST_ATTACK_DAMAGE_DEALT: i32 = 0x0000;
@@ -238,10 +242,10 @@ pub mod vars {
             pub const CURRENT_MOMENTUM_SPECIALS: i32 = 0x0007;
             pub const DOUBLE_JUMP_TIMER: i32 = 0x0008; // Only used by Lucas, and it's commented out, goes unused.
             pub const ROLL_SPEED: i32 = 0x0009;
-            // pub const LEDGE_POS: i32 = 0x000A;
-            // pub const LEDGE_POS_X: i32 = 0x000A;
-            // pub const LEDGE_POS_Y: i32 = 0x000B;
-            // pub const LEDGE_POS_Z: i32 = 0x000C;
+            pub const LAST_GROUNDED_POS: i32 = 0x000A;
+            // pub const LAST_GROUNDED_POS_X: i32 = 0x000A;
+            // pub const LAST_GROUNDED_POS_y: i32 = 0x000B;
+            // pub const LAST_GROUNDED_POS_Z: i32 = 0x000C;
             pub const GET_DIST_TO_FLOOR: i32 = 0x000D;
             pub const ECB_BOTTOM_Y_OFFSET: i32 = 0x000E;
             pub const CURR_DASH_SPEED: i32 = 0x000F;
@@ -350,6 +354,7 @@ pub mod vars {
             pub const PERSIST_RNG: i32 = 0x0100;
             pub const PSYCHE_UP_ACTIVE: i32 = 0x0101;
             pub const MENU_TRAINING_MODE_LOCK: i32 = 0x0102;
+            pub const SPECIAL_LW_CSTICK_BUFFER: i32 = 0x0103;
 
             // ints
             pub const SPELL_SLOT_1: i32 = 0x0100;
@@ -366,6 +371,9 @@ pub mod vars {
             pub const SPELL_SLOT_USED_2_4: i32 = 0x0111;
             pub const CURSOR_SLOT: i32 = 0x0112;
             pub const MENU_TRAINING_MODE_INDEX: i32 = 0x0113;
+            
+            // floats
+            pub const SPECIAL_LW_CSTICK_BUFFER_DIR: i32 = 0x0100;
         }
     }
 
@@ -676,6 +684,7 @@ pub mod vars {
             pub const SPECIAL_N_CHANGE_FALL_SPEED: i32 = 0x1102;
             pub const SPECIAL_N_DECIDE_ANGLE: i32 = 0x1103;
             pub const SPECIAL_N_END: i32 = 0x1104;
+            pub const SPECIAL_HI_GROUND_START: i32 = 0x1105;
         }
     }
 
@@ -1625,12 +1634,17 @@ pub mod vars {
 
     pub mod tantan {
         pub mod instance {
-            //ints
+            // flags
+            pub const SPECIAL_HI_GROUND_START: i32 = 0x0100;
+            pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0101;
+
+            // ints
             pub const ARMR_DRAGONIZE_EFFECT_HANDLE: i32 = 0x0100;
         }
         pub mod status {
             // flags
             pub const ARMS_ATTACK_CANCEL: i32 = 0x1100;
+            pub const ATTACK_S4_CLEAR_CRIT: i32 = 0x1101;
         }
     }
 

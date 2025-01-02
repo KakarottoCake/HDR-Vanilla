@@ -3,18 +3,16 @@ use super::*;
 // FIGHTER_STATUS_KIND_SPECIAL_N
 
 unsafe extern "C" fn special_n_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_AIR
-    {
+    if fighter.is_situation(*SITUATION_KIND_AIR) {
         return fighter.status_pre_AttackAir();
     }
-    else{
+    else {
         return smashline::original_status(Pre, fighter, *FIGHTER_STATUS_KIND_SPECIAL_N)(fighter);
     }
 }
 
 unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_AIR
-    {
+    if fighter.is_situation(*SITUATION_KIND_AIR) {
         let fighter_log_attack_kind = *FIGHTER_LOG_ATTACK_KIND_ATTACK_AIR_F;
         smash_script::notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2b94de0d96), FIGHTER_LOG_ACTION_CATEGORY_KEEP, fighter_log_attack_kind);
         let motion_kind = Hash40::new("attack_air_f").hash;
@@ -30,6 +28,7 @@ unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue 
 
 unsafe extern "C" fn special_n_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.is_situation(*SITUATION_KIND_AIR) {
+        fighter.sub_air_check_dive();
         return 0.into();
     }
 

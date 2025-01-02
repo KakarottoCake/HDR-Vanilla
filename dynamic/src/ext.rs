@@ -483,6 +483,7 @@ pub trait BomaExt {
 
     // WORK
     unsafe fn get_int(&mut self, what: i32) -> i32;
+    unsafe fn inc_int(&mut self, what: i32);
     unsafe fn dec_int(&mut self, what: i32);
     unsafe fn get_float(&mut self, what: i32) -> f32;
     unsafe fn get_int64(&mut self, what: i32) -> u64;
@@ -924,6 +925,10 @@ impl BomaExt for BattleObjectModuleAccessor {
 
     unsafe fn get_int(&mut self, what: i32) -> i32 {
         WorkModule::get_int(self, what)
+    }
+
+    unsafe fn inc_int(&mut self, what: i32) {
+        WorkModule::inc_int(self, what)
     }
 
     unsafe fn dec_int(&mut self, what: i32) {

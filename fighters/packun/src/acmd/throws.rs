@@ -159,7 +159,7 @@ unsafe extern "C" fn game_throwhi(agent: &mut L2CAgentBase) {
         let target_no = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
         if stance.label == 1 {
-            ATTACK(agent, 1, 1, Hash40::new("mouth"), 0.0, 90, 0, 0, 0, 7.0, 2.0, 0.0, 0.0, Some(3.5), Some(0.0), Some(0.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_curse_poison"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_THROW);
+            ATTACK(agent, 1, 1, Hash40::new("mouth"), 0.0, 90, 0, 0, 0, 7.0, 2.0, 0.0, 0.0, Some(3.5), Some(0.0), Some(0.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_poison"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_THROW);
             //AttackModule::set_poison_param(boma, 1, 136, 45, 2.0, false);
         }
     }
@@ -192,7 +192,7 @@ unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
     frame(lua_state, 30.0);
     if is_excute(agent) {
         if stance.label == 1 {
-            ATTACK(agent, 0, 0, Hash40::new("top"), 2.5 * stance.damage_bite, 0, 100, 0, 0, 6.0, 0.0, 7.0, 0.0, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_curse_poison"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BITE);
+            ATTACK(agent, 0, 0, Hash40::new("top"), 2.5 * stance.damage_bite, 0, 100, 0, 0, 6.0, 0.0, 7.0, 0.0, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_poison"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BITE);
             AttackModule::set_poison_param(boma, 0, 121, 30, 1.5, false);
         }
         else {

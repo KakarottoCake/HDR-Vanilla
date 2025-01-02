@@ -64,7 +64,8 @@ unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue 
 unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let sit = fighter.global_table[SITUATION_KIND].get_i32();
     if StatusModule::is_situation_changed(fighter.module_accessor) {
-        if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+        if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND
+        && fighter.status_frame() > 12 {
             fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
             return 0.into();
         }

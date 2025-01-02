@@ -26,7 +26,8 @@ pub unsafe extern "C" fn attack_s4_hold_exec(fighter: &mut L2CFighterCommon) -> 
     if 0 < bigFrame && bigFrame < 2 {
         WorkModule::set_int(fighter.module_accessor, 2,*FIGHTER_TANTAN_INSTANCE_WORK_ID_INT_ARM_L_BIG_FRAME);
     }
-    return 0.into()
+
+    return 0.into();
 }
 
 // FIGHTER_STATUS_KIND_ATTACK_S4
@@ -36,10 +37,23 @@ pub unsafe extern "C" fn attack_s4_exec(fighter: &mut L2CFighterCommon) -> L2CVa
     if 0 < bigFrame && bigFrame < 2 {
         WorkModule::set_int(fighter.module_accessor, 2,*FIGHTER_TANTAN_INSTANCE_WORK_ID_INT_ARM_L_BIG_FRAME);
     }
-    return 0.into()
+    if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT)
+    && !VarModule::is_flag(fighter.battle_object, vars::tantan::status::ATTACK_S4_CLEAR_CRIT)
+    && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_TANTAN_INSTANCE_WORK_ID_FLAG_DRAGONIZE_L)
+    && WorkModule::get_int(fighter.module_accessor, *FIGHTER_TANTAN_INSTANCE_WORK_ID_INT_PUNCH_KIND_R) == 0
+    && VarModule::get_int(fighter.battle_object, vars::common::instance::LAST_ATTACK_HITBOX_ID) == 1 {
+        VarModule::on_flag(fighter.battle_object, vars::tantan::status::ATTACK_S4_CLEAR_CRIT);
+        SlowModule::set_whole(fighter.module_accessor, 4, 5);
+        EffectModule::req_screen(fighter.module_accessor, Hash40::new("bg_criticalhit"), false, true, true);
+    }
+
+    return 0.into();
 }
 
 unsafe extern "C" fn attack_s4_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    SlowModule::clear_whole(fighter.module_accessor);
+    CameraModule::reset_all(fighter.module_accessor);
+    EffectModule::remove_screen(fighter.module_accessor, Hash40::new("bg_criticalhit"), 0);
     let bigFrame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_TANTAN_INSTANCE_WORK_ID_INT_ARM_L_BIG_FRAME);
     if fighter.motion_frame() > 16.0 && WorkModule::get_int(fighter.module_accessor, *FIGHTER_TANTAN_INSTANCE_WORK_ID_INT_PUNCH_KIND_R) == 0 {
         if bigFrame > 0 {
