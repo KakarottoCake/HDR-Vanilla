@@ -4,8 +4,9 @@ unsafe extern "C" fn game_specialnb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    let powered = VarModule::is_flag(agent.object(), vars::palutena::status::SPECIAL_N_PRIMARY_POWERED);
-    println!("POWERED (game): {}", powered);
+    let powered = VarModule::is_flag(agent.object(), vars::palutena::status::SPECIAL_N_PRIMARY_POWERED) ||
+                        VarModule::get_int(agent.object(), vars::palutena::instance::POWER_BOARD_SLOT_2) == 2;
+    //println!("POWERED (game): {}", powered);
     let power1 = if powered {14.0} else {9.0};
     let power2 = if powered {12.0} else {7.0};
     let tall = powered;
@@ -37,7 +38,7 @@ unsafe extern "C" fn effect_specialnb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     let powered = VarModule::is_flag(agent.object(), vars::palutena::status::SPECIAL_N_PRIMARY_POWERED);
-    println!("POWERED (effects): {}", powered);
+    //println!("POWERED (effects): {}", powered);
     let length = if powered { 2.7 } else { 1.8 };
     let length2 = if powered { 0.69 } else { 0.5 };
     let y_pos = if powered {25} else {16};

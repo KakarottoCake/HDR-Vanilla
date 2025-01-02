@@ -4,8 +4,9 @@ unsafe extern "C" fn game_specialnr(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    let powered = VarModule::is_flag(agent.object(), vars::palutena::status::SPECIAL_N_PRIMARY_POWERED);
-    println!("POWERED (game): {}", powered);
+    let powered = VarModule::is_flag(agent.object(), vars::palutena::status::SPECIAL_N_PRIMARY_POWERED) ||
+                        VarModule::get_int(agent.object(), vars::palutena::instance::POWER_BOARD_SLOT_2) == 1;
+    //println!("POWERED (game): {}", powered);
     let power1 = if powered {18.0} else {14.0};
     let power2 = if powered {12.0} else {10.0};
     let sound_lvl = if powered {*ATTACK_SOUND_LEVEL_L} else {*ATTACK_SOUND_LEVEL_M};
@@ -31,7 +32,7 @@ unsafe extern "C" fn effect_specialnr(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     let power = VarModule::is_flag(agent.object(), vars::palutena::status::SPECIAL_N_PRIMARY_POWERED);
-    println!("POWERED (effects): {}", power);
+    //println!("POWERED (effects): {}", power);
     frame(lua_state, 10.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light_trace"), Hash40::new("stick"), 0, 8.65, 0, 0, 0, 0, 1, true);
