@@ -263,8 +263,8 @@ unsafe fn status_JumpSquat_common(fighter: &mut L2CFighterCommon, lr_update: L2C
 // The main exec block, for some reason it's not found in the exec status
 #[skyline::hook(replace = L2CFighterCommon_uniq_process_JumpSquat_exec_status_param)]
 unsafe fn uniq_process_JumpSquat_exec_status_param(fighter: &mut L2CFighterCommon, arg: L2CValue) {
-    if fighter.global_table[CUSTOM_ROUTINE].get_bool() {
-        let custom_routine: *const extern "C" fn(&mut L2CFighterCommon) -> L2CValue = fighter.global_table[CUSTOM_ROUTINE].get_ptr() as _;
+    if arg.get_bool() {
+        let custom_routine: *const extern "C" fn(&mut L2CFighterCommon) -> L2CValue = arg.get_ptr() as _;
         let callable: extern "C" fn(&mut L2CFighterCommon) -> L2CValue = std::mem::transmute(custom_routine);
         callable(fighter);
     }
