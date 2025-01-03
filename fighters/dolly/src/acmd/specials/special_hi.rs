@@ -16,6 +16,7 @@ unsafe extern "C" fn game_specialhi1(agent: &mut L2CAgentBase) {
     frame(lua_state, 7.0);
     if is_excute(agent) {
         agent.on_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
+        MeterModule::watch_damage(agent.battle_object, true);
         ATTACK(agent, 0, 0, Hash40::new("top"), 4.0, 368, 100, 50, 0, 4.0, 0.0, 9.0, 6.0, Some(0.0), Some(9.0), Some(-4.0), 2.0, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         AttackModule::set_vec_target_pos(agent.module_accessor, 0, Hash40::new("top"), &Vector2f{x: 5.0, y: 21.0}, 8, false);
         AttackModule::set_no_finish_camera(boma, 0, true, false);
@@ -26,10 +27,12 @@ unsafe extern "C" fn game_specialhi1(agent: &mut L2CAgentBase) {
         HIT_NODE(agent, Hash40::new("kneel"), *HIT_STATUS_XLU);
         agent.on_flag(*FIGHTER_DOLLY_STATUS_SPECIAL_HI_WORK_FLAG_JUMP);
         AttackModule::clear_all(boma);
+        MeterModule::watch_damage(agent.battle_object, false);
     }
 
     frame(lua_state, 10.0);
     if is_excute(agent) {
+        MeterModule::watch_damage(agent.battle_object, true);
         ATTACK(agent, 0, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 4.5, 0.0, 15.0, 1.0, Some(0.0), Some(26.0), Some(1.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         ATTACK(agent, 1, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 3.5, 0.0, 11.0, 6.0, Some(0.0), Some(11.0), Some(-4.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         AttackModule::set_no_finish_camera(boma, 0, true, false);
@@ -38,10 +41,12 @@ unsafe extern "C" fn game_specialhi1(agent: &mut L2CAgentBase) {
     wait(lua_state, 1.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
+        MeterModule::watch_damage(agent.battle_object, false);
     }
 
     frame(lua_state, 12.0);
     if is_excute(agent) {
+        MeterModule::watch_damage(agent.battle_object, true);
         ATTACK(agent, 0, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 4.5, 0.0, 9.5, 1.0, Some(0.0), Some(20.5), Some(1.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         ATTACK(agent, 1, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 3.5, 0.0, 5.5, 6.0, Some(0.0), Some(5.5), Some(-4.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         AttackModule::set_no_finish_camera(boma, 0, true, false);
@@ -50,10 +55,12 @@ unsafe extern "C" fn game_specialhi1(agent: &mut L2CAgentBase) {
     wait(lua_state, 1.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
+        MeterModule::watch_damage(agent.battle_object, false);
     }
 
     frame(lua_state, 15.0);
     if is_excute(agent) {
+        MeterModule::watch_damage(agent.battle_object, true);
         ATTACK(agent, 0, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 4.5, 0.0, 7.0, 1.0, Some(0.0), Some(18.0), Some(1.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         ATTACK(agent, 1, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 3.5, 0.0, 3.0, 6.0, Some(0.0), Some(3.0), Some(-4.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         AttackModule::set_no_finish_camera(boma, 0, true, false);
@@ -62,10 +69,12 @@ unsafe extern "C" fn game_specialhi1(agent: &mut L2CAgentBase) {
     wait(lua_state, 1.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
+        MeterModule::watch_damage(agent.battle_object, false);
     }
 
     frame(lua_state, 20.0);
     if is_excute(agent) {
+        MeterModule::watch_damage(agent.battle_object, true);
         ATTACK(agent, 0, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 4.5, 0.0, 6.5, 1.0, Some(0.0), Some(17.5), Some(1.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         ATTACK(agent, 1, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 3.5, 0.0, 2.5, 6.0, Some(0.0), Some(2.5), Some(-4.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         AttackModule::set_no_finish_camera(boma, 0, true, false);
@@ -74,11 +83,13 @@ unsafe extern "C" fn game_specialhi1(agent: &mut L2CAgentBase) {
     wait(lua_state, 1.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
+        MeterModule::watch_damage(agent.battle_object, false);
     }
 
     frame(lua_state, 25.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
+        MeterModule::watch_damage(agent.battle_object, true);
         if agent.get_int(*FIGHTER_DOLLY_STATUS_SPECIAL_COMMON_WORK_INT_STRENGTH) == *FIGHTER_DOLLY_STRENGTH_W {
             ATTACK(agent, 0, 0, Hash40::new("top"), 7.0, 83, 65, 0, 90, 6.0, 0.0, 6.5, 1.0, Some(0.0), Some(17.5), Some(1.0), 2.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
             ATTACK(agent, 1, 0, Hash40::new("top"), 7.0, 83, 65, 0, 90, 5.0, 0.0, 2.5, 6.0, Some(0.0), Some(2.5), Some(-4.0), 2.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);    
@@ -92,6 +103,7 @@ unsafe extern "C" fn game_specialhi1(agent: &mut L2CAgentBase) {
         HIT_NODE(agent, Hash40::new("kneer"), *HIT_STATUS_NORMAL);
         HIT_NODE(agent, Hash40::new("kneel"), *HIT_STATUS_NORMAL);
         AttackModule::clear_all(boma);
+        MeterModule::watch_damage(agent.battle_object, false);
     }
 
     frame(lua_state, 30.0);
@@ -156,6 +168,7 @@ unsafe extern "C" fn game_specialhicommand(agent: &mut L2CAgentBase) {
     frame(lua_state, 7.0);
     if is_excute(agent) {
         agent.on_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
+        MeterModule::watch_damage(agent.battle_object, true);
         ATTACK(agent, 0, 0, Hash40::new("top"), 4.0, 368, 100, 50, 0, 4.0, 0.0, 9.0, 6.0, Some(0.0), Some(9.0), Some(-4.0), 2.0, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         AttackModule::set_vec_target_pos(agent.module_accessor, 0, Hash40::new("top"), &Vector2f{x: 5.0, y: 21.0}, 8, false);
         AttackModule::set_no_finish_camera(boma, 0, true, false);
@@ -166,10 +179,12 @@ unsafe extern "C" fn game_specialhicommand(agent: &mut L2CAgentBase) {
         HIT_NODE(agent, Hash40::new("kneel"), *HIT_STATUS_XLU);
         agent.on_flag(*FIGHTER_DOLLY_STATUS_SPECIAL_HI_WORK_FLAG_JUMP);
         AttackModule::clear_all(boma);
+        MeterModule::watch_damage(agent.battle_object, false);
     }
 
     frame(lua_state, 10.0);
     if is_excute(agent) {
+        MeterModule::watch_damage(agent.battle_object, true);
         ATTACK(agent, 0, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 4.5, 0.0, 15.0, 1.0, Some(0.0), Some(26.0), Some(1.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         ATTACK(agent, 1, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 3.5, 0.0, 11.0, 6.0, Some(0.0), Some(11.0), Some(-4.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         AttackModule::set_no_finish_camera(boma, 0, true, false);
@@ -178,10 +193,12 @@ unsafe extern "C" fn game_specialhicommand(agent: &mut L2CAgentBase) {
     wait(lua_state, 1.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
+        MeterModule::watch_damage(agent.battle_object, false);
     }
 
     frame(lua_state, 12.0);
     if is_excute(agent) {
+        MeterModule::watch_damage(agent.battle_object, true);
         ATTACK(agent, 0, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 4.5, 0.0, 11.0, 1.0, Some(0.0), Some(22.0), Some(1.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         ATTACK(agent, 1, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 3.5, 0.0, 7.0, 6.0, Some(0.0), Some(7.0), Some(-4.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         AttackModule::set_no_finish_camera(boma, 0, true, false);
@@ -190,10 +207,12 @@ unsafe extern "C" fn game_specialhicommand(agent: &mut L2CAgentBase) {
     wait(lua_state, 1.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
+        MeterModule::watch_damage(agent.battle_object, false);
     }
 
     frame(lua_state, 14.0);
     if is_excute(agent) {
+        MeterModule::watch_damage(agent.battle_object, true);
         ATTACK(agent, 0, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 4.5, 0.0, 10.0, 1.0, Some(0.0), Some(21.0), Some(1.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         ATTACK(agent, 1, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 3.5, 0.0, 6.0, 6.0, Some(0.0), Some(6.0), Some(-4.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         AttackModule::set_no_finish_camera(boma, 0, true, false);
@@ -202,10 +221,12 @@ unsafe extern "C" fn game_specialhicommand(agent: &mut L2CAgentBase) {
     wait(lua_state, 1.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
+        MeterModule::watch_damage(agent.battle_object, false);
     }
 
     frame(lua_state, 16.0);
     if is_excute(agent) {
+        MeterModule::watch_damage(agent.battle_object, true);
         ATTACK(agent, 0, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 4.5, 0.0, 9.0, 1.0, Some(0.0), Some(20.0), Some(1.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         ATTACK(agent, 1, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 3.5, 0.0, 5.0, 6.0, Some(0.0), Some(5.0), Some(-4.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         AttackModule::set_no_finish_camera(boma, 0, true, false);
@@ -214,10 +235,12 @@ unsafe extern "C" fn game_specialhicommand(agent: &mut L2CAgentBase) {
     wait(lua_state, 1.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
+        MeterModule::watch_damage(agent.battle_object, false);
     }
 
     frame(lua_state, 19.0);
     if is_excute(agent) {
+        MeterModule::watch_damage(agent.battle_object, true);
         ATTACK(agent, 0, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 4.5, 0.0, 9.0, 1.0, Some(0.0), Some(20.0), Some(1.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         ATTACK(agent, 1, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 3.5, 0.0, 5.0, 6.0, Some(0.0), Some(5.0), Some(-4.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         AttackModule::set_no_finish_camera(boma, 0, true, false);
@@ -226,10 +249,12 @@ unsafe extern "C" fn game_specialhicommand(agent: &mut L2CAgentBase) {
     wait(lua_state, 1.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
+        MeterModule::watch_damage(agent.battle_object, false);
     }
 
     frame(lua_state, 21.0);
     if is_excute(agent) {
+        MeterModule::watch_damage(agent.battle_object, true);
         ATTACK(agent, 0, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 4.5, 0.0, 9.0, 1.0, Some(0.0), Some(20.0), Some(1.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         ATTACK(agent, 1, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 3.5, 0.0, 5.0, 6.0, Some(0.0), Some(5.0), Some(-4.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         AttackModule::set_no_finish_camera(boma, 0, true, false);
@@ -238,10 +263,12 @@ unsafe extern "C" fn game_specialhicommand(agent: &mut L2CAgentBase) {
     wait(lua_state, 1.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
+        MeterModule::watch_damage(agent.battle_object, false);
     }
 
     frame(lua_state, 24.0);
     if is_excute(agent) {
+        MeterModule::watch_damage(agent.battle_object, true);
         ATTACK(agent, 0, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 4.5, 0.0, 9.0, 1.0, Some(0.0), Some(20.0), Some(1.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         ATTACK(agent, 1, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 3.5, 0.0, 5.0, 6.0, Some(0.0), Some(5.0), Some(-4.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         AttackModule::set_no_finish_camera(boma, 0, true, false);
@@ -250,10 +277,12 @@ unsafe extern "C" fn game_specialhicommand(agent: &mut L2CAgentBase) {
     wait(lua_state, 1.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
+        MeterModule::watch_damage(agent.battle_object, false);
     }
 
     frame(lua_state, 28.0);
     if is_excute(agent) {
+        MeterModule::watch_damage(agent.battle_object, true);
         ATTACK(agent, 0, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 4.5, 0.0, 9.0, 1.0, Some(0.0), Some(20.0), Some(1.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         ATTACK(agent, 1, 0, Hash40::new("top"), 0.3, 367, 100, 30, 0, 3.5, 0.0, 5.0, 6.0, Some(0.0), Some(5.0), Some(-4.0), 0.5, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
         AttackModule::set_no_finish_camera(boma, 0, true, false);
@@ -262,10 +291,12 @@ unsafe extern "C" fn game_specialhicommand(agent: &mut L2CAgentBase) {
     wait(lua_state, 1.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
+        MeterModule::watch_damage(agent.battle_object, false);
     }
 
     frame(lua_state, 33.0);
     if is_excute(agent) {
+        MeterModule::watch_damage(agent.battle_object, true);
         AttackModule::clear_all(boma);
         if agent.get_int(*FIGHTER_DOLLY_STATUS_SPECIAL_COMMON_WORK_INT_STRENGTH) == *FIGHTER_DOLLY_STRENGTH_W {
             ATTACK(agent, 0, 0, Hash40::new("top"), 7.0, 83, 65, 0, 90, 6.0, 0.0, 6.5, 1.0, Some(0.0), Some(16.5), Some(1.0), 2.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DOLLY_PUNCH, *ATTACK_REGION_BODY);
@@ -280,6 +311,7 @@ unsafe extern "C" fn game_specialhicommand(agent: &mut L2CAgentBase) {
         HIT_NODE(agent, Hash40::new("kneer"), *HIT_STATUS_NORMAL);
         HIT_NODE(agent, Hash40::new("kneel"), *HIT_STATUS_NORMAL);
         AttackModule::clear_all(boma);
+        MeterModule::watch_damage(agent.battle_object, false);
     }
 
     frame(lua_state, 40.0);

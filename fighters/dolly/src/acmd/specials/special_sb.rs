@@ -15,6 +15,7 @@ unsafe extern "C" fn game_specialsbattackw(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 11.0);
     if is_excute(agent) {
+        MeterModule::watch_damage(agent.battle_object, true);
         ATTACK(agent, 2, 0, Hash40::new("top"), 2.0, 368, 100, 0, 0, 5.0, 0.0, 14.0, 5.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 2, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DOLLY_KICK, *ATTACK_REGION_KICK);
         ATTACK(agent, 3, 0, Hash40::new("top"), 2.0, 368, 100, 0, 0, 5.0, 0.0, 5.0, 1.0, Some(0.0), Some(8.0), Some(1.0), 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 2, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DOLLY_KICK, *ATTACK_REGION_KICK);
         AttackModule::set_vec_target_pos(agent.module_accessor, 2, Hash40::new("top"), &Vector2f{x: 10.0, y: 3.0}, 2, false);
@@ -27,6 +28,8 @@ unsafe extern "C" fn game_specialsbattackw(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 13.0);
     if is_excute(agent) {
+        MeterModule::watch_damage(agent.battle_object, false);
+        MeterModule::watch_damage(agent.battle_object, true);
         ATTACK(agent, 0, 0, Hash40::new("top"), 8.0, 90, 0, 0, 81, 5.0, 0.0, 6.0, 8.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DOLLY_KICK, *ATTACK_REGION_KICK);
         ATTACK(agent, 1, 0, Hash40::new("top"), 8.0, 90, 0, 0, 81, 5.0, 0.0, 5.0, 1.0, Some(0.0), Some(8.0), Some(1.0), 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DOLLY_KICK, *ATTACK_REGION_KICK);
         ATTACK(agent, 2, 0, Hash40::new("top"), 6.0, 78, 20, 0, 75, 5.0, 0.0, 6.0, 8.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DOLLY_KICK, *ATTACK_REGION_KICK);
@@ -35,6 +38,7 @@ unsafe extern "C" fn game_specialsbattackw(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 17.0);
     if is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
+        MeterModule::watch_damage(agent.battle_object, false);
     }
     frame(agent.lua_state_agent, 22.0);
     if is_excute(agent) {
@@ -48,6 +52,7 @@ unsafe extern "C" fn game_specialsbattack(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 9.0);
     if is_excute(agent) {
+        MeterModule::watch_damage(agent.battle_object, true);
         ATTACK(agent, 2, 0, Hash40::new("top"), 2.0, 368, 100, 0, 0, 5.0, 0.0, 16.0, 3.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 2, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DOLLY_KICK, *ATTACK_REGION_KICK);
         ATTACK(agent, 3, 0, Hash40::new("top"), 2.0, 368, 100, 0, 0, 5.0, 0.0, 16.0, 3.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 2, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DOLLY_KICK, *ATTACK_REGION_KICK);
         AttackModule::set_vec_target_pos(agent.module_accessor, 2, Hash40::new("top"), &Vector2f{x: 10.0, y: 3.0}, 2, false);
@@ -74,6 +79,8 @@ unsafe extern "C" fn game_specialsbattack(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 13.0);
     if is_excute(agent) {
+        MeterModule::watch_damage(agent.battle_object, false);
+        MeterModule::watch_damage(agent.battle_object, true);
         ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 90, 0, 0, 81, 5.0, 0.0, 9.0, 8.5, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DOLLY_KICK, *ATTACK_REGION_KICK);
         ATTACK(agent, 1, 0, Hash40::new("top"), 10.0, 90, 0, 0, 81, 5.0, 0.0, 5.0, 1.0, Some(0.0), Some(8.0), Some(1.0), 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DOLLY_KICK, *ATTACK_REGION_KICK);
         ATTACK(agent, 2, 0, Hash40::new("top"), 6.0, 78, 20, 0, 75, 5.0, 0.0, 9.0, 8.5, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DOLLY_KICK, *ATTACK_REGION_KICK);
@@ -87,6 +94,7 @@ unsafe extern "C" fn game_specialsbattack(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 17.0);
     if is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
+        MeterModule::watch_damage(agent.battle_object, false);
     }
     frame(agent.lua_state_agent, 22.0);
     if is_excute(agent) {

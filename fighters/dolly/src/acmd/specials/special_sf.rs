@@ -38,6 +38,7 @@ unsafe extern "C" fn game_specialsfattack(agent: &mut L2CAgentBase) {
     frame(lua_state, 0.0);
     if is_excute(agent) {
         agent.on_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
+        MeterModule::watch_damage(agent.battle_object, true);
         if agent.is_flag(*FIGHTER_DOLLY_STATUS_SPECIAL_S_WORK_FLAG_AIR_ATTACK) {
             if agent.get_int(*FIGHTER_DOLLY_STATUS_SPECIAL_COMMON_WORK_INT_STRENGTH) == *FIGHTER_DOLLY_STRENGTH_W {
                 MotionModule::set_rate(boma, 1.5);
@@ -85,6 +86,7 @@ unsafe extern "C" fn game_specialairsfend(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
+        MeterModule::watch_damage(agent.battle_object, false);
         if agent.get_int(*FIGHTER_DOLLY_STATUS_SPECIAL_COMMON_WORK_INT_STRENGTH) == *FIGHTER_DOLLY_STRENGTH_W {
             MotionModule::set_rate(boma, 1.0);
         }
@@ -103,6 +105,7 @@ unsafe extern "C" fn game_specialsfend(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
+        MeterModule::watch_damage(agent.battle_object, false);
         agent.on_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
         if agent.get_int(*FIGHTER_DOLLY_STATUS_SPECIAL_COMMON_WORK_INT_STRENGTH) == *FIGHTER_DOLLY_STRENGTH_W {
             MotionModule::set_rate(boma, 1.2);

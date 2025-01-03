@@ -13,6 +13,7 @@ unsafe extern "C" fn game_attackcommand4(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE_RANGE(agent, 15.0, 30.0, 7.0);
     if is_excute(agent) {
         agent.on_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
+        MeterModule::watch_damage(agent.battle_object, true);
         let strength = agent.get_int(*FIGHTER_DOLLY_STATUS_SPECIAL_COMMON_WORK_INT_STRENGTH);
         if strength == *FIGHTER_RYU_STRENGTH_S { 
             sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 1.0);
@@ -31,6 +32,7 @@ unsafe extern "C" fn game_attackcommand4(agent: &mut L2CAgentBase) {
         if strength == *FIGHTER_RYU_STRENGTH_S { 
             agent.on_flag(*FIGHTER_DOLLY_STATUS_ATTACK_WORK_FLAG_HIT_CANCEL);
         }
+        MeterModule::watch_damage(agent.battle_object, false);
         AttackModule::clear_all(boma);
     }
     frame(lua_state, 35.0);

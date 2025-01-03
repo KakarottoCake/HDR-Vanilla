@@ -110,6 +110,7 @@ unsafe extern "C" fn game_attackdash(agent: &mut L2CAgentBase) {
     frame(lua_state, 22.0);
     if is_excute(agent) {
         MeterModule::watch_damage(agent.battle_object, true);
+        VarModule::set_int(agent.battle_object, vars::dolly::status::HIT_CANCEL_TIMER, 12);
         ATTACK(agent, 0, 0, Hash40::new("top"),   7.0, 50, 130, 0, 32, 4.0, 0.0, 10.0, 3.0, Some(0.0), Some(6.0), Some(3.0), 1.25, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DOLLY_KICK, *ATTACK_REGION_BODY);
         ATTACK(agent, 1, 0, Hash40::new("legl"),  7.0, 50, 130, 0, 32, 4.0, 0.0, 0.0, -2.0, None, None, None, 1.25, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DOLLY_KICK, *ATTACK_REGION_BODY);
         ATTACK(agent, 2, 0, Hash40::new("kneel"), 7.0, 50, 130, 0, 32, 4.0, 0.0, 0.0, -2.0, None, None, None, 1.25, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DOLLY_KICK, *ATTACK_REGION_BODY);
