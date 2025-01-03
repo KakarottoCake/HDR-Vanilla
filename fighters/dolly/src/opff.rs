@@ -144,6 +144,19 @@ unsafe fn check_super_special_cancels(fighter: &mut L2CFighterCommon, boma: &mut
     }
 }
 
+unsafe fn hit_cancel_timer(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
+    let hit_cancel_timer = VarModule::get_int(fighter.battle_object, vars::dolly::status::HIT_CANCEL_TIMER);
+    if hit_cancel_timer > 0
+    && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
+    && !fighter.is_in_hitlag() {
+        VarModule::dec_int(fighter.battle_object, vars::dolly::status::HIT_CANCEL_TIMER);
+        if hit_cancel_timer - 1 == 0 {
+            fighter.off_flag(*FIGHTER_DOLLY_STATUS_ATTACK_WORK_FLAG_HIT_CANCEL);
+            fighter.off_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
+        }
+    }
+}
+
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
     inherit_final_cancel(fighter);
     disable_special_cancels_on_parry(fighter);
@@ -151,6 +164,7 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     fastfall_specials(fighter);
     specials_ledgegrab_fix(fighter);
     super_special_cancels(fighter, boma, status_kind, situation_kind, motion_kind, frame);
+    hit_cancel_timer(fighter, boma);
 }
 
 pub extern "C" fn dolly_meter(fighter: &mut smash::lua2cpp::L2CFighterCommon) {

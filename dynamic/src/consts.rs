@@ -526,6 +526,9 @@ pub mod vars {
             // flags
             pub const INHERIT_FINAL_CANCEL_ON_END: i32 = 0x1150;
             pub const ATTACK_COMMAND_4_RELEASE_BUTTON: i32 = 0x1151;
+
+            // ints
+            pub const HIT_CANCEL_TIMER: i32 = 0x1104;
         }
     }
 
