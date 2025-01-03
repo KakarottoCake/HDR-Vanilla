@@ -3,6 +3,7 @@ use globals::*;
 // status script import
 
 mod attack_air;
+mod attack_lw3;
 mod float;
 
 extern "Rust" {
@@ -32,5 +33,6 @@ pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
 
     attack_air::install(agent);
+    attack_lw3::install(agent);
     float::install(agent);
 }
