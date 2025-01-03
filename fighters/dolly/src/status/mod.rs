@@ -267,13 +267,14 @@ pub unsafe extern "C" fn dolly_check_other_special_command(fighter: &mut L2CFigh
         return true.into();
     }
 
-    if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_6N6 != 0
-    && StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_ATTACK_S3
-    && MeterModule::level(fighter.battle_object) >= 1 {
-        fighter.change_status(FIGHTER_STATUS_KIND_DASH.into(), true.into());
-        VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_ENTER_DASH_CANCEL);
-        return true.into();
-    }
+    // Uncomment to implement dash cancel FTilt
+    // if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_6N6 != 0
+    // && StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_ATTACK_S3
+    // && MeterModule::level(fighter.battle_object) >= 1 {
+    //     fighter.change_status(FIGHTER_STATUS_KIND_DASH.into(), true.into());
+    //     VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_ENTER_DASH_CANCEL);
+    //     return true.into();
+    // }
 
     return false.into();
 }
