@@ -7,6 +7,7 @@ mod dash;
 mod landing;
 mod guard_off;
 mod rebirth;
+mod escape;
 
 mod special_cmd4;
 mod special_s;
@@ -312,6 +313,7 @@ pub fn install(agent: &mut Agent) {
     landing::install(agent);
     guard_off::install(agent);
     rebirth::install(agent);
+    escape::install(agent);
 
     special_cmd4::install(agent);
     special_s::install(agent);

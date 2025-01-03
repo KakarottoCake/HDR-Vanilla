@@ -1,5 +1,21 @@
 use super::*;
 
+unsafe extern "C" fn game_catchattack(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 1.0);
+        MeterModule::watch_damage(agent.battle_object, true);
+        if is_excute(agent) {
+        ATTACK(agent, 0, 0, Hash40::new("top"), 1.5, 361, 100, 30, 0, 5.0, 0.0, 10.0, 10.0, None, None, None, 2.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DOLLY_KICK, *ATTACK_REGION_PUNCH);
+        AttackModule::set_catch_only_all(boma, true, false);
+    }
+    wait(lua_state, 1.0);
+    if is_excute(agent) {
+        AttackModule::clear_all(boma);
+        MeterModule::watch_damage(agent.battle_object, false);
+    }
+}
+
 unsafe extern "C" fn game_throwb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -113,6 +129,7 @@ unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.acmd("game_catchattack", game_catchattack, Priority::Low);
     agent.acmd("game_throwb", game_throwb, Priority::Low);
     agent.acmd("game_throwf", game_throwf, Priority::Low);
     agent.acmd("game_throwhi", game_throwhi, Priority::Low);
