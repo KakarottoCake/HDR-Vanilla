@@ -433,6 +433,7 @@ pub trait BomaExt {
     unsafe fn prev_right_stick_x(&mut self) -> f32;
     unsafe fn right_stick_y(&mut self) -> f32;
     unsafe fn prev_right_stick_y(&mut self) -> f32;
+    unsafe fn get_command_stick_direction(&mut self, command: bool) -> i32;
 
     // STATE
     unsafe fn is_status(&mut self, kind: i32) -> bool;
@@ -746,6 +747,55 @@ impl BomaExt for BattleObjectModuleAccessor {
             return ControlModule::get_stick_prev_y(self);
         } else {
             return ControlModule::get_sub_stick_prev_y(self);
+        }
+    }
+
+    /// Checks the direction of the left stick and returns a number between 1 and 9, representing numpad notation.
+    /// # Arguments
+    /// 
+    /// * `command` - Set to true to have the horizontal stick value reversed, so that it checks the input as if you are facing right.
+    unsafe fn get_command_stick_direction(&mut self, command: bool) -> i32 {
+        let status_kind = StatusModule::status_kind(self);
+        let mut stick_x = crate::util::get_fighter_common_from_accessor(self).global_table[STICK_X].get_f32();
+        let stick_y = crate::util::get_fighter_common_from_accessor(self).global_table[STICK_Y].get_f32();
+        if command {
+            stick_x = stick_x * PostureModule::lr(self);
+            if status_kind == *FIGHTER_STATUS_KIND_TURN_RUN {
+                stick_x *= -1.0;
+            }
+        }
+        let length = sv_math::vec2_length(stick_x, stick_y);
+        if length < 0.25 {
+            return 5;
+        }
+        let normalize = sv_math::vec2_normalize(stick_x, stick_y);
+        let dirx = normalize.x;
+        let diry = normalize.y;
+        let arctangent = diry.atan2(dirx.abs());
+        let degrees = arctangent.to_degrees();
+        if degrees.abs() <= 15.0 {
+            if stick_x > 0.0 {
+                return 6;
+            }
+            return 4;
+        }
+        else if 70.0 <= degrees.abs() {
+            if stick_y > 0.0 {
+                return 8;
+            }
+            return 2;
+        }
+        else {
+            if stick_x > 0.0 {
+                if stick_y > 0.0 {
+                    return 9;
+                }
+                return 3;
+            }
+            if stick_y > 0.0 {
+                return 7;
+            }
+            return 1;
         }
     }
 

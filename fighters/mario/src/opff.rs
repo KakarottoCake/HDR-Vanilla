@@ -37,8 +37,22 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     }
 }
 
+unsafe extern "C" fn mario_reset_special_lw_kind(fighter: &mut L2CFighterCommon) {
+    if StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_GROUND
+    || StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_CLIFF {
+        if ![
+            *FIGHTER_STATUS_KIND_SPECIAL_LW,
+            *FIGHTER_MARIO_STATUS_KIND_SPECIAL_LW_SHOOT,
+            *FIGHTER_MARIO_STATUS_KIND_SPECIAL_LW_CHARGE
+        ].contains(&StatusModule::status_kind(fighter.module_accessor)) {
+            VarModule::set_int(fighter.battle_object, vars::mario::instance::SPECIAL_LW_KIND, vars::mario::SPECIAL_LW_KIND_LONG_JUMP);
+        }
+    }
+}
+
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
     fastfall_specials(fighter);
+    mario_reset_special_lw_kind(fighter);
 }
 
 pub extern "C" fn mario_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {

@@ -996,14 +996,29 @@ pub mod vars {
     pub mod mario {
         pub mod instance {
             // flags
-            pub const SPECIAL_LW_DISABLE_STALL: i32 = 0x0100;
+            pub const SPECIAL_LW_BLJ_PREV : i32 = 0x0100;
             pub const SPECIAL_S_DISABLE_STALL: i32 = 0x0101;
+
+            // ints
+            pub const SPECIAL_LW_KIND : i32 = 0x0102;
         }
         pub mod status {
             // flags
             pub const SPECIAL_N_FIREBRAND: i32 = 0x1100;
-            pub const SPECIAL_LW_GROUND_START: i32 = 0x0101;
+            pub const SPECIAL_LW_LANDING : i32 = 0x1101;
+            pub const SPECIAL_LW_BLJ : i32 = 0x1102;
+
+            // ints
+            pub const SPECIAL_LW_LONG_JUMP_KIND : i32 = 0x1103;
         }
+        pub const SPECIAL_LW_KIND_LONG_JUMP : i32 = 0;
+        pub const SPECIAL_LW_KIND_GROUND_POUND : i32 = 1;
+        pub const SPECIAL_LW_KIND_GROUND_POUND_CANCEL : i32 = 2;
+    
+        pub const LONG_JUMP_W : i32 = 0;
+        pub const LONG_JUMP_M : i32 = 1;
+        pub const LONG_JUMP_S : i32 = 2;
+        pub const LONG_JUMP_B : i32 = 3;
     }
 
     pub mod mariod {
