@@ -264,8 +264,7 @@ unsafe fn status_JumpSquat_common(fighter: &mut L2CFighterCommon, lr_update: L2C
 #[skyline::hook(replace = L2CFighterCommon_uniq_process_JumpSquat_exec_status_param)]
 unsafe fn uniq_process_JumpSquat_exec_status_param(fighter: &mut L2CFighterCommon, arg: L2CValue) {
     if arg.get_bool() {
-        let custom_routine: *const extern "C" fn(&mut L2CFighterCommon) -> L2CValue = arg.get_ptr() as _;
-        let callable: extern "C" fn(&mut L2CFighterCommon) -> L2CValue = std::mem::transmute(custom_routine);
+        let callable: extern "C" fn(&mut L2CFighterCommon) -> L2CValue = std::mem::transmute(arg.get_ptr());
         callable(fighter);
     }
     else {
