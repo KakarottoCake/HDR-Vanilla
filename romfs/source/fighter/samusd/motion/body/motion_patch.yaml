@@ -148,10 +148,16 @@ special_air_hi:
   extra:
     xlu_start: 0
     xlu_end: 0
+    no_stop_intp: true
 special_hi:
+  flags:
+    loop: true
+    move: false
   extra:
     xlu_start: 0
     xlu_end: 0
+    cancel_frame: 0
+    no_stop_intp: false
 special_air_s:
   extra:
     cancel_frame: 51
@@ -190,3 +196,213 @@ step_pose_back:
     cancel_frame: 6
 cliff_wait:
   blend_frames: 2
+special_hi_hold:
+  game_script: game_specialhihold
+  flags:
+    turn: false
+    loop: false
+    move: false
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+    - name: d02specialhihold.nuanmb
+      unk: 0
+  scripts:
+    - expression_specialhihold
+    - sound_specialhihold
+    - effect_specialhihold
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 0
+    no_stop_intp: true
+special_hi_hold_air:
+  game_script: game_specialhiholdair
+  flags:
+    turn: false
+    loop: false
+    move: false
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+    - name: d02specialhiholdair.nuanmb
+      unk: 0
+  scripts:
+    - expression_specialhiholdair
+    - sound_specialhiholdair
+    - effect_specialhiholdair
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 0
+    no_stop_intp: true
+special_hi_landing_f:
+  game_script: game_specialhilandingf
+  flags:
+    turn: false
+    loop: false
+    move: false
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+    - name: d02specialhilandingf.nuanmb
+      unk: 0
+  scripts:
+    - expression_specialhilandingf
+    - sound_specialhilandingf
+    - effect_specialhilandingf
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 51
+    no_stop_intp: false
+special_hi_landing_lw:
+  game_script: game_specialhilandinglw
+  flags:
+    turn: false
+    loop: false
+    move: false
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+    - name: d02specialhilandinglw.nuanmb
+      unk: 0
+  scripts:
+    - expression_specialhilandinglw
+    - sound_specialhilandinglw
+    - effect_specialhilandinglw
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 47
+    no_stop_intp: false
+special_hi_fall:
+  game_script: game_specialhifall
+  flags:
+    turn: false
+    loop: false
+    move: false
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+    - name: d02specialhifall.nuanmb
+      unk: 0
+  scripts:
+    - expression_specialhifall
+    - sound_specialhifall
+    - effect_specialhifall
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 0
+    no_stop_intp: false
+special_air_hi_ceil:
+  game_script: game_specialairhiceil
+  flags:
+    turn: false
+    loop: false
+    move: true
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+    - name: g00ceildamage.nuanmb
+      unk: 0
+  scripts:
+    - expression_specialairhiceil
+    - sound_specialairhiceil
+    - effect_specialairhiceil
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 35
+    no_stop_intp: false
+special_air_hi_wall:
+  game_script: game_specialairhiwallf
+  flags:
+    turn: false
+    loop: false
+    move: true
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+    - name: g00walldamage.nuanmb
+      unk: 0
+  scripts:
+    - expression_specialairhiwallf
+    - sound_specialairhiwallf
+    - effect_specialairhiwallf
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 55
+    no_stop_intp: false
