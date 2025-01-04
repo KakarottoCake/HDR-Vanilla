@@ -138,6 +138,7 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
         attr = Hash40::new("collision_attr_fire");
         dmg = 1.05;
     }
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         JostleModule::set_team(boma, 1);
         JostleModule::set_overlap_rate_mul(boma, 2.0);
@@ -167,11 +168,8 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
         JostleModule::set_overlap_rate_mul(boma, 1.0);
     }
     wait(lua_state, 10.0);
-    if VarModule::is_flag(agent.battle_object, vars::shotos::instance::EX_SPECIAL_USED) {
-        FT_MOTION_RATE(agent, 2.0);
-    }
     if is_excute(agent) {
-        boma.off_flag(*FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
+        agent.off_flag(*FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
     }
 }
 

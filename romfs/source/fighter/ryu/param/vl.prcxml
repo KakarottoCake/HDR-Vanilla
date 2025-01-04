@@ -58,11 +58,18 @@
       <float hash="air_speed_x_m">0.8</float>
       <float hash="speed_x_s">1.2</float>
       <float hash="air_speed_x_s">1.04</float>
-      <int hash="end_weak_frame_w">36</int>
-      <int hash="air_end_weak_frame_w">24</int>
-      <int hash="end_weak_frame_m">39</int>
-      <int hash="air_end_weak_frame_m">30</int>
-      <int hash="end_weak_frame_s">41</int>
+      <!-- the animation length of special_s_end and 
+      special_air_s_end are divided by these values to 
+      obtain a motion rate. However, it doesnt take into 
+      account the cancel frame of those animations, so the 
+      actual numbers here aren't accurate to the in-game FAF -->
+      <int hash="end_weak_frame_w">18</int>
+      <int hash="air_end_weak_frame_w">18</int>
+      <int hash="end_weak_frame_m">36</int>
+      <int hash="air_end_weak_frame_m">36</int>
+      <int hash="end_weak_frame_s">36</int>
+      <int hash="air_end_weak_frame_s">36</int>
+
       <float hash="air_end_x_speed_mul">1</float>
       <float hash="end_air_accel_y">0.13</float>
       <float hash="end_air_max_speed_y">2.17</float>
