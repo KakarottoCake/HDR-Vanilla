@@ -86,15 +86,20 @@
   <list hash="param_special_hi">
     <struct index="0">
       <float hash="command_power_mul">1.2</float>
-      <float hash="speed_y_mul_w">0.3</float>
-      <float hash="speed_y_mul_m">0.525</float>
-      <float hash="speed_y_mul_s">0.77</float>
+      <float hash="speed_y_mul_w">0.26</float>
+      <float hash="speed_y_mul_m">0.45</float>
+      <float hash="speed_y_mul_s">0.78</float>
+      <float hash="air_speed_y_mul_w">0.45</float>
+      <float hash="air_speed_y_mul_m">0.59</float>
+      <float hash="air_speed_y_mul_s">0.78</float>
+      <float hash="stick_x_speed_mul_max">1.25</float>
       <float hash="fall_brake_y_mul">2</float>
       <int hash="fall_frame">5</int>
-      <int hash="landing_frame_w">11</int>
-      <int hash="landing_frame_m">11</int>
-      <int hash="landing_frame_s">22</int>
-      <int hash="pad_release_w">3</int>
+      <int hash="landing_frame_w">13</int>
+      <int hash="landing_frame_m">13</int>
+      <int hash="landing_frame_s">26</int>
+      <int hash="pad_release_w">2</int>
+      <int hash="pad_release_m">5</int>
       <float hash="command_landing_frame_mul">1</float>
     </struct>
     <hash40 index="1">dummy</hash40>
