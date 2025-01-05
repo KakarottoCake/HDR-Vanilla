@@ -284,7 +284,7 @@ special_hi_landing_f:
   extra:
     xlu_start: 0
     xlu_end: 0
-    cancel_frame: 51
+    cancel_frame: 40
     no_stop_intp: false
 special_hi_landing_lw:
   game_script: game_specialhilandinglw
@@ -314,7 +314,7 @@ special_hi_landing_lw:
   extra:
     xlu_start: 0
     xlu_end: 0
-    cancel_frame: 47
+    cancel_frame: 40
     no_stop_intp: false
 special_hi_fall:
   game_script: game_specialhifall
