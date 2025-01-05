@@ -213,36 +213,36 @@ special_air_n_fire:
     intangible_end_frame: 0
     cancel_frame: 46
     freeze_during_hitstop: false
-# special_lw_light:
-#     game_script: game_speciallwlight
-#     flags:
-#       turn: false
-#       loop: false
-#       move: false
-#     blend_frames: 5
-#     animations:
-#       - name: d03speciallwlight.nuanmb
-#     scripts:
-#       - expression_speciallwlight
-#       - sound_speciallwlight
-#       - effect_speciallwlight
-#     extra:
-#       cancel_frame: 55
-# special_air_lw_light:
-#     game_script: game_specialairlwlight
-#     flags:
-#       turn: false
-#       loop: false
-#       move: false
-#     blend_frames: 5
-#     animations:
-#       - name: d03specialairlwlight.nuanmb
-#     scripts:
-#       - expression_specialairlwlight
-#       - sound_specialairlwlight
-#       - effect_specialairlwlight
-#     extra:
-#       cancel_frame: 55
+special_s:
+    game_script: game_specials
+    flags:
+      turn: false
+      loop: false
+      move: false
+    blend_frames: 5
+    animations:
+      - name: d01specials.nuanmb
+    scripts:
+      - expression_specials
+      - sound_specials
+      - effect_specials
+    extra:
+      cancel_frame: 55
+special_air_s:
+    game_script: game_specialairs
+    flags:
+      turn: false
+      loop: false
+      move: false
+    blend_frames: 5
+    animations:
+      - name: d01specialairs.nuanmb
+    scripts:
+      - expression_specialairs
+      - sound_specialairs
+      - effect_specialairs
+    extra:
+      cancel_frame: 55
 special_air_hi:
   extra:
     xlu_start: 0

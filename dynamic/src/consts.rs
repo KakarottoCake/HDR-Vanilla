@@ -1007,6 +1007,7 @@ pub mod vars {
             pub const SPECIAL_N_FIREBRAND: i32 = 0x1100;
             pub const SPECIAL_LW_LANDING : i32 = 0x1101;
             pub const SPECIAL_LW_BLJ : i32 = 0x1102;
+            pub const SPECIAL_S_GROUND_START : i32 = 0x1103;
 
             // ints
             pub const SPECIAL_LW_LONG_JUMP_KIND : i32 = 0x1103;
