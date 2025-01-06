@@ -97,7 +97,7 @@ special_n:
 attack_hi3:
   cancel_frame: 31
 attack_lw3:
-  cancel_frame: 24
+  cancel_frame: 22
 attack_hi4:
   extra:
     cancel_frame: 65

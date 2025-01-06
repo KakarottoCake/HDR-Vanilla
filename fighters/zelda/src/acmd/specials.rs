@@ -11,8 +11,8 @@ unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
     frame(lua_state, 13.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 160, 45, 0, 12, 9.5, 0.0, 7.0, -0.5, Some(0.0), Some(7.0), Some(0.5), 0.75, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 4, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 1.0, 160, 45, 0, 12, 4.0, 0.0, 8.0, -10.0, Some(0.0), Some(8.0), Some(10.0), 0.75, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 4, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 160, 45, 0, 12, 9.5, 0.0, 7.0, -0.5, Some(0.0), Some(7.0), Some(0.5), 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 4, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 1.0, 160, 45, 0, 12, 4.0, 0.0, 8.0, -10.0, Some(0.0), Some(8.0), Some(10.0), 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 4, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
     }
     frame(lua_state, 25.0);
     if is_excute(agent) {
@@ -340,7 +340,7 @@ unsafe extern "C" fn game_speciallwattack(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     FT_MOTION_RATE(agent, 1.0);
-    frame(lua_state, 5.0);
+    frame(lua_state, 4.0);
     if is_excute(agent) {
         if !agent.is_flag(*FIGHTER_ZELDA_STATUS_SPECIAL_LW_FLAG_FAIL) {
             ArticleModule::shoot_exist(boma, *FIGHTER_ZELDA_GENERATE_ARTICLE_PHANTOM, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
@@ -348,6 +348,8 @@ unsafe extern "C" fn game_speciallwattack(agent: &mut L2CAgentBase) {
             agent.off_flag(*FIGHTER_ZELDA_STATUS_SPECIAL_LW_FLAG_ATTACK_PRECEDE);
         }
     }
+    frame(lua_state, 5.0);
+    FT_MOTION_RATE_RANGE(agent, 5.0, 40.0, 32.0);//37faf
 }
 
 unsafe extern "C" fn sound_speciallwattack(agent: &mut L2CAgentBase) {
@@ -357,7 +359,7 @@ unsafe extern "C" fn sound_speciallwattack(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         if agent.is_flag(*FIGHTER_ZELDA_STATUS_SPECIAL_LW_FLAG_FAIL) {
             let sound = SoundModule::play_se(boma, Hash40::new("se_system_beep"), true, false, false, false, app::enSEType(0));
-            SoundModule::set_se_vol(boma, sound as i32, 0.8, 0);
+            SoundModule::set_se_vol(boma, sound as i32, 0.75, 0);
         } else {
             let sound = SoundModule::play_se(boma, Hash40::new("se_zelda_special_l09"), true, false, false, false, app::enSEType(0));
             SoundModule::set_se_vol(boma, sound as i32, 1.6, 0);
@@ -391,7 +393,6 @@ unsafe extern "C" fn effect_landingfallspecial(agent: &mut L2CAgentBase) {
             } else {
                 //normal special landing lag eff
                 LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-
             }
         }
     } else { //grounded special cancel effects

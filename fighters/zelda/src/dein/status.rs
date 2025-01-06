@@ -61,7 +61,7 @@ pub unsafe extern "C" fn dein_remove(weapon: &mut smash::lua2cpp::L2CFighterBase
     //Dins existence checks, applicable refreshes and variable settings
     if sv_battle_object::is_active(dein as u32) {
         if sv_battle_object::is_active(dein2 as u32) { 
-            //if both dins slots are full, shuffle slots and explode first dins
+            //if both dins slots are full, shuffle slots and kill first dins
             VarModule::set_int(zelda, vars::zelda::instance::SPECIAL_S_DEIN_OBJECT_ID, dein2);
             VarModule::set_int(zelda, vars::zelda::instance::SPECIAL_S_DEIN_OBJECT_ID_2, thisdins);
             delete_effects(weapon, dein);
@@ -69,7 +69,7 @@ pub unsafe extern "C" fn dein_remove(weapon: &mut smash::lua2cpp::L2CFighterBase
             VarModule::on_flag(dein2_battle_object, vars::zelda::status::SPECIAL_S_DINS_REFRESH);
         } else {
             //if first slot full but second empty
-            //assign dins to empty slot, refresh first dins
+            //assign dins to empty slot, check pos of first dins
             VarModule::set_int(zelda, vars::zelda::instance::SPECIAL_S_DEIN_OBJECT_ID_2, thisdins);
             VarModule::on_flag(dein_battle_object, vars::zelda::status::SPECIAL_S_DINS_REFRESH);
         }
@@ -94,10 +94,41 @@ pub unsafe extern "C" fn dein_remove(weapon: &mut smash::lua2cpp::L2CFighterBase
 }
 
 unsafe extern "C" fn dins_refresh(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    //if dins are placed within x units of eachother, detonate
     if VarModule::is_flag(weapon.battle_object, vars::zelda::status::SPECIAL_S_DINS_REFRESH) {
-        EFFECT_OFF_KIND(weapon, Hash40::new("sys_flash"), true, true);
-        MotionModule::change_motion_force_inherit_frame(weapon.module_accessor, Hash40::new("tame"), 0.0, 1.0, 1.0);
-        weapon.set_float(160.0, *WEAPON_ZELDA_DEIN_STATUS_WORK_FLOAT_LIFE);
+        //get new dins id
+        let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
+        let zelda = utils::util::get_battle_object_from_id(owner_id);
+        let new_dins = VarModule::get_int(zelda, vars::zelda::instance::SPECIAL_S_DEIN_OBJECT_ID_2) as u32;
+        //new dins boma
+        let dein_battle_object = utils::util::get_battle_object_from_id(new_dins);
+        let dein_boma = &mut *(*dein_battle_object).module_accessor;
+        //pos of both dins
+        let new_dins_pos = *PostureModule::pos(dein_boma);
+        let old_dins_pos = *PostureModule::pos(weapon.module_accessor);
+        //calc distance
+        let diff = &Vector2f::new( new_dins_pos.x - old_dins_pos.x, new_dins_pos.y - old_dins_pos.y);
+        let distance = sv_math::vec2_length(diff.x, diff.y).abs();
+        //dins size, hold frames 
+        let hold_frame_max = weapon.get_param_float("param_dein", "count");
+        let hold_frame = weapon.get_float(*WEAPON_ZELDA_DEIN_STATUS_WORK_FLOAT_COUNT);
+        let pop_distance = 8.0 + 4.0 * (hold_frame_max/hold_frame); //min charge dins 8 units, max charge 12 units (soft scaling to match flame GFX better)
+        if distance <= pop_distance {
+            //set life to x frames to make it detonate
+            weapon.set_float(8.0, *WEAPON_ZELDA_DEIN_STATUS_WORK_FLOAT_LIFE); //10f delay?, incl 2f delay from dins release (lc tech window)
+            MotionModule::change_motion_force_inherit_frame(weapon.module_accessor, Hash40::new("tame"), 150.0, 1.0, 1.0);
+            //clear ticking gfx
+            EFFECT_OFF_KIND(weapon, Hash40::new("sys_flash"), true, true);
+            //one last flash to show max size
+            EffectModule::req_follow(weapon.module_accessor, Hash40::new("sys_flash"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.9 + 0.023 * hold_frame * 0.95, false, 0, 0, 0, 0, 0, false, false);
+            LAST_EFFECT_SET_COLOR(weapon, 0.9, 0.044, 0.005);
+            LAST_EFFECT_SET_RATE(weapon, 1.5);
+            //woosh sound before pop
+            let sound = SoundModule::play_se(weapon.module_accessor, Hash40::new("se_zelda_appeal_s01"), true, false, false, false, app::enSEType(0));
+            SoundModule::set_se_vol(weapon.module_accessor, sound as i32, 1.2, 0);
+            //kill 2nd dins
+            sv_battle_object::end_inhaled(new_dins, true);
+        }
         VarModule::off_flag(weapon.battle_object, vars::zelda::status::SPECIAL_S_DINS_REFRESH);
     }
     0.into()
