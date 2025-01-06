@@ -4,7 +4,7 @@ unsafe extern "C" fn game_specialhihold(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    FT_MOTION_RATE_RANGE(agent, 1.0, 41.0, 29.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 41.0, 25.0);
     frame(lua_state, 41.0);
     FT_MOTION_RATE(agent, 1.0);
 }
@@ -33,7 +33,6 @@ unsafe extern "C" fn effect_specialhihold(agent: &mut L2CAgentBase) {
             BURN_COLOR_NORMAL(agent);
             EFFECT_FOLLOW(agent, Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 3, -3, -90, 0, 0, 1.1, true);
             EFFECT_FOLLOW(agent, Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 3, 3, -90, 0, 0, 1.1, true);
-            //FLASH(agent, 0.3, 0.5, 1.0, 0.5);
         }
         wait(lua_state, 1.0);
         if is_excute(agent) {
@@ -64,14 +63,14 @@ unsafe extern "C" fn expression_specialhihold(agent: &mut L2CAgentBase) {
 
         ControlModule::set_rumble(boma, Hash40::new("rbkind_elecattacks"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(lua_state, 3.0);
-    if is_excute(agent) {
-        //AREA_WIND_2ND_arg10(agent,0, 1, 80, 2, 0.8, 0, 15, 40, 30, 60);
-    }
-    frame(lua_state, 42.0);
-    if is_excute(agent) {
-        //AreaModule::erase_wind(agent.module_accessor, 0);
-    }
+    // frame(lua_state, 3.0);
+    // if is_excute(agent) {
+    //     AREA_WIND_2ND_arg10(agent,0, 1, 80, 2, 0.8, 0, 15, 40, 30, 60);
+    // }
+    // frame(lua_state, 42.0);
+    // if is_excute(agent) {
+    //     AreaModule::erase_wind(agent.module_accessor, 0);
+    // }
 }
 
 unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
@@ -160,8 +159,6 @@ unsafe extern "C" fn effect_specialhifall(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_AURA(agent);
         BURN_COLOR(agent, 0.26, 0.71, 1.5, 0.7);
-        //EFFECT(agent, Hash40::new("sys_damage_fire"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 0, 0, true);
-        //EffectModule::enable_sync_init_pos_last(agent.module_accessor);
     }
     frame(lua_state, 6.0);
     if is_excute(agent) {
@@ -169,8 +166,6 @@ unsafe extern "C" fn effect_specialhifall(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {
-        //EFFECT(agent, Hash40::new("sys_damage_fire"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 0, 0, true);
-        //EffectModule::enable_sync_init_pos_last(agent.module_accessor);
         BURN_COLOR_FRAME(agent, 20, 1, 1, 1, 0);
     }
     frame(lua_state, 11.0);
@@ -178,12 +173,6 @@ unsafe extern "C" fn effect_specialhifall(agent: &mut L2CAgentBase) {
         BURN_COLOR_NORMAL(agent);
     }
 }
-
-// unsafe extern "C" fn game_specialhilandingf(agent: &mut L2CAgentBase) {
-//     if is_excute(agent) {
-//         CORRECT(agent, *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP);
-//     }
-// }
 
 unsafe extern "C" fn effect_specialhilandingf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
@@ -226,9 +215,7 @@ unsafe extern "C" fn game_specialhilandinglw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        //CORRECT(agent, *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP);
         ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 361, 80, 0, 30, 3.0, 0.0, 3.0, -5.0, Some(0.0), Some(3.0), Some(5.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        //ATTACK(agent, 1, 0, Hash40::new("top"), 5.0, 42, 70, 0, 80, 6.5, 0.0, 3.0, -10.0, Some(0.0), Some(3.0), Some(-11.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
     }
     frame(lua_state, 3.0);
     if is_excute(agent) {

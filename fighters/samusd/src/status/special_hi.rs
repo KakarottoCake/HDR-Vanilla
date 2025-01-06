@@ -1,36 +1,16 @@
 use super::*;
 
-//pub const FLAG_SET_DIR: i32 = 0x2100000C; //When on, this sets joint rotation during startup. vars::samusd::status::SPECIAL_HI_SET_ROT
-//pub const FLAG_RUSH_AIR: i32 = 0x2100000D; //True if Special Hi is used in air    vars::samusd::instance::SPECIAL_HI_RUSH_AIR
-//pub const FLAG_RUSH_BRAKE: i32 = 0x2100000E;  vars::samusd::status::SPECIAL_HI_RUSH_BRAKE
-
-//pub const FLOAT_RUSH_INPUT_X: i32 = 0x1000007;    unused
-//pub const FLOAT_RUSH_INPUT_Y: i32 = 0x1000008;    unused
-//pub const FLOAT_RUSH_DEGREE: i32 = 0x1000009; vars::samusd::instance::SPECIAL_HI_RUSH_ANGLE
-
-//pub const INT_RUSH_FRAME: i32 = 0x11000005; vars::samusd::status::SPECIAL_HI_RUSH_FRAME
-//pub const INT_END_TYPE: i32 = 0x11000006; //Controls whether DSamus lands, continues on ground, or falls    vars::samusd::instance::SPECIAL_HI_END_TYPE
-//pub const INT_END_NEXT_STATUS: i32 = 0x11000007;    unused
-//pub const INT_CONST_LANDING_FRAME: i32 = 0x11000008;  unused
-
-//pub const PARAM_RUSH_SPEED: f32 = 3.0;
-//pub const PARAM_RUSH_FRAME_MAX: i32 = 24; //Frame to transition into end status
-//pub const PARAM_RUSH_BRAKE_FRAME: i32 = 24; //Frame to start braking during rush. Make this greater than Max to prevent breaking
-//pub const PARAM_RUSH_BRAKE: f32 = 0.2; //Brake amount
-//pub const PARAM_SET_ANGLE_FRAME: f32 = 33.0; //Frame during start up to set angle and turn SPECIAL_HI_SET_ROT on
-
 const END_TYPE_LANDING: i32 = 0;
 const END_TYPE_GROUND: i32 = 1;
 const END_TYPE_AIR: i32 = 2;
 
 unsafe extern "C" fn special_hi_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
-    //*FIGHTER_SAMUS_STATUS_SPECIAL_HI_FLAG_WAIT_TAKEOFF;
     StatusModule::init_settings(
         fighter.module_accessor,
         SituationKind(*SITUATION_KIND_NONE),
         *FIGHTER_KINETIC_TYPE_MOTION_CLIFF_MOVE,
         *GROUND_CORRECT_KIND_KEEP as u32,
-        GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
+        GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES),
         true,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT,
@@ -66,10 +46,6 @@ unsafe extern "C" fn special_hi_main(fighter: &mut L2CFighterCommon) -> L2CValue
 }
 
 unsafe extern "C" fn special_hi_set_kinetic(fighter: &mut L2CFighterCommon) {
-    let energy_stop = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP) as *mut smash::app::KineticEnergy;
-    let stop_speed_x = lua_bind::KineticEnergy::get_speed_x(energy_stop);
-    let energy_gravity = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY) as *mut smash::app::KineticEnergy;
-    let grav_speed_y = lua_bind::KineticEnergy::get_speed_y(energy_gravity);
     let start_speed_x_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.start_speed_x_mul");
     let start_speed_y_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.start_speed_y_mul");
     let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) * start_speed_x_mul;
@@ -79,14 +55,22 @@ unsafe extern "C" fn special_hi_set_kinetic(fighter: &mut L2CFighterCommon) {
     if fighter.is_situation(*SITUATION_KIND_AIR) {
         let start_brake_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.start_brake_x");
         let start_brake_y = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.start_brake_y");
-        KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-        sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_FREE, speed_x, speed_y, 0.0, 0.0, 0.0);
-        sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, start_brake_x, start_brake_y);
+        sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, 0.0, 0.0, 0.0, 0.0);
+        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
+        sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
+        KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+
+        sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_AIR, speed_x, 0.0, 0.0, 0.0, 0.0);
+        sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, start_brake_x, 0.0);
         sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
+        KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
     }
 }
 
 unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.sub_transition_group_check_air_cliff().get_bool() {
+        return 1.into();
+    }
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
         || fighter.sub_air_check_fall_common().get_bool() {
@@ -107,13 +91,11 @@ unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2C
 }
 
 unsafe extern "C" fn special_hi_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-    if speed_y.abs() < 0.05 {
-        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
-        sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
-    }
-
     let frame = MotionModule::frame(fighter.module_accessor);
+    let gravity_frame = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.start_gravity_frame");
+    if fighter.motion_frame() >= gravity_frame {
+        sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.015);
+    }
     let lock_angle_frame = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.start_lock_angle_frame");
     if !VarModule::is_flag(fighter.battle_object, vars::samusd::status::SPECIAL_HI_SET_ROT)
     && fighter.motion_frame() > lock_angle_frame {
@@ -205,7 +187,7 @@ unsafe extern "C" fn special_hi_rush_pre(fighter: &mut L2CFighterCommon) -> L2CV
 
 unsafe extern "C" fn special_hi_rush_init(fighter: &mut L2CFighterCommon) -> L2CValue {
     let mut angle = VarModule::get_float(fighter.battle_object, vars::samusd::instance::SPECIAL_HI_RUSH_ANGLE);
-    let isGrounded = fighter.is_situation(*SITUATION_KIND_GROUND) && angle.abs() < 10.0;//special_hi_ray_check(fighter);
+    let isGrounded = fighter.is_situation(*SITUATION_KIND_GROUND) && angle.abs() < 10.0;    //special_hi_ray_check(fighter);
     let situation = if isGrounded { *SITUATION_KIND_GROUND } else { *SITUATION_KIND_AIR };
     let kinetic = if isGrounded { *FIGHTER_KINETIC_TYPE_GROUND_STOP } else { *FIGHTER_KINETIC_TYPE_AIR_STOP };
     let correct = if isGrounded { *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP } else { *GROUND_CORRECT_KIND_AIR };
@@ -261,7 +243,6 @@ unsafe extern "C" fn special_hi_rush_set_kinetic(fighter: &mut L2CFighterCommon)
 unsafe extern "C" fn special_hi_rush_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     //GroundModule::set_passable_check(fighter.module_accessor, true);
     MotionModule::change_motion(fighter.module_accessor,Hash40::new("special_hi"), 0.0, 1.0, false, 0.0, false, false);
-
     let angle = VarModule::get_float(fighter.battle_object, vars::samusd::instance::SPECIAL_HI_RUSH_ANGLE);
     if angle > 10.0 {
         StatusModule::set_situation_kind(fighter.module_accessor, app::SituationKind(*SITUATION_KIND_AIR), false);
@@ -310,14 +291,13 @@ unsafe extern "C" fn special_hi_rush_main_loop(fighter: &mut L2CFighterCommon) -
             return to_return.into();
         }
     }
-
     if !StatusModule::is_changing(fighter.module_accessor) && StatusModule::is_situation_changed(fighter.module_accessor) {
         if fighter.is_situation(*SITUATION_KIND_AIR) {
             VarModule::on_flag(fighter.battle_object, vars::samusd::instance::SPECIAL_HI_RUSH_AIR);
             GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         }
         else {
-            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
         }
         fighter.sub_change_kinetic_type_by_situation(FIGHTER_KINETIC_TYPE_GROUND_STOP.into(), FIGHTER_KINETIC_TYPE_AIR_STOP.into());
         special_hi_rush_set_kinetic(fighter);
@@ -388,10 +368,18 @@ unsafe extern "C" fn special_hi_end_init(fighter: &mut L2CFighterCommon) -> L2CV
     if end_type != END_TYPE_AIR {
         StatusModule::set_situation_kind(fighter.module_accessor, app::SituationKind(*SITUATION_KIND_GROUND), false);
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
         if end_type == END_TYPE_LANDING {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+            let limit_speed_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.end_land_limit_speed_x");
             sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, speed_x, 0.0);
-            sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, 1.5, 0.0);
+            sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, limit_speed_x, 0.0);
+            sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
+        }
+        else {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
+            let brake_speed_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.end_ground_brake_speed_x");
+            sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, speed_x, 0.0);
+            sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, brake_speed_x, 0.0);
             sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
         }
         special_hi_snap_to_ground(fighter);
@@ -403,9 +391,10 @@ unsafe extern "C" fn special_hi_end_init(fighter: &mut L2CFighterCommon) -> L2CV
         StatusModule::set_situation_kind(fighter.module_accessor, app::SituationKind(*SITUATION_KIND_AIR), false);
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
 
-        sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y * 0.75, 0.0, 0.0, 0.0);
+        let speed_y_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.end_speed_y_mul");
+        sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y * speed_y_mul, 0.0, 0.0, 0.0);
         let air_accel_y = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_y"), 0);
-        let accel_y_mul = 1.0;
+        let accel_y_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.end_accel_y_mul");
         let air_speed_y_stable = WorkModule::get_param_float(fighter.module_accessor, hash40("air_speed_y_stable"), 0);
         sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -air_accel_y * accel_y_mul);
         sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, air_speed_y_stable);
@@ -462,13 +451,13 @@ unsafe extern "C" fn special_hi_end_main_loop(fighter: &mut L2CFighterCommon) ->
         EffectModule::detach_kind(fighter.module_accessor, Hash40::new("samusd_dash_attack"), 0);
         fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND, *GROUND_CORRECT_KIND_AIR);
         fighter.change_kinetic_by_situation(*FIGHTER_KINETIC_TYPE_GROUND_STOP, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-        fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, *FIGHTER_STATUS_KIND_FALL_SPECIAL, false);
+        fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, *FIGHTER_STATUS_KIND_FALL, false);
     }
 
     return 0.into();
 }
 
-//Enable kinetics, smooth degree and joint rotation towards 0.0
+// Enable kinetics, smooth degree and joint rotation towards 0.0
 unsafe extern "C" fn special_hi_end_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
     if KineticModule::get_kinetic_type(fighter.module_accessor) != *FIGHTER_KINETIC_TYPE_FALL
     && !fighter.is_situation(*SITUATION_KIND_GROUND)
@@ -495,11 +484,11 @@ unsafe extern "C" fn special_hi_set_joint_rotation(fighter: &mut L2CFighterCommo
 unsafe fn special_hi_ray_check(fighter: &mut L2CFighterCommon) -> bool {
     return GroundModule::ray_check(fighter.module_accessor,
         &Vector2f{ x: PostureModule::pos_x(fighter.module_accessor), y: PostureModule::pos_y(fighter.module_accessor) }, 
-        &Vector2f{ x: 0.0, y: -5.5 }, true) == 1; //?
+        &Vector2f{ x: 0.0, y: -5.5 }, true) == 1;
 }
 
 unsafe extern "C" fn special_hi_rush_handle_bound(fighter: &mut L2CFighterCommon) -> i32 {
-    //Check for landing
+    // Check for landing
     let rush_frame = VarModule::get_int(fighter.battle_object, vars::samusd::status::SPECIAL_HI_RUSH_FRAME);
     let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     if fighter.is_situation(*SITUATION_KIND_GROUND) 
@@ -511,7 +500,7 @@ unsafe extern "C" fn special_hi_rush_handle_bound(fighter: &mut L2CFighterCommon
         let touch_normal_angle = sv_math::vec2_angle(normal_x, normal_y, speed_x, speed_y);
         let rush_impact_angle = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.rush_impact_angle");
         let adjusted_angle_rad: f32 = (rush_impact_angle + 90.0).to_radians();
-        //If angle is too steep, then land. Otherwise, continue forward
+        // If angle is too steep, then land. Otherwise, continue forward
         if adjusted_angle_rad < touch_normal_angle {
             special_hi_find_end_type(fighter);
             fighter.change_status(statuses::samusd::SPECIAL_HI_END.into(), false.into());
@@ -534,7 +523,7 @@ unsafe fn special_hi_snap_to_ground(fighter: &mut L2CFighterCommon) {
     let pos_x = PostureModule::pos_x(fighter.module_accessor);
     let pos_y = PostureModule::pos_y(fighter.module_accessor);
     let pos_z = PostureModule::pos_z(fighter.module_accessor);
-    let hit_pos = &mut Vector2f{x: 0.0, y: 0.0};
+    let hit_pos = &mut Vector2f::zero();
     let ray_check = GroundModule::ray_check_hit_pos(
         fighter.module_accessor,
         &Vector2f{x: pos_x, y: pos_y},
@@ -546,7 +535,6 @@ unsafe fn special_hi_snap_to_ground(fighter: &mut L2CFighterCommon) {
     let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let lr = PostureModule::lr(fighter.module_accessor);
     SET_SPEED_EX(fighter, speed_x * lr, -0.01, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-    GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
 }
 
 unsafe fn special_hi_find_end_type(fighter: &mut L2CFighterCommon) {
@@ -577,13 +565,13 @@ unsafe extern "C" fn special_hi_end_enable_control(fighter: &mut L2CFighterCommo
     let air_accel_x_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_x_mul"), 0);
     let air_accel_x_add = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_x_add"), 0);
     let air_speed_x_stable = WorkModule::get_param_float(fighter.module_accessor, hash40("air_speed_x_stable"), 0);
-    let speed_x_max_mul = 0.5;
-    let accel_x_mul = 0.375;
+    let stable_speed_x_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.end_stable_speed_x_mul");
+    let accel_x_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.end_accel_x_mul");
     sv_kinetic_energy!(controller_set_accel_x_mul, fighter, air_accel_x_mul * accel_x_mul);
     sv_kinetic_energy!(controller_set_accel_x_add, fighter, air_accel_x_add * accel_x_mul);
-    sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, air_speed_x_stable * speed_x_max_mul, 0.0);
+    sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, air_speed_x_stable * stable_speed_x_mul, 0.0);
     WorkModule::set_float(fighter.module_accessor, accel_x_mul, *FIGHTER_INSTANCE_WORK_ID_FLOAT_FALL_X_ACCEL_MUL);
-    WorkModule::set_float(fighter.module_accessor, speed_x_max_mul, *FIGHTER_INSTANCE_WORK_ID_FLOAT_FALL_X_MAX_MUL);
+    WorkModule::set_float(fighter.module_accessor, stable_speed_x_mul, *FIGHTER_INSTANCE_WORK_ID_FLOAT_FALL_X_MAX_MUL);
 }
 
 unsafe extern "C" fn stub(fighter: &mut L2CFighterCommon) -> L2CValue {
