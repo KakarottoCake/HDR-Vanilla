@@ -221,9 +221,12 @@ special_air_n:
 special_air_n_empty:
   extra:
     cancel_frame: 70
+special_s_end:
+  extra:
+    cancel_frame: 28
 special_air_s_end:
   extra:
-    cancel_frame: 21
+    cancel_frame: 28
 special_hi_command:
   extra:
     xlu_start: 0
