@@ -264,7 +264,7 @@ special_air_lw_step_f:
     cancel_frame: 13
 special_air_s_end:
   extra:
-    cancel_frame: 21
+    cancel_frame: 28
 special_hi_command:
   extra:
     xlu_start: 0
@@ -317,7 +317,7 @@ special_n_empty:
     move: false
 special_s_end:
   extra:
-    cancel_frame: 31
+    cancel_frame: 28
 throw_lw:
   extra:
     cancel_frame: 41
