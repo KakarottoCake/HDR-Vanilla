@@ -440,8 +440,16 @@ unsafe extern "C" fn special_hi_end_main_loop(fighter: &mut L2CFighterCommon) ->
         let next_status = match VarModule::get_int(fighter.battle_object, vars::samusd::instance::SPECIAL_HI_END_TYPE) {
             END_TYPE_GROUND => *FIGHTER_STATUS_KIND_WAIT,
             END_TYPE_LANDING => *FIGHTER_STATUS_KIND_WAIT,
-            END_TYPE_AIR => *FIGHTER_STATUS_KIND_FALL_SPECIAL,
-            _ => *FIGHTER_STATUS_KIND_FALL_SPECIAL,
+            END_TYPE_AIR => {
+                let landing_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("sjump_landing_frame"));
+                WorkModule::set_float(fighter.module_accessor, landing_frame, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME); 
+                *FIGHTER_STATUS_KIND_FALL_SPECIAL
+            },
+            _ => {
+                let landing_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("sjump_landing_frame"));
+                WorkModule::set_float(fighter.module_accessor, landing_frame, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME); 
+                *FIGHTER_STATUS_KIND_FALL_SPECIAL
+            },
         };
         fighter.change_status(next_status.into(), false.into());
         return 0.into();
@@ -451,6 +459,10 @@ unsafe extern "C" fn special_hi_end_main_loop(fighter: &mut L2CFighterCommon) ->
         EffectModule::detach_kind(fighter.module_accessor, Hash40::new("samusd_dash_attack"), 0);
         fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND, *GROUND_CORRECT_KIND_AIR);
         fighter.change_kinetic_by_situation(*FIGHTER_KINETIC_TYPE_GROUND_STOP, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+        if fighter.is_situation(*SITUATION_KIND_GROUND) {
+           let landing_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("sjump_landing_frame"));
+            WorkModule::set_float(fighter.module_accessor, landing_frame, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME); 
+        }
         fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, *FIGHTER_STATUS_KIND_FALL, false);
     }
 
