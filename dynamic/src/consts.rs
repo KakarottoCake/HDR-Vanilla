@@ -1859,6 +1859,10 @@ pub mod statuses {
         pub const EXPLODE_KIRBY: i32 = 0x5;
     }
 
+    pub mod palutena_meteor {
+        pub const MOVE: i32 = 0x0;
+    }
+
     pub mod pickel_trolley {
         pub const PEARL_FLY: i32 = 0x2;
     }
@@ -1897,6 +1901,10 @@ pub mod articles {
     
     pub mod purin {
         pub const DISARMING_VOICE: i32 = 0x2;
+    }
+
+    pub mod palutena {
+        pub const METEOR: i32 = 0x9;
     }
 }
 
