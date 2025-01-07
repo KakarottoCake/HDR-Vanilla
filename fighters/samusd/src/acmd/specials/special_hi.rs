@@ -63,14 +63,6 @@ unsafe extern "C" fn expression_specialhihold(agent: &mut L2CAgentBase) {
 
         ControlModule::set_rumble(boma, Hash40::new("rbkind_elecattacks"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    // frame(lua_state, 3.0);
-    // if is_excute(agent) {
-    //     AREA_WIND_2ND_arg10(agent,0, 1, 80, 2, 0.8, 0, 15, 40, 30, 60);
-    // }
-    // frame(lua_state, 42.0);
-    // if is_excute(agent) {
-    //     AreaModule::erase_wind(agent.module_accessor, 0);
-    // }
 }
 
 unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {

@@ -83,11 +83,6 @@ special:
 attack_12:
   extra:
     cancel_frame: 30
-special_s:
-  flags:
-    move: false
-  extra:
-    cancel_frame: 51
 attack_11:
   extra:
     cancel_frame: 18
@@ -149,6 +144,14 @@ special_air_hi:
     xlu_start: 0
     xlu_end: 0
     no_stop_intp: true
+special_s:
+  flags:
+    move: false
+  extra:
+    cancel_frame: 53
+special_air_s:
+  extra:
+    cancel_frame: 53
 special_hi:
   flags:
     loop: true
@@ -158,9 +161,6 @@ special_hi:
     xlu_end: 0
     cancel_frame: 0
     no_stop_intp: false
-special_air_s:
-  extra:
-    cancel_frame: 51
 special_air_lw:
   extra:
     cancel_frame: 47

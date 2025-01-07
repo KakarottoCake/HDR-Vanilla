@@ -1501,12 +1501,13 @@ pub mod vars {
     pub mod samusd {
         pub mod instance {
             // flags
-            pub const SPECIAL_HI_RUSH_AIR: i32 = 0x0100;
-            pub const SPECIAL_HI_RUSH_ANGLE: i32 = 0x0101;
-            pub const SPECIAL_LW_ENABLE_DETONATE: i32 = 0x0102;
+            pub const ATTACK_AIR_N_LANDING_HIT: i32 = 0x0100;
+            pub const SPECIAL_HI_RUSH_AIR: i32 = 0x0101;
+            pub const SPECIAL_HI_RUSH_ANGLE: i32 = 0x0102;
+            pub const SPECIAL_LW_ENABLE_DETONATE: i32 = 0x0103;
 
             // ints
-            pub const SPECIAL_HI_END_TYPE: i32 = 0x0103;
+            pub const SPECIAL_HI_END_TYPE: i32 = 0x0104;
         }
         pub mod status {
             // flags
