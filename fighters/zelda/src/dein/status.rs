@@ -39,6 +39,7 @@ unsafe extern "C" fn tame_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let zelda = utils::util::get_battle_object_from_id(owner_id);
 	if sv_battle_object::kind(owner_id) == *FIGHTER_KIND_ZELDA {
 		let zelda = utils::util::get_battle_object_from_id(owner_id);
+        VarModule::set_int(zelda, vars::zelda::instance::SPECIAL_S_CURRENT_DEIN_MOVE_OBJECT_ID, 0); //once dins starts ticking clear the ID
 		let dein = VarModule::get_int(zelda, vars::zelda::instance::SPECIAL_S_DEIN_OBJECT_ID);
         let dein2 = VarModule::get_int(zelda, vars::zelda::instance::SPECIAL_S_DEIN_OBJECT_ID_2);
         dein_remove(weapon, dein, dein2);

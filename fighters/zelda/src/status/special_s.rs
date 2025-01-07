@@ -4,8 +4,10 @@ unsafe extern "C" fn special_s_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[STATUS_KIND].get_i32() != *FIGHTER_ZELDA_STATUS_KIND_SPECIAL_S_LOOP
     && fighter.global_table[STATUS_KIND].get_i32() != *FIGHTER_ZELDA_STATUS_KIND_SPECIAL_S_END {
         let dein_move = VarModule::get_int(fighter.battle_object, vars::zelda::instance::SPECIAL_S_CURRENT_DEIN_MOVE_OBJECT_ID);
-        delete_effects(fighter, dein_move);
-        sv_battle_object::end_inhaled(dein_move as u32, true);
+        if dein_move != 0 { 
+            delete_effects(fighter, dein_move);
+            sv_battle_object::end_inhaled(dein_move as u32, true);
+        }
     }
     0.into()
 }
@@ -13,8 +15,10 @@ unsafe extern "C" fn special_s_end(fighter: &mut L2CFighterCommon) -> L2CValue {
 unsafe extern "C" fn special_s_loop_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[STATUS_KIND].get_i32() != *FIGHTER_ZELDA_STATUS_KIND_SPECIAL_S_END {
         let dein_move = VarModule::get_int(fighter.battle_object, vars::zelda::instance::SPECIAL_S_CURRENT_DEIN_MOVE_OBJECT_ID);
-        delete_effects(fighter, dein_move);
-        sv_battle_object::end_inhaled(dein_move as u32, true);
+        if dein_move != 0 { 
+            delete_effects(fighter, dein_move);
+            sv_battle_object::end_inhaled(dein_move as u32, true);
+        }
     }
     0.into()
 }
