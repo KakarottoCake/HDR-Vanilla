@@ -113,17 +113,20 @@ unsafe extern "C" fn dins_refresh(weapon: &mut L2CWeaponCommon) -> L2CValue {
         //dins size, hold frames 
         let hold_frame_max = weapon.get_param_float("param_dein", "count");
         let hold_frame = weapon.get_float(*WEAPON_ZELDA_DEIN_STATUS_WORK_FLOAT_COUNT);
-        let pop_distance = 8.0 + 4.0 * (hold_frame_max/hold_frame); //min charge dins 8 units, max charge 12 units (soft scaling to match flame GFX better)
+        let pop_distance = 7.5 + 5.0 * (hold_frame_max/hold_frame); //min charge dins 7 units, max charge 12.5 units (soft scaling to match flame GFX better)
         if distance <= pop_distance {
+            //explode on midpoint so it looks like dins were placed closer
+            let midpoint = &Vector3f::new((new_dins_pos.x + old_dins_pos.x) / 2.0, (new_dins_pos.y + old_dins_pos.y) / 2.0, old_dins_pos.z);
+            PostureModule::set_pos(weapon.module_accessor, midpoint);
             //set life to x frames to make it detonate
-            weapon.set_float(8.0, *WEAPON_ZELDA_DEIN_STATUS_WORK_FLOAT_LIFE); //10f delay?, incl 2f delay from dins release (lc tech window)
+            weapon.set_float(9.0, *WEAPON_ZELDA_DEIN_STATUS_WORK_FLOAT_LIFE); //10f delay?, incl 2f? delay from dins release (lc tech window)
             MotionModule::change_motion_force_inherit_frame(weapon.module_accessor, Hash40::new("tame"), 150.0, 1.0, 1.0);
             //clear ticking gfx
             EFFECT_OFF_KIND(weapon, Hash40::new("sys_flash"), true, true);
             //one last flash to show max size
             EffectModule::req_follow(weapon.module_accessor, Hash40::new("sys_flash"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.9 + 0.023 * hold_frame * 0.95, false, 0, 0, 0, 0, 0, false, false);
             LAST_EFFECT_SET_COLOR(weapon, 0.9, 0.044, 0.005);
-            LAST_EFFECT_SET_RATE(weapon, 1.5);
+            LAST_EFFECT_SET_RATE(weapon, 1.4);
             //woosh sound before pop
             let sound = SoundModule::play_se(weapon.module_accessor, Hash40::new("se_zelda_appeal_s01"), true, false, false, false, app::enSEType(0));
             SoundModule::set_se_vol(weapon.module_accessor, sound as i32, 1.2, 0);
