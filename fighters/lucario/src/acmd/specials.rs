@@ -363,7 +363,7 @@ unsafe extern "C" fn game_specialhimove(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, rate * 0.8);
     if is_excute(agent) {
         JostleModule::set_status(boma, false);
-        MeterModule::drain_direct(agent.battle_object, 6.0 * rate);
+        MeterModule::drain_direct(agent.battle_object,  rate * ParamModule::get_float(agent.battle_object, ParamType::Agent, "aura.uspecial_cost"));
         MeterModule::watch_damage(agent.battle_object, false);
         MeterModule::watch_damage(agent.battle_object, true);
         VarModule::on_flag(agent.battle_object, vars::lucario::status::HIT_CANCEL);
