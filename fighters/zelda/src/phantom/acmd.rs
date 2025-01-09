@@ -394,6 +394,7 @@ unsafe extern "C" fn game_attackl(agent: &mut L2CAgentBase) {
 	FT_MOTION_RATE_RANGE(agent, 13.0, 74.0, 100.0);
 	if is_excute(agent) {
 		AttackModule::clear_all(boma);
+		ReflectorModule::clear_all(boma);
 		sv_kinetic_energy!(mul_speed, agent, WEAPON_ZELDA_PHANTOM_KINETIC_ENERGY_ID_NORMAL, 0.75, 0.0);
 	}
 }
@@ -535,6 +536,7 @@ unsafe extern "C" fn game_attackmax(agent: &mut L2CAgentBase) {
 	FT_MOTION_RATE_RANGE(agent, 17.0, 119.0, 120.0);
 	if is_excute(agent) {
 		AttackModule::clear_all(boma);
+		ReflectorModule::clear_all(boma);
 	}
 }
 

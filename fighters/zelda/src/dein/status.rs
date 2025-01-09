@@ -114,7 +114,10 @@ unsafe extern "C" fn dins_refresh(weapon: &mut L2CWeaponCommon) -> L2CValue {
         let hold_frame_max = weapon.get_param_float("param_dein", "count");
         let hold_frame = weapon.get_float(*WEAPON_ZELDA_DEIN_STATUS_WORK_FLOAT_COUNT);
         let pop_distance = 7.5 + 5.0 * (hold_frame_max/hold_frame); //min charge dins 7 units, max charge 12.5 units (soft scaling to match flame GFX better)
-        if distance <= pop_distance {
+        //explode timer && current frame
+        let mine_timer = weapon.get_param_float("param_dein", "bang_time");
+        let frame = weapon.get_float(*WEAPON_ZELDA_DEIN_STATUS_WORK_FLOAT_LIFE); //frames till explosion
+        if distance <= pop_distance && frame > (mine_timer - 146.0) { //don't kill new dins if old dins already had final flash / is exploding 
             //explode on midpoint so it looks like dins were placed closer
             let midpoint = &Vector3f::new((new_dins_pos.x + old_dins_pos.x) / 2.0, (new_dins_pos.y + old_dins_pos.y) / 2.0, old_dins_pos.z);
             PostureModule::set_pos(weapon.module_accessor, midpoint);
@@ -123,7 +126,7 @@ unsafe extern "C" fn dins_refresh(weapon: &mut L2CWeaponCommon) -> L2CValue {
             MotionModule::change_motion_force_inherit_frame(weapon.module_accessor, Hash40::new("tame"), 150.0, 1.0, 1.0);
             //clear ticking gfx
             EFFECT_OFF_KIND(weapon, Hash40::new("sys_flash"), true, true);
-            //one last flash to show max size
+            //one last flash to show max size, maybe make a diff color if it looks strange
             EffectModule::req_follow(weapon.module_accessor, Hash40::new("sys_flash"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.9 + 0.023 * hold_frame * 0.95, false, 0, 0, 0, 0, 0, false, false);
             LAST_EFFECT_SET_COLOR(weapon, 0.9, 0.044, 0.005);
             LAST_EFFECT_SET_RATE(weapon, 1.4);
