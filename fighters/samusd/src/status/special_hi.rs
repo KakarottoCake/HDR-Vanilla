@@ -65,6 +65,9 @@ unsafe extern "C" fn special_hi_set_kinetic(fighter: &mut L2CFighterCommon) {
         sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
         KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
     }
+    else {
+        sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, 0.1, 0.0);
+    }
 }
 
 unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -454,8 +457,8 @@ unsafe extern "C" fn special_hi_end_main_loop(fighter: &mut L2CFighterCommon) ->
         fighter.change_status(next_status.into(), false.into());
         return 0.into();
     }
-    if !StatusModule::is_changing(fighter.module_accessor) &&
-    StatusModule::is_situation_changed(fighter.module_accessor) {
+    if !StatusModule::is_changing(fighter.module_accessor)
+    && StatusModule::is_situation_changed(fighter.module_accessor) {
         EffectModule::detach_kind(fighter.module_accessor, Hash40::new("samusd_dash_attack"), 0);
         fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND, *GROUND_CORRECT_KIND_AIR);
         fighter.change_kinetic_by_situation(*FIGHTER_KINETIC_TYPE_GROUND_STOP, *FIGHTER_KINETIC_TYPE_AIR_STOP);
