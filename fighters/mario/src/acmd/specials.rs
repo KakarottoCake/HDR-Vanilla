@@ -427,7 +427,7 @@ unsafe extern "C" fn sound_specials(agent: &mut L2CAgentBase) {
     frame(lua_state, 9.0);
     if is_excute(agent) {
         if !VarModule::is_flag(agent.battle_object, vars::mario::instance::SPECIAL_S_DISABLE_STALL) {
-            let handle = SoundModule::play_se(boma, Hash40::new("se_mario_special_l01"), true, false, false, false, app::enSEType(0));
+            let handle = SoundModule::play_se(boma, Hash40::new("se_mario_special_s01"), true, false, false, false, app::enSEType(0));
             SoundModule::set_se_vol(boma, handle as i32, 0.7, 0);
             PLAY_SE(agent, Hash40::new("vc_mario_attack05"));
             PLAY_SE(agent, Hash40::new("se_mario_attackair_l01"));
@@ -514,7 +514,7 @@ unsafe extern "C" fn game_groundpoundstart(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_groundpoundstart(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 5.0);
     if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_mario_special_l04"));
+        PLAY_SE(agent, Hash40::new("se_mario_special_l01"));
     }
 }
 
@@ -557,7 +557,7 @@ unsafe extern "C" fn game_groundpoundland(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn sound_groundpoundland(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_mario_special_l03"));
+        PLAY_SE(agent, Hash40::new("se_mario_special_l02"));
     }
 }
 
