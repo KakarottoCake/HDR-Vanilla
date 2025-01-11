@@ -72,41 +72,58 @@ unsafe extern "C" fn mario_special_lw_shoot_pre(fighter: &mut L2CFighterCommon) 
 }
 
 unsafe extern "C" fn mario_special_lw_shoot_init(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if VarModule::get_int(fighter.battle_object, vars::mario::instance::SPECIAL_LW_KIND) != vars::mario::SPECIAL_LW_KIND_LONG_JUMP {
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+        return false.into();
+    }
     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-    if VarModule::get_int(fighter.battle_object, vars::mario::instance::SPECIAL_LW_KIND) == vars::mario::SPECIAL_LW_KIND_LONG_JUMP {
-        VarModule::off_flag(fighter.battle_object, vars::mario::status::SPECIAL_LW_BLJ);
-        let dir = fighter.get_command_stick_direction(true);
-        let speed_x : f32;
-        let speed_y : f32;
-        if [6, 3, 9].contains(&dir) {
-            speed_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lw.long_jump_speed_strong_x");
-            speed_y = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lw.long_jump_speed_strong_y");
-            VarModule::set_int(fighter.battle_object, vars::mario::status::SPECIAL_LW_LONG_JUMP_KIND, vars::mario::LONG_JUMP_S);
-            VarModule::off_flag(fighter.battle_object, vars::mario::instance::SPECIAL_LW_BLJ_PREV);
-        }
-        else if [4, 7, 1].contains(&dir) {
-            VarModule::on_flag(fighter.battle_object, vars::mario::status::SPECIAL_LW_BLJ);
-            if VarModule::is_flag(fighter.battle_object, vars::mario::instance::SPECIAL_LW_BLJ_PREV) {
-                speed_x = -ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lw.long_jump_speed_strong_x");
-                speed_y = 0.0;
-                VarModule::set_int(fighter.battle_object, vars::mario::status::SPECIAL_LW_LONG_JUMP_KIND, vars::mario::LONG_JUMP_B);
-            }
-            else {
-                speed_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lw.long_jump_speed_weak_x");
-                speed_y = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lw.long_jump_speed_weak_y");
-                VarModule::set_int(fighter.battle_object, vars::mario::status::SPECIAL_LW_LONG_JUMP_KIND, vars::mario::LONG_JUMP_W);
-            }
-            VarModule::on_flag(fighter.battle_object, vars::mario::instance::SPECIAL_LW_BLJ_PREV);
+
+    VarModule::off_flag(fighter.battle_object, vars::mario::status::SPECIAL_LW_BLJ);
+    let mut speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) * PostureModule::lr(fighter.module_accessor);
+    let mut speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let speed_x_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "long_jump.speed_x_mul");
+    let speed_x_min = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "long_jump.speed_x_min");
+    let speed_x_max = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "long_jump.speed_x_max");
+    let speed_y_min = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "long_jump.speed_y_min");
+    let speed_y_max = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "long_jump.speed_y_max");
+
+    let back_speed_x_threshold = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "long_jump.back_speed_x_threshold");
+    dbg!(speed_x);
+    dbg!(speed_x_mul);
+    dbg!(speed_x_min);
+    dbg!(speed_x_max);
+    dbg!(back_speed_x_threshold);
+    if dbg!(speed_x) <= back_speed_x_threshold {
+        VarModule::on_flag(fighter.battle_object, vars::mario::status::SPECIAL_LW_BLJ);
+        if VarModule::is_flag(fighter.battle_object, vars::mario::instance::SPECIAL_LW_BLJ_PREV) {
+            let back_speed_x_min = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "long_jump.back_speed_x_min");
+            let back_speed_x_max = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "long_jump.back_speed_x_max");
+            dbg!(back_speed_x_min);
+            dbg!(back_speed_x_max);
+            speed_x = dbg!(f32::clamp(speed_x * speed_x_mul, back_speed_x_min, back_speed_x_max));
+            speed_y = 0.0;
+            VarModule::set_int(fighter.battle_object, vars::mario::status::SPECIAL_LW_LONG_JUMP_KIND, vars::mario::LONG_JUMP_B);
         }
         else {
-            speed_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lw.long_jump_speed_mid_x");
-            speed_y = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lw.long_jump_speed_mid_y");
-                VarModule::set_int(fighter.battle_object, vars::mario::status::SPECIAL_LW_LONG_JUMP_KIND, vars::mario::LONG_JUMP_M);
-            VarModule::off_flag(fighter.battle_object, vars::mario::instance::SPECIAL_LW_BLJ_PREV);
+            speed_x = dbg!(speed_x_min);
+            speed_y = speed_y_min;
+            VarModule::set_int(fighter.battle_object, vars::mario::status::SPECIAL_LW_LONG_JUMP_KIND, vars::mario::LONG_JUMP_W);
         }
-        SET_SPEED_EX(fighter, speed_x, speed_y, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+        VarModule::on_flag(fighter.battle_object, vars::mario::instance::SPECIAL_LW_BLJ_PREV);
+    } else {
+        speed_x = dbg!(f32::clamp(speed_x * speed_x_mul, speed_x_min, speed_x_max));
+        speed_y = util::nlerp(speed_y_min, speed_y_max, 1.0, (speed_x - speed_x_min) / (speed_x_max - speed_x_min));
+        if (speed_x >= speed_x_max) {
+            VarModule::set_int(fighter.battle_object, vars::mario::status::SPECIAL_LW_LONG_JUMP_KIND, vars::mario::LONG_JUMP_S);
+        } else {
+            VarModule::set_int(fighter.battle_object, vars::mario::status::SPECIAL_LW_LONG_JUMP_KIND, vars::mario::LONG_JUMP_M);
+        }
+        VarModule::off_flag(fighter.battle_object, vars::mario::instance::SPECIAL_LW_BLJ_PREV);
     }
-    0.into()
+
+    dbg!(speed_x);
+    SET_SPEED_EX(fighter, speed_x, speed_y, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    return false.into();
 }
 
 unsafe extern "C" fn mario_special_lw_shoot_main(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -155,7 +172,7 @@ unsafe extern "C" fn mario_special_lw_groundpound_fall_main_loop(fighter: &mut L
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
-    if fighter.get_command_stick_direction(false) == 8 {
+    if fighter.is_button_trigger(Buttons::SpecialAll | Buttons::Guard) {
         VarModule::set_int(fighter.battle_object, vars::mario::instance::SPECIAL_LW_KIND, vars::mario::SPECIAL_LW_KIND_GROUND_POUND_CANCEL);
         fighter.change_status(FIGHTER_MARIO_STATUS_KIND_SPECIAL_LW_CHARGE.into(), false.into());
     }
@@ -172,7 +189,7 @@ unsafe extern "C" fn mario_special_lw_shoot_exec(fighter: &mut L2CFighterCommon)
             1.0
         }
         else {
-            ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lw.long_jump_air_accel_y_mul")
+            ParamModule::get_float(fighter.battle_object, ParamType::Agent, "long_jump.air_accel_y_mul")
         };
         let air_accel_y = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_y"), 0) * air_accel_mul;
         let air_accel_x = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_x_mul"), 0);
@@ -182,7 +199,7 @@ unsafe extern "C" fn mario_special_lw_shoot_exec(fighter: &mut L2CFighterCommon)
             FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
             -air_accel_y
         );
-        let long_jump_air_accel_x_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lw.long_jump_air_accel_x_mul");
+        let long_jump_air_accel_x_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "long_jump.air_accel_x_mul");
         sv_kinetic_energy!(
             set_accel_x_mul,
             fighter,
@@ -195,7 +212,7 @@ unsafe extern "C" fn mario_special_lw_shoot_exec(fighter: &mut L2CFighterCommon)
         let gravity = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
         lua_bind::FighterKineticEnergyGravity::set_speed(
             gravity as *mut smash::app::FighterKineticEnergyGravity,
-            -ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lw.ground_pound_fall_speed")
+            -ParamModule::get_float(fighter.battle_object, ParamType::Agent, "ground_pound.fall_speed")
         );
         lua_bind::FighterKineticEnergyGravity::set_accel(gravity as *mut smash::app::FighterKineticEnergyGravity, 0.0);
     }
@@ -216,6 +233,7 @@ unsafe extern "C" fn mario_special_lw_charge_main(fighter: &mut L2CFighterCommon
             false,
             false
         );
+        KineticModule::set_consider_ground_friction(fighter.module_accessor, false, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         fighter.sub_shift_status_main(L2CValue::Ptr(mario_special_lw_longjump_end_main_loop as *const () as _))
     }
     else if VarModule::get_int(fighter.battle_object, vars::mario::instance::SPECIAL_LW_KIND) == vars::mario::SPECIAL_LW_KIND_GROUND_POUND {
