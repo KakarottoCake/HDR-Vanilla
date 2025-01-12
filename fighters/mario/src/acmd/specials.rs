@@ -462,21 +462,10 @@ unsafe extern "C" fn game_longjump(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 6.0);
     if is_excute(agent) {
         VarModule::on_flag(agent.battle_object, vars::mario::status::SPECIAL_LW_ENABLE_LANDING);
-        if [vars::mario::LONG_JUMP_B, vars::mario::LONG_JUMP_M].contains(&VarModule::get_int(agent.battle_object, vars::mario::status::SPECIAL_LW_LONG_JUMP_KIND)) {
-            CancelModule::enable_cancel(agent.module_accessor);
-        }
     }
-    frame(agent.lua_state_agent, 15.0);
+    frame(agent.lua_state_agent, 12.0);
     if is_excute(agent) {
-        if VarModule::get_int(agent.battle_object, vars::mario::status::SPECIAL_LW_LONG_JUMP_KIND) == vars::mario::LONG_JUMP_W {
-            CancelModule::enable_cancel(agent.module_accessor);
-        }
-    }
-    frame(agent.lua_state_agent, 20.0);
-    if is_excute(agent) {
-        if VarModule::get_int(agent.battle_object, vars::mario::status::SPECIAL_LW_LONG_JUMP_KIND) == vars::mario::LONG_JUMP_S {
-            CancelModule::enable_cancel(agent.module_accessor);
-        }
+        VarModule::on_flag(agent.battle_object, vars::common::status::DISABLE_ECB_SHIFT);
     }
 }
 
