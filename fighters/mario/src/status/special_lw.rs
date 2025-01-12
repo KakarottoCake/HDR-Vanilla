@@ -37,12 +37,19 @@ unsafe extern "C" fn mario_special_lw_pre(fighter: &mut L2CFighterCommon) -> L2C
 
 unsafe extern "C" fn mario_special_lw_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
-    // TODO: get the end frame of the special_lw_start motion and motion rate it according to the jump_squat_frame param
+    let motion_hash = Hash40::new("special_lw_start");
+    let jump_squat_frame = ParamModule::get_int(fighter.battle_object, ParamType::Agent, "long_jump.jump_squat_frame") as f32;
+    let start_frame = 0.0;
+    let end_frame = MotionModule::end_frame_from_hash(fighter.module_accessor, motion_hash);
+    let mut motion_rate = end_frame / jump_squat_frame;
+    if motion_rate < 1.0 {
+        motion_rate += 0.001;
+    }
     MotionModule::change_motion(
         fighter.module_accessor,
-        Hash40::new("special_lw_start"),
-        0.0,
-        1.0,
+        motion_hash,
+        start_frame,
+        motion_rate,
         false,
         0.0,
         false,
@@ -54,6 +61,7 @@ unsafe extern "C" fn mario_special_lw_main(fighter: &mut L2CFighterCommon) -> L2
 unsafe extern "C" fn mario_special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status(FIGHTER_MARIO_STATUS_KIND_SPECIAL_LW_SHOOT.into(), true.into());
+        return false.into();
     }
     return false.into();
 }
@@ -115,6 +123,8 @@ unsafe extern "C" fn mario_special_lw_shoot_init(fighter: &mut L2CFighterCommon)
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
             speed_x = speed_x_min;
             speed_y = speed_y_min;
+            sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, speed_x_max, 0.0);
+            sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, speed_x_max, 0.0);
             sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, speed_x * lr);
             sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y);
             VarModule::set_int(fighter.battle_object, vars::mario::status::SPECIAL_LW_LONG_JUMP_KIND, vars::mario::LONG_JUMP_W);
@@ -123,12 +133,13 @@ unsafe extern "C" fn mario_special_lw_shoot_init(fighter: &mut L2CFighterCommon)
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
         speed_x = f32::clamp(speed_x * speed_x_mul, speed_x_min, speed_x_max);
         speed_y = util::nlerp(speed_y_min, speed_y_max, 1.0, (speed_x - speed_x_min) / (speed_x_max - speed_x_min));
+        sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, speed_x_max, 0.0);
+        sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, speed_x_max, 0.0);
         sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, speed_x * lr);
         sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y);
         let long_jump_kind = if (speed_x >= speed_x_max) { vars::mario::LONG_JUMP_S } else { vars::mario::LONG_JUMP_M };
         VarModule::set_int(fighter.battle_object, vars::mario::status::SPECIAL_LW_LONG_JUMP_KIND, long_jump_kind);
     }
-    // SET_SPEED_EX(fighter, speed_x, speed_y, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     return false.into();
 }
 
