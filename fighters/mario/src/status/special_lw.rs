@@ -111,32 +111,35 @@ unsafe extern "C" fn mario_special_lw_shoot_init(fighter: &mut L2CFighterCommon)
     let back_speed_x_threshold = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "long_jump.back_speed_x_threshold");
     let back_speed_x_min = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "long_jump.back_speed_x_min");
     let back_speed_x_max = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "long_jump.back_speed_x_max");
+
     if fighter.global_table[SITUATION_KIND] != SITUATION_KIND_GROUND {
+        // if starting in the air, we just slid off and want to maintain (but not mult) all momentum
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
         sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, -1.0, 0.0);
         sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, speed_x * lr);
         sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y);
-        VarModule::set_int(fighter.battle_object, vars::mario::status::SPECIAL_LW_LONG_JUMP_KIND, vars::mario::LONG_JUMP_S);
-    } else if speed_x <= back_speed_x_threshold {
-        if fighter.global_table[PREV_STATUS_KIND] == FIGHTER_MARIO_STATUS_KIND_SPECIAL_LW_CHARGE
-        && !fighter.is_stick_forward() {
+        VarModule::set_int(fighter.battle_object, vars::mario::status::SPECIAL_LW_LONG_JUMP_KIND, vars::mario::LONG_JUMP_W);
+    } else if speed_x <= back_speed_x_threshold && fighter.global_table[PREV_STATUS_KIND] == FIGHTER_MARIO_STATUS_KIND_SPECIAL_LW_CHARGE {
+        if fighter.is_stick_backward() {
+            // BLJ with instant landing, uses ground kinetics
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
             speed_x = f32::clamp(speed_x * speed_x_mul, back_speed_x_min, back_speed_x_max);
             speed_y = 0.0;
             sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, -1.0, -1.0);
             sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, speed_x * lr, speed_y);
             VarModule::set_int(fighter.battle_object, vars::mario::status::SPECIAL_LW_LONG_JUMP_KIND, vars::mario::LONG_JUMP_B);
-        }
-        else {
+        } else {
+            // BLJ without instant landing, like a regular LJ but backwards
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-            speed_x = speed_x_min;
-            speed_y = speed_y_min;
-            sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, speed_x_max, 0.0);
+            speed_x = f32::clamp(speed_x * speed_x_mul, back_speed_x_min, back_speed_x_max);
+            speed_y = util::nlerp(speed_y_min, speed_y_max, 1.0, (-speed_x - speed_x_min) / (speed_x_max - speed_x_min));
+            sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, -1.0, 0.0);
             sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, speed_x * lr);
             sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y);
-            VarModule::set_int(fighter.battle_object, vars::mario::status::SPECIAL_LW_LONG_JUMP_KIND, vars::mario::LONG_JUMP_W);
+            VarModule::set_int(fighter.battle_object, vars::mario::status::SPECIAL_LW_LONG_JUMP_KIND, vars::mario::LONG_JUMP_S);
         }
     } else {
+        // regular LJ
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
         speed_x = f32::clamp(speed_x * speed_x_mul + speed_x_add, speed_x_min, speed_x_max);
         speed_y = util::nlerp(speed_y_min, speed_y_max, 1.0, (speed_x - speed_x_min) / (speed_x_max - speed_x_min));
