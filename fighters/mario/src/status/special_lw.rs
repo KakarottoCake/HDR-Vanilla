@@ -123,7 +123,6 @@ unsafe extern "C" fn mario_special_lw_shoot_init(fighter: &mut L2CFighterCommon)
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
             speed_x = speed_x_min;
             speed_y = speed_y_min;
-            sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, speed_x_max, 0.0);
             sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, speed_x_max, 0.0);
             sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, speed_x * lr);
             sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y);
@@ -133,7 +132,6 @@ unsafe extern "C" fn mario_special_lw_shoot_init(fighter: &mut L2CFighterCommon)
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
         speed_x = f32::clamp(speed_x * speed_x_mul, speed_x_min, speed_x_max);
         speed_y = util::nlerp(speed_y_min, speed_y_max, 1.0, (speed_x - speed_x_min) / (speed_x_max - speed_x_min));
-        sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, speed_x_max, 0.0);
         sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, speed_x_max, 0.0);
         sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, speed_x * lr);
         sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y);
@@ -246,20 +244,19 @@ unsafe extern "C" fn mario_special_lw_charge_main(fighter: &mut L2CFighterCommon
 }
 
 unsafe extern "C" fn mario_special_lw_charge_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.is_button_trigger(Buttons::SpecialAll) {
+    // if fighter.is_cat_flag(Cat1::SpecialLw) {
+        fighter.change_status(FIGHTER_MARIO_STATUS_KIND_SPECIAL_LW_SHOOT.into(), true.into());
+        return true.into();
+    }
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
         || fighter.sub_air_check_fall_common().get_bool() {
-            return 1.into();
+            return true.into();
         }
     }
-
-    let cat1 = ControlModule::get_command_flag_cat(fighter.module_accessor, 0);
-    if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW) != 0 {
-        StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_MARIO_STATUS_KIND_SPECIAL_LW_SHOOT, true);
-        return 1.into();
-    }
     if fighter.global_table[SITUATION_KIND] != SITUATION_KIND_GROUND {
-        fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+        fighter.change_status(FIGHTER_MARIO_STATUS_KIND_SPECIAL_LW_SHOOT.into(), true.into());
     }
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
