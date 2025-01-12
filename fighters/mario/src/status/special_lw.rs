@@ -119,8 +119,8 @@ unsafe extern "C" fn mario_special_lw_shoot_init(fighter: &mut L2CFighterCommon)
         sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, speed_x * lr);
         sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y);
         VarModule::set_int(fighter.battle_object, vars::mario::status::SPECIAL_LW_LONG_JUMP_KIND, vars::mario::LONG_JUMP_W);
-    } else if speed_x <= back_speed_x_threshold && fighter.global_table[PREV_STATUS_KIND] == FIGHTER_MARIO_STATUS_KIND_SPECIAL_LW_CHARGE {
-        if fighter.is_stick_backward() {
+    } else if speed_x <= back_speed_x_threshold {
+        if fighter.is_stick_backward() && fighter.global_table[PREV_STATUS_KIND] == FIGHTER_MARIO_STATUS_KIND_SPECIAL_LW_CHARGE {
             // BLJ with instant landing, uses ground kinetics
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
             speed_x = f32::clamp(speed_x * speed_x_mul, back_speed_x_min, back_speed_x_max);

@@ -28,7 +28,7 @@
     <float hash="speed_x_max">1.9</float>
     <float hash="speed_y_min">1.4</float>
     <float hash="speed_y_max">1.6</float>
-    <float hash="back_speed_x_threshold">0.1</float>
+    <float hash="back_speed_x_threshold">-0.2</float>
     <float hash="back_speed_x_min">-5.0</float>
     <float hash="back_speed_x_max">-1.0</float>
     <float hash="back_speed_x_hitbox_threshold">-3.0</float>
