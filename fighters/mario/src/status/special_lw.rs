@@ -152,7 +152,7 @@ unsafe extern "C" fn mario_special_lw_shoot_main(fighter: &mut L2CFighterCommon)
     let start_frame = if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
         0.0
     } else {
-        13.0
+        12.0
     };
     MotionModule::change_motion(
         fighter.module_accessor,

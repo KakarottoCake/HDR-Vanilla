@@ -466,6 +466,12 @@ unsafe extern "C" fn game_longjump(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 12.0);
     if is_excute(agent) {
         VarModule::on_flag(agent.battle_object, vars::common::status::DISABLE_ECB_SHIFT);
+        let lr = PostureModule::lr(agent.module_accessor);
+        let speed_x = KineticModule::get_sum_speed_x(agent.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) * lr;
+        let back_speed_x_hitbox_threshold = ParamModule::get_float(agent.battle_object, ParamType::Agent, "long_jump.back_speed_x_hitbox_threshold");
+        if speed_x <= back_speed_x_hitbox_threshold {
+            ATTACK(agent, 0, 0, Hash40::new("top"), 7.5, 45, 100, 0, 64, 3.0, 0.0, 5.0, 1.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
+        }
     }
 }
 
