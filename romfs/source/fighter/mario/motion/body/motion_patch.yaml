@@ -227,7 +227,7 @@ special_s:
       - sound_specials
       - effect_specials
     extra:
-      cancel_frame: 38
+      cancel_frame: 42
 special_air_s:
     game_script: game_specialairs
     flags:
@@ -242,7 +242,7 @@ special_air_s:
       - sound_specialairs
       - effect_specialairs
     extra:
-      cancel_frame: 38
+      cancel_frame: 42
 special_air_hi:
   extra:
     xlu_start: 0
