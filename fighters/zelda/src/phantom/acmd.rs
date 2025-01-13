@@ -144,6 +144,8 @@ unsafe extern "C" fn game_attackkick(agent: &mut L2CAgentBase) {
 	frame(lua_state, 5.0);
 	FT_MOTION_RATE(agent, 1.0);
 	if is_excute(agent) {
+		ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 361, 100, 80, 0, 4.0, 0.0, 7.0, 11.0, Some(0.0), Some(7.0), Some(7.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 3, true, false, true, true, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
+		ATTACK(agent, 1, 0, Hash40::new("top"), 0.0, 361, 100, 40, 0, 6.0, 0.0, 7.0, 11.0, Some(0.0), Some(7.0), Some(7.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 3, true, false, true, true, false, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
 		KineticModule::enable_energy(boma, *WEAPON_ZELDA_PHANTOM_KINETIC_ENERGY_ID_NORMAL);
 		agent.clear_lua_stack();
 		lua_args!(agent, WEAPON_ZELDA_PHANTOM_KINETIC_ENERGY_ID_NORMAL, rush_speed * PostureModule::lr(boma));
@@ -152,6 +154,7 @@ unsafe extern "C" fn game_attackkick(agent: &mut L2CAgentBase) {
 	}
 	frame(lua_state, 9.0);
 	if is_excute(agent) {
+		AttackModule::clear_all(boma);
 		ATTACK(agent, 0, 0, Hash40::new("top"), 3.0, 361, 50, 0, 50, 5.5, 0.0, 6.0, 14.0, Some(0.0), Some(6.0), Some(10.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, -1, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA_d, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
 		ATTACK(agent, 1, 0, Hash40::new("top"), 3.0, 361, 20, 0, 20, 5.5, 0.0, 6.0, 14.0, Some(0.0), Some(6.0), Some(10.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, -1, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
 		AttackModule::set_down_only(boma, 1, true);
@@ -160,6 +163,7 @@ unsafe extern "C" fn game_attackkick(agent: &mut L2CAgentBase) {
 	FT_MOTION_RATE_RANGE(agent, 15.0, 45.0, 60.0);
 	if is_excute(agent) {
 		AttackModule::clear_all(boma);
+		JostleModule::set_status(boma, false);
 	}
 }
 
@@ -228,6 +232,7 @@ unsafe extern "C" fn game_attackpunch(agent: &mut L2CAgentBase) {
 	FT_MOTION_RATE_RANGE(agent, 14.0, 57.0, 60.0);
 	if is_excute(agent) {
 		AttackModule::clear_all(boma);
+		JostleModule::set_status(boma, false);
 	}
 }
 
@@ -290,6 +295,7 @@ unsafe extern "C" fn game_attacks(agent: &mut L2CAgentBase) {
 	FT_MOTION_RATE_RANGE(agent, 14.0, 55.0, 80.0);
 	if is_excute(agent) {
 		AttackModule::clear_all(boma);
+		JostleModule::set_status(boma, false);
 	}
 }
 
@@ -396,6 +402,7 @@ unsafe extern "C" fn game_attackl(agent: &mut L2CAgentBase) {
 		AttackModule::clear_all(boma);
 		ReflectorModule::clear_all(boma);
 		sv_kinetic_energy!(mul_speed, agent, WEAPON_ZELDA_PHANTOM_KINETIC_ENERGY_ID_NORMAL, 0.75, 0.0);
+		JostleModule::set_status(boma, false);
 	}
 }
 
@@ -537,6 +544,7 @@ unsafe extern "C" fn game_attackmax(agent: &mut L2CAgentBase) {
 	if is_excute(agent) {
 		AttackModule::clear_all(boma);
 		ReflectorModule::clear_all(boma);
+		JostleModule::set_status(boma, false);
 	}
 }
 
