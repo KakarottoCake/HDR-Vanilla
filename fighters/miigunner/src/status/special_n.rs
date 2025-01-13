@@ -57,18 +57,20 @@ pub unsafe extern "C" fn special_n1_fire_main_loop(fighter: &mut L2CFighterCommo
         fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_FALL, false);
         return 0.into();
     }
-    if StatusModule::is_situation_changed(fighter.module_accessor) {
+    if !StatusModule::is_changing(fighter.module_accessor)
+    && StatusModule::is_situation_changed(fighter.module_accessor) {
         fighter.change_kinetic_by_situation(*FIGHTER_KINETIC_TYPE_GROUND_STOP, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
         fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK, *GROUND_CORRECT_KIND_AIR);
-        if fighter.is_motion(Hash40::new("special_n1_fire")) && fighter.is_motion(Hash40::new("special_air_n1_fire")) {
+        if (fighter.is_motion(Hash40::new("special_n1_fire")) || fighter.is_motion(Hash40::new("special_air_n1_fire"))) {
             fighter.change_motion_inherit_frame_keep_rate_by_situation("special_n1_fire", "special_air_n1_fire", -1.0, 1.0, 0.0);
         }
-        else if fighter.is_motion(Hash40::new("special_n1_fire_max")) && fighter.is_motion(Hash40::new("special_air_n1_fire_max")) {
+        else if (fighter.is_motion(Hash40::new("special_n1_fire_max")) || fighter.is_motion(Hash40::new("special_air_n1_fire_max"))) {
             fighter.change_motion_inherit_frame_keep_rate_by_situation("special_n1_fire_max", "special_air_n1_fire_max", -1.0, 1.0, 0.0);
         }
         else {
             fighter.change_motion_inherit_frame_keep_rate_by_situation("special_n1_neon", "special_air_n1_neon", -1.0, 1.0, 0.0);
         }
+        println!();
     }
 
     return 0.into();
