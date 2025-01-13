@@ -28,3 +28,4 @@ pub fn install() {
     skyline::install_hooks!(
         miigunner_grenadelauncher_init
     );
+}
