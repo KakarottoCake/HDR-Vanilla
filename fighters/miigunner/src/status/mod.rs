@@ -2,6 +2,9 @@ use super::*;
 use globals::*;
 // status script import
 
+mod attack_air;
+//mod down;
+//mod landing_attack_air;
 mod special_n;
 mod special_s;
 
@@ -36,6 +39,9 @@ extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
 pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
 
+    attack_air::install(agent);
+    //down::install(agent);
+    //landing_attack_air::install(agent);
     special_n::install(agent);
     special_s::install(agent);
 }
