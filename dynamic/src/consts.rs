@@ -996,14 +996,13 @@ pub mod vars {
     pub mod mario {
         pub mod instance {
             // flags
-            pub const SPECIAL_S_DISABLE_STALL: i32 = 0x0101;
+            pub const SPECIAL_S_DISABLE: i32 = 0x0101;
             pub const SPECIAL_LW_DISABLE: i32 = 0x0102;
         }
         pub mod status {
             // flags
             pub const SPECIAL_N_FIREBRAND: i32 = 0x1100;
             pub const SPECIAL_LW_ENABLE_LANDING : i32 = 0x1101;
-            pub const SPECIAL_S_GROUND_START : i32 = 0x1103;
 
             // ints
             pub const SPECIAL_LW_LONG_JUMP_KIND : i32 = 0x1103;

@@ -82,6 +82,7 @@ unsafe extern "C" fn special_s_init(fighter: &mut L2CFighterCommon) -> L2CValue 
 unsafe extern "C" fn special_s_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     PostureModule::set_stick_lr(fighter.module_accessor, 0.0);
     PostureModule::update_rot_y_lr(fighter.module_accessor);
+    VarModule::on_flag(fighter.battle_object, vars::mario::instance::SPECIAL_S_DISABLE);
     fighter.main_shift(special_s_main_loop)
 }
 
