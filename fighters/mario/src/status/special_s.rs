@@ -32,7 +32,10 @@ unsafe extern "C" fn special_s_kinetic_helper(fighter: &mut L2CFighterCommon) {
         KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
         
         // FIGHTER_KINETIC_ENERGY_ID_GRAVITY
+        let special_s_attack_acl_y = fighter.get_param_float("param_special_s", "special_s_attack_acl_y");
         sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
+        sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -special_s_attack_acl_y * 0.2);
+        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
         KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
     }
     KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_MOTION, fighter.module_accessor);
@@ -88,12 +91,10 @@ unsafe extern "C" fn special_s_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
 }
 
 unsafe extern "C" fn special_s_init(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if [
-        Hash40::new("special_s")
-    ].contains(&fighter.get_motion_kind().get_hash()) {
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_MARIO_STATUS_SPECIAL_S_FLAG_HOP);
+    if [Hash40::new("special_s")].contains(&fighter.get_motion_kind().get_hash()) {
+        fighter.off_flag(*FIGHTER_MARIO_STATUS_SPECIAL_S_FLAG_HOP);
     } else {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MARIO_STATUS_SPECIAL_S_FLAG_HOP);
+        fighter.on_flag(*FIGHTER_MARIO_STATUS_SPECIAL_S_FLAG_HOP);
     }
     special_s_motion_helper(fighter);
     special_s_kinetic_helper(fighter);
@@ -140,42 +141,40 @@ unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
 }
 
 unsafe extern "C" fn special_s_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if !fighter.is_situation(*SITUATION_KIND_AIR) {
-        let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        let ground_accel_x_add = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.ground_accel_x_add");
-        let ground_accel_x_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.ground_accel_x_mul");
-        let left_stick_x = fighter.left_stick_x();
-        if left_stick_x.abs() > 0.0 {
-            let drift = left_stick_x * ground_accel_x_mul + left_stick_x.signum() * ground_accel_x_add;
-            sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, speed_x + drift);
+    if fighter.is_situation(*SITUATION_KIND_GROUND) {
+        // allow ground drift 
+        if !fighter.is_flag(*FIGHTER_MARIO_STATUS_SPECIAL_S_FLAG_SPECIAL_FALL) {
+            let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            let ground_accel_x_add = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.ground_accel_x_add");
+            let ground_accel_x_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.ground_accel_x_mul");
+            let left_stick_x = fighter.left_stick_x();
+            if left_stick_x.abs() > 0.0 {
+                let drift = left_stick_x * ground_accel_x_mul + left_stick_x.signum() * ground_accel_x_add;
+                sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, speed_x + drift);
+            }
         }
-        return false.into();
+    } else {
+        KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+        if fighter.is_flag(*FIGHTER_MARIO_STATUS_SPECIAL_S_FLAG_SPECIAL_FALL) {
+            let air_accel_y = fighter.get_param_float("air_accel_y", "");
+            let air_speed_y_stable = fighter.get_param_float("air_speed_y_stable", "");
+            sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -air_accel_y);
+            sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, air_speed_y_stable);
+            return false.into();
+        }
+    
+        if fighter.is_flag(*FIGHTER_MARIO_STATUS_SPECIAL_S_FLAG_HOP) {
+            fighter.off_flag(*FIGHTER_MARIO_STATUS_SPECIAL_S_FLAG_HOP);
+            fighter.on_flag(*FIGHTER_MARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HOP);
+            let special_s_attack_acl_y = fighter.get_param_float("param_special_s", "special_s_attack_acl_y");
+            let special_s_attack_max_y = fighter.get_param_float("param_special_s", "special_s_attack_max_y");
+            let special_s_attack_spd_y = fighter.get_param_float("param_special_s", "special_s_attack_spd_y");
+            sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -special_s_attack_acl_y);
+            sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, special_s_attack_max_y);
+            sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, special_s_attack_spd_y);
+        }
+    
     }
-
-    KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-    if !fighter.is_flag(*FIGHTER_MARIO_STATUS_SPECIAL_S_FLAG_SPECIAL_FALL) {
-        let air_accel_y = fighter.get_param_float("air_accel_y", "");
-        let air_speed_y_stable = fighter.get_param_float("air_speed_y_stable", "");
-        sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -air_accel_y);
-        sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, air_speed_y_stable);
-        return false.into();
-    }
-
-    if !fighter.is_flag(*FIGHTER_MARIO_STATUS_SPECIAL_S_FLAG_HOP) {
-        fighter.on_flag(*FIGHTER_MARIO_STATUS_SPECIAL_S_FLAG_HOP);
-        fighter.clear_lua_stack();
-        lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-        let mut speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
-        fighter.on_flag(*FIGHTER_MARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HOP);
-        let special_s_attack_spd_y = fighter.get_param_float("param_special_s", "special_s_attack_spd_y");
-        speed_y = special_s_attack_spd_y;
-        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y);
-    }
-
-    let special_s_attack_acl_y = fighter.get_param_float("param_special_s", "special_s_attack_acl_y");
-    let special_s_attack_max_y = fighter.get_param_float("param_special_s", "special_s_attack_max_y");
-    sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -special_s_attack_acl_y);
-    sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, special_s_attack_max_y);
     return false.into();
 }
 
