@@ -167,13 +167,9 @@ unsafe extern "C" fn special_s_exec(fighter: &mut L2CFighterCommon) -> L2CValue 
         fighter.clear_lua_stack();
         lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
         let mut speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
-        if fighter.is_flag(*FIGHTER_MARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HOP) {
-            speed_y = 0.0;
-        } else {
-            fighter.on_flag(*FIGHTER_MARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HOP);
-            let special_s_attack_spd_y = fighter.get_param_float("param_special_s", "special_s_attack_spd_y");
-            speed_y = special_s_attack_spd_y;
-        }
+        fighter.on_flag(*FIGHTER_MARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HOP);
+        let special_s_attack_spd_y = fighter.get_param_float("param_special_s", "special_s_attack_spd_y");
+        speed_y = special_s_attack_spd_y;
         sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y);
     }
 
