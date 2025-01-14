@@ -3,8 +3,8 @@ use super::*;
 unsafe extern "C" fn special_s_kinetic_helper(fighter: &mut L2CFighterCommon) {
     let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
     if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
+        // KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
         // FIGHTER_KINETIC_ENERGY_ID_CONTROL
         let ground_speed_x_limit = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.ground_speed_x_limit");
         let ground_speed_x_stable = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.ground_speed_x_stable");
@@ -20,6 +20,7 @@ unsafe extern "C" fn special_s_kinetic_helper(fighter: &mut L2CFighterCommon) {
         sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, speed_x);
         KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     } else {
+        // KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
         // FIGHTER_KINETIC_ENERGY_ID_CONTROL
         let air_speed_x_limit = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.air_speed_x_limit");
         let air_speed_x_stable = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.air_speed_x_stable");
@@ -31,9 +32,13 @@ unsafe extern "C" fn special_s_kinetic_helper(fighter: &mut L2CFighterCommon) {
         sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, air_speed_x_stable, 0.0);
         sv_kinetic_energy!(controller_set_accel_x_add, fighter, air_accel_x_add);
         sv_kinetic_energy!(controller_set_accel_x_mul, fighter, air_accel_x_mul);
-        sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, -air_brake_x, 0.0);
         sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, speed_x);
         KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+
+        // FIGHTER_KINETIC_ENERGY_ID_STOP
+        sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_AIR, 0.0, 0.0, 0.0, 0.0, 0.0);
+        sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, -air_brake_x, 0.0);
+        KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
         
         // FIGHTER_KINETIC_ENERGY_ID_GRAVITY
         sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
