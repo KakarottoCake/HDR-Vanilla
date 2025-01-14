@@ -29,7 +29,7 @@ unsafe extern "C" fn mario_ground_pound_start_pre(fighter: &mut L2CFighterCommon
 }
 
 unsafe extern "C" fn mario_ground_pound_start_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    VarModule::on_flag(fighter.battle_object, vars::mario::instance::SPECIAL_LW_DISABLE);
+    // VarModule::on_flag(fighter.battle_object, vars::mario::instance::SPECIAL_LW_DISABLE);
     GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
     MotionModule::change_motion(
         fighter.module_accessor,
@@ -101,7 +101,8 @@ unsafe extern "C" fn mario_ground_pound_fall_main_loop(fighter: &mut L2CFighterC
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return true.into();
     }
-    if fighter.is_button_trigger(Buttons::SpecialAll | Buttons::Guard) 
+    let duration = ParamModule::get_int(fighter.battle_object, ParamType::Agent, "ground_pound.fall_duration");
+    if fighter.global_table[CURRENT_FRAME].get_i32() >= duration
     || fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
         fighter.change_status(statuses::mario::GROUND_POUND_END.into(), false.into());
     }

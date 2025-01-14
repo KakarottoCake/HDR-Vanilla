@@ -440,9 +440,14 @@ unsafe extern "C" fn sound_specials(agent: &mut L2CAgentBase) {
     frame(lua_state, 4.0);
     if is_excute(agent) {
         let handle = SoundModule::play_se(boma, Hash40::new("se_mario_special_s01"), true, false, false, false, app::enSEType(0));
-        SoundModule::set_se_vol(boma, handle as i32, 0.7, 0);
-        PLAY_SE(agent, Hash40::new("vc_mario_attack05"));
+        SoundModule::set_se_vol(boma, handle as i32, 0.6, 0);
         PLAY_SE(agent, Hash40::new("se_mario_attackair_l01"));
+        let rng = app::sv_math::rand(hash40("fighter"), 4);
+        match rng {
+            0 => PLAY_SE(agent, Hash40::new("vc_mario_appeal02")),
+            1 => PLAY_SE(agent, Hash40::new("vc_mario_012")),
+            _ => PLAY_SE(agent, Hash40::new("vc_mario_attack05")),
+        };
     }
 }
 
@@ -517,12 +522,14 @@ unsafe extern "C" fn sound_groundpoundstart(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 5.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_mario_special_l01"));
+        PLAY_SE(agent, Hash40::new("vc_mario_attack01"));
     }
 }
 
 unsafe extern "C" fn game_groundpoundfall(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 16.0, 30, 50, 0, 60, 5.0, 0.0, 2.8, -2.0, Some(0.0), Some(2.8), Some(2.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HIP);
+        ATTACK(agent, 0, 0, Hash40::new("claviclec"), 14.0, 70, 85, 0, 70, 4.6, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HIP);
+        AttackModule::set_attack_height_all(agent.module_accessor, app::AttackHeight(*ATTACK_HEIGHT_HIGH), false);
     }
 }
 
@@ -546,10 +553,10 @@ unsafe extern "C" fn expression_groundpoundfall(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn game_groundpoundland(agent: &mut L2CAgentBase) {
-    FT_MOTION_RATE(agent, 30.0 / 25.0);
     frame(agent.lua_state_agent, 1.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 25.0, 29.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 6.0, 30, 50, 0, 60, 5.0, 0.0, 2.8, -10.0, Some(0.0), Some(2.8), Some(10.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HIP);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 7.0, 70, 100, 0, 0, 3.8, 0.0, 2.8, -6.7, Some(0.0), Some(2.8), Some(6.7), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 9, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HIP);
     }
     wait(agent.lua_state_agent, 2.0);
     if is_excute(agent) {
@@ -565,8 +572,9 @@ unsafe extern "C" fn sound_groundpoundland(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn effect_groundpoundland(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
-        LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
-        EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7, 0, 0, 0, 0, 0, 0, false)
+        LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.65, 0, 0, 0, 0, 0, 0, false);
+        EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0, 0, 0, 0, 0, 0, false);
+        LAST_EFFECT_SET_RATE(agent, 2.0);
     }
 }
 
