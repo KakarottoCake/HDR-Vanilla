@@ -4,23 +4,18 @@ unsafe extern "C" fn special_s_kinetic_helper(fighter: &mut L2CFighterCommon) {
     let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
-        // KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-        // FIGHTER_KINETIC_ENERGY_ID_CONTROL
+        KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+        // FIGHTER_KINETIC_ENERGY_ID_STOP
         let ground_speed_x_limit = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.ground_speed_x_limit");
-        let ground_speed_x_stable = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.ground_speed_x_stable");
-        let ground_accel_x_add = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.ground_accel_x_add");
-        let ground_accel_x_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.ground_accel_x_mul");
-        let ground_brake = fighter.get_param_float("ground_brake", "");
-        sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, ENERGY_CONTROLLER_RESET_TYPE_FALL_ADJUST, 0.0, 0.0, 0.0, 0.0, 0.0);
-        sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, ground_speed_x_limit, 0.0);
-        sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, ground_speed_x_stable, 0.0);
-        sv_kinetic_energy!(controller_set_accel_x_add, fighter, ground_accel_x_add);
-        sv_kinetic_energy!(controller_set_accel_x_mul, fighter, ground_accel_x_mul);
-        sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, -ground_brake, 0.0);
-        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, speed_x);
-        KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+        // let ground_brake = fighter.get_param_float("ground_brake", "");
+        // sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_GROUND, speed_x, 0.0, 0.0, 0.0, 0.0);
+        sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ground_speed_x_limit, 0.0);
+        // sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, -ground_brake, 0.0);
+        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, speed_x);
+        // KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
     } else {
-        // KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
         // FIGHTER_KINETIC_ENERGY_ID_CONTROL
         let air_speed_x_limit = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.air_speed_x_limit");
         let air_speed_x_stable = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.air_speed_x_stable");
@@ -150,6 +145,15 @@ unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
 
 unsafe extern "C" fn special_s_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
     if !fighter.is_situation(*SITUATION_KIND_AIR) {
+        let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+        let ground_accel_x_add = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.ground_accel_x_add");
+        let ground_accel_x_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.ground_accel_x_mul");
+        let left_stick_x = fighter.left_stick_x();
+        if left_stick_x.abs() > 0.0 {
+            let drift = left_stick_x * ground_accel_x_mul + left_stick_x.signum() * ground_accel_x_add;
+            // KineticModule::add_speed(fighter.module_accessor, &Vector3f::new(drift, 0.0, 0.0));
+            sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, speed_x + drift);
+        }
         return false.into();
     }
 
