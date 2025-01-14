@@ -512,6 +512,8 @@ unsafe extern "C" fn expression_longjumpland(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn game_groundpoundstart(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 1.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 14.0, 19.0);
     frame(agent.lua_state_agent, 5.0);
     if is_excute(agent) {
         KineticModule::unable_energy_all(agent.module_accessor);
