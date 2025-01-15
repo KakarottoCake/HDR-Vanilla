@@ -120,7 +120,7 @@ unsafe extern "C" fn effect_attackairlwboost(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 9.0);
     if is_excute(agent) {
-        let handle = EffectModule::req_follow(boma, Hash40::new("sys_smash_flash"), Hash40::new("top"), &Vector3f::new(0.0, 10.0, -1.0), &Vector3f::zero(), 0.75, true, 0, 0, 0, 0, 0, false, false);
+        let handle = EffectModule::req_follow(boma, Hash40::new("sys_smash_flash"), Hash40::new("top"), &Vector3f::new(0.0, 10.0, -1.0), &Vector3f::zero(), 0.7, true, 0, 0, 0, 0, 0, false, false);
         VarModule::set_int64(agent.battle_object, vars::miigunner::instance::SPECIAL_HI1_LAUNCH_EFFECT_HANDLE, handle);
         EffectModule::set_rate(boma, handle as u32, 0.1);
     }
@@ -150,8 +150,15 @@ unsafe extern "C" fn effect_attackairlwboost(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_attackairlwboost(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    frame(lua_state, 10.0);
+    if is_excute(agent) {
+        //PLAY_SE(agent, Hash40::new("se_miigunner_special_c3_s02"));
+        let handle = SoundModule::play_se(boma, Hash40::new("se_miigunner_special_c3_s02"), true, false, false, false, app::enSEType(0));
+        SoundModule::set_se_vol(boma, handle as i32, 2.0, 0);
+    }
     frame(lua_state, 19.0);
     if is_excute(agent) {
+        STOP_SE(agent, Hash40::new("se_miigunner_special_c3_s02"));
         PLAY_SE(agent, Hash40::new("se_miigunner_attackair_l01"));
         PLAY_SE(agent, Hash40::new("vc_mii_attack07"));
     }
@@ -185,6 +192,28 @@ unsafe extern "C" fn game_landingairlw(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn effect_landingairlw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        // let handle = VarModule::get_int64(agent.battle_object, vars::miigunner::instance::SPECIAL_HI1_LAUNCH_EFFECT_HANDLE);
+        // EffectModule::set_scale(boma, handle as u32, &Vector3f::zero());
+        // VarModule::set_int(agent.battle_object, vars::miigunner::instance::SPECIAL_HI1_LAUNCH_EFFECT_HANDLE, -1);
+        EFFECT_OFF_KIND(agent, Hash40::new("sys_smash_flash"), false, false);
+        LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+    }
+}
+
+unsafe extern "C" fn sound_landingairlw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 2.0);
+    if is_excute(agent) {
+        STOP_SE(agent, Hash40::new("se_miigunner_special_c3_s02"));
+        PLAY_LANDING_SE(agent, Hash40::new("se_miigunner_landing02"));
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_attackairlw", game_attackairlw, Priority::Low);
     agent.acmd("effect_attackairlw", effect_attackairlw, Priority::Low);
@@ -195,4 +224,6 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("expression_attackairlwboost", expression_attackairlwboost, Priority::Low);
 
     agent.acmd("game_landingairlw", game_landingairlw, Priority::Low);
+    agent.acmd("effect_landingairlw", effect_landingairlw, Priority::Low);
+    agent.acmd("sound_landingairlw", sound_landingairlw, Priority::Low);
 }
