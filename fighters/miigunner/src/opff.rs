@@ -3,7 +3,7 @@ utils::import_noreturn!(common::opff::fighter_common_opff);
 use super::*;
 use globals::*;
 
-unsafe fn charge_handle(boma: &mut BattleObjectModuleAccessor) {
+unsafe fn special_waza_charge_handle(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_motion_one_of(&[
         Hash40::new("special_n3_start"),
         Hash40::new("special_air_n3_start"),
@@ -52,15 +52,15 @@ unsafe fn charge_handle(boma: &mut BattleObjectModuleAccessor) {
     }
 }
  
-unsafe fn nspecial_cancels(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_CANCEL) {
-        if boma.is_situation(*SITUATION_KIND_AIR) {
-            if WorkModule::get_int(boma, *FIGHTER_MIIGUNNER_STATUS_GUNNER_CHARGE_WORK_INT_CANCEL_STATUS) == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
-                WorkModule::set_int(boma, *STATUS_KIND_NONE, *FIGHTER_MIIGUNNER_STATUS_GUNNER_CHARGE_WORK_INT_CANCEL_STATUS);
-            }
-        }
-    }
-}
+// unsafe fn nspecial_cancels(boma: &mut BattleObjectModuleAccessor) {
+//     if boma.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_CANCEL) {
+//         if boma.is_situation(*SITUATION_KIND_AIR) {
+//             if WorkModule::get_int(boma, *FIGHTER_MIIGUNNER_STATUS_GUNNER_CHARGE_WORK_INT_CANCEL_STATUS) == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
+//                 WorkModule::set_int(boma, *STATUS_KIND_NONE, *FIGHTER_MIIGUNNER_STATUS_GUNNER_CHARGE_WORK_INT_CANCEL_STATUS);
+//             }
+//         }
+//     }
+// }
 
 unsafe fn reflector_jc(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_LW) && WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FRAME_IN_AIR) <= 1 {
@@ -89,7 +89,8 @@ unsafe fn laser_blaze_ff_land_cancel(boma: &mut BattleObjectModuleAccessor) {
         if boma.is_situation(*SITUATION_KIND_GROUND) && boma.is_prev_situation(*SITUATION_KIND_AIR) {
             StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_LANDING, false);
         }
-        if boma.is_situation(*SITUATION_KIND_AIR) {
+        if StatusModule::is_changing(boma)
+        && boma.is_situation(*SITUATION_KIND_AIR) {
             KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
         }
     }
@@ -113,19 +114,9 @@ unsafe fn missile_land_cancel(boma: &mut BattleObjectModuleAccessor) {
         *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_2_AIR ]) {
         if boma.is_situation(*SITUATION_KIND_GROUND) && boma.is_prev_situation(*SITUATION_KIND_AIR) {
             if boma.status_frame() > 23 {
-                MotionModule::set_frame(boma, 40.0, false);
+                MotionModule::set_frame(boma, 38.0, false);
             }
         }
-    }
-}
-
-unsafe fn arm_rocket_airdash(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH) && fighter.status_frame() > 16 {
-        StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH_END, false);
-    }
-    if fighter.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH_END) && fighter.status_frame() > 11 {
-        VarModule::on_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
-        StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_FALL, false);
     }
 }
 
@@ -142,29 +133,6 @@ unsafe fn lunar_launch_actionability(fighter: &mut L2CFighterCommon) {
                 StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_FALL, false);
             }
         }
-    }
-}
-
-/// Resets Lunar Launch use count
-unsafe fn lunar_launch_reset(fighter: &mut L2CFighterCommon) {
-    if fighter.is_situation(*SITUATION_KIND_GROUND) || fighter.is_status(*FIGHTER_STATUS_KIND_CLIFF_CATCH) {
-        VarModule::off_flag(fighter.battle_object, vars::miigunner::instance::SPECIAL_HI1_LAUNCH_AIR_USED);
-    }
-}
-
-/// Turn off funny slowed down smoke when hit
-unsafe fn lunar_launch_effect_reset(fighter: &mut L2CFighterCommon) {
-    if fighter.is_prev_status(*FIGHTER_STATUS_KIND_SPECIAL_HI) && fighter.is_status_one_of(&[
-        *FIGHTER_STATUS_KIND_DAMAGE,
-        *FIGHTER_STATUS_KIND_DAMAGE_AIR,
-        *FIGHTER_STATUS_KIND_DAMAGE_FALL,
-        *FIGHTER_STATUS_KIND_DAMAGE_FLY,
-        *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL,
-        *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_D,
-        *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR,
-        *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_U,
-        *FIGHTER_STATUS_KIND_DAMAGE_FALL ]) {
-        EFFECT_OFF_KIND(fighter, Hash40::new("miigunner_bottom_shot"), false, false);
     }
 }
 
@@ -225,10 +193,10 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
             && fighter.is_status_one_of(&[
                 *FIGHTER_STATUS_KIND_SPECIAL_N,
                 *FIGHTER_STATUS_KIND_SPECIAL_LW,
-                *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N3_LOOP,
-                *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N3_END,
-                *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_1_AIR,
-                *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_2_AIR,
+                //*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N3_LOOP,
+                //*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N3_END,
+                //*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_1_AIR,
+                //*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_2_AIR,
                 *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH_END,
                 *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW3_END,
                 *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW3_HIT,
@@ -259,16 +227,13 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 }
 
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
-    charge_handle(boma);
-    nspecial_cancels(boma);
+    special_waza_charge_handle(boma);
+    //nspecial_cancels(boma);
     reflector_jc(boma);
     laser_blaze_ff_land_cancel(boma);
     remove_homing_missiles(boma);
     missile_land_cancel(boma);
-    arm_rocket_airdash(fighter);
     lunar_launch_actionability(fighter);
-    lunar_launch_reset(fighter);
-    lunar_launch_effect_reset(fighter);
     stealth_burst_land_cancel(boma);
     fastfall_specials(fighter);
 }

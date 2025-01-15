@@ -5,6 +5,7 @@ use globals::*;
 mod attack_air;
 //mod down;
 //mod landing_attack_air;
+mod special_hi;
 mod special_n;
 mod special_s;
 
@@ -26,6 +27,7 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
     if fighter.is_situation(*SITUATION_KIND_GROUND) || fighter.is_situation(*SITUATION_KIND_CLIFF)
     || fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_REBIRTH, *FIGHTER_STATUS_KIND_DEAD, *FIGHTER_STATUS_KIND_LANDING]) {
         VarModule::off_flag(fighter.battle_object, vars::miigunner::instance::BOOSTED_ATTACK_AIR_LW_AIRTIME);
+        VarModule::off_flag(fighter.battle_object, vars::miigunner::instance::SPECIAL_HI1_LAUNCH_AIR_USED);
     }
     true.into()
 }
@@ -42,6 +44,7 @@ pub fn install(agent: &mut Agent) {
     attack_air::install(agent);
     //down::install(agent);
     //landing_attack_air::install(agent);
+    special_hi::install(agent);
     special_n::install(agent);
     special_s::install(agent);
 }
