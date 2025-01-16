@@ -77,6 +77,10 @@ unsafe extern "C" fn sub_attack_air_main(fighter: &mut L2CFighterCommon) -> L2CV
 
 unsafe extern "C" fn attack_air_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     EffectModule::kill_kind(fighter.module_accessor, Hash40::new("miigunner_atk_shot_after"), false, false);
+    if fighter.is_motion(Hash40::new("attack_air_lw_boost"))
+    && StatusModule::status_kind_next(fighter.module_accessor) != FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR {
+        EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_smash_flash"), false, false);
+    }
     
     return 0.into();
 }
