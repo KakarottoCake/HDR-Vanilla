@@ -88,11 +88,11 @@ unsafe extern "C" fn effect_attackairfboost(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 7.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("miigunner_atk_air_shot"), Hash40::new("armr"), 6.0, 0, 0, 0, 90, 0, 0.7, true);
+        EFFECT_FOLLOW(agent, Hash40::new("miigunner_atk_air_shot"), Hash40::new("armr"), 6.0, 0, 0, 0, 90, 0, 1, true);
     }
     frame(lua_state, 9.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 10, 10, 0, 0, 0, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 10, 10, 0, 0, 0, 0.7, true);
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {
