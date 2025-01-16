@@ -51,16 +51,6 @@ unsafe fn special_waza_charge_handle(boma: &mut BattleObjectModuleAccessor) {
         }
     }
 }
- 
-// unsafe fn nspecial_cancels(boma: &mut BattleObjectModuleAccessor) {
-//     if boma.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_CANCEL) {
-//         if boma.is_situation(*SITUATION_KIND_AIR) {
-//             if WorkModule::get_int(boma, *FIGHTER_MIIGUNNER_STATUS_GUNNER_CHARGE_WORK_INT_CANCEL_STATUS) == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
-//                 WorkModule::set_int(boma, *STATUS_KIND_NONE, *FIGHTER_MIIGUNNER_STATUS_GUNNER_CHARGE_WORK_INT_CANCEL_STATUS);
-//             }
-//         }
-//     }
-// }
 
 unsafe fn reflector_jc(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_LW) && WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FRAME_IN_AIR) <= 1 {
@@ -144,6 +134,14 @@ unsafe fn stealth_burst_land_cancel(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
+unsafe fn vortex_item_grab(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW3_END) {
+        if fighter.status_frame() < 6 {
+            fighter.try_pickup_item(15.0, Some(Hash40::new("top")), Some(&Vector2f::new(0.0, 0.0)));
+        }
+    }
+}
+
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
@@ -193,10 +191,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
             && fighter.is_status_one_of(&[
                 *FIGHTER_STATUS_KIND_SPECIAL_N,
                 *FIGHTER_STATUS_KIND_SPECIAL_LW,
-                //*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N3_LOOP,
-                //*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N3_END,
-                //*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_1_AIR,
-                //*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_2_AIR,
                 *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH_END,
                 *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW3_END,
                 *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW3_HIT,
@@ -228,13 +222,13 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     special_waza_charge_handle(boma);
-    //nspecial_cancels(boma);
     reflector_jc(boma);
     laser_blaze_ff_land_cancel(boma);
     remove_homing_missiles(boma);
     missile_land_cancel(boma);
     lunar_launch_actionability(fighter);
     stealth_burst_land_cancel(boma);
+    vortex_item_grab(fighter);
     fastfall_specials(fighter);
 }
 

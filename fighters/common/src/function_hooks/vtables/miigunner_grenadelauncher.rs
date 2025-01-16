@@ -42,6 +42,16 @@ unsafe extern "C" fn miigunner_grenadelauncher_init(vtable: u64, weapon: &mut sm
     (*energy).accel = PaddedVec2::new(0.0, -gravity_accel);
 }
 
+//d748d0 - on reflect (lw1)
+//d74bc0 - on absorb (lw3)
+//d74a20 - on reflect (lw1)
+//d74fd0 - on absorb (lw3)
+// #[skyline::hook(offset = 0x)]
+// unsafe extern "C" fn miigunner_on_search(vtable: u64, fighter: &mut Fighter, param_3: u64) {
+//     println!("h?");
+//     return call_original!(vtable, fighter, param_3);
+// }
+
 pub fn install() {
     skyline::install_hooks!(
         miigunner_grenadelauncher_init
