@@ -100,7 +100,7 @@ attack_hi3:
     cancel_frame: 29
 attack_dash:
   extra:
-    cancel_frame: 37
+    cancel_frame: 40
 attack_s4_s:
   extra:
     cancel_frame: 54

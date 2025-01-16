@@ -12,6 +12,7 @@ pub mod status;
 mod autoaimbullet;
 mod explosiveflame;
 mod reflectionboard;
+mod meteor;
 
 use smash::{
     lib::{
@@ -55,4 +56,7 @@ pub fn install() {
     autoaimbullet::install();
     explosiveflame::install();
     reflectionboard::install();
+    meteor::install();
+    
+    smashline::clone_weapon("ryu", *WEAPON_KIND_RYU_HADOKEN, "palutena", "meteor", false);
 }

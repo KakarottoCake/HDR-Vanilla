@@ -8,15 +8,21 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
     } else {
         Hash40::new("collision_attr_normal")
     };
+    frame(lua_state, 2.0);
+    FT_MOTION_RATE_RANGE(agent, 2.0, 4.0, 3.0);
     if is_excute(agent) {
         HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_XLU);
-        HIT_NODE(agent, Hash40::new("shoulderr"), *HIT_STATUS_XLU);
     }
-    frame(lua_state, 6.0);
+    frame(lua_state, 4.0);
+    FT_MOTION_RATE(agent, 1.0);
+    frame(lua_state, 5.0);
     if is_excute(agent) {
         agent.on_flag(*FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
         agent.on_flag(*FIGHTER_RYU_STATUS_WORK_ID_SPECIAL_HI_FLAG_REVERSE_LR);
         agent.on_flag(*FIGHTER_RYU_STATUS_WORK_ID_SPECIAL_HI_FLAG_DECIDE_STRENGTH);
+    }
+    frame(lua_state, 6.0);
+    if is_excute(agent) {
         MeterModule::watch_damage(agent.battle_object, true);
         if VarModule::is_flag(agent.battle_object, vars::shotos::instance::EX_SPECIAL_USED) {
             MeterModule::watch_damage(agent.battle_object, false);
@@ -89,6 +95,8 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     } else {
         Hash40::new("collision_attr_normal")
     };
+    frame(lua_state, 2.0);
+    FT_MOTION_RATE_RANGE(agent, 2.0, 4.0, 3.0);
     if is_excute(agent) {
         HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_XLU);
         HIT_NODE(agent, Hash40::new("shoulderr"), *HIT_STATUS_XLU);
@@ -97,14 +105,18 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
         }
     }
     frame(lua_state, 4.0);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         WHOLE_HIT(agent, *HIT_STATUS_XLU);
     }
-    frame(lua_state, 6.0);
+    frame(lua_state, 5.0);
     if is_excute(agent) {
         agent.on_flag(*FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
         agent.on_flag(*FIGHTER_RYU_STATUS_WORK_ID_SPECIAL_HI_FLAG_REVERSE_LR);
         agent.on_flag(*FIGHTER_RYU_STATUS_WORK_ID_SPECIAL_HI_FLAG_DECIDE_STRENGTH);
+    }
+    frame(lua_state, 6.0);
+    if is_excute(agent) {
         MeterModule::watch_damage(agent.battle_object, true);
         if VarModule::is_flag(agent.battle_object, vars::shotos::instance::EX_SPECIAL_USED) {
             MeterModule::watch_damage(agent.battle_object, false);
