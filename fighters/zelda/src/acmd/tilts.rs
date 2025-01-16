@@ -205,6 +205,8 @@ unsafe extern "C" fn game_attacklw3(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
+    frame(lua_state, 22.0); //anim end frame
+    FT_MOTION_RATE(agent, 1.0);
 }
 
 unsafe extern "C" fn effect_attacklw3(agent: &mut L2CAgentBase) {
