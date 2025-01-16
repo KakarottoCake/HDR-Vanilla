@@ -14,6 +14,7 @@ mod finals;
 mod special_cmd4;
 mod special_lw;
 mod special_s;
+mod special_hi;
 
 utils::import_noreturn!(common::shoto_status::{
     fgc_end_dashback,
@@ -308,4 +309,5 @@ pub fn install(agent: &mut Agent) {
     special_cmd4::install(agent);
     special_lw::install(agent);
     special_s::install(agent);
+    special_hi::install(agent);
 }

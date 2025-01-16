@@ -48,6 +48,7 @@ unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
         FighterAreaModuleImpl::enable_fix_jostle_area_xy(boma, 5.5, 3.0, 9.0, 3.0);
         JostleModule::set_team(boma, 1);
         JostleModule::set_overlap_rate_mul(boma, 2.0);
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
         if boma.get_int(*FIGHTER_RYU_STATUS_WORK_ID_SPECIAL_S_INT_START_SITUATION) == *SITUATION_KIND_GROUND {
             shield!(agent, *MA_MSC_CMD_REFLECTOR, *COLLISION_KIND_REFLECTOR, 0, hash40("top"), 11.0, 0.0, 11.0, 4.0, 0.0, 11.0, -4.0, 0.0, 0.0, 1, false, 0.0, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
         }
@@ -60,7 +61,6 @@ unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
             boma.off_flag(*FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
         }
         MeterModule::watch_damage(agent.battle_object, true);
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
         MeterModule::watch_damage(agent.battle_object, true);
         if VarModule::is_flag(agent.battle_object, vars::shotos::instance::EX_SPECIAL_USED) {
             MeterModule::watch_damage(agent.battle_object, false);
@@ -142,6 +142,7 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
         JostleModule::set_team(boma, 1);
         JostleModule::set_overlap_rate_mul(boma, 2.0);
         HitModule::set_status_all(boma, app::HitStatus(*HIT_STATUS_NORMAL), 0);
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
         if boma.get_int(*FIGHTER_RYU_STATUS_WORK_ID_SPECIAL_S_INT_START_SITUATION) == *SITUATION_KIND_GROUND {
             shield!(agent, *MA_MSC_CMD_SHIELD_OFF, *COLLISION_KIND_REFLECTOR, 0, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
         }
@@ -159,14 +160,18 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
             ATTACK(agent, 1, 0, Hash40::new("top"), 3.9 * dmg, 50, 150, 0, 50, 4.0, 0.0, 5.5, 5.0, Some(0.0), Some(5.5), Some(-5.5), 1.25, 0.5, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, attr, *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KEN_KICK, *ATTACK_REGION_KICK);
         }
     }
-    wait(lua_state, 3.0);
+    frame(lua_state, 3.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
         MeterModule::watch_damage(agent.battle_object, false);
         JostleModule::set_team(boma, 0);
         JostleModule::set_overlap_rate_mul(boma, 1.0);
     }
-    wait(lua_state, 10.0);
+    frame(lua_state, 9.0);
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
+    }
+    frame(lua_state, 13.0);
     if VarModule::is_flag(agent.battle_object, vars::shotos::instance::EX_SPECIAL_USED) {
         FT_MOTION_RATE(agent, 2.0);
     }

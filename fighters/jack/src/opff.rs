@@ -12,9 +12,9 @@ unsafe fn wings_of_rebellion_cancel(boma: &mut BattleObjectModuleAccessor, statu
         }
     }
     if boma.is_status(*FIGHTER_JACK_STATUS_KIND_SPECIAL_HI2_RUSH) {
-        if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) {
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_JACK_STATUS_KIND_SPECIAL_HI2_END, true);
-        }
+        // if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) {
+        //     StatusModule::change_status_request_from_script(boma, *FIGHTER_JACK_STATUS_KIND_SPECIAL_HI2_END, true);
+        // }
         if boma.get_num_used_jumps() < boma.get_jump_count_max() {
             if boma.get_aerial() != None {
                 if !VarModule::is_flag(boma.object(), vars::jack::instance::SPECIAL_HI_GROUND_START) {

@@ -1,7 +1,18 @@
 use super::*;
 
 
+// FIGHTER_STATUS_KIND_SPECIAL_HI
+
 unsafe extern "C" fn special_hi_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let mut mask_flags = (*FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK) as u64;
+
+    if fighter.global_table[STATUS_KIND_INTERRUPT] != FIGHTER_RYU_STATUS_KIND_SPECIAL_HI_COMMAND {
+        mask_flags |= *FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_HI as u64;
+    }
+    else {
+        mask_flags |= *FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_HI_COMMAND as u64;
+    }
+
     StatusModule::init_settings(
         fighter.module_accessor,
         app::SituationKind(*SITUATION_KIND_NONE),
@@ -14,6 +25,7 @@ unsafe extern "C" fn special_hi_pre(fighter: &mut L2CFighterCommon) -> L2CValue 
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT,
         0
     );
+
     FighterStatusModuleImpl::set_fighter_status_data(
         fighter.module_accessor,
         false,
@@ -21,7 +33,7 @@ unsafe extern "C" fn special_hi_pre(fighter: &mut L2CFighterCommon) -> L2CValue 
         false,
         false,
         false,
-        (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_HI | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64,
+        mask_flags,
         0,
         *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_HI as u32,
         0
@@ -32,4 +44,5 @@ unsafe extern "C" fn special_hi_pre(fighter: &mut L2CFighterCommon) -> L2CValue 
 
 pub fn install(agent: &mut Agent) {
     agent.status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_HI, special_hi_pre);
+    agent.status(Pre, *FIGHTER_RYU_STATUS_KIND_SPECIAL_HI_COMMAND, special_hi_pre);
 }

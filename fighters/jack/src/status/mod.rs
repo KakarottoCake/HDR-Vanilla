@@ -5,7 +5,7 @@ use globals::*;
 pub mod special_lw;
 pub mod summon;
 pub mod dispatch;
-pub mod special_hi2_rush_end;
+pub mod special_hi2;
 pub mod fall_special;
 
 unsafe fn set_move_customizer(fighter: &mut L2CFighterCommon, customizer: unsafe extern "C" fn(&mut L2CFighterCommon) -> L2CValue) {
@@ -78,6 +78,6 @@ pub fn install(agent: &mut Agent) {
     
     dispatch::install(agent);
     summon::install(agent);
-    special_hi2_rush_end::install(agent);
+    special_hi2::install(agent);
     fall_special::install(agent);
 }
