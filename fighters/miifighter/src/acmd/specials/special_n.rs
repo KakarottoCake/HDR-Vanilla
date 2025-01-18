@@ -96,9 +96,9 @@ unsafe extern "C" fn game_specialn2start(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialn2finish(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    // if is_excute(agent) {
-    //     WHOLE_HIT(agent, *HIT_STATUS_INVINCIBLE);
-    // }
+    if is_excute(agent) {
+        WHOLE_HIT(agent, *HIT_STATUS_INVINCIBLE);
+    }
     frame(lua_state, 2.0);
     FT_MOTION_RATE(agent, 0.8);
     frame(lua_state, 12.0);
@@ -111,10 +111,10 @@ unsafe extern "C" fn game_specialn2finish(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
-    // frame(lua_state, 17.0);
-    // if is_excute(agent) {
-    //     WHOLE_HIT(agent, *HIT_STATUS_NORMAL);
-    // }
+    frame(lua_state, 17.0);
+    if is_excute(agent) {
+        WHOLE_HIT(agent, *HIT_STATUS_NORMAL);
+    }
     frame(lua_state, 18.0);
     FT_MOTION_RATE(agent, 0.8);
     frame(lua_state, 49.0);
@@ -123,6 +123,22 @@ unsafe extern "C" fn game_specialn2finish(agent: &mut L2CAgentBase) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
     }
     frame(lua_state, 68.0);
+    FT_MOTION_RATE(agent, 1.0);
+}
+
+unsafe extern "C" fn game_specialn2miss(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 8.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_MIIFIGHTER_STATUS_WORK_ID_MACH_PUNCH_FLAG_SET_FALL_SPEED);
+    }
+    frame(lua_state, 18.0);
+    FT_MOTION_RATE_RANGE(agent, 18.0, 31.0, 21.0);
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
+    }
+    frame(lua_state, 31.0);
     FT_MOTION_RATE(agent, 1.0);
 }
 
@@ -135,4 +151,7 @@ pub fn install(agent: &mut Agent) {;
 
     agent.acmd("game_specialn2finish", game_specialn2finish, Priority::Low);
     agent.acmd("game_specialairn2finish", game_specialn2finish, Priority::Low);
+    
+    agent.acmd("game_specialn2miss", game_specialn2miss, Priority::Low);
+    agent.acmd("game_specialairn2miss", game_specialn2miss, Priority::Low);
 }

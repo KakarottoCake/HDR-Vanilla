@@ -13,34 +13,6 @@ unsafe fn feint_jump_jc(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
-// Wild Throw
-unsafe fn wild_throw(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_motion_one_of(&[Hash40::new("special_lw3"),Hash40::new("special_air_lw3")]) {
-        StatusModule::change_status_request_from_script(boma, *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_LW3_CATCH, false);
-    }
-    if boma.is_status(*FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_LW3_CATCH) {
-        if boma.status_frame() < 15 {
-            StatusModule::set_keep_situation_air(boma, true);
-        } else {
-            StatusModule::set_keep_situation_air(boma, false);
-        }
-    }
-}
-
-//Onslaught Shield Activation + No Freefall on hit
-unsafe fn onslaught(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_motion_one_of(&[Hash40::new("special_s1_start"),Hash40::new("special_air_s1_start")]) {
-        if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_S1_END, true);
-        }
-    }
-    if boma.is_motion_one_of(&[Hash40::new("special_air_s1_end")]) {
-        if boma.status_frame() > 60 {
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL, false);
-        }
-    }
-}
-
 //Earthquake Punch
 unsafe fn earthquake_punch(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     if fighter.is_status(*FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_LW1_GROUND) {
@@ -76,13 +48,6 @@ unsafe fn earthquake_punch(fighter: &mut L2CFighterCommon, boma: &mut BattleObje
             VarModule::set_int(fighter.battle_object, vars::miifighter::status::SPECIAL_LW1_CHARGE, (charge + 1) as i32);
         } else {
             MotionModule::set_rate(fighter.module_accessor, 1.0);
-        }
-    }
-    //Allows Divekick to be cancelled into freefall with second B press
-    if boma.is_motion_one_of(&[Hash40::new("special_lw1_loop")]) {
-        let is_press = ControlModule::check_button_on_trriger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL);
-        if is_press || fighter.status_frame() >= 40 {
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL_SPECIAL, false);
         }
     }
 }
@@ -152,9 +117,7 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     feint_jump_jc(boma);
-    wild_throw(boma);
     earthquake_punch(fighter, boma);
-    onslaught(boma);
     fastfall_specials(fighter);
 }
 
