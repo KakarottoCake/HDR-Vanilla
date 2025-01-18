@@ -26,7 +26,7 @@ unsafe extern "C" fn special_n_c_main_loop(fighter: &mut L2CFighterCommon) -> L2
     if fighter.is_situation(*SITUATION_KIND_GROUND) {
         if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
             if cancel_type == *FIGHTER_SAMUS_SPECIAL_N_CANCEL_TYPE_GROUND_JUMP {
-                app::lua_bind::FighterControlModuleImpl::update_attack_air_kind(fighter.module_accessor, true);
+                FighterControlModuleImpl::update_attack_air_kind(fighter.module_accessor, true);
             }
         }
     }
@@ -59,6 +59,7 @@ unsafe extern "C" fn special_n_c_main_loop(fighter: &mut L2CFighterCommon) -> L2
     }
     if shift_cancel_status {
         fighter.fastshift(L2CValue::Ptr(special_n_cancel_helper as *const () as _));
+        return 1.into();
     }
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
@@ -136,8 +137,7 @@ unsafe extern "C" fn special_n_h_main_loop(fighter: &mut L2CFighterCommon) -> L2
         return 1.into();
     }
     if fighter.is_situation(*SITUATION_KIND_GROUND) {
-        if fighter.is_cat_flag(Cat1::JumpButton)
-        || (ControlModule::is_enable_flick_jump(fighter.module_accessor) && fighter.is_cat_flag(Cat1::Jump)) {
+        if fighter.sub_check_jump_in_charging().get_bool() {
             if fighter.sub_check_button_jump().get_bool() {
                 fighter.set_int(*FIGHTER_SAMUS_SPECIAL_N_CANCEL_TYPE_GROUND_JUMP, *FIGHTER_SAMUS_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
             }
