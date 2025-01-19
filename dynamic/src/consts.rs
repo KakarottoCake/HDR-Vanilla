@@ -924,6 +924,7 @@ pub mod vars {
             pub const SPECIAL_N_OFFENSE_UP_INIT: i32 = 0x01ED;
             pub const ATTACK_S4_ANGLE_DOWN: i32 = 0x0103;
             pub const ATTACK_S4_ANGLE_UP: i32 = 0x0104;
+            pub const ATTACK_AIR_N_LANDING_HITBOX: i32 = 0x0105;
 
             // int
             pub const SPECIAL_N_OFFENSE_UP_EFFECT_HANDLE1: i32 = 0x01DF;
