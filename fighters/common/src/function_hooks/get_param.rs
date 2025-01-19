@@ -445,14 +445,14 @@ pub unsafe fn get_param_float_hook(x0 /*boma*/: u64, x1 /*param_type*/: u64, x2 
             }
         }
     
-        else if fighter_kind == *WEAPON_KIND_MIIGUNNER_GRENADELAUNCHER {
-            if x1 == hash40("param_grenadelauncher") {
-                if x2 == hash40("angle") {
-                    let charge = VarModule::get_float(owner_module_accessor.object(), vars::miigunner::instance::SPECIAL_N3_CHARGE);
-                    return 34.0 + charge;
-                }
-            }
-        }
+        // else if fighter_kind == *WEAPON_KIND_MIIGUNNER_GRENADELAUNCHER {
+        //     if x1 == hash40("param_grenadelauncher") {
+        //         if x2 == hash40("angle") {
+        //             let charge = VarModule::get_float(owner_module_accessor.object(), vars::miigunner::instance::SPECIAL_N3_CHARGE);
+        //             return 34.0 + charge;
+        //         }
+        //     }
+        // }
 
         else if fighter_kind == *WEAPON_KIND_PACKUN_SPIKEBALL {
             if VarModule::is_flag(boma_reference.object(), vars::packun_spikeball::instance::ENABLE_EXPLODE) {

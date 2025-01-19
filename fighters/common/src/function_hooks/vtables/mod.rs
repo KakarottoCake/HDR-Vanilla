@@ -2,6 +2,7 @@ use super::*;
 
 mod brave;
 mod donkey;
+mod duckhunt;
 mod gamewatch;
 mod ganon;
 mod gekkouga;
@@ -13,6 +14,7 @@ mod ptrainer;
 mod reflet;
 mod rockman;
 
+mod miigunner_grenadelauncher;
 mod ryu_shinkuhadoken;
 
 mod weapon;
@@ -20,6 +22,7 @@ mod weapon;
 pub fn install() {
     brave::install();
     donkey::install();
+    duckhunt::install();
     gamewatch::install();
     ganon::install();
     gekkouga::install();
@@ -31,6 +34,7 @@ pub fn install() {
     reflet::install();
     rockman::install();
 
+    miigunner_grenadelauncher::install();
     ryu_shinkuhadoken::install();
 
     weapon::install();

@@ -71,17 +71,7 @@ unsafe extern "C" fn effect_slipattack(agent: &mut L2CAgentBase) {
     frame(lua_state, 18.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 3.5, 8, -168, 180, 0, 1.05, 0, 0, 0, 0, 0, 0, true);
-        let color_vec = match WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) {
-            0 => Vector3f::new(0.1, 0.7, 3.0),//nor
-            1 => Vector3f::new(0.55, 0.88, 0.0004),//g
-            2 => Vector3f::new(1.25, 0.55, 1.5),//pur
-            3 => Vector3f::new(0.84, 0.7, 0.03),//r
-            4 => Vector3f::new(0.1, 1.0, 2.0),//y
-            5 => Vector3f::new(0.9, 0.03, 0.03),//w
-            6 => Vector3f::new(1.15, 0.65, 0.03),//blac
-            7 => Vector3f::new(0.78, 0.5, 2.5),//pi
-            _ => Vector3f::new(0.1, 0.7, 3.0)
-        }; //matches glow color
+        let color_vec = GET_COLOR_VEC(agent);
         LAST_EFFECT_SET_COLOR(agent, color_vec.x, color_vec.y, color_vec.z);
     }
     frame(lua_state, 33.0);
@@ -91,17 +81,7 @@ unsafe extern "C" fn effect_slipattack(agent: &mut L2CAgentBase) {
     frame(lua_state, 34.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 3, -3.5, -166, 14, 3, 1.05, 0, 0, 0, 0, 0, 0, true);
-        let color_vec = match WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) {
-            0 => Vector3f::new(0.1, 0.7, 3.0),//nor
-            1 => Vector3f::new(0.55, 0.88, 0.0004),//g
-            2 => Vector3f::new(1.25, 0.55, 1.5),//pur
-            3 => Vector3f::new(0.84, 0.7, 0.03),//r
-            4 => Vector3f::new(0.1, 1.0, 2.0),//y
-            5 => Vector3f::new(0.9, 0.03, 0.03),//w
-            6 => Vector3f::new(1.15, 0.65, 0.03),//blac
-            7 => Vector3f::new(0.78, 0.5, 2.5),//pi
-            _ => Vector3f::new(0.1, 0.7, 3.0)
-        }; //matches glow color
+        let color_vec = GET_COLOR_VEC(agent);
         LAST_EFFECT_SET_COLOR(agent, color_vec.x, color_vec.y, color_vec.z);
     }
 }
@@ -117,17 +97,7 @@ unsafe extern "C" fn effect_cliffattack(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 1, 5.5, 0, 0, 6, -12, 1.1, true);
-        let color_vec = match WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) {
-            0 => Vector3f::new(0.1, 0.7, 3.0),//nor
-            1 => Vector3f::new(0.55, 0.88, 0.0004),//g
-            2 => Vector3f::new(1.25, 0.55, 1.5),//pur
-            3 => Vector3f::new(0.84, 0.7, 0.03),//r
-            4 => Vector3f::new(0.1, 1.0, 2.0),//y
-            5 => Vector3f::new(0.9, 0.03, 0.03),//w
-            6 => Vector3f::new(1.15, 0.65, 0.03),//blac
-            7 => Vector3f::new(0.78, 0.5, 2.5),//pi
-            _ => Vector3f::new(0.1, 0.7, 3.0)
-        }; //matches glow color
+        let color_vec = GET_COLOR_VEC(agent);
         LAST_EFFECT_SET_COLOR(agent, color_vec.x, color_vec.y, color_vec.z);
     }
 }
@@ -137,17 +107,7 @@ unsafe extern "C" fn effect_catchattack(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 6, 17.5, -3, 15, -20, 0, 1.1, 0, 0, 0, 0, 0, 0, true);
-        let color_vec = match WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) {
-            0 => Vector3f::new(0.1, 0.7, 3.0),//nor
-            1 => Vector3f::new(0.55, 0.88, 0.0004),//g
-            2 => Vector3f::new(1.25, 0.55, 1.5),//pur
-            3 => Vector3f::new(0.84, 0.7, 0.03),//r
-            4 => Vector3f::new(0.1, 1.0, 2.0),//y
-            5 => Vector3f::new(0.9, 0.03, 0.03),//w
-            6 => Vector3f::new(1.15, 0.65, 0.03),//blac
-            7 => Vector3f::new(0.78, 0.5, 2.5),//pi
-            _ => Vector3f::new(0.1, 0.7, 3.0)
-        }; //matches glow color
+        let color_vec = GET_COLOR_VEC(agent);
         LAST_EFFECT_SET_COLOR(agent, color_vec.x, color_vec.y, color_vec.z);
         LAST_EFFECT_SET_RATE(agent, 1.5);
     }
@@ -163,33 +123,13 @@ unsafe extern "C" fn effect_downattackd(agent: &mut L2CAgentBase) {
     frame(lua_state, 7.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 4, 0, 180, 180, 10, 1.5, 0, 0, 0, 0, 0, 0, true);
-        let color_vec = match WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) {
-            0 => Vector3f::new(0.1, 0.7, 3.0),//nor
-            1 => Vector3f::new(0.55, 0.88, 0.0004),//g
-            2 => Vector3f::new(1.25, 0.55, 1.5),//pur
-            3 => Vector3f::new(0.84, 0.7, 0.03),//r
-            4 => Vector3f::new(0.1, 1.0, 2.0),//y
-            5 => Vector3f::new(0.9, 0.03, 0.03),//w
-            6 => Vector3f::new(1.15, 0.65, 0.03),//blac
-            7 => Vector3f::new(0.78, 0.5, 2.5),//pi
-            _ => Vector3f::new(0.1, 0.7, 3.0)
-        }; //matches glow color
+        let color_vec = GET_COLOR_VEC(agent);
         LAST_EFFECT_SET_COLOR(agent, color_vec.x, color_vec.y, color_vec.z);
     }
     frame(lua_state, 22.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 3, 0, 180, 0, 10, 1.5, 0, 0, 0, 0, 0, 0, true);
-        let color_vec = match WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) {
-            0 => Vector3f::new(0.1, 0.7, 3.0),//nor
-            1 => Vector3f::new(0.55, 0.88, 0.0004),//g
-            2 => Vector3f::new(1.25, 0.55, 1.5),//pur
-            3 => Vector3f::new(0.84, 0.7, 0.03),//r
-            4 => Vector3f::new(0.1, 1.0, 2.0),//y
-            5 => Vector3f::new(0.9, 0.03, 0.03),//w
-            6 => Vector3f::new(1.15, 0.65, 0.03),//blac
-            7 => Vector3f::new(0.78, 0.5, 2.5),//pi
-            _ => Vector3f::new(0.1, 0.7, 3.0)
-        }; //matches glow color
+        let color_vec = GET_COLOR_VEC(agent);
         LAST_EFFECT_SET_COLOR(agent, color_vec.x, color_vec.y, color_vec.z);
     }
 }
@@ -201,17 +141,7 @@ unsafe extern "C" fn effect_downattacku(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 6, 4, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, true);
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 0, 6, 3, 0, 0, 0, 0.95, true);
-        let color_vec = match WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) {
-            0 => Vector3f::new(0.1, 0.7, 3.0),//nor
-            1 => Vector3f::new(0.55, 0.88, 0.0004),//g
-            2 => Vector3f::new(1.25, 0.55, 1.5),//pur
-            3 => Vector3f::new(0.84, 0.7, 0.03),//r
-            4 => Vector3f::new(0.1, 1.0, 2.0),//y
-            5 => Vector3f::new(0.9, 0.03, 0.03),//w
-            6 => Vector3f::new(1.15, 0.65, 0.03),//blac
-            7 => Vector3f::new(0.78, 0.5, 2.5),//pi
-            _ => Vector3f::new(0.1, 0.7, 3.0)
-        }; //matches glow color
+        let color_vec = GET_COLOR_VEC(agent);
         LAST_EFFECT_SET_COLOR(agent, color_vec.x, color_vec.y, color_vec.z);
     }
     frame(lua_state, 17.0);
@@ -226,17 +156,7 @@ unsafe extern "C" fn effect_downattacku(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 6, -4, 0, 180, 0, 0.7, 0, 0, 0, 0, 0, 0, true);
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 0, 6, -3, 0, 180, 0, 0.95, true);
-        let color_vec = match WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) {
-            0 => Vector3f::new(0.1, 0.7, 3.0),//nor
-            1 => Vector3f::new(0.55, 0.88, 0.0004),//g
-            2 => Vector3f::new(1.25, 0.55, 1.5),//pur
-            3 => Vector3f::new(0.84, 0.7, 0.03),//r
-            4 => Vector3f::new(0.1, 1.0, 2.0),//y
-            5 => Vector3f::new(0.9, 0.03, 0.03),//w
-            6 => Vector3f::new(1.15, 0.65, 0.03),//blac
-            7 => Vector3f::new(0.78, 0.5, 2.5),//pi
-            _ => Vector3f::new(0.1, 0.7, 3.0)
-        }; //matches glow color
+        let color_vec = GET_COLOR_VEC(agent);
         LAST_EFFECT_SET_COLOR(agent, color_vec.x, color_vec.y, color_vec.z);
     }
     frame(lua_state, 22.0);
@@ -250,6 +170,8 @@ unsafe extern "C" fn effect_downattacku(agent: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.acmd("game_cliffescape", acmd_stub, Priority::Low);
+
     agent.acmd("game_dash", game_dash, Priority::Low);
     agent.acmd("sound_dash", sound_dash, Priority::Low);
     agent.acmd("game_turndash", game_turndash, Priority::Low);
