@@ -1501,10 +1501,23 @@ pub mod vars {
     pub mod samusd {
         pub mod instance {
             // flags
-            pub const SPECIAL_LW_ENABLE_DETONATE: i32 = 0x0100;
+            pub const ATTACK_AIR_N_LANDING_HIT: i32 = 0x0100;
+            pub const SPECIAL_HI_RUSH_AIR: i32 = 0x0101;
+            pub const SPECIAL_HI_RUSH_ANGLE: i32 = 0x0102;
+            pub const SPECIAL_LW_ENABLE_DETONATE: i32 = 0x0103;
 
             // ints
-            pub const SPECIAL_LW_BOMB_OBJECT_ID: i32 = 0x0100;
+            pub const SPECIAL_HI_END_TYPE: i32 = 0x0104;
+        }
+        pub mod status {
+            // flags
+            pub const SPECIAL_HI_SET_ROT: i32 = 0x1100;
+
+            // ints
+            pub const SPECIAL_HI_RUSH_FRAME: i32 = 0x1101;
+
+            // floats
+            pub const SPECIAL_HI_RUSH_BRAKE: i32 = 0x1102;
         }
     }
 
@@ -1886,6 +1899,8 @@ pub mod statuses {
 
     pub mod samusd {
         pub const FLOAT: i32 = 0x1F6;
+        pub const SPECIAL_HI_RUSH: i32 = 0x1F7;
+        pub const SPECIAL_HI_END: i32 = 0x1F8;
     }
 
     pub mod wolf {
