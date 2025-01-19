@@ -527,6 +527,8 @@ pub mod vars {
             pub const INHERIT_FINAL_CANCEL_ON_END: i32 = 0x1150;
             pub const ATTACK_COMMAND_4_RELEASE_BUTTON: i32 = 0x1151;
 
+            pub const SPECIAL_LW_BREAK : i32 = 0x1152;
+
             // ints
             pub const HIT_CANCEL_TIMER: i32 = 0x1104;
         }
@@ -1809,6 +1811,7 @@ pub mod statuses {
 
     pub mod dolly {
         pub const ATTACK_COMMAND_4: i32 = 0x203;
+        pub const SPECIAL_LW_BREAKING: i32 = 0x204;
     }
 
     pub mod edge_flash {
