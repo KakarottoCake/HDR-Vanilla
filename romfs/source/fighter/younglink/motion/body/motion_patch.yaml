@@ -97,7 +97,7 @@ attack_11:
     cancel_frame: 17
 attack_dash:
   extra:
-    cancel_frame: 47
+    cancel_frame: 49
 air_catch:
   extra:
     cancel_frame: 60

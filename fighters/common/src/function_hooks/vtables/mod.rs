@@ -14,6 +14,7 @@ mod rockman;
 mod krool;
 mod brave;
 
+mod miigunner_grenadelauncher;
 mod ryu_shinkuhadoken;
 
 mod weapon;
@@ -33,6 +34,7 @@ pub fn install() {
     krool::install();
     brave::install();
 
+    miigunner_grenadelauncher::install();
     ryu_shinkuhadoken::install();
 
     weapon::install();

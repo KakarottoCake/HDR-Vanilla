@@ -86,6 +86,9 @@ throw_hi:
 attack_11:
   extra:
     cancel_frame: 21
+attack_dash:
+  extra:
+    cancel_frame: 36
 attack_lw3:
   extra:
     cancel_frame: 19

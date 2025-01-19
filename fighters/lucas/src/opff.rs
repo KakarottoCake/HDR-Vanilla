@@ -6,7 +6,7 @@ use globals::*;
 unsafe fn psi_magnet_jc(boma: &mut BattleObjectModuleAccessor, status_kind: i32, situation_kind: i32, cat1: i32, stick_x: f32, facing: f32, frame: f32) {
     if [*FIGHTER_LUCAS_STATUS_KIND_SPECIAL_LW_HIT, *FIGHTER_LUCAS_STATUS_KIND_SPECIAL_LW_END].contains(&status_kind) {
         if boma.status_frame() > 0 {
-            if !boma.is_in_hitlag() {
+            if !AttackModule::is_attack(boma, 0, false) { //jc if hitbox clear
                 boma.check_jump_cancel(false, false);
             }
         }
