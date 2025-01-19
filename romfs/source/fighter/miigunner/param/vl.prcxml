@@ -10,6 +10,11 @@
       <int hash="life">15</int>
     </struct>
   </list>
+  <list size="1" hash="param_grenadelauncher">
+    <struct index="0">
+      <float hash="angle">54.0</float>
+    </struct>
+  </list>
   <list hash="param_special_s">
     <struct index="0">
       <float hash="s1_angle_ground">-15</float>
