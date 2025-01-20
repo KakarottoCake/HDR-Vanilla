@@ -1,10 +1,10 @@
 use super::*;
 use globals::*;
 
-mod special_s;
-
 mod special_hi;
 mod special_hi_open;
+//mod special_n;
+mod special_s;
 
 unsafe extern "C" fn should_use_special_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.is_situation(*SITUATION_KIND_AIR) && VarModule::is_flag(fighter.battle_object, vars::gamewatch::instance::SPECIAL_HI_ENABLE_PARACHUTE) {
@@ -15,6 +15,16 @@ unsafe extern "C" fn should_use_special_callback(fighter: &mut L2CFighterCommon)
 }
 
 unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.is_situation(*SITUATION_KIND_GROUND) || fighter.is_situation(*SITUATION_KIND_CLIFF)
+    || fighter.is_status_one_of(&[
+        *FIGHTER_STATUS_KIND_REBIRTH,
+        *FIGHTER_STATUS_KIND_DEAD,
+        *FIGHTER_STATUS_KIND_LANDING,
+        *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL
+    ]) {
+        VarModule::off_flag(fighter.battle_object, vars::gamewatch::instance::SPECIAL_HI_ENABLE_FREEFALL);
+        VarModule::off_flag(fighter.battle_object, vars::gamewatch::instance::SPECIAL_HI_ENABLE_PARACHUTE);
+    }
     if VarModule::is_flag(fighter.battle_object, vars::gamewatch::instance::SPECIAL_HI_ENABLE_PARACHUTE) {
         if (fighter.is_situation(*SITUATION_KIND_GROUND) || fighter.is_situation(*SITUATION_KIND_CLIFF)
         || fighter.is_status_one_of(&[
@@ -85,8 +95,8 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
 pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
 
-    special_s::install(agent);
-
     special_hi::install(agent);
     special_hi_open::install(agent);
+    //special_n::install(agent);
+    special_s::install(agent);
 }

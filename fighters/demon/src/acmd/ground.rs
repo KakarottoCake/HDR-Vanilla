@@ -455,6 +455,7 @@ unsafe extern "C" fn game_attackstand5(agent: &mut L2CAgentBase) {
     frame(lua_state, 15.0);
     if is_excute(agent) {
         if VarModule::is_flag(boma.object(), vars::demon::instance::ATTACK_HI3_SLAUGHTER_HIGH_KICK){
+            VarModule::off_flag(boma.object(), vars::demon::instance::ATTACK_HI3_SLAUGHTER_HIGH_KICK);
             FT_DESIRED_RATE(agent, 35.0-15.0, 18.0);
         }
     }
@@ -532,10 +533,10 @@ unsafe extern "C" fn game_attacksquat2(agent: &mut L2CAgentBase) {
         ATTACK(agent, 3, 0, Hash40::new("top"), 5.0, 77, 12, 0, 40, 3.0, 0.0, 9.0, 5.0, Some(0.0), Some(9.0), Some(12.0), 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA_d, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DEMON_PUNCH01, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 361, 100, 30, 0, 3.0, 0.0, 3.0, 5.0, Some(0.0), Some(3.0), Some(12.0), 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_DEMON_PUNCH01, *ATTACK_REGION_PUNCH);
         AttackModule::set_down_only(boma, 0, true);
-        AttackModule::set_add_reaction_frame_revised(boma, 1, 16.0, false);
-        AttackModule::set_add_reaction_frame_revised(boma, 2, 16.0, false);
-        AttackModule::set_add_reaction_frame_revised(boma, 3, 16.0, false);
-        AttackModule::set_add_reaction_frame_revised(boma, 0, 22.0, false);
+        AttackModule::set_add_reaction_frame_revised(boma, 1, 12.0, false);
+        AttackModule::set_add_reaction_frame_revised(boma, 2, 12.0, false);
+        AttackModule::set_add_reaction_frame_revised(boma, 3, 12.0, false);
+        AttackModule::set_add_reaction_frame_revised(boma, 0, 18.0, false);
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {

@@ -57,7 +57,7 @@ unsafe fn attack_module_set_attack(module: u64, id: i32, group: i32, data: &mut 
                     2 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_bind_extra");    data.sound_attr = CollisionSoundAttr::Elec; },
                     3 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_cutup");         data.sound_attr = CollisionSoundAttr::CutUp; },
                     4 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_coin");          data.sound_attr = CollisionSoundAttr::Coin; },
-                    5 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_curse_poison");  data.sound_attr = CollisionSoundAttr::Fire; },
+                    5 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_normal_poison"); data.sound_attr = CollisionSoundAttr::Fire; },
                     6 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_elec");          data.sound_attr = CollisionSoundAttr::Elec; },
                     7 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_fire");          data.sound_attr = CollisionSoundAttr::Fire; },
                     8 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_flower");        data.sound_attr = CollisionSoundAttr::Kick; },

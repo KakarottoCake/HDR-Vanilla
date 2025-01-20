@@ -1,4 +1,5 @@
 use super::*;
+use smash_rs;
 
 unsafe extern "C" fn special_s_init(fighter: &mut L2CFighterCommon) -> L2CValue {
     let prev_kind = WorkModule::get_int(fighter.module_accessor, *FIGHTER_GAMEWATCH_INSTANCE_WORK_ID_INT_SPECIAL_S_PREV_KIND);
@@ -81,9 +82,40 @@ unsafe extern "C" fn special_s_init(fighter: &mut L2CFighterCommon) -> L2CValue 
         *FIGHTER_GAMEWATCH_STATUS_SPECIAL_S_WORK_INT_MOTION_KIND_AIR
     );
 
-    0.into()
+    return 0.into();
+}
+
+unsafe extern "C" fn special_s_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.is_motion_one_of(&[Hash40::new("special_s_4"), Hash40::new("special_air_s_4")]) {
+        if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) && !fighter.is_in_hitlag() {
+            fighter.check_jump_cancel(false, false);
+        }
+    }
+
+    return smashline::original_status(Exec, fighter, *FIGHTER_STATUS_KIND_SPECIAL_S)(fighter);
+}
+
+unsafe extern "C" fn special_s_check_attack(fighter: &mut L2CFighterCommon, _param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
+    if fighter.is_motion_one_of(&[Hash40::new("special_s_1"), Hash40::new("special_air_s_1")]) {
+        let table = param_3.get_table() as *mut smash_rs::lib::L2CTable;
+        if utils::util::get_table_value(table, "object_category_").try_integer().unwrap() as i32 == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+            if utils::util::get_table_value(table, "kind_").try_integer().unwrap() as i32 == *COLLISION_KIND_HIT {
+                let object_id = utils::util::get_table_value(table, "object_id_").try_integer().unwrap() as u32;
+                let opponent_boma = sv_battle_object::module_accessor(object_id);
+                if StatusModule::situation_kind(opponent_boma) == *SITUATION_KIND_AIR {
+                    let opponent_object = utils::util::get_battle_object_from_accessor(opponent_boma);
+                    VarModule::on_flag(opponent_object, vars::common::instance::IS_KNOCKDOWN_THROW);
+                    StatusModule::set_status_kind_interrupt(opponent_boma, *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR);
+                }
+            }
+        }
+    }
+    
+    return 0.into();
 }
 
 pub fn install(agent: &mut Agent) {
     agent.status(Init, *FIGHTER_STATUS_KIND_SPECIAL_S, special_s_init);
+    agent.status(Exec, *FIGHTER_STATUS_KIND_SPECIAL_S, special_s_exec);
+    agent.status(CheckAttack, *FIGHTER_STATUS_KIND_SPECIAL_S, special_s_check_attack);
 }

@@ -94,6 +94,31 @@ unsafe extern "C" fn game_escapeairslide(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_appeals(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 10.0);
+    if is_excute(agent) {
+        if app::smashball::is_training_mode()
+        && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) {
+            let gas = agent.get_int(0x100000bf);
+            WorkModule::set_int(boma, gas + 1800, 0x100000bf);
+        }
+    }
+}
+
+unsafe extern "C" fn effect_appeals(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 10.0);
+    if is_excute(agent) {
+        if app::smashball::is_training_mode()
+        && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) {
+            EFFECT(agent, Hash40::new("wario_ppe_flash"), Hash40::new("hip"), 1, -3, 0, 0, -90, 0, 0.5, 0, 0, 0, 0, 0, 0, true);
+        }
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_cliffescape", acmd_stub, Priority::Low);
 
@@ -108,4 +133,9 @@ pub fn install(agent: &mut Agent) {
 
     agent.acmd("game_escapeair", game_escapeair, Priority::Low);
     agent.acmd("game_escapeairslide", game_escapeairslide, Priority::Low);
+
+    agent.acmd("game_appealsl", game_appeals, Priority::Low);
+    agent.acmd("game_appealsr", game_appeals, Priority::Low);
+    agent.acmd("effect_appealsl", effect_appeals, Priority::Low);
+    agent.acmd("effect_appealsr", effect_appeals, Priority::Low);
 }
