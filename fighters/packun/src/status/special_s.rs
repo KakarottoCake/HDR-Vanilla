@@ -1,5 +1,104 @@
 use super::*;
 
+unsafe extern "C" fn special_s_charge_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.is_situation(*SITUATION_KIND_GROUND) {
+        CORRECT(fighter, *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP);
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s_charge"), 0.0, 1.0, false, 0.0, false, false);
+    }
+    else {
+        CORRECT(fighter, *GROUND_CORRECT_KIND_AIR);
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_s_charge"), 0.0, 1.0, false, 0.0, false, false);
+    }
+    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON);
+    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT);
+    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON);
+    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL);
+    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL_BUTTON);
+    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_FLY);
+    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_FLY_NEXT);
+    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_AIR);
+    ControlModule::set_add_jump_mini_button_life(fighter.module_accessor, 8);
+
+    fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(sub_special_n_charge as *const () as _));
+    fighter.main_shift(special_s_charge_main_loop)
+}
+
+unsafe extern "C" fn sub_special_n_charge(fighter: &mut L2CFighterCommon, param: L2CValue) -> L2CValue {
+    if param.get_bool() {
+        fighter.inc_int(*FIGHTER_PACKUN_INSTANCE_WORK_ID_INT_SPECIAL_S_COUNT);
+    }
+
+    return 0.into();
+}
+
+unsafe extern "C" fn special_s_charge_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let count = fighter.get_int(*FIGHTER_PACKUN_INSTANCE_WORK_ID_INT_SPECIAL_S_COUNT);
+    let charge_max_frame = fighter.get_param_int("param_special_s", "charge_max_frame");
+    if count >= charge_max_frame {
+        fighter.change_status(FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_END.into(), false.into());
+        return 0.into();
+    }
+    if fighter.is_pad_flag(PadFlag::SpecialTrigger) {
+        fighter.change_status(FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_SHOOT.into(), false.into());
+        return 0.into();
+    }
+    if StatusModule::is_situation_changed(fighter.module_accessor) {
+        if fighter.is_situation(*SITUATION_KIND_GROUND) {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+            MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_s_charge"), -1.0, 1.0, 0.0, false, false);
+        }
+        else {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+            MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_s_charge"), -1.0, 1.0, 0.0, false, false);
+        }
+    }
+    if fighter.is_situation(*SITUATION_KIND_GROUND) {
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON) {
+            if fighter.sub_check_command_guard().get_bool() {
+                fighter.set_int(*FIGHTER_PACKUN_SPECIAL_S_CANCEL_TYPE_GROUND_GUARD, *FIGHTER_PACKUN_STATUS_SPECIAL_S_WORK_INT_CANCEL_TYPE);
+                fighter.change_status(FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_CANCEL.into(), true.into());
+                return 1.into();
+            }
+        }
+        if fighter.sub_check_jump_in_charging().get_bool() {
+            fighter.set_int(*FIGHTER_PACKUN_SPECIAL_S_CANCEL_TYPE_GROUND_JUMP, *FIGHTER_PACKUN_STATUS_SPECIAL_S_WORK_INT_CANCEL_TYPE);
+            fighter.change_status(FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_CANCEL.into(), true.into());
+            return 1.into();
+        }
+    }
+    else {
+        if fighter.is_cat_flag(Cat1::AirEscape) {
+            fighter.set_int(*FIGHTER_PACKUN_SPECIAL_S_CANCEL_TYPE_NONE, *FIGHTER_PACKUN_STATUS_SPECIAL_S_WORK_INT_CANCEL_TYPE);
+            fighter.change_status(FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_CANCEL.into(), true.into());
+            return 1.into();
+        }
+        if fighter.sub_check_jump_in_charging().get_bool() {
+            fighter.set_int(*FIGHTER_PACKUN_SPECIAL_S_CANCEL_TYPE_AIR_JUMP_AERIAL, *FIGHTER_PACKUN_STATUS_SPECIAL_S_WORK_INT_CANCEL_TYPE);
+            fighter.change_status(FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_JUMP_CANCEL.into(), true.into());
+            return 1.into();
+        }
+    }
+    if !fighter.global_table[IS_STOPPING].get_bool() {
+        if StatusModule::is_situation_changed(fighter.module_accessor) {
+            special_s_charge_set_kinetic(fighter);
+        }
+    }
+    
+    return 0.into();
+}
+
+unsafe extern "C" fn special_s_charge_set_kinetic(fighter: &mut L2CFighterCommon) {
+    let sum_speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let reset_type = if fighter.is_situation(*SITUATION_KIND_GROUND) { ENERGY_STOP_RESET_TYPE_GROUND } else { ENERGY_STOP_RESET_TYPE_AIR };
+    sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, reset_type, 0.0, 0.0, 0.0, 0.0, 0.0);
+    sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, sum_speed_x, 0.0);
+    KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
+}
+
 unsafe extern "C" fn special_s_shoot_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.is_situation(*SITUATION_KIND_GROUND) {
         CORRECT(fighter, *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP);
@@ -118,5 +217,6 @@ unsafe fn special_s_shoot_helper(fighter: &mut L2CFighterCommon) {
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.status(Main, *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_CHARGE, special_s_charge_main);
     agent.status(Main, *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_SHOOT, special_s_shoot_main);
 }
