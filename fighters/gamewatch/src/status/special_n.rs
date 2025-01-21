@@ -9,8 +9,8 @@ unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue 
     fighter.main_shift(special_n_main_loop)
 }
 
-unsafe fn sub_special_n(fighter: &mut L2CFighterCommon, param_1: bool) -> L2CValue {
-    if param_1 { return 0.into(); }
+unsafe fn sub_special_n(fighter: &mut L2CFighterCommon, param_1: L2CValue) -> L2CValue {
+    if param_1.get_bool() { return 0.into(); }
     if fighter.is_flag(*FIGHTER_GAMEWATCH_STATUS_SPECIAL_N_FLAG_SHOOT) {
         if fighter.get_int(*FIGHTER_GAMEWATCH_STATUS_SPECIAL_N_WORK_INT_LOOP_COUNT) <= 0
         || fighter.is_flag(*FIGHTER_GAMEWATCH_STATUS_SPECIAL_N_FLAG_COUNT_CHECK) {
