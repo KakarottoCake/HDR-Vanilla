@@ -119,8 +119,6 @@ unsafe extern "C" fn sound_specialsend(agent: &mut L2CAgentBase) {
     let boma: &mut BattleObjectModuleAccessor = agent.boma();
     frame(lua_state, 1.0);
     if is_excute(agent) {
-        let sound = SoundModule::play_se(boma, Hash40::new("se_zelda_magic10"), true, false, false, false, app::enSEType(0));
-        SoundModule::set_se_vol(boma, sound as i32, 0.9, 0);
     }
 }
 
@@ -359,82 +357,10 @@ unsafe extern "C" fn sound_speciallwattack(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         if agent.is_flag(*FIGHTER_ZELDA_STATUS_SPECIAL_LW_FLAG_FAIL) {
             let sound = SoundModule::play_se(boma, Hash40::new("se_system_beep"), true, false, false, false, app::enSEType(0));
-            SoundModule::set_se_vol(boma, sound as i32, 0.75, 0);
+            SoundModule::set_se_vol(boma, sound as i32, 0.6, 0);
         } else {
             let sound = SoundModule::play_se(boma, Hash40::new("se_zelda_special_l09"), true, false, false, false, app::enSEType(0));
             SoundModule::set_se_vol(boma, sound as i32, 1.6, 0);
-        }
-    }
-}
-
-unsafe extern "C" fn game_landingfallspecial(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    frame(lua_state, 1.0);
-    FT_MOTION_RATE(agent, 1.0);
-    if agent.is_prev_status(*FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_2) {
-        if VarModule::is_flag(agent.battle_object, vars::zelda::instance::SPECIAL_HI_GROUNDED_TELEPORT) {
-            FT_MOTION_RATE_RANGE(agent, 1.0, 21.0, 13.0);
-        } else {
-            FT_MOTION_RATE_RANGE(agent, 1.0, 21.0, 17.0);
-        }
-    }
-}
-
-unsafe extern "C" fn effect_landingfallspecial(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    let lr = sv_animcmd::get_value_float(lua_state, *SO_VAR_FLOAT_LR);
-    if !agent.is_prev_status(*FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_2) {
-        if is_excute(agent) {
-            if agent.is_prev_status(*FIGHTER_ZELDA_STATUS_KIND_SPECIAL_S_END) {
-                //lc dins effect
-                LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.85, 0, 0, 0, 0, 0, 0, false);
-            } else {
-                //normal special landing lag eff
-                LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-            }
-        }
-    } else { //grounded special cancel effects
-        frame(lua_state, 3.0);
-        if is_excute(agent) {
-            FLASH(agent, 0.62, 0.94, 0.9, 0.6);
-            if lr < 0.0 {
-                EFFECT_FOLLOW(agent, Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.75, false);
-            }
-            else {
-                EFFECT_FOLLOW(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.75, false);
-            }
-            LAST_EFFECT_SET_SCALE_W(agent, 0.55, 0.8, 0.55);
-        }
-        frame(lua_state, 6.0);
-        if is_excute(agent) {
-            FLASH(agent, 0.33, 0.83, 0.9, 0.2);
-        }
-        frame(lua_state, 9.0);
-        if is_excute(agent) {
-            FLASH(agent, 0.6, 1, 1, 0.5);
-        }
-        frame(lua_state, 13.0);
-        if is_excute(agent) {
-            FLASH(agent, 0.33, 0.83, 0.9, 0.2);
-        }
-        frame(lua_state, 16.0);
-        if is_excute(agent) {
-            COL_NORMAL(agent);
-        }
-    }
-}
-
-unsafe extern "C" fn sound_landingfallspecial(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    frame(lua_state, 1.0);
-    if is_excute(agent) {
-        if agent.is_prev_status(*FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_2) {
-            PLAY_SE(agent, Hash40::new("se_zelda_appear02"));
-        } else {
-            PLAY_SE(agent, Hash40::new("se_zelda_landing02"));
         }
     }
 }
@@ -473,7 +399,4 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("sound_speciallwattack", sound_speciallwattack, Priority::Low);
     agent.acmd("sound_specialairlwattack", sound_speciallwattack, Priority::Low);
 
-    agent.acmd("game_landingfallspecial", game_landingfallspecial, Priority::Low);
-    agent.acmd("effect_landingfallspecial", effect_landingfallspecial, Priority::Low);
-    agent.acmd("sound_landingfallspecial", sound_landingfallspecial, Priority::Low);
 }

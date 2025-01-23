@@ -60,8 +60,8 @@ pub unsafe extern "C" fn dein_remove(weapon: &mut smash::lua2cpp::L2CFighterBase
     let dein2_battle_object = utils::util::get_battle_object_from_id(dein2 as u32);
     let dein2_boma = &mut *(*dein2_battle_object).module_accessor;
     //Dins existence checks, applicable refreshes and variable settings
-    if sv_battle_object::is_active(dein as u32) {
-        if sv_battle_object::is_active(dein2 as u32) { 
+    if sv_battle_object::is_active(dein as u32) && dein != 0 {
+        if sv_battle_object::is_active(dein2 as u32) && dein2 != 0{ 
             //if both dins slots are full, shuffle slots and kill first dins
             VarModule::set_int(zelda, vars::zelda::instance::SPECIAL_S_DEIN_OBJECT_ID, dein2);
             VarModule::set_int(zelda, vars::zelda::instance::SPECIAL_S_DEIN_OBJECT_ID_2, thisdins);
@@ -113,8 +113,8 @@ unsafe extern "C" fn dins_refresh(weapon: &mut L2CWeaponCommon) -> L2CValue {
         //dins size, hold frames 
         let hold_frame_max = weapon.get_param_float("param_dein", "count");
         let hold_frame = weapon.get_float(*WEAPON_ZELDA_DEIN_STATUS_WORK_FLOAT_COUNT);
-        let base_detonate_range = ParamModule::get_float(zelda, ParamType::Agent, "base_detonate_range");
-        let add_detonate_range = ParamModule::get_float(zelda, ParamType::Agent, "add_detonate_range");
+        let base_detonate_range = ParamModule::get_float(zelda, ParamType::Agent, "param_special_s.base_detonate_range");
+        let add_detonate_range = ParamModule::get_float(zelda, ParamType::Agent, "param_special_s.add_detonate_range");
         let pop_distance = base_detonate_range + add_detonate_range * (hold_frame_max/hold_frame); //(soft scaling to match flame GFX better)
         //explode timer && current frame
         let mine_timer = weapon.get_param_float("param_dein", "bang_time");
@@ -145,7 +145,6 @@ unsafe extern "C" fn dins_refresh(weapon: &mut L2CWeaponCommon) -> L2CValue {
 
 pub unsafe extern "C" fn delete_effects(weapon: &mut smash::lua2cpp::L2CFighterBase, dein: i32) {
     let article_boma = sv_battle_object::module_accessor(dein as u32);
-    let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
     //Fizzle effects upon deletion of 1st dins
     // Fire
     let handle1 = EffectModule::req_on_joint(article_boma, Hash40::new("zelda_appeal_s_fire"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.5, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);

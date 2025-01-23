@@ -126,10 +126,13 @@ unsafe extern "C" fn special_hi2_end(fighter: &mut L2CFighterCommon) -> L2CValue
                 let stop_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP) as *mut app::KineticEnergy;
                 let speed = Vector2f{ x: lua_bind::KineticEnergy::get_speed_x(stop_energy), y: lua_bind::KineticEnergy::get_speed_y(stop_energy)};
                 sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, speed.x.abs() * lr * 1.05, speed.y); //b-reverse telecancel reverses momentum on ground
-                EFFECT_FOLLOW(fighter, Hash40::new("zelda_atk"), Hash40::new("top"), 5.5 * lr, 8.0, -2.0, 0, 0, 0, 1.65, true);
+                //telecancel flash
+                EFFECT_FOLLOW(fighter, Hash40::new("zelda_atk"), Hash40::new("top"), 5.5 * lr, 8.0, -2.1, 0, 0, 0, 1.65, true);
                 LAST_EFFECT_SET_COLOR(fighter, 0.95, 3.0, 0.6);
                 LAST_EFFECT_SET_ALPHA(fighter, 0.75);
                 LAST_EFFECT_SET_RATE(fighter, 1.10); //spawn gr cancel eff frame 0
+                //telecancel sound
+                PLAY_SE(fighter, Hash40::new("se_zelda_appear02"));
             }
         }
     }
@@ -169,7 +172,12 @@ unsafe extern "C" fn special_hi3_main(fighter: &mut L2CFighterCommon) -> L2CValu
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
         fighter.set_int(*SITUATION_KIND_GROUND, *FIGHTER_ZELDA_STATUS_SPECIAL_HI_WORK_INT_START_SITUATION);
         if VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK) {
-            MotionModule::change_motion(fighter.module_accessor, "landing_fall_special".to_hash(), 0.0, 1.0, false, 0.0, false, false);
+            let mut end_frame = MotionModule::end_frame_from_hash(fighter.module_accessor, "landing_heavy".to_hash());
+            let mut motion_rate = (end_frame-3.0)/13.0;
+            if !VarModule::is_flag(fighter.battle_object, vars::zelda::instance::SPECIAL_HI_GROUNDED_TELEPORT) {
+                motion_rate = (end_frame-3.0)/17.0;
+            } //extra 4f A2G
+            MotionModule::change_motion(fighter.module_accessor, "landing_heavy".to_hash(), 3.0, motion_rate, false, 0.0, false, false);
         } else {
             MotionModule::change_motion(fighter.module_accessor, "special_hi".to_hash(), 0.0, 1.0, false, 0.0, false, false);
         }
