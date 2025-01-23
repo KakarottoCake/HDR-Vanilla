@@ -113,7 +113,9 @@ unsafe extern "C" fn dins_refresh(weapon: &mut L2CWeaponCommon) -> L2CValue {
         //dins size, hold frames 
         let hold_frame_max = weapon.get_param_float("param_dein", "count");
         let hold_frame = weapon.get_float(*WEAPON_ZELDA_DEIN_STATUS_WORK_FLOAT_COUNT);
-        let pop_distance = 7.5 + 5.0 * (hold_frame_max/hold_frame); //min charge dins 7 units, max charge 12.5 units (soft scaling to match flame GFX better)
+        let base_detonate_range = ParamModule::get_float(zelda, ParamType::Agent, "base_detonate_range");
+        let add_detonate_range = ParamModule::get_float(zelda, ParamType::Agent, "add_detonate_range");
+        let pop_distance = base_detonate_range + add_detonate_range * (hold_frame_max/hold_frame); //(soft scaling to match flame GFX better)
         //explode timer && current frame
         let mine_timer = weapon.get_param_float("param_dein", "bang_time");
         let frame = weapon.get_float(*WEAPON_ZELDA_DEIN_STATUS_WORK_FLOAT_LIFE); //frames till explosion
