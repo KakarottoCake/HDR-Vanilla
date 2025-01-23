@@ -4,12 +4,10 @@ unsafe extern "C" fn game_specialnp(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    if is_excute(agent) {
-        FT_MOTION_RATE_RANGE(agent, 1.0, 18.0, 11.0);
-    }
+    FT_MOTION_RATE_RANGE(agent, 1.0, 18.0, 11.0);
     frame(lua_state, 18.0);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
-        FT_MOTION_RATE(agent, 1.0);
         ArticleModule::generate_article(boma, articles::palutena::METEOR, false, -1);
     }
 }
@@ -26,8 +24,15 @@ unsafe extern "C" fn effect_specialnp(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("palutena_backlight"), Hash40::new("top"), 3, 13.5, 0, 0, -90, 0, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("palutena_backlight"), Hash40::new("top"), -1, 21, -1, 0, -90, 0, 1, true);
         LAST_EFFECT_SET_COLOR(agent, 0.75, 0.01, 0.35);
+        EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_atk1"), Hash40::new("top"), 0, 40, 6, 0, 0, 0, 1.25, true);
+        LAST_EFFECT_SET_COLOR(agent, 1.875, 0.025, 0.875);
+        LAST_EFFECT_SET_RATE(agent, 1.6);
+    }
+    frame(lua_state, 18.0);
+    if is_excute(agent) {
+        EFFECT_DETACH_KIND(agent, Hash40::new("palutena_wand_atk1"), 0);
     }
     frame(lua_state, 30.0);
     if is_excute(agent) {

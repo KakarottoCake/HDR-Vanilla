@@ -6,9 +6,7 @@ use globals::*;
 unsafe fn special_waza_charge_handle(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_motion_one_of(&[
         Hash40::new("special_n3_start"),
-        Hash40::new("special_air_n3_start"),
-        Hash40::new("special_hi1"),
-        Hash40::new("special_air_hi1")]) {
+        Hash40::new("special_air_n3_start")]) {
         let is_hold = ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL);
         let charge = VarModule::get_float(boma.object(), vars::miigunner::status::ATTACK_CHARGE);
         let mut charge_start_frame = 0.0;
@@ -105,22 +103,6 @@ unsafe fn missile_land_cancel(boma: &mut BattleObjectModuleAccessor) {
         if boma.is_situation(*SITUATION_KIND_GROUND) && boma.is_prev_situation(*SITUATION_KIND_AIR) {
             if boma.status_frame() > 23 {
                 MotionModule::set_frame(boma, 38.0, false);
-            }
-        }
-    }
-}
-
-/// Allow uncharged or slightly charged Lunar Launch to be actionable
-unsafe fn lunar_launch_actionability(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_HI) {
-        if fighter.status_frame() >= 35 && VarModule::get_float(fighter.battle_object, vars::miigunner::status::ATTACK_CHARGE) <= 10.0 {
-            // if already used once this airtime
-            if VarModule::is_flag(fighter.battle_object, vars::miigunner::instance::SPECIAL_HI1_LAUNCH_AIR_USED) {
-                VarModule::on_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
-            }
-            else {
-                VarModule::on_flag(fighter.battle_object, vars::miigunner::instance::SPECIAL_HI1_LAUNCH_AIR_USED);
-                StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_FALL, false);
             }
         }
     }
@@ -226,7 +208,6 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     laser_blaze_ff_land_cancel(boma);
     remove_homing_missiles(boma);
     missile_land_cancel(boma);
-    lunar_launch_actionability(fighter);
     stealth_burst_land_cancel(boma);
     vortex_item_grab(fighter);
     fastfall_specials(fighter);

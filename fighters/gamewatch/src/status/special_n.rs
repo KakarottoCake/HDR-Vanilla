@@ -2,7 +2,7 @@ use super::*;
 
 unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     if !StopModule::is_stop(fighter.module_accessor) {
-        sub_special_n(fighter, false);
+        sub_special_n(fighter, false.into());
     }
 
     fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(sub_special_n as *const () as _));
