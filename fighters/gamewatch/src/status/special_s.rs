@@ -95,7 +95,7 @@ unsafe extern "C" fn special_s_exec(fighter: &mut L2CFighterCommon) -> L2CValue 
     return smashline::original_status(Exec, fighter, *FIGHTER_STATUS_KIND_SPECIAL_S)(fighter);
 }
 
-unsafe extern "C" fn special_s_check_attack(fighter: &mut L2CFighterCommon, _param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
+unsafe extern "C" fn special_s_check_attack(fighter: &mut L2CFighterCommon, param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
     if fighter.is_motion_one_of(&[Hash40::new("special_s_1"), Hash40::new("special_air_s_1")]) {
         let table = param_3.get_table() as *mut smash_rs::lib::L2CTable;
         if utils::util::get_table_value(table, "object_category_").try_integer().unwrap() as i32 == *BATTLE_OBJECT_CATEGORY_FIGHTER {
