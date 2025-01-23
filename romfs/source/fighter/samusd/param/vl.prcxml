@@ -58,13 +58,13 @@
   </list>
   <list hash="param_missile">
     <struct index="0">
-      <int hash="h_life">60</int>
+      <int hash="h_life">77</int>
       <float hash="h_anglemax">70</float>
       <float hash="h_angle">2.0</float>
-      <float hash="h_spd">0.5</float>
-      <int hash="h_homingf">30</int>
+      <float hash="h_spd">0.4</float>
+      <int hash="h_homingf">45</int>
       <float hash="h_spdmul">1.1</float>
-      <float hash="h_spdmin">0.4</float>
+      <float hash="h_spdmin">0.3</float>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>
