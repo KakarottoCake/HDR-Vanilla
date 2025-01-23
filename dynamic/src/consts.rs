@@ -924,6 +924,7 @@ pub mod vars {
             pub const SPECIAL_N_OFFENSE_UP_INIT: i32 = 0x01ED;
             pub const ATTACK_S4_ANGLE_DOWN: i32 = 0x0103;
             pub const ATTACK_S4_ANGLE_UP: i32 = 0x0104;
+            pub const ATTACK_AIR_N_LANDING_HITBOX: i32 = 0x0105;
 
             // int
             pub const SPECIAL_N_OFFENSE_UP_EFFECT_HANDLE1: i32 = 0x01DF;
@@ -996,14 +997,22 @@ pub mod vars {
     pub mod mario {
         pub mod instance {
             // flags
-            pub const SPECIAL_LW_DISABLE_STALL: i32 = 0x0100;
-            pub const SPECIAL_S_DISABLE_STALL: i32 = 0x0101;
+            pub const SPECIAL_S_DISABLE: i32 = 0x0101;
+            pub const SPECIAL_LW_DISABLE: i32 = 0x0102;
         }
         pub mod status {
             // flags
             pub const SPECIAL_N_FIREBRAND: i32 = 0x1100;
-            pub const SPECIAL_LW_GROUND_START: i32 = 0x0101;
+            pub const SPECIAL_LW_ENABLE_LANDING : i32 = 0x1101;
+
+            // ints
+            pub const SPECIAL_LW_LONG_JUMP_KIND : i32 = 0x1103;
         }
+    
+        pub const LONG_JUMP_W : i32 = 0;
+        pub const LONG_JUMP_M : i32 = 1;
+        pub const LONG_JUMP_S : i32 = 2;
+        pub const LONG_JUMP_B : i32 = 3;
     }
 
     pub mod mariod {
@@ -1084,13 +1093,14 @@ pub mod vars {
         }
         pub mod instance {
             // flags
-            pub const SPECIAL_HI1_LAUNCH_AIR_USED: i32 = 0x0100;
+            pub const BOOSTED_AERIAL_LANDING: i32 = 0x0100;
             pub const BOOSTED_ATTACK_AIR_LW_AIRTIME: i32 = 0x0101;
+            pub const SPECIAL_HI1_LAUNCH_AIR_USED: i32 = 0x0102;
 
             // ints
-            pub const SPECIAL_HI1_LAUNCH_EFFECT_HANDLE: i32 = 0x0100;
+            pub const SPECIAL_S2_STEALTHBOMB_EFFECT_HANDLE: i32 = 0x0100;
             pub const SPECIAL_S3_MISSILE_OBJECT_ID: i32 = 0x0101;
-            pub const SPECIAL_S2_STEALTHBOMB_EFFECT_HANDLE: i32 = 0x0102;
+            pub const SPECIAL_HI1_LAUNCH_EFFECT_HANDLE: i32 = 0x0102;
 
             // floats
             pub const SPECIAL_N3_CHARGE: i32 = 0x0102;
@@ -1501,10 +1511,23 @@ pub mod vars {
     pub mod samusd {
         pub mod instance {
             // flags
-            pub const SPECIAL_LW_ENABLE_DETONATE: i32 = 0x0100;
+            pub const ATTACK_AIR_N_LANDING_HIT: i32 = 0x0100;
+            pub const SPECIAL_HI_RUSH_AIR: i32 = 0x0101;
+            pub const SPECIAL_HI_RUSH_ANGLE: i32 = 0x0102;
+            pub const SPECIAL_LW_ENABLE_DETONATE: i32 = 0x0103;
 
             // ints
-            pub const SPECIAL_LW_BOMB_OBJECT_ID: i32 = 0x0100;
+            pub const SPECIAL_HI_END_TYPE: i32 = 0x0104;
+        }
+        pub mod status {
+            // flags
+            pub const SPECIAL_HI_SET_ROT: i32 = 0x1100;
+
+            // ints
+            pub const SPECIAL_HI_RUSH_FRAME: i32 = 0x1101;
+
+            // floats
+            pub const SPECIAL_HI_RUSH_BRAKE: i32 = 0x1102;
         }
     }
 
@@ -1837,6 +1860,12 @@ pub mod statuses {
         pub const SPECIAL_LW_CANCEL_JUMP: i32 = 0x1F5;
     }
 
+    pub mod mario {
+        pub const GROUND_POUND_START: i32 = 0x1E3;
+        pub const GROUND_POUND_FALL: i32 = 0x1E4;
+        pub const GROUND_POUND_END: i32 = 0x1E5;
+    }
+
     pub mod mewtwo {
         pub const FLOAT: i32 = 0x1E9;
     }
@@ -1886,6 +1915,8 @@ pub mod statuses {
 
     pub mod samusd {
         pub const FLOAT: i32 = 0x1F6;
+        pub const SPECIAL_HI_RUSH: i32 = 0x1F7;
+        pub const SPECIAL_HI_END: i32 = 0x1F8;
     }
 
     pub mod wolf {
