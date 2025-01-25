@@ -215,6 +215,11 @@ unsafe fn up_special_freefall(fighter: &mut L2CFighterCommon, boma: &mut BattleO
     }
 }
 
+unsafe fn camera_lockout(fighter: &mut L2CFighterCommon) {
+    let lockout = VarModule::get_int(fighter.battle_object, vars::demon::instance::CAMERA_LOCKOUT_TIMER);
+    VarModule::set_int(fighter.battle_object, vars::demon::instance::CAMERA_LOCKOUT_TIMER, (lockout - 1).max(0));
+}
+
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     slaughter_high_kick_devastator(boma);
     korean_back_dash(boma);
@@ -223,6 +228,7 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     enable_both_recovery_specials(boma);
     fastfall_specials(fighter);
     up_special_freefall(fighter, boma);
+    camera_lockout(fighter);
 }
 
 pub extern "C" fn demon_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
