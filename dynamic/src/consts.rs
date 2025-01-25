@@ -1503,8 +1503,13 @@ pub mod vars {
     pub mod samus {
         pub mod instance {
             // flags
-            pub const ATTACK_DASH_SHINESPARK: i32 = 0x0100;
-            pub const ATTACK_DASH_ENABLE_SHINESPARK: i32 = 0x0101;
+            pub const SPECIAL_LW_CRAWL: i32 = 0x0100;
+            pub const SPECIAL_LW_INPUT_FROM_CRAWL: i32 = 0x0101;
+            pub const SPECIAL_LW_BOMB_LOCKOUT: i32 = 0x0102;
+        }
+        pub mod status {
+            // flags
+            pub const SPECIAL_LW_INPUT_IN_CRAWL: i32 = 0x1100;
         }
     }
 

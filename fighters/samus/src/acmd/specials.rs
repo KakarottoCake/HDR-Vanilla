@@ -96,7 +96,62 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 4.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_SAMUS_STATUS_SPECIAL_LW_FLAG_JUMP);
+    }
+    frame(lua_state, 10.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_SAMUS_STATUS_SPECIAL_LW_FLAG_JUMP);
+    }
+    frame(lua_state, 11.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_SAMUS_STATUS_SPECIAL_LW_FLAG_WEAPON);
+        VisibilityModule::set_int64(boma, hash40("body") as i64, hash40("body_sphere") as i64);
+        WorkModule::on_flag(boma, *FIGHTER_SAMUS_STATUS_SPECIAL_LW_FLAG_MV);
+    }
+    frame(lua_state, 40.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_SAMUS_STATUS_SPECIAL_LW_FLAG_CHK_CROUCH);
+    }
+    frame(lua_state, 44.0);
+    if is_excute(agent) {
+        WorkModule::off_flag(boma, *FIGHTER_SAMUS_STATUS_SPECIAL_LW_FLAG_MV);
+    }
+    frame(lua_state, 45.0);
+    FT_MOTION_RATE(agent, 0.6);
+    if is_excute(agent) {
+        VisibilityModule::set_int64(boma, hash40("body") as i64, hash40("body_normal") as i64);
+    }
+}
+
+unsafe extern "C" fn effect_speciallw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 4.0);
+    if is_excute(agent) {
+        if !VarModule::is_flag(agent.battle_object, vars::samus::status::SPECIAL_LW_INPUT_IN_CRAWL) {
+            LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
+        }
+    }
+}
+
+unsafe extern "C" fn game_speciallwend(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 9.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_SAMUS_STATUS_SPECIAL_LW_FLAG_CHK_CROUCH);
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialhi", game_specialhi, Priority::Low);
     agent.acmd("game_specialairhi", game_specialairhi, Priority::Low);
+
+    agent.acmd("game_speciallw", game_speciallw, Priority::Low);
+    agent.acmd("effect_speciallw", effect_speciallw, Priority::Low);
 }
