@@ -330,13 +330,13 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
     frame(lua_state, 4.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
-        HitModule::set_whole(boma, HitStatus(*HIT_STATUS_XLU), 0);
+        // HitModule::set_whole(boma, HitStatus(*HIT_STATUS_XLU), 0);
         ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 361, 80, 0, 40, 8.0, 0.0, 11.0, -8.0, Some(0.0), Some(11.0), Some(6.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
     }
     frame(lua_state, 7.0);
     FT_MOTION_RATE(agent, 0.6);
     if is_excute(agent) {
-        HitModule::set_whole(boma, HitStatus(*HIT_STATUS_NORMAL), 0);
+        // HitModule::set_whole(boma, HitStatus(*HIT_STATUS_NORMAL), 0);
         AttackModule::clear_all(boma);
     }
     frame(lua_state, 8.0);

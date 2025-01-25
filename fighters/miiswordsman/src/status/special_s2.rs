@@ -1,5 +1,37 @@
 use super::*;
 
+
+// FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_S2_HOLD
+
+unsafe extern "C" fn special_s2_hold_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    StatusModule::init_settings(
+        fighter.module_accessor,
+        SituationKind(*SITUATION_KIND_NONE),
+        *FIGHTER_KINETIC_TYPE_UNIQ,
+        *GROUND_CORRECT_KIND_KEEP as u32,
+        GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP),
+        false,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT,
+        0
+    );
+    FighterStatusModuleImpl::set_fighter_status_data(
+        fighter.module_accessor,
+        false,
+        *FIGHTER_TREADED_KIND_NO_REAC,
+        false,
+        false,
+        false,
+        (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_S | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK) as u64,
+        0,
+        *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S as u32,
+        0
+    );
+
+    0.into()
+}
+
 // FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_S2_DASH
 
 unsafe extern "C" fn special_s2_dash_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -8,7 +40,7 @@ unsafe extern "C" fn special_s2_dash_pre(fighter: &mut L2CFighterCommon) -> L2CV
         SituationKind(*SITUATION_KIND_NONE),
         *FIGHTER_KINETIC_TYPE_UNIQ,
         *GROUND_CORRECT_KIND_KEEP as u32,
-        GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
+        GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP),
         false,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT,
@@ -47,12 +79,12 @@ unsafe extern "C" fn special_s2_dash_main(fighter: &mut L2CFighterCommon) -> L2C
 unsafe extern "C" fn special_s2_dash_change_motion(fighter: &mut L2CFighterCommon) {
     let mot = if !fighter.is_situation(*SITUATION_KIND_GROUND) {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        fighter.sub_fighter_cliff_check(GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES.into());
+        fighter.sub_fighter_cliff_check(GROUND_CLIFF_CHECK_KIND_ON_DROP.into());
         Hash40::new("special_air_s2_dash")
     }
     else {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
-        fighter.sub_fighter_cliff_check(GROUND_CLIFF_CHECK_KIND_NONE.into());
+        fighter.sub_fighter_cliff_check(GROUND_CLIFF_CHECK_KIND_ON_DROP.into());
         Hash40::new("special_s2_dash")
     };
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_STATUS_SHIPPU_SLASH_FLAG_CONTINUE_MOT) {
@@ -234,7 +266,7 @@ unsafe extern "C" fn special_s2_end_main_loop(fighter: &mut L2CFighterCommon) ->
                         // OG [ special_s2_end_helper(fighter); ]
                         // custom [
                         GroundModule::correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-                        fighter.sub_fighter_cliff_check(L2CValue::I32(*GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES));
+                        fighter.sub_fighter_cliff_check(L2CValue::I32(*GROUND_CLIFF_CHECK_KIND_ON_DROP));
                         fighter.change_status(
                             L2CValue::I32(*FIGHTER_STATUS_KIND_FALL),
                             L2CValue::Bool(true)
@@ -263,7 +295,7 @@ unsafe extern "C" fn special_s2_end_main_loop(fighter: &mut L2CFighterCommon) ->
                 if fighter.global_table[PREV_SITUATION_KIND] == SITUATION_KIND_GROUND {
                     if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_AIR {
                         GroundModule::correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-                        fighter.sub_fighter_cliff_check(L2CValue::I32(*GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES));
+                        fighter.sub_fighter_cliff_check(L2CValue::I32(*GROUND_CLIFF_CHECK_KIND_ON_DROP));
                         fighter.change_status(
                             L2CValue::I32(*FIGHTER_STATUS_KIND_FALL),
                             L2CValue::Bool(true)
@@ -305,7 +337,7 @@ unsafe extern "C" fn special_s2_end_main_loop(fighter: &mut L2CFighterCommon) ->
 unsafe extern "C" fn special_s2_end_helper(fighter: &mut L2CFighterCommon) {
     if fighter.global_table[SITUATION_KIND] != SITUATION_KIND_GROUND {
         GroundModule::correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        fighter.sub_fighter_cliff_check(L2CValue::I32(*GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES));
+        fighter.sub_fighter_cliff_check(L2CValue::I32(*GROUND_CLIFF_CHECK_KIND_ON_DROP));
         if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_STATUS_SHIPPU_SLASH_FLAG_CONTINUE_MOT) {
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_s2_end"), 0.0, 1.0, false, 0.0, false, false);
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_STATUS_SHIPPU_SLASH_FLAG_CONTINUE_MOT);
@@ -323,7 +355,7 @@ unsafe extern "C" fn special_s2_end_helper(fighter: &mut L2CFighterCommon) {
         else {
             GroundModule::correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
         }
-        fighter.sub_fighter_cliff_check(L2CValue::I32(*GROUND_CLIFF_CHECK_KIND_NONE));
+        fighter.sub_fighter_cliff_check(L2CValue::I32(*GROUND_CLIFF_CHECK_KIND_ON_DROP));
         if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_STATUS_SHIPPU_SLASH_FLAG_CONTINUE_MOT) {
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s2_end"), 0.0, 1.0, false, 0.0, false, false);
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_STATUS_SHIPPU_SLASH_FLAG_CONTINUE_MOT);
@@ -350,6 +382,8 @@ unsafe extern "C" fn sub_special_s2_end(fighter: &mut L2CFighterCommon) -> L2CVa
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.status(Pre, *FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_S2_HOLD, special_s2_hold_pre);
+
     agent.status(Pre, *FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_S2_DASH, special_s2_dash_pre);
     agent.status(Main, *FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_S2_DASH, special_s2_dash_main);
 

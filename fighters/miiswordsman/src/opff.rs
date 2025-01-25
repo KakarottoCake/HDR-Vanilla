@@ -12,6 +12,26 @@ unsafe fn airborne_assault_lag(fighter: &mut L2CFighterCommon) {
     }
 }
 
+unsafe fn ssd_charge_ledgegrab(fighter: &mut L2CFighterCommon) {
+    let special_hi_no = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_CUSTOMIZE_SPECIAL_HI_NO);
+
+    if special_hi_no == 1
+    && fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_HI) {
+        // allows ledgegrab during Skyward Slash Dash charge
+        fighter.sub_transition_group_check_air_cliff();
+    }
+
+    let special_s_no = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_CUSTOMIZE_SPECIAL_S_NO);
+
+    if (special_s_no == 1
+        && fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_S))
+    || fighter.is_status(*FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_S2_HOLD) {
+        // allows ledgegrab during Kinetic Slash charge
+        fighter.sub_transition_group_check_air_cliff();
+    }
+}
+
+
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
@@ -84,6 +104,7 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
     airborne_assault_lag(fighter);
+    ssd_charge_ledgegrab(fighter);
     fastfall_specials(fighter);
 }
 
