@@ -86,6 +86,8 @@ unsafe extern "C" fn game_attack13(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_attackdash(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    frame(lua_state, 1.0);
+    sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.85);
     frame(lua_state, 7.0);
     let rate = 2.0/3.0;
     FT_MOTION_RATE(agent, rate);

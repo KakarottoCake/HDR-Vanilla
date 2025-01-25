@@ -50,6 +50,14 @@ unsafe extern "C" fn game_attackcommand4(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_attackcommand4(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    frame(lua_state, 8.0);
+    if is_excute(agent) {
+        let strength = agent.get_int(*FIGHTER_DOLLY_STATUS_SPECIAL_COMMON_WORK_INT_STRENGTH);
+        if strength == *FIGHTER_RYU_STRENGTH_S  {
+            EFFECT(agent, Hash40::new("dolly_drive_flash"), Hash40::new("top"), 10, 12, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, false);
+            LAST_EFFECT_SET_RATE(agent, 1.3);
+        }
+    }
     frame(lua_state, 12.0);
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);

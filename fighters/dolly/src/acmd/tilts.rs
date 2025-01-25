@@ -127,12 +127,12 @@ unsafe extern "C" fn effect_attacks3(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 13.0);
     if is_excute(agent) {
-        EFFECT_FLIP_ALPHA(agent, Hash40::new("dolly_attack_speedline2"), Hash40::new("dolly_attack_speedline2"), Hash40::new("top"), 0, 14, 2, 0, -10, 0, 0.6, 0, 0, 0, 0, 0, 0, true, *EF_FLIP_YZ, 0.55);
-        LAST_EFFECT_SET_RATE(agent, 1.0);
+        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("dolly_attack_arc3"), Hash40::new("dolly_attack_arc3"), Hash40::new("top"), 4, 14, 2, 0, 0, 180, 0.67, true, *EF_FLIP_YZ, 0.6);
+        LAST_EFFECT_SET_RATE(agent, 1.2);
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_attack_impact"), Hash40::new("sys_attack_impact"), Hash40::new("top"), 2, 14, 10, 0, 0, 0, 1, true, *EF_FLIP_YZ, 0.55);
+        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_attack_impact"), Hash40::new("sys_attack_impact"), Hash40::new("top"), 2, 14, 10, 0, 0, 0, 0.8, true, *EF_FLIP_YZ, 0.55);
         LAST_EFFECT_SET_RATE(agent, 1.2);
         LANDING_EFFECT_FLIP(agent, Hash40::new("sys_atk_smoke"), Hash40::new("sys_atk_smoke"), Hash40::new("top"), 3, 0, -2, 0, 0, 0, 0.4, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_YZ);
     }
