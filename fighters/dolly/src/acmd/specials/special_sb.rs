@@ -11,7 +11,7 @@ unsafe extern "C" fn game_specialsbstart(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn game_specialsbattackw(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
+        agent.on_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
     }
     frame(agent.lua_state_agent, 11.0);
     if is_excute(agent) {
@@ -48,7 +48,7 @@ unsafe extern "C" fn game_specialsbattackw(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn game_specialsbattack(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
+        agent.on_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
     }
     frame(agent.lua_state_agent, 9.0);
     if is_excute(agent) {
@@ -104,7 +104,7 @@ unsafe extern "C" fn game_specialsbattack(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn effect_specialsbattack(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 5.0);
-    let alpha: f32 = if WorkModule::is_flag(agent.module_accessor, *FIGHTER_DOLLY_STATUS_SPECIAL_COMMON_WORK_FLAG_COMMAND) {
+    let alpha: f32 = if agent.is_flag(*FIGHTER_DOLLY_STATUS_SPECIAL_COMMON_WORK_FLAG_COMMAND) {
         if is_excute(agent) {
             EFFECT_FOLLOW_FLIP(agent, Hash40::new("dolly_kick_arc_s_command"), Hash40::new("dolly_kick_arc_s_command"), Hash40::new("rot"), -1, -6, 0, -90, -90, 0, 1, true, *EF_FLIP_YZ);
             EffectModule::set_disable_render_offset_last(agent.module_accessor);
@@ -114,7 +114,7 @@ unsafe extern "C" fn effect_specialsbattack(agent: &mut L2CAgentBase) {
     else {
         0.9
     };
-    let color = WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR);
+    let color = agent.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_COLOR);
     let eff = match color {
         0 => hash40("dolly_kick_arc_s01"),
         1 => hash40("dolly_kick_arc_s02"),
@@ -132,7 +132,7 @@ unsafe extern "C" fn effect_specialsbattack(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn sound_specialsbattack(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 1.0);
-    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_DOLLY_STATUS_SPECIAL_COMMON_WORK_FLAG_COMMAND) {
+    if agent.is_flag(*FIGHTER_DOLLY_STATUS_SPECIAL_COMMON_WORK_FLAG_COMMAND) {
         if is_excute(agent) {
             PLAY_STATUS(agent, Hash40::new("se_dolly_special_sb03_command"));
             PLAY_SEQUENCE(agent, Hash40::new("seq_dolly_rnd_special_b02"));
