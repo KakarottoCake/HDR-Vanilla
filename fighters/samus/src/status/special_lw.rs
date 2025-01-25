@@ -47,8 +47,7 @@ pub unsafe extern "C" fn special_lw_common_main_loop(fighter: &mut L2CFighterCom
     };
     if !fighter.is_motion(Hash40::new("special_lw")) {
         let cancel_frame = FighterMotionModuleImpl::get_cancel_frame(fighter.module_accessor, Hash40::new("special_lw"), true) as i32;
-        if fighter.motion_frame() > 3.0
-        || fighter.status_frame() >= cancel_frame {
+        if fighter.status_frame() >= cancel_frame {
             fighter.change_status(FIGHTER_STATUS_KIND_SQUAT_WAIT.into(), false.into());
         }
     }
@@ -83,7 +82,7 @@ pub unsafe extern "C" fn special_lw_common_main_loop(fighter: &mut L2CFighterCom
                 WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SAMUS_STATUS_SPECIAL_LW_FLAG_WEAPON);
                 let max_bomb = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_lw"), hash40("bomb_max_req")) as u64;
                 if ArticleModule::get_active_num(fighter.module_accessor, *FIGHTER_SAMUS_GENERATE_ARTICLE_BOMB) < max_bomb {
-                    ArticleModule::generate_article_enable(fighter.module_accessor, *FIGHTER_SAMUS_GENERATE_ARTICLE_BOMB,false,-1);
+                    ArticleModule::generate_article_enable(fighter.module_accessor, *FIGHTER_SAMUS_GENERATE_ARTICLE_BOMB, false, -1);
                     ArticleModule::shoot_exist(fighter.module_accessor, *FIGHTER_SAMUS_GENERATE_ARTICLE_BOMB, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
                 }
             }

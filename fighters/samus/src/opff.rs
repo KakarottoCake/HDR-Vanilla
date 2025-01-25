@@ -4,13 +4,12 @@ use super::*;
 use globals::*;
 
 unsafe fn missile_land_cancel(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_S,
-        *FIGHTER_SAMUS_STATUS_KIND_SPECIAL_S1G,
+    if fighter.is_status_one_of(&[
         *FIGHTER_SAMUS_STATUS_KIND_SPECIAL_S1A,
-        *FIGHTER_SAMUS_STATUS_KIND_SPECIAL_S2G,
         *FIGHTER_SAMUS_STATUS_KIND_SPECIAL_S2A]) {
         if fighter.is_situation(*SITUATION_KIND_GROUND) && fighter.is_prev_situation(*SITUATION_KIND_AIR) {
-            fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
+            fighter.set_float(6.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
+            fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());   
         }
     }
 }
@@ -25,13 +24,8 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
     && fighter.is_status_one_of(&[
-        *FIGHTER_STATUS_KIND_SPECIAL_N,
         *FIGHTER_STATUS_KIND_SPECIAL_HI,
         *FIGHTER_STATUS_KIND_SPECIAL_LW,
-        *FIGHTER_SAMUS_STATUS_KIND_SPECIAL_N_C,
-        *FIGHTER_SAMUS_STATUS_KIND_SPECIAL_N_E,
-        *FIGHTER_SAMUS_STATUS_KIND_SPECIAL_N_F,
-        *FIGHTER_SAMUS_STATUS_KIND_SPECIAL_N_H,
         *FIGHTER_SAMUS_STATUS_KIND_SPECIAL_S1A,
         *FIGHTER_SAMUS_STATUS_KIND_SPECIAL_S2A,
         ]) 
