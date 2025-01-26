@@ -96,14 +96,16 @@ pub unsafe extern "C" fn rockman_vtable_func(vtable: u64, fighter: &mut smash::a
                     false,
                     false
                 );
-                SoundModule::stop_se(module_accessor, Hash40::new("se_rockman_smash_s02"), 0);
+                let snd_handle = VarModule::get_int(module_accessor, vars::rockman::instance::SPECIAL_N_CHARGE_SHOT_SOUND_HANDLE) as i32;
+                SoundModule::set_se_vol(module_accessor, snd_handle, 0.6, 0);
             }
             if charge_frame == CHARGE_SHOT_CLEAR_INPUT_FRAME {
                 ControlModule::clear_command_one(module_accessor, 0, *FIGHTER_PAD_CMD_CAT1_SPECIAL_N);
             }
             if charge_frame > CHARGE_SHOT_DELAY_CHARGE_FRAME {
                 if !VarModule::is_flag(object, vars::rockman::instance::SPECIAL_N_CHARGE_SHOT_PLAYED_SFX) {
-                    SoundModule::play_se(module_accessor, Hash40::new("se_rockman_smash_s02"), true, false, false, false, enSEType(0));
+                    let snd_handle = SoundModule::play_se(module_accessor, Hash40::new("se_rockman_smash_s02"), true, false, false, false, enSEType(0));
+                    VarModule::set_int(module_accessor, vars::rockman::instance::SPECIAL_N_CHARGE_SHOT_SOUND_HANDLE, snd_handle as i32);
                     EffectModule::req_follow(
                         module_accessor,
                         Hash40::new("rockman_chargeshot_hold"),
@@ -199,6 +201,8 @@ unsafe fn rockman_kill_charge(module_accessor: *mut BattleObjectModuleAccessor, 
     if EffectModule::is_exist_effect(module_accessor, eff_handle) {
         EffectModule::kill(module_accessor, eff_handle, true, true);
     }
+    VarModule::set_int(module_accessor, vars::rockman::instance::SPECIAL_N_CHARGE_SHOT_EFFECT_HANDLE, 0);
+    VarModule::set_int(module_accessor, vars::rockman::instance::SPECIAL_N_CHARGE_SHOT_SOUND_HANDLE, 0);
 }
 
 #[skyline::hook(offset = 0x1083bec, inline)]
