@@ -100,7 +100,7 @@ unsafe extern "C" fn dolly_special_lw_main_loop(fighter: &mut L2CFighterCommon) 
     }
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DOLLY_STATUS_SPECIAL_LW_WORK_FLAG_JUMP)
     && fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND
-    && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
+    && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT)
     && fighter.global_table[PAD_FLAG].get_i32() & *FIGHTER_PAD_FLAG_GUARD_TRIGGER != 0 {
         VarModule::on_flag(fighter.battle_object, vars::dolly::status::SPECIAL_LW_BREAK);
     }
