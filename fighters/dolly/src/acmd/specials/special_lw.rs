@@ -322,7 +322,7 @@ unsafe extern "C" fn game_speciallwbreaking(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     if is_excute(agent) {
         WHOLE_HIT(agent, *HIT_STATUS_XLU);
-        ATTACK(agent, 0, 0, Hash40::new("top"), 1.0, 66, 100, 0, 63, 5.5, 0.0, 10.0, 7.5, Some(0.0), Some(6.0), Some(7.5), 0.0, 0.5, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 1, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_BODY);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 66, 151, 0, 54, 5.5, 0.0, 10.0, 7.5, Some(0.0), Some(6.0), Some(7.5), 0.0, 0.5, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 1, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_BODY);
     }
     frame(lua_state, 1.0);
     FT_MOTION_RATE_RANGE(agent, 1.0, 25.0, 19.0);
