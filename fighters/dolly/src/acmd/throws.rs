@@ -1,5 +1,29 @@
 use super::*;
 
+unsafe extern "C" fn game_catch(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 1.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 5.0, 5.0);
+    frame(lua_state, 5.0);
+    FT_MOTION_RATE(agent, 1.0);
+    if is_excute(agent) {
+        GrabModule::set_rebound(boma, true);
+    }
+    frame(lua_state, 6.0);
+    if is_excute(agent) {
+        CATCH(agent, 0, Hash40::new("top"), 4.0, 0.0, 9.0, 5.0, Some(0.0), Some(9.0), Some(9.7), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_G);
+        CATCH(agent, 1, Hash40::new("top"), 2.0, 0.0, 9.0, 3.0, Some(0.0), Some(9.0), Some(11.7), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_A);
+    }
+    game_CaptureCutCommon(agent);
+    wait(lua_state, 2.0);
+    if is_excute(agent) {
+        grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT);
+        GrabModule::set_rebound(boma, false);
+    }
+}
+
 unsafe extern "C" fn game_catchattack(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -60,7 +84,7 @@ unsafe extern "C" fn game_throwf(agent: &mut L2CAgentBase) {
         // lua_bind::FighterCutInManager::set_throw_finish_offset(singletons::FighterCutInManager(), Vector3f{x: 10.0, y: 0.0, z: 0.0});
     }
     frame(lua_state, 30.0);
-    FT_MOTION_RATE_RANGE(agent, 30.0, 48.0, 7.0);
+    FT_MOTION_RATE_RANGE(agent, 30.0, 48.0, 11.0);
     if is_excute(agent) {
         let target = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
         let target_group = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
@@ -133,6 +157,7 @@ unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.acmd("game_catch", game_catch, Priority::Low);
     agent.acmd("game_catchattack", game_catchattack, Priority::Low);
     agent.acmd("game_throwb", game_throwb, Priority::Low);
     agent.acmd("game_throwf", game_throwf, Priority::Low);
