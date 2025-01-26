@@ -6,7 +6,7 @@ mod landing_fall_special;
 mod special_lw;
 mod special_n;
 mod special_s;
-mod squat;
+//mod squat;
 
 unsafe extern "C" fn use_special_lw_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
     if VarModule::get_int(fighter.battle_object, vars::samus::instance::SPECIAL_LW_BOMB_LOCKOUT) > 0 {
@@ -28,5 +28,5 @@ pub fn install(agent: &mut Agent) {
     special_lw::install(agent);
     special_n::install(agent);
     special_s::install(agent);
-    squat::install(agent);
+    //squat::install(agent);
 }
