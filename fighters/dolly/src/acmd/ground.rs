@@ -110,6 +110,7 @@ unsafe extern "C" fn game_attackdash(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, 1.0);
     sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 1.0);
     frame(lua_state, 22.0);
+    FT_MOTION_RATE_RANGE(agent, 22.0, 26.0, 6.0);
     if is_excute(agent) {
         MeterModule::watch_damage(agent.battle_object, true);
         VarModule::set_int(agent.battle_object, vars::dolly::status::HIT_CANCEL_TIMER, 12);
@@ -119,11 +120,13 @@ unsafe extern "C" fn game_attackdash(agent: &mut L2CAgentBase) {
         ATTACK(agent, 3, 0, Hash40::new("footl"), 7.0, 50, 130, 0, 32, 4.0, 0.0, 0.0, -2.0, None, None, None, 1.25, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DOLLY_KICK, *ATTACK_REGION_BODY);
         AttackModule::set_attack_height_all(boma, AttackHeight(*ATTACK_HEIGHT_HIGH), false);
     }
-    frame(lua_state, 26.0);
+    frame(lua_state, 25.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
         MeterModule::watch_damage(agent.battle_object, false);
     }
+    frame(lua_state, 26.0);
+    FT_MOTION_RATE(agent, 1.0);
 }
 
 unsafe extern "C" fn effect_attackdash(agent: &mut L2CAgentBase) {

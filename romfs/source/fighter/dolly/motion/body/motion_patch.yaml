@@ -99,6 +99,9 @@ attack_command4:
     xlu_end: 0
     cancel_frame: 54
     no_stop_intp: true
+attack_dash:
+  extra:
+    cancel_frame: 42
 attack_hi3:
   extra:
     cancel_frame: 33
