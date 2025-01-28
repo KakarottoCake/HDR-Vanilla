@@ -7,6 +7,8 @@ pub mod acmd;
 pub mod opff;
 pub mod status;
 
+mod finalcuttershot;
+
 use smash::{
     lib::{
         L2CValue,
@@ -50,6 +52,8 @@ pub fn install() {
     opff::install(agent);
     status::install(agent);
     agent.install();
+
+    finalcuttershot::install();
 
     let whitelist_articles = [
         (*FIGHTER_KIND_PALUTENA, *WEAPON_KIND_PALUTENA_EXPLOSIVEFLAME),
