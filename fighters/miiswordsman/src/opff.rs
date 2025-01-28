@@ -20,15 +20,6 @@ unsafe fn ssd_charge_ledgegrab(fighter: &mut L2CFighterCommon) {
         // allows ledgegrab during Skyward Slash Dash charge
         fighter.sub_transition_group_check_air_cliff();
     }
-
-    let special_s_no = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_CUSTOMIZE_SPECIAL_S_NO);
-
-    if (special_s_no == 1
-        && fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_S))
-    || fighter.is_status(*FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_S2_HOLD) {
-        // allows ledgegrab during Kinetic Slash charge
-        fighter.sub_transition_group_check_air_cliff();
-    }
 }
 
 

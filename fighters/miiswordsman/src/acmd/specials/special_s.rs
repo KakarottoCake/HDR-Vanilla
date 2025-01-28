@@ -62,16 +62,6 @@ unsafe fn game_specials1hit(agent: &mut L2CAgentBase) {
 // ===================================== KINETIC SLASH =========================================
 // =============================================================================================
 
-unsafe extern "C" fn game_specialairs2start(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    frame(lua_state, 1.0);
-    FT_MOTION_RATE(agent, 0.7);
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
-    }
-}
-
 unsafe extern "C" fn game_specials2dash(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -365,7 +355,6 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_specials1", game_specials1, Priority::Low);
     agent.acmd("game_specialairs1", game_specialairs1, Priority::Low);
 
-    agent.acmd("game_specialairs2start", game_specialairs2start, Priority::Low);
     agent.acmd("game_specials2dash", game_specials2dash, Priority::Low);
     agent.acmd("game_specialairs2dash", game_specials2dash, Priority::Low);
     agent.acmd("game_specials2attack", game_specials2attack, Priority::Low);
