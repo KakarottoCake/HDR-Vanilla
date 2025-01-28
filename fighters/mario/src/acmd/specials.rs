@@ -332,7 +332,7 @@ unsafe extern "C" fn sound_specials(agent: &mut L2CAgentBase) {
         let handle = SoundModule::play_se(boma, Hash40::new("se_mario_special_s01"), true, false, false, false, app::enSEType(0));
         SoundModule::set_se_vol(boma, handle as i32, 0.6, 0);
         PLAY_SE(agent, Hash40::new("se_mario_attackair_l01"));
-        let rng = app::sv_math::rand(hash40("fighter"), 4);
+        let rng = app::sv_math::rand(hash40("fighter"), 3);
         match rng {
             0 => PLAY_SE(agent, Hash40::new("vc_mario_attack05")),
             _ => {
@@ -505,28 +505,22 @@ unsafe extern "C" fn sound_longjump(agent: &mut L2CAgentBase) {
             let lr = PostureModule::lr(agent.module_accessor);
             let speed_x = KineticModule::get_sum_speed_x(agent.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) * lr;
             let back_speed_x_hitbox_threshold = ParamModule::get_float(agent.battle_object, ParamType::Agent, "long_jump.back_speed_x_hitbox_threshold");
-            let wahoo;
             if speed_x > back_speed_x_hitbox_threshold {
                 // standard long jump
-                let rand = sv_math::rand(hash40("halfapress"), 8);
-                wahoo = match rand {
-                    0 => Hash40::new("vc_mario_longjump01"),
-                    1 => Hash40::new("vc_mario_longjump03"),
-                    _ => Hash40::new("vc_mario_longjump04"),
-                };
-                
+                let handle = SoundModule::play_se(agent.module_accessor, Hash40::new("vc_mario_longjump04"), false, false, false, false, enSEType(0));
+                SoundModule::set_se_vol(agent.module_accessor, handle as i32, 0.55, 0);
             }
             else {
                 // launching off an edge
-                let rand = sv_math::rand(hash40("qpualigned"), 3);
-                wahoo = match rand {
+                let rand = sv_math::rand(hash40("halfapress"), 3);
+                let wahoo = match rand {
                     0 => Hash40::new("vc_mario_longjumpback01"),
                     1 => Hash40::new("vc_mario_longjumpback02"),
                     _ => Hash40::new("vc_mario_longjumpback03"),
                 };
+                let handle = SoundModule::play_se(agent.module_accessor, wahoo, false, false, false, false, enSEType(0));
+                SoundModule::set_se_vol(agent.module_accessor, handle as i32, 0.5, 0);
             }
-            let handle = SoundModule::play_se(agent.module_accessor, wahoo, false, false, false, false, enSEType(0));
-            SoundModule::set_se_vol(agent.module_accessor, handle as i32, 0.5, 0);
         }
         
     }
