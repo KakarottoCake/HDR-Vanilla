@@ -11,6 +11,7 @@ pub mod status;
 
 mod cshot;
 mod gbeam;
+mod missile;
 mod supermissile;
 
 use smash::{
@@ -54,5 +55,6 @@ pub fn install() {
 
     cshot::install();
     gbeam::install();
+    missile::install();
     supermissile::install();
 }

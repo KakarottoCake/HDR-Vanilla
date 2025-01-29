@@ -3,15 +3,28 @@ use globals::*;
 // status script import
 
 mod wait;
-mod turn_dash;
-mod dash_back;
+mod dash;
 mod landing;
 mod guard_off;
+mod rebirth;
+mod escape;
 
+mod special_cmd4;
 mod special_s;
+mod special_supers;
 mod special_hi;
-mod super_special;
-mod super_special2;
+mod special_lw;
+mod special_lw_breaking;
+
+utils::import_noreturn!(common::shoto_status::{
+    fgc_end_dashback
+});
+
+extern "Rust" {
+    // from common::shoto_status
+    fn fgc_dashback_main(fighter: &mut L2CFighterCommon) -> L2CValue;
+    fn fgc_landing_main(fighter: &mut L2CFighterCommon) -> L2CValue;
+}
 
 // Prevents sideB from being used again if it has already been used once in the current airtime
 unsafe extern "C" fn should_use_special_s_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -58,11 +71,10 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
         *FIGHTER_STATUS_KIND_ATTACK_LW3,
         *FIGHTER_STATUS_KIND_ATTACK_HI4_START,
         *FIGHTER_STATUS_KIND_ATTACK_LW4_START,
-        *FIGHTER_STATUS_KIND_CATCH,
         *FIGHTER_STATUS_KIND_ITEM_SWING,
         *FIGHTER_STATUS_KIND_SPECIAL_N,
         *FIGHTER_STATUS_KIND_FINAL,
-        *FIGHTER_RYU_STATUS_KIND_WALK_BACK,
+        *FIGHTER_DOLLY_STATUS_KIND_WALK_BACK,
     ].contains(&fighter.global_table[globals::STATUS_KIND].get_i32())
     {
         update_lr(fighter, lr);
@@ -72,7 +84,7 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
     if fighter.global_table[globals::STATUS_KIND] == FIGHTER_STATUS_KIND_WAIT {
         if ![
             *FIGHTER_STATUS_KIND_DASH,
-            *FIGHTER_RYU_STATUS_KIND_DASH_BACK,
+            *FIGHTER_DOLLY_STATUS_KIND_DASH_BACK,
             *FIGHTER_STATUS_KIND_RUN_BRAKE,
             *FIGHTER_STATUS_KIND_TURN_RUN_BRAKE,
             *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL,
@@ -163,23 +175,150 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
     0.into()
 }
 
+pub const CHECK_SPECIAL_N_UNIQ:            i32 = 0x38;
+pub const CHECK_SPECIAL_S_UNIQ:            i32 = 0x39;
+pub const CHECK_SPECIAL_HI_UNIQ:           i32 = 0x3A;
+pub const CHECK_SPECIAL_LW_UNIQ:           i32 = 0x3B;
+
+pub unsafe extern "C" fn dolly_check_super_special_command(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let cat1 =  fighter.global_table[CMD_CAT1].get_i32();
+    let cat4 = fighter.global_table[CMD_CAT4].get_i32();
+
+    fighter.set_int(cat4, *FIGHTER_DOLLY_INSTANCE_WORK_ID_INT_CAT4_SPECIAL_COMMAND);
+    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND
+    || !fighter.is_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_ENABLE_SUPER_SPECIAL) {
+        return false.into();
+    }
+
+    if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SUPER_SPECIAL2_COMMAND != 0
+    && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SUPER_SPECIAL2) {
+        fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SUPER_SPECIAL2.into(), true.into());
+        return true.into();
+    }
+    if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SUPER_SPECIAL_COMMAND != 0
+    && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SUPER_SPECIAL) {
+        fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SUPER_SPECIAL.into(), true.into());
+        return true.into();
+    }
+    // if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SUPER_SPECIAL2_R_COMMAND != 0
+    // && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SUPER_SPECIAL2) {
+    //     let opplr = WorkModule::get_float(fighter.module_accessor, *FIGHTER_SPECIAL_COMMAND_USER_INSTANCE_WORK_ID_FLOAT_OPPONENT_LR_1ON1);
+    //     if opplr != 0.0 {
+    //         PostureModule::reverse_lr(fighter.module_accessor);
+    //     }
+    //     fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SUPER_SPECIAL2.into(), true.into());
+    //     return true.into();
+    // }
+    // if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SUPER_SPECIAL_R_COMMAND != 0
+    // && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SUPER_SPECIAL) {
+    //     let opplr = WorkModule::get_float(fighter.module_accessor, *FIGHTER_SPECIAL_COMMAND_USER_INSTANCE_WORK_ID_FLOAT_OPPONENT_LR_1ON1);
+    //     if opplr != 0.0 {
+    //         PostureModule::reverse_lr(fighter.module_accessor);
+    //     }
+    //     fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SUPER_SPECIAL.into(), true.into());
+    //     return true.into();
+    // }
+    return false.into();
+}
+
+unsafe extern "C" fn dolly_check_special_hi_command(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let cat1 =  fighter.global_table[CMD_CAT1].get_i32();
+    let cat4 = fighter.global_table[CMD_CAT4].get_i32();
+
+    if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SPECIAL_HI2_COMMAND != 0
+    && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI_COMMAND)
+    && fighter.sub_transition_term_id_cont_disguise(fighter.global_table[CHECK_SPECIAL_HI_UNIQ].clone()).get_bool() {
+        fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SPECIAL_HI_COMMAND.into(), true.into());
+        return true.into();
+    }
+    return false.into();
+}
+
+pub unsafe extern "C" fn dolly_check_other_special_command(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let cat1 =  fighter.global_table[CMD_CAT1].get_i32();
+    let cat4 = fighter.global_table[CMD_CAT4].get_i32();
+
+    if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SPECIAL_HI_COMMAND != 0
+    && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW_COMMAND)
+    && fighter.sub_transition_term_id_cont_disguise(fighter.global_table[CHECK_SPECIAL_LW_UNIQ].clone()).get_bool() {
+        fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SPECIAL_LW_COMMAND.into(), true.into());
+        return true.into();
+    }
+
+    if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SPECIAL_S_COMMAND != 0
+    && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S_COMMAND)
+    && fighter.sub_transition_term_id_cont_disguise(fighter.global_table[CHECK_SPECIAL_S_UNIQ].clone()).get_bool() {
+        fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SPECIAL_B_COMMAND.into(), true.into());
+        return true.into();
+    }
+    
+    if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SPECIAL_N_COMMAND != 0
+    && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S_COMMAND)
+    && fighter.sub_transition_term_id_cont_disguise(fighter.global_table[CHECK_SPECIAL_S_UNIQ].clone()).get_bool() {
+        fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SPECIAL_S_COMMAND.into(), true.into());
+        return true.into();
+    }
+
+    if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SPECIAL_N2_COMMAND != 0
+    && fighter.is_situation(*SITUATION_KIND_GROUND)
+    && !fighter.is_in_hitlag()
+    && StatusModule::status_kind(fighter.module_accessor) != statuses::dolly::ATTACK_COMMAND_4
+    && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S_COMMAND) {
+        fighter.change_status(statuses::dolly::ATTACK_COMMAND_4.into(), true.into());
+        return true.into();
+    }
+
+    // Uncomment to implement dash cancel FTilt
+    // if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_6N6 != 0
+    // && StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_ATTACK_S3
+    // && MeterModule::level(fighter.battle_object) >= 1 {
+    //     fighter.change_status(FIGHTER_STATUS_KIND_DASH.into(), true.into());
+    //     VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_ENTER_DASH_CANCEL);
+    //     return true.into();
+    // }
+
+    return false.into();
+}
+
+pub unsafe extern "C" fn dolly_check_special_command(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if dolly_check_super_special_command(fighter).get_bool() 
+    || dolly_check_special_hi_command(fighter).get_bool() 
+    || dolly_check_other_special_command(fighter).get_bool() {
+        return true.into();
+    }
+    return false.into();
+}
+
 unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     // set the callbacks on fighter init
     fighter.global_table[globals::USE_SPECIAL_S_CALLBACK].assign(&L2CValue::Ptr(should_use_special_s_callback as *const () as _));
     fighter.global_table[globals::STATUS_CHANGE_CALLBACK].assign(&L2CValue::Ptr(change_status_callback as *const () as _));   
+    fighter.global_table[globals::CHECK_SPECIAL_COMMAND].assign(&L2CValue::Ptr(dolly_check_special_command as *const () as _));
+    fighter.set_command_input_button(0, 2);
+    fighter.set_command_input_button(1, 1);
+    fighter.set_command_input_button(2, 2);
+    fighter.set_command_input_button(3, 2);
+    fighter.set_command_input_button(7, 2);
+    fighter.set_command_input_button(8, 2);
+    fighter.set_command_input_button(9, 2);
+    fighter.set_command_input_button(10, 2);
+    VarModule::set_int(fighter.battle_object, vars::dolly::instance::ADDED_METER_LEVELS, 0);
 }
 
 pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
 
     wait::install(agent);
-    turn_dash::install(agent);
-    dash_back::install(agent);
+    dash::install(agent);
     landing::install(agent);
     guard_off::install(agent);
+    rebirth::install(agent);
+    escape::install(agent);
 
+    special_cmd4::install(agent);
     special_s::install(agent);
+    special_supers::install(agent);
     special_hi::install(agent);
-    super_special::install(agent);
-    super_special2::install(agent);
+    special_lw::install(agent);
+    special_lw_breaking::install(agent);
 }

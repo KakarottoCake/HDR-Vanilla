@@ -18,8 +18,19 @@
     <hash40 index="2">dummy</hash40>
     <hash40 index="3">dummy</hash40>
   </list>
+  <list hash="param_special_s">
+    <struct index="0">
+      <float hash="command_power_mul">1.2</float>
+    </struct>
+    <struct index="1">
+      <float hash="command_power_mul">1.2</float>
+    </struct>
+    <hash40 index="2">dummy</hash40>
+    <hash40 index="3">dummy</hash40>
+  </list>
   <list hash="param_special_hi">
     <struct index="0">
+      <float hash="command_power_mul">1.2</float>
       <int hash="stick_down_hold_frame">16</int>
       <float hash="stick_x_speed_mul_max">6</float>
       <float hash="air_speed_x_stable_mul">0.6</float>
@@ -30,6 +41,7 @@
       <float hash="fall_brake_y_mul">0.8</float>
     </struct>
     <struct index="1">
+      <float hash="command_power_mul">1.2</float>
       <float hash="stick_x_speed_mul_max">6</float>
       <float hash="air_speed_x_stable_mul">0.6</float>
       <float hash="speed_y_mul">0.45</float>
@@ -43,6 +55,7 @@
   </list>
   <list hash="param_special_lw">
     <struct index="0">
+      <float hash="command_power_mul">1.2</float>
       <float hash="landing_brake_x">0.01</float>
       <int hash="landing_frame_hit">30</int>
       <int hash="landing_frame_fail">30</int>
@@ -50,6 +63,7 @@
       <int hash="landing_heavy_frame_command">15</int>
     </struct>
     <struct index="1">
+      <float hash="command_power_mul">1.2</float>
       <float hash="landing_brake_x">0.01</float>
       <int hash="landing_frame_hit">38</int>
       <int hash="landing_frame_fail">38</int>
