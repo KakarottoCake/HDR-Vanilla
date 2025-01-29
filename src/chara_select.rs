@@ -30,22 +30,13 @@ lazy_static! {
     };
 }
 
-static PT_CHARA_HASHES: &[u64] = &[
-    hash40("ui_chara_pzenigame").0,
-    hash40("ui_chara_plizardon").0,
-    hash40("ui_chara_pfushigisou").0,
-];
-
 static mut PLAYER_TAG_INDEX: &'static mut [u8] = &mut [0; 8];
 
-static mut LAST_FIGHTER_FOUND: u64 = 0x0;
-static mut LAST_FIGHTER2_FOUND: u64 = 0x0;
+static mut MAIN_FIGHTER_ID: u64 = 0x0;
+static mut SUB_FIGHTER_ID: u64 = 0x0;
+static mut LAST_FIGHTER_PICKED: String = String::new();
 
-static mut WAS_RANDOM_SELECTION: bool = false;
-static mut WAS_RANDOM: bool = false;
-
-const HASH_MASK: u64 = 0xFF_FFFFFFFF;
-const KEY_MASK: u64 = 0xFFFFFF_0000000000;
+static mut IS_MELEE_RANDOM: bool = false;
 
 const ORDER_TOML: &str = "ui/param/menu/chara_icon_order.toml";
 const RANDOM_IDX_TOML: &str = "ui/param/menu/chara_random_idx.toml";
@@ -56,132 +47,6 @@ fn ui_chara(i: usize, chara: &str) -> u64 {
     (0xc1u64 << 56)
     | (((i as u64) & 0xFFFF) << 40)
     | hash40(&format!("ui_chara_{}", chara)).0
-}
-
-fn is_random(entry: u64) -> bool {
-    (entry & HASH_MASK) == hash40("ui_chara_random").0
-}
-
-fn key(entry: u64) -> u64 {
-    entry & KEY_MASK
-}
-
-unsafe fn get_tag_from_save(idx: u8) -> String {
-    let tag_address =
-        (***(((*((*((skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as *mut u8)
-            .add(0x5314510) as *const u64)) as *const u64))
-            + 0x58) as *const *const *const u64)
-            + ((idx as u64) * 0xF7D8)
-            + 0xC) as *const u16;
-
-    let mut tag_length = 0;
-    while *tag_address.add(tag_length) != 0 {
-        tag_length += 1;
-    }
-
-    String::from_utf16_lossy(std::slice::from_raw_parts(tag_address, tag_length))
-}
-
-unsafe fn decide_fighter_from_id(id: usize) -> String {
-    // get player tag
-    let tag_index = PLAYER_TAG_INDEX[id];
-    let tag = &get_tag_from_save(tag_index);
-    // println!("Tag data for slot {}: {}", id, &tag); 
-
-    // get the base whitelist from the initial CSS load
-    let mut whitelist = CHARA_WHITELIST.lock().unwrap().clone();
-    // the following entries are present for CSS loading, but should never be chosen by random
-    let forbidden: [&str; 4] = [
-        "miifighter",
-        "miiswordsman",
-        "miigunner",
-        "light_first"
-    ];
-    for chara in forbidden {
-        whitelist.retain(|x| *x != chara.to_owned());
-    }
-
-    // choose a fighter from base whitelist
-    let mut chara_string =  whitelist.choose(&mut rand::thread_rng()).unwrap().as_str();
-    let default = chara_string.to_owned();
-    println!("Randomly decided on {chara_string}");
-
-    // Collect all relevant data from config TOML
-    let path = Path::new("mods:/").join(RANDOM_CFG_TOML);
-    if !path.exists() || !path.is_file() { return default };
-    let data = match std::fs::read_to_string(&path).unwrap().parse::<Value>() {
-        Ok(result) => result,
-        Err(_) => { 
-            println!("[src::chara_select] Invalid random_config TOML data!");
-            return default; 
-        }
-    };
-    let tag_data = match data.as_table().unwrap().get(tag) {
-        Some(table) => table.as_table().unwrap(),
-        None => {
-            println!("[src::chara_select] File does not contain tag [{tag}]! Using global settings.");
-            match data.as_table().unwrap().get("global_settings") {
-                Some(table) => table.as_table().unwrap(),
-                None => {
-                    println!("Just kidding... no global settings are present!");
-                    return default;
-                }
-            }
-        }
-    };
-    let kind = match tag_data.get("kind") {
-        Some(value) => value.as_str().unwrap(),
-        None => {
-            println!("[src::chara_select] Tag data does not contain key [kind]!");
-            return default;
-        }
-    };
-    if !["whitelist", "blacklist"].contains(&kind) { return default };
-    let list = match tag_data.get("list") {
-        Some(value) => value.as_array().unwrap(),
-        None => {
-            println!("[src::chara_select] Tag data does not contain key [list]!");
-            return default;
-        }
-    };
-
-    // return the original choice if it aligns with the data
-    if (kind == "whitelist" && list.contains(&toml::Value::String(default.clone())))
-    || (kind == "blacklist" && !list.contains(&toml::Value::String(default.clone()))) {
-        println!("{chara_string} is allowed!");
-        return default;
-    }
-
-    // getting to this point means the original choice isn't permitted, so we will adjust the selection
-    println!("{chara_string} is not allowed for tag {}! Adjusting...", &tag);
-    if kind == "whitelist" {
-        // for whitelists, clear and rebuild with the allowed characters
-        let reference = whitelist.clone();
-        whitelist.clear();
-        for chara in list {
-            let fighter = chara.as_str().unwrap_or("mario");
-            if reference.contains(&fighter.to_owned()) {
-                whitelist.push(fighter.to_owned());
-            }
-        }
-        // if none of the whitelisted characters were allowed originally, return the default
-        if whitelist.len() <= 0 {
-            println!("None of the whitelisted characters are allowed! Continuing with the default.");
-            return default;
-        }
-    } else {
-        // for blacklists, remove listed fighters from the selection
-        for chara in list {
-            let fighter = chara.as_str().unwrap_or("");
-            whitelist.retain(|x| *x != fighter.to_owned());
-        }
-    }
-
-    // re-query with adjusted list
-    chara_string =  whitelist.choose(&mut rand::thread_rng()).unwrap().as_str();
-    println!("Randomly decided on {chara_string}");
-
-    return chara_string.to_owned();
 }
 
 #[skyline::hook(offset = 0x19eb840, inline)]
@@ -333,109 +198,246 @@ pub unsafe fn display_css_hook(ctx: &InlineCtx) {
     };
 }
 
+// this hook occurs during the main loop of the css, where it calls a function to select a chosen fighter from random
+#[skyline::hook(offset = 0x1a14280, inline)]
+unsafe fn decide_random(ctx: &mut skyline::hooks::InlineCtx) {
+    let src = *ctx.registers[23].x.as_ref() as *mut u64;
+    let obj_ptr = *(src as *mut *mut u64).add(1);
+
+    let main_chara = *obj_ptr.add(0x200 / 0x8);
+    let sub_chara = *obj_ptr.add(0x208 / 0x8);
+    // println!("Main character: {:#x}", main_chara as u32);
+    // println!("Sub character: {:#x}", sub_chara as u32);
+
+    // casting the u64 to u32 will give us the hash40 equivalent, so no need for any bit masking 
+    let is_random = [main_chara as u32, sub_chara as u32].contains(&(hash40("ui_chara_random").0 as u32));
+    if !is_random { return };
+    
+    IS_MELEE_RANDOM = !ninput::any::is_down_any(ninput::Buttons::ZL | ninput::Buttons::ZR);
+
+    // by altering this register we can immediately change the selected fighter (melee style)
+    if IS_MELEE_RANDOM {
+        let player_id = (*(*(ctx.registers[21].x.as_ref() as *const u64) as *const u64) + 0x150) as *const u8;
+        generate_random(*player_id as usize, main_chara, sub_chara);
+        *ctx.registers[24].x.as_mut() = MAIN_FIGHTER_ID;
+    }
+}
+
+static PT_CHARA_HASHES: &[u64] = &[
+    hash40("ui_chara_pzenigame").0,
+    hash40("ui_chara_plizardon").0,
+    hash40("ui_chara_pfushigisou").0,
+];
+
+const KEY_MASK: u64 = 0xFFFFFF_0000000000;
+unsafe fn generate_random(player_id: usize, main_data: u64, sub_data: u64) {
+    let chara_string = &decide_fighter_from_id(player_id);
+    let mut chara_hash = hash40(&format!("ui_chara_{}", chara_string)).0;
+
+    MAIN_FIGHTER_ID = chara_hash | (main_data & KEY_MASK);
+    
+    if chara_string == "ptrainer" {
+        chara_hash = 
+        PT_CHARA_HASHES.choose(&mut rand::thread_rng()).copied()
+        .unwrap_or(hash40("ui_chara_random").0);
+    }
+    SUB_FIGHTER_ID = chara_hash |  (sub_data & KEY_MASK);
+}
+
+unsafe fn get_tag_from_save(idx: u8) -> String {
+    let tag_address =
+        (***(((*((*((skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as *mut u8)
+            .add(0x5314510) as *const u64)) as *const u64))
+            + 0x58) as *const *const *const u64)
+            + ((idx as u64) * 0xF7D8)
+            + 0xC) as *const u16;
+
+    let mut tag_length = 0;
+    while *tag_address.add(tag_length) != 0 {
+        tag_length += 1;
+    }
+
+    String::from_utf16_lossy(std::slice::from_raw_parts(tag_address, tag_length))
+}
+
+unsafe fn decide_fighter_from_id(id: usize) -> String {
+    // get player tag
+    let tag_index = PLAYER_TAG_INDEX[id];
+    let tag = &get_tag_from_save(tag_index);
+    // println!("Tag data for slot {}: {}", id, &tag); 
+
+    // get the base whitelist from the initial CSS load
+    let mut whitelist = CHARA_WHITELIST.lock().unwrap().clone();
+
+    // the following entries are present for CSS loading, but should never be chosen by random
+    let forbidden: [&str; 4] = [
+        "miifighter",
+        "miiswordsman",
+        "miigunner",
+        "light_first",
+    ];
+    for chara in forbidden {
+        whitelist.retain(|x| *x != chara.to_owned());
+    }
+
+    // choose a fighter from base whitelist
+    let mut chara_string =  match whitelist.choose(&mut rand::thread_rng()) {
+        Some(string) => string.as_str(),
+        None => {
+            println!("Whitelist is empty!");
+            return "mario".to_string();
+        }
+    };
+    let default = chara_string.to_owned();
+    println!("Random character decision: {chara_string}");
+
+    // Collect all relevant data from config TOML
+    let path = Path::new("mods:/").join(RANDOM_CFG_TOML);
+    if !path.exists() || !path.is_file() { return default };
+    let data = match std::fs::read_to_string(&path).unwrap().parse::<Value>() {
+        Ok(result) => result,
+        Err(_) => { 
+            println!("[src::chara_select] Invalid random_config TOML data!");
+            return default; 
+        }
+    };
+    let tag_data = match data.as_table().unwrap().get(tag) {
+        Some(table) => table.as_table().unwrap(),
+        None => {
+            if tag == "" {
+                println!("[src::chara_select] No player tag detected on player ID {id}! Using global settings.");
+            } else {
+                println!("[src::chara_select] No settings defined for tag [{tag}]! Using global settings.");
+            }
+            match data.as_table().unwrap().get("global_settings") {
+                Some(table) => table.as_table().unwrap(),
+                None => {
+                    println!("Just kidding... no global settings are present!");
+                    return default;
+                }
+            }
+        }
+    };
+    let kind = match tag_data.get("kind") {
+        Some(value) => value.as_str().unwrap(),
+        None => {
+            println!("[src::chara_select] Tag data does not contain key [kind]!");
+            return default;
+        }
+    };
+    if !["whitelist", "blacklist"].contains(&kind) { return default };
+    let list = match tag_data.get("list") {
+        Some(value) => value.as_array().unwrap(),
+        None => {
+            println!("[src::chara_select] Tag data does not contain key [list]!");
+            return default;
+        }
+    };
+
+    // return the original choice if it aligns with the data
+    if (kind == "whitelist" && list.contains(&toml::Value::String(default.clone())))
+    || (kind == "blacklist" && !list.contains(&toml::Value::String(default.clone()))) {
+        println!("{chara_string} is allowed!");
+        return default;
+    }
+
+    // getting to this point means the original choice isn't permitted, so we will adjust the selection
+    println!("{chara_string} is not allowed for tag {}! Adjusting...", &tag);
+    if kind == "whitelist" {
+        // for whitelists, clear and rebuild with the allowed characters
+        let reference = whitelist.clone();
+        whitelist.clear();
+        for chara in list {
+            let fighter = chara.as_str().unwrap_or("mario");
+            // prevent the same character from being picked twice in a row (if possible)
+            let restrict_prev = &fighter.to_owned() == &LAST_FIGHTER_PICKED && reference.len() > 1;
+            if reference.contains(&fighter.to_owned()) && !restrict_prev {
+                whitelist.push(fighter.to_owned());
+            }
+        }
+        // if none of the whitelisted characters were allowed originally, return the default
+        if whitelist.len() <= 0 {
+            println!("None of the whitelisted characters are allowed! Continuing with the default.");
+            return default;
+        }
+    } else {
+        // for blacklists, remove listed fighters from the selection
+        for chara in list {
+            let fighter = chara.as_str().unwrap_or("");
+            whitelist.retain(|x| *x != fighter.to_owned());
+        }
+        if whitelist.len() > 1 {
+            // prevent the same character from being picked twice in a row (if possible)
+            whitelist.retain(|x| *x != LAST_FIGHTER_PICKED);
+        }
+    }
+
+    // re-query with adjusted list
+    chara_string = match whitelist.choose(&mut rand::thread_rng()) {
+        Some(str) => str.as_str(),
+        None => {
+            println!("Whitelist is empty! Returning to default.");
+            &default
+        }
+    };
+    LAST_FIGHTER_PICKED = chara_string.to_owned();
+    println!("Randomly decided on {chara_string}");
+
+    return chara_string.to_owned();
+}
+
+#[skyline::hook(offset = 0x1a0d540)]
+unsafe fn set_random_fighter_data(base_ptr: *mut u64, arg2: u64, arg3: u64, arg4: u64) -> u64 {
+    // println!("Entering decide_fighter");
+
+    let main_chara = base_ptr.add(2);
+    let sub_chara = base_ptr.add(3);
+    // println!("Fighter: {:#x}, Sub-fighter: {:#x}", *main_chara, *sub_chara);
+    
+    // for melee random we will set these values right away, before the original logic
+    // this will change the entire selection (including ui)
+    if IS_MELEE_RANDOM {
+        *main_chara = MAIN_FIGHTER_ID;
+        *sub_chara = SUB_FIGHTER_ID;
+    } else {
+        // this function also runs between games, so make sure the fighter is re-rolled
+        // otherwise the same fighter will remain loaded for the next match
+        let player_id = (*base_ptr as u8 - 1) as usize;
+        generate_random(player_id, *main_chara, *sub_chara);
+    }
+
+    // now we'll call the original function into a var, which will do its thing and process data along the way
+    let ret = call_original!(base_ptr, arg2, arg3, arg4);
+
+    // at this point, for the normal random, it's safe to modify the data without affecting any UI
+    // note that we will only change the SUB fighter here. the main fighter will always just be ui_chara_random
+    if !IS_MELEE_RANDOM {
+        *sub_chara = SUB_FIGHTER_ID;
+    }
+
+    // handle costume rng
+    let costume_ptr = (base_ptr as *mut u64).add(4) as *mut u8;
+    let mut rng = COSTUME_RNG.lock().unwrap();
+    let costume = 
+        rng.choose(&mut rand::thread_rng()).copied()
+        .unwrap_or((rand::thread_rng().gen::<u32>() % 8) as i32);
+    // remove the selection from the rng pool, and refill if empty
+    rng.retain(|&x| x != costume);
+    if rng.is_empty() {
+        for i in 0..8 { rng.push(i) };
+    }
+
+    *costume_ptr = costume as u8;
+    println!("Randomly selected costume slot to be {costume} (data: {:#x})", *costume_ptr);
+
+    ret
+}
+
 #[skyline::hook(offset = 0x19fd0b0)]
 unsafe fn update_player_tag(arg1: u64, tag_index: *const u8) {
-    PLAYER_TAG_INDEX[*((arg1 + 0x1d4) as *const u8) as usize] = *tag_index;
+    let player_id = *((arg1 + 0x1d4) as *const u8) as usize;
+    PLAYER_TAG_INDEX[player_id] = *tag_index;
     call_original!(arg1, tag_index);
-}
-
-#[skyline::hook(offset = 0x1a14280, inline)]
-unsafe fn change_random_early(ctx: &mut skyline::hooks::InlineCtx) {
-    let obj = *ctx.registers[23].x.as_ref() as *mut u64;
-    let obj = *(obj as *mut *mut u64).add(1);
-    // println!("Entering change_random_early");
-    let ignore_random = ninput::any::is_down_any(ninput::Buttons::ZL | ninput::Buttons::ZR);
-    if ignore_random {
-        // println!("Ignoring the melee random selection!");
-    }
-
-    let main_chara = *obj.add(0x200 / 0x8);
-    let sub_chara = *obj.add(0x208 / 0x8);
-
-    if !ignore_random && (is_random(main_chara) || is_random(sub_chara)) {
-        // println!("The random pane was selected");
-        let player_id = (*(*(ctx.registers[21].x.as_ref() as *const u64) as *const u64) + 0x150) as *const u8;
-        let chara_string = &decide_fighter_from_id(*player_id as usize);
-        let chara_hash = hash40(&format!("ui_chara_{}", chara_string)).0;
-        LAST_FIGHTER_FOUND = chara_hash | key(main_chara);
-        LAST_FIGHTER2_FOUND = if chara_string == "ptrainer" {
-            PT_CHARA_HASHES.choose(&mut rand::thread_rng()).copied().unwrap_or(hash40("ui_chara_random").0) | key(sub_chara)
-        } else {
-            chara_hash | key(sub_chara)
-        };
-        // println!("Main character: {:#x}", LAST_FIGHTER_FOUND);
-        // println!("Sub character: {:#x}", LAST_FIGHTER2_FOUND);
-
-        *ctx.registers[24].x.as_mut() = LAST_FIGHTER_FOUND;
-        WAS_RANDOM_SELECTION = true;
-    } else {
-        WAS_RANDOM_SELECTION = false;
-    }
-}
-
-static mut ACTIVE_ID: u64 = 0x0;
-
-// runs first, processes miscellaneous info for the selected fighter
-#[skyline::hook(offset = 0x1a1cb30)]
-unsafe fn decide_costume(dest: u64, src: u64) {
-    // println!("Entering decide_costume");
-    let src_obj = *(src as *mut *mut u64).add(1);
-    let src_obj = src_obj.add(0x1F0 / 8);
-    ACTIVE_ID = (*(src_obj as *mut u32) - 1) as u64;
-
-    if WAS_RANDOM_SELECTION {
-        // handle rng
-        let mut rng = COSTUME_RNG.lock().unwrap();
-        let costume = rng.choose(&mut rand::thread_rng()).copied().unwrap_or(0);
-        rng.retain(|&x| x != costume);
-        // reset rng if the vector is empty
-        if rng.len() <= 0 {
-            for i in 0..8 { rng.push(i); }
-        }
-    
-        *(src_obj as *mut u32).add(8) = costume as u32;
-        // println!("Randomly selected costume slot to be {}", *(src_obj as *mut u32).add(8));
-    }
-
-    call_original!(dest, src);
-}
-
-// runs second, only runs on random pane selected
-#[skyline::hook(offset = 0x1a0d540)]
-unsafe fn decide_fighter(arg1: u64, arg2: u64, arg3: u64, arg4: u64) -> u64 {
-    // println!("Entering decide_fighter");
-    // if !WAS_RANDOM_SELECTION {
-    //     println!("decide_fighter called when the selection was not random");
-    // }
-
-    let p_main_chara = (arg1 as *mut u64).add(2);
-    let p_sub_chara = (arg1 as *mut u64).add(3);
-
-    if WAS_RANDOM_SELECTION && (is_random(*p_main_chara) || is_random(*p_sub_chara)) {
-        *p_main_chara = LAST_FIGHTER_FOUND;
-        *p_sub_chara = LAST_FIGHTER2_FOUND;
-    }
-    // println!("Decided on fighter: {:#x}", *p_main_chara);
-    // println!("Sub-fighter: {:#x}", *p_sub_chara);
-
-    // WAS_RANDOM_SELECTION = false;
-    // println!("Cleared random selection flag");
-
-    call_original!(arg1, arg2, arg3, arg4)
-}
-
-// determines what fighter is picked by random on selection (non-melee style)
-// this offset is found a little further down in the decide_fighter function above
-#[skyline::hook(offset = 0x1a0d628, inline)]
-unsafe fn random_whitelist(ctx: &mut skyline::hooks::InlineCtx) {
-    let chara_data = *ctx.registers[23].x.as_ref();
-
-    let player_id = ACTIVE_ID;
-    let chara_string = &decide_fighter_from_id(player_id as usize);
-    let chara_hash = hash40(&format!("ui_chara_{}", chara_string)).0;
-    let new_data = chara_hash | key(chara_data);
-    // println!("Changed random fighter to: {:#x}", new_data);
-    *ctx.registers[23].x.as_mut() = new_data;
 }
 
 #[skyline::hook(offset = 0x1798ac8, inline)]
@@ -451,12 +453,9 @@ unsafe fn fix_chara_replace(ctx: &skyline::hooks::InlineCtx) {
 pub fn install() {
     skyline::install_hooks!(
         display_css_hook,
+        decide_random,
+        set_random_fighter_data,
         update_player_tag,
-
-        change_random_early,
-        decide_costume,
-        decide_fighter,
-        random_whitelist,
         fix_chara_replace
     );
 }
