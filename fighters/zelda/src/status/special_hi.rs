@@ -60,7 +60,7 @@ unsafe extern "C" fn special_hi2_main_loop(fighter: &mut L2CFighterCommon) -> L2
                 GroundModule::correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
             }
         } else {
-            weirdness(fighter);
+            zelda_special_hi_2_check_ground(fighter);
             if StatusModule::is_situation_changed(fighter.module_accessor) {
                 if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
                     GroundModule::correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
@@ -88,19 +88,111 @@ unsafe extern "C" fn special_hi2_main_loop(fighter: &mut L2CFighterCommon) -> L2
 }
 
 //excludes a lot of vanilla stuff that adds wall bounce, forced straight when angled down and landing... etc makes wallride opff unnecessary
-unsafe extern "C" fn weirdness(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if !fighter.is_flag(*FIGHTER_ZELDA_STATUS_SPECIAL_HI_FLAG_CHECK_GROUND) {
-        return 0.into()
+unsafe extern "C" fn zelda_special_hi_2_check_ground(fighter: &mut L2CFighterCommon) {
+    if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ZELDA_STATUS_SPECIAL_HI_FLAG_CHECK_GROUND) {
+        return;
     }
+
     if GroundModule::is_attach_cliff(fighter.module_accessor) {
-        return 0.into()
+        return;
     }
-    if StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_GROUND {
-        if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) {
-            GroundModule::set_attach_ground(fighter.module_accessor, true);
+
+    let mut touch_id = *GROUND_TOUCH_ID_NONE;
+    let mut touch_flag = *GROUND_TOUCH_FLAG_NONE;
+    let init_speed_x = VarModule::get_float(fighter.battle_object, vars::common::status::TELEPORT_INITIAL_SPEED_X);
+
+    /*if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_RIGHT as u32) {
+        touch_id = *GROUND_TOUCH_ID_RIGHT;
+        touch_flag = *GROUND_TOUCH_FLAG_RIGHT;
+    }
+    else if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_LEFT as u32) {
+        touch_id = *GROUND_TOUCH_ID_LEFT;
+        touch_flag = *GROUND_TOUCH_FLAG_LEFT;
+    }
+    else if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_UP as u32) {
+        touch_id = *GROUND_TOUCH_ID_UP;
+        touch_flag = *GROUND_TOUCH_FLAG_UP;
+    }
+    else*/ if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) 
+    && init_speed_x.abs() >= 0.01 {
+        touch_id = *GROUND_TOUCH_ID_DOWN;
+        touch_flag = *GROUND_TOUCH_FLAG_DOWN;
+    }
+
+    if touch_flag == *GROUND_TOUCH_FLAG_NONE {
+        return;
+    }
+
+    fighter.clear_lua_stack();
+    lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_STOP);
+    let speed = sv_kinetic_energy::get_speed3f(fighter.lua_state_agent);
+
+    let mut length = sv_math::vec3_length(speed.x, speed.y, speed.z);
+    if 0.0 < length {
+        let touch_x = GroundModule::get_touch_normal_x(fighter.module_accessor, touch_flag as u32);
+        let touch_y = GroundModule::get_touch_normal_y(fighter.module_accessor, touch_flag as u32);
+
+        let touch = fighter.Vector3__create(touch_x.into(), touch_y.into(), 0.0_f32.into());
+        let something = fighter.Vector3__create(0.0_f32.into(), 0.0_f32.into(), 1.0_f32.into());
+        let mut cross = fighter.Vector3__cross(touch.clone(), something);
+
+        let math = 1.0 / length;
+        let speed_mul = Vector3f{x: speed.x * math, y: speed.y * math, z: speed.z * math};
+        let mut final_dot = 0.0;
+        if touch_flag != *GROUND_TOUCH_FLAG_DOWN
+        && 0.0 < speed_mul.y {
+            if cross["y"].get_f32() < 0.0 {
+                final_dot = -1.0;
+            }
+            let x = touch["x"].get_f32();
+            let y = touch["y"].get_f32();
+            let deg = x.atan2(y).to_degrees().abs();
+            let deg = 180.0 - deg;
+            let deg = deg.abs();
+            let something = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), 0x158bb5418d);
+            if deg <= something {
+                length = speed_mul.x.abs();
+                cross["x"].assign(&L2CValue::F32(speed_mul.x.signum()));
+            }
+        }
+        else {
+            final_dot = sv_math::vec3_dot(cross["x"].get_f32(), cross["y"].get_f32(), cross["z"].get_f32(), speed_mul.x, speed_mul.y, speed_mul.z);
+            if -0.00001 <= final_dot
+            && final_dot <= 0.00001 {
+                if touch_flag == *GROUND_TOUCH_FLAG_RIGHT
+                || touch_flag == *GROUND_TOUCH_FLAG_LEFT {
+                    final_dot = sv_math::vec3_dot(cross["x"].get_f32(), cross["y"].get_f32(), cross["z"].get_f32(), 0.0, 1.0, 0.0);
+                }
+                else {
+                    let lr = PostureModule::lr(fighter.module_accessor);
+                    final_dot = sv_math::vec3_dot(cross["x"].get_f32(), cross["y"].get_f32(), cross["z"].get_f32(), lr, 0.0, 0.0);
+                }
+            }
+        }
+
+        if final_dot < 0.0 {
+            let x = cross["x"].get_f32();
+            let y = cross["y"].get_f32();
+            let z = cross["z"].get_f32();
+            cross["x"].assign(&L2CValue::F32(x * -1.0));
+            cross["y"].assign(&L2CValue::F32(y * -1.0));
+            cross["z"].assign(&L2CValue::F32(z * -1.0));
+        }
+        sv_kinetic_energy!(
+            set_speed,
+            fighter,
+            FIGHTER_KINETIC_ENERGY_ID_STOP,
+            cross["x"].get_f32() * length,
+            cross["y"].get_f32() * length,
+            cross["z"].get_f32() * length
+        );
+        let situation = StatusModule::situation_kind(fighter.module_accessor);
+        if situation == *SITUATION_KIND_GROUND {
+            let line = GroundModule::get_touch_line_raw(fighter.module_accessor, GroundTouchID(touch_id)) as *mut GroundCollisionLine;
+            let is_floor = sv_ground_collision_line::is_floor(line);
+            GroundModule::set_attach_ground(fighter.module_accessor, is_floor);
         }
     }
-    0.into()
 }
 
 unsafe extern "C" fn special_hi2_end(fighter: &mut L2CFighterCommon) -> L2CValue {
