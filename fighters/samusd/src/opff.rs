@@ -3,17 +3,6 @@ utils::import_noreturn!(common::opff::fighter_common_opff);
 use super::*;
 use globals::*;
 
-pub unsafe fn morphball_crawl(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_status_one_of(&[*FIGHTER_SAMUS_STATUS_KIND_SPECIAL_GROUND_LW, *FIGHTER_SAMUS_STATUS_KIND_SPECIAL_AIR_LW]) {
-        if boma.motion_frame() >= 32.0 {
-            if (ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) || ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL_RAW))
-                && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) {
-                MotionModule::change_motion_force_inherit_frame(boma, Hash40::new("special_lw"), 18.0, 1.0, 1.0);
-            }
-        }
-    }
-}
-
 // unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 //     if !fighter.is_in_hitlag()
 //     && !StatusModule::is_changing(fighter.module_accessor)
@@ -42,19 +31,12 @@ pub unsafe fn morphball_crawl(boma: &mut BattleObjectModuleAccessor) {
 //         }
 //     }
 // }
-
-// disables Dark Samus bomb jump (normal Samus bomb jump unaffected)
-pub unsafe fn disable_bombjump(boma: &mut BattleObjectModuleAccessor) {
-    if WorkModule::is_flag(boma, 0x200000E2) // FIGHTER_SAMUS_INSTANCE_WORK_ID_FLAG_IS_CHANGE_STATUS_BOMBJUMP
-    && boma.kind() == *FIGHTER_KIND_SAMUSD {
-        WorkModule::off_flag(boma, 0x200000E2);
-    }
-}
  
-pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
-    morphball_crawl(boma);
+pub unsafe fn moveset(fighter: &mut L2CFighterCommon) {
     //fastfall_specials(fighter);
-    disable_bombjump(boma);
+    
+    // disables bomb jump
+    WorkModule::off_flag(fighter.module_accessor, 0x200000E2); // FIGHTER_SAMUS_INSTANCE_WORK_ID_FLAG_IS_CHANGE_STATUS_BOMBJUMP
 }
 
 pub extern "C" fn samusd_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
@@ -66,7 +48,7 @@ pub extern "C" fn samusd_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterC
 
 pub unsafe fn samusd_frame(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
     if let Some(info) = FrameInfo::update_and_get(fighter) {
-        moveset(fighter, &mut *info.boma);
+        moveset(fighter);
     }
 }
 

@@ -155,6 +155,114 @@ catch_attack:
 air_catch_landing:
   extra:
     cancel_frame: 20
+squat_entry:
+  game_script: game_squatentry
+  flags:
+    turn: false
+    loop: false
+    move: true
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: false
+    unk_100: false
+    unk_200: false
+    unk_400: false
+  blend_frames: 6
+  animations:
+    - name: a05squatentry.nuanmb
+      unk: 0
+  scripts:
+    - expression_squatentry
+    - sound_squatentry
+    - effect_squatentry
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 0
+    no_stop_intp: false
+squat_f:
+  game_script: game_squatf
+  flags:
+    turn: false
+    loop: true
+    move: true
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: false
+    unk_100: false
+    unk_200: false
+    unk_400: false
+  blend_frames: 6
+  animations:
+    - name: a05squatf.nuanmb
+      unk: 0
+  scripts:
+    - expression_squatf
+    - sound_squatf
+    - effect_squatf
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 0
+    no_stop_intp: false
+squat_b:
+  game_script: game_squatb
+  flags:
+    turn: false
+    loop: true
+    move: true
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: false
+    unk_100: false
+    unk_200: false
+    unk_400: false
+  blend_frames: 6
+  animations:
+    - name: a05squatb.nuanmb
+      unk: 0
+  scripts:
+    - expression_squatb
+    - sound_squatb
+    - effect_squatb
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 0
+    no_stop_intp: false
+squat_n:
+  game_script: game_squatn
+  flags:
+    turn: false
+    loop: true
+    move: true
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: false
+    unk_100: false
+    unk_200: false
+    unk_400: false
+  blend_frames: 6
+  animations:
+    - name: a05squatf.nuanmb
+      unk: 0
+  scripts:
+    - expression_squatn
+    - sound_squatn
+    - effect_squatn
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 0
+    no_stop_intp: false
 furafura_end:
   extra:
     cancel_frame: 34
