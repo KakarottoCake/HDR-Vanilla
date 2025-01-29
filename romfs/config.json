@@ -156,6 +156,9 @@
 		],
 		"fighter/tantan/cmn": [
 			"fighter/tantan/param/hdr.xml"
+		],
+		"fighter/zelda/cmn": [
+			"fighter/zelda/param/hdr.xml"
 		]
 	}
 }
