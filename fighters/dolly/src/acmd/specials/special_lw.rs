@@ -177,6 +177,7 @@ unsafe extern "C" fn game_specialairlwrisew(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialairlw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    frame(lua_state, 0.0);
     if is_excute(agent) {
         MotionModule::set_rate(boma, 1.0);
         agent.on_flag(*FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
