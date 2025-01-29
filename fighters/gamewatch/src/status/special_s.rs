@@ -42,7 +42,7 @@ unsafe extern "C" fn special_s_init(fighter: &mut L2CFighterCommon) -> L2CValue 
                 // for balancing reasons add another 50% chance to actually be a guaranteed 9
                 let rand = sv_math::rand(hash40("fighter"), 2);
                 if rand == 1 {
-                    VarModule::set_int(fighter.battle_object, vars::gamewatch::instance::SPECIAL_S_MATH_RESULT, (rng - kind - 1).abs());
+                    VarModule::set_int(fighter.battle_object, vars::gamewatch::instance::SPECIAL_S_MATH_RESULT, rng + kind + 1);
                 }
                 else {
                     VarModule::set_int(fighter.battle_object, vars::gamewatch::instance::SPECIAL_S_MATH_RESULT, rng);

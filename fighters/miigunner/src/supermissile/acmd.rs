@@ -10,7 +10,7 @@ unsafe extern "C" fn game_straight(agent: &mut L2CAgentBase) {
     }
     if is_excute(agent) {
         VarModule::off_flag(agent.battle_object, vars::miigunner_supermissile::instance::PULSE_DETONATE);
-        ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 361, 90, 0, 50, 3.0, 0.0, 0.0, 1.2, Some(0.0), Some(0.0), Some(3.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BOMB);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 361, 90, 0, 50, 2.5, 0.0, 0.0, 1.2, Some(0.0), Some(0.0), Some(2.5), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BOMB);
     }
 }
 
@@ -23,8 +23,8 @@ unsafe extern "C" fn effect_straight(agent: &mut L2CAgentBase) {
     frame(lua_state, 30.0);
     for h in 0..5 {
         if is_excute(agent) {
-            EFFECT_FOLLOW(agent, Hash40::new("sys_sp_flash"), Hash40::new("top"), 1, 0, 3, 0, 0, 0, 0.3 + 0.025 * h as f32, false);
-            LAST_EFFECT_SET_COLOR(agent, 0.5, 2.0, 1.0);
+            EFFECT_FOLLOW(agent, Hash40::new("sys_sp_flash"), Hash40::new("top"), 1, 0, 3, 0, 0, 0, 0.3 + 0.05 * h as f32, false);
+            LAST_EFFECT_SET_COLOR(agent, 0.5 + 1.5 * h as f32, 2.0, 1.0);
             LAST_EFFECT_SET_RATE(agent, 0.6);
         }
         wait(lua_state, 30.0);
@@ -41,7 +41,9 @@ unsafe extern "C" fn sound_straight(agent: &mut L2CAgentBase) {
     for h in 0..5 {
         if is_excute(agent) {
             let handle = SoundModule::play_se_no3d(boma, Hash40::new("se_common_spirits_floor_elec_spark2"), true, true);
-            SoundModule::set_se_vol(boma, handle as i32, 1.25, 0);
+            SoundModule::set_se_vol(boma, handle as i32, 1.25 + 0.05 * h as f32, 0);
+            let handle2 = SoundModule::play_se_no3d(boma, Hash40::new("se_common_spirits_floor_elec_spark1"), true, true);
+            SoundModule::set_se_vol(boma, handle2 as i32, 1.5 + 0.05 * h as f32, 0);
         }
         wait(lua_state, 30.0);
     }
@@ -53,6 +55,7 @@ unsafe extern "C" fn game_sburst(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     if is_excute(agent) {
         if VarModule::is_flag(agent.battle_object, vars::miigunner_supermissile::instance::PULSE_DETONATE) {
+            TeamModule::set_team(boma, -1, true);
             QUAKE(agent, *CAMERA_QUAKE_KIND_M);
             ATTACK(agent, 0, 0, Hash40::new("top"), 20.0, 50, 75, 0, 70, 14.0, 3.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 20, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_LL, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_BOMB);
         }

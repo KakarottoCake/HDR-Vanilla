@@ -96,6 +96,7 @@ pub unsafe extern "C" fn rockman_vtable_func(vtable: u64, fighter: &mut smash::a
                     false,
                     false
                 );
+                SoundModule::stop_se(module_accessor, Hash40::new("se_rockman_smash_s02"), 0);
             }
             if charge_frame == CHARGE_SHOT_CLEAR_INPUT_FRAME {
                 ControlModule::clear_command_one(module_accessor, 0, *FIGHTER_PAD_CMD_CAT1_SPECIAL_N);
