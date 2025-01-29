@@ -332,6 +332,7 @@ pub unsafe fn fgc_end_dashback(fighter: &mut L2CFighterCommon) {
 		app::sv_kinetic_energy::set_speed(fighter.lua_state_agent);
     }
     VarModule::set_float(fighter.battle_object, vars::common::instance::CURR_DASH_SPEED, initial_speed);
+    VarModule::off_flag(fighter.battle_object, vars::common::instance::IS_ENTER_DASH_CANCEL);
 }
 
 #[no_mangle]
