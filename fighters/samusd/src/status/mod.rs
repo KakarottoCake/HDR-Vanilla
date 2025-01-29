@@ -3,7 +3,11 @@ use globals::*;
 // status script import
 
 mod attack_air;
+mod attack_lw3;
 mod float;
+mod special_hi;
+mod special_n;
+mod special_s;
 
 extern "Rust" {
     #[link_name = "float_check_air_jump"]
@@ -32,5 +36,9 @@ pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
 
     attack_air::install(agent);
+    attack_lw3::install(agent);
     float::install(agent);
+    special_hi::install(agent);
+    special_n::install(agent);
+    special_s::install(agent);
 }

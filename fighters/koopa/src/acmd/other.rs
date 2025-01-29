@@ -114,14 +114,18 @@ unsafe extern "C" fn game_passivestand(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
+    sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 1.2);
     FT_MOTION_RATE_RANGE(agent, 1.0, 24.0, 20.0);
     frame(lua_state, 24.0);
+    sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 1.0);
     FT_MOTION_RATE_RANGE(agent, 24.0, 41.0, 20.0);
     frame(lua_state, 41.0);
     FT_MOTION_RATE(agent, 1.0);
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.acmd("game_cliffescape", acmd_stub, Priority::Low);
+
     agent.acmd("sound_damageflyhi", sound_damagefly, Priority::Low);
     agent.acmd("sound_damageflylw", sound_damagefly, Priority::Low);
     agent.acmd("sound_damageflyn", sound_damagefly, Priority::Low);

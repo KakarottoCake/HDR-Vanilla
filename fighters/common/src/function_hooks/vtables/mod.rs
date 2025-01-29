@@ -1,6 +1,7 @@
 use super::*;
 
 mod donkey;
+mod duckhunt;
 mod gamewatch;
 mod ganon;
 mod lucario;
@@ -13,12 +14,14 @@ mod rockman;
 mod krool;
 mod brave;
 
+mod miigunner_grenadelauncher;
 mod ryu_shinkuhadoken;
 
 mod weapon;
 
 pub fn install() {
     donkey::install();
+    duckhunt::install();
     gamewatch::install();
     ganon::install();
     lucario::install();
@@ -31,6 +34,7 @@ pub fn install() {
     krool::install();
     brave::install();
 
+    miigunner_grenadelauncher::install();
     ryu_shinkuhadoken::install();
 
     weapon::install();
