@@ -477,7 +477,7 @@ unsafe extern "C" fn effect_attackairlw(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 18.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("samusd_atk_air_lw"), Hash40::new("top"), 0, 11, 1, 0, -200, 90, 0.95, true);
+        EFFECT_FOLLOW(agent, Hash40::new("samusd_atk_air_lw"), Hash40::new("top"), 0, 11, 0.75, 0, -200, 90, 0.92, true);
         let color_vec = GET_COLOR_VEC(boma);
         LAST_EFFECT_SET_COLOR(agent, color_vec.x, color_vec.y, color_vec.z);
         LAST_EFFECT_SET_RATE(agent, 1.1);
