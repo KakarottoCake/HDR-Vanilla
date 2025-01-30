@@ -309,6 +309,7 @@ use serde::{Deserialize, Serialize};
 struct TourneyConfig {
     /// whether the tourney mode is enabled
     enabled: bool,
+    useOfficial: bool,
     /// the ordered list of starters stages which should be enabled,
     /// or `None` if there are no starters
     starters: Option<Vec<String>>,
@@ -344,7 +345,7 @@ impl TourneyConfig {
     /// loads the tourney config from the sdcard
     fn load() -> Option<TourneyConfig> {
         // load the tourney config
-        let config: Option<TourneyConfig> =
+        let mut config: Option<TourneyConfig> =
             match std::fs::read_to_string("sd:/ultimate/hdr-config/tourney_mode.json") {
                 Ok(json) => serde_json::from_str(&json)
                     .expect("A tourney_mode.json was found, but its contents were invalid!"),
@@ -355,6 +356,19 @@ impl TourneyConfig {
                     None
                 }
             };
+        // if we should be using the official list, load that directly instead (because it could be updated)
+        if config.unwrap().useOfficial {
+            config = match std::fs::read_to_string("sd:/ultimate/mods/hdr-stages/tourney_mode_official.json") {
+                Ok(json) => serde_json::from_str(&json)
+                    .expect("A tourney_mode.json was found, but its contents were invalid!"),
+                Err(_) => {
+                    println!(
+                        "No tourney mode config was found. Assuming tourney mode is disabled."
+                    );
+                    None
+                }
+            };
+        }
         return config;
     }
 }
