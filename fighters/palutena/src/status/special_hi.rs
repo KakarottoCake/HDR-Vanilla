@@ -153,7 +153,8 @@ unsafe extern "C" fn special_hi2_main_loop(fighter: &mut L2CFighterCommon) -> L2
     // wallride behavior
     let init_speed_x = VarModule::get_float(fighter.battle_object, vars::common::status::TELEPORT_INITIAL_SPEED_X);
     let init_speed_y = VarModule::get_float(fighter.battle_object, vars::common::status::TELEPORT_INITIAL_SPEED_Y);
-    if !GroundModule::is_wall_touch_line(fighter.module_accessor, *GROUND_TOUCH_ID_NONE as u32) {
+    if GroundModule::is_wall_touch_line(fighter.module_accessor, *GROUND_TOUCH_FLAG_SIDE as u32)
+        || (!GroundModule::is_wall_touch_line(fighter.module_accessor, *GROUND_TOUCH_ID_NONE as u32) && init_speed_x.abs() <= 0.01) {
         if !VarModule::is_flag(fighter.battle_object, vars::common::status::IS_TELEPORT_WALL_RIDE) {
             VarModule::on_flag(fighter.battle_object, vars::common::status::IS_TELEPORT_WALL_RIDE);
         }
