@@ -189,6 +189,8 @@ pub mod vars {
 
             pub const WAS_PREV_STATUS_CANCELABLE: i32 = 0x0069;
 
+            pub const IS_ENTER_DASH_CANCEL: i32 = 0x006A;
+
             // ints
 
             pub const LAST_ATTACK_RECEIVER_ENTRY_ID: i32 = 0x0000;
@@ -307,6 +309,8 @@ pub mod vars {
             pub const SHOULD_HITFALL: i32 = 0x1006;
 
             pub const NO_POCKET: i32 = 0x1052;
+
+            pub const IS_DASH_CANCEL: i32 = 0x1055;
 
             // ints
 
@@ -516,22 +520,20 @@ pub mod vars {
     pub mod dolly {
         pub mod instance {
             // ints
-            pub const METER_STOCKS: i32 = 0x0150;
-            pub const CURRENT_STOCKS: i32 = 0x0151;
+            pub const ADDED_METER_LEVELS: i32 = 0x0150;
 
             // flags
-            pub const SUPER_CANCEL: i32 = 0x0150;
             pub const DISABLE_SPECIAL_S: i32 = 0x0151;
-            pub const IS_INIT_METER: i32 = 0x0152;
-            pub const INCREASE_METER_STOCKS: i32 = 0x0153;
         }
         pub mod status {
             // flags
-            pub const IS_USE_FIRE_KICK: i32 = 0x1150;
-            pub const UNABLE_CANCEL_S3_DASH: i32 = 0x1151;
-            pub const IS_CHAIN_CANCEL: i32 = 0x1152;
-            pub const IS_SHATTER_STRIKE: i32 = 0x1153;
-            pub const AIR_SPECIAL_F: i32 = 0x1154;
+            pub const INHERIT_FINAL_CANCEL_ON_END: i32 = 0x1150;
+            pub const ATTACK_COMMAND_4_RELEASE_BUTTON: i32 = 0x1151;
+
+            pub const SPECIAL_LW_BREAK : i32 = 0x1152;
+
+            // ints
+            pub const HIT_CANCEL_TIMER: i32 = 0x1104;
         }
     }
 
@@ -1506,8 +1508,13 @@ pub mod vars {
     pub mod samus {
         pub mod instance {
             // flags
-            pub const ATTACK_DASH_SHINESPARK: i32 = 0x0100;
-            pub const ATTACK_DASH_ENABLE_SHINESPARK: i32 = 0x0101;
+            pub const SPECIAL_LW_CRAWL: i32 = 0x0100;
+            pub const SPECIAL_LW_INPUT_FROM_CRAWL: i32 = 0x0101;
+            pub const SPECIAL_LW_BOMB_LOCKOUT: i32 = 0x0102;
+        }
+        pub mod status {
+            // flags
+            pub const SPECIAL_LW_INPUT_IN_CRAWL: i32 = 0x1100;
         }
     }
 
@@ -1808,6 +1815,11 @@ pub mod statuses {
     pub mod diddy {
         pub const SPECIAL_N_CANCEL: i32 = 0x1FF;
         pub const SPECIAL_N_CANCEL_JUMP: i32 = 0x200;
+    }
+
+    pub mod dolly {
+        pub const ATTACK_COMMAND_4: i32 = 0x203;
+        pub const SPECIAL_LW_BREAKING: i32 = 0x204;
     }
 
     pub mod edge_flash {

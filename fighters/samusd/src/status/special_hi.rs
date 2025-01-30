@@ -24,7 +24,7 @@ unsafe extern "C" fn special_hi_pre(fighter: &mut L2CFighterCommon) -> L2CValue 
         false,
         false,
         false,
-        *FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_HI as u64,
+        (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_HI | FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK) as u64,
         (*FIGHTER_STATUS_ATTR_START_TURN) as u32,
         *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_HI as u32,
         0
