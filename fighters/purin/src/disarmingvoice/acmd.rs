@@ -15,13 +15,9 @@ unsafe extern "C" fn effect_shoot(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("poke_meloetta_bullet"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 727, true);
     }
-    for _ in 0..15 {
-        if is_excute(agent) {
-            EFFECT_OFF_KIND(agent, Hash40::new("rosetta_ring_erase"), false, false);
-            EFFECT_FOLLOW(agent, Hash40::new("rosetta_ring_erase"), Hash40::new("top"), 0, 0, 0, 0, 0, 25, 727, false);
-            EFFECT_DETACH_KIND(agent, Hash40::new("rosetta_ring_erase"), -1);
-        }
-        wait(lua_state, 4.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("rosetta_ring_erase"), Hash40::new("top"), 0, 0, 0, 0, 0, 25, 727, false);
+        LAST_EFFECT_SET_RATE(agent, 0.33);
     }
 }
 
