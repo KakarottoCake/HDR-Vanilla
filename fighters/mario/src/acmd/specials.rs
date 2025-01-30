@@ -334,11 +334,11 @@ unsafe extern "C" fn sound_specials(agent: &mut L2CAgentBase) {
         PLAY_SE(agent, Hash40::new("se_mario_attackair_l01"));
         let rng = app::sv_math::rand(hash40("fighter"), 3);
         match rng {
-            0 => PLAY_SE(agent, Hash40::new("vc_mario_attack05")),
-            _ => {
+            0 => {
                 let handle = SoundModule::play_se(agent.module_accessor, Hash40::new("vc_mario_starspin"), false, false, false, false, enSEType(0));
-                SoundModule::set_se_vol(agent.module_accessor, handle as i32, 0.4, 0);
+                SoundModule::set_se_vol(agent.module_accessor, handle as i32, 0.35, 0);
             },
+            _ => PLAY_SE(agent, Hash40::new("vc_mario_attack05")),
         };
     }
 }
@@ -507,20 +507,20 @@ unsafe extern "C" fn sound_longjump(agent: &mut L2CAgentBase) {
             let back_speed_x_hitbox_threshold = ParamModule::get_float(agent.battle_object, ParamType::Agent, "long_jump.back_speed_x_hitbox_threshold");
             if speed_x > back_speed_x_hitbox_threshold {
                 // standard long jump
-                let handle = SoundModule::play_se(agent.module_accessor, Hash40::new("vc_mario_longjump04"), false, false, false, false, enSEType(0));
-                SoundModule::set_se_vol(agent.module_accessor, handle as i32, 0.55, 0);
+                let handle = SoundModule::play_se(agent.module_accessor, Hash40::new("vc_mario_longjumpback01"), false, false, false, false, enSEType(0));
+                SoundModule::set_se_vol(agent.module_accessor, handle as i32, 0.45, 0);
             }
-            else {
-                // launching off an edge
-                let rand = sv_math::rand(hash40("halfapress"), 3);
-                let wahoo = match rand {
-                    0 => Hash40::new("vc_mario_longjumpback01"),
-                    1 => Hash40::new("vc_mario_longjumpback02"),
-                    _ => Hash40::new("vc_mario_longjumpback03"),
-                };
-                let handle = SoundModule::play_se(agent.module_accessor, wahoo, false, false, false, false, enSEType(0));
-                SoundModule::set_se_vol(agent.module_accessor, handle as i32, 0.5, 0);
-            }
+            // else {
+            //     // launching off an edge
+            //     let rand = sv_math::rand(hash40("halfapress"), 2);
+            //     let wahoo = match rand {
+            //         //0 => Hash40::new("vc_mario_longjumpback01"),
+            //         0 => Hash40::new("vc_mario_longjumpback02"),
+            //         _ => Hash40::new("vc_mario_longjumpback03"),
+            //     };
+            //     let handle = SoundModule::play_se(agent.module_accessor, wahoo, false, false, false, false, enSEType(0));
+            //     SoundModule::set_se_vol(agent.module_accessor, handle as i32, 0.45, 0);
+            // }
         }
         
     }
