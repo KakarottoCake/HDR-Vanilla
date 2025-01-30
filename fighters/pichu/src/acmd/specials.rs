@@ -63,10 +63,6 @@ unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
         }
         AttackModule::set_attack_keep_rumble(boma, 0, true);
     }
-    frame(lua_state, 11.0);
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), GROUND_CLIFF_CHECK_KIND_ALWAYS);
-    }
     frame(lua_state, 16.0);
     if is_excute(agent) {
         sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.5);
@@ -125,7 +121,7 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
         if VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
             FT_DESIRED_RATE(agent, 26.0, 33.0);
         }
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
     }
 }
 
@@ -136,7 +132,10 @@ unsafe extern "C" fn game_specialairsmissend(agent: &mut L2CAgentBase) {
         if VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
             FT_DESIRED_RATE(agent, 26.0, 33.0);
         }
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+    }
+    frame(lua_state, 6.0);
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
     }
     frame(lua_state, 35.0);
     if is_excute(agent) {
