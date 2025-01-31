@@ -238,7 +238,7 @@ unsafe extern "C" fn start_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.boma();
 
     let grounded = GroundModule::get_touch_line_raw(boma, GroundTouchID(*GROUND_TOUCH_ID_DOWN)) == 1;
-    if !grounded {
+    if grounded {
         WorkModule::off_flag(boma, *WEAPON_PICKEL_TROLLEY_INSTANCE_WORK_ID_FLAG_TYPE_AIR);
     } else {
         WorkModule::on_flag(boma, *WEAPON_PICKEL_TROLLEY_INSTANCE_WORK_ID_FLAG_TYPE_AIR);
