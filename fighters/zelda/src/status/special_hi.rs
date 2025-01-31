@@ -48,28 +48,21 @@ unsafe extern "C" fn special_hi2_main_loop(fighter: &mut L2CFighterCommon) -> L2
     let move_time = fighter.get_param_int("param_special_hi", "move_time"); //time spent moving
     if move_time <= fighter.get_int(*FIGHTER_ZELDA_STATUS_SPECIAL_HI_WORK_INT_FRAME) {
         fighter.change_status(FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_3.into(), true.into())
-    } else {
-        if fighter.is_cat_flag(Cat1::SpecialAny) {
-            VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
-            fighter.change_status(FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_3.into(), true.into())
+    }
+    if StatusModule::is_changing(fighter.module_accessor)
+    || StatusModule::is_situation_changed(fighter.module_accessor) {
+        if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
         }
-        if StatusModule::is_changing(fighter.module_accessor) {
-            if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
-                GroundModule::correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
-            } else {
-                GroundModule::correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-            }
-        } else {
-            zelda_special_hi_2_check_ground(fighter);
-            if StatusModule::is_situation_changed(fighter.module_accessor) {
-                if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
-                    GroundModule::correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
-                } else {
-                    GroundModule::correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-                }
-            }
+        else {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         }
     }
+    if fighter.is_cat_flag(Cat1::SpecialAny) {
+        VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
+        fighter.change_status(FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_3.into(), true.into())
+    }
+    zelda_special_hi_2_check_ground(fighter);
     //subsatus
     if !StatusModule::is_changing(fighter.module_accessor) {
         WorkModule::inc_int(fighter.module_accessor, *FIGHTER_ZELDA_STATUS_SPECIAL_HI_WORK_INT_FRAME);
@@ -87,7 +80,7 @@ unsafe extern "C" fn special_hi2_main_loop(fighter: &mut L2CFighterCommon) -> L2
     0.into()
 }
 
-//excludes a lot of vanilla stuff that adds wall bounce, forced straight when angled down and landing... etc makes wallride opff unnecessary
+//excludes a lot of vanilla stuff that adds wall bounce... makes wallride opff unnecessary
 unsafe extern "C" fn zelda_special_hi_2_check_ground(fighter: &mut L2CFighterCommon) {
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ZELDA_STATUS_SPECIAL_HI_FLAG_CHECK_GROUND) {
         return;
@@ -100,6 +93,7 @@ unsafe extern "C" fn zelda_special_hi_2_check_ground(fighter: &mut L2CFighterCom
     let mut touch_id = *GROUND_TOUCH_ID_NONE;
     let mut touch_flag = *GROUND_TOUCH_FLAG_NONE;
     let init_speed_x = VarModule::get_float(fighter.battle_object, vars::common::status::TELEPORT_INITIAL_SPEED_X);
+    let init_speed_y = VarModule::get_float(fighter.battle_object, vars::common::status::TELEPORT_INITIAL_SPEED_Y);
 
     /*if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_RIGHT as u32) {
         touch_id = *GROUND_TOUCH_ID_RIGHT;
@@ -114,7 +108,8 @@ unsafe extern "C" fn zelda_special_hi_2_check_ground(fighter: &mut L2CFighterCom
         touch_flag = *GROUND_TOUCH_FLAG_UP;
     }
     else*/ if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) 
-    && init_speed_x.abs() >= 0.01 {
+    && init_speed_x.abs() >= 0.01
+    && init_speed_y <= -0.01 {
         touch_id = *GROUND_TOUCH_ID_DOWN;
         touch_flag = *GROUND_TOUCH_FLAG_DOWN;
     }
