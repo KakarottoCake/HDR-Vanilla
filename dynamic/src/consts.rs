@@ -1717,7 +1717,10 @@ pub mod vars {
     }
 
     pub mod wario {
-
+        pub mod instance {
+            // flags
+            pub const PUMMEL_SKIP_STALE: i32 = 0x0100;
+        }
     }
 
     pub mod wiifit {

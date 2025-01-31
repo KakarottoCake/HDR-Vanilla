@@ -361,6 +361,16 @@ unsafe extern "C" fn effect_speciallwbreaking(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
         LAST_EFFECT_SET_COLOR(agent, 0.3, 0.3, 0.8);
+        EFFECT(agent, Hash40::new("sys_sp_flash"), Hash40::new("top"), 0, 12, -4, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        LAST_EFFECT_SET_RATE(agent, 0.9);
+        if agent.lr() < 0.0 {
+            // I will find and defenestrate whomsoever made this effect unable to be easily mirrored
+            EFFECT_FOLLOW(agent, Hash40::new("dolly_drive_start0"), Hash40::new("top"), 0, 14, 8, 100, 0, -240, 0.95, true);
+        }
+        else {
+            EFFECT_FOLLOW(agent, Hash40::new("dolly_drive_start0"), Hash40::new("top"), 0, 6, 8, 90, 0, -10, 0.95, true);
+        }
+        LAST_EFFECT_SET_COLOR(agent, 0.5, 0.05, 2.5);
     }
     for _ in 0..5 {
         if is_excute(agent) {
