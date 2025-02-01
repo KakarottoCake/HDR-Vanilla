@@ -395,7 +395,11 @@ unsafe extern "C" fn sound_speciallwbreaking(agent: &mut L2CAgentBase) {
         PLAY_SE(agent, Hash40::new("vc_dolly_ottotto"));
         let handle = SoundModule::play_se_no3d(boma, Hash40::new("se_dolly_command_success"), true, true);
         SoundModule::set_se_vol(boma, handle as i32, 1.25, 0);
-        PLAY_SEQUENCE(agent, Hash40::new("seq_dolly_rnd_escape_f"));
+        let rand = sv_math::rand(hash40("fighter"), 2) as i32;
+        match rand {
+            0 => PLAY_SE(agent, Hash40::new("vc_dolly_escapef")),
+            _ => PLAY_SE(agent, Hash40::new("vc_dolly_escapeb")),
+        }
     }
 }
 
