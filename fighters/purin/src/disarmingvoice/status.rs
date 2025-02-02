@@ -144,12 +144,8 @@ unsafe extern "C" fn shoot_exec(weapon: &mut L2CWeaponCommon) -> L2CValue {
 }
 
 unsafe extern "C" fn shoot_end(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    EffectModule::kill_kind(
-        weapon.module_accessor,
-        Hash40::new("poke_meloetta_bullet"),
-        false,
-        false
-    );
+    EffectModule::kill_kind(weapon.module_accessor, Hash40::new("poke_meloetta_bullet"), false, false);
+    EffectModule::kill_kind(weapon.module_accessor, Hash40::new("rosetta_ring_erase"), false, false);
     return false.into();
 }
 

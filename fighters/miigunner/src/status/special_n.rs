@@ -244,15 +244,15 @@ pub unsafe extern "C" fn special_n1_fire_main_loop(fighter: &mut L2CFighterCommo
 pub unsafe extern "C" fn special_n3_loop_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_air_check_dive();
     if !StopModule::is_stop(fighter.module_accessor) {
-        sub_special_n3_loop(fighter, false);
+        sub_special_n3_loop(fighter, false.into());
     }
 
     fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(sub_special_n3_loop as *const () as _));
     fighter.main_shift(special_n3_loop_main_loop)
 }
 
-pub unsafe extern "C" fn sub_special_n3_loop(fighter: &mut L2CFighterCommon, param: bool) -> L2CValue {
-    if param {
+unsafe extern "C" fn sub_special_n3_loop(fighter: &mut L2CFighterCommon, param: L2CValue) -> L2CValue {
+    if param.get_bool() {
         fighter.inc_int(*FIGHTER_MIIGUNNER_STATUS_GRENADE_LAUNCHER_WORK_INT_HOLD_COUNT);
     }
     // else {
@@ -308,7 +308,7 @@ pub unsafe extern "C" fn special_n3_loop_main_loop(fighter: &mut L2CFighterCommo
     return 0.into();
 }
 
-// pub unsafe extern "C" fn special_n3_charge(fighter: &mut L2CFighterCommon) {
+// unsafe extern "C" fn special_n3_charge(fighter: &mut L2CFighterCommon) {
 //     let charge = VarModule::get_float(fighter.battle_object, vars::miigunner::status::ATTACK_CHARGE);
 //     let mut charge_start_frame = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_charge.special_n3_charge_start");
 //     let mut charge_end_frame = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_charge.special_n3_charge_end");

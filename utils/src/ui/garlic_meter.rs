@@ -84,9 +84,9 @@ impl GarlicMeter {
     }
 
     pub fn set_meter_info(&mut self, current: f32, level1: f32, level2: f32, level3: f32) {
-        if current % 1.0 == 0.0 {
-            dbg!(current);
-        }
+        // if current % 1.0 == 0.0 {
+        //     dbg!(current);
+        // }
         if current < level1 {
             self.actual_percentage = current / level1;
             self.level = 0;

@@ -29,9 +29,18 @@ unsafe extern "C" fn reflet_air_jump_aerial_uniq(fighter: &mut L2CFighterCommon)
     float_check_air_jump_aerial(fighter, statuses::reflet::FLOAT.into())
 }
 
+unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.is_situation(*SITUATION_KIND_GROUND) || fighter.is_situation(*SITUATION_KIND_CLIFF)
+    || fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_REBIRTH, *FIGHTER_STATUS_KIND_DEAD, *FIGHTER_STATUS_KIND_LANDING]) {
+        VarModule::off_flag(fighter.battle_object, vars::reflet::instance::SPECIAL_HI_ENABLE_FREEFALL);
+    }
+    true.into()
+}
+
 unsafe extern "C" fn reflet_on_start(fighter: &mut L2CFighterCommon) {
     fighter.global_table[0x32].assign(&L2CValue::Ptr(reflet_air_jump_uniq as *const () as _));
     fighter.global_table[0x33].assign(&L2CValue::Ptr(reflet_air_jump_aerial_uniq as *const () as _));
+    fighter.global_table[globals::STATUS_CHANGE_CALLBACK].assign(&L2CValue::Ptr(change_status_callback as *const () as _));
     VarModule::set_int(fighter.battle_object, vars::common::instance::FLOAT_STATUS_KIND, statuses::reflet::FLOAT);
 }
 
