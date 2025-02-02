@@ -65,20 +65,11 @@ unsafe extern "C" fn special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2C
             fighter.change_status(FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_LW_END.into(), false.into());
             return 0.into();
         }
-        if fighter.lr() <= 0.0 {
-            if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_RIGHT as u32) {
-                if fighter.is_flag(*FIGHTER_CAPTAIN_STATUS_WORK_ID_FLAG_FALCON_KICK_WALL_CHECK) {
-                    fighter.change_status(FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_LW_WALL_END.into(), false.into());
-                    return 0.into();
-                }
-            }
-        }
-        else {
-            if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_LEFT as u32) {
-                if fighter.is_flag(*FIGHTER_CAPTAIN_STATUS_WORK_ID_FLAG_FALCON_KICK_WALL_CHECK) {
-                    fighter.change_status(FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_LW_WALL_END.into(), false.into());
-                    return 0.into();
-                }
+        let touch_flag = if fighter.lr() <= 0.0 { *GROUND_TOUCH_FLAG_LEFT } else { *GROUND_TOUCH_FLAG_RIGHT };
+        if GroundModule::is_touch(fighter.module_accessor, touch_flag as u32) {
+            if fighter.is_flag(*FIGHTER_CAPTAIN_STATUS_WORK_ID_FLAG_FALCON_KICK_WALL_CHECK) {
+                fighter.change_status(FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_LW_WALL_END.into(), false.into());
+                return 0.into();
             }
         }
     }

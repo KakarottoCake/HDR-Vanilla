@@ -97,10 +97,9 @@ unsafe extern "C" fn special_s_exec(fighter: &mut L2CFighterCommon) -> L2CValue 
 
 unsafe extern "C" fn special_s_check_attack(fighter: &mut L2CFighterCommon, param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
     if fighter.is_motion_one_of(&[Hash40::new("special_s_1"), Hash40::new("special_air_s_1")]) {
-        let table = param_3.get_table() as *mut smash_rs::lib::L2CTable;
-        if utils::util::get_table_value(table, "object_category_").try_integer().unwrap() as i32 == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-            if utils::util::get_table_value(table, "kind_").try_integer().unwrap() as i32 == *COLLISION_KIND_HIT {
-                let object_id = utils::util::get_table_value(table, "object_id_").try_integer().unwrap() as u32;
+        if (&param_3["object_category_"]).get_i32() == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+            if (&param_3["kind_"]).get_i32() == *COLLISION_KIND_HIT {
+                let object_id = (&param_3["object_id_"]).get_u32();
                 let opponent_boma = sv_battle_object::module_accessor(object_id);
                 if StatusModule::situation_kind(opponent_boma) == *SITUATION_KIND_AIR {
                     let opponent_object = utils::util::get_battle_object_from_accessor(opponent_boma);

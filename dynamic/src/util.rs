@@ -258,17 +258,6 @@ pub unsafe fn get_controller_from_id(player: usize) -> &'static Controller {
     (*controller_struct).controller
 }
 
-pub unsafe fn get_table_value(table: *mut smash2::lib::L2CTable, key: &str) -> smash2::lib::L2CValue {
-    let hash = if key.starts_with("0x") {
-        smash2::phx::Hash40::from_hex_str(key).unwrap()
-    } 
-    else {
-        smash2::phx::hash40(key)
-    };
-    
-    return (*table).get_map(hash).unwrap().clone();
-}
-
 /// Triggers a match exit (all the way back to the stage select screen) by entering into the `StateExit` game state.
 /// Note: Calling this function otuside of a match shouldn't crash but it has undefined behavior. If you do that, don't
 pub fn trigger_match_exit() {

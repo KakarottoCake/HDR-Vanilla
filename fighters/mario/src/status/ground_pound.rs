@@ -22,7 +22,7 @@ unsafe extern "C" fn mario_ground_pound_start_pre(fighter: &mut L2CFighterCommon
         false,
         *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_KEEP as u64,
         0,
-        *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW as u32,
+        (*FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u32,
         0
     );
     return false.into();
@@ -75,7 +75,7 @@ unsafe extern "C" fn mario_ground_pound_fall_pre(fighter: &mut L2CFighterCommon)
         false,
         false,
         false,
-        (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_LW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64,
+        (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_LW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK) as u64,
         0,
         *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW as u32,
         0
@@ -144,7 +144,7 @@ unsafe extern "C" fn mario_ground_pound_end_pre(fighter: &mut L2CFighterCommon) 
         false,
         false,
         false,
-        (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_LW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64,
+        (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_LW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK) as u64,
         0,
         *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW as u32,
         0

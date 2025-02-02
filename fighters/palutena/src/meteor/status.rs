@@ -46,6 +46,7 @@ unsafe extern "C" fn move_init(weapon: &mut L2CWeaponCommon) -> L2CValue {
 unsafe extern "C" fn move_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
     MotionModule::change_motion(weapon.module_accessor, Hash40::new("move"), 0.0, 1.0, false, 0.0, false, false);
+    VarModule::on_flag(weapon.object(), vars::common::status::NO_POCKET);
     weapon.fastshift(L2CValue::Ptr(move_main_loop as *const () as _))
 }
 
