@@ -18,6 +18,7 @@ pub unsafe extern "C" fn start_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
 }
 
 pub unsafe extern "C" fn start_init(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    VarModule::on_flag(weapon.battle_object, vars::common::status::NO_POCKET);
     let owner = &mut *sv_battle_object::module_accessor((WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
 
     // Random angle between 300 and 100
@@ -63,7 +64,7 @@ unsafe extern "C" fn start_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
     WorkModule::dec_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     let life = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     if life < 0 {
-        StatusModule::change_status_force(weapon.module_accessor, ROCKSTONE_STATUS_KIND_MOVE, false);
+        StatusModule::change_status_force(weapon.module_accessor, statuses::plizardon_rockstone::MOVE, false);
         return 0.into();
     }
 
@@ -101,6 +102,7 @@ pub unsafe extern "C" fn move_init(weapon: &mut L2CWeaponCommon) -> L2CValue {
 }
 
 pub unsafe extern "C" fn move_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    VarModule::on_flag(weapon.battle_object, vars::common::status::NO_POCKET);
     let life = 16; //WorkModule::get_param_int(weapon.module_accessor, hash40("param_rockstone"), hash40("life"));
     WorkModule::set_int(weapon.module_accessor, life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
     WorkModule::set_int(weapon.module_accessor, life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
@@ -164,14 +166,14 @@ pub unsafe extern "C" fn rockstone_remove(weapon: &mut L2CWeaponCommon) {
 }
 
 pub fn install(agent: &mut Agent) {
-    agent.status(Pre, ROCKSTONE_STATUS_KIND_START, start_pre);
-    agent.status(Init, ROCKSTONE_STATUS_KIND_START, start_init);
-    agent.status(Main, ROCKSTONE_STATUS_KIND_START, start_main);
-    agent.status(End, ROCKSTONE_STATUS_KIND_START, move_end);
+    agent.status(Pre, statuses::plizardon_rockstone::START, start_pre);
+    agent.status(Init, statuses::plizardon_rockstone::START, start_init);
+    agent.status(Main, statuses::plizardon_rockstone::START, start_main);
+    agent.status(End, statuses::plizardon_rockstone::START, move_end);
 
-    agent.status(Pre, ROCKSTONE_STATUS_KIND_MOVE, move_pre);
-    agent.status(Init, ROCKSTONE_STATUS_KIND_MOVE, move_init);
-    agent.status(Main, ROCKSTONE_STATUS_KIND_MOVE, move_main);
-    agent.status(Exec, ROCKSTONE_STATUS_KIND_MOVE, move_exec);
-    agent.status(End, ROCKSTONE_STATUS_KIND_MOVE, move_end);
+    agent.status(Pre, statuses::plizardon_rockstone::MOVE, move_pre);
+    agent.status(Init, statuses::plizardon_rockstone::MOVE, move_init);
+    agent.status(Main, statuses::plizardon_rockstone::MOVE, move_main);
+    agent.status(Exec, statuses::plizardon_rockstone::MOVE, move_exec);
+    agent.status(End, statuses::plizardon_rockstone::MOVE, move_end);
 }

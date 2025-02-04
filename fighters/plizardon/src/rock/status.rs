@@ -89,8 +89,8 @@ unsafe extern "C" fn delete_if_orphaned(weapon: &mut L2CWeaponCommon) {
 }
 
 pub fn install(agent: &mut Agent) {
-    agent.status(Pre, ROCK_STATUS_KIND_START, start_pre);
-    agent.status(Main, ROCK_STATUS_KIND_START, start_main);
-    agent.status(Exec, ROCK_STATUS_KIND_START, start_exec);
-    agent.status(End, ROCK_STATUS_KIND_START, start_end);
+    agent.status(Pre, statuses::plizardon_rock::HAVED, start_pre);
+    agent.status(Main, statuses::plizardon_rock::HAVED, start_main);
+    agent.status(Exec, statuses::plizardon_rock::HAVED, start_exec);
+    agent.status(End, statuses::plizardon_rock::HAVED, start_end);
 }
