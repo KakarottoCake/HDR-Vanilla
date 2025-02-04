@@ -1,5 +1,22 @@
 use super::*;
 
+unsafe extern "C" fn game_specialnstart(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 3.0);
+    FT_MOTION_RATE_RANGE(agent, 3.0, 15.0, 6.0);
+    frame(lua_state, 15.0);
+    FT_MOTION_RATE(agent, 1.0);
+}
+
+unsafe extern "C" fn game_specialnend(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        ArticleModule::generate_article(boma, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SEED, false, -1);
+    }
+}
+
 unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -53,6 +70,15 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.acmd("game_specialnstart", game_specialnstart, Priority::Low);
+    agent.acmd("effect_specialnstart", acmd_stub, Priority::Low);
+    agent.acmd("game_specialairnstart", game_specialnstart, Priority::Low);
+    agent.acmd("effect_specialairnstart", acmd_stub, Priority::Low);
+    agent.acmd("game_specialn", acmd_stub, Priority::Low);
+    agent.acmd("game_specialairn", acmd_stub, Priority::Low);
+    agent.acmd("game_specialnend", game_specialnend, Priority::Low);
+    agent.acmd("game_specialairnend", game_specialnend, Priority::Low);
+
     agent.acmd("game_specials", game_specials, Priority::Low);
     agent.acmd("game_specialairs", game_specials, Priority::Low);
     

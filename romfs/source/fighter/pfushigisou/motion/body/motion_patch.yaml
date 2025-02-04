@@ -171,6 +171,12 @@ special_air_hi:
 special_hi:
   extra:
     cancel_frame: 58
+special_air_n_end:
+  extra:
+    cancel_frame: 38
+special_n_end:
+  extra:
+    cancel_frame: 38
 step_pose_back:
   extra:
     cancel_frame: 6

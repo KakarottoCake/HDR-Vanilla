@@ -2,12 +2,10 @@ use super::*;
 use globals::*;
 
 pub unsafe extern "C" fn move_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
-    let owner_boma = &mut *(*utils::util::get_battle_object_from_id(owner_id)).module_accessor;
-    let stick_x = owner_boma.stick_x();
-    KineticModule::clear_speed_all(weapon.module_accessor);
-    sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 1.0 * stick_x, 3.0);
-    sv_kinetic_energy!(set_accel, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -0.05);
+    let life = weapon.get_param_int("param_seed", "life");
+    weapon.set_int(life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    weapon.set_int(life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
+    let owner_boma = weapon.get_owner_boma();
     MotionModule::change_motion(weapon.module_accessor, Hash40::new("move"), 0.0, 1.0, false, 0.0, false, false);
     if !StopModule::is_stop(weapon.module_accessor) {
         WorkModule::dec_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
@@ -39,11 +37,19 @@ pub unsafe extern "C" fn move_init(weapon: &mut L2CWeaponCommon) -> L2CValue {
         //println!("ERROR: owner is not a Pokemon, things will probably crash without this failsafe");
         VarModule::set_int(weapon.battle_object, vars::pfushigisou_seed::instance::PLEDGE_TYPE, 2);
     }
+
+    let speed_x = owner_boma.stick_x() * 0.6;
+    let speed_y = weapon.get_param_float("param_seed", "shoot_speed_y");
+    sv_kinetic_energy!(reset_energy, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0, 0.0, 0.0, 0.0);
+    sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, speed_y);
+    sv_kinetic_energy!(set_accel, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -0.075);
+    KineticModule::enable_energy(weapon.module_accessor, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
     
     return 0.into();
 }
 
 pub unsafe extern "C" fn move_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    update_rot(weapon);
     if GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_ALL as u32) {
         weapon.change_status(WEAPON_PFUSHIGISOU_SEED_STATUS_KIND_CLASH_GROUND.into(), false.into());
         return 0.into();
@@ -57,6 +63,18 @@ pub unsafe extern "C" fn move_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValu
     }
 
     return 0.into();
+}
+
+pub unsafe extern "C" fn update_rot(weapon: &mut L2CWeaponCommon) {
+    weapon.clear_lua_stack();
+    weapon.push_lua_stack(&mut L2CValue::I32(*WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL));
+    let speed_x = app::sv_kinetic_energy::get_speed_x(weapon.lua_state_agent);
+    weapon.clear_lua_stack();
+    weapon.push_lua_stack(&mut L2CValue::I32(*WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL));
+    let speed_y = app::sv_kinetic_energy::get_speed_y(weapon.lua_state_agent);
+    let facing = weapon.lr();
+    let angle = speed_y.atan2(speed_x).to_degrees();
+    PostureModule::set_rot(weapon.module_accessor, &Vector3f::new(0.0, 0.0, angle - 90.0), 0);
 }
 
 // unsafe extern "C" fn clash_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
@@ -77,42 +95,36 @@ pub unsafe extern "C" fn move_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValu
 // }
 
 pub unsafe extern "C" fn clash_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    let pledge_type = VarModule::get_int(weapon.battle_object, vars::pfushigisou_seed::instance::PLEDGE_TYPE);
-    let motion = if pledge_type == 1 { Hash40::new("clash_pledge_w") } else { Hash40::new("clash_pledge_f") };
-    MotionModule::change_motion(weapon.module_accessor, motion, 0.0, 1.0, false, 0.0, false, false);
+    if VarModule::get_int(weapon.battle_object, vars::pfushigisou_seed::instance::PLEDGE_TYPE) == 1 {
+        // Water Pledge
+        MotionModule::change_motion(weapon.module_accessor, Hash40::new("clash_pledge_w"), 0.0, 1.0, false, 0.0, false, false);
+    }
+    else {
+        // Fire Pledge
+        EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_bomb_a"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.4, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
+        MotionModule::change_motion(weapon.module_accessor, Hash40::new("clash_pledge_f"), 0.0, 1.0, false, 0.0, false, false);
+    }
 
     weapon.fastshift(L2CValue::Ptr(clash_main_loop as *const () as _))
 }
 
-// unsafe extern "C" fn clash_main_substatus(weapon: &mut L2CWeaponCommon, param_1: L2CValue) -> L2CValue {
-//     if !param_1.get_bool() {
-//         weapon.dec_int(*WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-//     }
-
-//     return 0.into();
-// }
-
 pub unsafe extern "C" fn clash_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    // if weapon.get_int(*WEAPON_INSTANCE_WORK_ID_INT_LIFE) <= 0 {
-    //     notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
-    // }
-
     return 0.into();
 }
 
-// unsafe extern "C" fn clash_end(weapon: &mut L2CWeaponCommon) -> L2CValue {
-//     EffectModule::detach_kind(weapon.module_accessor, Hash40::new("pfushigisou_tanemg_tama"), 5);
-//     return 0.into();
-// }
-
 pub unsafe extern "C" fn clash_ground_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    if VarModule::get_int(weapon.battle_object, vars::pfushigisou_seed::instance::PLEDGE_TYPE) == 3 {
-        MotionModule::change_motion(weapon.module_accessor, Hash40::new("clash_pledge_f"), 0.0, 1.0, false, 0.0, false, false);
-        EffectModule::req(weapon.module_accessor, Hash40::new("sys_bomb_a"), &Vector3f::zero(), &Vector3f::zero(), 1.0, 0, -1, false, 0);
+    EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("pfushigisou_tanemg_hit"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.0, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
+    if VarModule::get_int(weapon.battle_object, vars::pfushigisou_seed::instance::PLEDGE_TYPE) == 1 {
+        // Water Pledge
+        MotionModule::change_motion(weapon.module_accessor, Hash40::new("clash_ground"), 0.0, 1.0, false, 0.0, false, false);
+        EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_splash"), Hash40::new("top"), &Vector3f::new(0.0, -2.0, 0.0), &Vector3f::zero(), 0.4, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
+        SoundModule::play_se(weapon.module_accessor, Hash40::new("se_common_water_hit_s"), true, false, false, false, enSEType(0));
     }
     else {
-        MotionModule::change_motion(weapon.module_accessor, Hash40::new("clash_ground"), 0.0, 1.0, false, 0.0, false, false);
-        EffectModule::req(weapon.module_accessor, Hash40::new("pfushigisou_tanemg_hit"), &Vector3f::zero(), &Vector3f::zero(), 1.0, 0, -1, false, 0);
+        // Fire Pledge
+        MotionModule::change_motion(weapon.module_accessor, Hash40::new("clash_pledge_f"), 0.0, 1.0, false, 0.0, false, false);
+        EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_bomb_a"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.4, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
+        SoundModule::play_se(weapon.module_accessor, Hash40::new("se_common_bomb_s"), true, false, false, false, enSEType(0)); 
     }
     VisibilityModule::set_whole(weapon.module_accessor, false);
 
@@ -120,11 +132,6 @@ pub unsafe extern "C" fn clash_ground_main(weapon: &mut L2CWeaponCommon) -> L2CV
 }
 
 pub unsafe extern "C" fn clash_ground_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    if VarModule::get_int(weapon.battle_object, vars::pfushigisou_seed::instance::PLEDGE_TYPE) != 3 {
-        if weapon.global_table[CURRENT_FRAME].get_i32() == 2 {
-            notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
-        }
-    }
     return 0.into();
 }
 

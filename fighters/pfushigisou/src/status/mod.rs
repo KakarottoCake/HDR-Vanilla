@@ -3,6 +3,7 @@ use globals::*;
 // status script import
 
 mod special_lw;
+mod special_n;
 
 unsafe extern "C" fn entry_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let parent_id = LinkModule::get_parent_id(fighter.module_accessor, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
@@ -37,4 +38,5 @@ pub fn install(agent: &mut Agent) {
     agent.status(Main, *FIGHTER_STATUS_KIND_REBIRTH, rebirth_main);
 
     special_lw::install(agent);
+    special_n::install(agent);
 }
