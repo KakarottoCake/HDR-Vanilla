@@ -171,11 +171,12 @@ special_air_s3_1:
     cancel_frame: 41
 special_hi1_start:
   extra:
-    intangible_start_frame: 6
+    xlu_start: 0
+    xlu_end: 0
 special_air_hi1_start:
   extra:
-    intangible_start_frame: 0
-    intangible_end_frame: 0
+    xlu_start: 0
+    xlu_end: 0
 special_air_s3_1_hi:
   extra:
     cancel_frame: 41

@@ -916,6 +916,218 @@ unsafe extern "C" fn game_specialairlw(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, 0.75);
 }
 
+unsafe extern "C" fn game_attackragedrive(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if !WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ATTACK_RAGE_CAPTURE) {
+        // command input
+        sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.8);
+        FighterSpecializer_Demon::set_devil(boma, true, 10.0);
+        FT_MOTION_RATE(agent, 0.7);
+        if is_excute(agent) {
+            ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 5.0, 70, 30, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_BODY);
+        }
+        frame(lua_state, 3.0);
+        if is_excute(agent) {
+            damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 15.0);
+        }
+        frame(lua_state, 10.0);
+        FT_MOTION_RATE(agent, 1.0);
+        frame(lua_state, 11.0);
+        if is_excute(agent) {
+            GrabModule::set_rebound(boma, true);
+        }
+        frame(lua_state, 12.0);
+        if is_excute(agent) {
+            CATCH(agent, 0, Hash40::new("top"), 5.0, 0.0, 8.0, 5.0, None, None, None, *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
+            CATCH(agent, 1, Hash40::new("top"), 4.5, 0.0, 6.0, 8.5, None, None, None, *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
+            CATCH(agent, 2, Hash40::new("top"), 4.0, 0.0, 8.0, 5.0, None, None, None, *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_A);
+            CATCH(agent, 3, Hash40::new("top"), 3.5, 0.0, 6.0, 8.5, None, None, None, *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_A);
+            GrabModule::set_constraint(boma, 0, true);
+            GrabModule::set_constraint(boma, 1, true);
+            GrabModule::set_constraint(boma, 2, true);
+            GrabModule::set_constraint(boma, 3, true);
+        }
+        frame(lua_state, 13.0);
+        if is_excute(agent) {
+            damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
+            CATCH(agent, 0, Hash40::new("top"), 5.0, 0.0, 9.5, 5.0, None, None, None, *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
+            CATCH(agent, 1, Hash40::new("top"), 4.5, 0.0, 8.5, 12.0, None, None, None, *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
+            CATCH(agent, 2, Hash40::new("top"), 4.0, 0.0, 9.5, 5.0, None, None, None, *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_A);
+            CATCH(agent, 3, Hash40::new("top"), 3.5, 0.0, 8.5, 12.0, None, None, None, *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_A);
+            GrabModule::set_constraint(boma, 0, true);
+            GrabModule::set_constraint(boma, 1, true);
+            GrabModule::set_constraint(boma, 2, true);
+            GrabModule::set_constraint(boma, 3, true);
+        }
+        frame(lua_state, 14.0);
+        if is_excute(agent) {
+            CATCH(agent, 0, Hash40::new("top"), 5.0, 0.0, 14.0, 5.0, Some(0.0), Some(9.5), Some(5.0), *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
+            CATCH(agent, 1, Hash40::new("top"), 4.5, 0.0, 19.0, 9.0, Some(0.0), Some(8.5), Some(12.0), *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
+            CATCH(agent, 2, Hash40::new("top"), 4.0, 0.0, 14.0, 5.0, Some(0.0), Some(9.5), Some(5.0), *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_A);
+            CATCH(agent, 3, Hash40::new("top"), 3.5, 0.0, 21.0, 8.5, Some(0.0), Some(8.5), Some(12.0), *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_A);
+            GrabModule::set_constraint(boma, 0, true);
+            GrabModule::set_constraint(boma, 1, true);
+            GrabModule::set_constraint(boma, 2, true);
+            GrabModule::set_constraint(boma, 3, true);
+        }
+        frame(lua_state, 15.0);
+        if is_excute(agent) {
+            CATCH(agent, 0, Hash40::new("top"), 5.0, 0.0, 14.0, 5.0, Some(0.0), Some(9.5), Some(5.0), *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
+            CATCH(agent, 1, Hash40::new("top"), 4.5, 0.0, 22.0, 7.0, Some(0.0), Some(8.5), Some(10.0), *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
+            CATCH(agent, 2, Hash40::new("top"), 4.0, 0.0, 14.0, 5.0, Some(0.0), Some(9.5), Some(5.0), *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_A);
+            CATCH(agent, 3, Hash40::new("top"), 3.5, 0.0, 24.0, 6.5, Some(0.0), Some(8.5), Some(10.0), *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_A);
+            GrabModule::set_constraint(boma, 0, true);
+            GrabModule::set_constraint(boma, 1, true);
+            GrabModule::set_constraint(boma, 2, true);
+            GrabModule::set_constraint(boma, 3, true);
+        }
+        frame(lua_state, 16.0);
+        if is_excute(agent) {
+            grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
+            GrabModule::set_rebound(boma, false);
+        }
+        frame(lua_state, 38.0);
+        FT_MOTION_RATE(agent, 1.3);
+        frame(lua_state, 52.0);
+        FighterSpecializer_Demon::set_devil(boma, false, 0.0);
+    }
+    else {
+        // no input
+        FighterSpecializer_Demon::set_devil(boma, true, 10.0);
+        if is_excute(agent) {
+            ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 5.0, 70, 30, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_BODY);
+        }
+        frame(lua_state, 4.0);
+        if is_excute(agent) {
+            damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 10.0);
+        }
+        frame(lua_state, 12.0);
+        if is_excute(agent) {
+            GrabModule::set_rebound(boma, true);
+        }
+        frame(lua_state, 13.0);
+        if is_excute(agent) {
+            damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
+            CATCH(agent, 0, Hash40::new("top"), 5.0, 0.0, 9.5, 5.0, None, None, None, *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
+            CATCH(agent, 1, Hash40::new("top"), 4.5, 0.0, 8.5, 12.0, None, None, None, *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
+            CATCH(agent, 2, Hash40::new("top"), 4.0, 0.0, 9.5, 5.0, None, None, None, *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_A);
+            CATCH(agent, 3, Hash40::new("top"), 3.5, 0.0, 8.5, 12.0, None, None, None, *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_A);
+            GrabModule::set_constraint(boma, 0, true);
+            GrabModule::set_constraint(boma, 1, true);
+            GrabModule::set_constraint(boma, 2, true);
+            GrabModule::set_constraint(boma, 3, true);
+        }
+        frame(lua_state, 14.0);
+        if is_excute(agent) {
+            CATCH(agent, 0, Hash40::new("top"), 5.0, 0.0, 14.0, 5.0, Some(0.0), Some(9.5), Some(5.0), *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
+            CATCH(agent, 1, Hash40::new("top"), 4.5, 0.0, 19.0, 9.0, Some(0.0), Some(8.5), Some(12.0), *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
+            CATCH(agent, 2, Hash40::new("top"), 4.0, 0.0, 14.0, 5.0, Some(0.0), Some(9.5), Some(5.0), *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_A);
+            CATCH(agent, 3, Hash40::new("top"), 3.5, 0.0, 21.0, 8.5, Some(0.0), Some(8.5), Some(12.0), *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_A);
+            GrabModule::set_constraint(boma, 0, true);
+            GrabModule::set_constraint(boma, 1, true);
+            GrabModule::set_constraint(boma, 2, true);
+            GrabModule::set_constraint(boma, 3, true);
+        }
+        frame(lua_state, 15.0);
+        if is_excute(agent) {
+            grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
+            GrabModule::set_rebound(boma, false);
+        }
+        frame(lua_state, 38.0);
+        FT_MOTION_RATE(agent, 1.3);
+        frame(lua_state, 52.0);
+        FighterSpecializer_Demon::set_devil(boma, false, 0.0);
+    }
+}
+
+unsafe extern "C" fn game_attackragedriveground(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if !WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ATTACK_RAGE_CAPTURE) {
+        // command input
+        FighterSpecializer_Demon::set_devil(boma, true, 2.0);
+        if is_excute(agent) {
+            WHOLE_HIT(agent, *HIT_STATUS_INVINCIBLE);
+        }
+        frame(lua_state, 1.0);
+        if is_excute(agent) {
+            WorkModule::set_int(boma, *HIT_STATUS_NORMAL, *FIGHTER_DEMON_STATUS_ATTACK_RAGE_DRIVE_INT_TARGET_HIT_STATUS);
+            ATTACK(agent, 0, 0, Hash40::new("top"), 13.0, 100, 100, 100, 50, 6.5, 0.0, 1.0, 5.0, Some(10.0), Some(1.0), Some(5.0), 1.5, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 4, false, false, false, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_PUNCH);
+            AttackModule::set_no_dead_all(boma, true, false);
+            AttackModule::set_catch_only_all(boma, true, false);
+            ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 16.0, 60, 95, 0, 55, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_PUNCH);
+            AttackModule::set_attack_camera_quake_forced(boma, 0, *CAMERA_QUAKE_KIND_NONE, true);
+            AttackModule::set_no_finish_camera(boma, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, true, true);
+            ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 5.0, 70, 30, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_PUNCH);
+            ATTACK_IGNORE_THROW(agent, 1, 0, Hash40::new("top"), 18.0, 361, 80, 0, 80, 7.5, 0.0, 7.5, -10.0, Some(0.0), Some(7.5), Some(14.0), 0.8, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEMON_KICK, *ATTACK_REGION_PUNCH);
+            AttackModule::set_no_finish_camera(boma, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, true, true);
+        }
+        frame(lua_state, 2.0);
+        if is_excute(agent) {
+            WorkModule::off_flag(boma, *FIGHTER_DEMON_STATUS_SPECIAL_LW_FLAG_CHECK_DAMAGE);
+            AttackModule::clear_all(boma);
+            WorkModule::on_flag(boma, *FIGHTER_DEMON_STATUS_SPECIAL_LW_FLAG_HIT);
+            CAM_ZOOM_OUT(agent);
+        }
+        frame(lua_state, 4.0);
+        if is_excute(agent) {
+            WHOLE_HIT(agent, *HIT_STATUS_NORMAL);
+        }
+        frame(lua_state, 35.0);
+        FighterSpecializer_Demon::set_devil(boma, true, 3.0);
+        frame(lua_state, 38.0);
+        FighterSpecializer_Demon::set_devil(boma, true, 4.0);
+        frame(lua_state, 40.0);
+        FighterSpecializer_Demon::set_devil(boma, true, 5.0);
+        frame(lua_state, 41.0);
+        FighterSpecializer_Demon::set_devil(boma, true, 6.0);
+        frame(lua_state, 42.0);
+        FighterSpecializer_Demon::set_devil(boma, false, 0.0);
+    }
+    else {
+        // no input
+        FighterSpecializer_Demon::set_devil(boma, true, 2.0);
+        if is_excute(agent) {
+            WHOLE_HIT(agent, *HIT_STATUS_INVINCIBLE);
+        }
+        frame(lua_state, 1.0);
+        if is_excute(agent) {
+            WorkModule::set_int(boma, *HIT_STATUS_NORMAL, *FIGHTER_DEMON_STATUS_ATTACK_RAGE_DRIVE_INT_TARGET_HIT_STATUS);
+            ATTACK(agent, 0, 0, Hash40::new("top"), 11.5, 100, 100, 100, 50, 6.5, 0.0, 1.0, 5.0, Some(10.0), Some(1.0), Some(5.0), 1.4, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 4, false, false, false, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_PUNCH);
+            AttackModule::set_no_dead_all(boma, true, false);
+            AttackModule::set_catch_only_all(boma, true, false);
+            ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 13.0, 60, 95, 0, 67, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_PUNCH);
+            AttackModule::set_attack_camera_quake_forced(boma, 0, *CAMERA_QUAKE_KIND_NONE, true);
+            AttackModule::set_no_finish_camera(boma, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, true, true);
+            ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 5.0, 70, 30, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_PUNCH);
+            ATTACK_IGNORE_THROW(agent, 1, 0, Hash40::new("top"), 15.0, 361, 80, 0, 80, 5.0, 0.0, 5.0, -8.5, Some(0.0), Some(5.0), Some(12.5), 0.8, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEMON_KICK, *ATTACK_REGION_PUNCH);
+            AttackModule::set_no_finish_camera(boma, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, true, true);
+        }
+        frame(lua_state, 2.0);
+        if is_excute(agent) {
+            WorkModule::off_flag(boma, *FIGHTER_DEMON_STATUS_SPECIAL_LW_FLAG_CHECK_DAMAGE);
+            AttackModule::clear_all(boma);
+            WorkModule::on_flag(boma, *FIGHTER_DEMON_STATUS_SPECIAL_LW_FLAG_HIT);
+            CAM_ZOOM_OUT(agent);
+        }
+        frame(lua_state, 4.0);
+        if is_excute(agent) {
+            WHOLE_HIT(agent, *HIT_STATUS_NORMAL);
+        }
+        frame(lua_state, 35.0);
+        FighterSpecializer_Demon::set_devil(boma, true, 3.0);
+        frame(lua_state, 38.0);
+        FighterSpecializer_Demon::set_devil(boma, true, 4.0);
+        frame(lua_state, 40.0);
+        FighterSpecializer_Demon::set_devil(boma, true, 5.0);
+        frame(lua_state, 41.0);
+        FighterSpecializer_Demon::set_devil(boma, true, 6.0);
+        frame(lua_state, 42.0);
+        FighterSpecializer_Demon::set_devil(boma, false, 0.0);
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_attackstep", game_attackstep, Priority::Low);
     agent.acmd("game_attackstep2", game_attackstep2, Priority::Low);
@@ -923,14 +1135,20 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_attackstep2fhitshield", game_attackstep2fhitshield, Priority::Low);
     agent.acmd("game_attackstep2s", game_attackstep2s, Priority::Low);
     agent.acmd("game_attackstep2l", game_attackstep2l, Priority::Low);
+
     agent.acmd("game_specials", game_specials, Priority::Low);
     agent.acmd("game_specialsend", game_specialsend, Priority::Low);
     agent.acmd("game_specialairs", game_specialairs, Priority::Low);
     agent.acmd("game_specialairsend", game_specialairsend, Priority::Low);
+
     agent.acmd("game_specialhi", game_specialhi, Priority::Low);
     agent.acmd("game_specialhiair", game_specialhiair, Priority::Low);
     agent.acmd("effect_specialhistart", effect_specialhistart, Priority::Low);
     agent.acmd("effect_specialairhistart", effect_specialhistart, Priority::Low);
+
     agent.acmd("game_speciallw", game_speciallw, Priority::Low);
     agent.acmd("game_specialairlw", game_specialairlw, Priority::Low);
+
+    agent.acmd("game_attackragedrive", game_attackragedrive, Priority::Low);
+    agent.acmd("game_attackragedriveground", game_attackragedriveground, Priority::Low);
 }

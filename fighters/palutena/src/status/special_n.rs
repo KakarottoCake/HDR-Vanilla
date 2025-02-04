@@ -232,7 +232,7 @@ unsafe extern "C" fn special_n_main_loop_common(fighter: &mut L2CFighterCommon, 
             return 1.into();
         }
     }
-
+    fighter.sub_air_check_dive();
     if !StatusModule::is_changing(fighter.module_accessor)
     && StatusModule::is_situation_changed(fighter.module_accessor) {
         palutena_special_n_momentum_helper(fighter, false.into());
@@ -356,6 +356,33 @@ unsafe extern "C" fn special_n_o_main_loop(fighter: &mut L2CFighterCommon) -> L2
 }
 
 // green: spin attack
+unsafe extern "C" fn special_n_g_init(fighter: &mut L2CFighterCommon) -> L2CValue {
+    palutena_special_n_momentum_helper(fighter, true.into());
+
+    let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, 0.0, 0.0, 0.0, 0.0);
+    sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y);
+    if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+        sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
+    }
+    KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+
+    let air_speed_x_stable = WorkModule::get_param_float(fighter.module_accessor, hash40("air_speed_x_stable"), 0);
+    let air_accel_x_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_x_mul"), 0);
+    let air_accel_x_add = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_x_add"), 0);
+    sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, ENERGY_CONTROLLER_RESET_TYPE_FALL_ADJUST, 0.0, 0.0, 0.0, 0.0, 0.0);
+    sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.0, 0.0);
+    sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, air_speed_x_stable * 0.4, 0.0);
+    sv_kinetic_energy!(controller_set_accel_x_mul, fighter, air_accel_x_mul);
+    sv_kinetic_energy!(controller_set_accel_x_add, fighter, air_accel_x_add);
+    KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+
+    sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.0, 0.0);
+    KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_MOTION);
+
+    return 0.into();
+}
+
 unsafe extern "C" fn special_n_g_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     special_n_main_common(fighter, hash40("special_n_g"), hash40("special_air_n_g"));
 
@@ -363,7 +390,22 @@ unsafe extern "C" fn special_n_g_main(fighter: &mut L2CFighterCommon) -> L2CValu
 }
 
 unsafe extern "C" fn special_n_g_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    special_n_main_loop_common(fighter, hash40("special_n_g"), hash40("special_air_n_g"))
+    special_n_main_loop_common(fighter, hash40("special_n_g"), hash40("special_air_n_g"));
+    if fighter.is_situation(*SITUATION_KIND_AIR) {
+        let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+        if speed_y < 0.0 {
+            let speed_y_stable = fighter.get_param_float("air_speed_y_stable", "");
+            let accel_y = fighter.get_param_float("air_accel_y", "");
+            if speed_y.abs() > speed_y_stable * 0.5 {
+                sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -speed_y_stable * 0.5);
+            }
+            sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -accel_y * 0.5);
+            sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y_stable * 0.5);
+            sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y_stable * 0.5);
+        }
+    }
+
+    return 0.into();
 }
 
 unsafe extern "C" fn special_n_g_end(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -408,7 +450,7 @@ pub fn install(agent: &mut Agent) {
     agent.status(End, statuses::palutena::SPECIAL_N_O, special_n_end_common);
 
     agent.status(Pre, statuses::palutena::SPECIAL_N_G, special_n_color_pre);
-    agent.status(Init, statuses::palutena::SPECIAL_N_G, palutena_special_n_init_common);
+    agent.status(Init, statuses::palutena::SPECIAL_N_G, special_n_g_init);
     agent.status(Main, statuses::palutena::SPECIAL_N_G, special_n_g_main);
     agent.status(End, statuses::palutena::SPECIAL_N_G, special_n_g_end);
     agent.status(Exit, statuses::palutena::SPECIAL_N_G, special_n_g_exit);

@@ -160,12 +160,17 @@ unsafe extern "C" fn sound_attackdash(agent: &mut L2CAgentBase) {
     frame(lua_state, 4.0);
     if is_excute(agent) {
         PLAY_STATUS(agent, Hash40::new("se_dolly_attackair_f01"));
-        PLAY_SEQUENCE(agent, Hash40::new("seq_dolly_rnd_attack_s"));
+        let rand = sv_math::rand(hash40("fighter"), 4) as i32;
+        match rand {
+            0 => PLAY_SE(agent, Hash40::new("vc_dolly_attack02")),
+            1 => PLAY_SE(agent, Hash40::new("vc_dolly_attack05")),
+            2 => PLAY_SE(agent, Hash40::new("vc_dolly_attackdash_02")),
+            _ => {},
+        }
     }
     frame(lua_state, 16.0);
     if is_excute(agent) {
         PLAY_STATUS(agent, Hash40::new("se_dolly_attackair_h01"));
-        PLAY_SEQUENCE(agent, Hash40::new("seq_dolly_rnd_attackdash"));
     }
 }
 

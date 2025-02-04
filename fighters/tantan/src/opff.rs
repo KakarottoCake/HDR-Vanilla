@@ -55,9 +55,9 @@ unsafe fn arms_switch_during_normals(boma: &mut BattleObjectModuleAccessor) {
 }
 
 unsafe fn double_dragon(boma: &mut BattleObjectModuleAccessor) {
-    let dragonEffect = VarModule::get_int(boma.object(),vars::tantan::instance::ARMR_DRAGONIZE_EFFECT_HANDLE) as u32;
-    let armType =  WorkModule::get_int(boma, *FIGHTER_TANTAN_INSTANCE_WORK_ID_INT_PUNCH_KIND_R);
     if WorkModule::is_flag(boma, *FIGHTER_TANTAN_INSTANCE_WORK_ID_FLAG_DRAGONIZE_L) {
+        let dragonEffect = VarModule::get_int(boma.object(),vars::tantan::instance::ARMR_DRAGONIZE_EFFECT_HANDLE) as u32;
+        let armType =  WorkModule::get_int(boma, *FIGHTER_TANTAN_INSTANCE_WORK_ID_INT_PUNCH_KIND_R);
         let bigScale = WorkModule::get_param_float(boma,hash40("param_private"),hash40("arm_l_big_scale"));
         ModelModule::set_joint_scale(boma, Hash40::new("pr1_have"), &Vector3f::new(bigScale, bigScale, bigScale));
 
@@ -66,14 +66,15 @@ unsafe fn double_dragon(boma: &mut BattleObjectModuleAccessor) {
             VarModule::set_int(boma.object(),vars::tantan::instance::ARMR_DRAGONIZE_EFFECT_HANDLE,handle as i32);
         }
         else if !ArticleModule::is_exist(boma, *FIGHTER_TANTAN_GENERATE_ARTICLE_SPIRALRIGHT)
-        && armType==0 {
+        && armType == 0 {
             EffectModule::set_scale(boma, dragonEffect, &Vector3f::new(1.0, 1.0, 1.0));
         }
         else{
             EffectModule::set_scale(boma, dragonEffect, &Vector3f::zero());
         }
     }
-    else{
+    else {
+        let dragonEffect = VarModule::get_int(boma.object(),vars::tantan::instance::ARMR_DRAGONIZE_EFFECT_HANDLE) as u32;
         ModelModule::set_joint_scale(boma, Hash40::new("pr1_main"), &Vector3f::new(1.0, 1.0, 1.0));
         if dragonEffect > 0 {
             EffectModule::kill(boma, dragonEffect, false,false);

@@ -27,16 +27,21 @@ unsafe extern "C" fn effect_specialno(agent: &mut L2CAgentBase) {
         LAST_EFFECT_SET_COLOR(agent, 0.8, 0.2, 0.01);
         EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light2"), Hash40::new("stick"), 0, 8.65, 0, 0, 0, 0, 1, true);
         LAST_EFFECT_SET_COLOR(agent, 0.8, 0.2, 0.01);
-        EFFECT(agent, Hash40::new("palutena_throw_twinkle"), Hash40::new("top"), 0.0, 16.0, -8.0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, true);
+        EFFECT_FOLLOW(agent, Hash40::new("palutena_throw_twinkle"), Hash40::new("top"), 0.0, 12.0, 6.0, 0, 0, 0, 0.7, true);
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("palutena_mirror_break"), Hash40::new("top"), 0.0, 16.0, -8.0, 0, 0, 0, 0.225, 0, 0, 0, 0, 0, 0, true);
+        EFFECT_FOLLOW(agent, Hash40::new("palutena_mirror_break"), Hash40::new("top"), 0.0, 12.0, 6.0, 0, 0, 0, 0.2, true);
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_ALPHA(agent, Hash40::new("palutena_backlight"), Hash40::new("top"), -1, 21, 1, 0, 90, 0, 1, true, 0.7);
         LAST_EFFECT_SET_COLOR(agent, 0.8, 0.2, 0.01);
+    }
+    frame(lua_state, 13.0);
+    if is_excute(agent) {
+        EFFECT_DETACH_KIND(agent, Hash40::new("palutena_throw_twinkle"), 0);
+        EFFECT_DETACH_KIND(agent, Hash40::new("palutena_mirror_break"), 0);
     }
     frame(lua_state, 35.0);
     if is_excute(agent) {
