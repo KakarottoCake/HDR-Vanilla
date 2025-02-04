@@ -142,11 +142,13 @@ unsafe extern "C" fn game_specialsstart(agent: &mut L2CAgentBase) {
         JostleModule::set_team(boma, 1);
     }
     frame(lua_state, 10.0);
+    FT_MOTION_RATE(agent, 2.0);
     if is_excute(agent) {
         HIT_NODE(agent, Hash40::new("handr"), *HIT_STATUS_XLU);
         HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_XLU);
     }
     frame(lua_state, 12.0);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         ATTACK(agent, 1, 0, Hash40::new("top"), 0.0, 361, 0, 0, 0, 4.0, 0.0, 12.0, 7.0, Some(0.0), Some(5.0), Some(7.5), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_search"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
         WorkModule::on_flag(boma, *FIGHTER_CAPTAIN_STATUS_WORK_ID_FLAG_FALCON_KNUCKLE_HIT_CHECK_ONOFF);
@@ -333,8 +335,6 @@ unsafe extern "C" fn game_specialhithrow(agent: &mut L2CAgentBase) {
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 13.0, 50, 62, 0, 85, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_THROW);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 8.0, 0, 10, 0, 100, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_THROW);
         CHECK_FINISH_CAMERA(agent, 2, 1);
-        lua_bind::FighterCutInManager::set_throw_finish_zoom_rate(singletons::FighterCutInManager(), 1.3);
-        lua_bind::FighterCutInManager::set_throw_finish_offset(singletons::FighterCutInManager(), Vector3f{x: 5.0, y: 3.0, z: 0.0});
     }
     frame(lua_state, 2.0);
     if is_excute(agent) {

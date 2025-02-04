@@ -73,10 +73,13 @@ unsafe fn nayru_land_cancel(boma: &mut BattleObjectModuleAccessor) {
 /// Handles land canceling when airborne
 unsafe fn dins_fire_cancels(boma: &mut BattleObjectModuleAccessor){
     if boma.is_status(*FIGHTER_ZELDA_STATUS_KIND_SPECIAL_S_END) {
-        if boma.is_situation(*SITUATION_KIND_GROUND) {
-            if StatusModule::prev_situation_kind(boma) == *SITUATION_KIND_AIR {
-                WorkModule::set_float(boma, 7.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
-                boma.change_status_req(*FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, false);
+        if boma.is_situation(*SITUATION_KIND_GROUND) && StatusModule::is_situation_changed(boma) {
+            let cancel_frame = FighterMotionModuleImpl::get_cancel_frame(boma, Hash40::new("special_s_end"), true);
+            let end_frame = MotionModule::end_frame_from_hash(boma, "landing_heavy".to_hash());
+            let landing_lag = ParamModule::get_float(boma.object(), ParamType::Agent, "param_special_s.landing_lag");
+            let motion_rate = (end_frame-3.0)/landing_lag;
+            if MotionModule::frame(boma) < cancel_frame-landing_lag { //lc if arm is moving and not actionable
+                MotionModule::change_motion(boma, "landing_heavy".to_hash(), 3.0, motion_rate, false, 0.0, false, false);
             }
         }
     }

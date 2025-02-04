@@ -2,6 +2,7 @@
 #![allow(unused)]
 #![allow(non_snake_case)]
 #![allow(improper_ctypes)]
+#![allow(static_mut_refs)]
 #![feature(repr_simd)]
 #![feature(simd_ffi)]
 use smash::app::lua_bind::*;

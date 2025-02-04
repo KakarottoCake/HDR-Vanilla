@@ -3,10 +3,10 @@ utils::import_noreturn!(common::opff::fighter_common_opff);
 use super::*;
 use globals::*;
  
-unsafe fn nspecial_cancels(boma: &mut BattleObjectModuleAccessor, status_kind: i32, situation_kind: i32) {
+unsafe fn nspecial_cancels(boma: &mut BattleObjectModuleAccessor) {
     //PM-like neutral-b canceling
-    if status_kind == *FIGHTER_REFLET_STATUS_KIND_SPECIAL_N_CANCEL {
-        if situation_kind == *SITUATION_KIND_AIR {
+    if boma.is_status(*FIGHTER_REFLET_STATUS_KIND_SPECIAL_N_CANCEL) {
+        if boma.is_situation(*SITUATION_KIND_AIR) {
             if WorkModule::get_int(boma, *FIGHTER_REFLET_STATUS_SPECIAL_N_HOLD_INT_NEXT_STATUS) == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
                 WorkModule::set_int(boma, *STATUS_KIND_NONE, *FIGHTER_REFLET_STATUS_SPECIAL_N_HOLD_INT_NEXT_STATUS);
                 ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_AIR_ESCAPE);
@@ -22,6 +22,7 @@ unsafe fn nspecial_cancels(boma: &mut BattleObjectModuleAccessor, status_kind: i
     }
 }
 
+// move to hi_main
 unsafe fn elwind_cost(fighter: &mut L2CFighterCommon) {
     //cost of each elwind 1 -> 2
     //if fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_REFLET_STATUS_KIND_SPECIAL_HI_2]) 
@@ -35,6 +36,7 @@ unsafe fn elwind_cost(fighter: &mut L2CFighterCommon) {
 }
 
 unsafe fn levin_leniency(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
+    // move to attack_air
     if boma.is_motion_one_of(&[
         Hash40::new("attack_air_n"),
         Hash40::new("attack_air_f"),
@@ -75,13 +77,7 @@ unsafe fn sword_length(boma: &mut BattleObjectModuleAccessor) {
 
 // upB freefalls after one use per airtime
 unsafe fn up_special_freefall(fighter: &mut L2CFighterCommon) {
-    if StatusModule::is_changing(fighter.module_accessor)
-    && (fighter.is_situation(*SITUATION_KIND_GROUND)
-        || fighter.is_situation(*SITUATION_KIND_CLIFF)
-        || fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_REBIRTH, *FIGHTER_STATUS_KIND_DEAD, *FIGHTER_STATUS_KIND_LANDING]))
-    {
-        VarModule::off_flag(fighter.battle_object, vars::reflet::instance::SPECIAL_HI_ENABLE_FREEFALL);
-    }
+    // move to hi_end
     if fighter.is_prev_status(*FIGHTER_STATUS_KIND_SPECIAL_HI) {
         if StatusModule::is_changing(fighter.module_accessor) {
             VarModule::on_flag(fighter.battle_object, vars::reflet::instance::SPECIAL_HI_ENABLE_FREEFALL);
@@ -123,8 +119,8 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     }
 }
 
-pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
-    nspecial_cancels(boma, status_kind, situation_kind);
+pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
+    nspecial_cancels(boma);
     elwind_cost(fighter);
     levin_leniency(fighter, boma);
     sword_length(boma);
@@ -141,7 +137,7 @@ pub extern "C" fn reflet_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterC
 
 pub unsafe fn reflet_frame(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
     if let Some(info) = FrameInfo::update_and_get(fighter) {
-        moveset(fighter, &mut *info.boma, info.id, info.cat, info.status_kind, info.situation_kind, info.motion_kind.hash, info.stick_x, info.stick_y, info.facing, info.frame);
+        moveset(fighter, &mut *info.boma);
     }
 }
 

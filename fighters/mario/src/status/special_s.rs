@@ -45,6 +45,8 @@ unsafe extern "C" fn special_s_motion_helper(fighter: &mut L2CFighterCommon) {
     if fighter.global_table[SITUATION_KIND] != SITUATION_KIND_GROUND {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         fighter.sub_fighter_cliff_check(GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES.into());
+        EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_whirlwind_l"), false, false);
+        EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_whirlwind_r"), false, false);
         if fighter.is_flag(*FIGHTER_MARIO_STATUS_SPECIAL_S_FLAG_CONTINUE) {
             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_s"), -1.0, 1.0, 0.0, false, false);
         } else {
@@ -111,12 +113,6 @@ unsafe extern "C" fn special_s_main(fighter: &mut L2CFighterCommon) -> L2CValue 
 }
 
 unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if !StatusModule::is_changing(fighter.module_accessor)
-    && StatusModule::is_situation_changed(fighter.module_accessor) {
-        special_s_motion_helper(fighter);
-        special_s_kinetic_helper(fighter);
-    }
-    
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return true.into();
     }
@@ -137,6 +133,12 @@ unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         }
     }
+    if !StatusModule::is_changing(fighter.module_accessor)
+    && StatusModule::is_situation_changed(fighter.module_accessor) {
+        special_s_motion_helper(fighter);
+        special_s_kinetic_helper(fighter);
+    }
+    
     return false.into();
 }
 

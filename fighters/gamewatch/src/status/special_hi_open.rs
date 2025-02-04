@@ -1,7 +1,5 @@
 use super::*;
 
-// statuses::gamewatch::SPECIAL_HI_OPEN
-
 unsafe extern "C" fn special_hi_open_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(
         fighter.module_accessor,
@@ -28,7 +26,7 @@ unsafe extern "C" fn special_hi_open_pre(fighter: &mut L2CFighterCommon) -> L2CV
         0
     );
 
-    0.into()
+    return 0.into();
 }
 
 unsafe extern "C" fn special_hi_open_main(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -36,6 +34,7 @@ unsafe extern "C" fn special_hi_open_main(fighter: &mut L2CFighterCommon) -> L2C
     ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_GAMEWATCH_GENERATE_ARTICLE_PARACHUTE, false, -1);
     ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_GAMEWATCH_GENERATE_ARTICLE_RESCUE, Hash40::new("special_hi_open"), false, -1.0);
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_open"), 0.0, 1.0, false, 0.0, false, false);
+    
     fighter.sub_shift_status_main(L2CValue::Ptr(special_hi_open_main_loop as *const () as _))
 }
 
@@ -49,7 +48,7 @@ unsafe extern "C" fn special_hi_open_main_loop(fighter: &mut L2CFighterCommon) -
             FIGHTER_STATUS_KIND_LANDING
         };
         fighter.change_status(status.into(), true.into());
-        return 1.into()
+        return 1.into();
     }
     fighter.sub_air_check_dive();
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
@@ -61,12 +60,13 @@ unsafe extern "C" fn special_hi_open_main_loop(fighter: &mut L2CFighterCommon) -
     if MotionModule::is_end(fighter.module_accessor) || fighter.status_frame() > 45 {
         fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
     }
-    return 0.into()
+
+    return 0.into();
 }
 
 unsafe extern "C" fn special_hi_open_exit(fighter: &mut L2CFighterCommon) -> L2CValue {
     ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_GAMEWATCH_GENERATE_ARTICLE_PARACHUTE, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-    0.into()
+    return 0.into();
 }
 
 pub fn install(agent: &mut Agent) {
