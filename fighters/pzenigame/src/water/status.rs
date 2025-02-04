@@ -51,19 +51,18 @@ use globals::*;
 // }
 
 pub unsafe extern "C" fn regular_init(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    //let life = weapon.get_int(*WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    //weapon.set_int(life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
-    //let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
-    let owner_boma = weapon.get_owner_boma();//&mut *(*utils::util::get_battle_object_from_id(owner_id)).module_accessor;
+    let life = weapon.get_int(*WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    weapon.set_int(life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
+    let owner_boma = weapon.get_owner_boma();
     if [*FIGHTER_KIND_PZENIGAME, *FIGHTER_KIND_PFUSHIGISOU, *FIGHTER_KIND_PLIZARDON].contains(&owner_boma.kind()) {
-        println!("owner is a pokemon, we can set the pledge state properly");
+        //println!("owner is a pokemon, we can set the pledge state properly");
         let parent_id = LinkModule::get_parent_id(owner_boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
         let object = utils::util::get_battle_object_from_id(parent_id);
         let pledge_state = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
         VarModule::set_int(weapon.battle_object, vars::pzenigame_water::instance::PLEDGE_TYPE, pledge_state);
     }
     else {
-        println!("ERROR: owner is not a Pokemon, things will probably crash without this failsafe");
+        //println!("ERROR: owner is not a Pokemon, things will probably crash without this failsafe");
         VarModule::set_int(weapon.battle_object, vars::pzenigame_water::instance::PLEDGE_TYPE, 2);
     }
     
@@ -88,15 +87,11 @@ unsafe extern "C" fn clash_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
 }
 
 pub unsafe extern "C" fn clash_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    //weapon.set_int(4, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    EffectModule::kill_kind(weapon.module_accessor, Hash40::new("sys_sscope_bullet_max"), false, false);
+    let life = weapon.get_int(*WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     let pledge_type = VarModule::get_int(weapon.battle_object, vars::pzenigame_water::instance::PLEDGE_TYPE);
     let motion = if pledge_type == 2 { Hash40::new("clash_pledge_g") } else { Hash40::new("clash_pledge_f") };
     MotionModule::change_motion(weapon.module_accessor, motion, 0.0, 1.0, false, 0.0, false, false);
-
-    // if !StopModule::is_stop(weapon.module_accessor) {
-    //     weapon.dec_int(*WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    // }
-    // weapon.global_table[globals::SUB_STATUS].assign(&L2CValue::Ptr(clash_main_substatus as *const () as _));
 
     weapon.fastshift(L2CValue::Ptr(clash_main_loop as *const () as _))
 }
@@ -110,10 +105,6 @@ unsafe extern "C" fn clash_main_substatus(weapon: &mut L2CWeaponCommon, param_1:
 }
 
 pub unsafe extern "C" fn clash_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    // if weapon.get_int(*WEAPON_INSTANCE_WORK_ID_INT_LIFE) <= 0 {
-    //     notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
-    // }
-
     return 0.into();
 }
 
