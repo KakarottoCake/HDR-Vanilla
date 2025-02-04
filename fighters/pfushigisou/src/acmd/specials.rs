@@ -22,6 +22,9 @@ unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 22.0);
     if is_excute(agent) {
+        if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
+            agent.on_flag(*FIGHTER_PFUSHIGISOU_STATUS_SPECIAL_S_FLAG_SMASH);
+        }
         ArticleModule::generate_article(boma, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_LEAFCUTTER, false, 0);
     }
     frame(lua_state, 29.0);

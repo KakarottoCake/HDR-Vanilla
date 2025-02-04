@@ -4,6 +4,7 @@ use globals::*;
 
 mod special_lw;
 mod special_n;
+mod special_s;
 
 unsafe extern "C" fn entry_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let parent_id = LinkModule::get_parent_id(fighter.module_accessor, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
@@ -39,4 +40,5 @@ pub fn install(agent: &mut Agent) {
 
     special_lw::install(agent);
     special_n::install(agent);
+    special_s::install(agent);
 }
