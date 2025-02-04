@@ -40,32 +40,6 @@ unsafe extern "C" fn sound_damageflyroll(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn game_appeallwr(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    frame(lua_state, 35.0);
-    if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 0, 80, 70, 0, 10.0, 0.0, 17.0, 0.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, true, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
-    }
-    wait(lua_state, 5.0);
-    if is_excute(agent) {
-        AttackModule::clear_all(boma);
-    }
-}
-
-unsafe extern "C" fn game_appeallwl(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    frame(lua_state, 35.0);
-    if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 0, 80, 70, 0, 10.0, 0.0, 17.0, 0.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, true, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
-    }
-    wait(lua_state, 5.0);
-    if is_excute(agent) {
-        AttackModule::clear_all(boma);
-    }
-}
-
 unsafe extern "C" fn game_dash(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -153,6 +127,76 @@ unsafe extern "C" fn expression_landingheavy(agent: &mut L2CAgentBase) {
     } 
 }
 
+unsafe extern "C" fn game_appealhi(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        if is_training_mode() {
+            let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+            let object = utils::util::get_battle_object_from_id(parent_id);
+            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 1);
+            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 6000);
+        }
+    }
+}
+
+unsafe extern "C" fn effect_appealhi(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        if is_training_mode() {
+            EffectModule::kill_kind(boma, Hash40::new("sys_status_attack_up"), false, false);
+            EffectModule::kill_kind(boma, Hash40::new("sys_status_defense_up"), false, false);
+            EffectModule::kill_kind(boma, Hash40::new("sys_status_speed_up"), false, false);
+            let handle = EffectModule::req_follow(boma, Hash40::new("sys_status_defense_up"), Hash40::new("hip"), &Vector3f::new(0.7, 0.0, 0.0), &Vector3f::zero(), 0.9, true, 0, 0, 0, 0, 0, true, true) as u32;
+            VarModule::set_int(agent.battle_object, vars::plizardon::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, handle as i32);
+        }
+    }
+}
+
+unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        if is_training_mode() {
+            let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+            let object = utils::util::get_battle_object_from_id(parent_id);
+            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 2);
+            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 6000);
+        }
+    }
+    frame(lua_state, 35.0);
+    if is_excute(agent) {
+        ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 0, 80, 70, 0, 10.0, 0.0, 17.0, 0.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, true, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
+    }
+    wait(lua_state, 5.0);
+    if is_excute(agent) {
+        AttackModule::clear_all(boma);
+    }
+}
+
+unsafe extern "C" fn effect_appeallw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        if is_training_mode() {
+            EffectModule::kill_kind(boma, Hash40::new("sys_status_attack_up"), false, false);
+            EffectModule::kill_kind(boma, Hash40::new("sys_status_defense_up"), false, false);
+            EffectModule::kill_kind(boma, Hash40::new("sys_status_speed_up"), false, false);
+            let handle = EffectModule::req_follow(boma, Hash40::new("sys_status_speed_up"), Hash40::new("hip"), &Vector3f::new(0.7, 0.0, 0.0), &Vector3f::zero(), 0.9, true, 0, 0, 0, 0, 0, true, true) as u32;
+            VarModule::set_int(agent.battle_object, vars::plizardon::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, handle as i32);
+        }
+    }
+    frame(lua_state, 35.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("plizardon_roar"), Hash40::new("head"), -3, 4, 0, 0, 0, 0, 1, true);
+    }
+    frame(lua_state, 96.0);
+    if is_excute(agent) {
+        LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 5.2 * -boma.lr(), 0, -1, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, true);
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_cliffescape", acmd_stub, Priority::Low);
 
@@ -161,9 +205,6 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("sound_damageflyn", sound_damagefly, Priority::Low);
     agent.acmd("sound_damageflytop", sound_damagefly, Priority::Low);
     agent.acmd("sound_damageflyroll", sound_damageflyroll, Priority::Low);
-    
-    agent.acmd("game_appeallwr", game_appeallwr, Priority::Low);
-    agent.acmd("game_appeallwl", game_appeallwl, Priority::Low);
 
     agent.acmd("game_dash", game_dash, Priority::Low);
     agent.acmd("sound_dash", sound_dash, Priority::Low);
@@ -173,4 +214,14 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_escapeairslide", game_escapeairslide, Priority::Low);
     
     agent.acmd("expression_landingheavy", expression_landingheavy, Priority::Low);
+
+    agent.acmd("game_appealhil", game_appealhi, Priority::Low);
+    agent.acmd("game_appealhir", game_appealhi, Priority::Low);
+    agent.acmd("effect_appealhil", effect_appealhi, Priority::Low);
+    agent.acmd("effect_appealhir", effect_appealhi, Priority::Low);
+
+    agent.acmd("game_appeallwl", game_appeallw, Priority::Low);
+    agent.acmd("game_appeallwr", game_appeallw, Priority::Low);
+    agent.acmd("effect_appeallwl", effect_appeallw, Priority::Low);
+    agent.acmd("effect_appeallwr", effect_appeallw, Priority::Low);
 }
