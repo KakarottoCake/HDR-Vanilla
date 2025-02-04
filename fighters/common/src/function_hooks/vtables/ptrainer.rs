@@ -16,8 +16,8 @@ unsafe fn ptrainer_swap_backwards_hook(ctx: &mut skyline::hooks::InlineCtx) {
     }
 }
 
-#[skyline::hook(offset = 0xf96330)]
-unsafe fn ptrainer_stub_death_switch() {}
+// #[skyline::hook(offset = 0xf96330)]
+// unsafe fn ptrainer_stub_death_switch() {}
 
 #[skyline::from_offset(0x33bdc30)]
 unsafe extern "C" fn normal_weapon_hit_handler(vtable: u64, weapon: *mut app::Weapon, something: u32) -> u64;
@@ -70,7 +70,7 @@ unsafe fn plizardon_breath_on_hit(vtable: u64, weapon: *mut app::Weapon, collisi
 pub fn install() {
     skyline::install_hooks!(
         ptrainer_swap_backwards_hook,
-        ptrainer_stub_death_switch,
+        //ptrainer_stub_death_switch,
         pzenigame_water_on_hit,
         pfushigisou_seed_init,
         pfushigisou_seed_on_hit,
