@@ -64,10 +64,7 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
     && fighter.is_status_one_of(&[
-        *FIGHTER_STATUS_KIND_SPECIAL_N,
         *FIGHTER_STATUS_KIND_SPECIAL_HI,
-        *FIGHTER_PFUSHIGISOU_STATUS_KIND_SPECIAL_N_LOOP,
-        *FIGHTER_PFUSHIGISOU_STATUS_KIND_SPECIAL_N_END
         ]) 
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
@@ -91,7 +88,7 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     }
 }
 
-pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
+pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     up_special_freefall(fighter);
     special_lw_track(boma);
     fastfall_specials(fighter);
@@ -106,7 +103,7 @@ pub extern "C" fn pfushigisou_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFig
 
 pub unsafe fn pfushigisou_frame(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
     if let Some(info) = FrameInfo::update_and_get(fighter) {
-        moveset(fighter, &mut *info.boma, info.id, info.cat, info.status_kind, info.situation_kind, info.motion_kind.hash, info.stick_x, info.stick_y, info.facing, info.frame);
+        moveset(fighter, &mut *info.boma);
     }
 }
 

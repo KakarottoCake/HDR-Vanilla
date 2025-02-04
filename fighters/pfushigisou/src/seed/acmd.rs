@@ -18,7 +18,7 @@ unsafe extern "C" fn effect_move(agent: &mut L2CAgentBase) {
             LAST_EFFECT_SET_SCALE_W(agent, 2.0, 1.0, 2.0);
             LAST_EFFECT_SET_COLOR(agent, 0.8, 0.8, 5.0);
         }
-        for i in 1..=130 {
+        for i in 1..=30 {
             if is_excute(agent) {
                 EFFECT_FOLLOW(agent, Hash40::new("sys_drown_out"), Hash40::new("top"), 0, 0, 0, 180, 0, 0, 0.4, false);
             }
@@ -32,7 +32,7 @@ unsafe extern "C" fn effect_move(agent: &mut L2CAgentBase) {
             LAST_EFFECT_SET_SCALE_W(agent, 2.0, 1.0, 2.0);
             LAST_EFFECT_SET_COLOR(agent, 5.0, 0.8, 0.8);
         }
-        for i in 1..=130 {
+        for i in 1..=30 {
             if is_excute(agent) {
                 EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.3, false);
             }

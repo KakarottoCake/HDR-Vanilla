@@ -42,7 +42,7 @@ pub unsafe extern "C" fn move_init(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let speed_y = weapon.get_param_float("param_seed", "shoot_speed_y");
     sv_kinetic_energy!(reset_energy, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0, 0.0, 0.0, 0.0);
     sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, speed_y);
-    sv_kinetic_energy!(set_accel, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -0.075);
+    sv_kinetic_energy!(set_accel, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -0.085);
     KineticModule::enable_energy(weapon.module_accessor, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
     
     return 0.into();
@@ -101,7 +101,7 @@ pub unsafe extern "C" fn clash_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
     }
     else {
         // Fire Pledge
-        EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_bomb_a"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.4, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
+        EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("pfushigisou_atk_hi4"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.4, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
         MotionModule::change_motion(weapon.module_accessor, Hash40::new("clash_pledge_f"), 0.0, 1.0, false, 0.0, false, false);
     }
 
@@ -123,7 +123,7 @@ pub unsafe extern "C" fn clash_ground_main(weapon: &mut L2CWeaponCommon) -> L2CV
     else {
         // Fire Pledge
         MotionModule::change_motion(weapon.module_accessor, Hash40::new("clash_pledge_f"), 0.0, 1.0, false, 0.0, false, false);
-        EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_bomb_a"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.4, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
+        EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("pfushigisou_atk_hi4"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.4, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
         SoundModule::play_se(weapon.module_accessor, Hash40::new("se_common_bomb_s"), true, false, false, false, enSEType(0)); 
     }
     VisibilityModule::set_whole(weapon.module_accessor, false);
