@@ -159,6 +159,9 @@
 		],
 		"fighter/zelda/cmn": [
 			"fighter/zelda/param/hdr.xml"
+		],
+		"fighter/pikachu/cmn": [
+			"fighter/pikachu/param/hdr.xml"
 		]
 	}
 }

@@ -50,3 +50,4 @@ master: fighter/master/param/hdr.xml
 pfushigisou: fighter/pfushigisou/param/hdr.xml
 tantan: fighter/tantan/param/hdr.xml
 zelda: fighter/zelda/param/hdr.xml
+pikachu: fighter/pikachu/param/hdr.xml

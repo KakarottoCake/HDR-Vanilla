@@ -52,3 +52,4 @@ fighter/master/param/hdr.xml
 fighter/pfushigisou/param/hdr.xml
 fighter/tantan/param/hdr.xml
 fighter/zelda/param/hdr.xml
+fighter/pikachu/param/hdr.xml
