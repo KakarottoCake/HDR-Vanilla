@@ -32,20 +32,26 @@ unsafe fn pzenigame_water_on_hit(vtable: u64, weapon: *mut app::Weapon, collisio
         }
     }
     
-    return normal_weapon_hit_handler(vtable, weapon, collision_mask);
+    return 0;
+}
+
+#[skyline::hook(offset = 0x348d8a0)]
+unsafe fn pfushigisou_seed_init(vtable: u64, weapon: *mut app::Weapon) -> u64 {
+    // nothing
+    return 0;
 }
 
 #[skyline::hook(offset = 0x348d910)]
 unsafe fn pfushigisou_seed_on_hit(vtable: u64, weapon: *mut app::Weapon, collision_mask: u32) -> u64 {
     let boma = (&mut *(weapon)).battle_object.boma();
-    if !boma.is_status(*WEAPON_PFUSHIGISOU_SEED_STATUS_KIND_CLASH) {
+    if !boma.is_status_one_of(&[*WEAPON_PFUSHIGISOU_SEED_STATUS_KIND_CLASH, *WEAPON_PFUSHIGISOU_SEED_STATUS_KIND_CLASH_GROUND]) {
         if collision_mask as i32 & (*COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) != 0 {
             boma.change_status_req(*WEAPON_PFUSHIGISOU_SEED_STATUS_KIND_CLASH, false);
             return 0;
         }
     }
     
-    return normal_weapon_hit_handler(vtable, weapon, collision_mask);
+    return 0;
 }
 
 #[skyline::hook(offset = 0x34bfa30)]
@@ -58,7 +64,7 @@ unsafe fn plizardon_breath_on_hit(vtable: u64, weapon: *mut app::Weapon, collisi
         }
     }
     
-    return normal_weapon_hit_handler(vtable, weapon, collision_mask);
+    return 0;
 }
 
 pub fn install() {
@@ -66,6 +72,7 @@ pub fn install() {
         ptrainer_swap_backwards_hook,
         ptrainer_stub_death_switch,
         pzenigame_water_on_hit,
+        pfushigisou_seed_init,
         pfushigisou_seed_on_hit,
         plizardon_breath_on_hit,
     );
