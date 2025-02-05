@@ -4,7 +4,7 @@ unsafe extern "C" fn game_regular(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 366, 100, 20, 0, 4.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, true, true, true, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_WATER);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 366, 100, 20, 0, 3.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, true, true, true, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_WATER);
         AttackModule::enable_safe_pos(boma);
     }
 }
@@ -13,15 +13,39 @@ unsafe extern "C" fn effect_regular(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
+    let facing = boma.lr();
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("sys_sscope_bullet_max"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.5, false);
-        LAST_EFFECT_SET_COLOR(agent, 0.611, 0.862, 122.866);
-    }
-    for i in 1..=50 {
-        if is_excute(agent) {
-            EFFECT_FOLLOW(agent, Hash40::new("sys_splash"), Hash40::new("top"), 0, 0, 0, -90, 0, 0, 0.3, false);
+        let rot = if facing < 0.0 { 180 } else { 0 };
+        EFFECT_FOLLOW(agent, Hash40::new("sys_sscope_bullet_max"), Hash40::new("top"), 0, 0, 0, rot, 0, 0, 0.75, false);
+        //LAST_EFFECT_SET_COLOR(agent, 0.611, 0.862, 122.866);
+        if VarModule::get_int(agent.battle_object, vars::pfushigisou_seed::instance::PLEDGE_TYPE) == 2 {
+            LAST_EFFECT_SET_COLOR(agent, 0.6, 4.0, 3.0);
         }
-        wait(lua_state, 6.0);
+        else {
+            LAST_EFFECT_SET_COLOR(agent, 3.0, 0.6, 5.0);
+        }
+    }
+    for _ in 1..=30 {
+        let mut handle = 0;
+        if is_excute(agent) {
+            EFFECT_FOLLOW(agent, Hash40::new("sys_splash"), Hash40::new("top"), 0, 0, 0, -90.0 * facing, 0, 0, 0.3, false);
+            if VarModule::get_int(agent.battle_object, vars::pfushigisou_seed::instance::PLEDGE_TYPE) == 2 {
+                handle = EffectModule::req_follow(boma, Hash40::new("pfushigisou_atk_hi4"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.0, false, 0, 0, 0, 0, 0, false, false);
+                EffectModule::set_rate(boma, handle as u32, 9.0);
+            }
+            else {
+                EFFECT_FOLLOW(agent, Hash40::new("sys_steam"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.8, false);
+            }
+        }
+        wait(lua_state, 1.0);
+        if is_excute(agent) {
+            if VarModule::get_int(agent.battle_object, vars::pfushigisou_seed::instance::PLEDGE_TYPE) == 2 {
+                EffectModule::set_scale(boma, handle as u32, &Vector3f::new(0.45, 0.45, 0.45));
+                EffectModule::set_rate(boma, handle as u32, 0.5);
+                EffectModule::detach(boma, handle as u32, 0);
+            }
+        }
+        wait(lua_state, 10.0);
     }
 }
 
@@ -49,13 +73,19 @@ unsafe extern "C" fn effect_clashpledgeg(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("pzenigame_mizuteppo_hit"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
+    frame(lua_state, 13.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("pfushigisou_atk_hi4"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, false);
+        EFFECT_DETACH_KIND(agent, Hash40::new("pfushigisou_atk_hi4"), 0);
+    }
 }
 
 unsafe extern "C" fn game_clashpledgef(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 60, 120, 0, 35, 7.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_WATER);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 60, 120, 0, 35, 7.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_WATER, *ATTACK_REGION_WATER);
+        AttackModule::set_optional_hit_sound(boma, 0, Hash40::new("se_common_fire_l"));
     }
     frame(lua_state, 4.0);
     if is_excute(agent) {
@@ -76,6 +106,7 @@ unsafe extern "C" fn effect_die(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("sys_sscope_bullet_max"), false, false);
         EFFECT_FOLLOW(agent, Hash40::new("pzenigame_takinobori_end"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.3, true);
         EFFECT_DETACH_KIND(agent, Hash40::new("pzenigame_takinobori_end"), -1);
         EFFECT_DETACH_KIND(agent, Hash40::new("sys_splash"), -1);

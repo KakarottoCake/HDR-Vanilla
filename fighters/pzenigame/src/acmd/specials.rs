@@ -44,7 +44,7 @@ unsafe extern "C" fn effect_specialnshot(agent: &mut L2CAgentBase) {
             EFFECT_FLW_POS(agent, Hash40::new("pzenigame_mizuteppo_shoot"), Hash40::new("head"), -0.5, 2.7, 0, 0, 0, 13, 0.8, true);
         }
     }
-    frame(lua_state, 22.0);
+    frame(lua_state, 16.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("pzenigame_mizuteppo_shoot"), false, false);
     }
