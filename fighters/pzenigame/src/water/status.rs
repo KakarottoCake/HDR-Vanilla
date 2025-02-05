@@ -48,7 +48,8 @@ pub unsafe extern "C" fn set_rot(weapon: &mut L2CWeaponCommon) {
 }
 
 pub unsafe extern "C" fn regular_init(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    let life = weapon.get_int(*WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    let life = weapon.get_param_int("param_water", "life");
+    weapon.set_int(life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     weapon.set_int(life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
     let owner_boma = weapon.get_owner_boma();
     if [*FIGHTER_KIND_PZENIGAME, *FIGHTER_KIND_PFUSHIGISOU, *FIGHTER_KIND_PLIZARDON].contains(&owner_boma.kind()) {

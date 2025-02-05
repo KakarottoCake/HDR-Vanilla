@@ -35,6 +35,7 @@ unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue 
 }
 
 unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.sub_air_check_dive();
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status(FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_N_SHOOT.into(), false.into());
         return 0.into();
@@ -72,6 +73,7 @@ unsafe extern "C" fn special_n_motion_helper(fighter: &mut L2CFighterCommon, inh
 }
 
 unsafe extern "C" fn special_n_shoot_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.sub_air_check_dive();
     if fighter.is_flag(*FIGHTER_PZENIGAME_STATUS_SPECIAL_N_FLAG_SHOOT_ANGLE_ENABLE) {
         let angle = fighter.get_param_float("param_special_n", "angle");
         ModelModule::set_joint_rotate(fighter.module_accessor, Hash40::new("head"), &Vector3f::new(0.0, 0.0, -angle), MotionNodeRotateCompose{_address: *MOTION_NODE_ROTATE_COMPOSE_NONE as u8}, MotionNodeRotateOrder{_address: *MOTION_NODE_ROTATE_ORDER_XYZ as u8});

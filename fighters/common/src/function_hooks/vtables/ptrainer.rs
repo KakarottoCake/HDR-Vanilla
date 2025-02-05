@@ -31,8 +31,11 @@ unsafe fn pzenigame_water_on_hit(vtable: u64, weapon: *mut app::Weapon, collisio
             return 0;
         }
     }
+    else {
+        return 0;
+    }
     
-    return 0;
+    return normal_weapon_hit_handler(vtable, weapon, collision_mask);
 }
 
 #[skyline::hook(offset = 0x348d8a0)]
@@ -50,8 +53,11 @@ unsafe fn pfushigisou_seed_on_hit(vtable: u64, weapon: *mut app::Weapon, collisi
             return 0;
         }
     }
+    else {
+        return 0;
+    }
     
-    return 0;
+    return normal_weapon_hit_handler(vtable, weapon, collision_mask);
 }
 
 #[skyline::hook(offset = 0x34bfa30)]
@@ -64,7 +70,7 @@ unsafe fn plizardon_breath_on_hit(vtable: u64, weapon: *mut app::Weapon, collisi
         }
     }
     
-    return 0;
+    return normal_weapon_hit_handler(vtable, weapon, collision_mask);
 }
 
 pub fn install() {

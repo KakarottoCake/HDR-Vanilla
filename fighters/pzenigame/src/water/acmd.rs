@@ -30,16 +30,19 @@ unsafe extern "C" fn effect_regular(agent: &mut L2CAgentBase) {
         if is_excute(agent) {
             EFFECT_FOLLOW(agent, Hash40::new("sys_splash"), Hash40::new("top"), 0, 0, 0, -90.0 * facing, 0, 0, 0.3, false);
             if VarModule::get_int(agent.battle_object, vars::pzenigame_water::instance::PLEDGE_TYPE) == 2 {
+                // Grass Pledge
                 handle = EffectModule::req_follow(boma, Hash40::new("pfushigisou_atk_hi4"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.0, false, 0, 0, 0, 0, 0, false, false);
                 EffectModule::set_rate(boma, handle as u32, 9.0);
             }
             else {
+                // Fire Pledge
                 EFFECT_FOLLOW(agent, Hash40::new("sys_steam"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.8, false);
             }
         }
         wait(lua_state, 1.0);
         if is_excute(agent) {
             if VarModule::get_int(agent.battle_object, vars::pzenigame_water::instance::PLEDGE_TYPE) == 2 {
+                // Grass Pledge part 2
                 EffectModule::set_scale(boma, handle as u32, &Vector3f::new(0.45, 0.45, 0.45));
                 EffectModule::set_rate(boma, handle as u32, 0.5);
                 EffectModule::detach(boma, handle as u32, 0);

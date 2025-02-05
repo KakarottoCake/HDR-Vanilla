@@ -3,14 +3,26 @@ utils::import_noreturn!(common::opff::fighter_common_opff);
 use super::*;
 use globals::*;
 
+unsafe fn special_lw_track(boma: &mut BattleObjectModuleAccessor) {
+    if boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_LW) && !boma.is_button_on(Buttons::SpecialAll) {
+        let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+        let object = utils::util::get_battle_object_from_id(parent_id);
+        VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_LW_BACKWARDS_SWITCH);
+    }
+    if is_training_mode() && !sv_information::is_ready_go() {
+        let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+        let object = utils::util::get_battle_object_from_id(parent_id);
+        VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 0);
+        VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
+        VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
+    }
+}
+
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
     && fighter.is_status_one_of(&[
-        *FIGHTER_STATUS_KIND_SPECIAL_N,
         *FIGHTER_STATUS_KIND_SPECIAL_HI,
-        *FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_N_SHOOT,
-        *FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_N_CHARGE,
         *FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_S_HIT,
         *FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_S_END,
         ]) 
@@ -36,24 +48,9 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     }
 }
 
-unsafe fn special_lw_track(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_LW) && !boma.is_button_on(Buttons::SpecialAll) {
-        let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
-        let object = utils::util::get_battle_object_from_id(parent_id);
-        VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_LW_BACKWARDS_SWITCH);
-    }
-    if is_training_mode() && !sv_information::is_ready_go() {
-        let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
-        let object = utils::util::get_battle_object_from_id(parent_id);
-        VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 0);
-        VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
-        VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
-    }
-}
-
-pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
-    fastfall_specials(fighter);
+pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     special_lw_track(boma);
+    fastfall_specials(fighter);
 }
 
 pub extern "C" fn pzenigame_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
@@ -65,7 +62,7 @@ pub extern "C" fn pzenigame_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFight
 
 pub unsafe fn pzenigame_frame(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
     if let Some(info) = FrameInfo::update_and_get(fighter) {
-        moveset(fighter, &mut *info.boma, info.id, info.cat, info.status_kind, info.situation_kind, info.motion_kind.hash, info.stick_x, info.stick_y, info.facing, info.frame);
+        moveset(fighter, &mut *info.boma);
     }
 }
 
