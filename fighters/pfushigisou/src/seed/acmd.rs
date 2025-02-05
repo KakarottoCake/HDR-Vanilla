@@ -55,7 +55,7 @@ unsafe extern "C" fn game_clashpledgew(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 80, 70, 0, 45, 6.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_poison"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_OBJECT);
         AttackModule::set_optional_hit_effect(boma, 0, Hash40::new("sys_hit_normal"));
-        AttackModule::set_optional_hit_sound(boma, 0, Hash40::new("se_common_fire_m"));
+        AttackModule::set_optional_hit_sound(boma, 0, Hash40::new("se_common_water_hit_m"));
         AttackModule::set_poison_param(boma, 0, 121, 30, 2.0, false);
     }
     frame(lua_state, 4.0);
@@ -70,6 +70,8 @@ unsafe extern "C" fn effect_clashpledgew(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("pfushigisou_tanemg_hit"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+        EFFECT_FOLLOW(agent, Hash40::new("pzenigame_takinobori_end"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.6, true);
+        EFFECT_DETACH_KIND(agent, Hash40::new("pzenigame_takinobori_end"), -1);
     }
 }
 

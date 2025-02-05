@@ -5,7 +5,7 @@
 //pub mod acmd;
 
 //pub mod opff;
-//pub mod status;
+pub mod status;
 
 pub mod ptrainer;
 
@@ -42,6 +42,7 @@ use smashline::*;
 
 pub fn install() {
     let agent = &mut Agent::new("ptrainer");
+    status::install(agent);
     agent.install();
 
     ptrainer::install();
