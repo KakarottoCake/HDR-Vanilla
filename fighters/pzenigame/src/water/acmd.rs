@@ -18,7 +18,7 @@ unsafe extern "C" fn effect_regular(agent: &mut L2CAgentBase) {
         let rot = if facing < 0.0 { 180 } else { 0 };
         EFFECT_FOLLOW(agent, Hash40::new("sys_sscope_bullet_max"), Hash40::new("top"), 0, 0, 0, rot, 0, 0, 0.75, false);
         //LAST_EFFECT_SET_COLOR(agent, 0.611, 0.862, 122.866);
-        if VarModule::get_int(agent.battle_object, vars::pfushigisou_seed::instance::PLEDGE_TYPE) == 2 {
+        if VarModule::get_int(agent.battle_object, vars::pzenigame_water::instance::PLEDGE_TYPE) == 2 {
             LAST_EFFECT_SET_COLOR(agent, 0.6, 4.0, 3.0);
         }
         else {
@@ -29,7 +29,7 @@ unsafe extern "C" fn effect_regular(agent: &mut L2CAgentBase) {
         let mut handle = 0;
         if is_excute(agent) {
             EFFECT_FOLLOW(agent, Hash40::new("sys_splash"), Hash40::new("top"), 0, 0, 0, -90.0 * facing, 0, 0, 0.3, false);
-            if VarModule::get_int(agent.battle_object, vars::pfushigisou_seed::instance::PLEDGE_TYPE) == 2 {
+            if VarModule::get_int(agent.battle_object, vars::pzenigame_water::instance::PLEDGE_TYPE) == 2 {
                 handle = EffectModule::req_follow(boma, Hash40::new("pfushigisou_atk_hi4"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.0, false, 0, 0, 0, 0, 0, false, false);
                 EffectModule::set_rate(boma, handle as u32, 9.0);
             }
@@ -39,7 +39,7 @@ unsafe extern "C" fn effect_regular(agent: &mut L2CAgentBase) {
         }
         wait(lua_state, 1.0);
         if is_excute(agent) {
-            if VarModule::get_int(agent.battle_object, vars::pfushigisou_seed::instance::PLEDGE_TYPE) == 2 {
+            if VarModule::get_int(agent.battle_object, vars::pzenigame_water::instance::PLEDGE_TYPE) == 2 {
                 EffectModule::set_scale(boma, handle as u32, &Vector3f::new(0.45, 0.45, 0.45));
                 EffectModule::set_rate(boma, handle as u32, 0.5);
                 EffectModule::detach(boma, handle as u32, 0);
