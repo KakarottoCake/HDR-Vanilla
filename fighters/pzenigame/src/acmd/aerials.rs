@@ -51,7 +51,7 @@ unsafe extern "C" fn effect_attackairf(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 3.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW_FLIP(agent, Hash40::new("pzenigame_water_attack_spin"), Hash40::new("pzenigame_water_attack_spin"), Hash40::new("top"), 0, 5, 1, 0, 0, 0, 1, true, *EF_FLIP_NONE);
+        EFFECT_FOLLOW_FLIP(agent, Hash40::new("pzenigame_water_attack_spin"), Hash40::new("pzenigame_water_attack_spin"), Hash40::new("top"), -1, 5, 0, 0, 0, 0, 1, true, *EF_FLIP_NONE);
         LAST_EFFECT_SET_RATE(agent, 1.6);
     }
     frame(lua_state, 13.0);
