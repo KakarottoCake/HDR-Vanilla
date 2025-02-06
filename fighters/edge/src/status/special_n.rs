@@ -3,7 +3,7 @@ use super::*;
 unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_change_motion_by_situation(Hash40::new("special_n_start").into(), Hash40::new("special_air_n_start").into(), false.into());
     fighter.sub_set_special_start_common_kinetic_setting(hash40("param_special_n").into());
-    special_hi_set_kinetics(fighter, true);
+    special_n_set_kinetics(fighter, true.into());
     WorkModule::set_int(fighter.module_accessor, *FIGHTER_EDGE_SPECIAL_N_NONE, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CHARGE_KIND);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_EDGE_STATUS_SPECIAL_N_FLAG_REQUEST_SHOOT);
     WorkModule::set_int(fighter.module_accessor, -1, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS);
@@ -18,7 +18,7 @@ unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
     if !StatusModule::is_changing(fighter.module_accessor) {
         fighter.sub_change_motion_by_situation(Hash40::new("special_n_start").into(), Hash40::new("special_air_n_start").into(), true.into());
         fighter.sub_exec_special_start_common_kinetic_setting(hash40("param_special_n").into());
-        special_hi_set_kinetics(fighter, false);
+        special_n_set_kinetics(fighter, false.into());
     }
     if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_EDGE_STATUS_SPECIAL_N_FLAG_REQUEST_SHOOT);
@@ -79,9 +79,9 @@ unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
     return 0.into()
 }
 
-unsafe extern "C" fn special_hi_set_kinetics(fighter: &mut L2CFighterCommon, param_1: bool) {
+unsafe extern "C" fn special_n_set_kinetics(fighter: &mut L2CFighterCommon, param_1: L2CValue) {
     if fighter.is_situation(*SITUATION_KIND_AIR) {
-        if !param_1 && fighter.is_prev_situation(*SITUATION_KIND_AIR) {
+        if !param_1.get_bool() && fighter.is_prev_situation(*SITUATION_KIND_AIR) {
             return;
         }
         sv_kinetic_energy!(set_needs_set_param, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, false);

@@ -283,6 +283,8 @@ unsafe extern "C" fn sound_justshieldoff(agent: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.acmd("game_cliffescape", acmd_stub, Priority::Low);
+
     agent.acmd("sound_damageflyhi", sound_damageflyhi, Priority::Low);
     agent.acmd("sound_damageflylw", sound_damageflyhi, Priority::Low);
     agent.acmd("sound_damageflyn", sound_damageflyhi, Priority::Low);

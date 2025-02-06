@@ -250,21 +250,22 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     FT_MOTION_RATE(agent, 5.0);
     frame(lua_state, 4.0);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         ArticleModule::generate_article_enable(boma, *FIGHTER_ROCKMAN_GENERATE_ARTICLE_LEAFSHIELD, false, -1);
     }
-    FT_MOTION_RATE(agent, 1.0);
 }
 
-unsafe extern "C" fn game_specialairlw(agent: &mut L2CAgentBase) {
+unsafe extern "C" fn effect_speciallw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    FT_MOTION_RATE(agent, 5.0);
     frame(lua_state, 4.0);
     if is_excute(agent) {
-        ArticleModule::generate_article_enable(boma, *FIGHTER_ROCKMAN_GENERATE_ARTICLE_LEAFSHIELD, false, -1);
+        if boma.is_situation(*SITUATION_KIND_GROUND) {
+           LANDING_EFFECT(agent, Hash40::new("sys_action_smoke_v"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false); 
+        }
+        EFFECT_FOLLOW(agent, Hash40::new("rockman_leafshield_start"), Hash40::new("top"), 0, 6.5, 0, 0, 0, 0, 0.725, false);
     }
-    FT_MOTION_RATE(agent, 1.0);
 }
 
 pub fn install(agent: &mut Agent) {
@@ -294,6 +295,7 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialairhi", game_specialhi, Priority::Low);
 
     agent.acmd("game_speciallw", game_speciallw, Priority::Low);
-
-    agent.acmd("game_specialairlw", game_specialairlw, Priority::Low);
+    agent.acmd("game_specialairlw", game_speciallw, Priority::Low);
+    agent.acmd("effect_speciallw", effect_speciallw, Priority::Low);
+    agent.acmd("effect_specialairlw", effect_speciallw, Priority::Low);
 }

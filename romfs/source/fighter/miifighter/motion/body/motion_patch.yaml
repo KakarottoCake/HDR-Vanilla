@@ -1,3 +1,68 @@
+passive:
+  extra:
+    xlu_end: 21
+    cancel_frame: 29
+passive_stand_f:
+  extra:
+    xlu_end: 21
+    cancel_frame: 43
+passive_stand_b:
+  extra:
+    xlu_end: 21
+    cancel_frame: 43
+down_stand_u:
+  extra:
+    xlu_end: 23
+    cancel_frame: 33
+down_stand_d:
+  extra:
+    xlu_end: 23
+    cancel_frame: 33
+down_attack_u:
+  extra:
+    cancel_frame: 52
+down_attack_d:
+  extra:
+    cancel_frame: 52
+down_forward_u:
+  extra:
+    cancel_frame: 38
+down_forward_d:
+  extra:
+    cancel_frame: 38
+down_back_u:
+  extra:
+    cancel_frame: 38
+down_back_d:
+  extra:
+    cancel_frame: 38
+cliff_climb_quick:
+  extra:
+    xlu_end: 35
+    cancel_frame: 37
+cliff_attack_quick:
+  extra:
+    cancel_frame: 58
+cliff_escape_quick:
+  extra:
+    xlu_end: 31
+    cancel_frame: 52
+cliff_jump_quick1:
+  extra:
+    xlu_end: 17
+slip_stand:
+  extra:
+    xlu_end: 18
+    cancel_frame: 24
+slip_attack:
+  extra:
+    cancel_frame: 52
+slip_escape_f:
+  extra:
+    cancel_frame: 31
+slip_escape_b:
+  extra:
+    cancel_frame: 31
 jump_squat:
   blend_frames: 0
   animations:
@@ -12,12 +77,6 @@ guard_off:
   blend_frames: 4
   extra:
     cancel_frame: 12
-throw_b:
-  extra:
-    cancel_frame: 30
-throw_lw:
-  extra:
-    cancel_frame: 40
 attack_12:
   extra:
     cancel_frame: 18
@@ -50,39 +109,45 @@ attack_13:
     intangible_end_frame: 0
     cancel_frame: 33
     freeze_during_hitstop: true
-attack_lw3:
-  extra:
-    cancel_frame: 25
-attack_s4_s:
-  extra:
-    cancel_frame: 55
-special_lw1:
-  extra:
-    cancel_frame: 42
-attack_s4_hi:
-  extra:
-    cancel_frame: 55
-attack_air_b:
-  extra:
-    cancel_frame: 35
-attack_air_f:
-  extra:
-    cancel_frame: 37
-attack_air_n:
-  extra:
-    cancel_frame: 43
-attack_s4_lw:
-  extra:
-    cancel_frame: 55
-attack_air_lw:
-  extra:
-    cancel_frame: 46
-attack_air_hi:
-  extra:
-    cancel_frame: 30
 attack_100_end:
   extra:
     cancel_frame: 37
+attack_lw3:
+  extra:
+    cancel_frame: 28
+attack_s4_s:
+  extra:
+    cancel_frame: 55
+attack_s4_hi:
+  extra:
+    cancel_frame: 55
+attack_s4_lw:
+  extra:
+    cancel_frame: 55
+attack_air_n:
+  extra:
+    cancel_frame: 43
+attack_air_f:
+  extra:
+    cancel_frame: 37
+attack_air_b:
+  extra:
+    cancel_frame: 35
+attack_air_hi:
+  extra:
+    cancel_frame: 30
+attack_air_lw:
+  extra:
+    cancel_frame: 46
+special_air_s1_end:
+  extra:
+    cancel_frame: 60
+special_lw1:
+  extra:
+    cancel_frame: 42
+special_lw1_landing:
+  extra:
+    cancel_frame: 33
 special_lw2_start:
   extra:
     xlu_start: 0
@@ -91,6 +156,12 @@ special_air_lw2_start:
   extra:
     xlu_start: 0
     xlu_end: 0
+special_lw2_landing:
+  extra:
+    cancel_frame: 16
+special_lw2_kick_landing:
+  extra:
+    cancel_frame: 32
 special_lw3:
   extra:
     xlu_start: 0
@@ -99,21 +170,21 @@ special_air_lw3:
   extra:
     xlu_start: 0
     xlu_end: 0
-special_lw2_landing:
+special_air_lw3_throw:
   extra:
-    cancel_frame: 16
-special_lw1_landing:
-  extra:
-    cancel_frame: 31
-special_lw2_kick_landing:
-  extra:
-    cancel_frame: 32
+    cancel_frame: 37
 catch_dash:
   extra:
     cancel_frame: 41
 catch_attack:
   extra:
     cancel_frame: 0
+throw_b:
+  extra:
+    cancel_frame: 30
+throw_lw:
+  extra:
+    cancel_frame: 40
 furafura_end:
   extra:
     cancel_frame: 34
@@ -123,3 +194,5 @@ shield_break_fly:
 step_pose_back:
   extra:
     cancel_frame: 6
+cliff_wait:
+  blend_frames: 2

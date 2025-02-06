@@ -28,7 +28,7 @@ unsafe fn sub_status_guard_off_main_common_cancel(fighter: &mut L2CFighterCommon
     // check parry
     if fighter.is_cat_flag(CatHdr::Parry) {
         VarModule::on_flag(fighter.object(), vars::common::instance::IS_PARRY_FOR_GUARD_OFF);
-        fighter.change_status(FIGHTER_STATUS_KIND_GUARD_OFF.into(), true.into());
+        fighter.change_status(FIGHTER_STATUS_KIND_GUARD_OFF.into(), false.into());
         return true.into();
     }
 
@@ -108,7 +108,7 @@ unsafe fn sub_guard_off_uniq(fighter: &mut L2CFighterCommon, arg: L2CValue) -> L
                 ReflectorModule::set_status(boma, 0, app::ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD);
 
                 // ModelModule::disable_gold_eye(boma);
-                // EffectModule::remove_common(boma, Hash40::new("just_shield"));
+                EffectModule::remove_common(boma, Hash40::new("just_shield"));
                 let end_frame = MotionModule::end_frame_from_hash(boma, Hash40::new("guard_off"));
                 let guard_off_parry_faf = ParamModule::get_int(fighter.object(), ParamType::Common, "guard_off_parry_faf") as f32;
                 let rate = (end_frame * 0.8) / (guard_off_parry_faf - (fighter.status_frame() as f32));

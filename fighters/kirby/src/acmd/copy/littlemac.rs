@@ -11,11 +11,10 @@ unsafe extern "C" fn game_littlemacspecialn(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 9.0);
     if is_excute(agent) {
-        let damage =  22.0 * if agent.is_situation(*SITUATION_KIND_GROUND) { 1.0 } else { 0.8 };
+        let damage =  20.8 * if agent.is_situation(*SITUATION_KIND_GROUND) { 1.0 } else { 0.8 };
         let angle = if agent.is_situation(*SITUATION_KIND_GROUND) { 80 } else { 75 };
         let bkb = if agent.is_situation(*SITUATION_KIND_GROUND) { 40 } else { 30 };
         let kbg = if agent.is_situation(*SITUATION_KIND_GROUND) { 104 } else { 124 };
-        let shield_damage = if agent.is_situation(*SITUATION_KIND_GROUND) { 2 } else { 0 };
         ATTACK(agent, 0, 0, Hash40::new("armr"), damage, angle, kbg, 0, bkb, 5.0, 3.0, 0.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 2, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("armr"), damage, angle, kbg, 0, bkb, 3.0, -1.0, 0.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 2, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 2, 0, Hash40::new("shoulderr"), damage, angle, kbg, 0, bkb, 3.0, 0.0, 0.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 2, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PUNCH);
@@ -77,7 +76,7 @@ unsafe extern "C" fn effect_littlemacspecialn(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {
-        if VarModule::is_flag(boma.object(), vars::kirby::status::SPECIAL_N_LITTLEMAC_CLEAR_CRIT) {
+        if VarModule::is_flag(boma.object(), vars::kirby::status::SPECIAL_N_CLEAR_CRIT) {
             SlowModule::clear_whole(boma);
             EffectModule::remove_screen(boma, Hash40::new("bg_criticalhit"), 0);
         }

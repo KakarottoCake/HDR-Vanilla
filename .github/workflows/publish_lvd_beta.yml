@@ -1,6 +1,7 @@
 name: publish_lvd_beta.yml
 
 on:
+  workflow_dispatch:
   workflow_run:
     workflows: [make beta]
     types:

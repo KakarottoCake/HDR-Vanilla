@@ -44,7 +44,7 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 2.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 16.0, 40, 80, 0, 57, 6.0, 0.0, 4.0, 9.0, Some(0.0), Some(10.0), Some(9.0), 1.15, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 30, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 16.0, 40, 80, 0, 57, 6.0, 0.0, 4.0, 9.0, Some(0.0), Some(10.0), Some(9.0), 1.15, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 26, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_PUNCH);
     }
     frame(lua_state, 5.0);
     if is_excute(agent) {
@@ -112,7 +112,7 @@ unsafe extern "C" fn game_specialairhiend(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn game_speciallwstartl(agent: &mut L2CAgentBase) {
+unsafe extern "C" fn game_speciallwstart(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
@@ -120,7 +120,7 @@ unsafe extern "C" fn game_speciallwstartl(agent: &mut L2CAgentBase) {
     frame(lua_state, 6.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 69, 85, 0, 77, 7.5, 0.0, 7.0, -1.5, Some(0.0), Some(7.0), Some(1.5), 0.9, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_NONE);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 70, 85, 0, 77, 7.5, 0.0, 7.0, -1.5, Some(0.0), Some(7.0), Some(1.5), 0.9, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_NONE);
         shield!(agent, *MA_MSC_CMD_SHIELD_ON, *COLLISION_KIND_REFLECTOR, 0, *FIGHTER_PIT_REFLECTOR_GROUP_SPECIAL_LW);
         shield!(agent, *MA_MSC_CMD_SHIELD_ON, *COLLISION_KIND_REFLECTOR, 1, *FIGHTER_PIT_REFLECTOR_GROUP_SPECIAL_LW);
     }
@@ -130,7 +130,7 @@ unsafe extern "C" fn game_speciallwstartl(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn effect_speciallwstartl(agent: &mut L2CAgentBase) {
+unsafe extern "C" fn effect_speciallwstart(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 6.0);
@@ -139,7 +139,9 @@ unsafe extern "C" fn effect_speciallwstartl(agent: &mut L2CAgentBase) {
         let rot1 = if facing > 0.0 { 240 } else { 300 };
         let rot2 = if facing > 0.0 { 120 } else { 60 };
         EFFECT_FOLLOW(agent, Hash40::new("pitb_guardian_shield"), Hash40::new("virtualguardianf"), 2.0 * facing, 3, -2, 0, rot1, 0, 1.3, true);
+        LAST_EFFECT_SET_COLOR(agent, 5.0, 1.0, 1.0);
         EFFECT_FOLLOW(agent, Hash40::new("pitb_guardian_shield"), Hash40::new("virtualguardianb"), 2.0 * facing, 3, 2, 0, rot2, 0, 1.3, true);
+        LAST_EFFECT_SET_COLOR(agent, 5.0, 1.0, 1.0);
         if agent.is_situation(*SITUATION_KIND_GROUND) {
             LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.85, 0, 0, 0, 0, 0, 0, false);
         }
@@ -155,6 +157,22 @@ unsafe extern "C" fn game_speciallwhold(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn effect_speciallwend(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        let facing = PostureModule::lr(boma);
+        let rot1 = if facing > 0.0 { 240 } else { 300 };
+        let rot2 = if facing > 0.0 { 120 } else { 60 };
+        EFFECT(agent, Hash40::new("pitb_guardian_shield_end"), Hash40::new("virtualguardianf"), 2.0 * facing, 3, -2, 0, rot1, 0, 1, 0, 0, 0, 0, 0, 0, true);
+        EFFECT(agent, Hash40::new("pitb_guardian_shield_end"), Hash40::new("virtualguardianb"), 2.0 * facing, 3, 2, 0, rot2, 0, 1, 0, 0, 0, 0, 0, 0, true);
+    }
+    frame(lua_state, 3.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("pitb_guardian_shield"), false, false);
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialsstart", game_specialsstart, Priority::Low);
     agent.acmd("game_specialsend", game_specialsend, Priority::Low);
@@ -163,14 +181,20 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialhi", game_specialhi, Priority::Low);
     agent.acmd("game_specialairhiend", game_specialairhiend, Priority::Low);
     
-    agent.acmd("game_speciallwstartl", game_speciallwstartl, Priority::Low);
-    agent.acmd("game_speciallwstartr", game_speciallwstartl, Priority::Low);
-    agent.acmd("game_specialairlwstartl", game_speciallwstartl, Priority::Low);
-    agent.acmd("game_specialairlwstartr", game_speciallwstartl, Priority::Low);
-    agent.acmd("effect_speciallwstartl", effect_speciallwstartl, Priority::Low);
-    agent.acmd("effect_speciallwstartr", effect_speciallwstartl, Priority::Low);
-    agent.acmd("effect_specialairlwstartl", effect_speciallwstartl, Priority::Low);
-    agent.acmd("effect_specialairlwstartr", effect_speciallwstartl, Priority::Low);
+    agent.acmd("game_speciallwstartl", game_speciallwstart, Priority::Low);
+    agent.acmd("game_speciallwstartr", game_speciallwstart, Priority::Low);
+    agent.acmd("game_specialairlwstartl", game_speciallwstart, Priority::Low);
+    agent.acmd("game_specialairlwstartr", game_speciallwstart, Priority::Low);
+    agent.acmd("effect_speciallwstartl", effect_speciallwstart, Priority::Low);
+    agent.acmd("effect_speciallwstartr", effect_speciallwstart, Priority::Low);
+    agent.acmd("effect_specialairlwstartl", effect_speciallwstart, Priority::Low);
+    agent.acmd("effect_specialairlwstartr", effect_speciallwstart, Priority::Low);
+
     agent.acmd("game_speciallwhold", game_speciallwhold, Priority::Low);
     agent.acmd("game_specialairlwhold", game_speciallwhold, Priority::Low);
+
+    agent.acmd("effect_speciallwendl", effect_speciallwend, Priority::Low);
+    agent.acmd("effect_speciallwendr", effect_speciallwend, Priority::Low);
+    agent.acmd("effect_specialairlwendl", effect_speciallwend, Priority::Low);
+    agent.acmd("effect_specialairlwendr", effect_speciallwend, Priority::Low);
 }

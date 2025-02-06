@@ -15,10 +15,15 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
             status_end_CliffCatch,
             bind_address_call_status_CliffWait,
             status_end_CliffWait,
+            status_CliffAttack_Main,
             status_end_CliffAttack,
+            status_CliffClimb_Main,
             status_end_CliffClimb,
+            status_CliffEscape_Main,
             status_end_CliffEscape,
+            status_CliffJump1,
             status_end_CliffJump1,
+            status_CliffJump2_Main,
             status_end_CliffJump2,
             status_end_CliffJump3,
             sub_cliff_uniq_process_exit_Common,
@@ -69,9 +74,57 @@ unsafe fn status_end_CliffWait(fighter: &mut L2CFighterCommon) -> L2CValue {
     call_original!(fighter)
 }
 
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_CliffAttack_Main)]
+unsafe fn status_CliffAttack_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+    let cancel_frame = FighterMotionModuleImpl::get_cancel_frame(fighter.module_accessor, Hash40::new_raw(motion_kind), true);
+    let end_frame = MotionModule::end_frame(fighter.module_accessor);
+    if cancel_frame > end_frame {
+        if StatusModule::is_changing(fighter.module_accessor) {
+            let mut motion_rate = end_frame / cancel_frame;
+            if motion_rate < 1.0 {
+                motion_rate += 0.001;
+            }
+            MotionModule::set_rate(fighter.module_accessor, motion_rate);
+            MotionModule::set_whole_rate(fighter.module_accessor, 1.0);
+        }
+        
+        let xlu_end_frame = FighterMotionModuleImpl::get_hit_normal_frame(fighter.module_accessor, Hash40::new_raw(motion_kind), true);
+        if fighter.global_table[CURRENT_FRAME].get_f32() == xlu_end_frame {
+            HitModule::set_whole(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
+        }
+    }
+
+    call_original!(fighter)
+}
+
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_end_CliffAttack)]
 unsafe fn status_end_CliffAttack(fighter: &mut L2CFighterCommon) -> L2CValue {
     VarModule::set_int(fighter.object(), vars::common::instance::LEDGE_ID, -1);
+    call_original!(fighter)
+}
+
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_CliffClimb_Main)]
+unsafe fn status_CliffClimb_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+    let cancel_frame = FighterMotionModuleImpl::get_cancel_frame(fighter.module_accessor, Hash40::new_raw(motion_kind), true);
+    let end_frame = MotionModule::end_frame(fighter.module_accessor);
+    if cancel_frame > end_frame {
+        if StatusModule::is_changing(fighter.module_accessor) {
+            let mut motion_rate = end_frame / cancel_frame;
+            if motion_rate < 1.0 {
+                motion_rate += 0.001;
+            }
+            MotionModule::set_rate(fighter.module_accessor, motion_rate);
+            MotionModule::set_whole_rate(fighter.module_accessor, 1.0);
+        }
+        
+        let xlu_end_frame = FighterMotionModuleImpl::get_hit_normal_frame(fighter.module_accessor, Hash40::new_raw(motion_kind), true);
+        if fighter.global_table[CURRENT_FRAME].get_f32() == xlu_end_frame {
+            HitModule::set_whole(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
+        }
+    }
+
     call_original!(fighter)
 }
 
@@ -81,10 +134,53 @@ unsafe fn status_end_CliffClimb(fighter: &mut L2CFighterCommon) -> L2CValue {
     call_original!(fighter)
 }
 
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_CliffEscape_Main)]
+unsafe fn status_CliffEscape_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+    let cancel_frame = FighterMotionModuleImpl::get_cancel_frame(fighter.module_accessor, Hash40::new_raw(motion_kind), true);
+    let end_frame = MotionModule::end_frame(fighter.module_accessor);
+    if cancel_frame > end_frame {
+        if StatusModule::is_changing(fighter.module_accessor) {
+            let mut motion_rate = end_frame / cancel_frame;
+            if motion_rate < 1.0 {
+                motion_rate += 0.001;
+            }
+            MotionModule::set_rate(fighter.module_accessor, motion_rate);
+            MotionModule::set_whole_rate(fighter.module_accessor, 1.0);
+        }
+        
+        let xlu_end_frame = FighterMotionModuleImpl::get_hit_normal_frame(fighter.module_accessor, Hash40::new_raw(motion_kind), true);
+        if fighter.global_table[CURRENT_FRAME].get_f32() == xlu_end_frame {
+            HitModule::set_whole(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
+        }
+    }
+
+    call_original!(fighter)
+}
+
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_end_CliffEscape)]
 unsafe fn status_end_CliffEscape(fighter: &mut L2CFighterCommon) -> L2CValue {
     VarModule::set_int(fighter.object(), vars::common::instance::LEDGE_ID, -1);
     call_original!(fighter)
+}
+
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_CliffJump1)]
+unsafe fn status_CliffJump1(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let ret = call_original!(fighter);
+
+    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+    let xlu_end_frame = FighterMotionModuleImpl::get_hit_normal_frame(fighter.module_accessor, Hash40::new_raw(motion_kind), true);
+    let end_frame = MotionModule::end_frame(fighter.module_accessor);
+    if xlu_end_frame > end_frame {
+        let mut motion_rate = end_frame / xlu_end_frame;
+        if motion_rate < 1.0 {
+            motion_rate += 0.001;
+        }
+        MotionModule::set_rate(fighter.module_accessor, motion_rate);
+        MotionModule::set_whole_rate(fighter.module_accessor, 1.0);
+    }
+
+    ret
 }
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_end_CliffJump1)]
@@ -92,6 +188,23 @@ unsafe fn status_end_CliffJump1(fighter: &mut L2CFighterCommon) -> L2CValue {
     if StatusModule::status_kind_next(fighter.module_accessor) != *FIGHTER_STATUS_KIND_CLIFF_JUMP2 {
         VarModule::set_int(fighter.object(), vars::common::instance::LEDGE_ID, -1);
     }
+    call_original!(fighter)
+}
+
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_CliffJump2_Main)]
+unsafe fn status_CliffJump2_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if StatusModule::is_changing(fighter.module_accessor) {
+        WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_SPECIAL);
+        WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_ITEM_THROW);
+        WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_LASSO);
+        WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_ATTACK);
+        WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_JUMP_AERIAL);
+    }
+
+    if fighter.sub_air_check_fall_common().get_bool() {
+        return 1.into();
+    }
+
     call_original!(fighter)
 }
 

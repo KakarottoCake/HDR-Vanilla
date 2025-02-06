@@ -25,6 +25,7 @@
   <float hash="squat_f_stick_x_max">0.6244</float>
   <int hash="jump_flick_y">4</int>
   <int hash="jump_initial_frame">5</int>
+  <int hash="jump_no_aerial_frame">2</int>
   <float hash="jump_run_stick_y">0.607</float>
   <float hash="dive_cont_value">-0.6415</float>
   <int hash="tread_jump_after_xlu_frame">0</int>
@@ -38,13 +39,13 @@
   <float hash="shield_setoff_mul_fighter_shot">0.5156</float>
   <float hash="shield_stiff_mul_attack_4">1</float>
   <float hash="shield_stiff_mul_attack_air">1</float>
-  <float hash="shield_setoff_speed_mul">0.051</float>
-  <float hash="shield_setoff_speed_max">1.2</float>
-  <float hash="shield_rebound_ground_brake">1.15</float>
+  <float hash="shield_setoff_speed_mul">0.075273</float>
+  <float hash="shield_setoff_speed_max">1.6</float>
+  <float hash="shield_rebound_ground_brake">1</float>
   <int hash="guard_off_cancel_frame">14</int>
   <int hash="guard_off_disable_shield_recovery">14</int>
   <int hash="shield_just_frame">6</int>
-  <float hash="0x2cacbf2a63">6</float>
+  <float hash="0x2cacbf2a63">8</float>
   <float hash="just_shield_speed_rate">0.00</float>
   <float hash="shield_reset">30</float>
   <int hash="shield_setoff_escape">10</int>
@@ -60,6 +61,10 @@
   <float hash="hit_stop_delay_flick_mul">5.25</float>
   <int hash="hit_stop_delay_flick_frame">3</int>
   <int hash="hit_stop_delay_flick_max_count">7</int>
+  <int hash="0x256ea4745d">-1</int>
+  <float hash="0x2373146726">1</float>
+  <int hash="0x29dae31932">-1</int>
+  <int hash="0x339a45c8eb">999</int>
   <float hash="hit_stop_delay_auto_mul">2.5</float>
   <float hash="damage_reaction_mul_max">1</float>
   <list hash="pattern_power_mul">
@@ -98,7 +103,7 @@
   <int hash="cliff_catch_move_frame">0</int>
   <float hash="cliff_next_stick">0.2</float>
   <int hash="cliff_no_catch_frame">25</int>
-  <int hash="damage_cliff_no_catch_frame">25</int>
+  <int hash="damage_cliff_no_catch_frame">10</int>
   <int hash="cliff_wait_air_xlu_max_frame">0</int>
   <int hash="cliff_wait_damage_xlu_max_frame">0</int>
   <int hash="cliff_wait_xlu_min_frame">29</int>
@@ -106,6 +111,7 @@
   <float hash="cliff_robbed_speed_y">17.5</float>
   <int hash="cliff_robbed_no_control_frame">50</int>
   <int hash="air_lasso_catch_num">3</int>
+  <int hash="cliff_jump_disable_attack_frame">1</int>
   <int hash="cliff_max_count">999</int>
   <int hash="0x189f0b0c96">999</int>
   <int hash="air_lasso_cliff_wait_frame">7</int>
@@ -114,14 +120,14 @@
   <float hash="stand_stick_y">0.2</float>
   <float hash="stand_fb_stick_x">0.2</float>
   <list hash="cliff_catch_motion_rate">
-    <float index="0">1</float>
-    <float index="1">1</float>
-    <float index="2">1</float>
-    <float index="3">1</float>
-    <float index="4">1</float>
-    <float index="5">1</float>
-    <float index="6">1</float>
-    <float index="7">1</float>
+    <float index="0">1.5</float>
+    <float index="1">1.5</float>
+    <float index="2">1.5</float>
+    <float index="3">1.5</float>
+    <float index="4">1.5</float>
+    <float index="5">1.5</float>
+    <float index="6">1.5</float>
+    <float index="7">1.5</float>
   </list>
   <list hash="0x1dff572177">
     <float index="0">1</float>
@@ -136,8 +142,9 @@
   <float hash="wall_jump_stick_x">0.7957</float>
   <float hash="wall_jump_speed_dec">0.75</float>
   <float hash="wall_jump_x_speed_dec">0.7</float>
-  <int hash="wall_jump_disable_frame">1</int>
+  <int hash="wall_jump_disable_frame">6</int>
   <int hash="wall_jump_interval_frame">1</int>
+  <int hash="cliff_release_disable_wall_jump_frame">6</int>
   <int hash="attach_wall_disable_frame">999</int>
   <float hash="damage_ground_mul">1</float>
   <float hash="damage_air_brake">0.051</float>
@@ -158,6 +165,7 @@
   <float hash="furafura_clatter_frame">0</float>
   <float hash="damage_song_frame_bonus_damage">0.5</float>
   <float hash="bury_jump_y_speed_mul">1.15</float>
+  <float hash="kirby_swallowedthrown_clatter_recover">1.8</float>
   <float hash="mewtwo_thrown_reaction_frame_mul">1</float>
   <int hash="mewtwo_thrown_reaction_frame_max">15</int>
   <float hash="bury_damage_reaction_mul">0.7</float>

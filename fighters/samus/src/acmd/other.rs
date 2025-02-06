@@ -58,10 +58,51 @@ unsafe extern "C" fn game_escapeairslide(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_squat(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        VisibilityModule::set_int64(agent.module_accessor, hash40("body") as i64, hash40("body_sphere") as i64);
+    }
+}
+
+unsafe extern "C" fn expression_squat(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        ItemModule::set_have_item_visibility(boma, false, 0);
+        ItemModule::set_attach_item_visibility(boma, false, 0);
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_TOP, 10, true);
+    }
+    for i in 1..i32::MAX{
+        if is_excute(agent) {
+            ControlModule::set_rumble(boma, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        }
+        wait(lua_state, 30.0);
+    }
+}
+
 pub fn install(agent: &mut Agent) {
+    agent.acmd("game_cliffescape", acmd_stub, Priority::Low);
+
     agent.acmd("sound_dash", sound_dash, Priority::Low);
     agent.acmd("game_turndash", game_turndash, Priority::Low);
     
     agent.acmd("game_escapeair", game_escapeair, Priority::Low);
     agent.acmd("game_escapeairslide", game_escapeairslide, Priority::Low);
+
+    agent.acmd("game_squatn", game_squat, Priority::Low);
+
+    agent.acmd("game_squatentry", game_squat, Priority::Low);
+    agent.acmd("effect_squatentry", acmd_stub, Priority::Low);
+    agent.acmd("sound_squatentry", acmd_stub, Priority::Low);
+    agent.acmd("expression_squatentry", expression_squat, Priority::Low);
+
+    agent.acmd("game_squatf", game_squat, Priority::Low);
+    agent.acmd("effect_squatf", acmd_stub, Priority::Low);
+    agent.acmd("sound_squatf", acmd_stub, Priority::Low);
+    agent.acmd("expression_squatf", expression_squat, Priority::Low);
+
+    agent.acmd("game_squatb", game_squat, Priority::Low);
+    agent.acmd("effect_squatb", acmd_stub, Priority::Low);
+    agent.acmd("sound_squatb", acmd_stub, Priority::Low);
+    agent.acmd("expression_squatb", expression_squat, Priority::Low);
 }

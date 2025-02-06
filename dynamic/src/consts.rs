@@ -85,7 +85,7 @@ pub mod vars {
             pub const CSTICK_OVERRIDE: i32 = 0x0002;
             pub const CSTICK_OVERRIDE_SECOND: i32 = 0x0003;
 
-            pub const IS_TAP_JUMP: i32 = 0x0004;
+            // pub const IS_TAP_JUMP: i32 = 0x0004;
 
             pub const OMNI_FLOAT: i32 = 0x0005;
             pub const AERIAL_NO_FLOAT: i32 = 0x0006;
@@ -185,6 +185,12 @@ pub mod vars {
 
             pub const WEIRD_ASS_TURN_RUN_ANIMATION: i32 = 0x0067;
 
+            pub const ACMD_EFFECT: i32 = 0x0068;
+
+            pub const WAS_PREV_STATUS_CANCELABLE: i32 = 0x0069;
+
+            pub const IS_ENTER_DASH_CANCEL: i32 = 0x006A;
+
             // ints
 
             pub const LAST_ATTACK_RECEIVER_ENTRY_ID: i32 = 0x0000;
@@ -196,7 +202,7 @@ pub mod vars {
 
             pub const HITFALL_BUFFER: i32 = 0x0004;
 
-            pub const JUMP_SQUAT_FRAME: i32 = 0x0005;
+            // pub const JUMP_SQUAT_FRAME: i32 = 0x0005;
 
             pub const GIMMICK_TIMER: i32 = 0x0006;
 
@@ -220,6 +226,8 @@ pub mod vars {
             pub const RIGHT_STICK_FLICK_X: i32 = 0x0011;
             pub const RIGHT_STICK_FLICK_Y: i32 = 0x0012;
 
+            pub const PREV_STATUS_TRANSITION_FRAME: i32 = 0x0013;
+
             // floats
 
             pub const LAST_ATTACK_DAMAGE_DEALT: i32 = 0x0000;
@@ -234,10 +242,10 @@ pub mod vars {
             pub const CURRENT_MOMENTUM_SPECIALS: i32 = 0x0007;
             pub const DOUBLE_JUMP_TIMER: i32 = 0x0008; // Only used by Lucas, and it's commented out, goes unused.
             pub const ROLL_SPEED: i32 = 0x0009;
-            // pub const LEDGE_POS: i32 = 0x000A;
-            // pub const LEDGE_POS_X: i32 = 0x000A;
-            // pub const LEDGE_POS_Y: i32 = 0x000B;
-            // pub const LEDGE_POS_Z: i32 = 0x000C;
+            pub const LAST_GROUNDED_POS: i32 = 0x000A;
+            // pub const LAST_GROUNDED_POS_X: i32 = 0x000A;
+            // pub const LAST_GROUNDED_POS_y: i32 = 0x000B;
+            // pub const LAST_GROUNDED_POS_Z: i32 = 0x000C;
             pub const GET_DIST_TO_FLOOR: i32 = 0x000D;
             pub const ECB_BOTTOM_Y_OFFSET: i32 = 0x000E;
             pub const CURR_DASH_SPEED: i32 = 0x000F;
@@ -302,6 +310,8 @@ pub mod vars {
 
             pub const NO_POCKET: i32 = 0x1052;
 
+            pub const IS_DASH_CANCEL: i32 = 0x1055;
+
             // ints
 
             pub const DOWN_STAND_FB_KIND: i32 = 0x1000;
@@ -344,6 +354,7 @@ pub mod vars {
             pub const PERSIST_RNG: i32 = 0x0100;
             pub const PSYCHE_UP_ACTIVE: i32 = 0x0101;
             pub const MENU_TRAINING_MODE_LOCK: i32 = 0x0102;
+            pub const SPECIAL_LW_CSTICK_BUFFER: i32 = 0x0103;
 
             // ints
             pub const SPELL_SLOT_1: i32 = 0x0100;
@@ -360,6 +371,9 @@ pub mod vars {
             pub const SPELL_SLOT_USED_2_4: i32 = 0x0111;
             pub const CURSOR_SLOT: i32 = 0x0112;
             pub const MENU_TRAINING_MODE_INDEX: i32 = 0x0113;
+            
+            // floats
+            pub const SPECIAL_LW_CSTICK_BUFFER_DIR: i32 = 0x0100;
         }
     }
 
@@ -469,6 +483,9 @@ pub mod vars {
             pub const ATTACK_STEP2S_SPINNING_DEMON: i32 = 0x0102;
             pub const ATTACK_STAND2_LIGHTNING_SCREW_UPPERCUT: i32 = 0x0103;
             pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0104;
+
+            // ints
+            pub const CAMERA_LOCKOUT_TIMER: i32 = 0x0105;
         }
     }
 
@@ -503,22 +520,20 @@ pub mod vars {
     pub mod dolly {
         pub mod instance {
             // ints
-            pub const METER_STOCKS: i32 = 0x0150;
-            pub const CURRENT_STOCKS: i32 = 0x0151;
+            pub const ADDED_METER_LEVELS: i32 = 0x0150;
 
             // flags
-            pub const SUPER_CANCEL: i32 = 0x0150;
             pub const DISABLE_SPECIAL_S: i32 = 0x0151;
-            pub const IS_INIT_METER: i32 = 0x0152;
-            pub const INCREASE_METER_STOCKS: i32 = 0x0153;
         }
         pub mod status {
             // flags
-            pub const IS_USE_FIRE_KICK: i32 = 0x1150;
-            pub const UNABLE_CANCEL_S3_DASH: i32 = 0x1151;
-            pub const IS_CHAIN_CANCEL: i32 = 0x1152;
-            pub const IS_SHATTER_STRIKE: i32 = 0x1153;
-            pub const AIR_SPECIAL_F: i32 = 0x1154;
+            pub const INHERIT_FINAL_CANCEL_ON_END: i32 = 0x1150;
+            pub const ATTACK_COMMAND_4_RELEASE_BUTTON: i32 = 0x1151;
+
+            pub const SPECIAL_LW_BREAK : i32 = 0x1152;
+
+            // ints
+            pub const HIT_CANCEL_TIMER: i32 = 0x1104;
         }
     }
 
@@ -548,6 +563,9 @@ pub mod vars {
             pub const SPECIAL_HI_JUMP: i32 = 0x0101;
             pub const SPECIAL_HI_ENABLE_SHOT: i32 = 0x1102;
             pub const SPECIAL_HI2_KILLSHOT_BUFFERED: i32 = 0x1103;
+
+            // int
+            pub const SPECIAL_HI_RETICLE_EFFECT_HANDLE: i32 = 0x1100;
         }
     }
 
@@ -605,6 +623,7 @@ pub mod vars {
         pub mod instance {
             // flags
             pub const DISABLE_SPECIAL_HI: i32 = 0x0104;
+            pub const HIT_CANCEL: i32 = 0x0105;
         }
     }
 
@@ -615,6 +634,7 @@ pub mod vars {
             pub const DISABLE_SPECIAL_S: i32 = 0x0101;
             pub const SPECIAL_S_ENABLE_ACTION: i32 = 0x0102;
             pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0103;
+            pub const HIT_CANCEL: i32 = 0x0104;
         }
         pub mod status {
             // ints
@@ -672,6 +692,7 @@ pub mod vars {
             pub const SPECIAL_N_CHANGE_FALL_SPEED: i32 = 0x1102;
             pub const SPECIAL_N_DECIDE_ANGLE: i32 = 0x1103;
             pub const SPECIAL_N_END: i32 = 0x1104;
+            pub const SPECIAL_HI_GROUND_START: i32 = 0x1105;
         }
     }
 
@@ -775,7 +796,7 @@ pub mod vars {
             pub const SPECIAL_N_PICKEL_MINING_TIMER: i32 = 0x11F4;
             pub const SPECIAL_N_LITTLEMAC_GRAVITY_ENABLE: i32 = 0x11F5;
             pub const SPECIAL_N_LITTLEMAC_GRAVITY_END: i32 = 0x11F6;
-            pub const SPECIAL_N_LITTLEMAC_CLEAR_CRIT: i32 = 0x11F7;
+            pub const SPECIAL_N_CLEAR_CRIT: i32 = 0x11F7;
             pub const PURIN_SPECIAL_N_HIT: i32 = 0x11F8;
             pub const PURIN_SPECIAL_N_HIT_CANCEL_OK: i32 = 0x11F9;
             pub const PALUTENA_SPECIAL_N_HOLD: i32 = 0x11FA;
@@ -892,6 +913,7 @@ pub mod vars {
             // ints
             pub const SPECIAL_S_ROT_ANGLE: i32 = 0x1100;
             pub const SPECIAL_HI_MARKER_EFFECT_HANDLE: i32 = 0x1103;
+            pub const HIT_CANCEL_TIMER: i32 = 0x1104;
 
             // floats
             pub const SPECIAL_N_ANGLE: i32 = 0x1100;
@@ -907,6 +929,7 @@ pub mod vars {
             pub const SPECIAL_N_OFFENSE_UP_INIT: i32 = 0x01ED;
             pub const ATTACK_S4_ANGLE_DOWN: i32 = 0x0103;
             pub const ATTACK_S4_ANGLE_UP: i32 = 0x0104;
+            pub const ATTACK_AIR_N_LANDING_HITBOX: i32 = 0x0105;
 
             // int
             pub const SPECIAL_N_OFFENSE_UP_EFFECT_HANDLE1: i32 = 0x01DF;
@@ -979,14 +1002,22 @@ pub mod vars {
     pub mod mario {
         pub mod instance {
             // flags
-            pub const SPECIAL_LW_DISABLE_STALL: i32 = 0x0100;
-            pub const SPECIAL_S_DISABLE_STALL: i32 = 0x0101;
+            pub const SPECIAL_S_DISABLE: i32 = 0x0101;
+            pub const SPECIAL_LW_DISABLE: i32 = 0x0102;
         }
         pub mod status {
             // flags
             pub const SPECIAL_N_FIREBRAND: i32 = 0x1100;
-            pub const SPECIAL_LW_GROUND_START: i32 = 0x0101;
+            pub const SPECIAL_LW_ENABLE_LANDING : i32 = 0x1101;
+
+            // ints
+            pub const SPECIAL_LW_LONG_JUMP_KIND : i32 = 0x1103;
         }
+    
+        pub const LONG_JUMP_W : i32 = 0;
+        pub const LONG_JUMP_M : i32 = 1;
+        pub const LONG_JUMP_S : i32 = 2;
+        pub const LONG_JUMP_B : i32 = 3;
     }
 
     pub mod mariod {
@@ -1067,13 +1098,14 @@ pub mod vars {
         }
         pub mod instance {
             // flags
-            pub const SPECIAL_HI1_LAUNCH_AIR_USED: i32 = 0x0100;
+            pub const BOOSTED_AERIAL_LANDING: i32 = 0x0100;
             pub const BOOSTED_ATTACK_AIR_LW_AIRTIME: i32 = 0x0101;
+            pub const SPECIAL_HI1_LAUNCH_AIR_USED: i32 = 0x0102;
 
             // ints
-            pub const SPECIAL_HI1_LAUNCH_EFFECT_HANDLE: i32 = 0x0100;
+            pub const SPECIAL_S2_STEALTHBOMB_EFFECT_HANDLE: i32 = 0x0100;
             pub const SPECIAL_S3_MISSILE_OBJECT_ID: i32 = 0x0101;
-            pub const SPECIAL_S2_STEALTHBOMB_EFFECT_HANDLE: i32 = 0x0102;
+            pub const SPECIAL_HI1_LAUNCH_EFFECT_HANDLE: i32 = 0x0102;
 
             // floats
             pub const SPECIAL_N3_CHARGE: i32 = 0x0102;
@@ -1476,18 +1508,36 @@ pub mod vars {
     pub mod samus {
         pub mod instance {
             // flags
-            pub const ATTACK_DASH_SHINESPARK: i32 = 0x0100;
-            pub const ATTACK_DASH_ENABLE_SHINESPARK: i32 = 0x0101;
+            pub const SPECIAL_LW_CRAWL: i32 = 0x0100;
+            pub const SPECIAL_LW_INPUT_FROM_CRAWL: i32 = 0x0101;
+            pub const SPECIAL_LW_BOMB_LOCKOUT: i32 = 0x0102;
+        }
+        pub mod status {
+            // flags
+            pub const SPECIAL_LW_INPUT_IN_CRAWL: i32 = 0x1100;
         }
     }
 
     pub mod samusd {
         pub mod instance {
             // flags
-            pub const SPECIAL_LW_ENABLE_DETONATE: i32 = 0x0100;
+            pub const ATTACK_AIR_N_LANDING_HIT: i32 = 0x0100;
+            pub const SPECIAL_HI_RUSH_AIR: i32 = 0x0101;
+            pub const SPECIAL_HI_RUSH_ANGLE: i32 = 0x0102;
+            pub const SPECIAL_LW_ENABLE_DETONATE: i32 = 0x0103;
 
             // ints
-            pub const SPECIAL_LW_BOMB_OBJECT_ID: i32 = 0x0100;
+            pub const SPECIAL_HI_END_TYPE: i32 = 0x0104;
+        }
+        pub mod status {
+            // flags
+            pub const SPECIAL_HI_SET_ROT: i32 = 0x1100;
+
+            // ints
+            pub const SPECIAL_HI_RUSH_FRAME: i32 = 0x1101;
+
+            // floats
+            pub const SPECIAL_HI_RUSH_BRAKE: i32 = 0x1102;
         }
     }
 
@@ -1536,6 +1586,9 @@ pub mod vars {
             // flags
             pub const SCALE_COMBO_DAMAGE: i32 = 0x1100;
             pub const MAGIC_SERIES_CANCEL_ENABLED: i32 = 0x1101;
+
+            // ints
+            pub const HIT_CANCEL_TIMER: i32 = 0x1104;
         }
     }
 
@@ -1617,12 +1670,17 @@ pub mod vars {
 
     pub mod tantan {
         pub mod instance {
-            //ints
+            // flags
+            pub const SPECIAL_HI_GROUND_START: i32 = 0x0100;
+            pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0101;
+
+            // ints
             pub const ARMR_DRAGONIZE_EFFECT_HANDLE: i32 = 0x0100;
         }
         pub mod status {
             // flags
             pub const ARMS_ATTACK_CANCEL: i32 = 0x1100;
+            pub const ATTACK_S4_CLEAR_CRIT: i32 = 0x1101;
         }
     }
 
@@ -1659,7 +1717,10 @@ pub mod vars {
     }
 
     pub mod wario {
-
+        pub mod instance {
+            // flags
+            pub const PUMMEL_SKIP_STALE: i32 = 0x0100;
+        }
     }
 
     pub mod wiifit {
@@ -1759,6 +1820,11 @@ pub mod statuses {
         pub const SPECIAL_N_CANCEL_JUMP: i32 = 0x200;
     }
 
+    pub mod dolly {
+        pub const ATTACK_COMMAND_4: i32 = 0x203;
+        pub const SPECIAL_LW_BREAKING: i32 = 0x204;
+    }
+
     pub mod edge_flash {
         pub const BURST: i32 = 0x2;
         pub const VANISH: i32 = 0x3;
@@ -1812,6 +1878,12 @@ pub mod statuses {
         pub const SPECIAL_LW_CANCEL_JUMP: i32 = 0x1F5;
     }
 
+    pub mod mario {
+        pub const GROUND_POUND_START: i32 = 0x1E3;
+        pub const GROUND_POUND_FALL: i32 = 0x1E4;
+        pub const GROUND_POUND_END: i32 = 0x1E5;
+    }
+
     pub mod mewtwo {
         pub const FLOAT: i32 = 0x1E9;
     }
@@ -1832,6 +1904,10 @@ pub mod statuses {
     pub mod palutena_explosiveflame {
         pub const CHECK_KIRBY: i32 = 0x4;
         pub const EXPLODE_KIRBY: i32 = 0x5;
+    }
+
+    pub mod palutena_meteor {
+        pub const MOVE: i32 = 0x0;
     }
 
     pub mod pickel_trolley {
@@ -1857,6 +1933,8 @@ pub mod statuses {
 
     pub mod samusd {
         pub const FLOAT: i32 = 0x1F6;
+        pub const SPECIAL_HI_RUSH: i32 = 0x1F7;
+        pub const SPECIAL_HI_END: i32 = 0x1F8;
     }
 
     pub mod wolf {
@@ -1872,6 +1950,10 @@ pub mod articles {
     
     pub mod purin {
         pub const DISARMING_VOICE: i32 = 0x2;
+    }
+
+    pub mod palutena {
+        pub const METEOR: i32 = 0x9;
     }
 }
 

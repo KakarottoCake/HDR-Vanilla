@@ -63,6 +63,14 @@ unsafe extern "C" fn special_hi3_pre(fighter: &mut L2CFighterCommon) -> L2CValue
     return 0.into();
 }
 
+unsafe extern "C" fn special_hi3_init(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let init_speed_x: f32 = VarModule::get_float(fighter.battle_object, vars::common::status::TELEPORT_INITIAL_SPEED_X);
+    let init_speed_y = VarModule::get_float(fighter.battle_object, vars::common::status::TELEPORT_INITIAL_SPEED_Y);
+    sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, init_speed_x, init_speed_y); //fix gr reappearance
+    return smashline::original_status(Init, fighter, *FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_HI_3)(fighter);
+    0.into()
+}
+
 unsafe extern "C" fn special_hi3_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.is_situation(*SITUATION_KIND_GROUND) {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
@@ -146,5 +154,6 @@ pub fn install(agent: &mut Agent) {
     agent.status(Exec, *FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_HI_2, special_hi2_exec);
     
     agent.status(Pre, *FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_HI_3, special_hi3_pre);
+    agent.status(Init, *FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_HI_3, special_hi3_init);
     agent.status(Main, *FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_HI_3, special_hi3_main);
 }

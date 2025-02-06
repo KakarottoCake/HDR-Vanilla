@@ -295,8 +295,8 @@ unsafe fn before_collision(object: *mut BattleObject) {
             if (*boma).is_fighter() {
                 let motion_kind = MotionModule::motion_kind(boma);
                 if motion_kind != hash40("invalid") {
-                    let motion_module__update_motion_slow: extern "C" fn(*const TempModule, u64) -> u64 = std::mem::transmute(*(((module_accessor.motion_module.vtable as u64) + 0x680) as *const u64));
-                    motion_module__update_motion_slow(module_accessor.motion_module, motion_kind);
+                    let fighter_motion_module_impl__unk: extern "C" fn(*const TempModule, u64) -> u64 = std::mem::transmute(*(((module_accessor.motion_module.vtable as u64) + 0x680) as *const u64));
+                    fighter_motion_module_impl__unk(module_accessor.motion_module, motion_kind);
 
                     let cancel_frame = FighterMotionModuleImpl::get_cancel_frame(boma, Hash40::new_raw(motion_kind), true);
 
@@ -571,7 +571,13 @@ unsafe fn after_collision(object: *mut BattleObject) {
     let module_accessor: *mut ModuleAccessor = std::mem::transmute((*object).module_accessor);
     let module_accessor = *module_accessor;
 
-    if VarModule::has_var_module((*boma).object()) { VarModule::off_flag((*boma).object(), vars::common::instance::BEFORE_GROUND_COLLISION); }
+    if VarModule::has_var_module((*boma).object()) {
+        VarModule::off_flag((*boma).object(), vars::common::instance::BEFORE_GROUND_COLLISION);
+
+        if StatusModule::situation_kind(boma) == *SITUATION_KIND_GROUND {
+            VarModule::set_vec3((*boma).object(), vars::common::instance::LAST_GROUNDED_POS, *PostureModule::pos(boma));
+        }
+    }
 
     if skip_early_main_status(boma, StatusModule::status_kind(boma)) {
         return call_original!(object);
@@ -734,6 +740,45 @@ unsafe fn change_elec_hitlag_for_attacker(ctx: &mut skyline::hooks::InlineCtx) {
     }
 }
 
+static mut DATA_ACCESS_LOCK: [u8; 0x20] = [0; 0x20];
+
+// Reduces rim lighting on fighters to 0.5 strength
+#[skyline::hook(offset = 0x38026f0)]
+unsafe fn set_uniform_buffer(stage: u64, index: u64, buffer: u64) {
+    let cbuf = *((buffer + 8) as *const u64);
+    let buffer_ptr = *((cbuf + 0x98) as *const u64);
+
+    if buffer_ptr == 0 {
+        return call_original!(stage, index, buffer);
+    }
+
+    let size = *((cbuf + 0x10) as *const usize);
+    let addr = *((cbuf + 0xb0) as *const u64);
+
+    let text = skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as *const u8;
+    let func = *(text.add(0x5940d28) as *const u64);
+    let func: extern "C" fn(*mut u8) -> *mut u8 = std::mem::transmute(func);
+    let map = func(buffer_ptr as _);
+
+    let data = std::slice::from_raw_parts_mut(map, size);
+
+    skyline::nn::os::LockMutex(DATA_ACCESS_LOCK.as_mut_ptr().cast());
+
+    if index == 8 {
+        data[0xAC as usize..0xB0 as usize]
+            .copy_from_slice(&vec![0x00, 0x00, 0x00, 0x3F]);  // 0x00, 0x00, 0x00, 0x3F = 0.5 floating point
+    }
+
+    let text = skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as *const u8;
+    let func = *(text.add(0x5940d38) as *const u64);
+    let func: extern "C" fn(*mut u8, isize, usize) = std::mem::transmute(func);
+    func(buffer_ptr as _, 0, size);
+
+    skyline::nn::os::UnlockMutex(DATA_ACCESS_LOCK.as_mut_ptr().cast());
+
+    call_original!(stage, index, buffer);
+}
+
 pub fn install() {
     energy::install();
     effect::install();
@@ -789,6 +834,7 @@ pub fn install() {
         before_collision,
         after_collision,
         status_module__change_status,
-        change_elec_hitlag_for_attacker
+        change_elec_hitlag_for_attacker,
+        set_uniform_buffer
     );
 }

@@ -110,6 +110,7 @@ unsafe extern "C" fn game_specialsthrowf(agent: &mut L2CAgentBase) {
     frame(lua_state, 19.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_KOOPA_STATUS_SPECIAL_S_FLAG_HIT);
+        CameraModule::reset_all(boma);
     }
 }
 
@@ -172,6 +173,7 @@ unsafe extern "C" fn game_specialsthrowb(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         REVERSE_LR(agent);
         WorkModule::on_flag(boma, *FIGHTER_KOOPA_STATUS_SPECIAL_S_FLAG_HIT);
+        CameraModule::reset_all(boma);
     }
 }
 

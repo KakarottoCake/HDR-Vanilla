@@ -241,7 +241,7 @@ unsafe extern "C" fn game_specialairs(agent: &mut L2CAgentBase) {
     }
     wait(lua_state, 4.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 6.0, 270, 35, 0, 80, 4.5, 0.0, 3.0, 6.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_BOMB, *ATTACK_REGION_NONE);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 6.0, 270, 37, 0, 80, 4.5, 0.0, 3.0, 6.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_BOMB, *ATTACK_REGION_NONE);
     }
     wait(lua_state, 1.0);
     if is_excute(agent) {
@@ -254,6 +254,9 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     if is_excute(agent) {
         boma.select_cliff_hangdata_from_name("special_hi");
+        if boma.is_situation(*SITUATION_KIND_GROUND) {
+            VarModule::on_flag(boma.object(), vars::ganon::status::SPECIAL_HI_GROUND_START);
+        }
     }
     frame(lua_state, 1.0);
     if is_excute(agent) {
@@ -263,8 +266,8 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     frame(lua_state, 5.0);
     FT_MOTION_RATE_RANGE(agent, 5.0, 8.0, 7.0);
     if is_excute(agent) {
-        if boma.is_situation(*SITUATION_KIND_GROUND) {
-            damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 8);
+        if VarModule::is_flag(boma.object(), vars::ganon::status::SPECIAL_HI_GROUND_START) {
+            damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 10);
         }
     }
     frame(lua_state, 8.0);
@@ -273,8 +276,8 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, 2.0);
     if is_excute(agent) {
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NONE, 0);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 6.0, 368, 100, 150, 0, 5.7, 0.0, 6.9, 10.5, None, None, None, 0.9, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 0, 0, Hash40::new("top"), 6.0, 368, 100, 135, 0, 5.5, 0.0, 12.5, 9.5, None, None, None, 0.9, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 6.0, 368, 100, 150, 0, 5.7, 0.0, 6.9, 10.5, None, None, None, 0.9, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 6.0, 368, 100, 135, 0, 5.5, 0.0, 12.5, 9.5, None, None, None, 0.9, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PUNCH);
         AttackModule::set_vec_target_pos(boma, 0, Hash40::new("top"), &Vector2f{x: 26.0, y: 46.0}, 20, false);
         AttackModule::set_vec_target_pos(boma, 1, Hash40::new("top"), &Vector2f{x: 26.0, y: 46.0}, 20, false);
         AttackModule::set_no_damage_fly_smoke_all(boma, true, false);
@@ -295,8 +298,8 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 34.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("armr"), 11.0, 80, 90, 0, 50, 3.5, 6.0, -1.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 1, 0, Hash40::new("armr"), 11.0, 80, 90, 0, 50, 5.7, -1.5, -1.5, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("armr"), 11.0, 80, 99, 0, 50, 3.5, 6.0, -1.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 1, 0, Hash40::new("armr"), 11.0, 80, 99, 0, 50, 5.7, -1.5, -1.5, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PUNCH);
     }
     frame(lua_state, 38.0);
     if is_excute(agent) {
@@ -314,11 +317,9 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 3.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("ganon_raijin_hold"), Hash40::new("haver"), 2, 0, 0, 0, 0, 0, 1.0, true);
-        EffectModule::enable_sync_init_pos_last(boma);
-        EFFECT_FOLLOW(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 12, 11, 0, 0, 0, 1, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.8, 0.2, 0.8);
-        LAST_EFFECT_SET_RATE(agent, 0.7);
+        EFFECT_FOLLOW(agent, Hash40::new("ganon_majinken_start"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.9, true);
+        EFFECT_FOLLOW(agent, Hash40::new("ganon_majinken_flash"), Hash40::new("top"), 0, 12, 11, 0, 0, 0, 0.85, true);
+        LAST_EFFECT_SET_RATE(agent, 2.0);
     }
     frame(lua_state, 12.0);
     if is_excute(agent) {
@@ -333,11 +334,7 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("ganon_attack_elec"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1.3, 0, 0, 0, 0, 0, 0, true);
         }
-    }
-    wait(agent.lua_state_agent, 2.0);
-    frame(lua_state, 42.0);
-    if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("ganon_raijin_hold"), false, true);
+        wait(agent.lua_state_agent, 2.0);
     }
 }
 

@@ -8,6 +8,7 @@ unsafe extern "C" fn build_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let zelda_boma: &mut BattleObjectModuleAccessor = &mut *(*zelda).module_accessor;
     if sv_battle_object::kind(owner_id) == *FIGHTER_KIND_ZELDA {
         VarModule::set_int(zelda, vars::zelda::instance::SPECIAL_LW_PHANTOM_OBJECT_ID, weapon.battle_object_id as i32);
+        //forward spawn on grounded phantom cancel
         if VarModule::is_flag(zelda, vars::zelda::instance::SPECIAL_LW_FORWARD_PHANTOM) {
             let pos = *PostureModule::pos(weapon.module_accessor);
             let zelda_pos = *PostureModule::pos(zelda_boma);      
