@@ -62,13 +62,17 @@ unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("legl"), 9.0, 361, 95, 0, 35, 3.0, 0.0, 0.0, -1.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
         ATTACK(agent, 1, 0, Hash40::new("kneel"), 9.0, 361, 95, 0, 35, 3.0, 3.0, 0.0, -1.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        AttackModule::clear(boma, 2, false);
+        ATTACK(agent, 2, 0, Hash40::new("footr"), 9.0, 361, 95, 0, 35, 3.0, 0.0, -0.5, 1.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
     }
-    frame(lua_state, 15.0);
+    frame(lua_state, 11.0);
+    if is_excute(agent) {
+        ATTACK(agent, 2, 0, Hash40::new("kneel"), 9.0, 361, 95, 0, 35, 3.0, 2.0, 0.0, -1.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+    }
+    frame(lua_state, 17.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
-    frame(lua_state, 30.0);
+    frame(lua_state, 22.0);
     if is_excute(agent) {
         WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
@@ -94,7 +98,7 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
-    frame(lua_state, 23.0);
+    frame(lua_state, 20.0);
     if is_excute(agent) {
         WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }

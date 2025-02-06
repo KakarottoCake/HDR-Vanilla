@@ -15,7 +15,7 @@
     <float hash="air_accel_x_mul">0.065</float>
     <float hash="ground_speed_x_limit">1.125</float>
     <float hash="ground_accel_x_add">0.105</float>
-    <float hash="ground_accel_x_mul">0.055</float>
+    <float hash="ground_accel_x_mul">0.105</float>
   </struct>
   <struct hash="long_jump">
     <float hash="speed_x_add">0.2</float>

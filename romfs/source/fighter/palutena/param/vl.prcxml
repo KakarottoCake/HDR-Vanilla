@@ -85,8 +85,7 @@
   </list>
   <list hash="param_reflector">
     <struct index="0">
-      <float hash="life_mul">0.5</float>
-      <float hash="speed_mul">1.0</float>
+      <float hash="life_mul">0</float>
       <float hash="offset_y_start">11.5</float>
       <float hash="offset_y_end">-7.5</float>
       <float hash="offset_z_start">4.0</float>
