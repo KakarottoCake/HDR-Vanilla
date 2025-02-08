@@ -1,7 +1,6 @@
 use super::*;
 
 unsafe extern "C" fn special_lw_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    println!("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
     if !weapon.is_flag(*WEAPON_PTRAINER_PTRAINER_INSTANCE_WORK_ID_FLAG_OUTFIELD_INVISIBLE) {
         VisibilityModule::set_whole(weapon.module_accessor, true);
     }

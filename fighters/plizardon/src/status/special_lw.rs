@@ -9,6 +9,7 @@ unsafe extern "C" fn special_lw_main(fighter: &mut L2CFighterCommon) -> L2CValue
     if VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE) == 0 {
         VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 3);
         VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 900);
+        VarModule::on_flag(object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
     }
     VarModule::on_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
     smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_SPECIAL_LW)(fighter)

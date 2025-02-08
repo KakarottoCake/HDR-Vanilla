@@ -27,6 +27,7 @@ pub unsafe extern "C" fn pledge_timer(weapon: &mut L2CFighterBase) {
             }
             
             VarModule::set_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 0);
+            VarModule::off_flag(weapon.battle_object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
         }
     }
 }
