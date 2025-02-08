@@ -47,7 +47,7 @@ unsafe extern "C" fn game_attacks4(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn game_attackhi4(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
-    let boma = smash::app::sv_system::battle_object_module_accessor(lua_state);
+    let boma = agent.boma();
     if is_excute(agent) {
         HIT_NO(agent, 12, *HIT_STATUS_NORMAL);
         HIT_NO(agent, 13, *HIT_STATUS_NORMAL);

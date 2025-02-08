@@ -120,7 +120,7 @@ unsafe extern "C" fn game_specialnupperfire(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn game_specialnfire2(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
-    let boma = smash::app::sv_system::battle_object_module_accessor(lua_state);
+    let boma = agent.boma();
     for _ in 0..4 {
         if is_excute(agent) && will_bayonet(agent){
             VarModule::on_flag(boma.object(), vars::buddy::instance::SPECIAL_N_BAYONET_ACTIVE);
@@ -452,7 +452,7 @@ unsafe extern "C" fn game_specialairswall(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn effect_specialairswall(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent; 
-    let boma = smash::app::sv_system::battle_object_module_accessor(lua_state); 
+    let boma = agent.boma(); 
     let has_hit_shield = AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD);
     let lr = PostureModule::lr(boma)==0.0;
     let size = if (has_hit_shield) {0.5} else {0.75};
@@ -466,7 +466,7 @@ unsafe extern "C" fn effect_specialairswall(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn sound_specialairswall(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent; 
-    let boma = smash::app::sv_system::battle_object_module_accessor(lua_state); 
+    let boma = agent.boma(); 
     frame(lua_state, 2.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_common_down_m_01"));

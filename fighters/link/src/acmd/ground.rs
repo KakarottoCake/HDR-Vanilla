@@ -85,7 +85,7 @@ unsafe extern "C" fn expression_attack13(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_attackdash(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let nodes = ["head", "bust", "waist", "arml", "shoulderl", "armr", "shoulderr"]; // nodes that become intangible during the attack
+    let nodes = ["waist", "arml", "shoulderl", "armr"]; // nodes that become intangible during the attack
     frame(lua_state, 7.0);
     if is_excute(agent) {
         for node in nodes { HIT_NODE(agent, Hash40::new(node), *HIT_STATUS_INVINCIBLE); }
