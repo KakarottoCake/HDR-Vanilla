@@ -307,9 +307,8 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
 	frame(lua_state, 18.0);
     FT_MOTION_RATE(agent, 1.0);
 	if is_excute(agent) {
-		ATTACK(agent, 0, 0, Hash40::new("top"), 4.5, 368, 100, 100, 0, 5.0, 0.0, 4.0, -5.0, Some(0.0), Some(4.0), Some(8.0), 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-		AttackModule::set_vec_target_pos(boma, 0, Hash40::new("rot"), &Vector2f{x: 2.0, y: 5.5}, 4, false);
-        AttackModule::set_no_damage_fly_smoke_all(boma, true, false);
+		ATTACK(agent, 0, 0, Hash40::new("top"), 4.5, 75, 100, 100, 0, 5.0, 0.0, 4.0, -5.0, Some(0.0), Some(4.0), Some(8.0), 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
+		AttackModule::set_no_damage_fly_smoke_all(boma, true, false);
         AttackModule::set_no_finish_camera_ex(boma, 0, true, false);
         AttackModule::set_no_dead_damage_fly_effect(boma, true);
 	}
