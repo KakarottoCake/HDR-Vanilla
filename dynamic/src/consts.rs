@@ -1409,6 +1409,12 @@ pub mod vars {
             pub const SPECIAL_N_PLEDGE_STATE: i32 = 0x0100; // 0 - None, 1 - Squirtle, 2 - Ivysaur, 3 - Charizard
             pub const SPECIAL_N_PLEDGE_TIMER: i32 = 0x0101;
         }
+        pub mod status {
+            // flags
+            pub const VOICE_FORWARD_SWITCH: i32 = 0x1100;
+            pub const VOICE_USE_OUT_POKE_KIND: i32 = 0x1101;
+            pub const CONTINUE_VOICE: i32 = 0x1102;
+        }
     }
 
     pub mod pzenigame {
