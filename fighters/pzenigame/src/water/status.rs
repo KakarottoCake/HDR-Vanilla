@@ -48,9 +48,7 @@ pub unsafe extern "C" fn set_rot(weapon: &mut L2CWeaponCommon) {
 }
 
 pub unsafe extern "C" fn regular_init(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    let life = weapon.get_param_int("param_water", "life");
-    weapon.set_int(life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    weapon.set_int(life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
+    let mut life = weapon.get_param_int("param_water", "life");
     let owner_boma = weapon.get_owner_boma();
     if [*FIGHTER_KIND_PZENIGAME, *FIGHTER_KIND_PFUSHIGISOU, *FIGHTER_KIND_PLIZARDON].contains(&owner_boma.kind()) {
         //println!("owner is a pokemon, we can set the pledge state properly");
@@ -58,11 +56,17 @@ pub unsafe extern "C" fn regular_init(weapon: &mut L2CWeaponCommon) -> L2CValue 
         let object = utils::util::get_battle_object_from_id(parent_id);
         let pledge_state = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
         VarModule::set_int(weapon.battle_object, vars::pzenigame_water::instance::PLEDGE_TYPE, pledge_state);
+        if pledge_state <= 1 {
+            // No pledge
+            life = 10;
+        }
     }
     else {
         //println!("ERROR: owner is not a Pokemon, things will probably crash without this failsafe");
         VarModule::set_int(weapon.battle_object, vars::pzenigame_water::instance::PLEDGE_TYPE, 2);
     }
+    weapon.set_int(life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    weapon.set_int(life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
     
     return 0.into();
 }
@@ -88,7 +92,7 @@ pub unsafe extern "C" fn clash_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
     EffectModule::kill_kind(weapon.module_accessor, Hash40::new("sys_sscope_bullet_max"), false, false);
     let life = weapon.get_int(*WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     let pledge_type = VarModule::get_int(weapon.battle_object, vars::pzenigame_water::instance::PLEDGE_TYPE);
-    let motion = if pledge_type == 2 { Hash40::new("clash_pledge_g") } else { Hash40::new("clash_pledge_f") };
+    let motion = if pledge_type == 2 { Hash40::new("clash_pledge_g") } else if pledge_type == 3 { Hash40::new("clash_pledge_f") } else { Hash40::new("clash") };
     MotionModule::change_motion(weapon.module_accessor, motion, 0.0, 1.0, false, 0.0, false, false);
 
     weapon.fastshift(L2CValue::Ptr(clash_main_loop as *const () as _))
