@@ -85,10 +85,9 @@ unsafe extern "C" fn expression_attack13(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_attackdash(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let nodes = ["waist", "arml", "shoulderl", "armr"]; // nodes that become intangible during the attack
     frame(lua_state, 7.0);
     if is_excute(agent) {
-        for node in nodes { HIT_NODE(agent, Hash40::new(node), *HIT_STATUS_INVINCIBLE); }
+        WorkModule::on_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_WAIT_SHIELD);
         ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 70, 93, 0, 40, 3.5, 0.0, 4.0, 6.0, Some(0.0), Some(10.0), Some(6.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 3, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
     }
 	frame(lua_state, 10.0);
@@ -97,8 +96,8 @@ unsafe extern "C" fn game_attackdash(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 15.0);
     if is_excute(agent) {
+        WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_WAIT_SHIELD);
         AttackModule::clear_all(boma);
-        for node in nodes { HIT_NODE(agent, Hash40::new(node), *HIT_STATUS_NORMAL); }
     }
 }
 
