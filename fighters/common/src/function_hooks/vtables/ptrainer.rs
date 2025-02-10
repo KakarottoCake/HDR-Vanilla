@@ -60,19 +60,6 @@ unsafe fn pfushigisou_seed_on_hit(vtable: u64, weapon: *mut app::Weapon, collisi
     return normal_weapon_hit_handler(vtable, weapon, collision_mask);
 }
 
-// #[skyline::hook(offset = 0x34bfa30)]
-// unsafe fn plizardon_breath_on_hit(vtable: u64, weapon: *mut app::Weapon, collision_mask: u32) -> u64 {
-//     let boma = (&mut *(weapon)).battle_object.boma();
-//     if !boma.is_status(*WEAPON_PLIZARDON_BREATH_STATUS_KIND_VANISH) {
-//         if collision_mask as i32 & (*COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) != 0 {
-//             boma.change_status_req(*WEAPON_PLIZARDON_BREATH_STATUS_KIND_VANISH, false);
-//             return 0;
-//         }
-//     }
-    
-//     return normal_weapon_hit_handler(vtable, weapon, collision_mask);
-// }
-
 pub fn install() {
     // enables Bullet Seed to be reflected
     unsafe {
@@ -86,6 +73,5 @@ pub fn install() {
         pzenigame_water_on_hit,
         pfushigisou_seed_init,
         pfushigisou_seed_on_hit,
-        //plizardon_breath_on_hit,
     );
 }
