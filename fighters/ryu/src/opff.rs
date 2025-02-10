@@ -381,7 +381,7 @@ unsafe fn metered_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObjec
     // DSpecial cancels
     if boma.is_cat_flag(Cat1::SpecialLw)
     && VarModule::is_flag(boma.object(), vars::shotos::instance::SPECIAL_LW_ENABLE_FADC)
-    && (MeterModule::level(boma.object()) >= 1 || VarModule::is_flag(fighter.battle_object, vars::shotos::instance::MAGIC_SERIES_CANCEL)) {
+    && (MeterModule::level(boma.object()) >= 2 || VarModule::is_flag(fighter.battle_object, vars::shotos::instance::MAGIC_SERIES_CANCEL)) {
         VarModule::on_flag(fighter.battle_object, vars::shotos::instance::SPECIAL_LW_ENABLE_INSTALL);
         if boma.is_status_one_of(&[
             *FIGHTER_STATUS_KIND_SPECIAL_HI,
@@ -567,12 +567,19 @@ unsafe fn aerial_cancels(boma: &mut BattleObjectModuleAccessor) {
 unsafe fn hit_cancel_timer(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     let hit_cancel_timer = VarModule::get_int(fighter.battle_object, vars::shotos::status::HIT_CANCEL_TIMER);
     if hit_cancel_timer > 0
-    && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
-    && !fighter.is_in_hitlag() {
+    && (
+        AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) 
+        || boma.is_status_one_of(&[
+            *FIGHTER_STATUS_KIND_SPECIAL_N,
+            *FIGHTER_RYU_STATUS_KIND_SPECIAL_N_COMMAND,
+            *FIGHTER_RYU_STATUS_KIND_SPECIAL_N2_COMMAND
+        ])
+    )    && !fighter.is_in_hitlag() {
         VarModule::dec_int(fighter.battle_object, vars::shotos::status::HIT_CANCEL_TIMER);
         if hit_cancel_timer - 1 == 0 {
             fighter.off_flag(*FIGHTER_RYU_STATUS_ATTACK_FLAG_HIT_CANCEL);
             fighter.off_flag(*FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
+            VarModule::off_flag(boma.object(), vars::shotos::instance::SPECIAL_LW_ENABLE_FADC)
         }
     }
 }
