@@ -58,11 +58,11 @@ unsafe extern "C" fn special_hi2_main_loop(fighter: &mut L2CFighterCommon) -> L2
             GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         }
     }
-    if fighter.is_cat_flag(Cat1::SpecialAny) {
+    zelda_special_hi_2_check_ground(fighter);
+    if fighter.is_cat_flag(Cat1::SpecialAny) && !StatusModule::is_changing(fighter.module_accessor) {
         VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
         fighter.change_status(FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_3.into(), true.into())
     }
-    zelda_special_hi_2_check_ground(fighter);
     //subsatus
     if !StatusModule::is_changing(fighter.module_accessor) {
         WorkModule::inc_int(fighter.module_accessor, *FIGHTER_ZELDA_STATUS_SPECIAL_HI_WORK_INT_FRAME);
@@ -90,39 +90,33 @@ unsafe extern "C" fn zelda_special_hi_2_check_ground(fighter: &mut L2CFighterCom
         return;
     }
 
+    if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+        let line = GroundModule::get_touch_line_raw(fighter.module_accessor, GroundTouchID(*GROUND_TOUCH_ID_DOWN)) as *mut GroundCollisionLine;
+        let mut attach = true;
+        if GroundModule::is_passable_check(fighter.module_accessor) { //snap to platforms if no longer ignoring platforms
+            attach = sv_ground_collision_line::is_floor(line);
+        }
+        GroundModule::set_attach_ground(fighter.module_accessor, attach);
+    }
+
     let mut touch_id = *GROUND_TOUCH_ID_NONE;
     let mut touch_flag = *GROUND_TOUCH_FLAG_NONE;
     let init_speed_x = VarModule::get_float(fighter.battle_object, vars::common::status::TELEPORT_INITIAL_SPEED_X);
     let init_speed_y = VarModule::get_float(fighter.battle_object, vars::common::status::TELEPORT_INITIAL_SPEED_Y);
 
-    /*if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_RIGHT as u32) {
-        touch_id = *GROUND_TOUCH_ID_RIGHT;
-        touch_flag = *GROUND_TOUCH_FLAG_RIGHT;
-    }
-    else if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_LEFT as u32) {
-        touch_id = *GROUND_TOUCH_ID_LEFT;
-        touch_flag = *GROUND_TOUCH_FLAG_LEFT;
-    }
-    else if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_UP as u32) {
-        touch_id = *GROUND_TOUCH_ID_UP;
-        touch_flag = *GROUND_TOUCH_FLAG_UP;
-    }
-    else*/ if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) 
+   if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) 
     && init_speed_x.abs() >= 0.01
     && init_speed_y <= -0.01 {
         touch_id = *GROUND_TOUCH_ID_DOWN;
         touch_flag = *GROUND_TOUCH_FLAG_DOWN;
-    }
-
-    if touch_flag == *GROUND_TOUCH_FLAG_NONE {
+    } else {
         return;
     }
 
-    fighter.clear_lua_stack();
-    lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_STOP);
-    let speed = sv_kinetic_energy::get_speed3f(fighter.lua_state_agent);
+    let stop_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP) as *mut app::KineticEnergy;
+    let speed = Vector2f{ x: lua_bind::KineticEnergy::get_speed_x(stop_energy), y: lua_bind::KineticEnergy::get_speed_y(stop_energy)};
 
-    let mut length = sv_math::vec3_length(speed.x, speed.y, speed.z);
+    let mut length = sv_math::vec3_length(speed.x, speed.y, 0.0);
     if 0.0 < length {
         let touch_x = GroundModule::get_touch_normal_x(fighter.module_accessor, touch_flag as u32);
         let touch_y = GroundModule::get_touch_normal_y(fighter.module_accessor, touch_flag as u32);
@@ -132,37 +126,11 @@ unsafe extern "C" fn zelda_special_hi_2_check_ground(fighter: &mut L2CFighterCom
         let mut cross = fighter.Vector3__cross(touch.clone(), something);
 
         let math = 1.0 / length;
-        let speed_mul = Vector3f{x: speed.x * math, y: speed.y * math, z: speed.z * math};
-        let mut final_dot = 0.0;
-        if touch_flag != *GROUND_TOUCH_FLAG_DOWN
-        && 0.0 < speed_mul.y {
-            if cross["y"].get_f32() < 0.0 {
-                final_dot = -1.0;
-            }
-            let x = touch["x"].get_f32();
-            let y = touch["y"].get_f32();
-            let deg = x.atan2(y).to_degrees().abs();
-            let deg = 180.0 - deg;
-            let deg = deg.abs();
-            let something = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), 0x158bb5418d);
-            if deg <= something {
-                length = speed_mul.x.abs();
-                cross["x"].assign(&L2CValue::F32(speed_mul.x.signum()));
-            }
-        }
-        else {
-            final_dot = sv_math::vec3_dot(cross["x"].get_f32(), cross["y"].get_f32(), cross["z"].get_f32(), speed_mul.x, speed_mul.y, speed_mul.z);
-            if -0.00001 <= final_dot
-            && final_dot <= 0.00001 {
-                if touch_flag == *GROUND_TOUCH_FLAG_RIGHT
-                || touch_flag == *GROUND_TOUCH_FLAG_LEFT {
-                    final_dot = sv_math::vec3_dot(cross["x"].get_f32(), cross["y"].get_f32(), cross["z"].get_f32(), 0.0, 1.0, 0.0);
-                }
-                else {
-                    let lr = PostureModule::lr(fighter.module_accessor);
-                    final_dot = sv_math::vec3_dot(cross["x"].get_f32(), cross["y"].get_f32(), cross["z"].get_f32(), lr, 0.0, 0.0);
-                }
-            }
+        let speed_mul = Vector3f{x: speed.x * math, y: speed.y * math, z: 0.0};
+        let mut final_dot = sv_math::vec3_dot(cross["x"].get_f32(), cross["y"].get_f32(), cross["z"].get_f32(), speed_mul.x, speed_mul.y, speed_mul.z);
+        if -0.00001 <= final_dot
+        && final_dot <= 0.00001 {
+            final_dot = sv_math::vec3_dot(cross["x"].get_f32(), cross["y"].get_f32(), cross["z"].get_f32(), fighter.lr(), 0.0, 0.0);
         }
 
         if final_dot < 0.0 {
@@ -181,12 +149,6 @@ unsafe extern "C" fn zelda_special_hi_2_check_ground(fighter: &mut L2CFighterCom
             cross["y"].get_f32() * length,
             cross["z"].get_f32() * length
         );
-        let situation = StatusModule::situation_kind(fighter.module_accessor);
-        if situation == *SITUATION_KIND_GROUND {
-            let line = GroundModule::get_touch_line_raw(fighter.module_accessor, GroundTouchID(touch_id)) as *mut GroundCollisionLine;
-            let is_floor = sv_ground_collision_line::is_floor(line);
-            GroundModule::set_attach_ground(fighter.module_accessor, is_floor);
-        }
     }
 }
 
@@ -214,7 +176,8 @@ unsafe extern "C" fn special_hi2_end(fighter: &mut L2CFighterCommon) -> L2CValue
                 let speed = Vector2f{ x: lua_bind::KineticEnergy::get_speed_x(stop_energy), y: lua_bind::KineticEnergy::get_speed_y(stop_energy)};
                 sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, speed.x.abs() * lr * 1.05, speed.y); //b-reverse telecancel reverses momentum on ground
                 //telecancel flash
-                EFFECT_FOLLOW(fighter, Hash40::new("zelda_atk"), Hash40::new("top"), 5.5 * lr, 8.0, -2.1, 0, 0, 0, 1.65, true);
+                EffectModule::req_follow(fighter.module_accessor, Hash40::new("zelda_atk"), Hash40::new("top"), &Vector3f::new(5.5 * lr, 8.0, -2.1), &Vector3f::zero(), 1.65, true, 0, 0, 0, 0, 0, false, false);
+                //EFFECT_FOLLOW(fighter, Hash40::new("zelda_atk"), Hash40::new("top"), 5.5 * lr, 8.0, -2.1, 0, 0, 0, 1.65, true);
                 LAST_EFFECT_SET_COLOR(fighter, 0.95, 3.0, 0.6);
                 LAST_EFFECT_SET_ALPHA(fighter, 0.75);
                 LAST_EFFECT_SET_RATE(fighter, 1.10); //spawn gr cancel eff frame 0
@@ -224,34 +187,6 @@ unsafe extern "C" fn special_hi2_end(fighter: &mut L2CFighterCommon) -> L2CValue
         }
     }
     0.into()
-}
-
-unsafe extern "C" fn special_hi3_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
-    StatusModule::init_settings(
-        fighter.module_accessor,
-        app::SituationKind(*SITUATION_KIND_NONE),
-        *FIGHTER_KINETIC_TYPE_UNIQ,
-        *GROUND_CORRECT_KIND_KEEP as u32,
-        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
-        true,
-        *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG,
-        *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT,
-        *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT,
-        (*FS_SUCCEEDS_KEEP_ATTACK | *FS_SUCCEEDS_KEEP_EFFECT) as i32 //allow effect to spawn on ledge cancel
-    );
-    FighterStatusModuleImpl::set_fighter_status_data(
-        fighter.module_accessor,
-        false,
-        *FIGHTER_TREADED_KIND_NO_REAC,
-        false,
-        false,
-        false,
-        (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_HI | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK) as u64,
-        0,
-        *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_HI as u32,
-        0
-    );
-    return 0.into();
 }
 
 unsafe extern "C" fn special_hi3_main(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -357,6 +292,5 @@ pub fn install(agent: &mut Agent) {
     agent.status(Pre, *FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_2, special_hi2_pre);
     agent.status(Main, *FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_2, special_hi2_main);
     agent.status(End, *FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_2, special_hi2_end);
-    agent.status(Pre, *FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_3, special_hi3_pre);
     agent.status(Main, *FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_3, special_hi3_main);
 }
