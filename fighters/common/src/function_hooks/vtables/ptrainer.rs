@@ -74,6 +74,12 @@ unsafe fn pfushigisou_seed_on_hit(vtable: u64, weapon: *mut app::Weapon, collisi
 // }
 
 pub fn install() {
+    // enables Bullet Seed to be reflected
+    unsafe {
+        let text = skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as *mut u64;
+        let _ = skyline::patching::Patch::in_text(0x51a0628).data(text.add(0x33b8c40 / 0x8));
+    }
+
     skyline::install_hooks!(
         ptrainer_swap_backwards_hook,
         //ptrainer_stub_death_switch,
