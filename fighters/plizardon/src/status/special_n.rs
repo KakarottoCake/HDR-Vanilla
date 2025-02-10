@@ -7,7 +7,9 @@ unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue 
 }
 
 unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.sub_air_check_dive();
+    if fighter.sub_transition_group_check_air_cliff().get_bool() {
+        return 1.into();
+    }
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
         || fighter.sub_air_check_fall_common().get_bool() {
@@ -22,7 +24,7 @@ unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
         fighter.off_flag(*FIGHTER_PLIZARDON_STATUS_BREATH_FLAG_GENE_BREATH);
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_PLIZARDON_GENERATE_ARTICLE_BREATH, false, -1);
     }
-    if StatusModule::is_changing(fighter.module_accessor)
+    if !StatusModule::is_changing(fighter.module_accessor)
     && StatusModule::is_situation_changed(fighter.module_accessor) {
         special_n_change_motion(fighter, true);
     }

@@ -200,6 +200,12 @@ jump_squat:
 shield_break_fly:
   animations:
   - name: f04downspotd.nuanmb
+special_n_start:
+  extra:
+    cancel_frame: 60
+special_air_n_start:
+  extra:
+    cancel_frame: 60
 step_pose_back:
   extra:
     cancel_frame: 6

@@ -1,5 +1,5 @@
-clash_pledge_w:
-  game_script: game_clashpledgew
+move_pledge_w:
+  game_script: game_movepledgew
   flags:
     turn: false
     loop: false
@@ -18,11 +18,11 @@ clash_pledge_w:
   blend_frames: 0
   animations: []
   scripts:
-  - sound_clashpledgew
-  - effect_clashpledgew
+  - sound_movepledgew
+  - effect_movepledgew
   extra: ~
-clash_pledge_g:
-  game_script: game_clashpledgeg
+move_pledge_g:
+  game_script: game_movepledgeg
   flags:
     turn: false
     loop: false
@@ -41,6 +41,6 @@ clash_pledge_g:
   blend_frames: 0
   animations: []
   scripts:
-  - sound_clashpledgeg
-  - effect_clashpledgeg
+  - sound_movepledgeg
+  - effect_movepledgeg
   extra: ~
