@@ -623,6 +623,7 @@ dependencies = [
  "koopag",
  "koopajr",
  "krool",
+ "lazy_static",
  "link",
  "littlemac",
  "locks",
@@ -676,12 +677,14 @@ dependencies = [
  "skyline 0.2.1 (git+https://github.com/ultimate-research/skyline-rs)",
  "skyline-web",
  "skyline_smash",
+ "smash",
  "smash-arc",
  "smashline",
  "snake",
  "sonic",
  "szerosuit",
  "tantan",
+ "toml 0.5.11",
  "toonlink",
  "trail",
  "utils",
@@ -1168,7 +1171,7 @@ dependencies = [
  "motion_list_rs",
  "serde",
  "serde_yaml",
- "toml",
+ "toml 0.7.8",
 ]
 
 [[package]]
@@ -2241,6 +2244,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2c9d3793400a45f954c52e73d068316d76b6f4e36977e3fcebb13a2721e80237"
 dependencies = [
  "crunchy",
+]
+
+[[package]]
+name = "toml"
+version = "0.5.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f4f7f0dd8d50a853a531c426359045b1998f04219d88799810762cd4ad314234"
+dependencies = [
+ "serde",
 ]
 
 [[package]]
