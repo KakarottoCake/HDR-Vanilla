@@ -12,7 +12,7 @@
   </list>
   <list size="1" hash="param_grenadelauncher">
     <struct index="0">
-      <float hash="angle">54.0</float>
+      <float hash="angle">64.0</float>
     </struct>
   </list>
   <list hash="param_special_s">
