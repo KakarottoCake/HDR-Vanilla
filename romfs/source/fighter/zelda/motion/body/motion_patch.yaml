@@ -73,9 +73,6 @@ fall_aerial:
   blend_frames: 3
 fall_special:
   blend_frames: 3
-landing_fall_special:
-  extra:
-    cancel_frame: 21
 guard_off:
   blend_frames: 4
   extra:
@@ -95,9 +92,9 @@ special_n:
     intangible_end_frame: 13
     cancel_frame: 64
 attack_hi3:
-  cancel_frame: 31
+  cancel_frame: 33
 attack_lw3:
-  cancel_frame: 24
+  cancel_frame: 22
 attack_hi4:
   extra:
     cancel_frame: 65
@@ -110,6 +107,9 @@ attack_s4_s:
   extra:
     cancel_frame: 54
 attack_s3_s:
+  extra:
+    cancel_frame: 34
+attack_s3_hi:
   extra:
     cancel_frame: 34
 attack_s3_lw:
@@ -127,9 +127,6 @@ attack_air_n:
 attack_air_lw:
   extra:
     cancel_frame: 43
-attack_s3_hi:
-  extra:
-    cancel_frame: 34
 special_air_n:
   extra:
     intangible_start_frame: 0

@@ -92,6 +92,53 @@ unsafe fn status_DashCommon(fighter: &mut L2CFighterCommon) {
             WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_SQUAT);
         }
     }
+    if VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_ENTER_DASH_CANCEL) {
+        VarModule::off_flag(fighter.battle_object, vars::common::instance::IS_ENTER_DASH_CANCEL);
+        VarModule::on_flag(fighter.battle_object, vars::common::status::IS_DASH_CANCEL);
+        WorkModule::unable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_JUMP);
+        fighter.unable_transition_term_many(&[
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_DASH,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_S4_START,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_DASH,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_FORCE,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_FORCE_DASH,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_TURN,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_DASH,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_SWING_4,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_SHOOT_S4,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_SLIP,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_SWING_DASH,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_PICKUP_LIGHT,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_PICKUP_HEAVY,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N_COMMAND,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N2_COMMAND,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S_COMMAND,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI_COMMAND,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_COMMAND1,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW_COMMAND,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SUPER_SPECIAL,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SUPER_SPECIAL2,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_PICKUP_LIGHT_DASH,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_PICKUP_HEAVY_DASH,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_COMMAND_623NB,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_STAND,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_SQUAT,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_DASH,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_DASH,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_B,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_F,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_PASS,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_U,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_S,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_LW,
+        ]);
+    }
     VarModule::off_flag(fighter.battle_object, vars::common::instance::IS_SMASH_TURN);
 }
 
@@ -596,8 +643,8 @@ unsafe fn sub_dash_uniq_process_main_internal(fighter: &mut L2CFighterCommon, pa
         if attack_frame - 1 < 0 {
             WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_SPECIAL);
             WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_ATTACK);
-            WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_PICKUP_LIGHT);
-            WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_PICKUP_HEAVY);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_PICKUP_LIGHT);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_PICKUP_HEAVY);
         }
     }
     let invalid_attack_escape_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_DASH_WORK_INT_INVALID_ATTACK_ESCAPE_FRAME);
@@ -690,6 +737,8 @@ unsafe fn status_end_dash(fighter: &mut L2CFighterCommon) -> L2CValue {
         MotionModule::joint_local_tra(fighter.module_accessor, Hash40::new("hip"), false, &mut hip_translate);
         VarModule::set_float(fighter.battle_object, vars::common::instance::DASH_HIP_OFFSET_X, hip_translate.z);
     }
+
+    VarModule::off_flag(fighter.battle_object, vars::common::instance::IS_ENTER_DASH_CANCEL);
 
     call_original!(fighter)
 }

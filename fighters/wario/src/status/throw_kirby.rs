@@ -19,7 +19,37 @@ unsafe extern "C" fn throw_kirby_init(fighter: &mut L2CFighterCommon) -> L2CValu
 
 unsafe extern "C" fn throw_kirby_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     return fighter.status_ThrowKirby();
+    // KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_ENV_WIND);
+    // let motion = fighter.get_int64(*FIGHTER_STATUS_CATCH_WAIT_WORK_INT_MOTION_KIND);
+    // MotionModule::change_motion(fighter.module_accessor, Hash40::new_raw(motion), 0.0, 1.0, false, 0.0, false, false);
+    // WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_THROW_KIRBY_GROUND);
+    //throw log common
+    //throw kirby uniq
+    //fighter.main_shift(throw_kirby_main_loop)
 }
+
+// unsafe extern "C" fn throw_kirby_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+//     if CancelModule::is_enable_cancel(fighter.module_accessor) {
+//         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
+//         || fighter.sub_air_check_fall_common().get_bool() {
+//             return 0.into();
+//         }
+//     }
+//     if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_THROW_KIRBY_GROUND) {
+//         if fighter.is_situation(*SITUATION_KIND_AIR) {
+//             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+//             return 1.into();
+//         }
+//     }
+//     if !MotionModule::is_end(fighter.module_accessor) {
+//         throw_kirby_exec(fighter);
+//         fighter.sub_status_uniq_process_ThrowKirby_execFixPos();
+//         return 0.into();
+//     }
+//     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
+//     fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+//     return 1.into();
+// }
 
 unsafe extern "C" fn throw_kirby_exit(fighter: &mut L2CFighterCommon) -> L2CValue {
     EFFECT_OFF_KIND(fighter, Hash40::new("sys_merikomi"),false,true);

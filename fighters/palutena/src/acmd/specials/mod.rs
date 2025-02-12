@@ -106,7 +106,6 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let current_damage = DamageModule::damage(boma, 0);
     frame(lua_state, 4.0);
     if is_excute(agent) {
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 20.0);
@@ -114,12 +113,14 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
     frame(lua_state, 19.0);
     if is_excute(agent) {
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
+        let current_damage = DamageModule::damage(boma, 0);
         VarModule::set_float(boma.object(), vars::palutena::status::SPECIAL_LW_STORED_DAMAGE, DamageModule::damage(boma, 0) - current_damage);
     }
     frame(lua_state, 23.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 12.0 + (VarModule::get_float(boma.object(), vars::palutena::status::SPECIAL_LW_STORED_DAMAGE) * 0.75), 361, 50, 0, 70, 7.0, 0.0, 10.5, 13.0, Some(0.0), Some(10.5), Some(14.5), 1.25, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_MAGIC);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 12.0 + (VarModule::get_float(boma.object(), vars::palutena::status::SPECIAL_LW_STORED_DAMAGE) * 0.75), 361, 30, 0, 65, 9.0, 0.0, 10.5, 9.0, Some(0.0), Some(10.5), Some(20.0), 1.25, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_MAGIC);
+        let damage = VarModule::get_float(boma.object(), vars::palutena::status::SPECIAL_LW_STORED_DAMAGE);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 12.0 + (damage * 0.75), 361, 50, 0, 70, 7.0, 0.0, 10.5, 13.0, Some(0.0), Some(10.5), Some(14.5), 1.25, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_MAGIC);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 12.0 + (damage * 0.75), 361, 30, 0, 65, 8.0, 0.0, 10.5, 8.0, Some(0.0), Some(10.5), Some(19.0), 1.25, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_MAGIC);
         AttackModule::set_force_reaction(boma, 0, true, false);
         AttackModule::set_force_reaction(boma, 1, true, false);
     }
@@ -135,8 +136,8 @@ unsafe extern "C" fn effect_speciallw(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     if is_excute(agent) {
         EFFECT_FLW_POS(agent, Hash40::new("palutena_counter_flash"), Hash40::new("shield"), -1, 0, -3, 0, 0, 0, 0.7, true);
-        EFFECT(agent, Hash40::new("palutena_counter_success"), Hash40::new("top"), 0, 14.8, -1, 0, 90, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
-        EFFECT(agent, Hash40::new("sys_counter_flash"), Hash40::new("top"), 0, 14.8, -1, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
+        EFFECT_FLW_POS(agent, Hash40::new("palutena_counter_success"), Hash40::new("top"), 0, 14.8, 0, 0, 90, 0, 0.4, false);
+        EFFECT_FLW_POS(agent, Hash40::new("sys_counter_flash"), Hash40::new("top"), 0, 14.8, 1.5, 0, 0, 0, 0.4, false);
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {

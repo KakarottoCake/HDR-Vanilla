@@ -235,11 +235,14 @@ unsafe extern "C" fn game_specialairsthrow(agent: &mut L2CAgentBase) {
     frame(lua_state, 24.0);
     if is_excute(agent) {
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
+        if VarModule::get_float(agent.battle_object, vars::lucario::status::AURA_OVERRIDE) <= 0.0 {
+            MeterModule::add(agent.battle_object, 12.0 * MeterModule::damage_gain_mul(agent.battle_object));
+        }
     }
     frame(lua_state, 25.0);
     if is_excute(agent) {
-        MeterModule::watch_damage(agent.battle_object, false);
         AttackModule::clear_all(boma);
+        MeterModule::watch_damage(agent.battle_object, false);
     }
     frame(lua_state, 44.0);
     if is_excute(agent) {
@@ -274,12 +277,13 @@ unsafe extern "C" fn game_specialsthrow(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 29.0);
     if is_excute(agent) {
-        MeterModule::watch_damage(agent.battle_object, true);
         let target = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
         let target_group = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
         let target_no = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
-        MeterModule::watch_damage(agent.battle_object, false);
+        if VarModule::get_float(agent.battle_object, vars::lucario::status::AURA_OVERRIDE) <= 0.0 {
+            MeterModule::add(agent.battle_object, 12.0 * MeterModule::damage_gain_mul(agent.battle_object));
+        }
     }
 }
 
@@ -344,7 +348,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 8.0);
-    FT_MOTION_RATE_RANGE(agent, 8.0, 21.0, 24.0);
+    FT_MOTION_RATE_RANGE(agent, 8.0, 21.0, 16.0);
     if is_excute(agent) {
         boma.on_flag(*FIGHTER_LUCARIO_MACH_STATUS_WORK_ID_FLAG_GRAVITY_ONOFF);
     }
@@ -363,14 +367,13 @@ unsafe extern "C" fn game_specialhimove(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, rate * 0.8);
     if is_excute(agent) {
         JostleModule::set_status(boma, false);
-        MeterModule::drain_direct(agent.battle_object, 8.1 * rate);
-    }
-    frame(lua_state, 3.0);
-    if is_excute(agent) {
         MeterModule::watch_damage(agent.battle_object, false);
         MeterModule::watch_damage(agent.battle_object, true);
         VarModule::on_flag(agent.battle_object, vars::lucario::status::HIT_CANCEL);
-        ATTACK(agent, 0, 0, Hash40::new("hip"), 0.5, 367, 100, 0, 35, 6.0, 0.0, 0.0, 0.0, None, None, None, 0.75, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 2, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_LUCARIO, *ATTACK_REGION_NONE);
+        ATTACK(agent, 0, 0, Hash40::new("hip"), 0.5, 367, 100, 16, 0, 6.0, 0.0, 0.0, 0.0, None, None, None, 0.75, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 2, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_LUCARIO, *ATTACK_REGION_NONE);
+        ATTACK(agent, 1, 0, Hash40::new("hip"), 0.5, 367, 100, 32, 0, 6.0, 0.0, 0.0, 0.0, None, None, None, 0.75, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 1, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_LUCARIO, *ATTACK_REGION_NONE);
+        AttackModule::set_no_finish_camera(boma, 0, true, false);
+        AttackModule::set_no_finish_camera(boma, 1, true, false);
     }
     frame(lua_state, 16.0);
     if is_excute(agent) {

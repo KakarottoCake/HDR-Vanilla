@@ -12,6 +12,7 @@ pub mod status;
 mod bullet;
 mod clayrocket;
 mod fishingrod;
+mod pot;
 mod trafficsign;
 
 use smash::{
@@ -56,5 +57,6 @@ pub fn install() {
     bullet::install();
     clayrocket::install();
     fishingrod::install();
+    pot::install();
     trafficsign::install();
 }

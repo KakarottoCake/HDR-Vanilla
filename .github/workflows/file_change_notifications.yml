@@ -231,11 +231,11 @@ jobs:
 
           # Determine the email subject and link based on event type
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            echo "EMAIL_SUBJECT=File Changes PRd in pre-release Branch" >> $GITHUB_ENV
+            echo "EMAIL_SUBJECT=[PR] Files changed in pre-release" >> $GITHUB_ENV
             echo "LINK=${{ github.event.pull_request.html_url }}" >> $GITHUB_ENV
             echo "LINK_TYPE=Pull Request" >> $GITHUB_ENV
           else
-            echo "EMAIL_SUBJECT=Files Changed in pre-release Branch" >> $GITHUB_ENV
+            echo "EMAIL_SUBJECT=[merge] Files changed in pre-release" >> $GITHUB_ENV
             COMMIT_SHA=${{ github.sha }}
             COMMIT_URL=https://github.com/${{ github.repository }}/commit/${COMMIT_SHA}
             echo "LINK=$COMMIT_URL" >> $GITHUB_ENV

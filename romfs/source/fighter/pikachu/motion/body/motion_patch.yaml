@@ -112,6 +112,12 @@ landing_air_hi:
 landing_air_lw:
   extra:
     cancel_frame: 30
+special_lw:
+  extra:
+    cancel_frame: 80
+special_air_lw:
+  extra:
+    cancel_frame: 80
 catch:
   extra:
     cancel_frame: 35

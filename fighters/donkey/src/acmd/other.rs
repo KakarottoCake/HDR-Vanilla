@@ -122,13 +122,29 @@ unsafe extern "C" fn game_escapeairslide(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_itemheavyget(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 5.0);
+    frame(lua_state, 1.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 8.0, 13.0);
+    frame(lua_state, 8.0);
+    FT_MOTION_RATE(agent, 1.0);
+    if !ItemModule::is_have_item(boma, 0) {
+        let itemmanager = smash2::app::ItemManager::instance().unwrap();
+        let barrel_count = smash2::app::ItemManager::get_num_of_ownered_item(
+            itemmanager, boma.battle_object_id, 
+            smash2::app::ItemKind::Barrel);
+        if barrel_count == 0 {
+            VarModule::on_flag(agent.object(), vars::donkey::instance::SPECIAL_LW_BARREL_GENERATED);
+            ItemModule::have_item(boma, ItemKind(*ITEM_KIND_BARREL), 0, 0, false, false);
+            EFFECT(agent, Hash40::new("donkey_handslap"), Hash40::new("top"), 6, 0, 0, 0, 0, 0, 0.3, 0, 0, 0, 0, 0, 0, false);
+        }
+    } else {
+        VarModule::off_flag(agent.object(), vars::donkey::instance::SPECIAL_LW_BARREL_GENERATED);
+    }
     if VarModule::is_flag(agent.object(), vars::donkey::instance::SPECIAL_LW_BARREL_GENERATED) {
         VarModule::off_flag(agent.object(), vars::donkey::instance::SPECIAL_LW_BARREL_GENERATED);
-        FT_MOTION_RATE_RANGE(agent, 5.0, 25.0, 45.0);   //26
+        FT_MOTION_RATE_RANGE(agent, 8.0, 25.0, 35.0);   //26
     }
     else {
-        FT_MOTION_RATE_RANGE(agent, 5.0, 25.0, 30.0);   //18
+        FT_MOTION_RATE_RANGE(agent, 8.0, 25.0, 22.0);   //18
     }
     if is_excute(agent) {
         ItemModule::pickup_item(agent.module_accessor, ItemSize{_address: *ITEM_SIZE_HEAVY as u8},
@@ -136,7 +152,6 @@ unsafe extern "C" fn game_itemheavyget(agent: &mut L2CAgentBase) {
             QuickItemTreatType{_address: *QUICK_ITEM_TREAT_TYPE_FORCE_HAVE as u8},
             ItemPickupSearchMode{_address: *ITEM_PICKUP_SEARCH_MODE_NORMAL as u8});
     }
-    frame(lua_state, 25.0);
 }
 
 unsafe extern "C" fn expression_superliftlanding(agent: &mut L2CAgentBase) {

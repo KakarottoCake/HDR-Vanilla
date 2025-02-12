@@ -17,7 +17,21 @@ unsafe extern "C" fn game_straight(agent: &mut L2CAgentBase) {
 	}
 }
 
+unsafe extern "C" fn effect_sburst(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        agent.clear_lua_stack();
+        lua_args!(agent, Hash40::new("sys_bomb_a"), Hash40::new("sys_bomb_b"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.75, 0, 0, 0, 0, 0, 0, true);
+        sv_animcmd::EFFECT_BRANCH_SITUATION(agent.lua_state_agent);
+        agent.clear_lua_stack();
+        LAST_EFFECT_SET_RATE(agent, 1.33);
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_ready", game_ready, Priority::Low);
     agent.acmd("game_straight", game_straight, Priority::Low);
+
+    agent.acmd("effect_sburst", effect_sburst, Priority::Low);
 }

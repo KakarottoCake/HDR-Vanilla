@@ -117,6 +117,32 @@ unsafe extern "C" fn effect_landingheavy(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_catchcut(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 1.0);
+    // I don't like this any more than you do
+    if boma.is_prev_status_one_of(&[
+        *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_EAT_FALL,
+        *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_EAT_JUMP1,
+        *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_EAT_JUMP2,
+        *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_EAT_WAIT,
+        *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_EAT_WAIT_FALL,
+        *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_EAT_WAIT_JUMP,
+        *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_EAT_PASS,
+        *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_EAT_TURN,
+        *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_EAT_TURN_AIR,
+        *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_EAT_WALK,
+        *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_EAT_LANDING,
+        *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_SWALLOW,
+        *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_SWALLOW_WAIT,
+    ]) && boma.is_situation(*SITUATION_KIND_AIR) {
+        FT_MOTION_RATE_RANGE(agent, 1.0, 30.0, 34.0);
+    }
+    frame(lua_state, 30.0);
+    FT_MOTION_RATE(agent, 1.0);
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_cliffescape", acmd_stub, Priority::Low);
 
@@ -134,4 +160,6 @@ pub fn install(agent: &mut Agent) {
     
     agent.acmd("game_landingheavy", game_landingheavy, Priority::Low);
     agent.acmd("effect_landingheavy", effect_landingheavy, Priority::Low);
+
+    agent.acmd("game_catchcut", game_catchcut, Priority::Low);
 }

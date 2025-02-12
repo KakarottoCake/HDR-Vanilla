@@ -72,6 +72,10 @@ unsafe extern "C" fn effect_tame(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_tame(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+	if is_excute(agent) {
+		let sound = SoundModule::play_se(boma, Hash40::new("se_zelda_magic10"), true, false, false, false, app::enSEType(0));
+        SoundModule::set_se_vol(boma, sound as i32, 0.85, 0);
+	}
 	frame(lua_state, 20.0);
     if is_excute(agent) {
 		let sound = SoundModule::play_se(boma, Hash40::new("se_zelda_magic01"), true, false, false, false, app::enSEType(0));

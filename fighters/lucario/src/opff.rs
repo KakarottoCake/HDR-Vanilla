@@ -10,7 +10,7 @@ pub extern "C" fn lucario_meter(fighter: &mut smash::lua2cpp::L2CFighterCommon) 
         }
         MeterModule::update(fighter.object(), false);
         MeterModule::set_meter_cap(fighter.object(), 3);
-        MeterModule::set_meter_per_level(fighter.object(), 90.0);
+        MeterModule::set_meter_per_level(fighter.object(), ParamModule::get_float(fighter.battle_object, ParamType::Agent, "meter.damage_per_level"));
         utils::ui::UiManager::set_aura_meter_enable(fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32, true);
         utils::ui::UiManager::set_aura_meter_info(
             (fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32),
@@ -146,7 +146,7 @@ unsafe fn sspecial(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModule
 }
 
 unsafe fn meter_module(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, status_kind: i32, situation_kind: i32) {
-    let damage_gain_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "aura.damage_meter_gain_mul");
+    let damage_gain_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "meter.damage_meter_gain_mul");
     MeterModule::set_damage_gain_mul(fighter.object(), damage_gain_mul);
     if [ // list of statuses that should pause passive meter regen
         // wallcling
@@ -247,9 +247,9 @@ unsafe fn meter_module(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMo
     // determine if we should use the burnout regen rate
     let meter_regen_type = {
         if VarModule::is_flag(fighter.battle_object, vars::lucario::instance::METER_BURNOUT) {
-            "aura.regen_rate_burnout"
+            "meter.regen_rate_burnout"
         } else {
-            "aura.regen_rate"
+            "meter.regen_rate"
         }
     };
     // determine if we should use the defensive regen multiplier
@@ -260,7 +260,7 @@ unsafe fn meter_module(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMo
             *FIGHTER_STATUS_KIND_GUARD_ON,
         ].contains(&status_kind)
         || situation_kind == *SITUATION_KIND_AIR {
-            ParamModule::get_float(fighter.battle_object, ParamType::Agent, "aura.regen_rate_defensive_mul")
+            ParamModule::get_float(fighter.battle_object, ParamType::Agent, "meter.regen_rate_defensive_mul")
         } else {
             1.0
         }

@@ -14,6 +14,7 @@ mod finals;
 mod special_cmd4;
 mod special_lw;
 mod special_s;
+mod special_hi;
 
 utils::import_noreturn!(common::shoto_status::{
     fgc_end_dashback,
@@ -110,7 +111,6 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
         *FIGHTER_STATUS_KIND_ATTACK_LW3,
         *FIGHTER_STATUS_KIND_ATTACK_HI4_START,
         *FIGHTER_STATUS_KIND_ATTACK_LW4_START,
-        *FIGHTER_STATUS_KIND_CATCH,
         *FIGHTER_STATUS_KIND_ITEM_SWING,
         *FIGHTER_STATUS_KIND_SPECIAL_N,
         *FIGHTER_STATUS_KIND_FINAL,
@@ -308,4 +308,5 @@ pub fn install(agent: &mut Agent) {
     special_cmd4::install(agent);
     special_lw::install(agent);
     special_s::install(agent);
+    special_hi::install(agent);
 }
