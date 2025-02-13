@@ -14,4 +14,8 @@
             <float hash="p2_y">11</float>
         </struct>
     </struct>
+    <struct hash="param_special_hi">
+        <int hash="rush_frame">40</int>
+        <float hash="rush_brake">0.06</float>
+    </struct>
 </struct>
