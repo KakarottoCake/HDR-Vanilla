@@ -112,10 +112,6 @@ unsafe extern "C" fn game_specialhi1(agent: &mut L2CAgentBase) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
         MotionModule::set_rate(boma, 1.5);
     }
-    frame(lua_state, 33.0);
-    if is_excute(agent) {
-        agent.off_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
-    }
 }
 
 unsafe extern "C" fn expression_specialhi1(agent: &mut L2CAgentBase) {
@@ -318,11 +314,8 @@ unsafe extern "C" fn game_specialhicommand(agent: &mut L2CAgentBase) {
 
     frame(lua_state, 40.0);
     if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
-    }
-    frame(lua_state, 41.0);
-    if is_excute(agent) {
-        agent.off_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+        MotionModule::set_rate(boma, 1.5);
     }
 }
 
@@ -365,9 +358,12 @@ unsafe extern "C" fn game_specialhifall(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        VarModule::off_flag(agent.battle_object, vars::dolly::status::INHERIT_FINAL_CANCEL_ON_END);
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         MotionModule::set_rate(boma, 1.5);
+    }
+    frame(lua_state, 2.0);
+    if is_excute(agent) {
+        VarModule::off_flag(agent.battle_object, vars::dolly::status::INHERIT_FINAL_CANCEL_ON_END);
     }
 }
 
@@ -382,7 +378,7 @@ unsafe extern "C" fn game_specialairhiend(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialhilanding(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 10.0);
+    frame(lua_state, 12.0);
     if is_excute(agent) {
         VarModule::off_flag(agent.battle_object, vars::dolly::status::INHERIT_FINAL_CANCEL_ON_END);
     }

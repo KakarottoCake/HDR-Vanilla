@@ -55,6 +55,12 @@ pub unsafe extern "C" fn special_b_init(fighter: &mut L2CFighterCommon) -> L2CVa
     if fighter.is_situation(*SITUATION_KIND_AIR) {
         VarModule::on_flag(fighter.battle_object, vars::dolly::instance::DISABLE_SPECIAL_S);
     }
+    // cap start speed
+    let lr = PostureModule::lr(fighter.module_accessor);
+    let mut speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) * lr;
+    let mut speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let start_speed_x_max = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_b.start_speed_x_max");
+    SET_SPEED_EX(fighter, speed_x.min(start_speed_x_max) * lr, speed_y, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     return false.into();
 }
 
@@ -64,6 +70,12 @@ pub unsafe extern "C" fn special_b_command_init(fighter: &mut L2CFighterCommon) 
     if fighter.is_situation(*SITUATION_KIND_AIR) {
         VarModule::on_flag(fighter.battle_object, vars::dolly::instance::DISABLE_SPECIAL_S);
     }
+    // cap start speed
+    let lr = PostureModule::lr(fighter.module_accessor);
+    let mut speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) * lr;
+    let mut speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let start_speed_x_max = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_b.start_speed_x_max");
+    SET_SPEED_EX(fighter, speed_x.min(start_speed_x_max) * lr, speed_y, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     return false.into();
 }
 

@@ -55,11 +55,15 @@ unsafe fn chain_hit(fighter: &mut L2CFighterCommon) {
         if fighter.status_frame() <= 1 {
             VarModule::set_int(fighter.object(), vars::common::instance::LAST_ATTACK_HITBOX_ID, -1);
         }
-        if VarModule::get_int(fighter.object(), vars::common::instance::LAST_ATTACK_HITBOX_ID) == 1
-        || VarModule::get_int(fighter.object(), vars::common::instance::LAST_ATTACK_HITBOX_ID) == 3 {
-            ATTACK(fighter, 5, 1, Hash40::new("haver"), 2.0, 367, 0, 0, 0, 4.5, 0.0, 5.7, -1.5, Some(0.0), Some(6.0), Some(-1.5), 0.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_SWORD);
-            VarModule::set_int(fighter.object(), vars::common::instance::LAST_ATTACK_HITBOX_ID, -1);
+        let last_id = VarModule::get_int(fighter.object(), vars::common::instance::LAST_ATTACK_HITBOX_ID);
+        if fighter.is_motion_one_of(&[Hash40::new("attack_lw3"), Hash40::new("attack_hi3")]) {
+            if !(last_id == 2 || last_id == 4) { return; }
         }
+        else {
+            if !(last_id == 1 || last_id == 3) { return; }
+        }
+        ATTACK(fighter, 5, 1, Hash40::new("haver"), 2.0, 367, 0, 0, 0, 4.5, 0.0, 5.7, -1.5, Some(0.0), Some(6.0), Some(-1.5), 0.0, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_SWORD);
+        VarModule::set_int(fighter.object(), vars::common::instance::LAST_ATTACK_HITBOX_ID, -1);
     }
 }
 
