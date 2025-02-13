@@ -76,7 +76,8 @@ unsafe fn status_Down_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
         WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE);
         WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE_FB);
 
-        if fighter.sub_AirChkPassive_for_damage().get_bool() {
+        if !VarModule::is_flag(fighter.battle_object, vars::common::instance::DOWN_DISABLE_PASSIVE)
+        && fighter.sub_AirChkPassive_for_damage().get_bool() {
             return 1.into();
         }
 
@@ -122,6 +123,8 @@ unsafe fn status_end_Down(fighter: &mut L2CFighterCommon) -> L2CValue {
         CameraModule::stop_quake(fighter.module_accessor, *CAMERA_QUAKE_KIND_S);
         CameraModule::stop_quake(fighter.module_accessor, *CAMERA_QUAKE_KIND_M);
     }
+
+    VarModule::off_flag(fighter.battle_object, vars::common::instance::DOWN_DISABLE_PASSIVE);
 
     0.into()
 }
