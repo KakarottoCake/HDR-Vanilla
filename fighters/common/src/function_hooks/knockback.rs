@@ -326,6 +326,7 @@ pub unsafe extern "C" fn is_final_killing_hit(defender_boma: &mut BattleObjectMo
 
 const NUM_ANGLE_CHECK: i32 = 12;
 const NUM_FALSE_ANGLES_ALLOWED: i32 = 1;
+const NUM_HITSTUN_LENIENCY: f32 = 1.0;
 
 unsafe extern "C" fn is_valid_finishing_hit(knockback_info: *const f32, defender_boma: &mut BattleObjectModuleAccessor, attacker_boma: &mut BattleObjectModuleAccessor) -> bool {
     let knockback = *knockback_info;
@@ -492,7 +493,7 @@ unsafe extern "C" fn is_valid_finishing_hit(knockback_info: *const f32, defender
         curr_hitstun += 1;
 
 
-        while context.hitstun - 1.0 > curr_hitstun as f32 { // subtract 1 from the hitstun to give us a little room for error in the calculation
+        while context.hitstun - NUM_HITSTUN_LENIENCY > curr_hitstun as f32 { // subtracting from the hitstun gives us room for error in the calculations
             context.step();
             if GroundModule::ray_check(
                 defender_boma, 
