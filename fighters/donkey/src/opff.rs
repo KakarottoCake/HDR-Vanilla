@@ -11,26 +11,14 @@ unsafe fn dash_attack_air_cancel(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
-unsafe fn nspecial_cancels(boma: &mut BattleObjectModuleAccessor) {
-    //PM-like neutral-b canceling
-    if boma.is_status(*FIGHTER_DONKEY_STATUS_KIND_SPECIAL_N_CANCEL) {
-        if boma.is_situation(*SITUATION_KIND_AIR) {
-            if WorkModule::get_int(boma, *FIGHTER_DONKEY_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE) == *FIGHTER_DONKEY_SPECIAL_N_CANCEL_TYPE_AIR_ESCAPE_AIR {
-                WorkModule::set_int(boma, *FIGHTER_DONKEY_SPECIAL_N_CANCEL_TYPE_NONE, *FIGHTER_DONKEY_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
-            }
-        }
-    }
-}
-
 extern "Rust" {
     fn gimmick_flash(boma: &mut BattleObjectModuleAccessor);
 }
 
 unsafe fn barrel_pull(boma: &mut BattleObjectModuleAccessor) {
     // barrel pull
-    if ItemModule::is_have_item(boma, 0) && ItemModule::get_have_item_kind(boma, 0) == *ITEM_KIND_BARREL
-    && boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD_OFF, *FIGHTER_STATUS_KIND_WAIT])
-    && boma.is_situation(*SITUATION_KIND_GROUND) {
+    if boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD_OFF, *FIGHTER_STATUS_KIND_WAIT])
+    && ItemModule::is_have_item(boma, 0) && ItemModule::get_have_item_kind(boma, 0) == *ITEM_KIND_BARREL {
         boma.change_status_req(*FIGHTER_STATUS_KIND_ITEM_HEAVY_PICKUP, false);
     }
     if boma.is_status(*FIGHTER_STATUS_KIND_ITEM_HEAVY_PICKUP) {
@@ -75,31 +63,6 @@ unsafe fn headbutt_aerial_stall(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
-/// this sets the ledgegrab box for the backside of up special, which 
-/// enables DK to more consistently grab ledge with slipoff uspecial
-pub unsafe fn special_hi_slipoff_grab(fighter: &mut L2CFighterCommon) {
-    if fighter.is_situation(*SITUATION_KIND_AIR) && fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_HI) {
-        fighter.set_back_cliff_hangdata(20.0, 10.0);
-        fighter.set_front_cliff_hangdata(20.0, 10.0);
-    }
-}
-
-/// make grounded uspecial flat, so that moving forward and back isnt jarring
-pub unsafe fn flatten_uspecial(fighter: &mut L2CFighterCommon) {
-    if fighter.is_motion(Hash40::new("special_hi")) && fighter.motion_frame() > 16.0 && fighter.motion_frame() < 61.0 {
-        // flattens dk out during uspecial
-        fighter.set_joint_rotate("rot", Vector3f::new(0.0, 20.0, 50.0));
-
-        // moves dk's trans bone slightly down to compensate for lifted feet during uspecial
-        let slightly_lower = Vector3f{x:0.0, y: -4.0, z: 0.0 };
-        ModelModule::set_joint_translate(fighter.boma(), Hash40::new("trans"), &slightly_lower, false, false);
-
-        // leans left and right based on movement
-        let movement_lean = 20.0 * KineticModule::get_sum_speed_x(fighter.boma(), *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        fighter.set_joint_rotate("trans", Vector3f::new(0.0, movement_lean, 0.0));
-    }
-}
-
 // prevent donkey kong from carrying/throwing steve's blocks
 pub unsafe fn remove_pickelobject(fighter: &mut L2CFighterCommon) {
     if ItemModule::get_have_item_kind(fighter.boma(), 0) == *ITEM_KIND_PICKELOBJECT {
@@ -115,14 +78,8 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
     && fighter.is_status_one_of(&[
-        *FIGHTER_STATUS_KIND_SPECIAL_N,
         *FIGHTER_STATUS_KIND_SPECIAL_S,
         *FIGHTER_STATUS_KIND_SPECIAL_HI,
-        *FIGHTER_STATUS_KIND_SPECIAL_LW,
-        *FIGHTER_DONKEY_STATUS_KIND_SPECIAL_N_LOOP,
-        *FIGHTER_DONKEY_STATUS_KIND_SPECIAL_N_ATTACK,
-        *FIGHTER_DONKEY_STATUS_KIND_SPECIAL_N_END,
-        *FIGHTER_DONKEY_STATUS_KIND_SPECIAL_N_CANCEL,
         ]) 
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
@@ -148,7 +105,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     dash_attack_air_cancel(boma);
-    nspecial_cancels(boma);
     barrel_pull(boma);
     headbutt_aerial_stall(boma);
     remove_pickelobject(fighter);
@@ -159,7 +115,6 @@ pub extern "C" fn donkey_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterC
     unsafe {
         common::opff::fighter_common_opff(fighter);
 		donkey_frame(fighter);
-        flatten_uspecial(fighter);
     }
 }
 
