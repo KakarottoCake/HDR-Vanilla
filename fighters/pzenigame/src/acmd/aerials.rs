@@ -186,11 +186,11 @@ unsafe extern "C" fn effect_attackairhi(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn expression_attackairhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 3.0);
+    frame(lua_state, 2.0);
     if is_excute(agent) {
         ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(lua_state, 4.0);
+    frame(lua_state, 4.5);
     if is_excute(agent) {
         RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
     }

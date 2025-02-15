@@ -57,6 +57,29 @@ unsafe extern "C" fn effect_specialnshot(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn sound_specialnshot(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 5.0);
+    if is_excute(agent) {
+        PLAY_STATUS(agent, Hash40::new("se_pzenigame_special_n03"));
+        PLAY_SE(agent, Hash40::new("vc_pzenigame_special_n01"));
+    }
+}
+
+unsafe extern "C" fn expression_specialnshot(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
+        ItemModule::set_have_item_visibility(boma, false, 0);
+    }
+    frame(lua_state, 6.0);
+    if is_excute(agent) {
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_waterjets"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+}
+
 unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -119,8 +142,12 @@ pub fn install(agent: &mut Agent) {
 
     agent.acmd("game_specialnshot", game_specialnshot, Priority::Low);
     agent.acmd("effect_specialnshot", effect_specialnshot, Priority::Low);
+    agent.acmd("sound_specialnshot", sound_specialnshot, Priority::Low);
+    agent.acmd("expression_specialnshot", expression_specialnshot, Priority::Low);
     agent.acmd("game_specialairnshot", game_specialnshot, Priority::Low);
     agent.acmd("effect_specialairnshot", effect_specialnshot, Priority::Low);
+    agent.acmd("sound_specialairnshot", sound_specialnshot, Priority::Low);
+    agent.acmd("expression_specialairnshot", expression_specialnshot, Priority::Low);
 
     agent.acmd("game_specials", game_specials, Priority::Low);
     agent.acmd("game_specialairs", game_specials, Priority::Low);

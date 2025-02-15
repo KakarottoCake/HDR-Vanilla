@@ -77,7 +77,7 @@ unsafe extern "C" fn expression_attacks4(agent: &mut L2CAgentBase) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
         ItemModule::set_have_item_visibility(boma, false, 0);
     }
-    frame(lua_state, 13.0);
+    frame(lua_state, 19.0);
     if is_excute(agent) {
         ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitl"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
