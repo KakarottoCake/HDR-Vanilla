@@ -301,9 +301,6 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     let stance = StanceInfo::from(VarModule::get_int(boma.object(), vars::packun::instance::CURRENT_STANCE));
-    let angle = if stance.label == 1 {105} else {75};
-    let bkb = if stance.label == 1 {15} else if stance.label == 0 {10} else {0};
-    let sound = if stance.label != 2 { *COLLISION_SOUND_ATTR_PUNCH } else { *COLLISION_SOUND_ATTR_HEAVY };
     if stance.label != 2 {
         FT_DESIRED_RATE(agent, 6.0, 7.0);
     }
@@ -317,7 +314,11 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
     frame(lua_state, 6.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("mouth"), 9.0 * stance.damage_head, angle, 87, 0, 53 + bkb, 7.0, 2.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, sound, *ATTACK_REGION_HEAD);
+        let angle = if stance.label == 1 { 105 } else { 75 };
+        let bkb = if stance.label == 1 { 15 } else if stance.label == 0 { 10 } else { 0 };
+        let sound = if stance.label != 2 { *COLLISION_SOUND_ATTR_PUNCH } else { *COLLISION_SOUND_ATTR_HEAVY };
+        let size = if stance.label == 2 { 6.5 } else { 6.0 };
+        ATTACK(agent, 0, 0, Hash40::new("mouth"), 9.0 * stance.damage_head, angle, 87, 0, 53 + bkb, size, 2.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, sound, *ATTACK_REGION_HEAD);
         if stance.label == 2 {
             HIT_NODE(agent, Hash40::new("mouth"), *HIT_STATUS_XLU);
             HIT_NODE(agent, Hash40::new("lipu3"), *HIT_STATUS_XLU);
@@ -335,9 +336,28 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
         HIT_NODE(agent, Hash40::new("neck6"), *HIT_STATUS_NORMAL);
         HIT_NODE(agent, Hash40::new("neck8"), *HIT_STATUS_NORMAL);
     }
-    frame(lua_state, 24.0);
+    frame(lua_state, 25.0);
     if is_excute(agent) {
+        DamageModule::add_damage(boma, 1.0, 0);
         WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+    }
+}
+
+unsafe extern "C" fn effect_attackairhi(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 7.0);
+    if is_excute(agent) {
+        if agent.lr() < 0.0 {
+            EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_b"), Hash40::new("top"), 0, 6.5, -2.5, 0, 280, -70, 1.45, true);
+            LAST_EFFECT_SET_SCALE_W(agent, 1.6, 1.45, 1.45);
+            LAST_EFFECT_SET_RATE(agent, 0.7);
+        }
+        else {
+            EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_b"), Hash40::new("top"), 0, 6.5, -2.5, 0, 280, -110, 1.45, true);
+            LAST_EFFECT_SET_SCALE_W(agent, 1.6, 1.45, 1.45);
+            LAST_EFFECT_SET_RATE(agent, 0.7);
+        }
     }
 }
 
@@ -406,6 +426,7 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("expression_attackairbs", expression_attackairbs, Priority::Low);
 
     agent.acmd("game_attackairhi", game_attackairhi, Priority::Low);
+    agent.acmd("effect_attackairhi", effect_attackairhi, Priority::Low);
 
     agent.acmd("game_attackairlw", game_attackairlw, Priority::Low);
 }

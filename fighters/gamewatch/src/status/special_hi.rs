@@ -1,7 +1,5 @@
 use super::*;
 
-// FIGHTER_STATUS_KIND_SPECIAL_HI
-
 unsafe extern "C" fn special_hi_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     if VarModule::is_flag(fighter.battle_object, vars::gamewatch::instance::SPECIAL_HI_ENABLE_FREEFALL) {
         let cancel_module = *(fighter.module_accessor as *mut BattleObjectModuleAccessor as *mut u64).add(0x128 / 8) as *const u64;
@@ -16,6 +14,7 @@ unsafe extern "C" fn special_hi_main(fighter: &mut L2CFighterCommon) -> L2CValue
         fighter.set_situation(SITUATION_KIND_AIR.into());
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
     }
+
     fighter.sub_shift_status_main(L2CValue::Ptr(special_hi_main_loop as *const () as _))
 }
 
@@ -35,7 +34,7 @@ unsafe fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
             VarModule::on_flag(fighter.battle_object, vars::gamewatch::instance::SPECIAL_HI_ENABLE_PARACHUTE);
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         }
-        return 1.into()
+        return 1.into();
     }
     if fighter.status_frame() > 31 && fighter.is_cat_flag(Cat1::SpecialAny)
     && !VarModule::is_flag(fighter.battle_object, vars::gamewatch::instance::SPECIAL_HI_ENABLE_FREEFALL) {
@@ -47,18 +46,19 @@ unsafe fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
             let status = if WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("landing_frame")) > 0.0
                 { FIGHTER_STATUS_KIND_LANDING } else { FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL };
             fighter.change_status(status.into(), true.into());
-            return 1.into()
+            return 1.into();
         }
     }
-    return 0.into()
+
+    return 0.into();
 }
 
 unsafe extern "C" fn special_hi_exit(fighter: &mut L2CFighterCommon) -> L2CValue {
     VarModule::on_flag(fighter.battle_object, vars::gamewatch::instance::SPECIAL_HI_ENABLE_FREEFALL);
-    0.into()
+    return 0.into();
 }
 
 pub fn install(agent: &mut Agent) {
     agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_HI, special_hi_main);
-    agent.status( Exit, *FIGHTER_STATUS_KIND_SPECIAL_HI, special_hi_exit);
+    agent.status(Exit, *FIGHTER_STATUS_KIND_SPECIAL_HI, special_hi_exit);
 }

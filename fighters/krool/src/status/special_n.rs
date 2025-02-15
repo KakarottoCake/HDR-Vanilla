@@ -21,8 +21,8 @@ use super::*;
 // }
 
 // // FUN_710002a5b0
-// pub unsafe extern "C" fn special_n_substatus(fighter: &mut L2CFighterCommon, param_1: bool) -> L2CValue {
-//     if !param_1 {
+// pub unsafe extern "C" fn special_n_substatus(fighter: &mut L2CFighterCommon, param_1: L2CValue) -> L2CValue {
+//     if !param_1.get_bool() {
 //         if !fighter.is_flag(*FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_SHOOT_IRONBALL_END) {
 //             if fighter.is_flag(*FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_SHOOT_IRONBALL) {
 //                 if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_KROOL_GENERATE_ARTICLE_IRONBALL) {
@@ -189,14 +189,14 @@ pub unsafe extern "C" fn special_n_fire_hi_main(fighter: &mut L2CFighterCommon) 
     // }
     special_n_set_kinetic(fighter);
     if !StopModule::is_stop(fighter.module_accessor) {
-        special_n_fire_hi_substatus(fighter, false);
+        special_n_fire_hi_substatus(fighter, false.into());
     }
     fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(special_n_fire_hi_substatus as *const () as _));
     fighter.main_shift(special_n_fire_hi_main_loop)
 }
 
-pub unsafe extern "C" fn special_n_fire_hi_substatus(fighter: &mut L2CFighterCommon, param_1: bool) -> L2CValue {
-    if param_1 {
+pub unsafe extern "C" fn special_n_fire_hi_substatus(fighter: &mut L2CFighterCommon, param_1: L2CValue) -> L2CValue {
+    if param_1.get_bool() {
         let mut motion_2nd_waight = fighter.get_float(*FIGHTER_KROOL_STATUS_SPECIAL_N_WORK_FLOAT_MOTION_2ND_WAIGHT);
         if motion_2nd_waight < 0.0 {
             motion_2nd_waight = (motion_2nd_waight - 0.1666667).abs().max(0.0);

@@ -483,6 +483,9 @@ pub mod vars {
             pub const ATTACK_STEP2S_SPINNING_DEMON: i32 = 0x0102;
             pub const ATTACK_STAND2_LIGHTNING_SCREW_UPPERCUT: i32 = 0x0103;
             pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0104;
+
+            // ints
+            pub const CAMERA_LOCKOUT_TIMER: i32 = 0x0105;
         }
     }
 
@@ -1714,7 +1717,10 @@ pub mod vars {
     }
 
     pub mod wario {
-
+        pub mod instance {
+            // flags
+            pub const PUMMEL_SKIP_STALE: i32 = 0x0100;
+        }
     }
 
     pub mod wiifit {

@@ -15,6 +15,14 @@ unsafe extern "C" fn dolly_special_lw_main_inner(fighter: &mut L2CFighterCommon)
     WorkModule::set_int(fighter.module_accessor, *FIGHTER_DOLLY_STRENGTH_S, *FIGHTER_DOLLY_STATUS_SPECIAL_COMMON_WORK_INT_STRENGTH);
     WorkModule::set_customize_no(fighter.module_accessor, 1, 3);
     fighter.sub_set_special_start_common_kinetic_setting(hash40("param_special_lw").into());
+
+    // cap start speed
+    let lr = PostureModule::lr(fighter.module_accessor);
+    let mut speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) * lr;
+    let mut speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let start_speed_x_max = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lw.start_speed_x_max");
+    SET_SPEED_EX(fighter, speed_x.min(start_speed_x_max) * lr, speed_y, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+
     dolly_special_lw_mot_helper(fighter, true.into());
     let additions = if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DOLLY_STATUS_SPECIAL_COMMON_WORK_FLAG_COMMAND) {
         *FIGHTER_LOG_ATTACK_KIND_ADDITIONS_ATTACK_07

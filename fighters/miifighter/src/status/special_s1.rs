@@ -17,7 +17,7 @@ pub unsafe extern "C" fn special_s1_main(fighter: &mut L2CFighterCommon) -> L2CV
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
         if !StopModule::is_stop(fighter.module_accessor) {
-            sub_special_s1_ground(fighter, false);
+            sub_special_s1_ground(fighter, false.into());
         }
         fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(sub_special_s1_ground as *const () as _));
     }
@@ -28,7 +28,7 @@ pub unsafe extern "C" fn special_s1_main(fighter: &mut L2CFighterCommon) -> L2CV
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
         if !StopModule::is_stop(fighter.module_accessor) {
-            sub_special_s1_air(fighter, false);
+            sub_special_s1_air(fighter, false.into());
         }
         fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(sub_special_s1_air as *const () as _));
     }
@@ -38,8 +38,8 @@ pub unsafe extern "C" fn special_s1_main(fighter: &mut L2CFighterCommon) -> L2CV
     fighter.main_shift(special_s1_main_loop)
 }
 
-unsafe extern "C" fn sub_special_s1_ground(fighter: &mut L2CFighterCommon, param_1: bool) -> L2CValue {
-    if !param_1 {
+unsafe extern "C" fn sub_special_s1_ground(fighter: &mut L2CFighterCommon, param_1: L2CValue) -> L2CValue {
+    if !param_1.get_bool() {
         if fighter.is_flag(*FIGHTER_MIIFIGHTER_STATUS_WORK_ID_FLAG_100KICK_CLIFF_FALL_ONOFF) {
             GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
         }
@@ -51,8 +51,8 @@ unsafe extern "C" fn sub_special_s1_ground(fighter: &mut L2CFighterCommon, param
     return 0.into();
 }
 
-unsafe extern "C" fn sub_special_s1_air(fighter: &mut L2CFighterCommon, param_1: bool) -> L2CValue {
-    if !param_1 {
+unsafe extern "C" fn sub_special_s1_air(fighter: &mut L2CFighterCommon, param_1: L2CValue) -> L2CValue {
+    if !param_1.get_bool() {
         if fighter.is_flag(*FIGHTER_MIIFIGHTER_STATUS_WORK_ID_FLAG_100KICK_GRAVITY_ONOFF) {
             KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
         }
