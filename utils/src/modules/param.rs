@@ -304,7 +304,7 @@ use serde::{Deserialize, Serialize};
 // use serde_json::Result;
 
 /// stores the tournament mode configuration
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[repr(C)]
 struct TourneyConfig {
     /// whether the tourney mode is enabled
@@ -357,7 +357,7 @@ impl TourneyConfig {
                 }
             };
         // if we should be using the official list, load that directly instead (because it could be updated)
-        if config.unwrap().useOfficial {
+        if config.clone().unwrap().useOfficial {
             config = match std::fs::read_to_string("sd:/ultimate/mods/hdr-stages/tourney_mode_official.json") {
                 Ok(json) => serde_json::from_str(&json)
                     .expect("A tourney_mode.json was found, but its contents were invalid!"),
