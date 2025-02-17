@@ -28,8 +28,7 @@ pub unsafe extern "C" fn attack_air_main(fighter: &mut L2CFighterCommon) -> L2CV
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
         KineticModule::suspend_energy_all(fighter.module_accessor);
         // meter cost
-        let rate = VarModule::get_float(fighter.battle_object, vars::lucario::instance::SPECIAL_HI_MOTION_RATE);
-        MeterModule::drain_direct(fighter.object(), MeterModule::meter_per_level(fighter.object()) - (8.1 * rate));
+        MeterModule::drain_direct(fighter.object(), MeterModule::meter_per_level(fighter.object()));
         opff::check_burnout(fighter);
         opff::pause_meter_regen(fighter, 120);
     }
