@@ -46,6 +46,7 @@ unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE_RANGE(agent, 15.0, 58.0, endlag);
     if is_excute(agent) {
         agent.on_flag(*FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
+        VarModule::set_int(agent.battle_object, vars::shotos::status::HIT_CANCEL_TIMER, 12);
     }
     frame(lua_state, 28.0);
     if is_excute(agent) {
@@ -53,9 +54,6 @@ unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 58.0);
     FT_MOTION_RATE(agent, 1.0);
-    if is_excute(agent) {
-        agent.off_flag(*FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
-    }
 }
 
 unsafe extern "C" fn effect_specialn(agent: &mut L2CAgentBase) {

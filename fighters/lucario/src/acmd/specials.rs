@@ -235,11 +235,14 @@ unsafe extern "C" fn game_specialairsthrow(agent: &mut L2CAgentBase) {
     frame(lua_state, 24.0);
     if is_excute(agent) {
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
+        if VarModule::get_float(agent.battle_object, vars::lucario::status::AURA_OVERRIDE) <= 0.0 {
+            MeterModule::add(agent.battle_object, 12.0 * MeterModule::damage_gain_mul(agent.battle_object));
+        }
     }
     frame(lua_state, 25.0);
     if is_excute(agent) {
-        MeterModule::watch_damage(agent.battle_object, false);
         AttackModule::clear_all(boma);
+        MeterModule::watch_damage(agent.battle_object, false);
     }
     frame(lua_state, 44.0);
     if is_excute(agent) {
@@ -274,12 +277,13 @@ unsafe extern "C" fn game_specialsthrow(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 29.0);
     if is_excute(agent) {
-        MeterModule::watch_damage(agent.battle_object, true);
         let target = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
         let target_group = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
         let target_no = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
-        MeterModule::watch_damage(agent.battle_object, false);
+        if VarModule::get_float(agent.battle_object, vars::lucario::status::AURA_OVERRIDE) <= 0.0 {
+            MeterModule::add(agent.battle_object, 12.0 * MeterModule::damage_gain_mul(agent.battle_object));
+        }
     }
 }
 
@@ -363,7 +367,6 @@ unsafe extern "C" fn game_specialhimove(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, rate * 0.8);
     if is_excute(agent) {
         JostleModule::set_status(boma, false);
-        MeterModule::drain_direct(agent.battle_object,  rate * ParamModule::get_float(agent.battle_object, ParamType::Agent, "aura.uspecial_cost"));
         MeterModule::watch_damage(agent.battle_object, false);
         MeterModule::watch_damage(agent.battle_object, true);
         VarModule::on_flag(agent.battle_object, vars::lucario::status::HIT_CANCEL);

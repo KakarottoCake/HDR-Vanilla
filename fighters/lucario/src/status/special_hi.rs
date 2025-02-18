@@ -39,6 +39,7 @@ unsafe extern "C" fn special_hi_exec(fighter: &mut L2CFighterCommon) -> L2CValue
     let motion_frame = MotionModule::frame(fighter.module_accessor);
     let start_frame = 8.0;
     let end_frame = 21.0;
+    let length = end_frame - (start_frame + 1.0);
     if motion_frame > start_frame {
         if motion_frame < end_frame {
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LUCARIO_MACH_STATUS_WORK_ID_FLAG_RUSH_DIR_ROT);
@@ -50,6 +51,7 @@ unsafe extern "C" fn special_hi_exec(fighter: &mut L2CFighterCommon) -> L2CValue
             }
             if motion_frame > start_frame + 13.0 / 16.0 {
                 special_hi_guide_handler(fighter, rate);
+                MeterModule::drain_direct(fighter.battle_object, ParamModule::get_float(fighter.battle_object, ParamType::Agent, "meter.uspecial_cost") / length);
             }
         } else {
             let rate = VarModule::get_float(fighter.battle_object, vars::lucario::instance::SPECIAL_HI_MOTION_RATE);

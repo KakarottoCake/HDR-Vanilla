@@ -17,13 +17,17 @@ extern crate skyline;
 #[cfg(feature = "skyline-web")]
 extern crate skyline_web;
 extern crate smash;
+extern crate smash2;
 extern crate smash_arc;
 extern crate ninput;
+#[macro_use]
+extern crate lazy_static;
+extern crate toml;
 
 mod fighters;
 
 #[cfg(feature = "main_nro")]
-mod random;
+mod chara_select;
 
 #[cfg(feature = "main_nro")]
 mod controls;
@@ -386,7 +390,7 @@ pub extern "C" fn main() {
     {
         quick_validate_install();
         skyline::install_hooks!(change_version_string_hook);
-        random::install();
+        chara_select::install();
         controls::install();
         lua::install();
         online::install();
