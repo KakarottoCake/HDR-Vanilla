@@ -304,7 +304,8 @@ use serde::{Deserialize, Serialize};
 // use serde_json::Result;
 
 /// stores the tournament mode configuration
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[allow(non_snake_case)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 #[repr(C)]
 struct TourneyConfig {
     /// whether the tourney mode is enabled
