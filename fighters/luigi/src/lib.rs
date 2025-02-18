@@ -45,19 +45,46 @@ use utils::{
 use smashline::*;
 #[macro_use] extern crate smash_script;
 
-pub fn calculate_misfire(fighter: &mut L2CFighterCommon) -> i32 {
-    unsafe {
-        let divisor_scale_min = ParamModule::get_int(fighter.battle_object, ParamType::Agent, "misfire.divisor_scale_min");
-        let divisor_scale_max = ParamModule::get_int(fighter.battle_object, ParamType::Agent, "misfire.divisor_scale_max");
-        let damage_scale_min = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "misfire.damage_scale_min");
-        let damage_scale_max = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "misfire.damage_scale_max");
-        let damage = DamageModule::damage(fighter.module_accessor, 0);
-        let lerp = (divisor_scale_max - divisor_scale_min) as f32 / (damage_scale_max - damage_scale_min);
-        let damage_lerp = (damage * lerp) as i32;
-        let calc_misfire = (divisor_scale_max - damage_lerp).clamp(divisor_scale_min, divisor_scale_max);
-        let rand = app::sv_math::rand(hash40("fighter"), calc_misfire);
-        return rand;
+pub unsafe fn reset_misfire_queue(fighter: &mut L2CFighterCommon) {
+    let numerator = ParamModule::get_int(fighter.battle_object, ParamType::Agent, "misfire.numerator");
+    let denominator = ParamModule::get_int(fighter.battle_object, ParamType::Agent, "misfire.denominator").min(32);
+
+    // this bitflag represents the misfire queue
+    // each 0 is a standard missile, each 1 is a misfire
+    // the numerator above is the maximum number of misfires in the queue
+    // the denominator above is the maximum length of the queue (capped to 32, because we are using an i32)
+    let mut bitflag = 0b00000000000000000000000000000000;
+    let mut num_misfire = 0;
+    while (num_misfire < numerator) {
+        // generate a random position between [0, denominator - 1] (inclusive)
+        let position = app::sv_math::rand(hash40("fighter"), denominator);
+        // if that bit is already set, skip it (prevents duplicates)
+        if dbg!((bitflag & (1 << position)) != 0) {
+            continue;
+        }
+        bitflag |= (1 << position); // set the bit at this position to 1
+        num_misfire += 1;
     }
+    // the result is a bit flag that looks something like: 0b00000000000000000001000000100000
+    // in which case a misfire will happen at position 12 and 5
+    println!("Misfire bitflag on init: {:0denominator$b}", bitflag, denominator = (denominator as usize));
+    VarModule::set_int(fighter.battle_object, vars::luigi::instance::SPECIAL_S_MISFIRE_BITFLAG, bitflag);
+    VarModule::set_int(fighter.battle_object, vars::luigi::instance::SPECIAL_S_MISFIRE_COUNT, denominator - 1); // counts down from denominator (higher positions first)
+}
+
+pub unsafe fn calculate_misfire(fighter: &mut L2CFighterCommon) -> bool {
+    // reset the queue and counter if the queue has not been initialized or the counter has dipped below zero
+    if VarModule::get_int(fighter.battle_object, vars::luigi::instance::SPECIAL_S_MISFIRE_BITFLAG) == 0
+    || VarModule::get_int(fighter.battle_object, vars::luigi::instance::SPECIAL_S_MISFIRE_COUNT) < 0 {
+        reset_misfire_queue(fighter);
+    }
+
+    let bitflag = VarModule::get_int(fighter.battle_object, vars::luigi::instance::SPECIAL_S_MISFIRE_BITFLAG);
+    let position = VarModule::get_int(fighter.battle_object, vars::luigi::instance::SPECIAL_S_MISFIRE_COUNT);
+    VarModule::dec_int(fighter.battle_object, vars::luigi::instance::SPECIAL_S_MISFIRE_COUNT);
+    println!("Misfire queue: {:0position$b}", bitflag, position = (position as usize));
+    let is_misfire = (bitflag & (1 << dbg!(position))) != 0; // if the bit at this position is 1, we misfire
+    return is_misfire; 
 }
 
 pub fn install() {
