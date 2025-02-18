@@ -59,7 +59,7 @@ pub unsafe fn reset_misfire_queue(fighter: &mut L2CFighterCommon) {
         // generate a random position between [0, denominator - 1] (inclusive)
         let position = app::sv_math::rand(hash40("fighter"), denominator);
         // if that bit is already set, skip it (prevents duplicates)
-        if dbg!((bitflag & (1 << position)) != 0) {
+        if (bitflag & (1 << position)) != 0 {
             continue;
         }
         bitflag |= (1 << position); // set the bit at this position to 1
@@ -67,7 +67,7 @@ pub unsafe fn reset_misfire_queue(fighter: &mut L2CFighterCommon) {
     }
     // the result is a bit flag that looks something like: 0b00000000000000000001000000100000
     // in which case a misfire will happen at position 12 and 5
-    println!("Misfire bitflag on init: {:0denominator$b}", bitflag, denominator = (denominator as usize));
+    //println!("Misfire bitflag on init: {:0denominator$b}", bitflag, denominator = (denominator as usize));
     VarModule::set_int(fighter.battle_object, vars::luigi::instance::SPECIAL_S_MISFIRE_BITFLAG, bitflag);
     VarModule::set_int(fighter.battle_object, vars::luigi::instance::SPECIAL_S_MISFIRE_COUNT, denominator - 1); // counts down from denominator (higher positions first)
 }
@@ -82,8 +82,8 @@ pub unsafe fn calculate_misfire(fighter: &mut L2CFighterCommon) -> bool {
     let bitflag = VarModule::get_int(fighter.battle_object, vars::luigi::instance::SPECIAL_S_MISFIRE_BITFLAG);
     let position = VarModule::get_int(fighter.battle_object, vars::luigi::instance::SPECIAL_S_MISFIRE_COUNT);
     VarModule::dec_int(fighter.battle_object, vars::luigi::instance::SPECIAL_S_MISFIRE_COUNT);
-    println!("Misfire queue: {:0position$b}", bitflag, position = (position as usize));
-    let is_misfire = (bitflag & (1 << dbg!(position))) != 0; // if the bit at this position is 1, we misfire
+    //println!("Misfire queue: {:0position$b}", bitflag, position = (position as usize));
+    let is_misfire = (bitflag & (1 << position)) != 0; // if the bit at this position is 1, we misfire
     return is_misfire; 
 }
 
