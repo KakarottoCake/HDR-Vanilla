@@ -272,7 +272,7 @@ unsafe extern "C" fn effect_specialswalljump(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_b"), Hash40::new("sys_attack_arc_b"), Hash40::new("top"), 0, 8, 6, 0, 0, 90, 1.2, true, *EF_FLIP_YZ);
+        EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_c"), Hash40::new("sys_attack_arc_b"), Hash40::new("top"), 0, 8, 6, 0, 0, 90, 1.2, true, *EF_FLIP_YZ);
         LAST_EFFECT_SET_RATE(agent, 1.4);
     }
     frame(lua_state, 12.0);
