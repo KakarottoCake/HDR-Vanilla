@@ -51,3 +51,5 @@ pfushigisou: fighter/pfushigisou/param/hdr.xml
 tantan: fighter/tantan/param/hdr.xml
 zelda: fighter/zelda/param/hdr.xml
 pikachu: fighter/pikachu/param/hdr.xml
+ridley: fighter/ridley/param/hdr.xml
+robot: fighter/robot/param/hdr.xml

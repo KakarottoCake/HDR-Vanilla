@@ -80,7 +80,7 @@ unsafe extern "C" fn special_hi_start_main_loop(fighter: &mut L2CFighterCommon) 
         // }
         if fighter.is_situation(*SITUATION_KIND_AIR) {
             let start_stop_y_frame = ParamModule::get_int(fighter.battle_object, ParamType::Agent, "param_special_hi.start_stop_y_frame");
-            if fighter.status_frame() < start_stop_y_frame {
+            if fighter.global_table[CURRENT_FRAME].get_i32() < start_stop_y_frame {
                 sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
             }
             else {
