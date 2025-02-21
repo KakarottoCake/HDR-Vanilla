@@ -2,7 +2,7 @@ use super::*;
 
 unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
-    let boma = smash::app::sv_system::battle_object_module_accessor(lua_state);
+    let boma = agent.boma();
     frame(lua_state, 6.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
