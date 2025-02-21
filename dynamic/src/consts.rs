@@ -191,6 +191,8 @@ pub mod vars {
 
             pub const IS_ENTER_DASH_CANCEL: i32 = 0x006A;
 
+            pub const DOWN_DISABLE_PASSIVE: i32 = 0x006B;
+
             // ints
 
             pub const LAST_ATTACK_RECEIVER_ENTRY_ID: i32 = 0x0000;
