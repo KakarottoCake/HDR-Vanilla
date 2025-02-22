@@ -366,7 +366,7 @@ impl TourneyConfig {
                     println!(
                         "No tourney mode config was found. Assuming tourney mode is disabled."
                     );
-                    None
+                    return None;
                 }
             };
         // if we should be using the official list, load that directly instead (because it could be updated)
