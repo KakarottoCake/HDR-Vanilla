@@ -276,6 +276,15 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_speciallwin(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 6.0);
+    if is_excute(agent) {
+        HitModule::set_whole(boma, HitStatus(*HIT_STATUS_OFF), 0);
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialnstart", game_specialnstart, Priority::Low);
     agent.acmd("game_specialairnstart", game_specialnstart, Priority::Low);
@@ -288,4 +297,7 @@ pub fn install(agent: &mut Agent) {
 
     agent.acmd("game_specialhi", game_specialhi, Priority::Low);
     agent.acmd("game_specialairhi", game_specialhi, Priority::Low);
+
+    agent.acmd("game_speciallwin", game_speciallwin, Priority::Low);
+    agent.acmd("game_specialairlwin", game_speciallwin, Priority::Low);
 }
