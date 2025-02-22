@@ -2,16 +2,6 @@ use super::*;
 
 utils::import_noreturn!(common::opff::fighter_common_opff);
 
-unsafe fn nspecial_cancels(fighter: &mut L2CFighterCommon) {
-    //PM-like neutral-b canceling
-    if fighter.is_status(*FIGHTER_BRAVE_STATUS_KIND_SPECIAL_N_CANCEL)
-    && fighter.is_situation(*SITUATION_KIND_AIR)
-    && WorkModule::get_int(fighter.module_accessor, *FIGHTER_BRAVE_STATUS_SPECIAL_N_HOLD_INT_NEXT_STATUS) == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
-        WorkModule::set_int(fighter.module_accessor, *STATUS_KIND_NONE, *FIGHTER_BRAVE_STATUS_SPECIAL_N_HOLD_INT_NEXT_STATUS);
-        ControlModule::clear_command_one(fighter.module_accessor, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_AIR_ESCAPE);
-    }
-}
-
 unsafe fn dspecial_cancels(fighter: &mut L2CFighterCommon) {
     //PM-like down-b canceling
     if fighter.is_status(*FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_CANCEL)
@@ -114,7 +104,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         *FIGHTER_STATUS_KIND_SPECIAL_N,
         *FIGHTER_STATUS_KIND_SPECIAL_S,
         *FIGHTER_STATUS_KIND_SPECIAL_HI,
-        *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_N_HOLD,
         *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_N_SHOOT,
         *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_N_CANCEL,
         *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_S_HOLD,
@@ -153,7 +142,6 @@ pub unsafe extern "C" fn brave_frame_wrapper(fighter: &mut L2CFighterCommon) {
     common::opff::fighter_common_opff(fighter);
     persist_rng(fighter);
     psych_up_crit(fighter);
-    nspecial_cancels(fighter);
     dspecial_cancels(fighter);
     dash_cancel_frizz(fighter);
     woosh_cancel(fighter);

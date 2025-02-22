@@ -12,7 +12,7 @@
   </list>
   <list size="1" hash="param_grenadelauncher">
     <struct index="0">
-      <float hash="angle">54.0</float>
+      <float hash="angle">64.0</float>
     </struct>
   </list>
   <list hash="param_special_s">
@@ -52,10 +52,10 @@
   <list hash="param_supermissile">
     <struct index="0">
       <int hash="max_req">1</int>
-      <int hash="s_life">180</int>
-      <float hash="s_spd_x0">0.4</float>
-      <float hash="s_acc_f">999</float>
-      <float hash="s_acc_x">0.0</float>
+      <int hash="s_life">120</int>
+      <float hash="s_spd_x0">0.1</float>
+      <float hash="s_acc_f">1</float>
+      <float hash="s_acc_x">0.0187</float>
       <float hash="s_model_angle_speed">13</float>
       <float hash="s_spd_x_max">0.8</float>
     </struct>

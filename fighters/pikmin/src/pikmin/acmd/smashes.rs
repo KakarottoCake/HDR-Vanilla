@@ -8,6 +8,7 @@ unsafe extern "C" fn game_attacks4sjump(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
     let p = PikminInfo::from(variation);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         HIT_NODE(agent, Hash40::new("waist"), *HIT_STATUS_XLU);
         let dmg = 20.3;
@@ -38,6 +39,7 @@ unsafe extern "C" fn game_attackhi4(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
     let p = PikminInfo::from(variation);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         HIT_NODE(agent, Hash40::new("waist"), *HIT_STATUS_XLU);
         let dmg = 18.2;
@@ -70,6 +72,7 @@ unsafe extern "C" fn game_attacklw4(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
     let p = PikminInfo::from(variation);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         HIT_NODE(agent, Hash40::new("waist"), *HIT_STATUS_XLU);
         let dmg = 15.4;

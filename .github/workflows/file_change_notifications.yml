@@ -43,7 +43,8 @@ jobs:
 
         FILES_TO_WATCH=(
           "fighters/common/src/"
-          "romfs/source/fighter/"
+          "**.prcxml"
+          "**.xml"
           "romfs/source/param/"
 
           "fighters/fox/src/opff.rs"
@@ -72,7 +73,6 @@ jobs:
 
           "dynamic/src/se.rs"
           "**/acmd/ground.rs"
-          "**/acmd/other.rs"
 
           "fighters/marth/src/acmd/aerials.rs"
           "fighters/marth/src/acmd/smashes.rs"
