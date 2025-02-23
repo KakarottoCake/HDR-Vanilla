@@ -30,6 +30,10 @@ pub unsafe extern "C" fn pledge_timer(weapon: &mut L2CFighterBase) {
             VarModule::off_flag(weapon.battle_object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
         }
     }
+
+    if is_training_mode() && VarModule::is_flag(weapon.battle_object, vars::ptrainer::instance::DISABLE_SPECIAL_LW) {
+        VarModule::off_flag(weapon.battle_object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
+    }
 }
 
 pub fn install(agent: &mut Agent) {
