@@ -28,6 +28,30 @@ unsafe extern "C" fn game_attacks3(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn effect_attacks3(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 5.0);
+    if is_excute(agent) {
+        if agent.lr() < 0.0 {
+            EFFECT_FOLLOW(agent, Hash40::new("pfushigisou_leaf_atk"), Hash40::new("grass"), 1, 0, 0, 0, 0, 90, 1.2, true);
+            LAST_EFFECT_SET_RATE(agent, 1.2);
+        }
+        else {
+            EFFECT_FOLLOW(agent, Hash40::new("pfushigisou_leaf_atk"), Hash40::new("grass"), 1, 0, 0, 180, 0, 90, 1.2, true);
+            LAST_EFFECT_SET_RATE(agent, 1.2);
+        }
+    }
+    frame(lua_state, 6.0);
+    if is_excute(agent) {
+        FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), -4, 0, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(lua_state, 19.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("pfushigisou_leaf_atk"), false, false);
+    }
+}
+
 unsafe extern "C" fn game_attackhi3(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -108,6 +132,7 @@ unsafe extern "C" fn effect_attacklw3(agent: &mut L2CAgentBase) {
 
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_attacks3", game_attacks3, Priority::Low);
+    agent.acmd("effect_attacks3", effect_attacks3, Priority::Low);
 
     agent.acmd("game_attackhi3", game_attackhi3, Priority::Low);
     
