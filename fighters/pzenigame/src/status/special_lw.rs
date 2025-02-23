@@ -17,20 +17,12 @@ unsafe extern "C" fn special_lw_out_main(fighter: &mut L2CFighterCommon) -> L2CV
     if pledge_state == *PLEDGE_STATE_GRASS {
         let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_status_speed_up"), Hash40::new("hip"), &Vector3f::new(0.7, 0.0, 0.0), &Vector3f::zero(), 0.7, true, 0, 0, 0, 0, 0, true, true) as u32;
         VarModule::set_int(fighter.object(), vars::pzenigame::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, handle as i32);
-        for _ in 0..2 {
-            let grass_fx = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_grass_landing"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.0, true, 0, 0, 0, 0, 0, true, true) as u32;
-            EffectModule::set_rgb(fighter.module_accessor, grass_fx, 0.5, 2.0, 0.5);
-            EffectModule::set_scale(fighter.module_accessor, grass_fx, &Vector3f::new(1.2, 1.4, 1.2));
-            EffectModule::set_rate(fighter.module_accessor, grass_fx, 0.6);
-        }
+        fighter.play_pledge_effect(*PLEDGE_STATE_GRASS);
     }
     else if pledge_state == *PLEDGE_STATE_FIRE {
         let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_status_attack_up"), Hash40::new("hip"), &Vector3f::new(0.7, 0.0, 0.0), &Vector3f::zero(), 0.7, true, 0, 0, 0, 0, 0, true, true) as u32;
         VarModule::set_int(fighter.object(), vars::pzenigame::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, handle as i32);
-        let fire_fx = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_damage_fire"), Hash40::new("top"), &Vector3f::new(0.5, 0.0, 0.0), &Vector3f::zero(), 1.0, true, 0, 0, 0, 0, 0, true, true) as u32;
-        EffectModule::set_rgb(fighter.module_accessor, fire_fx, 1.0, 0.9, 0.9);
-        EffectModule::set_scale(fighter.module_accessor, fire_fx, &Vector3f::new(1.2, 1.25, 1.2));
-        EffectModule::set_rate(fighter.module_accessor, fire_fx, 0.5);
+        fighter.play_pledge_effect(*PLEDGE_STATE_FIRE);
     }
     smashline::original_status(Main, fighter, *FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_LW_OUT)(fighter)
 }

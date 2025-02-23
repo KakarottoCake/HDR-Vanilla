@@ -150,11 +150,12 @@ unsafe extern "C" fn effect_appealhi(agent: &mut L2CAgentBase) {
             EffectModule::kill_kind(boma, Hash40::new("sys_status_speed_up"), false, false);
             let handle = EffectModule::req_follow(boma, Hash40::new("sys_status_defense_up"), Hash40::new("hip"), &Vector3f::new(0.7, 0.0, 0.0), &Vector3f::zero(), 0.9, true, 0, 0, 0, 0, 0, true, true) as u32;
             VarModule::set_int(agent.battle_object, vars::plizardon::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, handle as i32);
+            boma.play_pledge_effect(*PLEDGE_STATE_WATER);
         }
     }
     frame(lua_state, 16.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW_NO_STOP_FLIP(agent, Hash40::new("plizardon_atk_mouth_fire"), Hash40::new("plizardon_atk_mouth_fire"), Hash40::new("head"), -1, 2.5, 0, 130, 0, 190, 0.85, true, *EF_FLIP_NONE);
+        EFFECT_FOLLOW_NO_STOP_FLIP(agent, Hash40::new("plizardon_atk_mouth_fire"), Hash40::new("plizardon_atk_mouth_fire"), Hash40::new("head"), -1, 2.5, 0, 130, 0, 190, 0.85, true, *EF_FLIP_ROT_X);
         LAST_EFFECT_SET_SCALE_W(agent, 0.9, 2.0, 0.9);
     }
     frame(lua_state, 18.0);
@@ -230,6 +231,7 @@ unsafe extern "C" fn effect_appeallw(agent: &mut L2CAgentBase) {
             EffectModule::kill_kind(boma, Hash40::new("sys_status_speed_up"), false, false);
             let handle = EffectModule::req_follow(boma, Hash40::new("sys_status_speed_up"), Hash40::new("hip"), &Vector3f::new(0.7, 0.0, 0.0), &Vector3f::zero(), 0.9, true, 0, 0, 0, 0, 0, true, true) as u32;
             VarModule::set_int(agent.battle_object, vars::plizardon::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, handle as i32);
+            boma.play_pledge_effect(*PLEDGE_STATE_GRASS);
         }
     }
     frame(lua_state, 35.0);

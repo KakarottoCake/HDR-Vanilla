@@ -137,6 +137,7 @@ unsafe extern "C" fn effect_appealhi(agent: &mut L2CAgentBase) {
             EffectModule::kill_kind(boma, Hash40::new("sys_status_speed_up"), false, false);
             let handle = EffectModule::req_follow(boma, Hash40::new("sys_status_defense_up"), Hash40::new("hip"), &Vector3f::new(0.7, 0.0, 0.0), &Vector3f::zero(), 0.8, true, 0, 0, 0, 0, 0, true, true) as u32;
             VarModule::set_int(agent.battle_object, vars::pfushigisou::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, handle as i32);
+            boma.play_pledge_effect(*PLEDGE_STATE_WATER);
         }
     }
 }
@@ -164,6 +165,7 @@ unsafe extern "C" fn effect_appeallw(agent: &mut L2CAgentBase) {
             EffectModule::kill_kind(boma, Hash40::new("sys_status_speed_up"), false, false);
             let handle = EffectModule::req_follow(boma, Hash40::new("sys_status_attack_up"), Hash40::new("hip"), &Vector3f::new(0.7, 0.0, 0.0), &Vector3f::zero(), 0.8, true, 0, 0, 0, 0, 0, true, true) as u32;
             VarModule::set_int(agent.battle_object, vars::pfushigisou::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, handle as i32);
+            boma.play_pledge_effect(*PLEDGE_STATE_FIRE);
         }
     }
     frame(lua_state, 54.0);
