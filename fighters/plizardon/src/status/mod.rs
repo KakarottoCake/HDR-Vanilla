@@ -38,6 +38,7 @@ unsafe extern "C" fn entry_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
     VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
     VarModule::off_flag(object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
+    VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER, 0);
     smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_ENTRY)(fighter)
 }
 
@@ -48,6 +49,7 @@ unsafe extern "C" fn dead_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
     VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
     VarModule::off_flag(object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
+    VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER, 0);
     smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_DEAD)(fighter)
 }
 
@@ -58,6 +60,7 @@ unsafe extern "C" fn rebirth_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
     VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
     VarModule::off_flag(object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
+    VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER, 0);
     smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_REBIRTH)(fighter)
 }
 

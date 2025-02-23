@@ -12,6 +12,7 @@ pub unsafe fn GET_POKE_BOMA(boma: *mut BattleObjectModuleAccessor) -> &'static m
 
 unsafe extern "C" fn on_start(weapon: &mut L2CWeaponCommon) {
     VarModule::off_flag(weapon.battle_object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
+    VarModule::set_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER, 0);
 }
 
 pub fn install(agent: &mut Agent) {
