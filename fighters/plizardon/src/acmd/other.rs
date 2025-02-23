@@ -152,6 +152,51 @@ unsafe extern "C" fn effect_appealhi(agent: &mut L2CAgentBase) {
             VarModule::set_int(agent.battle_object, vars::plizardon::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, handle as i32);
         }
     }
+    frame(lua_state, 16.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW_NO_STOP_FLIP(agent, Hash40::new("plizardon_atk_mouth_fire"), Hash40::new("plizardon_atk_mouth_fire"), Hash40::new("head"), -1, 2.5, 0, 130, 0, 190, 0.85, true, *EF_FLIP_NONE);
+        LAST_EFFECT_SET_SCALE_W(agent, 0.9, 2.0, 0.9);
+    }
+    frame(lua_state, 18.0);
+    if is_excute(agent) {
+        EFFECT_FLIP_ALPHA(agent, Hash40::new("sys_attack_impact"), Hash40::new("sys_attack_impact"), Hash40::new("top"), -3, 13, 5, 0, -30, -90, 0.5, 0, 0, 0, 0, 0, 0, true, *EF_FLIP_YZ, 0.9);
+    }
+    frame(lua_state, 27.0);
+    if is_excute(agent) {
+        EFFECT_FLIP_ALPHA(agent, Hash40::new("sys_attack_impact"), Hash40::new("sys_attack_impact"), Hash40::new("top"), -3, 13, 1, 0, -30, -90, 0.5, 0, 0, 0, 0, 0, 0, true, *EF_FLIP_YZ, 0.9);
+    }
+    frame(lua_state, 37.0);
+    if is_excute(agent) {
+        EFFECT_FLIP_ALPHA(agent, Hash40::new("sys_attack_impact"), Hash40::new("sys_attack_impact"), Hash40::new("top"), -3, 13, 5, 0, -30, -90, 0.5, 0, 0, 0, 0, 0, 0, true, *EF_FLIP_YZ, 0.9);
+    }
+    frame(lua_state, 48.0);
+    if is_excute(agent) {
+        EFFECT_FLIP_ALPHA(agent, Hash40::new("sys_attack_impact"), Hash40::new("sys_attack_impact"), Hash40::new("top"), -3, 13, 1, 0, -30, -90, 0.5, 0, 0, 0, 0, 0, 0, true, *EF_FLIP_YZ, 0.9);
+    }
+    frame(lua_state, 54.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("plizardon_atk_mouth_fire"), false, false); 
+    }
+}
+
+unsafe extern "C" fn sound_appealhi(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 12.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("vc_plizardon_attack06"));
+    }
+    for f in [18.0, 27.0, 37.0, 48.0] {
+        frame(lua_state, f);
+        if is_excute(agent) {
+            let sfx = if [18.0, 37.0].contains(&f) {
+                "se_plizardon_step_left_m"
+            } else {
+                "se_plizardon_step_right_m"
+            };
+            PLAY_SE(agent, Hash40::new(sfx));
+        }
+    }
 }
 
 unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
@@ -161,7 +206,6 @@ unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
         if is_training_mode() {
             let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
             let object = utils::util::get_battle_object_from_id(parent_id);
-            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 2);
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_GRASS);
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 6000);
         }
