@@ -231,7 +231,18 @@ static PT_CHARA_HASHES: &[u64] = &[
 
 const KEY_MASK: u64 = 0xFFFFFF_0000000000;
 unsafe fn generate_random(player_id: usize, main_data: u64, sub_data: u64) {
-    let chara_string = &decide_fighter_from_id(player_id);
+    let mut chara_string = decide_fighter_from_id(player_id);
+    if chara_string == "element" {
+        let aegis = [
+            "flame_first", 
+            "light_first"
+        ]
+        .choose(&mut rand::thread_rng()).copied()
+        .unwrap_or("flame_first");
+        
+        chara_string = String::from(aegis);
+    }
+
     let mut chara_hash = hash40(&format!("ui_chara_{}", chara_string)).0;
 
     MAIN_FIGHTER_ID = chara_hash | (main_data & KEY_MASK);
@@ -350,7 +361,7 @@ unsafe fn decide_fighter_from_id(id: usize) -> String {
         for chara in list {
             let fighter = chara.as_str().unwrap_or("mario");
             // prevent the same character from being picked twice in a row (if possible)
-            let restrict_prev = &fighter.to_owned() == &LAST_FIGHTER_PICKED && reference.len() > 1;
+            let restrict_prev = &fighter.to_owned() == &LAST_FIGHTER_PICKED && list.len() > 1;
             if reference.contains(&fighter.to_owned()) && !restrict_prev {
                 whitelist.push(fighter.to_owned());
             }
