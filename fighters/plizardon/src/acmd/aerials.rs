@@ -157,6 +157,26 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn effect_attackairb(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 13.0);
+    if is_excute(agent) {
+        if agent.lr() < 0.0 {
+            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("plizardon_atk_fire_air2"), Hash40::new("fire"), 0, 0, 0, 0, 0, 0, 1, true);
+            LAST_EFFECT_SET_RATE(agent, 0.8);
+        }
+        else {
+            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("plizardon_atk_fire_air2"), Hash40::new("fire"), 0, 0, 0, 180, 0, 0, 1, true);
+            LAST_EFFECT_SET_RATE(agent, 0.8);
+        }
+    }
+    frame(lua_state, 17.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("plizardon_atk_fire_air2"), false, false);
+    }
+}
+
 unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -279,6 +299,7 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("sound_attackairf", sound_attackairf, Priority::Low);
 
     agent.acmd("game_attackairb", game_attackairb, Priority::Low);
+    agent.acmd("effect_attackairb", effect_attackairb, Priority::Low);
 
     agent.acmd("game_attackairhi", game_attackairhi, Priority::Low);
     agent.acmd("effect_attackairhi", effect_attackairhi, Priority::Low);
