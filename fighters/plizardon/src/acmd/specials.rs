@@ -116,16 +116,15 @@ unsafe extern "C" fn effect_specialnstart(agent: &mut L2CAgentBase) {
         FLASH(agent, 1, 0.2, 0, 0.5);
         FLASH_FRM(agent, 15, 0, 0, 0, 0);
     }
+    frame(lua_state, 7.0);
     if pledge == *PLEDGE_STATE_WATER {
-        frame(lua_state, 7.0);
         if is_excute(agent) {
-            EFFECT_FOLLOW(agent, Hash40::new("sys_steam"), Hash40::new("mouth2"), 0, 0, 0, 0, 0, 0, 0.8, false);
+            EFFECT_FOLLOW_ALPHA(agent, Hash40::new("sys_steam2"), Hash40::new("head"), 0, 5, 0, 0, 0, 0, 0.7, false, 3.0);
             EFFECT_FOLLOW(agent, Hash40::new("sys_drown_out"), Hash40::new("mouth2"), 0, 0, 0, 180, 0, 0, 0.6, false);
         }
     }
     else if pledge == *PLEDGE_STATE_GRASS {
         let mut handle = 0;
-        frame(lua_state, 7.0);
         for _ in 0..4 {
             if is_excute(agent) {
                 handle = EffectModule::req_follow(boma, Hash40::new("pfushigisou_atk_hi4"), Hash40::new("mouth2"), &Vector3f::zero(), &Vector3f::zero(), 0.0, false, 0, 0, 0, 0, 0, false, false);
@@ -141,9 +140,8 @@ unsafe extern "C" fn effect_specialnstart(agent: &mut L2CAgentBase) {
         }
     }
     else {
-        frame(lua_state, 7.0);
         if is_excute(agent) {
-            EFFECT_FOLLOW(agent, Hash40::new("plizardon_flare_blitz_hold"), Hash40::new("mouth2"), 0, 0, 0, 0, 0, 0, 0.35, true);
+            EFFECT_FOLLOW(agent, Hash40::new("plizardon_flare_blitz_hold"), Hash40::new("head"), -3, 5, 0, 0, 0, 0, 0.3, true);
         }
     }
     frame(lua_state, 18.0);
@@ -151,28 +149,79 @@ unsafe extern "C" fn effect_specialnstart(agent: &mut L2CAgentBase) {
         COL_NORMAL(agent);
     }
     frame(lua_state, 20.0);
-    let mut handle = 0;
     if is_excute(agent) {
         let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
         let object = utils::util::get_battle_object_from_id(parent_id);
         let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
-        EFFECT_OFF_KIND(agent, Hash40::new("plizardon_flare_blitz_hold"), false, false);
-        EFFECT_FOLLOW_FLIP(agent, Hash40::new("plizardon_flare_blitz"), Hash40::new("plizardon_flare_blitz"), Hash40::new("top"), 0, 8, 9, 270, 0, 0, 1, true, *EF_FLIP_NONE);
+
+        let mut flame_color = Vector3f::new(1.0, 1.0, 1.0);
+        let mut flame_alpha = 1.0;
+        let mut flame_rate = 2.0;
+        let mut speedline_alpha_mul = 0.8;
+        let mut speedline_color_main = Vector3f::new(0.6, 0.1, 0.0);
+        let mut speedline_color_sub = Vector3f::new(0.9, 0.4, 0.0);
         if pledge == *PLEDGE_STATE_WATER {
-            LAST_EFFECT_SET_SCALE_W(agent, 1.0, 0.8, 0.8);
             EFFECT_OFF_KIND(agent, Hash40::new("sys_drown_out"), false, false);
+            EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_steam"), Hash40::new("sys_steam"), Hash40::new("top"), -1, 5, 20, 0, 0, 0, 1.0, true, *EF_FLIP_YZ, 5.0);
+            LAST_EFFECT_SET_SCALE_W(agent, 1.8, 1.5, 1.8);
+            LAST_EFFECT_SET_COLOR(agent, 0.7, 0.7, 0.74);
+            LAST_EFFECT_SET_RATE(agent, 0.8);
+
+            flame_alpha = 0.85;
+            speedline_alpha_mul = 0.6;
+            speedline_color_main = Vector3f::new(0.25, 0.3, 0.5);
+            speedline_color_sub = Vector3f::new(0.6, 0.1, 0.0);
         }
         else if pledge == *PLEDGE_STATE_GRASS {
-            LAST_EFFECT_SET_SCALE_W(agent, 1.0, 0.8, 0.8);
+            EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_steam"), Hash40::new("sys_steam"), Hash40::new("top"), -1, 5, 19, 0, 0, 0, 1.0, true, *EF_FLIP_YZ, 1.2);
+            LAST_EFFECT_SET_COLOR(agent, 2.0, 3.0, 0.5);
+            LAST_EFFECT_SET_RATE(agent, 0.7);
+            EFFECT_FLIP(agent, Hash40::new("sys_grass_landing"), Hash40::new("sys_grass_landing"), Hash40::new("top"), -1, 5, 10, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true, *EF_FLIP_YZ);
+            LAST_EFFECT_SET_COLOR(agent, 4.0, 3.0, 1.0);
+            LAST_EFFECT_SET_RATE(agent, 0.4);
+
+            flame_alpha = 0.7;
+            flame_rate = 1.0;
+            flame_color = Vector3f::new(0.3, 0.9, 0.5);
+            speedline_alpha_mul = 0.6;
+            speedline_color_main = Vector3f::new(0.7, 0.2, 0.0);
+            speedline_color_sub = Vector3f::new(0.4, 0.3, 0.1);
         }
-        else {
-            LAST_EFFECT_SET_SCALE_W(agent, 1.0, 0.7, 0.7);
+
+        EFFECT_OFF_KIND(agent, Hash40::new("plizardon_flare_blitz_hold"), false, false);
+        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("plizardon_atk_mouth_fire"), Hash40::new("plizardon_atk_mouth_fire"), Hash40::new("head"), -1, 2, 0, 0, 180, 35, 1.0, true, *EF_FLIP_ROT_X, flame_alpha);
+        LAST_EFFECT_SET_SCALE_W(agent, 1.2, 1.9, 1.2);
+        LAST_EFFECT_SET_COLOR(agent, flame_color.x, flame_color.y, flame_color.z);
+        LAST_EFFECT_SET_RATE(agent, flame_rate);
+
+        for i in 0..2 {
+            let scale_y = match i {
+                0 => (1.3, 1.2, 1.1),
+                _ => (1.2, 1.1, 1.0),
+            };
+            EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_attack_speedline"), Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 6, 11, 0, 0, 0, 1.0, true, *EF_FLIP_YZ, 0.5 * speedline_alpha_mul);
+            LAST_EFFECT_SET_SCALE_W(agent, 2.0, scale_y.0, 1.0);
+            LAST_EFFECT_SET_RATE(agent, 0.3);
+            LAST_EFFECT_SET_COLOR(agent, speedline_color_main.x, speedline_color_main.y, speedline_color_main.z);
+            EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_attack_speedline"), Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 6, 11, 0, 0, 0, 1.0, true, *EF_FLIP_YZ, 0.4 * speedline_alpha_mul);
+            LAST_EFFECT_SET_SCALE_W(agent, 2.0, scale_y.1, 1.0);
+            LAST_EFFECT_SET_RATE(agent, 0.3);
+            LAST_EFFECT_SET_COLOR(agent, speedline_color_sub.x, speedline_color_sub.y, speedline_color_sub.z);
+            if [*PLEDGE_STATE_NONE, *PLEDGE_STATE_FIRE].contains(&pledge) {
+                EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_attack_speedline"), Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 6, 11, 0, 0, 0, 1.0, true, *EF_FLIP_YZ, 0.2 * speedline_alpha_mul);
+                LAST_EFFECT_SET_SCALE_W(agent, 2.0, scale_y.2, 1.0);
+                LAST_EFFECT_SET_RATE(agent, 0.3);
+            }
+            if i == 0 {
+                wait(lua_state, 18.0);
+            }
         }
+
     }
-    frame(lua_state, 33.0);
+    frame(lua_state, 39.0);
     if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("plizardon_flare_blitz"), false, false);
-        EFFECT_DETACH_KIND(agent, Hash40::new("plizardon_flare_blitz"), 0);
+        EFFECT_OFF_KIND(agent, Hash40::new("plizardon_atk_mouth_fire"), false, false); 
+        EFFECT_OFF_KIND(agent, Hash40::new("sys_steam2"), false, false); 
     }
 }
 
