@@ -4,6 +4,7 @@ use super::*;
 use globals::*;
 
 pub unsafe extern "C" fn pledge_timer(weapon: &mut L2CFighterBase) {
+    //println!("timer: {}", VarModule::get_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER));
     if VarModule::get_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE) != *PLEDGE_STATE_NONE {
         if !VarModule::is_flag(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER)
         && VarModule::countdown_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0) {
@@ -27,13 +28,11 @@ pub unsafe extern "C" fn pledge_timer(weapon: &mut L2CFighterBase) {
             }
             
             VarModule::set_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_NONE);
-            VarModule::off_flag(weapon.battle_object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
         }
     }
-
-    // if is_training_mode() && VarModule::is_flag(weapon.battle_object, vars::ptrainer::instance::DISABLE_SPECIAL_LW) {
-    //     VarModule::off_flag(weapon.battle_object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
-    // }
+    if VarModule::countdown_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER, 0) {
+        VarModule::off_flag(weapon.battle_object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
+    }
 }
 
 pub fn install(agent: &mut Agent) {

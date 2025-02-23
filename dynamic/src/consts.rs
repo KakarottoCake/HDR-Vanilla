@@ -1412,6 +1412,7 @@ pub mod vars {
             // ints
             pub const SPECIAL_N_PLEDGE_STATE: i32 = 0x0100; // 0 - None, 1 - Squirtle, 2 - Ivysaur, 3 - Charizard
             pub const SPECIAL_N_PLEDGE_TIMER: i32 = 0x0101;
+            pub const SPECIAL_LW_SWAP_TIMER: i32 = 0x0102;
         }
         pub mod status {
             // flags

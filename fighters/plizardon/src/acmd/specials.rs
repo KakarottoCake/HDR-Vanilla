@@ -337,8 +337,9 @@ unsafe extern "C" fn game_speciallwin(agent: &mut L2CAgentBase) {
         if VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE) == *PLEDGE_STATE_NONE {
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_FIRE);
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 900);
-            //VarModule::on_flag(object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
         }
+        VarModule::on_flag(object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
+        VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER, 300);
         VarModule::on_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
     }
 }
