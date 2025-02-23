@@ -14,11 +14,11 @@ unsafe extern "C" fn special_lw_out_main(fighter: &mut L2CFighterCommon) -> L2CV
     let object = utils::util::get_battle_object_from_id(parent_id);
     let pledge_state = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
     //println!("pledge_state: {}", pledge_state);
-    if pledge_state == 1 {
+    if pledge_state == *PLEDGE_STATE_WATER {
         let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_status_defense_up"), Hash40::new("hip"), &Vector3f::new(0.7, 0.0, 0.0), &Vector3f::zero(), 0.9, true, 0, 0, 0, 0, 0, true, true) as u32;
         VarModule::set_int(fighter.object(), vars::plizardon::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, handle as i32);
     }
-    else if pledge_state == 2 {
+    else if pledge_state == *PLEDGE_STATE_GRASS {
         let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_status_speed_up"), Hash40::new("hip"), &Vector3f::new(0.7, 0.0, 0.0), &Vector3f::zero(), 0.9, true, 0, 0, 0, 0, 0, true, true) as u32;
         VarModule::set_int(fighter.object(), vars::plizardon::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, handle as i32);
     }

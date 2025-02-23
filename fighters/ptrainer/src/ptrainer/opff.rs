@@ -4,7 +4,7 @@ use super::*;
 use globals::*;
 
 pub unsafe extern "C" fn pledge_timer(weapon: &mut L2CFighterBase) {
-    if VarModule::get_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE) != 0 {
+    if VarModule::get_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE) != *PLEDGE_STATE_NONE {
         if !VarModule::is_flag(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER)
         && VarModule::countdown_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0) {
             let poke_parent_id = LinkModule::get_parent_object_id(weapon.module_accessor, *WEAPON_PTRAINER_PTRAINER_LINK_NO_POKEMON) as u32;
@@ -26,7 +26,7 @@ pub unsafe extern "C" fn pledge_timer(weapon: &mut L2CFighterBase) {
                 VarModule::set_int(poke_object, vars::plizardon::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, -1);
             }
             
-            VarModule::set_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 0);
+            VarModule::set_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_NONE);
             VarModule::off_flag(weapon.battle_object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
         }
     }

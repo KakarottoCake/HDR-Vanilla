@@ -15,7 +15,7 @@ unsafe extern "C" fn game_specialnstart(agent: &mut L2CAgentBase) {
         let speed_y = if agent.is_situation(*SITUATION_KIND_GROUND) { 0.0 } else { 0.25 };
         SET_SPEED_EX(agent, -1.0, speed_y, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     }
-    if pledge == 1 {
+    if pledge == *PLEDGE_STATE_WATER {
         // Water Pledge
         if is_excute(agent) {
             ATTACK(agent, 0, 1, Hash40::new("top"), 13.0, 30, 110, 0, 20, 7.0, 0.0, 8.5, 11.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
@@ -40,7 +40,7 @@ unsafe extern "C" fn game_specialnstart(agent: &mut L2CAgentBase) {
             ATTACK(agent, 1, 0, Hash40::new("top"), 1.0, 0, 0, 0, 0, 14.0, 0.0, 8.5, 20.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
         }
     }
-    else if pledge == 2 {
+    else if pledge == *PLEDGE_STATE_GRASS {
         // Grass Pledge
         if is_excute(agent) {
             ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 366, 100, 40, 0, 7.0, 0.0, 8.5, 11.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 3, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
@@ -116,14 +116,14 @@ unsafe extern "C" fn effect_specialnstart(agent: &mut L2CAgentBase) {
         FLASH(agent, 1, 0.2, 0, 0.5);
         FLASH_FRM(agent, 15, 0, 0, 0, 0);
     }
-    if pledge == 1 {
+    if pledge == *PLEDGE_STATE_WATER {
         frame(lua_state, 7.0);
         if is_excute(agent) {
             EFFECT_FOLLOW(agent, Hash40::new("sys_steam"), Hash40::new("mouth2"), 0, 0, 0, 0, 0, 0, 0.8, false);
             EFFECT_FOLLOW(agent, Hash40::new("sys_drown_out"), Hash40::new("mouth2"), 0, 0, 0, 180, 0, 0, 0.6, false);
         }
     }
-    else if pledge == 2 {
+    else if pledge == *PLEDGE_STATE_GRASS {
         let mut handle = 0;
         frame(lua_state, 7.0);
         for _ in 0..4 {
@@ -158,11 +158,11 @@ unsafe extern "C" fn effect_specialnstart(agent: &mut L2CAgentBase) {
         let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
         EFFECT_OFF_KIND(agent, Hash40::new("plizardon_flare_blitz_hold"), false, false);
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("plizardon_flare_blitz"), Hash40::new("plizardon_flare_blitz"), Hash40::new("top"), 0, 8, 9, 270, 0, 0, 1, true, *EF_FLIP_NONE);
-        if pledge == 1 {
+        if pledge == *PLEDGE_STATE_WATER {
             LAST_EFFECT_SET_SCALE_W(agent, 1.0, 0.8, 0.8);
             EFFECT_OFF_KIND(agent, Hash40::new("sys_drown_out"), false, false);
         }
-        else if pledge == 2 {
+        else if pledge == *PLEDGE_STATE_GRASS {
             LAST_EFFECT_SET_SCALE_W(agent, 1.0, 0.8, 0.8);
         }
         else {
@@ -203,7 +203,7 @@ unsafe extern "C" fn expression_specialnstart(agent: &mut L2CAgentBase) {
         let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
         let object = utils::util::get_battle_object_from_id(parent_id);
         let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
-        if pledge == 1 || pledge == 2 {
+        if [*PLEDGE_STATE_WATER, *PLEDGE_STATE_GRASS].contains(&pledge) {
             QUAKE(agent, *CAMERA_QUAKE_KIND_S);
         }
         RUMBLE_HIT(agent, Hash40::new("rbkind_attackl"), 0);
@@ -285,8 +285,8 @@ unsafe extern "C" fn game_speciallwin(agent: &mut L2CAgentBase) {
         let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
         let object = utils::util::get_battle_object_from_id(parent_id);
         VarModule::on_flag(object, vars::ptrainer::instance::SPECIAL_LW_BACKWARDS_SWITCH); // we will turn this off in opff
-        if VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE) == 0 {
-            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 3);
+        if VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE) == *PLEDGE_STATE_NONE {
+            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_FIRE);
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 900);
             VarModule::on_flag(object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
         }

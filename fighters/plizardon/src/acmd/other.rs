@@ -134,7 +134,7 @@ unsafe extern "C" fn game_appealhi(agent: &mut L2CAgentBase) {
         if is_training_mode() {
             let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
             let object = utils::util::get_battle_object_from_id(parent_id);
-            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 1);
+            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_WATER);
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 6000);
         }
     }
@@ -162,6 +162,7 @@ unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
             let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
             let object = utils::util::get_battle_object_from_id(parent_id);
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 2);
+            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_GRASS);
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 6000);
         }
     }
@@ -219,6 +220,8 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_appealhir", game_appealhi, Priority::Low);
     agent.acmd("effect_appealhil", effect_appealhi, Priority::Low);
     agent.acmd("effect_appealhir", effect_appealhi, Priority::Low);
+    agent.acmd("sound_appealhil", sound_appealhi, Priority::Low);
+    agent.acmd("sound_appealhir", sound_appealhi, Priority::Low);
 
     agent.acmd("game_appeallwl", game_appeallw, Priority::Low);
     agent.acmd("game_appeallwr", game_appeallw, Priority::Low);

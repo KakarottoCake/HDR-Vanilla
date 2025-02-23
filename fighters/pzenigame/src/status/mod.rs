@@ -10,7 +10,7 @@ mod special_lw;
 unsafe extern "C" fn entry_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let parent_id = LinkModule::get_parent_id(fighter.module_accessor, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
     let object = utils::util::get_battle_object_from_id(parent_id);
-    VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 0);
+    VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_NONE);
     VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
     VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
     VarModule::off_flag(object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
@@ -20,7 +20,7 @@ unsafe extern "C" fn entry_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 unsafe extern "C" fn dead_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let parent_id = LinkModule::get_parent_id(fighter.module_accessor, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
     let object = utils::util::get_battle_object_from_id(parent_id);
-    VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 0);
+    VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_NONE);
     VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
     VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
     VarModule::off_flag(object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
@@ -30,7 +30,7 @@ unsafe extern "C" fn dead_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 unsafe extern "C" fn rebirth_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let parent_id = LinkModule::get_parent_id(fighter.module_accessor, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
     let object = utils::util::get_battle_object_from_id(parent_id);
-    VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 0);
+    VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_NONE);
     VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
     VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
     VarModule::off_flag(object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);

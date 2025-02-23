@@ -4,7 +4,7 @@ unsafe extern "C" fn special_lw_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
     if !weapon.is_flag(*WEAPON_PTRAINER_PTRAINER_INSTANCE_WORK_ID_FLAG_OUTFIELD_INVISIBLE) {
         VisibilityModule::set_whole(weapon.module_accessor, true);
     }
-    let ptrainer = weapon.global_table[0x4].get_ptr() as *mut Weapon;
+    let ptrainer = weapon.global_table[0x4].get_ptr() as *mut smash::app::Weapon;
     if smash::app::WeaponSpecializer_PTrainerPTrainer::request_change_pokemon(ptrainer) != 0 {
         weapon.set_int(*FIGHTER_COMMON_START_KIND_CHANGE, *WEAPON_PTRAINER_PTRAINER_INSTANCE_WORK_ID_INT_START_KIND);
         MotionModule::change_motion(weapon.module_accessor, Hash40::new("p_change"), 0.0, 1.0, false, 0.0, false, false);

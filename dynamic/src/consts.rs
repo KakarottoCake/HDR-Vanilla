@@ -2068,3 +2068,8 @@ pub mod melee_mode {
 
 // extra lua_consts
 pub const COLLISION_KIND_MASK_PARRY: smash::lib::LuaConst = smash::lib::LuaConst::new(0x80);
+
+pub const PLEDGE_STATE_NONE: smash::lib::LuaConst = smash::lib::LuaConst::new(0x0);
+pub const PLEDGE_STATE_WATER: smash::lib::LuaConst = smash::lib::LuaConst::new(0x1);
+pub const PLEDGE_STATE_GRASS: smash::lib::LuaConst = smash::lib::LuaConst::new(0x2);
+pub const PLEDGE_STATE_FIRE: smash::lib::LuaConst = smash::lib::LuaConst::new(0x3);
