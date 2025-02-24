@@ -7,7 +7,7 @@ use globals::*;
 unsafe fn launch_star_cancel(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_status(*FIGHTER_ROSETTA_STATUS_KIND_SPECIAL_HI_JUMP)
 	&& MotionModule::frame(boma) > 2.0 {
-        if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
+        if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD | *CONTROL_PAD_BUTTON_SPECIAL) {
             StatusModule::change_status_request_from_script(boma, *FIGHTER_ROSETTA_STATUS_KIND_SPECIAL_HI_END, false);
         }
     }
