@@ -1371,13 +1371,6 @@ pub mod vars {
         }
     }
 
-    pub mod plizardon_breath {
-        pub mod instance {
-            // ints
-            pub const PLEDGE_TYPE: i32 = 0x0100;
-        }
-    }
-
     pub mod plizardon_rock {
         pub mod status {
             // flags
