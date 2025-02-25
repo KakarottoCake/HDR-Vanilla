@@ -9,6 +9,7 @@ pub mod status;
 
 // articles
 
+mod hulahoop;
 mod sunbullet;
 
 use smash::{
@@ -50,5 +51,6 @@ pub fn install() {
     status::install(agent);
     agent.install();
 
+    hulahoop::install();
     sunbullet::install();
 }
