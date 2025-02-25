@@ -7,7 +7,8 @@
   </list>
   <list hash="param_special_s">
     <struct index="0">
-      <float hash="speed_x_">3</float>
+      <float hash="rush_rotate_count_">1</float>
+      <float hash="speed_x_">2.5</float>
       <float hash="brake_x_">0.04</float>
     </struct>
     <hash40 index="1">dummy</hash40>

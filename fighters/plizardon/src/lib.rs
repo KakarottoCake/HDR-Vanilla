@@ -7,6 +7,7 @@ pub mod acmd;
 pub mod opff;
 pub mod status;
 
+mod explosion;
 mod rock;
 mod rockstone;
 
@@ -74,6 +75,7 @@ pub fn install() {
     status::install(agent);
     agent.install();
 
+    explosion::install();
     rock::install();
     rockstone::install();
 
