@@ -29,24 +29,6 @@ unsafe fn nspecial_cancels(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
-unsafe fn deep_breathing_respawn_cooldown(boma: &mut BattleObjectModuleAccessor) {
-    if VarModule::get_int(boma.object(), vars::common::instance::GIMMICK_TIMER) > 1 {
-        VarModule::dec_int(boma.object(), vars::common::instance::GIMMICK_TIMER);
-    }
-    else if VarModule::get_int(boma.object(), vars::common::instance::GIMMICK_TIMER) == 1 {
-        //println!("cooldown over");
-        VarModule::dec_int(boma.object(), vars::common::instance::GIMMICK_TIMER);
-        VarModule::off_flag(boma.object(), vars::wiifit::instance::SPECIAL_LW_RESPAWN_COOLDOWN);
-    }
-    if boma.is_status_one_of(&[
-        *FIGHTER_STATUS_KIND_DEAD,
-        *FIGHTER_STATUS_KIND_REBIRTH]) {
-        //println!("starting cooldown");
-        VarModule::set_int(boma.object(), vars::common::instance::GIMMICK_TIMER, 180);
-        VarModule::off_flag(boma.object(), vars::wiifit::instance::SPECIAL_LW_RESPAWN_COOLDOWN);
-    }
-}
-
 /// Starts ring effect for hitboxes
 pub unsafe fn start_ring(fighter: &mut L2CFighterCommon, duration: f32, start_size: f32, end_size: f32, bone: Hash40, mut offset: Vector3f, mut color: Vector3f, mut color2: Vector3f, follow: bool) {
     VarModule::on_flag(fighter.object(), vars::wiifit::instance::RING_EFFECT_VISIBLE);
@@ -202,7 +184,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
     header_cancel(boma);
     nspecial_cancels(boma);
-    deep_breathing_respawn_cooldown(boma);
     fastfall_specials(fighter);
     //update_ring(fighter);
 }

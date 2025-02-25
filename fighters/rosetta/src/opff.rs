@@ -4,10 +4,10 @@ use super::*;
 use globals::*;
 
 //Launch Star Cancel
-unsafe fn launch_star_cancel(boma: &mut BattleObjectModuleAccessor, status_kind: i32) {
-    if status_kind == *FIGHTER_ROSETTA_STATUS_KIND_SPECIAL_HI_JUMP
+unsafe fn launch_star_cancel(boma: &mut BattleObjectModuleAccessor) {
+    if boma.is_status(*FIGHTER_ROSETTA_STATUS_KIND_SPECIAL_HI_JUMP)
 	&& MotionModule::frame(boma) > 2.0 {
-        if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) {
+        if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD | *CONTROL_PAD_BUTTON_SPECIAL) {
             StatusModule::change_status_request_from_script(boma, *FIGHTER_ROSETTA_STATUS_KIND_SPECIAL_HI_END, false);
         }
     }
@@ -22,7 +22,7 @@ use vars::rosetta::instance::*;
 use vars::rosetta::status::*;
 
 // down special teleport
-unsafe fn teleport(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, frame: f32) {
+unsafe fn teleport(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
 	// handle the cooldown timer
 	let cooldown_frame = VarModule::get_int(boma.object(), GIMMICK_TIMER);
 	if cooldown_frame > 0 { VarModule::dec_int(boma.object(), GIMMICK_TIMER); }
@@ -52,13 +52,13 @@ unsafe fn teleport(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModule
 
 	if !can_teleport {
 		// prevent the successful teleport logic if Luma is put into hitstun or killed during startup
-		if (13.0..17.0).contains(&frame) {
+		if (13.0..17.0).contains(&fighter.motion_frame()) {
 			VarModule::on_flag(boma.object(), SPECIAL_LW_INVALID_WARP);
 		}
 	}
 
 	// transition rosalina to special fall after a successful aerial teleport
-	if frame > 38.0 
+	if fighter.motion_frame() > 38.0 
 	&& !VarModule::is_flag(boma.object(), SPECIAL_LW_INVALID_WARP) 
 	&& !VarModule::is_flag(boma.object(), SPECIAL_LW_WARP_GROUND_START) {
 		//println!("successful aerial teleport. entering special fall");
@@ -98,9 +98,9 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     }
 }
 
-pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
-    launch_star_cancel(boma, status_kind);
-	teleport(fighter, boma, frame);
+pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
+    launch_star_cancel(boma);
+	teleport(fighter, boma);
 	fastfall_specials(fighter);
 }
 
@@ -113,7 +113,7 @@ pub extern "C" fn rosetta_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighter
 
 pub unsafe fn rosetta_frame(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
     if let Some(info) = FrameInfo::update_and_get(fighter) {
-        moveset(fighter, &mut *info.boma, info.id, info.cat, info.status_kind, info.situation_kind, info.motion_kind.hash, info.stick_x, info.stick_y, info.facing, info.frame);
+        moveset(fighter, &mut *info.boma);
     }
 }
 
