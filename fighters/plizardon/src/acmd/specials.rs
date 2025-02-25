@@ -7,7 +7,7 @@ unsafe extern "C" fn game_specialnstart(agent: &mut L2CAgentBase) {
     let object = utils::util::get_battle_object_from_id(parent_id);
     let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
     frame(lua_state, 1.0);
-    if pledge == 1 {
+    if pledge == *PLEDGE_STATE_WATER {
         FT_MOTION_RATE_RANGE(agent, 1.0, 20.0, 15.0);
     }
     frame(lua_state, 20.0);
@@ -155,6 +155,7 @@ unsafe extern "C" fn effect_specialnstart(agent: &mut L2CAgentBase) {
         let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
 
         let mut flame_color = Vector3f::new(1.0, 1.0, 1.0);
+        let mut flame_size = 1.0;
         let mut flame_alpha = 1.0;
         let mut flame_rate = 2.0;
         let mut speedline_alpha_mul = 0.8;
@@ -166,7 +167,13 @@ unsafe extern "C" fn effect_specialnstart(agent: &mut L2CAgentBase) {
             LAST_EFFECT_SET_SCALE_W(agent, 1.8, 1.5, 1.8);
             LAST_EFFECT_SET_COLOR(agent, 0.7, 0.7, 0.74);
             LAST_EFFECT_SET_RATE(agent, 0.8);
+            EFFECT_FOLLOW_ALPHA(agent, Hash40::new("sys_damage_fire"), Hash40::new("top"), 0, 8, 16, 0, 90, 0, 2, false, 1.0);
+            LAST_EFFECT_SET_COLOR(agent, 1.0, 1.0, 3.0);
+            EFFECT_FOLLOW_ALPHA(agent, Hash40::new("sys_hit_fire"), Hash40::new("top"), 0, 8, 16, 0, 90, 0, 0.5, false, 0.8);
+            LAST_EFFECT_SET_COLOR(agent, 0.5, 0.5, 3.0);
 
+            flame_color = Vector3f::new(0.6, 1.0, 6.0);
+            flame_size = 1.1;
             flame_alpha = 0.85;
             speedline_alpha_mul = 0.6;
             speedline_color_main = Vector3f::new(0.25, 0.3, 0.5);
@@ -179,44 +186,73 @@ unsafe extern "C" fn effect_specialnstart(agent: &mut L2CAgentBase) {
             EFFECT_FLIP(agent, Hash40::new("sys_grass_landing"), Hash40::new("sys_grass_landing"), Hash40::new("top"), -1, 5, 10, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true, *EF_FLIP_YZ);
             LAST_EFFECT_SET_COLOR(agent, 4.0, 3.0, 1.0);
             LAST_EFFECT_SET_RATE(agent, 0.4);
+            EFFECT_FOLLOW_ALPHA(agent, Hash40::new("sys_damage_fire"), Hash40::new("top"), 0, 8, 16, 0, 90, 0, 2, false, 0.8);
+            LAST_EFFECT_SET_COLOR(agent, 0.6, 1.8, 1.0);
 
+            flame_color = Vector3f::new(0.3, 0.9, 0.5);
+            flame_size = 1.1;
             flame_alpha = 0.7;
             flame_rate = 1.0;
-            flame_color = Vector3f::new(0.3, 0.9, 0.5);
             speedline_alpha_mul = 0.6;
             speedline_color_main = Vector3f::new(0.7, 0.2, 0.0);
             speedline_color_sub = Vector3f::new(0.4, 0.3, 0.1);
         }
 
         EFFECT_OFF_KIND(agent, Hash40::new("plizardon_flare_blitz_hold"), false, false);
-        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("plizardon_atk_mouth_fire"), Hash40::new("plizardon_atk_mouth_fire"), Hash40::new("head"), -1, 2, 0, 0, 180, 35, 1.0, true, *EF_FLIP_ROT_X, flame_alpha);
+        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("plizardon_atk_mouth_fire"), Hash40::new("plizardon_atk_mouth_fire"), Hash40::new("head"), -1, 2, 0, 0, 180, 35, flame_size, true, *EF_FLIP_ROT_X, flame_alpha);
         LAST_EFFECT_SET_SCALE_W(agent, 1.2, 1.9, 1.2);
         LAST_EFFECT_SET_COLOR(agent, flame_color.x, flame_color.y, flame_color.z);
         LAST_EFFECT_SET_RATE(agent, flame_rate);
 
-        for i in 0..2 {
-            let scale_y = match i {
-                0 => (1.3, 1.2, 1.1),
-                _ => (1.2, 1.1, 1.0),
-            };
-            EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_attack_speedline"), Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 6, 11, 0, 0, 0, 1.0, true, *EF_FLIP_YZ, 0.5 * speedline_alpha_mul);
-            LAST_EFFECT_SET_SCALE_W(agent, 2.0, scale_y.0, 1.0);
+        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_attack_speedline"), Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 6, 11, 0, 0, 0, 1.0, true, *EF_FLIP_YZ, 0.5 * speedline_alpha_mul);
+        LAST_EFFECT_SET_SCALE_W(agent, 2.0, 1.3, 1.0);
+        LAST_EFFECT_SET_RATE(agent, 0.3);
+        LAST_EFFECT_SET_COLOR(agent, speedline_color_main.x, speedline_color_main.y, speedline_color_main.z);
+        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_attack_speedline"), Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 6, 11, 0, 0, 0, 1.0, true, *EF_FLIP_YZ, 0.4 * speedline_alpha_mul);
+        LAST_EFFECT_SET_SCALE_W(agent, 2.0, 1.2, 1.0);
+        LAST_EFFECT_SET_RATE(agent, 0.3);
+        LAST_EFFECT_SET_COLOR(agent, speedline_color_sub.x, speedline_color_sub.y, speedline_color_sub.z);
+        if [*PLEDGE_STATE_NONE, *PLEDGE_STATE_FIRE].contains(&pledge) {
+            EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_attack_speedline"), Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 6, 11, 0, 0, 0, 1.0, true, *EF_FLIP_YZ, 0.2 * speedline_alpha_mul);
+            LAST_EFFECT_SET_SCALE_W(agent, 2.0, 1.1, 1.0);
             LAST_EFFECT_SET_RATE(agent, 0.3);
-            LAST_EFFECT_SET_COLOR(agent, speedline_color_main.x, speedline_color_main.y, speedline_color_main.z);
-            EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_attack_speedline"), Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 6, 11, 0, 0, 0, 1.0, true, *EF_FLIP_YZ, 0.4 * speedline_alpha_mul);
-            LAST_EFFECT_SET_SCALE_W(agent, 2.0, scale_y.1, 1.0);
-            LAST_EFFECT_SET_RATE(agent, 0.3);
-            LAST_EFFECT_SET_COLOR(agent, speedline_color_sub.x, speedline_color_sub.y, speedline_color_sub.z);
-            if [*PLEDGE_STATE_NONE, *PLEDGE_STATE_FIRE].contains(&pledge) {
-                EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_attack_speedline"), Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 6, 11, 0, 0, 0, 1.0, true, *EF_FLIP_YZ, 0.2 * speedline_alpha_mul);
-                LAST_EFFECT_SET_SCALE_W(agent, 2.0, scale_y.2, 1.0);
-                LAST_EFFECT_SET_RATE(agent, 0.3);
-            }
-            if i == 0 {
-                wait(lua_state, 18.0);
-            }
         }
-
+    }
+    frame(lua_state, 23.0);
+    if is_excute(agent) {
+        EFFECT_DETACH_KIND(agent, Hash40::new("sys_hit_fire"), 0);
+    }
+    frame(lua_state, 29.0);
+    if is_excute(agent) {
+        if pledge == *PLEDGE_STATE_GRASS {
+            EFFECT_FOLLOW_ALPHA(agent, Hash40::new("pfushigisou_atk_hi4"), Hash40::new("top"), 0, 8.5, 21.5, 0, 0, 90, 0.6, false, 0.4);
+        }
+    }
+    frame(lua_state, 38.0);
+    if is_excute(agent) {
+        let mut speedline_color_main = Vector3f::new(0.6, 0.1, 0.0);
+        let mut speedline_color_sub = Vector3f::new(0.9, 0.4, 0.0);
+        if pledge == *PLEDGE_STATE_WATER {
+            speedline_color_main = Vector3f::new(0.25, 0.3, 0.5);
+            speedline_color_sub = Vector3f::new(0.6, 0.1, 0.0);
+        }
+        else if pledge == *PLEDGE_STATE_GRASS {
+            speedline_color_main = Vector3f::new(0.7, 0.2, 0.0);
+            speedline_color_sub = Vector3f::new(0.4, 0.3, 0.1);
+        }
+        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_attack_speedline"), Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 6, 11, 0, 0, 0, 1.0, true, *EF_FLIP_YZ, 0.5 * 0.6);
+        LAST_EFFECT_SET_SCALE_W(agent, 2.0, 1.2, 1.0);
+        LAST_EFFECT_SET_RATE(agent, 0.3);
+        LAST_EFFECT_SET_COLOR(agent, speedline_color_main.x, speedline_color_main.y, speedline_color_main.z);
+        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_attack_speedline"), Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 6, 11, 0, 0, 0, 1.0, true, *EF_FLIP_YZ, 0.4 * 0.6);
+        LAST_EFFECT_SET_SCALE_W(agent, 2.0, 1.1, 1.0);
+        LAST_EFFECT_SET_RATE(agent, 0.3);
+        LAST_EFFECT_SET_COLOR(agent, speedline_color_sub.x, speedline_color_sub.y, speedline_color_sub.z);
+        if [*PLEDGE_STATE_NONE, *PLEDGE_STATE_FIRE].contains(&pledge) {
+            EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_attack_speedline"), Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 6, 11, 0, 0, 0, 1.0, true, *EF_FLIP_YZ, 0.2 * 0.6);
+            LAST_EFFECT_SET_SCALE_W(agent, 2.0, 1.0, 1.0);
+            LAST_EFFECT_SET_RATE(agent, 0.3);
+        }
     }
     frame(lua_state, 39.0);
     if is_excute(agent) {
@@ -235,6 +271,21 @@ unsafe extern "C" fn sound_specialnstart(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         PLAY_STATUS(agent, Hash40::new("vc_plizardon_appeal02"));
     }
+    let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+    let object = utils::util::get_battle_object_from_id(parent_id);
+    let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
+    if pledge == *PLEDGE_STATE_WATER {
+        frame(lua_state, 20.0);
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("se_common_bomb_s"));
+        }
+    }
+    else if pledge == *PLEDGE_STATE_GRASS {
+        frame(lua_state, 23.0);
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("se_common_bomb_s"));
+        }
+    }
 }
 
 unsafe extern "C" fn expression_specialnstart(agent: &mut L2CAgentBase) {
@@ -247,27 +298,48 @@ unsafe extern "C" fn expression_specialnstart(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitl"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(lua_state, 20.0);
-    if is_excute(agent) {
-        let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
-        let object = utils::util::get_battle_object_from_id(parent_id);
-        let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
-        if [*PLEDGE_STATE_WATER, *PLEDGE_STATE_GRASS].contains(&pledge) {
-            QUAKE(agent, *CAMERA_QUAKE_KIND_S);
+    let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+    let object = utils::util::get_battle_object_from_id(parent_id);
+    let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
+    if pledge != *PLEDGE_STATE_GRASS {
+        frame(lua_state, 20.0);
+        if is_excute(agent) {
+            if pledge == *PLEDGE_STATE_WATER {
+                QUAKE(agent, *CAMERA_QUAKE_KIND_S);
+            }
+            RUMBLE_HIT(agent, Hash40::new("rbkind_attackl"), 0);
         }
-        RUMBLE_HIT(agent, Hash40::new("rbkind_attackl"), 0);
+        frame(lua_state, 23.0);
+        if is_excute(agent) {
+            RUMBLE_HIT(agent, Hash40::new("rbkind_attackl"), 0);
+        }
+        frame(lua_state, 26.0);
+        if is_excute(agent) {
+            RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
+        }
+        frame(lua_state, 29.0);
+        if is_excute(agent) {
+            RUMBLE_HIT(agent, Hash40::new("rbkind_attacks"), 0);
+        }
     }
-    frame(lua_state, 23.0);
-    if is_excute(agent) {
-        RUMBLE_HIT(agent, Hash40::new("rbkind_attackl"), 0);
-    }
-    frame(lua_state, 26.0);
-    if is_excute(agent) {
-        RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
-    }
-    frame(lua_state, 29.0);
-    if is_excute(agent) {
-        RUMBLE_HIT(agent, Hash40::new("rbkind_attacks"), 0);
+    else {
+        frame(lua_state, 20.0);
+        if is_excute(agent) {
+            QUAKE(agent, *CAMERA_QUAKE_KIND_S);
+            RUMBLE_HIT(agent, Hash40::new("rbkind_attacks"), 0);
+        }
+        frame(lua_state, 23.0);
+        if is_excute(agent) {
+            RUMBLE_HIT(agent, Hash40::new("rbkind_attacks"), 0);
+        }
+        frame(lua_state, 26.0);
+        if is_excute(agent) {
+            RUMBLE_HIT(agent, Hash40::new("rbkind_attacks"), 0);
+        }
+        frame(lua_state, 29.0);
+        if is_excute(agent) {
+            RUMBLE_HIT(agent, Hash40::new("rbkind_attackl"), 0);
+        }
     }
 }
 
