@@ -270,6 +270,36 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn effect_speciallw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 16.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_cheek"), Hash40::new("head"), 0, 0, 0, 0, -90, -90, 1, true);
+    }
+    frame(lua_state, 18.0);
+    if is_excute(agent) {
+        if VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
+            let discharge_effect_mul = VarModule::get_float(boma.object(), vars::pichu::instance::SPECIAL_LW_DISCHARGE_SIZE_MUL);
+            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit2"), Hash40::new("hip"), 0, 0, 0, 0, 90, 0, 1.15 * discharge_effect_mul, true);
+            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_final_explosion"), Hash40::new("hip"), 0, 0, 0, 0, 0, 0, 0.35 * discharge_effect_mul, false);
+        }
+    }
+    frame(lua_state, 46.0);
+    if is_excute(agent) {
+        FLASH(agent, 1, 1, 1, 0.314);
+    }
+    wait(lua_state, 1.0);
+    if is_excute(agent) {
+        FLASH(agent, 0, 0, 0, 0.314);
+    }
+    wait(lua_state, 1.0);
+    if is_excute(agent) {
+        COL_NORMAL(agent);
+    }
+    wait(lua_state, 1.0);
+}
+
 unsafe extern "C" fn game_speciallwhit(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -316,12 +346,7 @@ unsafe extern "C" fn effect_speciallwhit(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     WorkModule::is_flag(boma, *FIGHTER_PIKACHU_STATUS_WORK_ID_FLAG_KAMINARI_ATTACK_HIT);
     if is_excute(agent) {
-        if VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
-            let discharge_effect_mul = VarModule::get_float(boma.object(), vars::pichu::instance::SPECIAL_LW_DISCHARGE_SIZE_MUL);
-            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit2"), Hash40::new("hip"), 0, 0, 0, 0, 90, 0, 1.15 * discharge_effect_mul, true);
-            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_final_explosion"), Hash40::new("hip"), 0, 0, 0, 0, 0, 0, 0.3 * discharge_effect_mul, false);
-        }
-        else {
+        if !VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
             EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit2"), Hash40::new("top"), 0, -2, 0, 0, 90, 0, 1.15, true);
             EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit"), Hash40::new("top"), 0, -2, 0, 0, 90, 0, 0.85, true);
         }
@@ -434,12 +459,7 @@ unsafe extern "C" fn effect_specialairlwhit(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     WorkModule::is_flag(boma, *FIGHTER_PIKACHU_STATUS_WORK_ID_FLAG_KAMINARI_ATTACK_HIT);
     if is_excute(agent) {
-        if VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
-            let discharge_effect_mul = VarModule::get_float(boma.object(), vars::pichu::instance::SPECIAL_LW_DISCHARGE_SIZE_MUL);
-            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit2"), Hash40::new("hip"), 0, 0, 0, 0, 90, 0, 1.15 * discharge_effect_mul, true);
-            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_final_explosion"), Hash40::new("hip"), 0, 0, 0, 0, 0, 0, 0.3 * discharge_effect_mul, false);
-        }
-        else {
+        if !VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
             EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit2"), Hash40::new("top"), 0, -2, 0, 0, 90, 0, 1.15, true);
             EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit"), Hash40::new("top"), 0, -2, 0, 0, 90, 0, 0.85, true);
         }
@@ -559,6 +579,9 @@ pub fn install(agent: &mut Agent) {
 
     agent.acmd("game_speciallw", game_speciallw, Priority::Low);
     agent.acmd("game_specialairlw", game_speciallw, Priority::Low);
+    agent.acmd("effect_speciallw", effect_speciallw, Priority::Low);
+    agent.acmd("effect_specialairlw", effect_speciallw, Priority::Low);
+    
     agent.acmd("game_speciallwhit", game_speciallwhit, Priority::Low);
     agent.acmd("game_specialairlwhit", game_speciallwhit, Priority::Low);
     agent.acmd("effect_speciallwhit", effect_speciallwhit, Priority::Low);
