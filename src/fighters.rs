@@ -76,6 +76,7 @@ pub fn install() {
         pit = "pit",
         pitb = "pitb",
         plizardon = "plizardon",
+        ptrainer = "ptrainer",
         purin = "purin",
         pzenigame = "pzenigame",
         reflet = "reflet",

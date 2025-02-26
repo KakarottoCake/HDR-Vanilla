@@ -12,6 +12,12 @@
     </struct>
     <hash40 index="2">dummy</hash40>
   </list>
+  <list hash="param_seed">
+    <struct index="0">
+      <int hash="life">130</int>
+      <float hash="shoot_speed_y">3.4</float>
+    </struct>
+  </list>
   <list hash="param_vine">
     <struct index="0">
       <int hash="rewind_frame">18</int>
