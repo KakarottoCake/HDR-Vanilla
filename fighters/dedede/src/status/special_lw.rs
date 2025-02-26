@@ -106,8 +106,6 @@ unsafe extern "C" fn special_lw_attack_main(fighter: &mut L2CFighterCommon) -> L
 }
 
 unsafe extern "C" fn special_lw_attack_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let charge_frames = VarModule::get_int(fighter.battle_object, vars::dedede::instance::SPECIAL_LW_CHARGE_FRAME);
-    let mut charge_level = charge_frames as f32 / 30.0;
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
@@ -130,31 +128,26 @@ unsafe extern "C" fn special_lw_attack_main_loop(fighter: &mut L2CFighterCommon)
             EFFECT_OFF_KIND(fighter, Hash40::new("sys_whirlwind_l"), false, false);
         }
     }
+    let charge_frames = VarModule::get_int(fighter.battle_object, vars::dedede::instance::SPECIAL_LW_CHARGE_FRAME);
+    let mut charge_level = charge_frames as f32 / 30.0;
     if charge_level > 1.0 {
         MotionModule::set_rate(fighter.module_accessor, charge_level as f32 * 1.4);
-        if VarModule::is_flag(fighter.battle_object, vars::dedede::status::SPECIAL_LW_CONTINUE_SPIN){
+        if VarModule::is_flag(fighter.battle_object, vars::dedede::status::SPECIAL_LW_CONTINUE_SPIN) {
             VarModule::set_flag(fighter.battle_object, vars::dedede::instance::SPECIAL_LW_CONTINUE_JET_SPIN, true);
             EFFECT_OFF_KIND(fighter, Hash40::new("dedede_final_jet"), false, true);
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_lw"), 0.0, 1.0, false, 0.0, false, false);
             VarModule::set_int(fighter.battle_object, vars::dedede::instance::SPECIAL_LW_CHARGE_FRAME, charge_frames - 30);
-            if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_DEDEDE_GENERATE_ARTICLE_JETHAMMER){
+            if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_DEDEDE_GENERATE_ARTICLE_JETHAMMER) {
                 let article = ArticleModule::get_article(fighter.module_accessor, *FIGHTER_DEDEDE_GENERATE_ARTICLE_JETHAMMER);
                 let object_id = smash::app::lua_bind::Article::get_battle_object_id(article) as u32;
                 let article_boma = sv_battle_object::module_accessor(object_id);
-    
                 MotionModule::change_motion(article_boma, Hash40::new("attack"), 0.0, 1.0, false, 0.0, false, false);
-    
             }
-            VarModule::set_flag(fighter.battle_object, vars::dedede::status::SPECIAL_LW_CONTINUE_SPIN, false);
+            VarModule::off_flag(fighter.battle_object, vars::dedede::status::SPECIAL_LW_CONTINUE_SPIN);
         }
     }
     if MotionModule::is_end(fighter.module_accessor) {
-        if fighter.is_situation(*SITUATION_KIND_AIR) {
-            fighter.change_status(FIGHTER_STATUS_KIND_FALL_SPECIAL.into(), false.into());
-        }
-        else {
-            fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
-        }
+        fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_FALL_SPECIAL, false);
         return 0.into();
     }
 
@@ -162,8 +155,7 @@ unsafe extern "C" fn special_lw_attack_main_loop(fighter: &mut L2CFighterCommon)
 }
 
 unsafe extern "C" fn special_lw_attack_end(fighter: &mut L2CFighterCommon) -> L2CValue {
-    VarModule::set_flag(fighter.battle_object, vars::dedede::status::SPECIAL_LW_CONTINUE_SPIN, false);
-    VarModule::set_flag(fighter.battle_object, vars::dedede::instance::SPECIAL_LW_CONTINUE_JET_SPIN, false);
+    VarModule::off_flag(fighter.battle_object, vars::dedede::instance::SPECIAL_LW_CONTINUE_JET_SPIN);
     VarModule::set_int(fighter.battle_object, vars::dedede::instance::SPECIAL_LW_CHARGE_FRAME, 0);
 
     return 0.into();

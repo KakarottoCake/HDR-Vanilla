@@ -146,6 +146,26 @@ unsafe extern "C" fn game_throwflw(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 7.0, 45, 45, 0, 45, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 40, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+    }
+    frame(lua_state, 18.0);
+    if is_excute(agent) {
+        CHECK_FINISH_CAMERA(agent, 10, 0);
+    }
+    frame(lua_state, 19.0);
+    if is_excute(agent) {
+        let target = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
+        let target_group = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
+        let target_no = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
+        ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
+    }
+}
+
 unsafe extern "C" fn game_itemheavythrowf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -259,15 +279,13 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_catchturn", game_catchturn, Priority::Low);
 
     agent.acmd("game_throwff", game_throwff, Priority::Low);
-
     agent.acmd("game_throwfb", game_throwfb, Priority::Low);
-
     agent.acmd("game_throwfhi", game_throwfhi, Priority::Low);
-
     agent.acmd("game_throwflw", game_throwflw, Priority::Low);
 
-    agent.acmd("game_itemheavythrowf", game_itemheavythrowf, Priority::Low);
+    agent.acmd("game_throwlw", game_throwlw, Priority::Low);
 
+    agent.acmd("game_itemheavythrowf", game_itemheavythrowf, Priority::Low);
     agent.acmd("game_itemheavythrowb", game_itemheavythrowb, Priority::Low);
 
     agent.acmd("game_itemheavythrowlw", game_itemheavythrowlw, Priority::Low);

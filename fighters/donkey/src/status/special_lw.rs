@@ -56,6 +56,7 @@ unsafe extern "C" fn special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2C
     let is_air = MotionModule::motion_kind(fighter.module_accessor) == hash40("special_air_lw");
     let situation = fighter.global_table[SITUATION_KIND].get_i32();
     if is_air {
+        fighter.sub_air_check_dive();
         if CancelModule::is_enable_cancel(fighter.module_accessor) {
             if fighter.sub_transition_group_check_air_landing().get_bool()
             || fighter.sub_wait_ground_check_common(false.into()).get_bool()

@@ -186,7 +186,7 @@ unsafe extern "C" fn game_specialhihold(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     FT_MOTION_RATE_RANGE(agent, 1.0, 6.0, 10.0);
     frame(lua_state, 6.0);
-    FT_MOTION_RATE_RANGE(agent, 6.0, 16.0, 20.0);
+    FT_MOTION_RATE_RANGE(agent, 6.0, 16.0, 13.0);
     frame(lua_state, 16.0);
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 18.0);
@@ -286,6 +286,25 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     frame(lua_state, 26.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
+    }
+}
+
+unsafe extern "C" fn game_specialhilanding(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 1.0);
+    FT_MOTION_RATE(agent, 0.6);
+    frame(lua_state, 4.0);
+    FT_MOTION_RATE(agent, 1.0);
+    frame(lua_state, 5.0);
+    if is_excute(agent) {
+        ATTACK(agent, 0, 0, Hash40::new("kneer"), 6.0, 361, 120, 0, 55, 6.0, 4.0, 0.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        ATTACK(agent, 1, 0, Hash40::new("kneer"), 6.0, 361, 120, 0, 55, 6.0, -3.0, 0.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+    }
+    wait(lua_state, 2.0);
+    if is_excute(agent) {
+        AttackModule::clear_all(boma);
+        WorkModule::on_flag(boma, *FIGHTER_FOX_FIRE_STATUS_WORK_ID_FLAG_WOLF_KICK);
     }
 }
 
@@ -421,6 +440,7 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("effect_specialhiholdair", effect_specialhiholdair, Priority::Low);
     agent.acmd("sound_specialhiholdair", sound_specialhihold, Priority::Low);
     agent.acmd("game_specialhi", game_specialhi, Priority::Low);
+    agent.acmd("game_specialhilanding", game_specialhilanding, Priority::Low);
     agent.acmd("game_specialhifall", game_specialhifall, Priority::Low);
 
     agent.acmd("game_speciallwstart", game_speciallwstart, Priority::Low);

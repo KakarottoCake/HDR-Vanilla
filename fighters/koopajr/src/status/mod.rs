@@ -2,12 +2,12 @@ use super::*;
 use globals::*;
 // status script import
 
+mod rebirth;
 mod special_hi;
+mod special_hi_damage;
+mod special_hi_escape;
 mod special_s;
 mod special_s_jump;
-mod special_hi_escape;
-mod special_hi_damage;
-mod rebirth;
 
 // Prevents sideB from being used again if it has already been used once in the current airtime
 unsafe extern "C" fn should_use_special_s_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -41,10 +41,10 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
 pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
 
+    rebirth::install(agent);
     special_hi::install(agent);
+    special_hi_damage::install(agent);
+    special_hi_escape::install(agent);
     special_s::install(agent);
     special_s_jump::install(agent);
-    special_hi_escape::install(agent);
-    special_hi_damage::install(agent);
-    rebirth::install(agent);
 }

@@ -102,7 +102,7 @@ unsafe fn missile_land_cancel(boma: &mut BattleObjectModuleAccessor) {
         *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_2_AIR ]) {
         if boma.is_situation(*SITUATION_KIND_GROUND) && boma.is_prev_situation(*SITUATION_KIND_AIR) {
             if boma.status_frame() > 23 {
-                MotionModule::set_frame(boma, 38.0, false);
+                MotionModule::set_frame(boma, 40.0, false);
             }
         }
     }

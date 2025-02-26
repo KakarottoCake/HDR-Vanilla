@@ -191,6 +191,8 @@ pub mod vars {
 
             pub const IS_ENTER_DASH_CANCEL: i32 = 0x006A;
 
+            pub const DOWN_DISABLE_PASSIVE: i32 = 0x006B;
+
             // ints
 
             pub const LAST_ATTACK_RECEIVER_ENTRY_ID: i32 = 0x0000;
@@ -988,6 +990,8 @@ pub mod vars {
             pub const SPECIAL_S_SMOKE_EFFECT_HANDLE: i32 = 0x0101;
             /// This int stores the handle of the pulsing effect for killing it if we store misfire
             pub const SPECIAL_S_PULSE_EFFECT_HANDLE: i32 = 0x0102;
+            pub const SPECIAL_S_MISFIRE_COUNT: i32 = 0x0103;
+            pub const SPECIAL_S_MISFIRE_BITFLAG: i32 = 0x0104;
 
             // float
             /// This float holds the current multiplier on damage for misfire

@@ -47,7 +47,7 @@ unsafe extern "C" fn game_attackdash(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         HIT_NODE(agent, Hash40::new("bust"), *HIT_STATUS_NORMAL);
         HIT_NODE(agent, Hash40::new("hip"), *HIT_STATUS_NORMAL);
-        HIT_NODE(agent, Hash40::new("head"), *HIT_STATUS_INVINCIBLE);
+        HIT_NODE(agent, Hash40::new("head"), *HIT_STATUS_NORMAL);
         HIT_NODE(agent, Hash40::new("shoulderr"), *HIT_STATUS_NORMAL);
         HIT_NODE(agent, Hash40::new("shoulderl"), *HIT_STATUS_INVINCIBLE);
         HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_NORMAL);
@@ -59,10 +59,6 @@ unsafe extern "C" fn game_attackdash(agent: &mut L2CAgentBase) {
         HIT_NODE(agent, Hash40::new("virtualshield"), *HIT_STATUS_INVINCIBLE);
         ATTACK(agent, 0, 0, Hash40::new("shoulderl"), 9.0, 55, 102, 0, 40, 3.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_OBJECT);
         ATTACK(agent, 1, 0, Hash40::new("arml"), 11.0, 70, 102, 0, 40, 4.5, 2.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
-    }
-    frame(lua_state, 8.0);
-    if is_excute(agent) {
-        HIT_NODE(agent, Hash40::new("head"), *HIT_STATUS_NORMAL);
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {

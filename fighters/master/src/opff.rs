@@ -9,18 +9,6 @@ unsafe fn specialhi_reset(fighter: &mut L2CFighterCommon) {
     }
 }
 
-unsafe fn nspecial_cancels(boma: &mut BattleObjectModuleAccessor, status_kind: i32, situation_kind: i32) {
-    //PM-like neutral-b canceling
-    if status_kind == *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_CANCEL {
-        if situation_kind == *SITUATION_KIND_AIR {
-            if WorkModule::get_int(boma, *FIGHTER_MASTER_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE) == *FIGHTER_MASTER_SPECIAL_N_CANCEL_TYPE_AIR_ESCAPE_AIR {
-                WorkModule::set_int(boma, *FIGHTER_MASTER_SPECIAL_N_CANCEL_TYPE_NONE, *FIGHTER_MASTER_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
-                //ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_AIR_ESCAPE);
-            }
-        }
-    }
-}
-
 unsafe fn aymr_slowdown(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_status(*FIGHTER_MASTER_STATUS_KIND_SPECIAL_LW_HIT) {
         if AttackModule::is_infliction(boma, *COLLISION_KIND_MASK_HIT) && MotionModule::frame(boma) < 11.0 {
@@ -89,7 +77,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_HOLD,
         *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_TURN,
         *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_SHOOT,
-        *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_CANCEL,
         *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_MAX_SHOOT,
         *FIGHTER_MASTER_STATUS_KIND_SPECIAL_S_FRONT,
         *FIGHTER_MASTER_STATUS_KIND_SPECIAL_S_FRONT_DASH,
@@ -120,8 +107,7 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     }
 }
 
-pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
-    nspecial_cancels(boma, status_kind, situation_kind);
+pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     aymr_slowdown(boma);
     specialhi_reset(fighter);
     up_special_freefall(fighter);
@@ -138,7 +124,7 @@ pub extern "C" fn master_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterC
 
 pub unsafe fn master_frame(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
     if let Some(info) = FrameInfo::update_and_get(fighter) {
-        moveset(fighter, &mut *info.boma, info.id, info.cat, info.status_kind, info.situation_kind, info.motion_kind.hash, info.stick_x, info.stick_y, info.facing, info.frame);
+        moveset(fighter, &mut *info.boma);
     }
 }
 

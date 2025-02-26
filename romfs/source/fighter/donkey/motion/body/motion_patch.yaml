@@ -85,7 +85,7 @@ attack_11:
     cancel_frame: 18
 throw_f_b:
   extra:
-    cancel_frame: 33
+    cancel_frame: 30
 throw_f_f:
   extra:
     cancel_frame: 27
@@ -95,6 +95,9 @@ attack_lw3:
 throw_f_hi:
   extra:
     cancel_frame: 38
+throw_lw:
+  extra:
+    cancel_frame: 45
 special_hi:
   extra:
     cancel_frame: 111

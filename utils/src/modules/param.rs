@@ -304,7 +304,9 @@ use serde::{Deserialize, Serialize};
 // use serde_json::Result;
 
 /// stores the tournament mode configuration
+#[allow(non_snake_case)]
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(default)]
 #[repr(C)]
 struct TourneyConfig {
     /// whether the tourney mode is enabled
@@ -316,6 +318,17 @@ struct TourneyConfig {
     /// the ordered list of counterpick stages which should be enabled,
     /// or `None` if there are no counterpicks
     counterpicks: Option<Vec<String>>,
+}
+
+impl Default for TourneyConfig {
+    fn default() -> Self {
+        TourneyConfig {
+            enabled: false,
+            useOfficial: false,
+            starters: None,
+            counterpicks: None
+        }
+    }
 }
 
 impl TourneyConfig {
