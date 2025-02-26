@@ -9,6 +9,7 @@ mod attack_air;
 mod special_s;
 mod special_lw;
 mod special_n;
+mod special_hi;
 
 unsafe extern "C" fn should_use_special_n_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
     if VarModule::is_flag(fighter.battle_object, vars::trail::instance::DISABLE_SPECIAL_N) {
@@ -32,4 +33,5 @@ pub fn install(agent: &mut Agent) {
     special_s::install(agent);
     special_lw::install(agent);
     special_n::install(agent);
+    special_hi::install(agent);
 }
