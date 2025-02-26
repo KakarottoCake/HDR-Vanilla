@@ -1249,7 +1249,17 @@ pub mod vars {
     }
 
     pub mod pfushigisou {
+        pub mod instance {
+            // ints
+            pub const SPECIAL_N_PLEDGE_EFFECT_HANDLE: i32 = 0x0100;
+        }
+    }
 
+    pub mod pfushigisou_seed {
+        pub mod instance {
+            // ints
+            pub const PLEDGE_TYPE: i32 = 0x0100;
+        }
     }
 
     pub mod pichu {
@@ -1353,18 +1363,70 @@ pub mod vars {
 
     pub mod plizardon {
         pub mod instance {
+            // flags
             pub const DISABLE_SPECIAL_S: i32 = 0x0100;
+
+            // ints
+            pub const SPECIAL_N_PLEDGE_EFFECT_HANDLE: i32 = 0x0100;
+        }
+    }
+
+    pub mod plizardon_rock {
+        pub mod status {
+            // flags
+            pub const ENABLE_BREAK: i32 = 0x1100;
+
+            // ints
+            pub const MAX_STONES: i32 = 0x1100;
+            pub const REMAINING_STONES: i32 = 0x1101;
+            pub const SPAWN_COOLDOWN: i32 = 0x1102;
+        }
+    }
+
+    pub mod plizardon_rockstone {
+        pub mod status {
+            // flags
+            pub const INFLICTED: i32 = 0x1100;
+        }
+        pub mod instance {
+            // ints
+            pub const ANGLE: i32 = 0x0100;
+            pub const ROT: i32 = 0x0101;
         }
     }
 
     pub mod ptrainer {
         pub mod instance {
-            pub const SPECIAL_LW_BACKWARDS_SWITCH: i32 = 0x0100;
+            // flags
+            pub const SPECIAL_N_PLEDGE_PAUSE_TIMER: i32 = 0x0100;
+            pub const SPECIAL_LW_BACKWARDS_SWITCH: i32 = 0x0101;
+            pub const DISABLE_SPECIAL_LW: i32 = 0x0102;
+
+            // ints
+            pub const SPECIAL_N_PLEDGE_STATE: i32 = 0x0100; // 0 - None, 1 - Squirtle, 2 - Ivysaur, 3 - Charizard
+            pub const SPECIAL_N_PLEDGE_TIMER: i32 = 0x0101;
+            pub const SPECIAL_LW_SWAP_TIMER: i32 = 0x0102;
+        }
+        pub mod status {
+            // flags
+            pub const VOICE_FORWARD_SWITCH: i32 = 0x1100;
+            pub const VOICE_USE_OUT_POKE_KIND: i32 = 0x1101;
+            pub const CONTINUE_VOICE: i32 = 0x1102;
         }
     }
 
     pub mod pzenigame {
+        pub mod instance {
+            // ints
+            pub const SPECIAL_N_PLEDGE_EFFECT_HANDLE: i32 = 0x0100;
+        }
+    }
 
+    pub mod pzenigame_water {
+        pub mod instance {
+            // ints
+            pub const PLEDGE_TYPE: i32 = 0x0100;
+        }
     }
 
     pub mod reflet {
@@ -1918,6 +1980,15 @@ pub mod statuses {
         pub const PEARL_FLY: i32 = 0x2;
     }
 
+    pub mod plizardon_rock {
+        pub const HAVED: i32 = 0x0;
+    }
+
+    pub mod plizardon_rockstone {
+        pub const START: i32 = 0x0;
+        pub const MOVE: i32 = 0x2;
+    }
+
     pub mod purin_disarming_voice {
         pub const SHOOT: i32 = 0x0;
     }
@@ -1950,6 +2021,11 @@ pub mod statuses {
 pub mod articles {
     pub mod packun {
         pub const FIREBREATH: i32 = 0x4;
+    }
+
+    pub mod plizardon {
+        pub const ROCK: i32 = 0x3;
+        pub const ROCKSTONE: i32 = 0x4;
     }
     
     pub mod purin {
@@ -1986,3 +2062,8 @@ pub mod melee_mode {
 
 // extra lua_consts
 pub const COLLISION_KIND_MASK_PARRY: smash::lib::LuaConst = smash::lib::LuaConst::new(0x80);
+
+pub const PLEDGE_STATE_NONE: smash::lib::LuaConst = smash::lib::LuaConst::new(0x0);
+pub const PLEDGE_STATE_WATER: smash::lib::LuaConst = smash::lib::LuaConst::new(0x1);
+pub const PLEDGE_STATE_GRASS: smash::lib::LuaConst = smash::lib::LuaConst::new(0x2);
+pub const PLEDGE_STATE_FIRE: smash::lib::LuaConst = smash::lib::LuaConst::new(0x3);
