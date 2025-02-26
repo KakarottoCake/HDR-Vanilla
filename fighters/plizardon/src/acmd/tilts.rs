@@ -24,7 +24,12 @@ unsafe extern "C" fn effect_attacks3(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 7.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW_FLIP(agent, Hash40::new("plizardon_atk_wing"), Hash40::new("plizardon_atk_wing"), Hash40::new("top"), 2, 13.5, 8.25, 0, -75, 80, 1, true, *EF_FLIP_YZ);
+        if agent.lr() < 0.0 {
+            EFFECT_FOLLOW(agent, Hash40::new("plizardon_atk_wing"), Hash40::new("top"), -2, 13.5, 8.25, 0, -75, 100, 1, true);
+        }
+        else {
+            EFFECT_FOLLOW(agent, Hash40::new("plizardon_atk_wing"), Hash40::new("top"), 2, 13.5, 8.25, 0, -75, 80, 1, true);
+        }
         LAST_EFFECT_SET_RATE(agent, 0.8);
         LAST_EFFECT_SET_SCALE_W(agent, 1.0, 1.0, 1.1);
     }
