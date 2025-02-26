@@ -42,10 +42,10 @@
   </list>
   <list hash="param_special_hi">
     <struct index="0">
-      <float hash="rush_speed">2.5</float>
-      <int hash="rush_brake_frame">1</int>
-      <float hash="rush_end_speed_rate_x">0.05</float>
-      <float hash="rush_end_speed_rate_y">0.025</float>
+      <float hash="rush_speed">2.75</float>
+      <int hash="rush_brake_frame">10</int>
+      <float hash="rush_end_speed_rate_x">0.15</float>
+      <float hash="rush_end_speed_rate_y">0.15</float>
       <int hash="landing_frame">42</int>
       <float hash="rush_angle">90</float>
     </struct>

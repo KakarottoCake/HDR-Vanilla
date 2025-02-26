@@ -75,9 +75,17 @@ unsafe extern "C" fn game_specialairsstart(agent: &mut L2CAgentBase) {
         boma.select_cliff_hangdata_from_name("special_s");
         WorkModule::on_flag(boma, *FIGHTER_PIT_STATUS_SPECIAL_S_WORK_ID_FLAG_MOVE_FRONT);
     }
+    frame(lua_state, 19.0);
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
+    }
     frame(lua_state, 31.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_PIT_STATUS_SPECIAL_S_WORK_ID_FLAG_GRAVITY_ONOFF);
+    }
+    frame(lua_state, 41.0);
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
     }
 }
 

@@ -153,8 +153,6 @@ unsafe extern "C" fn special_hi_rush_exec(fighter: &mut L2CFighterCommon) -> L2C
     let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
     let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
 
-    println!("{} {}", speed_x, speed_y);
-
     ret
 }
 

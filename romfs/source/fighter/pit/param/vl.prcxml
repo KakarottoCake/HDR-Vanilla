@@ -44,7 +44,7 @@
   </list>
   <list hash="param_special_hi">
     <struct index="0">
-      <float hash="rush_speed">3</float>
+      <float hash="rush_speed">4.5</float>
       <int hash="rush_brake_frame">1</int>
       <float hash="fall_x_mul">0.6</float>
       <int hash="landing_frame">28</int>

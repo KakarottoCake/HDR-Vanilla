@@ -15,7 +15,7 @@
         </struct>
     </struct>
     <struct hash="param_special_hi">
-        <int hash="rush_frame">40</int>
-        <float hash="rush_brake">0.06</float>
+        <int hash="rush_frame">20</int>
+        <float hash="rush_brake">0.21</float>
     </struct>
 </struct>

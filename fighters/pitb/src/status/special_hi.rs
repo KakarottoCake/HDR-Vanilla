@@ -33,6 +33,28 @@ unsafe extern "C" fn special_hi_pre(fighter: &mut L2CFighterCommon) -> L2CValue 
     return 0.into();
 }
 
+// FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH
+
+unsafe extern "C" fn special_hi_rush_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let ret = smashline::original_status(Main, fighter, *FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH)(fighter);
+
+    let rush_frame = ParamModule::get_int(fighter.battle_object, ParamType::Agent, "param_special_hi.rush_frame") as f32;
+    let rate = MotionModule::end_frame(fighter.module_accessor) / rush_frame;
+    MotionModule::set_rate(fighter.module_accessor, rate);
+
+    let dir = WorkModule::get_float(fighter.module_accessor, *FIGHTER_PIT_STATUS_SPECIAL_HI_RUSH_FLOAT_SDIR);
+    let mut rush_brake_x = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("rush_end_speed_rate_x"));
+    let mut rush_brake_y = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("rush_end_speed_rate_y"));
+
+    rush_brake_x *= dir.cos().abs();
+    rush_brake_y *= dir.sin().abs();
+
+    WorkModule::set_float(fighter.module_accessor, rush_brake_x, *FIGHTER_PIT_STATUS_SPECIAL_HI_RUSH_FLOAT_BRAKE_X);
+    WorkModule::set_float(fighter.module_accessor, rush_brake_y, *FIGHTER_PIT_STATUS_SPECIAL_HI_RUSH_FLOAT_BRAKE_Y);
+
+    ret
+}
+
 // FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH_END
 
 pub unsafe extern "C" fn special_hi_rush_end_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -108,6 +130,7 @@ unsafe extern "C" fn special_hi_rush_end_main_loop(fighter: &mut L2CFighterCommo
 
 pub fn install(agent: &mut Agent) {
     agent.status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_HI, special_hi_pre);
+    agent.status(Main, *FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH, special_hi_rush_main);
     agent.status(Pre, *FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH_END, special_hi_rush_end_pre);
     agent.status(Main, *FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH_END, special_hi_rush_end_main);
 }
