@@ -28,7 +28,7 @@ unsafe fn upperdash_arm_jump_and_aerial_cancel(boma: &mut BattleObjectModuleAcce
     }
     if boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_S) {
         let start_frame = if boma.is_situation(*SITUATION_KIND_GROUND) { 16 } else { 19 };
-        if (start_frame..35).contains(&boma.status_frame()) && ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_SPECIAL_RAW) {
+        if (start_frame..35).contains(&boma.status_frame()) && boma.is_cat_flag(Cat1::SpecialN) {
             WorkModule::on_flag(boma, *FIGHTER_PIT_STATUS_SPECIAL_S_WORK_ID_FLAG_HIT);
         }
     }
