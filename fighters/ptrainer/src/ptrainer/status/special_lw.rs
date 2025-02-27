@@ -36,7 +36,7 @@ unsafe extern "C" fn special_lw_main_loop(weapon: &mut L2CWeaponCommon) -> L2CVa
     if weapon.is_flag(*WEAPON_PTRAINER_PTRAINER_STATUS_WORK_FLAG_VOICE) {
         // move back to frame 11 to account for backward switch
         if weapon.status_frame() == 11 {
-            let poke_boma = GET_POKE_BOMA(weapon.module_accessor);
+            let poke_boma = get_poke_boma(weapon.module_accessor);
             if !ControlModule::check_button_on(poke_boma, *CONTROL_PAD_BUTTON_SPECIAL) {
                 VarModule::on_flag(weapon.battle_object, vars::ptrainer::status::VOICE_FORWARD_SWITCH);
             }
@@ -64,7 +64,7 @@ unsafe extern "C" fn play_voice(weapon: &mut L2CWeaponCommon) {
         let rand = sv_math::rand(hash40("fighter"), 6) as i32;
         let voice_hash = match rand {
             0 => {
-                let poke_boma = GET_POKE_BOMA(weapon.module_accessor);
+                let poke_boma = get_poke_boma(weapon.module_accessor);
                 if VarModule::is_flag(weapon.battle_object, vars::ptrainer::status::VOICE_FORWARD_SWITCH) {
                     if poke_boma.kind() == *FIGHTER_KIND_PZENIGAME {
                         Hash40::new("vc_ptrainer_throw02")
@@ -127,7 +127,7 @@ unsafe extern "C" fn play_voice(weapon: &mut L2CWeaponCommon) {
 }
 
 unsafe extern "C" fn play_voice_continue(weapon: &mut L2CWeaponCommon, is_forward: bool, use_out: bool) {
-    let poke_boma = GET_POKE_BOMA(weapon.module_accessor);
+    let poke_boma = get_poke_boma(weapon.module_accessor);
     if use_out {
         if is_forward {
             if poke_boma.kind() == *FIGHTER_KIND_PZENIGAME {

@@ -40,6 +40,12 @@ use utils::{
 };
 use smashline::*;
 
+pub unsafe fn get_poke_boma(boma: *mut BattleObjectModuleAccessor) -> &'static mut BattleObjectModuleAccessor {
+    let poke_parent_id = LinkModule::get_parent_object_id(boma, *WEAPON_PTRAINER_PTRAINER_LINK_NO_POKEMON) as u32;
+    let poke_object = utils::util::get_battle_object_from_id(poke_parent_id);
+    return &mut *(*poke_object).module_accessor;
+}
+
 pub fn install() {
     let agent = &mut Agent::new("ptrainer");
     agent.install();
