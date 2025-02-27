@@ -3,25 +3,28 @@ utils::import_noreturn!(common::opff::fighter_common_opff);
 use super::*;
 use globals::*;
 
-unsafe fn flame_cancel(boma: &mut BattleObjectModuleAccessor, status_kind: i32, situation_kind: i32, frame: f32) {
-    let prev_situation = StatusModule::prev_situation_kind(boma);
-    if status_kind != *FIGHTER_STATUS_KIND_SPECIAL_N || situation_kind != *SITUATION_KIND_GROUND || prev_situation != *SITUATION_KIND_AIR {
-        return;
-    }
-    if StatusModule::is_changing(boma) {
-        return;
-    }
-    if frame < 19.0 {
-        MotionModule::set_frame(boma, 18.0, true);
+unsafe fn flare_blitz_edge_cancel(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status(*FIGHTER_PLIZARDON_STATUS_KIND_SPECIAL_S_END) {
+        if fighter.is_prev_situation(*SITUATION_KIND_GROUND)
+        && fighter.is_situation(*SITUATION_KIND_AIR) {
+            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+        }
     }
 }
 
-unsafe fn flare_blitz_edge_cancel(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status(*FIGHTER_PLIZARDON_STATUS_KIND_SPECIAL_S_END) {
-        if fighter.global_table[PREV_SITUATION_KIND] == SITUATION_KIND_GROUND
-        && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_AIR {
-            fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL, false);
-        }
+unsafe fn special_lw_track(boma: &mut BattleObjectModuleAccessor) {
+    if boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_LW) && !boma.is_button_on(Buttons::SpecialAll) {
+        let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+        let object = utils::util::get_battle_object_from_id(parent_id);
+        VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_LW_BACKWARDS_SWITCH);
+    }
+    if is_training_mode() && !sv_information::is_ready_go() {
+        let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+        let object = utils::util::get_battle_object_from_id(parent_id);
+        VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_NONE);
+        VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
+        VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
+        VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER, 0);
     }
 }
 
@@ -29,7 +32,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
     && fighter.is_status_one_of(&[
-        *FIGHTER_STATUS_KIND_SPECIAL_N,
         *FIGHTER_STATUS_KIND_SPECIAL_HI,
         *FIGHTER_PLIZARDON_STATUS_KIND_SPECIAL_S_END,
         ]) 
@@ -55,35 +57,10 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     }
 }
 
-unsafe fn special_lw_track(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_LW) && !boma.is_button_on(Buttons::SpecialAll) {
-        let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
-        let object = utils::util::get_battle_object_from_id(parent_id);
-        VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_LW_BACKWARDS_SWITCH);
-    }
-}
-
-pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
-    flame_cancel(boma, status_kind, situation_kind, frame);
+pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     flare_blitz_edge_cancel(fighter);
-    fastfall_specials(fighter);
     special_lw_track(boma);
-
-    // Frame Data
-    //frame_data(boma, status_kind, motion_kind, frame);
-}
-
-unsafe fn frame_data(boma: &mut BattleObjectModuleAccessor, status_kind: i32, motion_kind: u64, frame: f32) {
-    if status_kind == *FIGHTER_STATUS_KIND_ATTACK_AIR {
-        if motion_kind == hash40("attack_air_n") {
-            if frame < 8.0 {
-                MotionModule::set_rate(boma, 1.75);
-            }
-            if frame >= 8.0 {
-                MotionModule::set_rate(boma, 1.0);
-            }
-        }
-    }
+    fastfall_specials(fighter);
 }
 
 pub extern "C" fn plizardon_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
@@ -95,7 +72,7 @@ pub extern "C" fn plizardon_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFight
 
 pub unsafe fn plizardon_frame(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
     if let Some(info) = FrameInfo::update_and_get(fighter) {
-        moveset(fighter, &mut *info.boma, info.id, info.cat, info.status_kind, info.situation_kind, info.motion_kind.hash, info.stick_x, info.stick_y, info.facing, info.frame);
+        moveset(fighter, &mut *info.boma);
     }
 }
 
