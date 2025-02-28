@@ -217,6 +217,9 @@ impl UiObject for PledgeMeter {
             set_pane_visible(self.meter_bar_lucario, false);
             set_pane_visible(self.meter_bar_pichu, false);
             set_pane_visible(self.meter_div, false);
+            set_width_height(self.meter_bar_bg, self.meter_bar_bg_width_height.0, self.meter_bar_bg_width_height.1);
+            set_width_height(self.meter_bar_lucario, self.meter_bar_lucario_width_height.0, self.meter_bar_lucario_width_height.1);
+            set_width_height(self.meter_bar_pichu, self.meter_bar_pichu_width_height.0, self.meter_bar_pichu_width_height.1);
         } else if !self.is_enabled {
             self.reset();
         }
