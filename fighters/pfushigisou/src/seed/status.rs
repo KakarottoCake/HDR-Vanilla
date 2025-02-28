@@ -2,6 +2,7 @@ use super::*;
 use globals::*;
 
 pub unsafe extern "C" fn move_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    GroundModule::set_passable_check(weapon.module_accessor, true);
     MotionModule::change_motion(weapon.module_accessor, Hash40::new("move"), 0.0, 1.0, false, 0.0, false, false);
     if !StopModule::is_stop(weapon.module_accessor) {
         WorkModule::dec_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
@@ -45,7 +46,7 @@ pub unsafe extern "C" fn move_init(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let speed_y = weapon.get_param_float("param_seed", "shoot_speed_y");
     sv_kinetic_energy!(reset_energy, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0, 0.0, 0.0, 0.0);
     sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, speed_y);
-    sv_kinetic_energy!(set_accel, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -0.085);
+    sv_kinetic_energy!(set_accel, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -0.102);
     KineticModule::enable_energy(weapon.module_accessor, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
     
     return 0.into();

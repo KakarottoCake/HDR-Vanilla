@@ -178,6 +178,16 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
         search!(agent, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR_ALL);
         // UNABLE_AREA(fighter, *FIGHTER_JACK_AREA_KIND_ITEM_CATCH);
     }
+    frame(lua_state, 45.0);
+    if is_excute(agent) {
+        if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
+            CancelModule::enable_cancel(boma);
+        }
+        else {
+            VarModule::on_flag(agent.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
+            boma.off_flag(*FIGHTER_JACK_INSTANCE_WORK_ID_FLAG_SPECIAL_AIR_HI_HOP);
+        }
+    }
 }
 
 unsafe extern "C" fn effect_specialairhi(agent: &mut L2CAgentBase) {

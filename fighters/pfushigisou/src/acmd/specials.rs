@@ -15,7 +15,8 @@ unsafe extern "C" fn game_specialnend(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
         let object = utils::util::get_battle_object_from_id(parent_id);
-        let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
+        let timer = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER);
+        VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer - 180);
         ArticleModule::generate_article(boma, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SEED, false, -1);
     }
     frame(lua_state, 7.0);
@@ -33,9 +34,6 @@ unsafe extern "C" fn effect_specialnend(agent: &mut L2CAgentBase) {
         let object = utils::util::get_battle_object_from_id(parent_id);
         let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
         EFFECT_FLW_POS(agent, Hash40::new("pfushigisou_tanemg"), Hash40::new("flower"), 5.7, 0, 0, 0, 0, 0, 1.3, true);
-        // else {
-        //     EFFECT_FOLLOW(agent, Hash40::new("pfushigisou_atk_hi4"), Hash40::new("top"), 0, 13, 0, 0, 0, 0, 0.2, false);
-        // }
         if agent.is_situation(*SITUATION_KIND_GROUND) {
             FOOT_EFFECT(agent, Hash40::new("sys_v_smoke_b"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
             LAST_EFFECT_SET_ALPHA(agent, 0.8);
@@ -129,6 +127,18 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
             notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
         }
     }
+    frame(lua_state, 45.0);
+    if is_excute(agent) {
+        if agent.is_situation(*SITUATION_KIND_AIR) {
+            if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
+                CancelModule::enable_cancel(boma);
+            }
+            else {
+                VarModule::on_flag(agent.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
+                boma.off_flag(*FIGHTER_PFUSHIGISOU_INSTANCE_WORK_ID_FLAG_SPECIAL_AIR_HI_HOP);
+            }
+        } 
+    }
 }
 
 unsafe extern "C" fn game_speciallwin(agent: &mut L2CAgentBase) {
@@ -142,7 +152,7 @@ unsafe extern "C" fn game_speciallwin(agent: &mut L2CAgentBase) {
         VarModule::on_flag(object, vars::ptrainer::instance::SPECIAL_LW_BACKWARDS_SWITCH); // we will turn this off in opff
         if VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE) == *PLEDGE_STATE_NONE {
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_GRASS);
-            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 900);
+            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 1800);
         }
         VarModule::on_flag(object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
         VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER, 300);

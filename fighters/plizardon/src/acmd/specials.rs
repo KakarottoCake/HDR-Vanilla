@@ -14,6 +14,10 @@ unsafe extern "C" fn game_specialnstart(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         let speed_y = if agent.is_situation(*SITUATION_KIND_GROUND) { 0.0 } else { 0.25 };
         SET_SPEED_EX(agent, -1.0, speed_y, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+        let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+        let object = utils::util::get_battle_object_from_id(parent_id);
+        let timer = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER);
+        VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer - 180);
     }
     if pledge == *PLEDGE_STATE_WATER {
         // Water Pledge
@@ -408,7 +412,7 @@ unsafe extern "C" fn game_speciallwin(agent: &mut L2CAgentBase) {
         VarModule::on_flag(object, vars::ptrainer::instance::SPECIAL_LW_BACKWARDS_SWITCH); // we will turn this off in opff
         if VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE) == *PLEDGE_STATE_NONE {
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_FIRE);
-            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 900);
+            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 1800);
         }
         VarModule::on_flag(object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
         VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER, 300);

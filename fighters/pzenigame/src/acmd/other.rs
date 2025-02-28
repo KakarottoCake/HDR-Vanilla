@@ -173,7 +173,7 @@ unsafe extern "C" fn game_appealhi(agent: &mut L2CAgentBase) {
             let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
             let (state, timer) = match pledge {
                 2 /* GRASS */ => (*PLEDGE_STATE_NONE, 0),
-                _ => (*PLEDGE_STATE_GRASS, 6000)
+                _ => (*PLEDGE_STATE_GRASS, 3600)
             };
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, state);
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer);
@@ -219,7 +219,7 @@ unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
             let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
             let (state, timer) = match pledge {
                 3 /* FIRE */ => (*PLEDGE_STATE_NONE, 0),
-                _ => (*PLEDGE_STATE_FIRE, 6000)
+                _ => (*PLEDGE_STATE_FIRE, 3600)
             };
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, state);
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer);

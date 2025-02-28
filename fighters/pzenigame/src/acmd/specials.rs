@@ -18,6 +18,10 @@ unsafe extern "C" fn game_specialnshot(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 6.0);
     if is_excute(agent) {
+        let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+        let object = utils::util::get_battle_object_from_id(parent_id);
+        let timer = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER);
+        VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer - 180);
         ArticleModule::generate_article(boma, *FIGHTER_PZENIGAME_GENERATE_ARTICLE_WATER, false, -1);
     }
     frame(lua_state, 12.0);
@@ -59,7 +63,7 @@ unsafe extern "C" fn sound_specialnshot(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 5.0);
     if is_excute(agent) {
-        PLAY_STATUS(agent, Hash40::new("se_pzenigame_special_n03"));
+        PLAY_SE(agent, Hash40::new("se_pzenigame_special_n03"));
         PLAY_SE(agent, Hash40::new("vc_pzenigame_special_n01"));
     }
 }
@@ -144,7 +148,7 @@ unsafe extern "C" fn game_speciallwin(agent: &mut L2CAgentBase) {
         VarModule::on_flag(object, vars::ptrainer::instance::SPECIAL_LW_BACKWARDS_SWITCH); // we will turn this off in opff
         if VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE) == *PLEDGE_STATE_NONE {
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_WATER);
-            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 900);
+            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 1800);
         }
         VarModule::on_flag(object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
         VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER, 300);

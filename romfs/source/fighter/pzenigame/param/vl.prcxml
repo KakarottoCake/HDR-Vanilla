@@ -16,7 +16,7 @@
   </list>
   <list hash="param_water">
     <struct index="0">
-      <int hash="life">38</int>
+      <int hash="life">45</int>
       <float hash="speed_min">1.6</float>
       <float hash="accel_y">0.1</float>
       <float hash="scale_min">1.0</float>
