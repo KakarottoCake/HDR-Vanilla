@@ -180,7 +180,6 @@ unsafe extern "C" fn special_lw_start_pre(fighter: &mut L2CFighterCommon) -> L2C
         *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW as u32,
         0
     );
-    VarModule::off_flag(fighter.battle_object, vars::brave::instance::PERSIST_RNG);
 
     ret
 }
@@ -219,7 +218,6 @@ unsafe extern "C" fn special_lw_steel_start_pre(fighter: &mut L2CFighterCommon) 
         *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW as u32,
         0
     );
-    VarModule::off_flag(fighter.battle_object, vars::brave::instance::PERSIST_RNG);
 
     return 0.into()
 }
@@ -253,17 +251,9 @@ unsafe extern "C" fn special_lw_failure_pre(fighter: &mut L2CFighterCommon) -> L
     return 0.into();
 }
 
-unsafe extern "C" fn special_lw_select_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let index = fighter.get_int(*FIGHTER_BRAVE_INSTANCE_WORK_ID_INT_SPECIAL_LW_SELECT_INDEX);
-    VarModule::set_int(fighter.battle_object, vars::brave::instance::CURSOR_SLOT, index);
-    return smashline::original_status(Exec, fighter, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_SELECT)(fighter)
-}
-
 pub fn install(agent: &mut Agent) {
     agent.status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_LW, special_lw_pre);
     agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_LW, special_lw_main);
-
-    agent.status(Main, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_SELECT, special_lw_select_exec);
 
     agent.status(Pre, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_START, special_lw_start_pre);
     agent.status(Pre, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_STEEL_START, special_lw_steel_start_pre);

@@ -12,6 +12,19 @@ unsafe fn dspecial_cancels(fighter: &mut L2CFighterCommon) {
     }
 }
 
+unsafe fn persist_rng(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status(*FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_SELECT) {
+        let index = fighter.get_int(*FIGHTER_BRAVE_INSTANCE_WORK_ID_INT_SPECIAL_LW_SELECT_INDEX);
+        VarModule::set_int(fighter.battle_object, vars::brave::instance::CURSOR_SLOT, index);
+    }
+    if fighter.is_status(*FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_START)
+    || fighter.is_status(*FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_STEEL_START) {
+        VarModule::off_flag(fighter.battle_object, vars::brave::instance::PERSIST_RNG);
+        fighter.set_int(0, *FIGHTER_BRAVE_INSTANCE_WORK_ID_INT_SPECIAL_LW_SELECT_INDEX);
+        VarModule::set_int(fighter.battle_object, vars::brave::instance::CURSOR_SLOT, 0);
+    }
+}
+
 unsafe fn psych_up_crit(fighter: &mut L2CFighterCommon) {
     if VarModule::is_flag(fighter.battle_object, vars::brave::instance::PSYCHE_UP_ACTIVE) {
         if VarModule::get_int(fighter.battle_object, vars::common::instance::GIMMICK_TIMER) <= 0 {
@@ -109,6 +122,7 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 
 pub unsafe extern "C" fn brave_frame_wrapper(fighter: &mut L2CFighterCommon) {
     common::opff::fighter_common_opff(fighter);
+    persist_rng(fighter);
     psych_up_crit(fighter);
     dspecial_cancels(fighter);
     dash_cancel_frizz(fighter);
