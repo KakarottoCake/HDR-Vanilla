@@ -11,7 +11,6 @@ pub unsafe extern "C" fn pledge_meter(weapon: &mut L2CFighterBase) {
         if VarModule::countdown_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0) {
             VarModule::set_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_NONE);
             kill_pledge_effects(poke_object);
-            hide_pledge_ui(weapon, poke_object);
         } else {
             update_pledge_ui(weapon, poke_object);
         }

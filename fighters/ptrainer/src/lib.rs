@@ -68,27 +68,6 @@ pub unsafe extern "C" fn kill_pledge_effects(poke_object: *mut BattleObject) {
     }
 }
 
-pub unsafe extern "C" fn hide_pledge_ui(weapon: &mut L2CFighterBase, poke_object: *mut BattleObject) {
-    if poke_object.is_null() {
-        return;
-    }
-    let poke_boma = &mut *(*poke_object).module_accessor;
-    if !sv_information::is_ready_go() && poke_boma.status_frame() < 1 {
-        return;
-    }
-    let entry_id = poke_boma.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
-    let swap_timer = VarModule::get_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER);
-    utils::ui::UiManager::set_ptrainer_meter_enable(entry_id, false);
-    utils::ui::UiManager::set_ptrainer_meter_info(
-        entry_id,
-        0.0,
-        900.0,
-        swap_timer as f32,
-        300.0,
-        *PLEDGE_STATE_NONE
-    );
-}
-
 pub unsafe extern "C" fn update_pledge_ui(weapon: &mut L2CFighterBase, poke_object: *mut BattleObject) {
     if poke_object.is_null() {
         return;

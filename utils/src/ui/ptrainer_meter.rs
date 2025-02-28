@@ -115,9 +115,15 @@ impl PledgeMeter {
         set_pane_visible(self.meter_bar_pichu, false);
         set_pane_visible(self.meter_div, false);
 
-        self.meter_bar_bg_width_height = get_width_height(self.meter_bar_bg);
-        self.meter_bar_lucario_width_height = get_width_height(self.meter_bar_lucario);
-        self.meter_bar_pichu_width_height = get_width_height(self.meter_bar_pichu);
+        if self.meter_bar_bg_width_height == (-1.0, -1.0) {
+            self.meter_bar_bg_width_height = get_width_height(self.meter_bar_bg);
+        }
+        if self.meter_bar_lucario_width_height == (-1.0, -1.0) {
+            self.meter_bar_lucario_width_height = get_width_height(self.meter_bar_lucario);
+        }
+        if self.meter_bar_pichu_width_height == (-1.0, -1.0) {
+            self.meter_bar_pichu_width_height = get_width_height(self.meter_bar_pichu);
+        }
 
         self.actual_percentage = 0.0;
         self.visual_percentage = 0.0;
@@ -217,9 +223,6 @@ impl UiObject for PledgeMeter {
             set_pane_visible(self.meter_bar_lucario, false);
             set_pane_visible(self.meter_bar_pichu, false);
             set_pane_visible(self.meter_div, false);
-            set_width_height(self.meter_bar_bg, self.meter_bar_bg_width_height.0, self.meter_bar_bg_width_height.1);
-            set_width_height(self.meter_bar_lucario, self.meter_bar_lucario_width_height.0, self.meter_bar_lucario_width_height.1);
-            set_width_height(self.meter_bar_pichu, self.meter_bar_pichu_width_height.0, self.meter_bar_pichu_width_height.1);
         } else if !self.is_enabled {
             self.reset();
         }
