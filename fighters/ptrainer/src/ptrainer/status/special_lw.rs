@@ -135,42 +135,43 @@ unsafe extern "C" fn play_voice(weapon: &mut L2CWeaponCommon) {
 
 unsafe extern "C" fn play_voice_continue(weapon: &mut L2CWeaponCommon, is_forward: bool, use_out: bool) {
     let poke_object = get_poke_battle_object(weapon.module_accessor);
-    if !poke_object.is_null() {
-        let poke_boma = &mut *(*poke_object).module_accessor;
-        if use_out {
-            if is_forward {
-                if poke_boma.kind() == *FIGHTER_KIND_PZENIGAME {
-                    PLAY_SE(weapon, Hash40::new("vc_ptrainer_throw13"));
-                }
-                else if poke_boma.kind() == *FIGHTER_KIND_PFUSHIGISOU {
-                    PLAY_SE(weapon, Hash40::new("vc_ptrainer_throw11"));
-                }
-                else {
-                    PLAY_SE(weapon, Hash40::new("vc_ptrainer_throw12"));
-                }
+    if poke_object.is_null() {
+        return;
+    }
+    let poke_boma = &mut *(*poke_object).module_accessor;
+    if use_out {
+        if is_forward {
+            if poke_boma.kind() == *FIGHTER_KIND_PZENIGAME {
+                PLAY_SE(weapon, Hash40::new("vc_ptrainer_throw13"));
+            }
+            else if poke_boma.kind() == *FIGHTER_KIND_PFUSHIGISOU {
+                PLAY_SE(weapon, Hash40::new("vc_ptrainer_throw11"));
             }
             else {
-                if poke_boma.kind() == *FIGHTER_KIND_PZENIGAME {
-                    PLAY_SE(weapon, Hash40::new("vc_ptrainer_throw12"));
-                }
-                else if poke_boma.kind() == *FIGHTER_KIND_PFUSHIGISOU {
-                    PLAY_SE(weapon, Hash40::new("vc_ptrainer_throw13"));
-                }
-                else {
-                    PLAY_SE(weapon, Hash40::new("vc_ptrainer_throw11"));
-                }
+                PLAY_SE(weapon, Hash40::new("vc_ptrainer_throw12"));
             }
         }
         else {
             if poke_boma.kind() == *FIGHTER_KIND_PZENIGAME {
-                PLAY_SE(weapon, Hash40::new("vc_ptrainer_throw11"));
-            }
-            else if poke_boma.kind() == *FIGHTER_KIND_PFUSHIGISOU {
                 PLAY_SE(weapon, Hash40::new("vc_ptrainer_throw12"));
             }
-            else {
+            else if poke_boma.kind() == *FIGHTER_KIND_PFUSHIGISOU {
                 PLAY_SE(weapon, Hash40::new("vc_ptrainer_throw13"));
             }
+            else {
+                PLAY_SE(weapon, Hash40::new("vc_ptrainer_throw11"));
+            }
+        }
+    }
+    else {
+        if poke_boma.kind() == *FIGHTER_KIND_PZENIGAME {
+            PLAY_SE(weapon, Hash40::new("vc_ptrainer_throw11"));
+        }
+        else if poke_boma.kind() == *FIGHTER_KIND_PFUSHIGISOU {
+            PLAY_SE(weapon, Hash40::new("vc_ptrainer_throw12"));
+        }
+        else {
+            PLAY_SE(weapon, Hash40::new("vc_ptrainer_throw13"));
         }
     }
 }
