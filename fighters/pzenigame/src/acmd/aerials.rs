@@ -40,7 +40,7 @@ unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 16.0);
     sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 1.0);
-    FT_MOTION_RATE_RANGE(agent, 16.0, 36.0, 27.0);
+    FT_MOTION_RATE_RANGE(agent, 16.0, 36.0, 24.0);
     frame(lua_state, 22.0);
     if is_excute(agent) {
         WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
