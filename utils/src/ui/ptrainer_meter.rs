@@ -132,7 +132,7 @@ impl PledgeMeter {
     }
 
     pub fn set_meter_info(&mut self, current_pledge: f32, max_pledge: f32, current_swap: f32, max_swap: f32, pledge_state: i32) {
-        let percent = current_pledge / max_pledge;
+        let percent = current_pledge.clamp(0.0, max_pledge) / max_pledge;
         self.actual_percentage = percent;
 
         if pledge_state != self.pledge_state {
