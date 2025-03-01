@@ -17,7 +17,8 @@ unsafe extern "C" fn game_specialnstart(agent: &mut L2CAgentBase) {
         let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
         let object = utils::util::get_battle_object_from_id(parent_id);
         let timer = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER);
-        VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer - 180);
+        let pledge_use_cost_frame = ParamModule::get_int(agent.battle_object, ParamType::Agent, "param_special_lw.pledge_use_cost_frame");
+        VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer - pledge_use_cost_frame);
     }
     if pledge == *PLEDGE_STATE_WATER {
         // Water Pledge
@@ -412,10 +413,12 @@ unsafe extern "C" fn game_speciallwin(agent: &mut L2CAgentBase) {
         VarModule::on_flag(object, vars::ptrainer::instance::SPECIAL_LW_BACKWARDS_SWITCH); // we will turn this off in opff
         if VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE) == *PLEDGE_STATE_NONE {
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_FIRE);
-            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 1800);
+            let pledge_duration_frame = ParamModule::get_int(agent.battle_object, ParamType::Agent, "param_special_lw.pledge_duration_frame");
+            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, pledge_duration_frame);
         }
         VarModule::on_flag(object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
-        VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER, 300);
+        let swap_lockout_frame = ParamModule::get_int(agent.battle_object, ParamType::Agent, "param_special_lw.swap_lockout_frame");
+        VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER, swap_lockout_frame);
         VarModule::on_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
     }
 }

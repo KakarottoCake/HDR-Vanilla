@@ -154,6 +154,12 @@
 		"fighter/pfushigisou/cmn": [
 			"fighter/pfushigisou/param/hdr.xml"
 		],
+		"fighter/plizardon/cmn": [
+			"fighter/plizardon/param/hdr.xml"
+		],
+		"fighter/pzenigame/cmn": [
+			"fighter/pzenigame/param/hdr.xml"
+		],
 		"fighter/tantan/cmn": [
 			"fighter/tantan/param/hdr.xml"
 		],
