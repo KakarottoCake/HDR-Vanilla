@@ -59,8 +59,7 @@ unsafe fn damage_to_meter(fighter: &mut L2CFighterCommon) {
         return;
     }
 
-    const MULTIPLIER: f32 = 1.0;
-    app::FighterSpecializer_Jack::add_rebel_gauge(fighter.module_accessor, app::FighterEntryID(fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID)), last_damage * MULTIPLIER);
+    app::FighterSpecializer_Jack::add_rebel_gauge(fighter.module_accessor, app::FighterEntryID(fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID)), last_damage);
 
     // Set the const to 0.0 since we don't have a different way to detect when we hit someone
     // (need to implement something beter for this, probably in MeterModule refactor)
