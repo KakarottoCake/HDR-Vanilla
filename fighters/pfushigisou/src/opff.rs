@@ -25,7 +25,6 @@ unsafe fn special_lw_track(boma: &mut BattleObjectModuleAccessor) {
         let entry_id = boma.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
         utils::ui::UiManager::set_ptrainer_meter_enable(entry_id, false);
     }
-    dbg!(boma.status());
 }
 
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
