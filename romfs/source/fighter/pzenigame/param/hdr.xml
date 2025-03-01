@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <struct>
+    <struct hash="param_special_s">
+      <float hash="start_speed_y_mul">0.25</float>
+      <float hash="start_speed_y_add">0.5</float>
+    </struct>
     <struct hash="param_special_n">
       <!-- This is 10 frames in game -->
       <float hash="landing_frame">9.0</float>

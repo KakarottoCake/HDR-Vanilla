@@ -8,6 +8,7 @@ unsafe extern "C" fn special_s_main(fighter: &mut L2CFighterCommon) -> L2CValue 
     AreaModule::enable_area(fighter.module_accessor, *FIGHTER_PZENIGAME_AREA_KIND_SPECIAL_S_TREADED, true, -1);
     special_s_change_motion(fighter, false, Hash40::new("special_s_start"), Hash40::new("special_air_s_start"), *FIGHTER_KINETIC_TYPE_GROUND_STOP, *FIGHTER_KINETIC_TYPE_PZENIGAME_SPECIAL_AIR_S_START);
     fighter.on_flag(*FIGHTER_PZENIGAME_STATUS_SPECIAL_S_FLAG_CONTINUE);
+    VarModule::on_flag(fighter.battle_object, vars::common::instance::SIDE_SPECIAL_CANCEL_NO_HIT);
 
     fighter.main_shift(special_s_main_loop)
 }
@@ -55,6 +56,15 @@ unsafe extern "C" fn special_s_loop_main(fighter: &mut L2CFighterCommon) -> L2CV
     special_s_change_motion(fighter, false, Hash40::new("special_s"), Hash40::new("special_air_s"), *FIGHTER_KINETIC_TYPE_PZENIGAME_SPECIAL_S, *FIGHTER_KINETIC_TYPE_PZENIGAME_SPECIAL_AIR_S);
     fighter.on_flag(*FIGHTER_PZENIGAME_STATUS_SPECIAL_S_FLAG_CONTINUE);
 
+    if fighter.is_situation(*SITUATION_KIND_AIR) {
+        if KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) <= 0.0 {
+            let start_speed_y_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.start_speed_y_mul");
+            KineticModule::mul_speed(fighter.module_accessor, &Vector3f::new(1.0, start_speed_y_mul, 1.0), *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+        }
+        let start_speed_y_add = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.start_speed_y_add");
+        KineticModule::add_speed(fighter.module_accessor, &Vector3f::new(1.0, start_speed_y_add, 1.0));
+    }
+
     fighter.main_shift(special_s_loop_main_loop)
 }
 
@@ -75,8 +85,9 @@ unsafe extern "C" fn special_s_loop_main_loop(fighter: &mut L2CFighterCommon) ->
     }
     let limit_frame_min = fighter.get_param_int("param_special_s", "limit_frame_min");
     if counter >= limit_frame_min {
-        if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD)
-        || fighter.is_pad_flag(PadFlag::SpecialTrigger) {
+        let buffer = ControlModule::get_command_life_count_max(fighter.module_accessor) as usize;
+        if InputModule::get_trigger_count(fighter.battle_object, Buttons::Guard) < buffer
+        || fighter.is_cat_flag(Cat1::SpecialAny) {
             fighter.change_status(FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_S_END.into(), true.into());
             return 0.into();
         }
