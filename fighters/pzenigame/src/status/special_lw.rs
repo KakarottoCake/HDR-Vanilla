@@ -24,13 +24,13 @@ unsafe extern "C" fn special_lw_out_main(fighter: &mut L2CFighterCommon) -> L2CV
         VarModule::set_int(fighter.object(), vars::pzenigame::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, handle as i32);
         fighter.play_pledge_effect(*PLEDGE_STATE_FIRE);
     }
+    VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
     smashline::original_status(Main, fighter, *FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_LW_OUT)(fighter)
 }
 
 unsafe extern "C" fn special_lw_out_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     let parent_id = LinkModule::get_parent_id(fighter.module_accessor, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
     let object = utils::util::get_battle_object_from_id(parent_id);
-    VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
     return 0.into();
 }
 
