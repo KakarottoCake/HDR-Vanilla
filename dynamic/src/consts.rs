@@ -870,6 +870,7 @@ pub mod vars {
             pub const ATTACK_13_DREAMLAND_EXPRESS: i32 = 0x0100;
             pub const ATTACK_13_LATE_DLE_INPUT: i32 = 0x0101;
             pub const SPECIAL_N_MOTION_AIR: i32 = 0x0102;
+            pub const SPECIAL_HI_GROUND_START: i32 = 0x0103;
 
             // floats
             pub const CURRENT_DAMAGE: i32 = 0x0100;
