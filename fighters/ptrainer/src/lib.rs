@@ -84,7 +84,7 @@ pub unsafe extern "C" fn update_pledge_ui(weapon: &mut L2CFighterBase, poke_obje
     utils::ui::UiManager::set_ptrainer_meter_info(
         entry_id,
         pledge_timer as f32,
-        900.0,
+        1800.0,
         swap_timer as f32,
         300.0,
         pledge_state
