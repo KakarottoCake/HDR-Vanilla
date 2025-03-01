@@ -18,6 +18,12 @@
       <float hash="shoot_speed_y">4.08</float>
     </struct>
   </list>
+  <list hash="param_leafcutter">
+    <struct index="0">
+      <float hash="bound_angle">45</float>
+      <float hash="bound_speed_mul">0.8</float>
+    </struct>
+  </list>
   <list hash="param_vine">
     <struct index="0">
       <int hash="rewind_frame">18</int>
