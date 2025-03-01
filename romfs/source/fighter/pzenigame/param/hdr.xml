@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <struct>
+    <struct hash="param_special_n">
+      <!-- This is 10 frames in game -->
+      <float hash="landing_frame">9.0</float>
+    </struct>
     <struct hash="param_special_lw">
       <!-- these are duplicated for each pokemon -->
       <int hash="pledge_duration_frame">1800</int>

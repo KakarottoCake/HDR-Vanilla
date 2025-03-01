@@ -67,7 +67,13 @@ unsafe extern "C" fn sound_specialnshot(agent: &mut L2CAgentBase) {
     frame(lua_state, 5.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_pzenigame_special_n03"));
-        PLAY_SE(agent, Hash40::new("vc_pzenigame_special_n01"));
+        let rand = sv_math::rand(hash40("fighter"), 2);
+        if rand == 1 {
+            PLAY_SE(agent, Hash40::new("vc_pzenigame_attack02"));
+        }
+        else {
+            PLAY_SE(agent, Hash40::new("vc_pzenigame_special_n01"));
+        }
     }
 }
 
