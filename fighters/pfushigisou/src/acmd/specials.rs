@@ -89,6 +89,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     if agent.is_situation(*SITUATION_KIND_AIR) {
         if is_excute(agent) {
+            boma.off_flag(*FIGHTER_PFUSHIGISOU_INSTANCE_WORK_ID_FLAG_SPECIAL_AIR_HI_HOP);
             ArticleModule::generate_article(boma, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_VINE, false, 0);
             ArticleModule::set_visibility_whole(boma, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_VINE, false, app::ArticleOperationTarget(0));
             WorkModule::on_flag(boma, *FIGHTER_PFUSHIGISOU_STATUS_SPECIAL_HI_SET_MAP_COLL_OFFSET);
@@ -138,7 +139,6 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
             }
             else {
                 VarModule::on_flag(agent.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
-                boma.off_flag(*FIGHTER_PFUSHIGISOU_INSTANCE_WORK_ID_FLAG_SPECIAL_AIR_HI_HOP);
             }
         } 
     }

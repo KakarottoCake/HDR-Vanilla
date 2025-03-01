@@ -112,6 +112,7 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
+        boma.off_flag(*FIGHTER_JACK_INSTANCE_WORK_ID_FLAG_SPECIAL_AIR_HI_HOP);
         ArticleModule::generate_article(boma, *FIGHTER_JACK_GENERATE_ARTICLE_WIREROPE, false, 0);
     }
     frame(lua_state, 8.0);
@@ -185,7 +186,6 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
         }
         else {
             VarModule::on_flag(agent.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
-            boma.off_flag(*FIGHTER_JACK_INSTANCE_WORK_ID_FLAG_SPECIAL_AIR_HI_HOP);
         }
     }
 }
