@@ -2,6 +2,7 @@ use super::*;
 use globals::*;
 // status script import
 
+mod landing_fall_special;
 mod run;
 mod special_n;
 mod special_s;
@@ -41,6 +42,7 @@ pub fn install(agent: &mut Agent) {
     agent.status(Main, *FIGHTER_STATUS_KIND_DEAD, dead_main);
     agent.status(Main, *FIGHTER_STATUS_KIND_REBIRTH, rebirth_main);
     
+    landing_fall_special::install(agent);
     run::install(agent);
     special_n::install(agent);
     special_s::install(agent);

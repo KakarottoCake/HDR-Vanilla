@@ -65,7 +65,8 @@ unsafe extern "C" fn special_n_shoot_main_loop(fighter: &mut L2CFighterCommon) -
     if !StatusModule::is_changing(fighter.module_accessor) {
         if StatusModule::is_situation_changed(fighter.module_accessor) {
             if fighter.is_situation(*SITUATION_KIND_GROUND) && fighter.motion_frame() >= 6.0 {
-                fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
+                fighter.set_float(8.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
+                fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
                 return 1.into();
             }
             else {
