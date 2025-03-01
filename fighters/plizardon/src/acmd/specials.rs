@@ -16,9 +16,11 @@ unsafe extern "C" fn game_specialnstart(agent: &mut L2CAgentBase) {
         SET_SPEED_EX(agent, -1.0, speed_y, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
         let object = utils::util::get_battle_object_from_id(parent_id);
-        let timer = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER);
-        let pledge_use_cost_frame = ParamModule::get_int(agent.battle_object, ParamType::Agent, "param_special_lw.pledge_use_cost_frame");
-        VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer - pledge_use_cost_frame);
+        if ![*PLEDGE_STATE_NONE, *PLEDGE_STATE_FIRE].contains(&VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE)) {
+            let timer = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER);
+            let pledge_use_cost_frame = ParamModule::get_int(agent.battle_object, ParamType::Agent, "param_special_lw.pledge_use_cost_frame");
+            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer - pledge_use_cost_frame);
+        }
     }
     if pledge == *PLEDGE_STATE_WATER {
         // Water Pledge
