@@ -76,8 +76,12 @@ impl GarlicMeter {
         set_pane_visible(self.meter_bar, false);
         set_pane_visible(self.meter_bar_2, false);
 
-        self.meter_bar_width_height = get_width_height(self.meter_bar);
-        self.meter_bar_2_width_height = get_width_height(self.meter_bar_2);
+        if self.meter_bar_width_height == (-1.0, -1.0) {
+            self.meter_bar_width_height = get_width_height(self.meter_bar);
+        }
+        if self.meter_bar_2_width_height == (-1.0, -1.0) {
+            self.meter_bar_2_width_height = get_width_height(self.meter_bar_2);
+        }
 
         self.actual_percentage = 0.0;
         self.level = 0;
