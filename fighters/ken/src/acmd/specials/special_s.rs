@@ -42,7 +42,6 @@ unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
         dmg = 1.05;
     }
     if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
         FighterAreaModuleImpl::enable_fix_jostle_area_xy(boma, 5.5, 3.0, 9.0, 3.0);
         JostleModule::set_team(boma, 1);
         JostleModule::set_overlap_rate_mul(boma, 2.0);

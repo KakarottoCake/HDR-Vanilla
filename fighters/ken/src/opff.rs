@@ -335,17 +335,6 @@ unsafe fn ken_ex_tatsu(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMo
     && fighter.get_int(*FIGHTER_RYU_STATUS_WORK_ID_SPECIAL_COMMON_INT_STRENGTH) != *FIGHTER_RYU_STRENGTH_S {
         fighter.set_int(*FIGHTER_RYU_STRENGTH_S, *FIGHTER_RYU_STATUS_WORK_ID_SPECIAL_COMMON_INT_STRENGTH);
     }
-    
-
-    if !boma.is_status(*FIGHTER_RYU_STATUS_KIND_SPECIAL_S_END)
-    && boma.is_situation(*SITUATION_KIND_AIR)
-    && boma.is_button_on(Buttons::SpecialAll)
-    && KineticModule::get_sum_speed_y(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL) < 0.0 {
-        // Tatsu gravity
-        // if holding special in the air, we float
-        // params have been modified to make us fall otherwise
-        KineticModule::mul_speed(boma, &Vector3f::new(1.0, 0.0, 1.0), *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-    }
 }
 
 /// enables shield during transition from dashback to run

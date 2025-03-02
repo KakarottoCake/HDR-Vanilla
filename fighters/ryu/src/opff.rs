@@ -275,14 +275,6 @@ unsafe fn ryu_ex_tatsu(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMo
     if VarModule::is_flag(fighter.battle_object, vars::shotos::instance::EX_SPECIAL_USED) {
         // no speed in EX
         KineticModule::mul_speed(boma, &Vector3f::zero(), *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-    } else if !boma.is_status(*FIGHTER_RYU_STATUS_KIND_SPECIAL_S_END)
-    && boma.is_situation(*SITUATION_KIND_AIR)
-    && boma.is_button_on(Buttons::SpecialAll)
-    && KineticModule::get_sum_speed_y(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL) < 0.0 {
-        // Tatsu gravity
-        // if holding special in the air, we float
-        // params have been modified to make us fall otherwise
-        KineticModule::mul_speed(boma, &Vector3f::new(1.0, 0.0, 1.0), *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
     }
 }
 
