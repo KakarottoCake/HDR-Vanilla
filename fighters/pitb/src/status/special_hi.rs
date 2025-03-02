@@ -35,6 +35,39 @@ unsafe extern "C" fn special_hi_pre(fighter: &mut L2CFighterCommon) -> L2CValue 
 
 // FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH
 
+unsafe extern "C" fn special_hi_rush_init(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let ret = smashline::original_status(Init, fighter, *FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH)(fighter);
+
+    let stick_x = fighter.global_table[STICK_X].get_f32();
+    let stick_y = fighter.global_table[STICK_Y].get_f32();
+    let mut rad = 0.0_f32.to_radians();
+    let rush_speed = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("rush_speed"));
+    let lr = PostureModule::lr(fighter.module_accessor);
+
+    let stick_added = stick_x.abs() + stick_y.abs();
+
+    if stick_added >= 0.5 {
+        let atan = (stick_y).atan2(stick_x * lr);
+        rad = atan;
+    }
+    let rush_angle = fighter.get_param_float("param_special_hi", "rush_angle");
+    rad = rad.clamp((90.0 - 0.5 * rush_angle).to_radians(), (90.0 + 0.5 * rush_angle).to_radians());
+    dbg!(rad);
+    dbg!(rad.to_degrees());
+    let rush_speed_x = rush_speed * rad.sin() * lr;
+    let rush_speed_y = rush_speed * rad.cos();
+
+    sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, rush_speed_x, rush_speed_y);
+    KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
+
+    fighter.set_joint_rotate("rot", Vector3f{x: rad.to_degrees(), y: 0.0, z: 0.0});
+
+    WorkModule::set_float(fighter.module_accessor, rad, *FIGHTER_PIT_STATUS_SPECIAL_HI_RUSH_FLOAT_SDIR);
+    WorkModule::set_float(fighter.module_accessor, rad, *FIGHTER_PIT_STATUS_SPECIAL_HI_RUSH_FLOAT_SDIR_INIT);
+
+    ret
+}
+
 unsafe extern "C" fn special_hi_rush_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let ret = smashline::original_status(Main, fighter, *FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH)(fighter);
 
@@ -130,6 +163,7 @@ unsafe extern "C" fn special_hi_rush_end_main_loop(fighter: &mut L2CFighterCommo
 
 pub fn install(agent: &mut Agent) {
     agent.status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_HI, special_hi_pre);
+    agent.status(Init, *FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH, special_hi_rush_init);
     agent.status(Main, *FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH, special_hi_rush_main);
     agent.status(Pre, *FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH_END, special_hi_rush_end_pre);
     agent.status(Main, *FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH_END, special_hi_rush_end_main);
