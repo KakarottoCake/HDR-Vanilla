@@ -100,7 +100,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
         WorkModule::on_flag(boma, *FIGHTER_PIT_STATUS_SPECIAL_HI_RUSH_FLAG_BACK_ANGLE);
         JostleModule::set_status(boma, true);
     }
-    frame(lua_state, 48.0);
+    frame(lua_state, 50.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
