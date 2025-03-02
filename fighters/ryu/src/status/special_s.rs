@@ -231,6 +231,10 @@ unsafe extern "C" fn special_s_loop_main(fighter: &mut L2CFighterCommon) -> L2CV
     let alpha = fighter.get_param_float("param_special_s", "command_wind_alpha") * 0.01;
     EffectModule::set_alpha(fighter.module_accessor, spineffect, alpha);
 
+    if VarModule::is_flag(fighter.battle_object, vars::shotos::instance::EX_SPECIAL_USED) {
+        MeterModule::drain_direct(fighter.battle_object, 2.0 * MeterModule::meter_per_level(fighter.battle_object));
+    }
+
     fighter.sub_shift_status_main(L2CValue::Ptr(special_s_loop_main_loop as *const () as _))
 }
 

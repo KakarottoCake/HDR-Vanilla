@@ -50,6 +50,7 @@ unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
             agent.off_flag(*FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
         }
         if VarModule::is_flag(boma.object(), vars::shotos::instance::EX_SPECIAL_USED) {
+            MeterModule::watch_damage(agent.battle_object, false);
             ATTACK(agent, 0, 0, Hash40::new("top"), 2.4, 366, 100, 70, 0, 3.5, 0.0, 12.5, -10.0, Some(0.0), Some(12.5), Some(10.0), 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_RYU_KICK, *ATTACK_REGION_KICK);
             ATTACK(agent, 1, 0, Hash40::new("top"), 2.4, 366, 100, 70, 0, 3.5, 0.0, 5.5, -5.0, Some(0.0), Some(5.5), Some(5.0), 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_RYU_KICK, *ATTACK_REGION_KICK);
         } else {
