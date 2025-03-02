@@ -1401,6 +1401,7 @@ pub mod vars {
             pub const SPECIAL_N_PLEDGE_PAUSE_TIMER: i32 = 0x0100;
             pub const SPECIAL_LW_BACKWARDS_SWITCH: i32 = 0x0101;
             pub const DISABLE_SPECIAL_LW: i32 = 0x0102;
+            pub const METER_UI_DISABLE_COLOR: i32 = 0x0103;
 
             // ints
             pub const SPECIAL_N_PLEDGE_STATE: i32 = 0x0100; // 0 - None, 1 - Squirtle, 2 - Ivysaur, 3 - Charizard

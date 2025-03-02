@@ -309,11 +309,12 @@ impl UiManager {
         max_pledge: f32,
         current_swap: f32,
         max_swap: f32,
-        pledge_state: i32
+        pledge_state: i32,
+        disabled: bool
     ) {
         let mut manager = UI_MANAGER.write();
         manager.ptrainer_meter[Self::get_ui_index_from_entry_id(entry_id) as usize]
-            .set_meter_info(current_pledge, max_pledge, current_swap, max_swap, pledge_state);
+            .set_meter_info(current_pledge, max_pledge, current_swap, max_swap, pledge_state, disabled);
     }
 }
 

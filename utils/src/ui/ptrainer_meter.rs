@@ -5,6 +5,7 @@ const COLOR_NONE: [f32; 4] = [1.0, 1.0, 1.0, 1.0];
 const COLOR_WATER: [f32; 4] = [0.0 / 255.0, 68.0 / 255.0, 204.0 / 255.0, 1.0];
 const COLOR_GRASS: [f32; 4] = [34.0 / 255.0, 195.0 / 255.0, 48.0 / 255.0, 1.0];
 const COLOR_FIRE: [f32; 4] = [255.0 / 255.0, 20.0 / 255.0, 20.0 / 255.0, 1.0];
+const COLOR_DISABLED: [f32; 4] = [75.0 / 255.0, 75.0 / 255.0, 75.0 / 255.0, 1.0];
 
 const EMPTY_TEXCOORDS: [f32; 8] = [
     0.0, 0.0,
@@ -60,6 +61,7 @@ pub struct PledgeMeter {
     // Progress tracking
     pub actual_percentage: f32,
     pub visual_percentage: f32,
+    pub disabled: bool,
 
     // Number tracking
     pub pledge_state: i32,
@@ -99,6 +101,7 @@ impl PledgeMeter {
 
             actual_percentage: -1.0,
             visual_percentage: -1.0,
+            disabled: false,
 
             pledge_state: *PLEDGE_STATE_NONE,
 
@@ -131,7 +134,7 @@ impl PledgeMeter {
         self.pledge_state = *PLEDGE_STATE_NONE;
     }
 
-    pub fn set_meter_info(&mut self, current_pledge: f32, max_pledge: f32, current_swap: f32, max_swap: f32, pledge_state: i32) {
+    pub fn set_meter_info(&mut self, current_pledge: f32, max_pledge: f32, current_swap: f32, max_swap: f32, pledge_state: i32, disabled: bool) {
         let percent = current_pledge.clamp(0.0, max_pledge) / max_pledge;
         self.actual_percentage = percent;
 
@@ -143,6 +146,7 @@ impl PledgeMeter {
             self.visual_percentage = 0.0;
         }
         self.pledge_state = pledge_state;
+        self.disabled = disabled;
     }
 
     pub fn update_meter_progress(&mut self) {
@@ -175,11 +179,14 @@ impl PledgeMeter {
     }
 
     pub fn update_charged_visuals(&mut self) {
-        let bar_color = match self.pledge_state {
-            _ if self.pledge_state == *PLEDGE_STATE_WATER => COLOR_WATER,
-            _ if self.pledge_state == *PLEDGE_STATE_GRASS => COLOR_GRASS,
-            _ if self.pledge_state == *PLEDGE_STATE_FIRE => COLOR_FIRE,
-            _ => COLOR_NONE,
+        let bar_color =  if self.disabled { COLOR_DISABLED } 
+        else {
+            match self.pledge_state {
+                _ if self.pledge_state == *PLEDGE_STATE_WATER => COLOR_WATER,
+                _ if self.pledge_state == *PLEDGE_STATE_GRASS => COLOR_GRASS,
+                _ if self.pledge_state == *PLEDGE_STATE_FIRE => COLOR_FIRE,
+                _ => COLOR_NONE,
+            }
         };
         let symbol_coords = match self.pledge_state {
             _ if self.pledge_state == *PLEDGE_STATE_WATER => WATER_TEXCOORDS,
