@@ -2,9 +2,9 @@ use super::*;
 use super::super::consts::*;
 
 const COLOR_NONE: [f32; 4] = [1.0, 1.0, 1.0, 1.0];
-const COLOR_WATER: [f32; 4] = [20.0 / 255.0, 35.0 / 255.0, 200.0 / 255.0, 1.0];
-const COLOR_GRASS: [f32; 4] = [50.0 / 255.0, 200.0 / 255.0, 20.0 / 255.0, 1.0];
-const COLOR_FIRE: [f32; 4] = [200.0 / 255.0, 20.0 / 255.0, 20.0 / 255.0, 1.0];
+const COLOR_WATER: [f32; 4] = [0.0 / 255.0, 68.0 / 255.0, 204.0 / 255.0, 1.0];
+const COLOR_GRASS: [f32; 4] = [34.0 / 255.0, 195.0 / 255.0, 48.0 / 255.0, 1.0];
+const COLOR_FIRE: [f32; 4] = [255.0 / 255.0, 20.0 / 255.0, 20.0 / 255.0, 1.0];
 
 const EMPTY_TEXCOORDS: [f32; 8] = [
     0.0, 0.0,
@@ -45,7 +45,7 @@ const FIRE_TEXCOORDS: [f32; 8] = [
 pub struct PledgeMeter {
     // Panes
     pub meter_lightning: u64,
-    // pub meter_pledge: u64,
+    pub meter_pledge: u64,
     pub meter_base: u64,
     pub meter_bar_bg: u64,
     pub meter_bar_lucario: u64,
@@ -71,8 +71,8 @@ impl PledgeMeter {
     pub fn new(layout_data: u64) -> Self {
         let meter_lightning = get_pane_from_layout(layout_data, "poke_meter_lightning\0")
             .expect("Couldn't find poke_meter_lightning");
-        // let meter_pledge = get_pane_from_layout(layout_data, "poke_meter_pledge\0")
-        //     .expect("Couldn't find poke_meter_pledge");
+        let meter_pledge = get_pane_from_layout(layout_data, "poke_meter_pledge\0")
+            .expect("Couldn't find poke_meter_pledge");
         let meter_base = get_pane_from_layout(layout_data, "poke_meter_base\0")
             .expect("Couldn't find poke_meter_base");
         let meter_bar_bg = get_pane_from_layout(layout_data, "poke_meter_bar_bg\0")
@@ -86,7 +86,7 @@ impl PledgeMeter {
 
         return Self {
             meter_lightning,
-            // meter_pledge,
+            meter_pledge,
             meter_base,
             meter_bar_bg,
             meter_bar_lucario,
@@ -108,11 +108,11 @@ impl PledgeMeter {
 
     pub fn reset(&mut self) {
         set_pane_visible(self.meter_lightning, false);
-        // set_pane_visible(self.meter_pledge, true);
+        set_pane_visible(self.meter_pledge, true);
         set_pane_visible(self.meter_base, true);
         set_pane_visible(self.meter_bar_bg, true);
         set_pane_visible(self.meter_bar_lucario, false);
-        set_pane_visible(self.meter_bar_pichu, false);
+        set_pane_visible(self.meter_bar_pichu, true);
         set_pane_visible(self.meter_div, false);
 
         if self.meter_bar_bg_width_height == (-1.0, -1.0) {
@@ -156,7 +156,6 @@ impl PledgeMeter {
             ]
         );
         set_width_height(self.meter_bar_pichu, self.meter_bar_pichu_width_height.0 * self.visual_percentage, self.meter_bar_pichu_width_height.1);
-        set_pane_visible(self.meter_bar_pichu, true);
 
         // meter_bar_bg
         set_tex_coords(
@@ -164,7 +163,6 @@ impl PledgeMeter {
             FULL_TEXCOORDS
         );
         set_width_height(self.meter_bar_bg, self.meter_bar_bg_width_height.0, self.meter_bar_bg_width_height.1);
-        set_pane_visible(self.meter_bar_bg, true);
     }
 
     pub fn update_percentages(&mut self) {
@@ -190,10 +188,10 @@ impl PledgeMeter {
             _ => EMPTY_TEXCOORDS,
         };
         set_pane_colors(self.meter_bar_pichu, bar_color, bar_color);
-        // set_tex_coords(
-        //     self.meter_pledge,
-        //     symbol_coords
-        // );
+        set_tex_coords(
+            self.meter_pledge,
+            symbol_coords
+        );
     }
 }
 
@@ -206,8 +204,8 @@ impl UiObject for PledgeMeter {
 
     fn is_valid(&self) -> bool {
         return is_pane_valid(self.meter_lightning)
+            && is_pane_valid(self.meter_pledge)
             && is_pane_valid(self.meter_base)
-            // && is_pane_valid(self.meter_pledge)
             && is_pane_valid(self.meter_bar_bg)
             && is_pane_valid(self.meter_bar_lucario)
             && is_pane_valid(self.meter_bar_pichu)
@@ -217,7 +215,7 @@ impl UiObject for PledgeMeter {
     fn set_enable(&mut self, enable: bool) {
         if !enable {
             set_pane_visible(self.meter_lightning, false);
-            // set_pane_visible(self.meter_pledge, false);
+            set_pane_visible(self.meter_pledge, false);
             set_pane_visible(self.meter_base, false);
             set_pane_visible(self.meter_bar_bg, false);
             set_pane_visible(self.meter_bar_lucario, false);
