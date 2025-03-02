@@ -91,10 +91,10 @@ unsafe extern "C" fn special_s_loop_main_loop(fighter: &mut L2CFighterCommon) ->
             fighter.change_status(FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_S_END.into(), true.into());
             return 0.into();
         }
-        if !StatusModule::is_changing(fighter.module_accessor)
-        && StatusModule::is_situation_changed(fighter.module_accessor) {
-            special_s_change_motion(fighter, true, Hash40::new("special_s"), Hash40::new("special_air_s"), *FIGHTER_KINETIC_TYPE_PZENIGAME_SPECIAL_S, *FIGHTER_KINETIC_TYPE_PZENIGAME_SPECIAL_AIR_S);
-        }
+    }
+    if !StatusModule::is_changing(fighter.module_accessor)
+    && StatusModule::is_situation_changed(fighter.module_accessor) {
+        special_s_change_motion(fighter, true, Hash40::new("special_s"), Hash40::new("special_air_s"), *FIGHTER_KINETIC_TYPE_PZENIGAME_SPECIAL_S, *FIGHTER_KINETIC_TYPE_PZENIGAME_SPECIAL_AIR_S);
     }
 
     return 0.into();
