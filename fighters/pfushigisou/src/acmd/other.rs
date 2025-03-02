@@ -129,6 +129,7 @@ unsafe extern "C" fn game_appealhi(agent: &mut L2CAgentBase) {
             };
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, state);
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer);
+            VarModule::off_flag(object, vars::ptrainer::instance::METER_UI_DISABLE_COLOR);
         }
     }
 }
@@ -171,6 +172,7 @@ unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
             };
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, state);
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer);
+            VarModule::off_flag(object, vars::ptrainer::instance::METER_UI_DISABLE_COLOR);
         }
     }
 }
@@ -185,7 +187,7 @@ unsafe extern "C" fn effect_appeallw(agent: &mut L2CAgentBase) {
             EffectModule::kill_kind(boma, Hash40::new("sys_status_speed_up"), false, false);
             let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
             let object = utils::util::get_battle_object_from_id(parent_id);
-            let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE) as i32;            
+            let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE) as i32;
             if pledge == *PLEDGE_STATE_FIRE {
                 VarModule::set_int(boma.object(), vars::pfushigisou::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, -1);
             }
