@@ -112,6 +112,7 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
+        boma.off_flag(*FIGHTER_JACK_INSTANCE_WORK_ID_FLAG_SPECIAL_AIR_HI_HOP);
         ArticleModule::generate_article(boma, *FIGHTER_JACK_GENERATE_ARTICLE_WIREROPE, false, 0);
     }
     frame(lua_state, 8.0);
@@ -177,6 +178,15 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
         ArticleModule::change_status(boma, *FIGHTER_JACK_GENERATE_ARTICLE_WIREROPE, *WEAPON_JACK_WIREROPE_STATUS_KIND_BACK, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
         search!(agent, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR_ALL);
         // UNABLE_AREA(fighter, *FIGHTER_JACK_AREA_KIND_ITEM_CATCH);
+    }
+    frame(lua_state, 45.0);
+    if is_excute(agent) {
+        if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
+            CancelModule::enable_cancel(boma);
+        }
+        else {
+            VarModule::on_flag(agent.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
+        }
     }
 }
 

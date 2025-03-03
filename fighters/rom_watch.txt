@@ -50,5 +50,7 @@ fighter/wiifit/param/hdr.xml
 fighter/inkling/param/hdr.xml
 fighter/master/param/hdr.xml
 fighter/pfushigisou/param/hdr.xml
+fighter/plizardon/param/hdr.xml
+fighter/pzenigame/param/hdr.xml
 fighter/tantan/param/hdr.xml
 fighter/zelda/param/hdr.xml

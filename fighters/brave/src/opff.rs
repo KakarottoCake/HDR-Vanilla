@@ -18,19 +18,14 @@ unsafe fn persist_rng(fighter: &mut L2CFighterCommon) {
         VarModule::set_int(fighter.battle_object, vars::brave::instance::CURSOR_SLOT, index);
     }
     if fighter.is_status(*FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_START)
-    || fighter.is_status(*FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_STEEL_START)
-    || fighter.is_status(*FIGHTER_STATUS_KIND_DEAD) {
+    || fighter.is_status(*FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_STEEL_START) {
         VarModule::off_flag(fighter.battle_object, vars::brave::instance::PERSIST_RNG);
+        fighter.set_int(0, *FIGHTER_BRAVE_INSTANCE_WORK_ID_INT_SPECIAL_LW_SELECT_INDEX);
+        VarModule::set_int(fighter.battle_object, vars::brave::instance::CURSOR_SLOT, 0);
     }
 }
 
 unsafe fn psych_up_crit(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status(*FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_START) {
-        if fighter.is_motion_one_of(&[Hash40::new("special_lw21"), Hash40::new("special_air_lw21")]) && fighter.motion_frame() == 6.0 {
-            VarModule::on_flag(fighter.battle_object, vars::brave::instance::PSYCHE_UP_ACTIVE);
-            VarModule::set_int(fighter.battle_object, vars::common::instance::GIMMICK_TIMER, 900);
-        }
-    }
     if VarModule::is_flag(fighter.battle_object, vars::brave::instance::PSYCHE_UP_ACTIVE) {
         if VarModule::get_int(fighter.battle_object, vars::common::instance::GIMMICK_TIMER) <= 0 {
             EFFECT_OFF_KIND(fighter, Hash40::new("brave_charge_hold"), false, false);
@@ -59,9 +54,6 @@ unsafe fn psych_up_crit(fighter: &mut L2CFighterCommon) {
             VarModule::set_int(fighter.battle_object, vars::common::instance::GIMMICK_TIMER, 0);
         }
     }
-    if fighter.is_status(*FIGHTER_STATUS_KIND_DEAD) {
-        VarModule::off_flag(fighter.battle_object, vars::brave::instance::PSYCHE_UP_ACTIVE);
-    }
 }
 
 // Hero dash cancel Frizz
@@ -75,16 +67,6 @@ unsafe fn dash_cancel_frizz(fighter: &mut L2CFighterCommon) {
             let mut brave_fighter = app::Fighter{battle_object: *(fighter.battle_object)};
             FighterSpecializer_Brave::add_sp(&mut brave_fighter, -10.0);
             EFFECT(fighter, Hash40::new("sys_flash"), Hash40::new("top"), 0, 15, -2, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, false);
-        }
-    }
-}
-
-// Hero woosh cancel
-unsafe fn woosh_cancel(fighter: &mut L2CFighterCommon) {
-    if fighter.is_motion_one_of(&[Hash40::new("special_hi1"), Hash40::new("special_air_hi1"), Hash40::new("special_hi_empty"), Hash40::new("special_air_hi_empty")]) {
-        if MotionModule::frame(fighter.module_accessor) >= 41.0 {
-            VarModule::on_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
-            fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL, true);
         }
     }
 }
@@ -144,7 +126,6 @@ pub unsafe extern "C" fn brave_frame_wrapper(fighter: &mut L2CFighterCommon) {
     psych_up_crit(fighter);
     dspecial_cancels(fighter);
     dash_cancel_frizz(fighter);
-    woosh_cancel(fighter);
     kaclang_jc(fighter);
     fastfall_specials(fighter);
 

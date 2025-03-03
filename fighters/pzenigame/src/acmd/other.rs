@@ -173,10 +173,11 @@ unsafe extern "C" fn game_appealhi(agent: &mut L2CAgentBase) {
             let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
             let (state, timer) = match pledge {
                 2 /* GRASS */ => (*PLEDGE_STATE_NONE, 0),
-                _ => (*PLEDGE_STATE_GRASS, 6000)
+                _ => (*PLEDGE_STATE_GRASS, ParamModule::get_int(agent.battle_object, ParamType::Agent, "param_special_lw.pledge_duration_frame_training"))
             };
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, state);
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer);
+            VarModule::off_flag(object, vars::ptrainer::instance::METER_UI_DISABLE_COLOR);
         }
     }
 }
@@ -219,10 +220,11 @@ unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
             let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
             let (state, timer) = match pledge {
                 3 /* FIRE */ => (*PLEDGE_STATE_NONE, 0),
-                _ => (*PLEDGE_STATE_FIRE, 6000)
+                _ => (*PLEDGE_STATE_FIRE, ParamModule::get_int(agent.battle_object, ParamType::Agent, "param_special_lw.pledge_duration_frame_training"))
             };
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, state);
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer);
+            VarModule::off_flag(object, vars::ptrainer::instance::METER_UI_DISABLE_COLOR);
         }
     }
 }

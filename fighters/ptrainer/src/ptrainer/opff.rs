@@ -1,33 +1,18 @@
-// opff import
-//utils::import_noreturn!(common::opff::fighter_common_opff);
 use super::*;
 use globals::*;
 
-pub unsafe extern "C" fn pledge_timer(weapon: &mut L2CFighterBase) {
-    //println!("timer: {}", VarModule::get_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER));
-    if VarModule::get_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE) != *PLEDGE_STATE_NONE {
-        if !VarModule::is_flag(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER)
-        && VarModule::countdown_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0) {
-            let poke_parent_id = LinkModule::get_parent_object_id(weapon.module_accessor, *WEAPON_PTRAINER_PTRAINER_LINK_NO_POKEMON) as u32;
-            let poke_object = utils::util::get_battle_object_from_id(poke_parent_id);
-            let poke_boma = &mut *(*poke_object).module_accessor;
-            if poke_boma.kind() == *FIGHTER_KIND_PZENIGAME {
-                let handle = VarModule::get_int(poke_object, vars::pzenigame::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE) as u32;
-                EffectModule::kill(poke_boma, handle, false, false);
-                VarModule::set_int(poke_object, vars::pzenigame::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, -1);
-            }
-            else if poke_boma.kind() == *FIGHTER_KIND_PFUSHIGISOU {
-                let handle = VarModule::get_int(poke_object, vars::pfushigisou::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE) as u32;
-                EffectModule::kill(poke_boma, handle, false, false);
-                VarModule::set_int(poke_object, vars::pfushigisou::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, -1);
-            }
-            else {
-                let handle = VarModule::get_int(poke_object, vars::plizardon::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE) as u32;
-                EffectModule::kill(poke_boma, handle, false, false);
-                VarModule::set_int(poke_object, vars::plizardon::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, -1);
-            }
-            
+pub unsafe extern "C" fn pledge_meter(weapon: &mut L2CFighterBase) {
+    let pledge_state = VarModule::get_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
+    let is_pledge_timer_paused = VarModule::is_flag(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
+    if pledge_state != *PLEDGE_STATE_NONE && !is_pledge_timer_paused {
+        let poke_object = get_poke_battle_object(weapon.module_accessor);
+        if VarModule::get_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER) <= 0 {
+            VarModule::set_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
             VarModule::set_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_NONE);
+            kill_pledge_effects(poke_object);
+        } else {
+            VarModule::dec_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER);
+            update_pledge_ui(weapon, poke_object);
         }
     }
     if VarModule::countdown_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER, 0) {
@@ -36,5 +21,5 @@ pub unsafe extern "C" fn pledge_timer(weapon: &mut L2CFighterBase) {
 }
 
 pub fn install(agent: &mut Agent) {
-    agent.on_line(Main, pledge_timer);
+    agent.on_line(Main, pledge_meter);
 }

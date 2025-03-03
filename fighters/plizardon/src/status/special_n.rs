@@ -60,6 +60,8 @@ unsafe extern "C" fn special_n_exec(fighter: &mut L2CFighterCommon) -> L2CValue 
 }
 
 unsafe extern "C" fn special_n_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_steam2"), false, false);
+    EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_drown_out"), false, false);
     return 0.into();
 }
 

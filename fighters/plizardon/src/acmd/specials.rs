@@ -14,6 +14,13 @@ unsafe extern "C" fn game_specialnstart(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         let speed_y = if agent.is_situation(*SITUATION_KIND_GROUND) { 0.0 } else { 0.25 };
         SET_SPEED_EX(agent, -1.0, speed_y, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+        let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+        let object = utils::util::get_battle_object_from_id(parent_id);
+        if ![*PLEDGE_STATE_NONE, *PLEDGE_STATE_FIRE].contains(&VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE)) {
+            let timer = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER);
+            let pledge_use_cost_frame = ParamModule::get_int(agent.battle_object, ParamType::Agent, "param_special_lw.pledge_use_cost_frame");
+            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer - pledge_use_cost_frame);
+        }
     }
     if pledge == *PLEDGE_STATE_WATER {
         // Water Pledge
@@ -343,6 +350,74 @@ unsafe extern "C" fn expression_specialnstart(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        JostleModule::set_status(boma, false);
+        ATTACK(agent, 0, 0, Hash40::new("neck"), 0.0, 366, 0, 0, 0, 4.5, 0.0, 0.0, 0.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, true, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_BODY);
+        ATTACK(agent, 1, 0, Hash40::new("top"),  0.0, 366, 0, 0, 0, 4.5, 0.0, 6.5, 4.5, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, true, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_BODY);
+    }
+}
+
+unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
+    }
+    frame(lua_state, 1.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 15.0, 1.0);
+    frame(lua_state, 15.0);
+    FT_MOTION_RATE(agent, 1.0);
+    frame(lua_state, 23.0);
+    FT_MOTION_RATE_RANGE(agent, 23.0, 53.0, 40.0);
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
+    }
+    frame(lua_state, 53.0);
+    FT_MOTION_RATE(agent, 1.0);
+}
+
+unsafe extern "C" fn game_specialairsend(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
+    }
+    frame(lua_state, 9.0);
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
+    }
+}
+
+unsafe extern "C" fn effect_specialsend(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("plizardon_flare_blitz"), false, false);
+        EFFECT_FLW_POS(agent, Hash40::new("plizardon_flare_blitz_smoke"), Hash40::new("rot"), 0, 2, 15, -90, 0, 0, 1.3, true);
+    }
+    frame(lua_state, 15.0);
+    if is_excute(agent) {
+        EFFECT_DETACH_KIND(agent, Hash40::new("plizardon_flare_blitz_smoke"), -1);
+    }
+    for _ in 0..7 {
+        if is_excute(agent) {
+            BURN_COLOR(agent, 2, 0.1, 0, 0.5);
+        }
+        wait(lua_state, 2.0);
+        if is_excute(agent) {
+            BURN_COLOR_FRAME(agent, 2, 1, 0.2, 0.1, 0);
+        }
+        wait(lua_state, 2.0);
+        if is_excute(agent) {
+            BURN_COLOR_NORMAL(agent);
+        }
+        wait(lua_state, 1.0);
+    }
+}
+
 unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -408,33 +483,13 @@ unsafe extern "C" fn game_speciallwin(agent: &mut L2CAgentBase) {
         VarModule::on_flag(object, vars::ptrainer::instance::SPECIAL_LW_BACKWARDS_SWITCH); // we will turn this off in opff
         if VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE) == *PLEDGE_STATE_NONE {
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_FIRE);
-            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 900);
+            let pledge_duration_frame = ParamModule::get_int(agent.battle_object, ParamType::Agent, "param_special_lw.pledge_duration_frame");
+            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, pledge_duration_frame);
         }
         VarModule::on_flag(object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
-        VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER, 300);
+        let swap_lockout_frame = ParamModule::get_int(agent.battle_object, ParamType::Agent, "param_special_lw.swap_lockout_frame");
+        VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER, swap_lockout_frame);
         VarModule::on_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
-    }
-}
-
-unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    if is_excute(agent) {
-        JostleModule::set_status(boma, false);
-        ATTACK(agent, 0, 0, Hash40::new("neck"), 0.0, 366, 0, 0, 0, 4.5, 0.0, 0.0, 0.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, true, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_BODY);
-        ATTACK(agent, 1, 0, Hash40::new("top"),  0.0, 366, 0, 0, 0, 4.5, 0.0, 6.5, 4.5, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, true, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_BODY);
-    }
-}
-
-unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
-    }
-    frame(lua_state, 9.0);
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
     }
 }
 
@@ -448,11 +503,16 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("expression_specialnstart", expression_specialnstart, Priority::Low);
     agent.acmd("expression_specialairnstart", expression_specialnstart, Priority::Low);
 
+    agent.acmd("game_specials", game_specials, Priority::Low);
+
+    agent.acmd("game_specialsend", game_specialsend, Priority::Low);
+    agent.acmd("game_specialairsend", game_specialairsend, Priority::Low);
+    agent.acmd("effect_specialsend", effect_specialsend, Priority::Low);
+    agent.acmd("effect_specialairsend", effect_specialsend, Priority::Low);
+
     agent.acmd("game_specialhi", game_specialhi, Priority::Low);
     agent.acmd("game_specialairhi", game_specialhi, Priority::Low);
 
     agent.acmd("game_speciallwin", game_speciallwin, Priority::Low);
     agent.acmd("game_specialairlwin", game_speciallwin, Priority::Low);
-
-    agent.acmd("game_specials", game_specials, Priority::Low);
 }

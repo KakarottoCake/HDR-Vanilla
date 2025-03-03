@@ -184,6 +184,15 @@ unsafe extern "C" fn special_lw_start_pre(fighter: &mut L2CFighterCommon) -> L2C
     ret
 }
 
+unsafe extern "C" fn special_lw_start_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let brave = fighter.global_table[0x4].get_ptr() as *mut Fighter;
+    FighterSpecializer_Brave::special_lw_close_window(brave, true, false, false);
+    VarModule::off_flag(fighter.battle_object, vars::brave::instance::PERSIST_RNG);
+    fighter.set_int(0, *FIGHTER_BRAVE_INSTANCE_WORK_ID_INT_SPECIAL_LW_SELECT_INDEX);
+    VarModule::set_int(fighter.battle_object, vars::brave::instance::CURSOR_SLOT, 0);
+    return smashline::original_status(End, fighter, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_START)(fighter);
+}
+
 unsafe extern "C" fn special_lw_steel_start_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     let facing = PostureModule::lr(fighter.module_accessor);
     let c_stick_override = fighter.is_button_on(Buttons::CStickOverride);
@@ -256,6 +265,8 @@ pub fn install(agent: &mut Agent) {
     agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_LW, special_lw_main);
 
     agent.status(Pre, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_START, special_lw_start_pre);
+    agent.status(End, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_START, special_lw_start_end);
     agent.status(Pre, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_STEEL_START, special_lw_steel_start_pre);
+
     agent.status(Pre, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_FAILURE, special_lw_failure_pre);
 }
