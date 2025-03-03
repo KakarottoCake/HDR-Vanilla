@@ -7,8 +7,8 @@
 extern crate lazy_static;
 
 pub mod offsets;
+pub mod modules;
 
-mod modules;
 mod game_modes;
 mod ui;
 

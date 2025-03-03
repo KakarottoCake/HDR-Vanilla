@@ -6,7 +6,7 @@ use std::{
 };
 use skyline::hooks::InlineCtx;
 use smash2::{
-    cpp::Vector, 
+    cpp::Vector,
     phx::hash40
 };
 use rand::{
@@ -14,6 +14,8 @@ use rand::{
     Rng
 };
 use toml::Value;
+
+use utils::modules::TourneyConfig;
 
 lazy_static! {
     static ref CHARA_WHITELIST: Mutex<Vec<String>> = {
@@ -48,6 +50,22 @@ fn ui_chara(i: usize, chara: &str) -> u64 {
     | (((i as u64) & 0xFFFF) << 40)
     | hash40(&format!("ui_chara_{}", chara)).0
 }
+
+fn is_tourney_mode() -> bool {
+    match TourneyConfig::load() {
+        Some(config) => config.enabled,
+        None => false
+    }
+}
+
+// hardcoded order of fighters in the CSS for when tourney mode is enabled
+const DEFAULT_ORDER: [&str; 86] = [
+    "mario", "mariod", "luigi", "peach", "daisy", "rosetta", "koopa", "koopajr", "packun", "yoshi", "wario", "donkey", "diddy", "krool", "buddy", "ice_climber", "gamewatch",
+    "link", "younglink", "toonlink", "zelda", "sheik", "ganon", "samus", "szerosuit", "ridley", "samusd", "kirby", "metaknight", "dedede", "fox", "falco", "wolf", "robot", "duckhunt",
+    "pikachu", "pichu", "ptrainer", "purin", "mewtwo", "lucario", "gekkouga", "gaogaen", "marth", "roy", "ike", "reflet", "chrom", "lucina", "kamui", "master",
+    "ness", "lucas", "captain", "pit", "pitb", "palutena", "pikmin", "murabito", "shizue", "wiifit", "littlemac", "shulk", "element", "inkling", "tantan", "miifighter", "miiswordsman", "miigunner",
+    "snake", "simon", "richter", "sonic", "bayonetta", "jack", "rockman", "ryu", "ken", "dolly", "demon", "pacman", "cloud", "edge", "trail", "brave", "pickel"
+];
 
 #[skyline::hook(offset = 0x19eb840, inline)]
 pub unsafe fn display_css_hook(ctx: &InlineCtx) {
@@ -104,7 +122,9 @@ pub unsafe fn display_css_hook(ctx: &InlineCtx) {
         println!("[src::chara_select] Invalid schema format!");
         return;
     }
-    let chara_order = schema.get("order").unwrap().as_array().unwrap();
+    let chara_order = 
+        if is_tourney_mode() { &DEFAULT_ORDER.map(|x| toml::Value::String(x.to_string())).to_vec() }
+        else { schema.get("order").unwrap().as_array().unwrap() };
     let center_random = schema.get("centered_random").unwrap().as_bool().unwrap_or(true);
 
     let mut chara_whitelist = CHARA_WHITELIST.lock().unwrap();
@@ -301,6 +321,10 @@ unsafe fn decide_fighter_from_id(id: usize) -> String {
     };
     let default = chara_string.to_owned();
     println!("Random character decision: {chara_string}");
+
+    if is_tourney_mode() {
+        return default;
+    }
 
     // Collect all relevant data from config TOML
     let path = Path::new("mods:/").join(RANDOM_CFG_TOML);
