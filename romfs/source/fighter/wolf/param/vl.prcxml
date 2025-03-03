@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <struct>
   <list hash="cliff_hang_data">
-    <hash40 index="0">dummy</hash40>
+    <struct index="0">
+      <float hash="p1_y">19</float>
+    </struct>
     <struct index="1">
       <float hash="p1_y">19</float>
     </struct>

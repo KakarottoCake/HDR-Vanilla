@@ -5,6 +5,7 @@ use globals::*;
 mod run;
 mod special_s;
 mod bayonet_end;
+mod special_hi;
 
 /// Re-enables the ability to use aerial specials when connecting to ground or cliff
 unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -46,4 +47,5 @@ pub fn install(agent: &mut Agent) {
     run::install(agent);
     special_s::install(agent);
     bayonet_end::install(agent);
+    special_hi::install(agent);
 }

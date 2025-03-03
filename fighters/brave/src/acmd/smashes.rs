@@ -54,7 +54,7 @@ unsafe extern "C" fn effect_attacks4(agent: &mut L2CAgentBase) {
             LAST_EFFECT_SET_COLOR(agent, 0.3, 0.1, 4.0);
         }
     }
-    frame(lua_state, 16.0);
+    frame(lua_state, 15.75);
     let psyche_up = VarModule::is_flag(agent.battle_object, vars::brave::instance::PSYCHE_UP_ACTIVE);
     if is_excute(agent) {
         EFFECT_FOLLOW_WORK(agent, *FIGHTER_BRAVE_INSTANCE_WORK_ID_INT_EFFECT_KIND_SWORD_FLARE, Hash40::new("sword1"), 0, 0, 0, 0, 0, -90, 1, true);

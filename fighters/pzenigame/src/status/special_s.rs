@@ -1,6 +1,39 @@
 use super::*;
 
 
+// FIGHTER_STATUS_KIND_SPECIAL_S
+
+unsafe extern "C" fn special_s_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    StatusModule::init_settings(
+        fighter.module_accessor,
+        app::SituationKind(*SITUATION_KIND_NONE),
+        *FIGHTER_KINETIC_TYPE_UNIQ,
+        *GROUND_CORRECT_KIND_KEEP as u32,
+        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP),
+        true,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT,
+        0
+    );
+
+    FighterStatusModuleImpl::set_fighter_status_data(
+        fighter.module_accessor,
+        false,
+        *FIGHTER_TREADED_KIND_ENABLE,
+        false,
+        false,
+        false,
+        *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_KEEP as u64,
+        *FIGHTER_STATUS_ATTR_START_TURN as u32,
+        *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S as u32,
+        0
+    );
+
+    return 0.into();
+}
+
+
 unsafe extern "C" fn special_s_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let flick_x = ControlModule::get_flick_no_reset_x(fighter.module_accessor);
     let special_smash_flick_x = fighter.get_param_int("common", "special_smash_flick_x");
@@ -101,6 +134,7 @@ unsafe extern "C" fn special_s_loop_main_loop(fighter: &mut L2CFighterCommon) ->
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_S, special_s_pre);
     agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_S, special_s_main);
     agent.status(Main, *FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_S_LOOP, special_s_loop_main);
 }

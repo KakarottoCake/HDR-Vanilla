@@ -311,10 +311,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
 		AttackModule::set_no_damage_fly_smoke_all(boma, true, false);
         AttackModule::set_no_finish_camera_ex(boma, 0, true, false);
         AttackModule::set_no_dead_damage_fly_effect(boma, true);
-	}
-	wait(lua_state, 1.0);
-	if is_excute(agent) {
-		WorkModule::on_flag(boma, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_MOVE_TRANS);
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_MOVE_TRANS);
 		WorkModule::on_flag(boma, *FIGHTER_KAMUI_STATUS_SPECIAL_HI_FLAG_TILT_BODY_ON);
 	}
 	frame(lua_state, 20.0);
@@ -349,10 +346,6 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
 		WorkModule::off_flag(boma, *FIGHTER_KAMUI_STATUS_SPECIAL_HI_FLAG_TILT_BODY_ON);
         WorkModule::on_flag(boma, *FIGHTER_KAMUI_STATUS_SPECIAL_HI_FLAG_AIR_CONTROL);
 	}
-    frame(lua_state, 45.0);
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
-    }
 	frame(lua_state, 49.0);
 	FT_MOTION_RATE(agent, 0.8);
 }

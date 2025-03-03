@@ -28,6 +28,7 @@ pub unsafe extern "C" fn game_specialhi1(agent: &mut L2CAgentBase) {
         AttackModule::set_vec_target_pos(boma, 2, Hash40::new("top"), &Vector2f::new(10.0, 55.0), 15, false);
         AttackModule::set_vec_target_pos(boma, 3, Hash40::new("top"), &Vector2f::new(10.0, 55.0), 15, false);
         AttackModule::set_no_damage_fly_smoke_all(boma, true, false);
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
     }
     frame(lua_state, 18.0);
     if is_excute(agent) {
@@ -35,13 +36,10 @@ pub unsafe extern "C" fn game_specialhi1(agent: &mut L2CAgentBase) {
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
         WorkModule::on_flag(boma, *FIGHTER_ROY_STATUS_SPECIAL_HI_FLAG_CONTROL);
     }
-    frame(lua_state, 20.0);
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
-    }
     frame(lua_state, 24.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_ROY_STATUS_SPECIAL_HI_FLAG_FREE_FALL_CHK);
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
     }
 
 }

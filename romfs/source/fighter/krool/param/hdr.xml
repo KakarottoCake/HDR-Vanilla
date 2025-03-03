@@ -23,7 +23,8 @@
     <int hash="cancel_min_frame">8</int>
     <float hash="start_brake_x">0.04</float>
     <float hash="start_limit_spd_x">1.3</float>
-    <float hash="start_stable_spd_y">0.1</float>
+    <int hash="start_stop_y_frame">12</int>
+    <float hash="start_accel_y">0.01</float>
     <float hash="start_cancel_speed_x">1.0</float>
     <float hash="start_cancel_speed_y">2.0</float>
     <float hash="fly_charge_min_spd_x">0.0</float>

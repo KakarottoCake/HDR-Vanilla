@@ -147,6 +147,10 @@ special_air_n_fire:
 special_air_n_end:
   extra:
     cancel_frame: 43
+special_air_hi:
+  extra:
+    xlu_start: 0
+    xlu_end: 0
 catch:
   extra:
     cancel_frame: 35

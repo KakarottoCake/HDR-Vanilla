@@ -4,14 +4,14 @@ use super::*;
 use globals::*;
 
 //Launch Star Cancel
-unsafe fn launch_star_cancel(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_status(*FIGHTER_ROSETTA_STATUS_KIND_SPECIAL_HI_JUMP)
-	&& MotionModule::frame(boma) > 2.0 {
-        if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD | *CONTROL_PAD_BUTTON_SPECIAL) {
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_ROSETTA_STATUS_KIND_SPECIAL_HI_END, false);
-        }
-    }
-}
+// unsafe fn launch_star_cancel(boma: &mut BattleObjectModuleAccessor) {
+//     if boma.is_status(*FIGHTER_ROSETTA_STATUS_KIND_SPECIAL_HI_JUMP)
+// 	&& MotionModule::frame(boma) > 2.0 {
+//         if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD | *CONTROL_PAD_BUTTON_SPECIAL) {
+//             StatusModule::change_status_request_from_script(boma, *FIGHTER_ROSETTA_STATUS_KIND_SPECIAL_HI_END, false);
+//         }
+//     }
+// }
 
 extern "Rust" {
     fn gimmick_flash(boma: &mut BattleObjectModuleAccessor);
@@ -66,6 +66,13 @@ unsafe fn teleport(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModule
 	} 
 }
 
+unsafe fn up_special_startup_ledgegrab(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_HI) {
+        // allows ledgegrab during upB startup
+        fighter.sub_transition_group_check_air_cliff();
+    }
+}
+
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
@@ -99,8 +106,9 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 }
 
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
-    launch_star_cancel(boma);
+    // launch_star_cancel(boma);
 	teleport(fighter, boma);
+	up_special_startup_ledgegrab(fighter);
 	fastfall_specials(fighter);
 }
 

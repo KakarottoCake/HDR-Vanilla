@@ -195,6 +195,7 @@ pub unsafe extern "C" fn process_item_on_collision(defender: u32, attacker: u32)
                 TeamModule::set_hit_team(defender_boma, attacker_team_no);
             }
             else if attacker_boma.is_item() {
+                if attacker_boma.kind() == *ITEM_KIND_MECHAKOOPA { return; }
                 let owner_id = LinkModule::get_parent_id(attacker_boma, *ITEM_LINK_NO_TEAMOWNER, true) as u32;
                 //println!("owner id: {}", owner_id);
                 let owner_boma = &mut *(*utils::util::get_battle_object_from_id(owner_id));

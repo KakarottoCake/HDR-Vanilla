@@ -77,6 +77,13 @@ unsafe fn ink_charge_cancel(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
+unsafe fn up_special_startup_ledgegrab(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_HI) {
+        // allows ledgegrab during upB startup
+        fighter.sub_transition_group_check_air_cliff();
+    }
+}
+
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
@@ -118,6 +125,7 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     splatter_vfx(boma);
     roller_jump_cancel(boma);
     ink_charge_cancel(boma);
+    up_special_startup_ledgegrab(fighter);
     fastfall_specials(fighter);
 }
 

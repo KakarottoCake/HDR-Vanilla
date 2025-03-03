@@ -178,6 +178,7 @@ unsafe extern "C" fn game_specialairsstart(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     if is_excute(agent) {
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 4.0, 0, 10, 0, 100, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
     }
     frame(lua_state, 16.0);
     if is_excute(agent) {
@@ -192,6 +193,10 @@ unsafe extern "C" fn game_specialairsstart(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
+    }
+    frame(lua_state, 38.0);
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
     }
 }
 
@@ -281,6 +286,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
         AttackModule::set_vec_target_pos(boma, 0, Hash40::new("top"), &Vector2f{x: 26.0, y: 46.0}, 20, false);
         AttackModule::set_vec_target_pos(boma, 1, Hash40::new("top"), &Vector2f{x: 26.0, y: 46.0}, 20, false);
         AttackModule::set_no_damage_fly_smoke_all(boma, true, false);
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
     }
     frame(lua_state, 10.5);
     if is_excute(agent) {
@@ -304,6 +310,9 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     frame(lua_state, 38.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
+    }
+    frame(lua_state, 44.0);
+    if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
     }
     frame(lua_state, 45.0);

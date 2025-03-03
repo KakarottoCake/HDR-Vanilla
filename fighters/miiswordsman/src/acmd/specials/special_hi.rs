@@ -16,6 +16,7 @@ unsafe extern "C" fn game_specialairhi1(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     if is_excute(agent) {
+        boma.select_cliff_hangdata_from_name("special_hi1");
         let addSpeed = Vector3f { x: 0.0, y: 0.5, z: 0.0 };
         KineticModule::add_speed(boma, &addSpeed);
         ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 46, 95, 0, 60, 4.0, 0.0, 8.5, 5.0, Some(0.0), Some(4.0), Some(5.0), 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
@@ -83,6 +84,7 @@ unsafe extern "C" fn game_specialhi2hold(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     FT_MOTION_RATE(agent, 0.6);
     if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
         VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
     }
     frame(lua_state, 17.0);

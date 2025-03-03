@@ -918,10 +918,6 @@ unsafe extern "C" fn game_specialairhi2(agent: &mut L2CAgentBase) {
 	let boma = agent.boma();
     frame(lua_state, 1.0);
 
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, 0x2127e37c07u64, GROUND_CLIFF_CHECK_KIND_NONE);
-    }
-
     manage_sword_motion(agent, Hash40::new("to_open"));
 
     frame(lua_state, 23.0);
