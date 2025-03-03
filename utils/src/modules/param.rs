@@ -370,7 +370,8 @@ impl TourneyConfig {
                 }
             };
         // if we should be using the official list, load that directly instead (because it could be updated)
-        if config.clone().unwrap().useOfficial {
+        let unwrapped_config = config.clone().unwrap();
+        if unwrapped_config.enabled && unwrapped_config.useOfficial {
             config = match std::fs::read_to_string("sd:/ultimate/mods/hdr-stages/tourney_mode_official.json") {
                 Ok(json) => serde_json::from_str(&json)
                     .expect("A tourney_mode.json was found, but its contents were invalid!"),
