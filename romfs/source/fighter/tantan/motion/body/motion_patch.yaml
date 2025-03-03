@@ -104,7 +104,6 @@ attack_11:
 attack_lw3:
   extra:
     cancel_frame: 34
-attack_hi4:
 attack_lw4:
   extra:
     cancel_frame: 53
@@ -772,6 +771,9 @@ attack_legs_twist_walk_brake_l_b:
 attack_legs_twist_walk_brake_r_b:
   flags:
     unk_800: false
+special_air_hi_end:
+  extra:
+    cancel_frame: 27
 special_hi_start:
   blend_frames: 4
 catch_attack:

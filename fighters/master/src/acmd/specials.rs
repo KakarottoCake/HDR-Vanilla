@@ -575,6 +575,15 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         ArticleModule::change_status(boma, *FIGHTER_MASTER_GENERATE_ARTICLE_SWORD, *WEAPON_MASTER_SWORD_STATUS_KIND_BACK, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     }
+    frame(lua_state, 54.0);
+    if is_excute(agent) {
+        if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
+            CancelModule::enable_cancel(boma);
+        }
+        else {
+            VarModule::on_flag(agent.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
+        }
+    }
 }
 
 unsafe extern "C" fn game_specialairhiovertake(agent: &mut L2CAgentBase) {

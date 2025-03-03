@@ -237,12 +237,9 @@ unsafe extern "C" fn pearl_fly_end(weapon: &mut L2CWeaponCommon) -> L2CValue {
 unsafe extern "C" fn start_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.boma();
 
-    let grounded = GroundModule::get_touch_line_raw(boma, GroundTouchID(*GROUND_TOUCH_ID_DOWN)) == 1;
-    if grounded {
-        WorkModule::off_flag(boma, *WEAPON_PICKEL_TROLLEY_INSTANCE_WORK_ID_FLAG_TYPE_AIR);
-    } else {
-        WorkModule::on_flag(boma, *WEAPON_PICKEL_TROLLEY_INSTANCE_WORK_ID_FLAG_TYPE_AIR);
-    }
+    let touch_line = GroundModule::get_touch_line_raw(boma, GroundTouchID(*GROUND_TOUCH_ID_DOWN));
+    let is_touch_ground = touch_line != 0;
+    WorkModule::set_flag(boma, !is_touch_ground, *WEAPON_PICKEL_TROLLEY_INSTANCE_WORK_ID_FLAG_TYPE_AIR);
 
     if !WorkModule::is_flag(boma, *WEAPON_PICKEL_TROLLEY_INSTANCE_WORK_ID_FLAG_TYPE_AIR) {
         WorkModule::set_int(boma, -1, *WEAPON_PICKEL_TROLLEY_INSTANCE_WORK_ID_INT_NO_GRAVITY_COUNT);

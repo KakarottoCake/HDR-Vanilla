@@ -70,6 +70,12 @@ extern "C" {
 
     #[link_name = "UiManager__set_plant_meter_info"]
     fn ui_manager_set_plant_meter_info(entry_id: u32, element: i32);
+    
+    #[link_name = "UiManager__set_ptrainer_meter_enable"]
+    fn ui_manager_set_ptrainer_meter_enable(entry_id: u32, enable: bool);
+
+    #[link_name = "UiManager__set_ptrainer_meter_info"]
+    fn ui_manager_set_ptrainer_meter_info(entry_id: u32, current_pledge: f32, max_pledge: f32, current_swap: f32, max_swap: f32, pledge_state: i32, paused: bool);
 }
 
 #[allow(non_snake_case)]
@@ -215,6 +221,18 @@ pub mod UiManager {
     pub fn set_plant_meter_info(entry_id: u32, element: i32) {
         unsafe {
             super::ui_manager_set_plant_meter_info(entry_id, element)
+        }
+    }
+
+    pub fn set_ptrainer_meter_enable(entry_id: u32, enable: bool) {
+        unsafe {
+            super::ui_manager_set_ptrainer_meter_enable(entry_id, enable)
+        }
+    }
+
+    pub fn set_ptrainer_meter_info(entry_id: u32, current_pledge: f32, max_pledge: f32, current_swap: f32, max_swap: f32, pledge_state: i32, disabled: bool) {
+        unsafe {
+            super::ui_manager_set_ptrainer_meter_info(entry_id, current_pledge, max_pledge, current_swap, max_swap, pledge_state, disabled)
         }
     }
 }

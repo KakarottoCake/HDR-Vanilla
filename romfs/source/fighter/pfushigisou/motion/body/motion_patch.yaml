@@ -167,16 +167,16 @@ slip_stand:
     cancel_frame: 24
 special_air_hi:
   extra:
-    cancel_frame: 48
+    cancel_frame: 55
 special_hi:
   extra:
     cancel_frame: 48
 special_air_n_end:
   extra:
-    cancel_frame: 38
+    cancel_frame: 34
 special_n_end:
   extra:
-    cancel_frame: 38
+    cancel_frame: 34
 step_pose_back:
   extra:
     cancel_frame: 6
