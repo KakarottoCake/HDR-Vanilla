@@ -33,6 +33,15 @@ unsafe extern "C" fn special_hi_pre(fighter: &mut L2CFighterCommon) -> L2CValue 
     return 0.into();
 }
 
+pub unsafe extern "C" fn special_hi_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if StatusModule::status_kind_next(fighter.module_accessor) != *FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH {
+        EffectModule::kill_kind(fighter.module_accessor, Hash40::new("pitb_fly_miracle_start"), true, true);
+        EffectModule::kill_kind(fighter.module_accessor, Hash40::new("pitb_ikaros_wing_flare"), true, true);
+    }
+
+    return 0.into();
+}
+
 // FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH
 
 unsafe extern "C" fn special_hi_rush_init(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -163,8 +172,11 @@ unsafe extern "C" fn special_hi_rush_end_main_loop(fighter: &mut L2CFighterCommo
 
 pub fn install(agent: &mut Agent) {
     agent.status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_HI, special_hi_pre);
+    agent.status(End, *FIGHTER_STATUS_KIND_SPECIAL_HI, special_hi_end);
+
     agent.status(Init, *FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH, special_hi_rush_init);
     agent.status(Main, *FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH, special_hi_rush_main);
+
     agent.status(Pre, *FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH_END, special_hi_rush_end_pre);
     agent.status(Main, *FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH_END, special_hi_rush_end_main);
 }
