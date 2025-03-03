@@ -31,14 +31,23 @@ unsafe extern "C" fn reset_poke_vars(object: *mut BattleObject) {
     VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_NONE);
     VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
     VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
+    VarModule::off_flag(object, vars::ptrainer::instance::METER_UI_DISABLE_COLOR);
     VarModule::off_flag(object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
     VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER, 0);
+}
+
+unsafe extern "C" fn fall_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.is_prev_status_one_of(&[*FIGHTER_STATUS_KIND_AIR_LASSO_HANG, *FIGHTER_STATUS_KIND_AIR_LASSO_REWIND]) {
+        VarModule::on_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
+    }
+    smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_FALL)(fighter)
 }
 
 pub fn install(agent: &mut Agent) {
     agent.status(Main, *FIGHTER_STATUS_KIND_ENTRY, entry_main);
     agent.status(Main, *FIGHTER_STATUS_KIND_DEAD, dead_main);
     agent.status(Main, *FIGHTER_STATUS_KIND_REBIRTH, rebirth_main);
+    agent.status(Main, *FIGHTER_STATUS_KIND_FALL, fall_main);
 
     special_lw::install(agent);
     special_n::install(agent);

@@ -15,7 +15,13 @@
   <list hash="param_seed">
     <struct index="0">
       <int hash="life">130</int>
-      <float hash="shoot_speed_y">3.4</float>
+      <float hash="shoot_speed_y">4.08</float>
+    </struct>
+  </list>
+  <list hash="param_leafcutter">
+    <struct index="0">
+      <float hash="bound_angle">45</float>
+      <float hash="bound_speed_mul">0.8</float>
     </struct>
   </list>
   <list hash="param_vine">

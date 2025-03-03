@@ -58,7 +58,7 @@ pub unsafe extern "C" fn regular_init(weapon: &mut L2CWeaponCommon) -> L2CValue 
         VarModule::set_int(weapon.battle_object, vars::pzenigame_water::instance::PLEDGE_TYPE, pledge_state);
         if [*PLEDGE_STATE_NONE, *PLEDGE_STATE_WATER].contains(&pledge_state) {
             // No pledge
-            life = 10;
+            life = 12;
         }
     }
     else {

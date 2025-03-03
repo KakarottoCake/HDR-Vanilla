@@ -80,14 +80,16 @@ pub unsafe extern "C" fn update_pledge_ui(weapon: &mut L2CFighterBase, poke_obje
     let pledge_timer = VarModule::get_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER);
     let swap_timer = VarModule::get_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER);
     let pledge_state = VarModule::get_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
+    let disabled = VarModule::is_flag(weapon.battle_object, vars::ptrainer::instance::METER_UI_DISABLE_COLOR);
     utils::ui::UiManager::set_ptrainer_meter_enable(entry_id, true);
     utils::ui::UiManager::set_ptrainer_meter_info(
         entry_id,
         pledge_timer as f32,
-        900.0,
+        1800.0,
         swap_timer as f32,
         300.0,
-        pledge_state
+        pledge_state,
+        disabled
     );
 }
 

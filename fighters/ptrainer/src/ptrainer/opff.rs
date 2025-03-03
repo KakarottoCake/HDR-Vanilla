@@ -1,5 +1,3 @@
-// opff import
-//utils::import_noreturn!(common::opff::fighter_common_opff);
 use super::*;
 use globals::*;
 
@@ -8,10 +6,12 @@ pub unsafe extern "C" fn pledge_meter(weapon: &mut L2CFighterBase) {
     let is_pledge_timer_paused = VarModule::is_flag(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
     if pledge_state != *PLEDGE_STATE_NONE && !is_pledge_timer_paused {
         let poke_object = get_poke_battle_object(weapon.module_accessor);
-        if VarModule::countdown_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0) {
+        if VarModule::get_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER) <= 0 {
+            VarModule::set_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
             VarModule::set_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_NONE);
             kill_pledge_effects(poke_object);
         } else {
+            VarModule::dec_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER);
             update_pledge_ui(weapon, poke_object);
         }
     }

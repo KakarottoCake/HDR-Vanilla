@@ -16,7 +16,7 @@
   </list>
   <list hash="param_water">
     <struct index="0">
-      <int hash="life">38</int>
+      <int hash="life">45</int>
       <float hash="speed_min">1.6</float>
       <float hash="accel_y">0.1</float>
       <float hash="scale_min">1.0</float>
@@ -28,7 +28,7 @@
   </list>
   <list hash="param_special_s">
     <struct index="0">
-      <int hash="limit_frame_min">15</int>
+      <int hash="limit_frame_min">5</int>
       <int hash="limit_frame_max">60</int>
       <float hash="speed_x">2</float>
       <float hash="smash_speed_x">2.3</float>
@@ -37,6 +37,7 @@
       <float hash="stable_speed_x">2.5</float>
       <float hash="hit_speed_x">-1.2</float>
       <float hash="hit_speed_y">1.5</float>
+      <float hash="reflect_speed_mul_x">0.5</float>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>
