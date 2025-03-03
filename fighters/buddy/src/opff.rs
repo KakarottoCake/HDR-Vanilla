@@ -439,6 +439,13 @@ unsafe fn up_special_freefall(fighter: &mut L2CFighterCommon) {
     }
 }
 
+unsafe fn up_special_startup_ledgegrab(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_BUDDY_STATUS_KIND_SPECIAL_HI_JUMP]) {
+        // allows ledgegrab during upB startup
+        fighter.sub_transition_group_check_air_cliff();
+    }
+}
+
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
@@ -490,6 +497,7 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     buddy_meter_controller(fighter,boma,status_kind);
     training_reset(fighter,boma);
     up_special_freefall(fighter);
+    up_special_startup_ledgegrab(fighter);
     fastfall_specials(fighter);
 
     if boma.is_status_one_of(&[

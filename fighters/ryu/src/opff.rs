@@ -3,6 +3,14 @@ utils::import_noreturn!(common::opff::fighter_common_opff);
 use super::*;
 use globals::*;
 
+
+unsafe fn up_special_startup_ledgegrab(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_HI) {
+        // allows ledgegrab during upB startup
+        fighter.sub_transition_group_check_air_cliff();
+    }
+}
+
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
@@ -57,6 +65,7 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     ryu_ex_hado(fighter, boma, frame);
     ryu_ex_tatsu(fighter, boma, frame);
     ryu_ex_focus(fighter, boma, frame);
+    up_special_startup_ledgegrab(fighter);
     fastfall_specials(fighter);
 }
 
@@ -266,14 +275,6 @@ unsafe fn ryu_ex_tatsu(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMo
     if VarModule::is_flag(fighter.battle_object, vars::shotos::instance::EX_SPECIAL_USED) {
         // no speed in EX
         KineticModule::mul_speed(boma, &Vector3f::zero(), *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-    } else if !boma.is_status(*FIGHTER_RYU_STATUS_KIND_SPECIAL_S_END)
-    && boma.is_situation(*SITUATION_KIND_AIR)
-    && boma.is_button_on(Buttons::SpecialAll)
-    && KineticModule::get_sum_speed_y(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL) < 0.0 {
-        // Tatsu gravity
-        // if holding special in the air, we float
-        // params have been modified to make us fall otherwise
-        KineticModule::mul_speed(boma, &Vector3f::new(1.0, 0.0, 1.0), *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
     }
 }
 

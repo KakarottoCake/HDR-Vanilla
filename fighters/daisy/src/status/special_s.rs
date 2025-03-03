@@ -1,12 +1,15 @@
 use super::*;
 
+
+// FIGHTER_STATUS_KIND_SPECIAL_S
+
 unsafe extern "C" fn special_s_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(
         fighter.module_accessor, 
         app::SituationKind(*SITUATION_KIND_NONE),
         *FIGHTER_KINETIC_TYPE_UNIQ,
         *GROUND_CORRECT_KIND_KEEP as u32,
-        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
+        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP),
         true,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT,
@@ -76,6 +79,8 @@ unsafe extern "C" fn special_s_check_flick(fighter: &mut L2CFighterCommon) -> L2
 
     return 0.into();
 }
+
+// FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_JUMP
 
 unsafe extern "C" fn special_s_jump_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(

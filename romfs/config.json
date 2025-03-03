@@ -165,6 +165,18 @@
 		],
 		"fighter/zelda/cmn": [
 			"fighter/zelda/param/hdr.xml"
+		],
+		"fighter/pikachu/cmn": [
+			"fighter/pikachu/param/hdr.xml"
+		],
+		"fighter/ridley/cmn": [
+			"fighter/ridley/param/hdr.xml"
+		],
+		"fighter/robot/cmn": [
+			"fighter/robot/param/hdr.xml"
+		],
+		"fighter/shulk/cmn": [
+			"fighter/shulk/param/hdr.xml"
 		]
 	}
 }

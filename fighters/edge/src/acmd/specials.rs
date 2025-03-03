@@ -106,7 +106,6 @@ unsafe extern "C" fn game_specialhi1(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 6.0);
     if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
         AttackModule::clear_all(boma);
         JostleModule::set_status(boma, true);
     }
@@ -141,9 +140,6 @@ unsafe extern "C" fn game_specialairhi1end(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialhi2(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
-    }
     FighterSpecializer_Edge::set_special_hi_jostle_area(boma);
     frame(lua_state, 2.0);
     if is_excute(agent) {

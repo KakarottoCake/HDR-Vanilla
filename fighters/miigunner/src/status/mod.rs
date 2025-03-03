@@ -37,6 +37,11 @@ unsafe extern "C" fn move_customizer(fighter: &mut L2CFighterCommon) -> L2CValue
     if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_HI_1 {
         fighter.sv_set_status_func(
             FIGHTER_STATUS_KIND_SPECIAL_HI.into(),
+            LUA_SCRIPT_STATUS_FUNC_STATUS_PRE.into(),
+            std::mem::transmute(special_hi::special_hi1_pre as *const ())
+        );
+        fighter.sv_set_status_func(
+            FIGHTER_STATUS_KIND_SPECIAL_HI.into(),
             LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN.into(),
             std::mem::transmute(special_hi::special_hi1_main as *const ())
         );
