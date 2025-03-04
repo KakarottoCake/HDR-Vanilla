@@ -1,5 +1,14 @@
 use super::*;
 
+unsafe extern "C" fn special_lw_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let ret = smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_SPECIAL_LW)(fighter);
+
+    // Allow multiple Bouncing Fishes per airtime
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_DISABLE_AIR_SPECIAL_LW);
+
+    ret
+}
+
 unsafe extern "C" fn special_lw_attack_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(
         fighter.module_accessor,
@@ -59,6 +68,7 @@ unsafe extern "C" fn special_lw_return_pre(fighter: &mut L2CFighterCommon) -> L2
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_LW, special_lw_main);
     agent.status(Pre, *FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_ATTACK, special_lw_attack_pre);
     agent.status(Pre, *FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_RETURN, special_lw_return_pre);
 }

@@ -8,6 +8,7 @@ mod turn_dash;
 mod landing;
 mod landing_attack_air;
 mod down;
+mod special_hi;
 
 mod attack;
 mod attack_combo;
@@ -20,6 +21,7 @@ pub fn install(agent: &mut Agent) {
     landing::install(agent);
     landing_attack_air::install(agent);
     down::install(agent);
+    special_hi::install(agent);
 
     attack::install(agent);
     attack_combo::install(agent);

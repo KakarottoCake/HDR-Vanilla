@@ -14,6 +14,7 @@ unsafe fn bouncing_fish_transitions(fighter: &mut L2CFighterCommon) {
     }
     if fighter.is_status(*FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_RETURN)
     && fighter.is_situation(*SITUATION_KIND_AIR) {
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_DISABLE_AIR_SPECIAL_LW);
         VarModule::on_flag(fighter.object(), vars::sheik::instance::SPECIAL_LW_HIT);
         if fighter.status_frame() > 14 {
             fighter.check_jump_cancel(false, false);
@@ -67,7 +68,9 @@ pub unsafe fn vanish_wall_ride(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_SHEIK_STATUS_KIND_SPECIAL_HI_MOVE) {
         let init_speed_x = VarModule::get_float(fighter.battle_object, vars::common::status::TELEPORT_INITIAL_SPEED_X);
         let init_speed_y = VarModule::get_float(fighter.battle_object, vars::common::status::TELEPORT_INITIAL_SPEED_Y);
-        if !GroundModule::is_wall_touch_line(fighter.module_accessor, *GROUND_TOUCH_FLAG_NONE as u32) {
+        if GroundModule::is_wall_touch_line(fighter.module_accessor, *GROUND_TOUCH_FLAG_SIDE as u32)
+        || (!GroundModule::is_wall_touch_line(fighter.module_accessor, *GROUND_TOUCH_ID_NONE as u32) && init_speed_x.abs() <= 0.01)
+        { //now only bypasses floor-ride if angle is vertical
             if !VarModule::is_flag(fighter.battle_object, vars::common::status::IS_TELEPORT_WALL_RIDE) {
                 VarModule::on_flag(fighter.battle_object, vars::common::status::IS_TELEPORT_WALL_RIDE);
             }

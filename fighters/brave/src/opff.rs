@@ -2,16 +2,6 @@ use super::*;
 
 utils::import_noreturn!(common::opff::fighter_common_opff);
 
-unsafe fn nspecial_cancels(fighter: &mut L2CFighterCommon) {
-    //PM-like neutral-b canceling
-    if fighter.is_status(*FIGHTER_BRAVE_STATUS_KIND_SPECIAL_N_CANCEL)
-    && fighter.is_situation(*SITUATION_KIND_AIR)
-    && WorkModule::get_int(fighter.module_accessor, *FIGHTER_BRAVE_STATUS_SPECIAL_N_HOLD_INT_NEXT_STATUS) == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
-        WorkModule::set_int(fighter.module_accessor, *STATUS_KIND_NONE, *FIGHTER_BRAVE_STATUS_SPECIAL_N_HOLD_INT_NEXT_STATUS);
-        ControlModule::clear_command_one(fighter.module_accessor, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_AIR_ESCAPE);
-    }
-}
-
 unsafe fn dspecial_cancels(fighter: &mut L2CFighterCommon) {
     //PM-like down-b canceling
     if fighter.is_status(*FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_CANCEL)
@@ -28,19 +18,14 @@ unsafe fn persist_rng(fighter: &mut L2CFighterCommon) {
         VarModule::set_int(fighter.battle_object, vars::brave::instance::CURSOR_SLOT, index);
     }
     if fighter.is_status(*FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_START)
-    || fighter.is_status(*FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_STEEL_START)
-    || fighter.is_status(*FIGHTER_STATUS_KIND_DEAD) {
+    || fighter.is_status(*FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_STEEL_START) {
         VarModule::off_flag(fighter.battle_object, vars::brave::instance::PERSIST_RNG);
+        fighter.set_int(0, *FIGHTER_BRAVE_INSTANCE_WORK_ID_INT_SPECIAL_LW_SELECT_INDEX);
+        VarModule::set_int(fighter.battle_object, vars::brave::instance::CURSOR_SLOT, 0);
     }
 }
 
 unsafe fn psych_up_crit(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status(*FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_START) {
-        if fighter.is_motion_one_of(&[Hash40::new("special_lw21"), Hash40::new("special_air_lw21")]) && fighter.motion_frame() == 6.0 {
-            VarModule::on_flag(fighter.battle_object, vars::brave::instance::PSYCHE_UP_ACTIVE);
-            VarModule::set_int(fighter.battle_object, vars::common::instance::GIMMICK_TIMER, 900);
-        }
-    }
     if VarModule::is_flag(fighter.battle_object, vars::brave::instance::PSYCHE_UP_ACTIVE) {
         if VarModule::get_int(fighter.battle_object, vars::common::instance::GIMMICK_TIMER) <= 0 {
             EFFECT_OFF_KIND(fighter, Hash40::new("brave_charge_hold"), false, false);
@@ -69,9 +54,6 @@ unsafe fn psych_up_crit(fighter: &mut L2CFighterCommon) {
             VarModule::set_int(fighter.battle_object, vars::common::instance::GIMMICK_TIMER, 0);
         }
     }
-    if fighter.is_status(*FIGHTER_STATUS_KIND_DEAD) {
-        VarModule::off_flag(fighter.battle_object, vars::brave::instance::PSYCHE_UP_ACTIVE);
-    }
 }
 
 // Hero dash cancel Frizz
@@ -89,21 +71,18 @@ unsafe fn dash_cancel_frizz(fighter: &mut L2CFighterCommon) {
     }
 }
 
-// Hero woosh cancel
-unsafe fn woosh_cancel(fighter: &mut L2CFighterCommon) {
-    if fighter.is_motion_one_of(&[Hash40::new("special_hi1"), Hash40::new("special_air_hi1"), Hash40::new("special_hi_empty"), Hash40::new("special_air_hi_empty")]) {
-        if MotionModule::frame(fighter.module_accessor) >= 41.0 {
-            VarModule::on_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
-            fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL, true);
-        }
-    }
-}
-
 unsafe fn kaclang_jc(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_STEEL) {
         if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) && !fighter.is_in_hitlag() {
             fighter.check_jump_cancel(false, false);
         }
+    }
+}
+
+unsafe fn up_special_startup_ledgegrab(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_HI_HOLD]) {
+        // allows ledgegrab during upB startup
+        fighter.sub_transition_group_check_air_cliff();
     }
 }
 
@@ -114,7 +93,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         *FIGHTER_STATUS_KIND_SPECIAL_N,
         *FIGHTER_STATUS_KIND_SPECIAL_S,
         *FIGHTER_STATUS_KIND_SPECIAL_HI,
-        *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_N_HOLD,
         *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_N_SHOOT,
         *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_N_CANCEL,
         *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_S_HOLD,
@@ -153,11 +131,10 @@ pub unsafe extern "C" fn brave_frame_wrapper(fighter: &mut L2CFighterCommon) {
     common::opff::fighter_common_opff(fighter);
     persist_rng(fighter);
     psych_up_crit(fighter);
-    nspecial_cancels(fighter);
     dspecial_cancels(fighter);
     dash_cancel_frizz(fighter);
-    woosh_cancel(fighter);
     kaclang_jc(fighter);
+    up_special_startup_ledgegrab(fighter);
     fastfall_specials(fighter);
 
     // Extend sword length

@@ -15,6 +15,13 @@ unsafe fn aether_drift(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
+unsafe fn quickdraw_walljump_leniency(boma: &mut BattleObjectModuleAccessor) {
+    if [*FIGHTER_IKE_STATUS_KIND_SPECIAL_S_END].contains(&boma.status())
+    && boma.status_frame() < ParamModule::get_int(boma.object(), ParamType::Agent, "param_special_s.end_walljump_valid_frame") {
+        boma.check_wall_jump_cancel();
+    }
+}
+
 unsafe fn quickdraw_instakill(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut BattleObjectModuleAccessor){
     if StatusModule::is_changing(boma) {
         return;
@@ -446,6 +453,7 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 
 pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     aether_drift(boma);
+    quickdraw_walljump_leniency(boma);
     quickdraw_instakill(fighter, boma);
     quickdraw_attack_arm_bend(boma);
     jab_lean(boma);

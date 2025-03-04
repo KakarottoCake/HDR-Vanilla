@@ -3,6 +3,14 @@ utils::import_noreturn!(common::opff::fighter_common_opff);
 use super::*;
 use globals::*;
 
+
+unsafe fn up_special_startup_ledgegrab(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_HI) {
+        // allows ledgegrab during upB startup
+        fighter.sub_transition_group_check_air_cliff();
+    }
+}
+
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
@@ -57,6 +65,7 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     ryu_ex_hado(fighter, boma, frame);
     ryu_ex_tatsu(fighter, boma, frame);
     ryu_ex_focus(fighter, boma, frame);
+    up_special_startup_ledgegrab(fighter);
     fastfall_specials(fighter);
 }
 
@@ -266,14 +275,6 @@ unsafe fn ryu_ex_tatsu(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMo
     if VarModule::is_flag(fighter.battle_object, vars::shotos::instance::EX_SPECIAL_USED) {
         // no speed in EX
         KineticModule::mul_speed(boma, &Vector3f::zero(), *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-    } else if !boma.is_status(*FIGHTER_RYU_STATUS_KIND_SPECIAL_S_END)
-    && boma.is_situation(*SITUATION_KIND_AIR)
-    && boma.is_button_on(Buttons::SpecialAll)
-    && KineticModule::get_sum_speed_y(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL) < 0.0 {
-        // Tatsu gravity
-        // if holding special in the air, we float
-        // params have been modified to make us fall otherwise
-        KineticModule::mul_speed(boma, &Vector3f::new(1.0, 0.0, 1.0), *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
     }
 }
 
@@ -381,7 +382,7 @@ unsafe fn metered_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObjec
     // DSpecial cancels
     if boma.is_cat_flag(Cat1::SpecialLw)
     && VarModule::is_flag(boma.object(), vars::shotos::instance::SPECIAL_LW_ENABLE_FADC)
-    && (MeterModule::level(boma.object()) >= 1 || VarModule::is_flag(fighter.battle_object, vars::shotos::instance::MAGIC_SERIES_CANCEL)) {
+    && (MeterModule::level(boma.object()) >= 2 || VarModule::is_flag(fighter.battle_object, vars::shotos::instance::MAGIC_SERIES_CANCEL)) {
         VarModule::on_flag(fighter.battle_object, vars::shotos::instance::SPECIAL_LW_ENABLE_INSTALL);
         if boma.is_status_one_of(&[
             *FIGHTER_STATUS_KIND_SPECIAL_HI,
@@ -567,12 +568,19 @@ unsafe fn aerial_cancels(boma: &mut BattleObjectModuleAccessor) {
 unsafe fn hit_cancel_timer(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     let hit_cancel_timer = VarModule::get_int(fighter.battle_object, vars::shotos::status::HIT_CANCEL_TIMER);
     if hit_cancel_timer > 0
-    && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
-    && !fighter.is_in_hitlag() {
+    && (
+        AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) 
+        || boma.is_status_one_of(&[
+            *FIGHTER_STATUS_KIND_SPECIAL_N,
+            *FIGHTER_RYU_STATUS_KIND_SPECIAL_N_COMMAND,
+            *FIGHTER_RYU_STATUS_KIND_SPECIAL_N2_COMMAND
+        ])
+    )    && !fighter.is_in_hitlag() {
         VarModule::dec_int(fighter.battle_object, vars::shotos::status::HIT_CANCEL_TIMER);
         if hit_cancel_timer - 1 == 0 {
             fighter.off_flag(*FIGHTER_RYU_STATUS_ATTACK_FLAG_HIT_CANCEL);
             fighter.off_flag(*FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
+            VarModule::off_flag(boma.object(), vars::shotos::instance::SPECIAL_LW_ENABLE_FADC)
         }
     }
 }

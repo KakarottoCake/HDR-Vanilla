@@ -42,7 +42,7 @@ unsafe extern "C" fn sound_damageflyroll(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn game_jumpaerialf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;    
-    let boma = smash::app::sv_system::battle_object_module_accessor(lua_state);
+    let boma = agent.boma();
     frame(lua_state, 26.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, /*Flag*/ *FIGHTER_STATUS_JUMP_FLY_NEXT);
@@ -111,6 +111,8 @@ unsafe extern "C" fn game_escapeairslide(agent: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.acmd("game_cliffescape", acmd_stub, Priority::Low);
+
     agent.acmd("sound_damageflyhi", sound_damagefly, Priority::Low);
     agent.acmd("sound_damageflylw", sound_damagefly, Priority::Low);
     agent.acmd("sound_damageflyn", sound_damagefly, Priority::Low);

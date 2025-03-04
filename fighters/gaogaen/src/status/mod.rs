@@ -4,8 +4,10 @@ use globals::*;
 
 mod attack_lw4;
 mod special_n;
+mod special_hi;
 
 pub fn install(agent: &mut Agent) {
     attack_lw4::install(agent);
     special_n::install(agent);
+    special_hi::install(agent);
 }

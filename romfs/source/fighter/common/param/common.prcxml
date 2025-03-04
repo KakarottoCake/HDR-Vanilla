@@ -25,6 +25,7 @@
   <float hash="squat_f_stick_x_max">0.6244</float>
   <int hash="jump_flick_y">4</int>
   <int hash="jump_initial_frame">5</int>
+  <int hash="jump_no_aerial_frame">2</int>
   <float hash="jump_run_stick_y">0.607</float>
   <float hash="dive_cont_value">-0.6415</float>
   <int hash="tread_jump_after_xlu_frame">0</int>
@@ -44,7 +45,7 @@
   <int hash="guard_off_cancel_frame">14</int>
   <int hash="guard_off_disable_shield_recovery">14</int>
   <int hash="shield_just_frame">6</int>
-  <float hash="0x2cacbf2a63">6</float>
+  <float hash="0x2cacbf2a63">8</float>
   <float hash="just_shield_speed_rate">0.00</float>
   <float hash="shield_reset">30</float>
   <int hash="shield_setoff_escape">10</int>
@@ -110,6 +111,7 @@
   <float hash="cliff_robbed_speed_y">17.5</float>
   <int hash="cliff_robbed_no_control_frame">50</int>
   <int hash="air_lasso_catch_num">3</int>
+  <int hash="cliff_jump_disable_attack_frame">1</int>
   <int hash="cliff_max_count">999</int>
   <int hash="0x189f0b0c96">999</int>
   <int hash="air_lasso_cliff_wait_frame">7</int>
@@ -140,8 +142,9 @@
   <float hash="wall_jump_stick_x">0.7957</float>
   <float hash="wall_jump_speed_dec">0.75</float>
   <float hash="wall_jump_x_speed_dec">0.7</float>
-  <int hash="wall_jump_disable_frame">1</int>
+  <int hash="wall_jump_disable_frame">6</int>
   <int hash="wall_jump_interval_frame">1</int>
+  <int hash="cliff_release_disable_wall_jump_frame">6</int>
   <int hash="attach_wall_disable_frame">999</int>
   <float hash="damage_ground_mul">1</float>
   <float hash="damage_air_brake">0.051</float>
@@ -162,6 +165,7 @@
   <float hash="furafura_clatter_frame">0</float>
   <float hash="damage_song_frame_bonus_damage">0.5</float>
   <float hash="bury_jump_y_speed_mul">1.15</float>
+  <float hash="kirby_swallowedthrown_clatter_recover">1.8</float>
   <float hash="mewtwo_thrown_reaction_frame_mul">1</float>
   <int hash="mewtwo_thrown_reaction_frame_max">15</int>
   <float hash="bury_damage_reaction_mul">0.7</float>

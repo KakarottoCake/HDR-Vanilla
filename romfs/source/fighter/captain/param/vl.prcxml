@@ -2,7 +2,8 @@
 <struct>
   <list hash="cliff_hang_data">
     <struct index="0">
-      <float hash="p1_y">24.5</float>
+      <float hash="p1_y">18</float>
+      <float hash="p2_y">8</float>
     </struct>
     <struct index="1">
       <float hash="p1_y">20</float>
@@ -31,6 +32,7 @@
   <list hash="param_special_hi">
     <struct index="0">
       <float hash="speed_coef">0.95</float>
+      <int hash="landing_frame">32</int>
       <float hash="speed_x_mul">1.5</float>
       <float hash="fall_x_mul">0.6</float>
     </struct>

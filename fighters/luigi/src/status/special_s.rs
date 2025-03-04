@@ -14,7 +14,7 @@ unsafe extern "C" fn special_s_init(fighter: &mut L2CFighterCommon) -> L2CValue 
         VarModule::on_flag(fighter.battle_object, vars::luigi::instance::SPECIAL_S_MISFIRE_INIT);
     }
     else {
-        if super::calculate_misfire(fighter) == 0 {
+        if super::calculate_misfire(fighter) {
             VarModule::on_flag(fighter.battle_object, vars::luigi::instance::SPECIAL_S_MISFIRE_INIT);
         }
     } 

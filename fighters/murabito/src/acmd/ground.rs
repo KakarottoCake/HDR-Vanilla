@@ -15,7 +15,9 @@ unsafe extern "C" fn game_attackdash(agent: &mut L2CAgentBase) {
         ArticleModule::shoot(boma, *FIGHTER_MURABITO_GENERATE_ARTICLE_FLOWERPOT, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
     }
     frame(lua_state, 10.0);
-    FT_MOTION_RATE(agent, 30.0/(44.0-10.0));
+    FT_MOTION_RATE_RANGE(agent, 10.0, 44.0, 30.0);
+    frame(lua_state, 44.0);
+    FT_MOTION_RATE(agent, 1.0);
 }
 
 pub fn install(agent: &mut Agent) {

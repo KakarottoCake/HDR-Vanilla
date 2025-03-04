@@ -29,10 +29,48 @@ unsafe extern "C" fn game_specialsheading(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 30.0);
     if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), GROUND_CLIFF_CHECK_KIND_ON_DROP);
+    }
+}
+
+unsafe extern "C" fn game_specialhistart(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        boma.select_cliff_hangdata_from_name("special_hi");
+    }
+    frame(lua_state, 5.0);
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), GROUND_CLIFF_CHECK_KIND_NONE);
+        ArticleModule::generate_article(boma, *FIGHTER_WIIFIT_GENERATE_ARTICLE_HULAHOOP, false, -1);
+    }
+}
+
+unsafe extern "C" fn game_specialhijump(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        boma.select_cliff_hangdata_from_name("special_hi");
+    }
+}
+
+unsafe extern "C" fn game_specialhiend(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        boma.select_cliff_hangdata_from_name("special_hi");
+    }
+    frame(lua_state, 3.0);
+    if is_excute(agent) {
+        ArticleModule::shoot_exist(boma, *FIGHTER_WIIFIT_GENERATE_ARTICLE_HULAHOOP, smash::app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
     }
 }
 
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialsheading", game_specialsheading, Priority::Low);
+
+    agent.acmd("game_specialhistart", game_specialhistart, Priority::Low);
+    agent.acmd("game_specialairhistart", game_specialhistart, Priority::Low);
+    agent.acmd("game_specialhijump", game_specialhijump, Priority::Low);
+    agent.acmd("game_specialhiend", game_specialhiend, Priority::Low);
 }

@@ -16,11 +16,11 @@ unsafe extern "C" fn attack_s4_start_main(fighter: &mut L2CFighterCommon) -> L2C
 // FIGHTER_STATUS_KIND_ATTACK_S4
 
 unsafe extern "C" fn attack_s4_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    sub_attack_s4(fighter, true);
+    sub_attack_s4(fighter, true.into());
     fighter.sub_shift_status_main(L2CValue::Ptr(L2CFighterCommon_bind_address_call_status_AttackS4_Main as *const () as _))
 }
 
-unsafe extern "C" fn sub_attack_s4(fighter: &mut L2CFighterCommon, param_1: bool) {
+unsafe extern "C" fn sub_attack_s4(fighter: &mut L2CFighterCommon, param_1: L2CValue) {
     let hash = if VarModule::get_int(fighter.object(), vars::packun::instance::CURRENT_STANCE) == 2 { hash40("attack_s4_s_2") } else { hash40("attack_s4_s") };
     WorkModule::set_int64(fighter.module_accessor, hash as i64, *FIGHTER_STATUS_ATTACK_WORK_INT_MOTION_KIND);
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_SMASH_SMASH_HOLD_TO_ATTACK);

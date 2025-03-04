@@ -195,6 +195,7 @@ pub unsafe extern "C" fn process_item_on_collision(defender: u32, attacker: u32)
                 TeamModule::set_hit_team(defender_boma, attacker_team_no);
             }
             else if attacker_boma.is_item() {
+                if attacker_boma.kind() == *ITEM_KIND_MECHAKOOPA { return; }
                 let owner_id = LinkModule::get_parent_id(attacker_boma, *ITEM_LINK_NO_TEAMOWNER, true) as u32;
                 //println!("owner id: {}", owner_id);
                 let owner_boma = &mut *(*utils::util::get_battle_object_from_id(owner_id));
@@ -326,6 +327,7 @@ pub unsafe extern "C" fn is_final_killing_hit(defender_boma: &mut BattleObjectMo
 
 const NUM_ANGLE_CHECK: i32 = 12;
 const NUM_FALSE_ANGLES_ALLOWED: i32 = 1;
+const NUM_HITSTUN_LENIENCY: f32 = 1.0;
 
 unsafe extern "C" fn is_valid_finishing_hit(knockback_info: *const f32, defender_boma: &mut BattleObjectModuleAccessor, attacker_boma: &mut BattleObjectModuleAccessor) -> bool {
     let knockback = *knockback_info;
@@ -459,10 +461,6 @@ unsafe extern "C" fn is_valid_finishing_hit(knockback_info: *const f32, defender
             context.x_pos_prev += sdi_distance;
         }
 
-        let mut x = 0;
-        let mut does_angle_kill = false;
-
-
         // check possible amsah techs
         context.step();
         if context.y_pos - context.y_pos_prev < base_asdi * sdi_mul
@@ -476,6 +474,8 @@ unsafe extern "C" fn is_valid_finishing_hit(knockback_info: *const f32, defender
             return false;
         }
 
+        let mut curr_hitstun = 0;
+        let mut does_angle_kill = false;
         // do first iteration of knockback check
         if GroundModule::ray_check(
             defender_boma, 
@@ -491,10 +491,10 @@ unsafe extern "C" fn is_valid_finishing_hit(knockback_info: *const f32, defender
             // println!("{} will kill! adding to counter.", ang.to_degrees());
             does_angle_kill = true;
         }
-        x += 1;
+        curr_hitstun += 1;
 
 
-        while context.hitstun > x as f32  {
+        while context.hitstun - NUM_HITSTUN_LENIENCY > curr_hitstun as f32 { // subtracting from the hitstun gives us room for error in the calculations
             context.step();
             if GroundModule::ray_check(
                 defender_boma, 
@@ -511,7 +511,7 @@ unsafe extern "C" fn is_valid_finishing_hit(knockback_info: *const f32, defender
                 does_angle_kill = true;
                 break;
             }
-            x += 1;
+            curr_hitstun += 1;
         }
         context = context_ref;
         let false_allowed_num = if is_final_killing_hit(defender_boma, attacker_boma) { NUM_FALSE_ANGLES_ALLOWED }  else { 0 };

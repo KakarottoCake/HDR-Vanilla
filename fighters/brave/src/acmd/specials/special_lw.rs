@@ -298,6 +298,18 @@ unsafe extern "C" fn game_speciallw20(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_speciallw21(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 6.0);
+    if is_excute(agent) {
+        let mut brave = app::Fighter{battle_object: *(agent.battle_object)};
+        FighterSpecializer_Brave::special_lw_active_command(&mut brave);
+        VarModule::on_flag(agent.battle_object, vars::brave::instance::PSYCHE_UP_ACTIVE);
+        VarModule::set_int(agent.battle_object, vars::common::instance::GIMMICK_TIMER, 900);
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_speciallwstart", game_speciallwstart, Priority::Low);
     agent.acmd("game_specialairlwstart", game_speciallwstart, Priority::Low);
@@ -329,4 +341,7 @@ pub fn install(agent: &mut Agent) {
 
     agent.acmd("game_speciallw20", game_speciallw20, Priority::Low);
     agent.acmd("game_specialairlw20", game_speciallw20, Priority::Low);
+
+    agent.acmd("game_speciallw21", game_speciallw21, Priority::Low);
+    agent.acmd("game_specialairlw21", game_speciallw21, Priority::Low);
 }

@@ -5,7 +5,7 @@ on:
 jobs:
   check-pr:
     name: Validate Release Labels
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       # ensure that a semantic version label is present
       - name: check_semver_labels

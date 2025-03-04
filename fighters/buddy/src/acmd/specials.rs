@@ -120,7 +120,7 @@ unsafe extern "C" fn game_specialnupperfire(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn game_specialnfire2(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
-    let boma = smash::app::sv_system::battle_object_module_accessor(lua_state);
+    let boma = agent.boma();
     for _ in 0..4 {
         if is_excute(agent) && will_bayonet(agent){
             VarModule::on_flag(boma.object(), vars::buddy::instance::SPECIAL_N_BAYONET_ACTIVE);
@@ -145,8 +145,9 @@ unsafe extern "C" fn game_specialsdash(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     if is_excute(agent) {
-        WorkModule::on_flag( boma, *FIGHTER_BUDDY_STATUS_SPECIAL_S_FLAG_SUPER_ARMOR);
-        JostleModule::set_status( boma, false);
+        //WorkModule::on_flag(boma, *FIGHTER_BUDDY_STATUS_SPECIAL_S_FLAG_SUPER_ARMOR);
+        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 12.0);
+        JostleModule::set_status(boma, false);
         ATTACK(agent, 0, 0, Hash40::new("top"), 18.0, 43, 72, 0, 66, 3.8, 0.0, 6.2, 1.8, Some(0.0), Some(6.2), Some(3.2), 1.15, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 11, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
         ATTACK(agent, 1, 0, Hash40::new("top"), 18.0, 43, 72, 0, 66, 4.2, 0.0, 9.2, 3.8, Some(0.0), Some(9.2), Some(5.4), 1.15, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 11, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
         //AttackModule::set_captured_same_time_attack(boma, 0, true);
@@ -155,27 +156,26 @@ unsafe extern "C" fn game_specialsdash(agent: &mut L2CAgentBase) {
         //AttackModule::set_captured_same_time_attack_damage_mul(boma, 1, 0.25);
         ATK_SET_SHIELD_SETOFF_MUL_arg3(agent, 0, 1, 0.48);
         QUAKE(agent, *CAMERA_QUAKE_KIND_S);
-        HIT_NO(agent, 0, *HIT_STATUS_INVINCIBLE);
-        HIT_NO(agent, 1, *HIT_STATUS_INVINCIBLE);
-        HIT_NO(agent, 2, *HIT_STATUS_INVINCIBLE);
-        HIT_NO(agent, 3, *HIT_STATUS_INVINCIBLE);
-        HIT_NO(agent, 4, *HIT_STATUS_INVINCIBLE);
-        HIT_NO(agent, 5, *HIT_STATUS_INVINCIBLE);
-        HIT_NO(agent, 6, *HIT_STATUS_INVINCIBLE);
-        HIT_NO(agent, 7, *HIT_STATUS_INVINCIBLE);
-        HIT_NO(agent, 8, *HIT_STATUS_INVINCIBLE);
-        HIT_NO(agent, 9, *HIT_STATUS_INVINCIBLE);
-        HIT_NO(agent, 10, *HIT_STATUS_INVINCIBLE);
+        // HIT_NO(agent, 0, *HIT_STATUS_INVINCIBLE);
+        // HIT_NO(agent, 1, *HIT_STATUS_INVINCIBLE);
+        // HIT_NO(agent, 2, *HIT_STATUS_INVINCIBLE);
+        // HIT_NO(agent, 3, *HIT_STATUS_INVINCIBLE);
+        // HIT_NO(agent, 4, *HIT_STATUS_INVINCIBLE);
+        // HIT_NO(agent, 5, *HIT_STATUS_INVINCIBLE);
+        // HIT_NO(agent, 6, *HIT_STATUS_INVINCIBLE);
+        // HIT_NO(agent, 7, *HIT_STATUS_INVINCIBLE);
+        // HIT_NO(agent, 8, *HIT_STATUS_INVINCIBLE);
+        // HIT_NO(agent, 9, *HIT_STATUS_INVINCIBLE);
+        // HIT_NO(agent, 10, *HIT_STATUS_INVINCIBLE);
         HIT_NO(agent, 11, *HIT_STATUS_NORMAL);
-        HitModule::set_status_all(boma, app::HitStatus(*HIT_STATUS_INVINCIBLE), 0);
-        WorkModule::on_flag( boma, *FIGHTER_BUDDY_STATUS_SPECIAL_S_FLAG_CLIFF_CHECK);
+        // HitModule::set_status_all(boma, app::HitStatus(*HIT_STATUS_INVINCIBLE), 0);
+        // WorkModule::on_flag(boma, *FIGHTER_BUDDY_STATUS_SPECIAL_S_FLAG_CLIFF_CHECK);
     }
     frame(lua_state, 13.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 13.0, 43, 63, 0, 56, 3.8, 0.0, 6.2, 1.8, Some(0.0), Some(6.2), Some(3.2), 1.15, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
         ATTACK(agent, 1, 0, Hash40::new("top"), 13.0, 43, 63, 0, 56, 4.2, 0.0, 9.2, 3.8, Some(0.0), Some(9.2), Some(5.4), 1.15, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
         HitModule::set_status_all(boma, app::HitStatus(*HIT_STATUS_NORMAL), 0);
-        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 12.0);
         //AttackModule::set_captured_same_time_attack(boma, 0, true);
         //AttackModule::set_captured_same_time_attack(boma, 1, true);
         //AttackModule::set_captured_same_time_attack_damage_mul(boma, 0, 0.25);
@@ -281,8 +281,8 @@ unsafe extern "C" fn game_specialairsdash(agent: &mut L2CAgentBase) {
         let shieldDamage = 4;
         JostleModule::set_status( boma, false);
         ATTACK(agent, 0, 0, Hash40::new("top"), 16.0, 43, 70, 0, 76, 3.2, 0.0, 9.2, 8.8, Some(0.0), Some(9.2), Some(12.4), 1.125, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, shieldDamage, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 16.0, 43, 70, 0, 76, 4.2, 0.0, 4.2, 2.8, None,None,None, 1.125, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, shieldDamage, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-        WorkModule::on_flag( boma, *FIGHTER_BUDDY_STATUS_SPECIAL_S_FLAG_CLIFF_CHECK);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 16.0, 43, 70, 0, 76, 3.2, 0.0, 6.2, 0.8, None,None,None, 1.125, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, shieldDamage, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
+        //WorkModule::on_flag( boma, *FIGHTER_BUDDY_STATUS_SPECIAL_S_FLAG_CLIFF_CHECK);
         HIT_NO(agent, 12, *HIT_STATUS_NORMAL);
         HIT_NO(agent, 13, *HIT_STATUS_NORMAL);
         HIT_NO(agent, 14, *HIT_STATUS_NORMAL);
@@ -294,7 +294,7 @@ unsafe extern "C" fn game_specialairsdash(agent: &mut L2CAgentBase) {
     frame(lua_state, 11.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 43, 57, 0, 66, 3.2, 0.0, 9.2, 8.8, Some(0.0), Some(9.2), Some(12.4), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 10.0, 43, 57, 0, 66, 4.2, 0.0, 4.2, 2.8, None,None,None, 1.125, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 10.0, 43, 57, 0, 66, 3.2, 0.0, 6.2, 0.8, None,None,None, 1.125, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
     }
 }
 
@@ -452,7 +452,7 @@ unsafe extern "C" fn game_specialairswall(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn effect_specialairswall(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent; 
-    let boma = smash::app::sv_system::battle_object_module_accessor(lua_state); 
+    let boma = agent.boma(); 
     let has_hit_shield = AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD);
     let lr = PostureModule::lr(boma)==0.0;
     let size = if (has_hit_shield) {0.5} else {0.75};
@@ -466,7 +466,7 @@ unsafe extern "C" fn effect_specialairswall(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn sound_specialairswall(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent; 
-    let boma = smash::app::sv_system::battle_object_module_accessor(lua_state); 
+    let boma = agent.boma(); 
     frame(lua_state, 2.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_common_down_m_01"));
@@ -481,6 +481,35 @@ unsafe extern "C" fn sound_specialairswall(agent: &mut L2CAgentBase) {
     frame(lua_state, 14.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_common_down_m_02"));
+    }
+}
+
+unsafe extern "C" fn game_specialhistart(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if IS_EXIST_ARTICLE(agent, *FIGHTER_BUDDY_GENERATE_ARTICLE_PAD) {
+        if is_excute(agent) {
+            ArticleModule::remove_exist(boma, *FIGHTER_BUDDY_GENERATE_ARTICLE_PAD, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        }
+    }
+    if is_excute(agent) {
+        ArticleModule::generate_article(boma, *FIGHTER_BUDDY_GENERATE_ARTICLE_PAD, false, -1);
+    }
+}
+
+unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        ArticleModule::shoot_exist(boma, *FIGHTER_BUDDY_GENERATE_ARTICLE_PAD, smash::app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
+    }
+    frame(lua_state, 20.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_BUDDY_STATUS_SPECIAL_HI_FLAG_RESET_CONTROL);
+    }
+    frame(lua_state, 36.0);
+    if is_excute(agent) {
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
     }
 }
 
@@ -505,4 +534,7 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialairswall", game_specialairswall, Priority::Low);
     agent.acmd("effect_specialairswall", effect_specialairswall, Priority::Low);
     agent.acmd("sound_specialairswall", sound_specialairswall, Priority::Low);
+
+    agent.acmd("game_specialhistart", game_specialhistart, Priority::Low);
+    agent.acmd("game_specialhi", game_specialhi, Priority::Low);
 }

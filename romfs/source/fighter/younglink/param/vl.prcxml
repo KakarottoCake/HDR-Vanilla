@@ -3,9 +3,9 @@
   <list size="3" hash="cliff_hang_data">
     <struct index="0">
       <float hash="p1_x">17</float>
-      <float hash="p1_y">20</float>
+      <float hash="p1_y">19</float>
       <float hash="p2_x">-10.2</float>
-      <float hash="p2_y">8</float>
+      <float hash="p2_y">7</float>
     </struct>
     <struct index="1">
       <float hash="p1_x">42</float>
@@ -59,6 +59,7 @@
       <float hash="rslash_air_gravity_y_mul">0.7</float>
       <float hash="rslash_air_accel_x_mul">0.025</float>
       <float hash="rslash_air_max_x_mul">0.8</float>
+      <int hash="rslash_landing_frame">26</int>
       <float hash="rslash_end_air_accel_x_mul">0.025</float>
       <float hash="rslash_end_air_max_x">1.2</float>
       <float hash="rslash_fall_special_accel_x_mul">0.025</float>

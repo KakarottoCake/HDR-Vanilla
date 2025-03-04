@@ -6,7 +6,7 @@ use utils::game_modes::CustomMode;
 //== StatusModule::init_settings
 //=================================================================
 #[skyline::hook(replace=StatusModule::init_settings)]
-unsafe fn init_settings_hook(boma: &mut BattleObjectModuleAccessor, mut situation: smash::app::SituationKind, kinetic_type: i32, arg4: u32,
+unsafe fn init_settings_hook(boma: &mut BattleObjectModuleAccessor, mut situation: smash::app::SituationKind, kinetic_type: i32, ground_correct_kind: u32,
                              ground_cliff_check_kind: smash::app::GroundCliffCheckKind, jostle: bool,
                              keep_flag: i32, keep_int: i32, keep_float: i32, arg10: i32) -> u64 {
     let id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
@@ -15,9 +15,10 @@ unsafe fn init_settings_hook(boma: &mut BattleObjectModuleAccessor, mut situatio
     let situation_kind = StatusModule::situation_kind(boma);
     let mut cliff_check_kind = ground_cliff_check_kind;
     let mut kinetic_type = kinetic_type.clone();
+    let mut ground_correct_kind = ground_correct_kind.clone();
                                 
     // Call edge_slippoffs init_settings
-    let fix = super::ground::init_settings_edges(boma, situation, kinetic_type, arg4, ground_cliff_check_kind, jostle, keep_flag, keep_int, keep_float, arg10);
+    ground_correct_kind = super::ground::init_settings_edges(boma, situation, kinetic_type, ground_correct_kind, ground_cliff_check_kind, jostle, keep_flag, keep_int, keep_float, arg10);
 
     if boma.is_fighter() {
         
@@ -80,6 +81,11 @@ unsafe fn init_settings_hook(boma: &mut BattleObjectModuleAccessor, mut situatio
             kinetic_type = *FIGHTER_KINETIC_TYPE_FALL;
             situation.0 = *SITUATION_KIND_NONE;
         }
+
+        if ground_correct_kind == *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK as u32 {
+            ground_correct_kind = *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP as u32;
+        }
+
 
         if boma.kind() == *FIGHTER_KIND_DONKEY && boma.is_situation(*SITUATION_KIND_AIR) 
             && boma.is_status_one_of(&[
@@ -169,7 +175,7 @@ unsafe fn init_settings_hook(boma: &mut BattleObjectModuleAccessor, mut situatio
         VarModule::reset(object, mask);
     }
 
-    original!()(boma, situation, kinetic_type, fix, cliff_check_kind, jostle, keep_flag, keep_int, keep_float, arg10)
+    original!()(boma, situation, kinetic_type, ground_correct_kind, cliff_check_kind, jostle, keep_flag, keep_int, keep_float, arg10)
 }
 
 #[skyline::hook(replace=StatusModule::change_status_request)]
@@ -233,6 +239,7 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
             },
             _ => {}
         }
+
         // Allow buffered wavedashes when Shield is pressed at any time within Jump input's buffer window
         if next_status == *FIGHTER_STATUS_KIND_JUMP_SQUAT {
             if boma.is_cat_flag(Cat1::AirEscape) && !boma.is_cat_flag(Cat1::AttackN) {
@@ -246,17 +253,44 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
                 }
             }
         }
+
         // Clears buffer when sliding off an edge in a damaged state, to prevent accidental buffered aerials/airdodges (common on missed techs)
-        else if ( [*FIGHTER_STATUS_KIND_DOWN,
+        if ( [
+            *FIGHTER_STATUS_KIND_DOWN,
             *FIGHTER_STATUS_KIND_DOWN_WAIT,
             *FIGHTER_STATUS_KIND_SLIP_WAIT,
             *FIGHTER_STATUS_KIND_DAMAGE].contains(&StatusModule::status_kind(boma))
             || (boma.is_prev_status(*FIGHTER_STATUS_KIND_DAMAGE_AIR) && boma.is_status(*FIGHTER_STATUS_KIND_LANDING)) )
-        && next_status == *FIGHTER_STATUS_KIND_FALL {
+        && [*FIGHTER_STATUS_KIND_FALL,
+            *FIGHTER_STATUS_KIND_DAMAGE_FALL,
+            *FIGHTER_STATUS_KIND_MISS_FOOT].contains(&next_status)
+        {
             clear_buffer = true;
         }
+
+        if [*FIGHTER_STATUS_KIND_FALL,
+            *FIGHTER_STATUS_KIND_DAMAGE_FALL,
+            *FIGHTER_STATUS_KIND_MISS_FOOT].contains(&next_status)
+        && boma.is_prev_situation(*SITUATION_KIND_GROUND) {
+            if !boma.is_status(*FIGHTER_STATUS_KIND_DOWN) {
+                ControlModule::reset_trigger(boma);
+            }
+
+            clear_buffer = true;
+        }
+
+        // Allows us to detect when knockdown was induced due to untechable situations
+        // (e.g., Ganon aerial Flame Choke, Charizard Flare Blitz rebound)
+        if next_status == *FIGHTER_STATUS_KIND_DOWN {
+            if !WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE)
+            || WorkModule::is_flag(boma, *FIGHTER_STATUS_DAMAGE_FLAG_FLY_DISABLE_PASSIVE)
+            || StatusModule::prev_status_kind(boma, 0) == *FIGHTER_STATUS_KIND_CATCHED_AIR_END_GANON {   
+                VarModule::on_flag(boma.object(), vars::common::instance::DOWN_DISABLE_PASSIVE);
+            }
+        }
+
         // Tether trump logic
-        else if boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_AIR_LASSO, *FIGHTER_STATUS_KIND_AIR_LASSO_REACH, *FIGHTER_STATUS_KIND_AIR_LASSO_HANG, *FIGHTER_STATUS_KIND_AIR_LASSO_REWIND])
+        if boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_AIR_LASSO, *FIGHTER_STATUS_KIND_AIR_LASSO_REACH, *FIGHTER_STATUS_KIND_AIR_LASSO_HANG, *FIGHTER_STATUS_KIND_AIR_LASSO_REWIND])
         && [*FIGHTER_STATUS_KIND_CLIFF_CATCH, *FIGHTER_STATUS_KIND_CLIFF_CATCH_MOVE, *FIGHTER_STATUS_KIND_CLIFF_WAIT].contains(&next_status) {
             let player_number = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
             let cliff_id = GroundModule::get_cliff_id_uint32(boma);
@@ -274,13 +308,14 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
                 }
             }
         }
-        else if boma.is_status(*FIGHTER_STATUS_KIND_DAMAGE_AIR)
+
+        if boma.is_status(*FIGHTER_STATUS_KIND_DAMAGE_AIR)
         && next_status == *FIGHTER_STATUS_KIND_LANDING
         && boma.motion_frame() < 1.0 {
             VarModule::on_flag(boma.object(), vars::common::instance::IS_CC_NON_TUMBLE);
         }
 
-        else if boma.kind() == *FIGHTER_KIND_TRAIL {
+        if boma.kind() == *FIGHTER_KIND_TRAIL {
             if StatusModule::status_kind(boma) == *FIGHTER_TRAIL_STATUS_KIND_SPECIAL_S_SEARCH
             && next_status == *FIGHTER_TRAIL_STATUS_KIND_SPECIAL_S_TURN
             && ((!VarModule::is_flag(boma.object(), vars::trail::status::SPECIAL_S_INPUT_CHECK)
@@ -295,39 +330,45 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
                 return 0;
             }
         }
-        else if boma.kind() == *FIGHTER_KIND_KOOPAJR
+
+        if boma.kind() == *FIGHTER_KIND_KOOPAJR
         && StatusModule::status_kind(boma) == *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_S_DASH
         && StatusModule::situation_kind(boma) == *SITUATION_KIND_GROUND
         && next_status == *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_S_JUMP {
             next_status = *FIGHTER_STATUS_KIND_JUMP_SQUAT;
         }
-        else if boma.kind() == *FIGHTER_KIND_REFLET
+
+        if boma.kind() == *FIGHTER_KIND_REFLET
         && StatusModule::status_kind(boma) == *FIGHTER_STATUS_KIND_SPECIAL_HI
         && next_status == *FIGHTER_STATUS_KIND_FALL_SPECIAL
         && !VarModule::is_flag(boma.object(), vars::reflet::instance::SPECIAL_HI_ENABLE_FREEFALL) {
             next_status = *FIGHTER_STATUS_KIND_FALL;
         }
-        else if boma.kind() == *FIGHTER_KIND_MEWTWO 
+
+        if boma.kind() == *FIGHTER_KIND_MEWTWO 
         && StatusModule::status_kind(boma) == *FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_HI_3
         && next_status == *FIGHTER_STATUS_KIND_FALL_SPECIAL
         && VarModule::is_flag(boma.object(), vars::common::instance::UP_SPECIAL_CANCEL)
         && !VarModule::is_flag(boma.object(), vars::mewtwo::instance::SPECIAL_HI_ENABLE_FREEFALL) {
             next_status = *FIGHTER_STATUS_KIND_FALL;
         }
-        else if boma.kind() == *FIGHTER_KIND_PALUTENA 
+
+        if boma.kind() == *FIGHTER_KIND_PALUTENA 
         && StatusModule::status_kind(boma) == *FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_3
         && next_status == *FIGHTER_STATUS_KIND_FALL_SPECIAL
         && VarModule::is_flag(boma.object(), vars::common::instance::UP_SPECIAL_CANCEL)
         && !VarModule::is_flag(boma.object(), vars::palutena::instance::SPECIAL_HI_ENABLE_FREEFALL) {
             next_status = *FIGHTER_STATUS_KIND_FALL;
         }
-        else if boma.kind() == *FIGHTER_KIND_KOOPAJR {
+
+        if boma.kind() == *FIGHTER_KIND_KOOPAJR {
             // Prevent airdodging out of upB
             if next_status == *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_HI_ESCAPE {
                 return 0;
             }
         }
-        else if boma.kind() == *FIGHTER_KIND_DAISY {
+
+        if boma.kind() == *FIGHTER_KIND_DAISY {
             // Prevents Daisy from floating out of upB
             if StatusModule::status_kind(boma) == *FIGHTER_STATUS_KIND_SPECIAL_HI
             && next_status == *FIGHTER_PEACH_STATUS_KIND_SPECIAL_HI_FALL {
@@ -344,22 +385,35 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
             }
         }
         // Stubs vanilla Popgun cancel behavior
-        else if boma.kind() == *FIGHTER_KIND_DIDDY
+        if boma.kind() == *FIGHTER_KIND_DIDDY
         && boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_DIDDY_STATUS_KIND_SPECIAL_N_CHARGE])
         && [*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_FALL].contains(&next_status) {
             return 0;
         }
-        else if boma.kind() == *FIGHTER_KIND_KIRBY
+        
+        if boma.kind() == *FIGHTER_KIND_KIRBY
         && (WorkModule::get_int(boma, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_COPY_CHARA) == FIGHTER_KIND_DIDDY)
         && boma.is_status_one_of(&[*FIGHTER_KIRBY_STATUS_KIND_DIDDY_SPECIAL_N, *FIGHTER_KIRBY_STATUS_KIND_DIDDY_SPECIAL_N_CHARGE])
         && [*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_FALL].contains(&next_status) {
             return 0;
         }
         // Allows Clay Pigeon smash input to work properly
-        else if boma.kind() == *FIGHTER_KIND_DUCKHUNT
+        if boma.kind() == *FIGHTER_KIND_DUCKHUNT
         && next_status == *FIGHTER_STATUS_KIND_SPECIAL_S {
             clear_buffer = false;
         }
+
+        VarModule::set_int(
+            boma.object(),
+            vars::common::instance::PREV_STATUS_TRANSITION_FRAME,
+            util::get_fighter_common_from_accessor(boma).global_table[CURRENT_FRAME].get_i32()
+        );
+
+        VarModule::set_flag(
+            boma.object(),
+            vars::common::instance::WAS_PREV_STATUS_CANCELABLE,
+            CancelModule::is_enable_cancel(boma) || (boma.is_status(*FIGHTER_STATUS_KIND_LANDING) && WorkModule::is_flag(boma, *FIGHTER_STATUS_LANDING_FLAG_STIFF_CANCEL_CONT))
+        );
     }
     original!()(boma, next_status, clear_buffer)
 }

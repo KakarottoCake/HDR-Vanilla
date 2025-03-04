@@ -483,6 +483,7 @@ pub trait BomaExt {
 
     // WORK
     unsafe fn get_int(&mut self, what: i32) -> i32;
+    unsafe fn inc_int(&mut self, what: i32);
     unsafe fn dec_int(&mut self, what: i32);
     unsafe fn get_float(&mut self, what: i32) -> f32;
     unsafe fn get_int64(&mut self, what: i32) -> u64;
@@ -490,6 +491,7 @@ pub trait BomaExt {
     unsafe fn set_int(&mut self, value: i32, what: i32);
     unsafe fn set_float(&mut self, value: f32, what: i32);
     unsafe fn set_int64(&mut self, value: i64, what: i32);
+    unsafe fn set_flag(&mut self, value: bool, what: i32);
     unsafe fn on_flag(&mut self, what: i32);
     unsafe fn off_flag(&mut self, what: i32);
     unsafe fn get_param_int(&mut self, obj: &str, field: &str) -> i32;
@@ -551,6 +553,10 @@ pub trait BomaExt {
     unsafe fn try_pickup_item(&mut self, range: f32, bone: Option<Hash40>, offset: Option<&Vector2f>) -> Option<&mut BattleObjectModuleAccessor> ;
 
     unsafe fn get_player_idx_from_boma(&mut self) -> i32;
+
+    unsafe fn set_command_input_button(&mut self, command: usize, buttons: u8);
+
+    unsafe fn clone_command_input(&mut self, command: usize, replace_command: usize);
 
 }
 
@@ -922,6 +928,10 @@ impl BomaExt for BattleObjectModuleAccessor {
         WorkModule::get_int(self, what)
     }
 
+    unsafe fn inc_int(&mut self, what: i32) {
+        WorkModule::inc_int(self, what)
+    }
+
     unsafe fn dec_int(&mut self, what: i32) {
         WorkModule::dec_int(self, what)
     }
@@ -978,6 +988,10 @@ impl BomaExt for BattleObjectModuleAccessor {
     ) {
         let int = WorkModule::get_param_int64(self, object.to_hash().hash, param.to_hash().hash);
         WorkModule::set_int64(self, int as i64, what);
+    }
+
+    unsafe fn set_flag(&mut self, value: bool, what: i32) {
+        WorkModule::set_flag(self, value, what)
     }
 
     unsafe fn on_flag(&mut self, what: i32) {
@@ -1526,6 +1540,20 @@ impl BomaExt for BattleObjectModuleAccessor {
         *((next + 0x8) as *const i32)
     }
 
+    /// Sets a command input to only use certain buttons.
+    unsafe fn set_command_input_button(&mut self, command: usize, buttons: u8) {
+        let control_module = *(self as *mut BattleObjectModuleAccessor as *const *const u64).add(0x48 / 8);
+        let command_input = *control_module.add((0x7f0 + (command * 8)) / 8) as *mut u8;
+        *command_input.add(0xb) = buttons;
+    }
+
+    /// Clones a command input to another cat4 flag
+    unsafe fn clone_command_input(&mut self, command: usize, replace_command: usize) {
+        let control_module = *(self as *mut BattleObjectModuleAccessor as *const *const u64).add(0x48 / 8);
+        let original = *control_module.add((0x7f0 + (command * 8)) / 8) as *mut CommandInputState;
+        let replace = *control_module.add((0x7f0 + (replace_command * 8)) / 8) as *mut CommandInputState;
+        *replace = *original.clone();
+    }
 }
 
 pub trait LuaUtil {
@@ -1811,4 +1839,17 @@ pub struct CollisionLog {
     pub receiver_id: u8,
     pub collider_id: u8,
     pub padding_3: [u8;10]
+}
+
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct CommandInputState {
+    pub vtable: u64,
+    pub command_timer: u8,
+    pub state: u8,
+    pub unk2: u8,
+    pub input_allow: u8,
+    pub max_timer: u8,
+    pub enable_timer: u8,
+    pub lr: i8,
 }

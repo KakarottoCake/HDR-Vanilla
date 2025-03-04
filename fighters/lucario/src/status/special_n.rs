@@ -162,7 +162,9 @@ unsafe extern "C" fn special_n_hold_main_loop(fighter: &mut L2CFighterCommon) ->
 }
 
 unsafe extern "C" fn special_n_hold_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
-    MeterModule::drain_direct(fighter.battle_object, 0.09);
+    let nspecial_cost = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "meter.nspecial_cost");
+    let max_charge_frame = fighter.get_param_float("param_special_n", "max_charge_frame");
+    MeterModule::drain_direct(fighter.battle_object, nspecial_cost / max_charge_frame);
     opff::pause_meter_regen(fighter, 30);
     smashline::original_status(Exec, fighter, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_HOLD)(fighter)
 }
@@ -209,8 +211,6 @@ unsafe extern "C" fn special_n_max_main_loop(fighter: &mut L2CFighterCommon) -> 
 }
 
 unsafe extern "C" fn special_n_max_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
-    // MeterModule::drain_direct(fighter.battle_object, 0.09);
-    // opff::pause_meter_regen(fighter, 30);
     smashline::original_status(Exec, fighter, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_MAX)(fighter)
 }
 

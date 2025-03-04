@@ -3,6 +3,8 @@ use super::*;
 unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    frame(lua_state, 1.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 12.0, 15.0);
     frame(lua_state, 12.0);
     if is_excute(agent) && !boma.is_prev_situation(*SITUATION_KIND_AIR) {
         boma.on_flag(*FIGHTER_RYU_STATUS_WORK_ID_SPECIAL_N_FLAG_SPECIAL_FALL);
@@ -37,6 +39,7 @@ unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE_RANGE(agent, 15.0, 58.0, endlag);
     if is_excute(agent) {
         agent.on_flag(*FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
+        VarModule::set_int(agent.battle_object, vars::shotos::status::HIT_CANCEL_TIMER, 12);
     }
     frame(lua_state, 28.0);
     if is_excute(agent) {
@@ -44,16 +47,13 @@ unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 58.0);
     FT_MOTION_RATE(agent, 1.0);
-    if is_excute(agent) {
-        agent.off_flag(*FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
-    }
 }
 
 unsafe extern "C" fn game_specialairn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    FT_MOTION_RATE_RANGE(agent, 1.0, 12.0, 13.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 12.0, 15.0);
     frame(lua_state, 12.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
@@ -89,6 +89,7 @@ unsafe extern "C" fn game_specialairn(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE_RANGE(agent, 15.0, 70.0, endlag);
     if is_excute(agent) {
         agent.on_flag(*FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
+        VarModule::set_int(agent.battle_object, vars::shotos::status::HIT_CANCEL_TIMER, 12);
     }
     frame(lua_state, 40.0);
     if is_excute(agent) {
@@ -96,9 +97,6 @@ unsafe extern "C" fn game_specialairn(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 70.0);
     FT_MOTION_RATE(agent, 1.0);
-    if is_excute(agent) {
-        agent.off_flag(*FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
-    }
 }
 
 unsafe extern "C" fn sound_specialn(agent: &mut L2CAgentBase) {

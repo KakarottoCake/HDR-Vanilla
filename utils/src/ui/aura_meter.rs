@@ -7,6 +7,10 @@ const FULL_TEXCOORDS: [f32; 8] = [
     1.0, 1.0
 ];
 
+/*
+blujay was here (I deleted the image that was here sorry bro they are actually literally going to look at this project LOL ~Suddy)
+*/
+
 const EMPTY_TEXCOORDS: [f32; 8] = [
     0.0, 0.0,
     0.0, 0.0,
@@ -83,9 +87,15 @@ impl AuraMeter {
         set_pane_visible(self.meter_bar_pichu, false);
         set_pane_visible(self.meter_div, true);
 
-        self.meter_bar_bg_width_height = get_width_height(self.meter_bar_bg);
-        self.meter_bar_lucario_width_height = get_width_height(self.meter_bar_lucario);
-        self.meter_bar_pichu_width_height = get_width_height(self.meter_bar_pichu);
+        if self.meter_bar_bg_width_height == (-1.0, -1.0) {
+            self.meter_bar_bg_width_height = get_width_height(self.meter_bar_bg);
+        }
+        if self.meter_bar_lucario_width_height == (-1.0, -1.0) {
+            self.meter_bar_lucario_width_height = get_width_height(self.meter_bar_lucario);
+        }
+        if self.meter_bar_pichu_width_height == (-1.0, -1.0) {
+            self.meter_bar_pichu_width_height = get_width_height(self.meter_bar_pichu);
+        }
 
         self.actual_percentage = 0.0;
         self.visual_percentage = 0.0;
