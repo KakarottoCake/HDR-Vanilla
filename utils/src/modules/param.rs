@@ -308,9 +308,9 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(default)]
 #[repr(C)]
-struct TourneyConfig {
+pub struct TourneyConfig {
     /// whether the tourney mode is enabled
-    enabled: bool,
+    pub enabled: bool,
     useOfficial: bool,
     /// the ordered list of starters stages which should be enabled,
     /// or `None` if there are no starters
@@ -356,7 +356,7 @@ impl TourneyConfig {
         return true;
     }
     /// loads the tourney config from the sdcard
-    fn load() -> Option<TourneyConfig> {
+    pub fn load() -> Option<TourneyConfig> {
         // load the tourney config
         let mut config: Option<TourneyConfig> =
             match std::fs::read_to_string("sd:/ultimate/hdr-config/tourney_mode.json") {
