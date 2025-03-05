@@ -396,19 +396,18 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
     }
-    frame(lua_state, 23.0);
-    FT_MOTION_RATE_RANGE(agent, 23.0, 53.0, 40.0);
-    frame(lua_state, 53.0);
-    FT_MOTION_RATE(agent, 1.0);
 }
 
 unsafe extern "C" fn game_specialairsend(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 7.0);
+    FT_MOTION_RATE_RANGE(agent, 7.0, 47.0, 27.0);
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
     }
+    frame(lua_state, 47.0);
+    FT_MOTION_RATE(agent, 1.0);
 }
 
 unsafe extern "C" fn effect_specialsend(agent: &mut L2CAgentBase) {
