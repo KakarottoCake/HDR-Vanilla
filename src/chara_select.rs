@@ -233,7 +233,7 @@ unsafe fn decide_random(ctx: &mut skyline::hooks::InlineCtx) {
     let is_random = [main_chara as u32, sub_chara as u32].contains(&(hash40("ui_chara_random").0 as u32));
     if !is_random { return };
     
-    IS_MELEE_RANDOM = !ninput::any::is_down_any(ninput::Buttons::ZL | ninput::Buttons::ZR);
+    IS_MELEE_RANDOM = ninput::any::is_down_any(ninput::Buttons::ZL | ninput::Buttons::ZR);
 
     // by altering this register we can immediately change the selected fighter (melee style)
     if IS_MELEE_RANDOM {
@@ -464,6 +464,8 @@ unsafe fn set_random_fighter_data(base_ptr: *mut u64, arg2: u64, arg3: u64, arg4
 
     *costume_ptr = costume as u8;
     println!("Randomly selected costume slot to be {costume} (data: {:#x})", *costume_ptr);
+
+    IS_MELEE_RANDOM = false;
 
     ret
 }
