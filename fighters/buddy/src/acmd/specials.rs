@@ -169,7 +169,7 @@ unsafe extern "C" fn game_specialsdash(agent: &mut L2CAgentBase) {
         // HIT_NO(agent, 10, *HIT_STATUS_INVINCIBLE);
         HIT_NO(agent, 11, *HIT_STATUS_NORMAL);
         // HitModule::set_status_all(boma, app::HitStatus(*HIT_STATUS_INVINCIBLE), 0);
-        // WorkModule::on_flag(boma, *FIGHTER_BUDDY_STATUS_SPECIAL_S_FLAG_CLIFF_CHECK);
+        WorkModule::on_flag(boma, *FIGHTER_BUDDY_STATUS_SPECIAL_S_FLAG_CLIFF_CHECK);
     }
     frame(lua_state, 13.0);
     if is_excute(agent) {
