@@ -264,6 +264,15 @@ unsafe extern "C" fn effect_appeallw(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_win3(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 1.0);
+    if is_excute(agent) {
+        ModelModule::set_scale(boma, 0.97);
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_cliffescape", acmd_stub, Priority::Low);
 
@@ -294,4 +303,6 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_appeallwr", game_appeallw, Priority::Low);
     agent.acmd("effect_appeallwl", effect_appeallw, Priority::Low);
     agent.acmd("effect_appeallwr", effect_appeallw, Priority::Low);
+
+    agent.acmd("game_win3", game_win3, Priority::Low);
 }
