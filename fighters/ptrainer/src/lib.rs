@@ -40,12 +40,6 @@ use utils::{
 };
 use smashline::*;
 
-pub unsafe fn get_poke_battle_object(boma: *mut BattleObjectModuleAccessor) -> *mut BattleObject {
-    let poke_parent_id = LinkModule::get_parent_object_id(boma, *WEAPON_PTRAINER_PTRAINER_LINK_NO_POKEMON) as u32;
-    let poke_object = utils::util::get_battle_object_from_id(poke_parent_id);
-    return poke_object;
-}
-
 pub unsafe extern "C" fn kill_pledge_effects(poke_object: *mut BattleObject) {
     if poke_object.is_null() {
         return;

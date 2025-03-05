@@ -36,11 +36,14 @@ unsafe extern "C" fn special_lw_main_loop(weapon: &mut L2CWeaponCommon) -> L2CVa
     if weapon.is_flag(*WEAPON_PTRAINER_PTRAINER_STATUS_WORK_FLAG_VOICE) {
         // move back to frame 11 to account for backward switch
         if weapon.status_frame() == 11 {
-            let poke_object = get_poke_battle_object(weapon.module_accessor);
-            if !poke_object.is_null() {
-                let poke_boma = &mut *(*poke_object).module_accessor;
-                if !ControlModule::check_button_on(poke_boma, *CONTROL_PAD_BUTTON_SPECIAL) {
-                    VarModule::on_flag(weapon.battle_object, vars::ptrainer::status::VOICE_FORWARD_SWITCH);
+            if LinkModule::is_link(weapon.module_accessor, *WEAPON_PTRAINER_PTRAINER_LINK_NO_POKEMON) {
+                let poke_parent_id = LinkModule::get_parent_object_id(weapon.module_accessor, *WEAPON_PTRAINER_PTRAINER_LINK_NO_POKEMON) as u32;
+                let poke_object = utils::util::get_battle_object_from_id(poke_parent_id);
+                if !poke_object.is_null() {
+                    let poke_boma = &mut *(*poke_object).module_accessor;
+                    if !ControlModule::check_button_on(poke_boma, *CONTROL_PAD_BUTTON_SPECIAL) {
+                        VarModule::on_flag(weapon.battle_object, vars::ptrainer::status::VOICE_FORWARD_SWITCH);
+                    }
                 }
             }
             play_voice(weapon);
@@ -67,30 +70,35 @@ unsafe extern "C" fn play_voice(weapon: &mut L2CWeaponCommon) {
         let rand = sv_math::rand(hash40("fighter"), 6) as i32;
         let voice_hash = match rand {
             0 => {
-                let poke_object = get_poke_battle_object(weapon.module_accessor);
-                if !poke_object.is_null() {
-                    let poke_boma = &mut *(*poke_object).module_accessor;
-                    if VarModule::is_flag(weapon.battle_object, vars::ptrainer::status::VOICE_FORWARD_SWITCH) {
-                        if poke_boma.kind() == *FIGHTER_KIND_PZENIGAME {
-                            Hash40::new("vc_ptrainer_throw02")
-                        }
-                        else if poke_boma.kind() == *FIGHTER_KIND_PFUSHIGISOU {
-                            Hash40::new("vc_ptrainer_throw03")
-                        }
-                        else {
-                            Hash40::new("vc_ptrainer_throw01")
-                        }
-                    }
-                    else {
-                        if poke_boma.kind() == *FIGHTER_KIND_PZENIGAME {
-                            Hash40::new("vc_ptrainer_throw03")
-                        }
-                        else if poke_boma.kind() == *FIGHTER_KIND_PFUSHIGISOU {
-                            Hash40::new("vc_ptrainer_throw01")
+                if LinkModule::is_link(weapon.module_accessor, *WEAPON_PTRAINER_PTRAINER_LINK_NO_POKEMON) {
+                    let poke_parent_id = LinkModule::get_parent_object_id(weapon.module_accessor, *WEAPON_PTRAINER_PTRAINER_LINK_NO_POKEMON) as u32;
+                    let poke_object = utils::util::get_battle_object_from_id(poke_parent_id);
+                    if !poke_object.is_null() {
+                        let poke_boma = &mut *(*poke_object).module_accessor;
+                        if VarModule::is_flag(weapon.battle_object, vars::ptrainer::status::VOICE_FORWARD_SWITCH) {
+                            if poke_boma.kind() == *FIGHTER_KIND_PZENIGAME {
+                                Hash40::new("vc_ptrainer_throw02")
+                            }
+                            else if poke_boma.kind() == *FIGHTER_KIND_PFUSHIGISOU {
+                                Hash40::new("vc_ptrainer_throw03")
+                            }
+                            else {
+                                Hash40::new("vc_ptrainer_throw01")
+                            }
                         }
                         else {
-                            Hash40::new("vc_ptrainer_throw02")
+                            if poke_boma.kind() == *FIGHTER_KIND_PZENIGAME {
+                                Hash40::new("vc_ptrainer_throw03")
+                            }
+                            else if poke_boma.kind() == *FIGHTER_KIND_PFUSHIGISOU {
+                                Hash40::new("vc_ptrainer_throw01")
+                            }
+                            else {
+                                Hash40::new("vc_ptrainer_throw02")
+                            }
                         }
+                    } else {
+                        Hash40::new("vc_ptrainer_throw08")
                     }
                 } else {
                     Hash40::new("vc_ptrainer_throw08")
@@ -134,7 +142,11 @@ unsafe extern "C" fn play_voice(weapon: &mut L2CWeaponCommon) {
 }
 
 unsafe extern "C" fn play_voice_continue(weapon: &mut L2CWeaponCommon, is_forward: bool, use_out: bool) {
-    let poke_object = get_poke_battle_object(weapon.module_accessor);
+    if !LinkModule::is_link(weapon.module_accessor, *WEAPON_PTRAINER_PTRAINER_LINK_NO_POKEMON) {
+        return;
+    }
+    let poke_parent_id = LinkModule::get_parent_object_id(weapon.module_accessor, *WEAPON_PTRAINER_PTRAINER_LINK_NO_POKEMON) as u32;
+    let poke_object = utils::util::get_battle_object_from_id(poke_parent_id);
     if poke_object.is_null() {
         return;
     }

@@ -8,22 +8,24 @@ unsafe extern "C" fn special_lw_main(fighter: &mut L2CFighterCommon) -> L2CValue
 }
 
 unsafe extern "C" fn special_lw_out_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let parent_id = LinkModule::get_parent_id(fighter.module_accessor, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
-    let object = utils::util::get_battle_object_from_id(parent_id);
-    let pledge_state = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
-    //println!("pledge_state: {}", pledge_state);
-    if pledge_state == *PLEDGE_STATE_WATER {
-        let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_status_defense_up"), Hash40::new("hip"), &Vector3f::new(0.7, 0.0, 0.0), &Vector3f::zero(), 0.8, true, 0, 0, 0, 0, 0, true, true) as u32;
-        VarModule::set_int(fighter.object(), vars::pfushigisou::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, handle as i32);
-        fighter.play_pledge_effect(*PLEDGE_STATE_WATER);
+    if LinkModule::is_link(fighter.module_accessor, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
+        let parent_id = LinkModule::get_parent_id(fighter.module_accessor, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+        let object = utils::util::get_battle_object_from_id(parent_id);
+        let pledge_state = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
+        //println!("pledge_state: {}", pledge_state);
+        if pledge_state == *PLEDGE_STATE_WATER {
+            let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_status_defense_up"), Hash40::new("hip"), &Vector3f::new(0.7, 0.0, 0.0), &Vector3f::zero(), 0.8, true, 0, 0, 0, 0, 0, true, true) as u32;
+            VarModule::set_int(fighter.object(), vars::pfushigisou::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, handle as i32);
+            fighter.play_pledge_effect(*PLEDGE_STATE_WATER);
+        }
+        else if pledge_state == *PLEDGE_STATE_FIRE {
+            let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_status_attack_up"), Hash40::new("hip"), &Vector3f::new(0.7, 0.0, 0.0), &Vector3f::zero(), 0.8, true, 0, 0, 0, 0, 0, true, true) as u32;
+            VarModule::set_int(fighter.object(), vars::pfushigisou::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, handle as i32);
+            fighter.play_pledge_effect(*PLEDGE_STATE_FIRE);
+        }
+        VarModule::set_flag(object, vars::ptrainer::instance::METER_UI_DISABLE_COLOR, pledge_state == *PLEDGE_STATE_GRASS);
+        VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
     }
-    else if pledge_state == *PLEDGE_STATE_FIRE {
-        let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_status_attack_up"), Hash40::new("hip"), &Vector3f::new(0.7, 0.0, 0.0), &Vector3f::zero(), 0.8, true, 0, 0, 0, 0, 0, true, true) as u32;
-        VarModule::set_int(fighter.object(), vars::pfushigisou::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, handle as i32);
-        fighter.play_pledge_effect(*PLEDGE_STATE_FIRE);
-    }
-    VarModule::set_flag(object, vars::ptrainer::instance::METER_UI_DISABLE_COLOR, pledge_state == *PLEDGE_STATE_GRASS);
-    VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
     smashline::original_status(Main, fighter, *FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_LW_OUT)(fighter)
 }
 

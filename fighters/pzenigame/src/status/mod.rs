@@ -9,23 +9,29 @@ mod special_s;
 mod special_lw;
 
 unsafe extern "C" fn entry_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let parent_id = LinkModule::get_parent_id(fighter.module_accessor, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
-    let object = utils::util::get_battle_object_from_id(parent_id);
-    reset_poke_vars(object);
+    if LinkModule::is_link(fighter.module_accessor, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
+        let parent_id = LinkModule::get_parent_id(fighter.module_accessor, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+        let object = utils::util::get_battle_object_from_id(parent_id);
+        reset_poke_vars(object);
+    }
     smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_ENTRY)(fighter)
 }
 
 unsafe extern "C" fn dead_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let parent_id = LinkModule::get_parent_id(fighter.module_accessor, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
-    let object = utils::util::get_battle_object_from_id(parent_id);
-    reset_poke_vars(object);
+    if LinkModule::is_link(fighter.module_accessor, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
+        let parent_id = LinkModule::get_parent_id(fighter.module_accessor, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+        let object = utils::util::get_battle_object_from_id(parent_id);
+        reset_poke_vars(object);
+    }
     smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_DEAD)(fighter)
 }
 
 unsafe extern "C" fn rebirth_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let parent_id = LinkModule::get_parent_id(fighter.module_accessor, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
-    let object = utils::util::get_battle_object_from_id(parent_id);
-    reset_poke_vars(object);
+    if LinkModule::is_link(fighter.module_accessor, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
+        let parent_id = LinkModule::get_parent_id(fighter.module_accessor, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+        let object = utils::util::get_battle_object_from_id(parent_id);
+        reset_poke_vars(object);
+    }
     smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_REBIRTH)(fighter)
 }
 
