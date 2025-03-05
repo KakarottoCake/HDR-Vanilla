@@ -18,10 +18,10 @@
     <float hash="ground_accel_x_mul">0.055</float>
   </struct>
   <struct hash="long_jump">
-    <float hash="speed_x_add">0.2</float>
+    <float hash="speed_x_add">0.4</float>
     <float hash="speed_x_mul">1.7</float>
     <float hash="speed_x_min">1.0</float>
-    <float hash="speed_x_max">1.9</float>
+    <float hash="speed_x_max">2.1</float>
     <float hash="speed_y_min">1.4</float>
     <float hash="speed_y_max">1.6</float>
     <float hash="back_speed_x_threshold">-0.2</float>
