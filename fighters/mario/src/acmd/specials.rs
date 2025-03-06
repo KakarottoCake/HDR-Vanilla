@@ -241,7 +241,7 @@ unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 25.0);
     if is_excute(agent){
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
         agent.on_flag(*FIGHTER_MARIO_STATUS_SPECIAL_S_FLAG_SPECIAL_FALL);
     }
 }
@@ -637,6 +637,13 @@ unsafe extern "C" fn expression_groundpoundland(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_groundpoundend(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 8.0);
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialn", game_specialn, Priority::Low);
     agent.acmd("game_specialairn", game_specialn, Priority::Low);
@@ -692,4 +699,6 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("effect_specialairlwlanding", effect_groundpoundland, Priority::Low);
     agent.acmd("sound_specialairlwlanding", sound_groundpoundland, Priority::Low);
     agent.acmd("expression_specialairlwlanding", expression_groundpoundland, Priority::Low);
+
+    agent.acmd("game_specialairlwcancel", game_groundpoundend, Priority::Low);
 }
