@@ -1,12 +1,5 @@
 use super::*;
 
-unsafe extern "C" fn fall_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.is_prev_status_one_of(&[*FIGHTER_STATUS_KIND_AIR_LASSO_HANG, *FIGHTER_STATUS_KIND_AIR_LASSO_REWIND]) {
-        VarModule::on_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
-    }
-    smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_FALL)(fighter)
-}
-
 unsafe extern "C" fn fall_special_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     let accel_x_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.fall_special_accel_x_mul");
     let speed_x_max_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.fall_special_speed_x_max_mul");
@@ -16,6 +9,5 @@ unsafe extern "C" fn fall_special_pre(fighter: &mut L2CFighterCommon) -> L2CValu
 }
 
 pub fn install(agent: &mut Agent) {
-    agent.status(Main, *FIGHTER_STATUS_KIND_FALL, fall_main);
     agent.status(Pre, *FIGHTER_STATUS_KIND_FALL_SPECIAL, fall_special_pre);
 }
