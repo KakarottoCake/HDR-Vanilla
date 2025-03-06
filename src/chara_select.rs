@@ -181,10 +181,15 @@ pub unsafe fn display_css_hook(ctx: &InlineCtx) {
     // construct the new order
     let new_order: &mut Vec<u64> = &mut Vec::new();
     let mut push = false; // whether to shift to compensate the inserted random entry
+    let use_general_all = match chara_vec.get(chara_vec.len() - 1) {
+        Some(entry) => (*entry & !KEY_MASK) == hash40("ui_chara_general_all").0,
+        None => false
+    };
     let mut idx: usize = 0; // handler for the custom order. this is needed to crosscheck skipped entries for things like smashdown
     for i in 0..(icon_count - r_offset) {
         if i == random_idx && center_random == true {
-            new_order.push(ui_chara(i, "random"));
+            let entry = if use_general_all { "general_all" } else { "random" };
+            new_order.push(ui_chara(i, entry));
             // println!("{} / {} = random", i + 1, icon_count);
             push = true;
         }
@@ -203,7 +208,11 @@ pub unsafe fn display_css_hook(ctx: &InlineCtx) {
         if fighter == "element" { // aegis is a special case and is loaded with two entries
             new_order.push(ui_chara(num, "flame_first"));
             new_order.push(ui_chara(num, "light_first"));
-        } else {
+        } 
+        else if fighter == "random" && use_general_all {
+            new_order.push(ui_chara(num, "general_all"));
+        } 
+        else {
             new_order.push(ui_chara(num, fighter));
         }
         // println!("{} / {} = {}", n + 1, icon_count, fighter);
