@@ -389,13 +389,15 @@ unsafe fn get_dead_effect_scale_hook(boma: &mut BattleObjectModuleAccessor, arg1
 unsafe fn module_access_effect_hook(lua_state: u64) {
     let mut agent: L2CAgent = L2CAgent::new(lua_state);
     let mut params: Vec<L2CValue> = Vec::new();
-    for i in 0..i32::MAX {
+    let mut i = 0;
+    loop {
         let param = agent.pop_lua_stack(i + 1);
         if param.val_type == L2CValueType::Void {
             break;
         }
         
         params.push(param);
+        i += 1;
     }
 
     agent.clear_lua_stack();
