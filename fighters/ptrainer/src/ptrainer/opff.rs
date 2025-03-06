@@ -23,7 +23,6 @@ pub unsafe extern "C" fn pledge_meter(weapon: &mut L2CFighterBase) {
         }
     }
     if VarModule::countdown_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER, 0) {
-        VarModule::off_flag(weapon.battle_object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
     }
 }
 

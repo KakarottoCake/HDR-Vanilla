@@ -5,7 +5,6 @@ use globals::*;
 mod special_lw;
 
 unsafe extern "C" fn on_start(weapon: &mut L2CWeaponCommon) {
-    VarModule::off_flag(weapon.battle_object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
     VarModule::set_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER, 0);
 }
 

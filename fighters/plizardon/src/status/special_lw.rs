@@ -25,7 +25,6 @@ unsafe extern "C" fn special_lw_out_main(fighter: &mut L2CFighterCommon) -> L2CV
             VarModule::set_int(fighter.object(), vars::plizardon::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, handle as i32);
             fighter.play_pledge_effect(*PLEDGE_STATE_GRASS);
         }
-        VarModule::set_flag(object, vars::ptrainer::instance::METER_UI_DISABLE_COLOR, pledge_state == *PLEDGE_STATE_FIRE);
         VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
     }
     smashline::original_status(Main, fighter, *FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_LW_OUT)(fighter)

@@ -178,7 +178,6 @@ unsafe extern "C" fn game_appealhi(agent: &mut L2CAgentBase) {
             };
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, state);
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer);
-            VarModule::off_flag(object, vars::ptrainer::instance::METER_UI_DISABLE_COLOR);
         }
     }
 }
@@ -227,7 +226,6 @@ unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
             };
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, state);
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer);
-            VarModule::off_flag(object, vars::ptrainer::instance::METER_UI_DISABLE_COLOR);
         }
     }
 }
