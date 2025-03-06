@@ -266,6 +266,7 @@ unsafe extern "C" fn game_specialairsdash(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;    
     let boma = agent.boma();
     if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
         //Set control
         VarModule::on_flag(boma.object(), vars::buddy::instance::SPECIAL_S_BEAKBOMB_ACTIVE);
         VarModule::set_int(boma.object(), vars::buddy::instance::SPECIAL_S_BEAKBOMB_FRAME,0);
@@ -408,16 +409,24 @@ unsafe extern "C" fn expression_specialairsdash(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn game_specialairsend(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;  
-    let boma = agent.boma();  
+    let boma = agent.boma();
+    frame(lua_state, 7.0);
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
+    }
     frame(lua_state, 36.0);
     if is_excute(agent) {
-        WorkModule::on_flag(boma, /*Flag*/ *FIGHTER_BUDDY_STATUS_SPECIAL_S_FLAG_LANDING_HEAVY);
+        WorkModule::on_flag(boma, *FIGHTER_BUDDY_STATUS_SPECIAL_S_FLAG_LANDING_HEAVY);
     }
 }
 
 unsafe extern "C" fn game_specialairswall(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;    
     let boma = agent.boma(); 
+    frame(lua_state, 7.0);
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
+    }
     frame(lua_state, 15.0);
     if is_excute(agent) {
         let has_hit_shield = AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD);
