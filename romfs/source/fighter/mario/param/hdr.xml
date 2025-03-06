@@ -36,6 +36,6 @@
   </struct>
   <struct hash="ground_pound">
     <float hash="fall_speed">4.0</float>
-    <int hash="fall_duration">24</int>
+    <int hash="fall_duration">48</int>
   </struct>
 </struct>

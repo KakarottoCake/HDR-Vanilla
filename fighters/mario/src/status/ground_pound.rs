@@ -21,7 +21,7 @@ unsafe extern "C" fn mario_ground_pound_start_pre(fighter: &mut L2CFighterCommon
         false,
         false,
         *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_KEEP as u64,
-        0,
+        *FIGHTER_STATUS_ATTR_START_TURN as u32,
         (*FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u32,
         0
     );
