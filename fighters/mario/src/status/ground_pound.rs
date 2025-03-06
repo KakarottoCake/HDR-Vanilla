@@ -61,7 +61,7 @@ unsafe extern "C" fn mario_ground_pound_fall_pre(fighter: &mut L2CFighterCommon)
         SituationKind(*SITUATION_KIND_AIR),
         *FIGHTER_KINETIC_TYPE_FALL,
         *GROUND_CORRECT_KIND_AIR as u32,
-        GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES),
+        GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
         true,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT,
