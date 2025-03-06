@@ -178,6 +178,7 @@ unsafe extern "C" fn check_asdi(fighter: &mut L2CFighterCommon) {
     {
         let hashmap = fighter.local_func__fighter_status_damage_2();
         let sdi_mul = hashmap["stop_delay_"].get_f32();
+
         // get stick x/y length
         // uses cstick's value if cstick is on (for Double Stick DI)
         let stick_x = if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CSTICK_ON) && !fighter.is_button_on(Buttons::CStickOverride) {
@@ -192,6 +193,7 @@ unsafe extern "C" fn check_asdi(fighter: &mut L2CFighterCommon) {
         else {
             ControlModule::get_stick_y(fighter.module_accessor)
         };
+
         // get base asdi distance
         let base_asdi = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("hit_stop_delay_auto_mul"));
         let asdi_speed_up_mul = if fighter.is_flag(*FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGE_SPEED_UP) {
@@ -200,21 +202,31 @@ unsafe extern "C" fn check_asdi(fighter: &mut L2CFighterCommon) {
         else {
             1.0
         };
+
         // mul sdi_mul by hit_stop_delay_auto_mul = total sdi
         let asdi = sdi_mul * base_asdi * asdi_speed_up_mul;
+
         // mul stick x/y by total sdi
         let asdi_x = asdi * stick_x;
-        let asdi_y = asdi * stick_y;
+        let mut asdi_y = asdi * stick_y;
+
+        if stick_y > -0.33 && stick_y < 0.0 {
+            EffectModule::req_on_joint(fighter.module_accessor, Hash40::new("sys_flash"), Hash40::new("head"), &Vector3f::zero(), &Vector3f::zero(), 1.5, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
+            asdi_y = 0.0;
+        }
+
         // get current pos
         let mut pos = Vector3f {
             x: PostureModule::pos_x(fighter.module_accessor),
             y: PostureModule::pos_y(fighter.module_accessor),
             z: PostureModule::pos_z(fighter.module_accessor)
         };
+
         // add asdi x/y to pos
         pos.x += asdi_x;
         pos.y += asdi_y;
         PostureModule::set_pos(fighter.module_accessor, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
+
         // make sure we can enter tech/missed tech on f1 of damage fly statuses (vanilla only allows them starting on f3)
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DAMAGE_FLAG_ENABLE_DOWN);
     }
