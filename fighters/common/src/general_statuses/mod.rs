@@ -128,6 +128,7 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
             sys_line_status_system_control_hook,
             status_FallSub_hook,
             super_jump_punch_main_hook,
+            super_jump_punch_uniq,
             sub_cliff_uniq_process_exec_fix_pos,
             end_pass_ground,
             virtual_ftStatusUniqProcessDamage_exec_common,
@@ -598,6 +599,75 @@ pub unsafe fn super_jump_punch_main_hook(fighter: &mut L2CFighterCommon) {
         let new_status = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_INT_STATUS_KIND_END);
         fighter.change_status_req(new_status, false);
     }
+}
+
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_super_jump_punch_uniq)]
+pub unsafe fn super_jump_punch_uniq(fighter: &mut L2CFighterCommon, arg2: L2CValue) -> L2CValue {
+    if arg2.get_bool() {
+        return 0.into();
+    }
+
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_CHANGE_KINE)
+    || !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_MOVE_TRANS) {
+        if fighter.global_table[FIGHTER_KIND] != FIGHTER_KIND_SZEROSUIT {
+            if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_CHANGE_KINE) {
+                if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_MOVE_TRANS)
+                && KineticModule::get_kinetic_type(fighter.module_accessor) != *FIGHTER_KINETIC_TYPE_AIR_STOP {
+                    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+                    
+                    let speed_x_mul = WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_MOVE_TRANS_END_SPEED_X_MUL);
+                    let speed_y_mul = WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_MOVE_TRANS_END_SPEED_Y_MUL);
+
+                    if speed_x_mul > 0.0
+                    && speed_x_mul != 1.0 {
+                        fighter.clear_lua_stack();
+                        lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_STOP);
+                        let speed_x = app::sv_kinetic_energy::get_speed_x(fighter.lua_state_agent);
+
+                        fighter.clear_lua_stack();
+                        lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, speed_x * speed_x_mul, 0.0);
+                        app::sv_kinetic_energy::set_speed(fighter.lua_state_agent);
+                    }
+
+                    if speed_y_mul > 0.0
+                    && speed_y_mul != 1.0 {
+                        fighter.clear_lua_stack();
+                        lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+                        let speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
+
+                        fighter.clear_lua_stack();
+                        lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y * speed_y_mul);
+                        app::sv_kinetic_energy::set_speed(fighter.lua_state_agent);
+                    }
+                }
+            }
+        }
+    }
+    else {
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_CHANGE_KINE);
+
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_SUPER_JUMP_PUNCH_AIR_TRANS);
+
+        StatusModule::set_situation_kind(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_AIR), false);
+        let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+        fighter.global_table[PREV_SITUATION_KIND].assign(&L2CValue::I32(situation_kind));
+        fighter.global_table[SITUATION_KIND].assign(&L2CValue::I32(*SITUATION_KIND_AIR));
+
+        GroundModule::correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+    }
+
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_REVERSE_LR) {
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_REVERSE_LR);
+
+        let reverse_lr_stick_x = WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_CONST_LR_STICK_X);
+
+        if fighter.global_table[STICK_X].get_f32().abs() > reverse_lr_stick_x {
+            PostureModule::set_stick_lr(fighter.module_accessor, 0.0);
+            PostureModule::update_rot_y_lr(fighter.module_accessor);
+        }
+    }
+
+    0.into()
 }
 
 // I honestly don't know why this function was needed in vanilla in the first place

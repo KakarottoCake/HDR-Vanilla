@@ -30,6 +30,7 @@ unsafe extern "C" fn game_specialhi12(agent: &mut L2CAgentBase) {
     frame(lua_state, 7.0);
     FT_MOTION_RATE_RANGE(agent, 7.0, 8.5, 2.0);
     if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
         VarModule::off_flag(agent.object(), vars::common::status::DISABLE_ECB_SHIFT);
         // HIT_NODE(agent, Hash40::new("kneer"), *HIT_STATUS_XLU);
         // HIT_NODE(agent, Hash40::new("kneel"), *HIT_STATUS_XLU);
@@ -257,6 +258,7 @@ unsafe extern "C" fn game_specialhi3(agent: &mut L2CAgentBase) {
     frame(lua_state, 4.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
         SA_SET(agent, *SITUATION_KIND_AIR);
         WorkModule::on_flag(boma, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_REVERSE_LR);
         // HIT_NODE(agent, Hash40::new("arml"), *HIT_STATUS_XLU);
