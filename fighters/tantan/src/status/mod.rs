@@ -4,6 +4,7 @@ use globals::*;
 
 mod jump;
 mod catch;
+mod pass;
 
 mod attack;
 mod attack_air;
@@ -49,6 +50,7 @@ pub fn install(agent: &mut Agent) {
 
     jump::install(agent);
     catch::install(agent);
+    pass::install(agent);
 
     attack::install(agent);
     attack_air::install(agent);
