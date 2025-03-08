@@ -20,8 +20,6 @@ extern crate smash;
 extern crate smash2;
 extern crate smash_arc;
 extern crate ninput;
-#[macro_use]
-extern crate lazy_static;
 extern crate toml;
 
 mod fighters;
