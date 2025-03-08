@@ -4,8 +4,6 @@ use rand::{
     prelude::SliceRandom,
     Rng
 };
-use serde::Deserialize;
-use toml::Value;
 
 const RANDOM_CFG_TOML: &str = "ui/param/menu/chara_random_config.toml";
 
@@ -64,25 +62,15 @@ unsafe fn decide_random(ctx: &mut skyline::hooks::InlineCtx) {
     let is_melee = ninput::any::is_down_any(ninput::Buttons::ZL | ninput::Buttons::ZR);
     if is_melee {
         let player_id = (*(*(ctx.registers[21].x.as_ref() as *const u64) as *const u64) + 0x150) as *const u8;
-        match generate_random(*player_id as usize, main_chara, sub_chara) {
-            Ok(_) => {
-                *ctx.registers[24].x.as_mut() = CHARA_DATA.read().unwrap().main_id;
-            },
-            Err(e) => {
-                println!("[src::chara_select] Error generating random fighter: {}", e);
-                CHARA_DATA.write().unwrap().use_default = true;
-            }
-        };
+        generate_random(*player_id as usize, main_chara, sub_chara);
+        *ctx.registers[24].x.as_mut() = CHARA_DATA.read().unwrap().main_id;
     }
 
     CHARA_DATA.write().unwrap().melee_random = is_melee;
 }
 
-unsafe fn generate_random(player_id: usize, main_data: u64, sub_data: u64) -> Result<(), String> {
-    let mut chara_string = match decide_fighter_from_id(player_id) {
-        Ok(string) => string,
-        Err(e) => return Err(e)
-    };
+unsafe fn generate_random(player_id: usize, main_data: u64, sub_data: u64) {
+    let mut chara_string = decide_fighter_from_id(player_id);
     let mut chara_hash = hash40(&format!("ui_chara_{}", chara_string)).0;
 
     let mut chara_data = CHARA_DATA.write().unwrap();
@@ -112,15 +100,9 @@ unsafe fn generate_random(player_id: usize, main_data: u64, sub_data: u64) -> Re
     chara_data.costume = costume as u8;
     chara_data.costume_rng = rng;
     println!("Randomly selected costume slot to be {costume}");
-
-    Ok(())
 }
 
-unsafe fn decide_fighter_from_id(id: usize) -> Result<String, String> {
-    if is_tourney_mode() {
-        return Err("Tourney mode enabled! Bypassing random config.".into())
-    }
-
+unsafe fn decide_fighter_from_id(id: usize) -> String {
     let chara_data = { CHARA_DATA.read().unwrap().clone() };
     let mut whitelist = chara_data.whitelist;
 
@@ -134,29 +116,34 @@ unsafe fn decide_fighter_from_id(id: usize) -> Result<String, String> {
     // choose a fighter from base whitelist
     let mut chara_string =  match whitelist.choose(&mut rand::thread_rng()) {
         Some(string) => string.as_str(),
-        None => return Err("Whitelist is empty!".into())
+        None => return dbg!("mario").to_owned()
     };
     let default = chara_string.to_owned();
     println!("Default character decision: {chara_string}");
+
+    if is_tourney_mode() {
+        println!("Tourney mode enabled! Bypassing random config.");
+        return default;
+    }
 
     // Collect all relevant data from config TOML
     let path = Path::new("mods:/").join(RANDOM_CFG_TOML);
     let data = match std::fs::read_to_string(&path) {
         Ok(result) => result,
-        Err(e) => return Err("Could not read TOML!".into())
+        Err(e) => return dbg!(default)
     };
     let config: RandomConfig = match toml::from_str(&data) {
         Ok(result) => result,
-        Err(e) => return Err(format!("Error parsing TOML: {}", e))
+        Err(e) => return dbg!(default)
     };
     
     let tag_index = PLAYER_TAG_INDEX[id];
     let tag = &get_tag_from_save(tag_index);
     println!("Tag data for slot {}: {}", id, &tag); 
-    let tag_data: TagData = match config.tags.get(tag) {
+    let mut tag_data: TagData = match config.tags.get(tag) {
         Some(data) => data.clone(),
         None => {
-            println!("[src::chara_select] No settings defined for tag [{tag}]! Using global settings.");
+            println!("No settings defined for tag [{tag}]! Using global settings.");
             match config.tags.get("global_settings") {
                 Some(global) => global.clone(),
                 None => {
@@ -167,32 +154,35 @@ unsafe fn decide_fighter_from_id(id: usize) -> Result<String, String> {
         }
     };
 
+    if tag_data.list.contains(&"element".to_string()) { // convert aegis
+        let idx = tag_data.list.iter().position(|x| x == "element").unwrap();
+        tag_data.list[idx] = "flame_first".to_string();
+        tag_data.list.insert(idx + 1, "light_first".to_string());
+    }
+
     match tag_data.kind {
         ListKind::Whitelist => {
             if tag_data.list.contains(&default) {
                 println!("{chara_string} is allowed!");
-                return Ok(default);
+                return default;
             }
 
-            println!("{chara_string} is not allowed for tag {}! Adjusting...", &tag);
-            let size = whitelist.len();
             whitelist.retain(|x| {
-                let restrict_prev = (*x == chara_data.last_selection && size > 1);
+                let restrict_prev = *x == chara_data.last_selection && tag_data.list.len() > 1;
                 tag_data.list.contains(&x) && !restrict_prev
             });
 
             // if none of the whitelisted characters were allowed originally, return the default
             if whitelist.len() <= 0 {
-                return Err("None of the whitelisted characters are allowed!".into());
+                return dbg!(default);
             }
         }
         ListKind::Blacklist => {
             if !tag_data.list.contains(&default) {
                 println!("{chara_string} is allowed!");
-                return Ok(default);
+                return default;
             }
 
-            println!("{chara_string} is not allowed for tag {}! Adjusting...", &tag);
             for chara in tag_data.list {
                 whitelist.retain(|x| *x != chara);
             }
@@ -203,22 +193,20 @@ unsafe fn decide_fighter_from_id(id: usize) -> Result<String, String> {
         }
     }
     // re-query with adjusted list
+    println!("{} is not allowed for tag {}! Adjusting...", default, &tag);
     chara_string = match whitelist.choose(&mut rand::thread_rng()) {
         Some(str) => str.as_str(),
-        None => return Err("Whitelist is empty!".into())
+        None => return dbg!(default)
     };
     println!("Randomly decided on {chara_string}");
     CHARA_DATA.write().unwrap().last_selection = chara_string.to_owned();
 
-    Ok(chara_string.to_owned())
+    chara_string.to_owned()
 }
 
 #[skyline::hook(offset = 0x1a0d540)]
 unsafe fn set_random_fighter_data(base_ptr: *mut u64, arg2: u64, arg3: u64, arg4: u64) -> u64 {
     let chara_data = { CHARA_DATA.read().unwrap().clone() };
-    if chara_data.use_default { 
-        return call_original!(base_ptr, arg2, arg3, arg4) 
-    };
     
     let main_chara = base_ptr.add(2);
     let sub_chara = base_ptr.add(3);
@@ -230,13 +218,7 @@ unsafe fn set_random_fighter_data(base_ptr: *mut u64, arg2: u64, arg3: u64, arg4
     } else {
         // ensure random is re-rolled between games
         let player_id = (*base_ptr as u8 - 1) as usize;
-        match generate_random(player_id, *main_chara, *sub_chara) {
-            Ok(_) => {},
-            Err(e) => {
-                println!("[src::chara_select] Error generating random fighter: {}", e);
-                CHARA_DATA.write().unwrap().use_default = true;
-            }
-        };
+        generate_random(player_id, *main_chara, *sub_chara);
     }
 
     let ret = call_original!(base_ptr, arg2, arg3, arg4);

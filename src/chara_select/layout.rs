@@ -1,5 +1,4 @@
 use super::*;
-use toml::Value;
 
 const ORDER_TOML: &str = "ui/param/menu/chara_icon_order.toml";
 const RANDOM_IDX_TOML: &str = "ui/param/menu/chara_random_idx.toml";
@@ -68,20 +67,36 @@ pub unsafe fn init_css_hook(ctx: &InlineCtx) {
             return;
         }
     };
-    if !config.enabled { return }; // aborts if the config set this to false
     
     // get the original vector of fighter entries to be loaded
     let chara_vec = &mut *(*ctx.registers[4].x.as_ref() as *mut smash2::cpp::Vector<u64>);
+
+    if !config.enabled {
+        for char in CharaSchema::default().order.iter() {
+            let hash = hash40(&format!("ui_chara_{}", char)).0;
+            let allowed = chara_vec.iter().any(|x| (*x & !KEY_MASK) == hash);
+            if allowed {
+                chara_data.whitelist.push(char.to_string());
+            }
+        }
+
+        return;
+    }
+
     let (mut whitelist, mut blacklist) = (Vec::new(), Vec::new());
     
     let schema: CharaSchema = config.schemas.get(&config.order).cloned().unwrap_or_default();
-    let chara_order = if is_tourney_mode() { CharaSchema::default().order } else { schema.order.clone() };
+    let mut chara_order = if is_tourney_mode() { CharaSchema::default().order } else { schema.order.clone() };
+    // aegis is a special case and is loaded with two entries
+    if chara_order.contains(&"element".to_string()) {
+        let idx = chara_order.iter().position(|x| x == "element").unwrap();
+        chara_order[idx] = "flame_first".to_string();
+        chara_order.insert(idx + 1, "light_first".to_string());
+    }
+
     for idx in 0..chara_order.len() {
         let chara = match chara_order.get(idx) {
-            Some(string) => {
-                if string == "element" { "flame_first" }
-                else { string.as_str() }
-            },
+            Some(string) => string.as_str(),
             None => "goku"
         };
         let should_load = chara_vec.iter().any(|x|
@@ -90,9 +105,6 @@ pub unsafe fn init_css_hook(ctx: &InlineCtx) {
 
         let dest = if should_load { &mut whitelist } else { &mut blacklist };
         dest.push(chara.to_string());
-        if chara == "flame_first" { // aegis is a special case and is loaded with two entries
-            dest.push("light_first".to_string()) 
-        };
         // println!("Fighter {chara} will{} be loaded", if should_load { "" } else { " not" });
     }
 
@@ -100,7 +112,8 @@ pub unsafe fn init_css_hook(ctx: &InlineCtx) {
     if schema.centered_random { icon_count += 1 }; // +1 to the order if random is to be inserted
     icon_count -= blacklist.len(); // subtract blacklisted fighters from the total
 
-    let random_idx = get_random_idx(icon_count);
+    let kill_mythra = if whitelist.contains(&"light_first".to_string()) { 1 } else { 0 }; // die
+    let random_idx = get_random_idx(dbg!(icon_count - kill_mythra));
     // println!(
     //     "{icon_count} icons to load ({} out of {} blacklisted).\nRandom will be placed in slot {random_idx}", 
     //     blacklist.len(), chara_order.len() + if schema.centered_random { 1 } else { 0 }
@@ -147,25 +160,32 @@ pub unsafe fn init_css_hook(ctx: &InlineCtx) {
     chara_data.blacklist = blacklist;
 }
 
+
+#[derive(Debug, Deserialize)]
+struct RandomIndex{ placement: Vec<usize> }
+
 fn get_random_idx(icon_count: usize) -> usize {
     let mut idx = icon_count / 2;
     let path = Path::new("mods:/").join(RANDOM_IDX_TOML);
-    if path.exists() && path.is_file() {
-        let data = match std::fs::read_to_string(&path).unwrap().parse::<Value>() {
-            Ok(result) => result,
-            Err(_) => return idx
-        };
-        let placement = match data.as_table().unwrap().get("placement") {
-            Some(table) => table.as_table().unwrap(),
-            None => return idx
-        };
-        match placement.get(&icon_count.to_string()) {
-            Some(value) => { idx = value.as_integer().unwrap() as usize },
-            None => {}
-        };
-    }
+    let data = match std::fs::read_to_string(&path) {
+        Ok(result) => result,
+        Err(e) => {
+            println!("[src::chara_select] Could not read TOML: {}", e);
+            return idx;
+        }
+    };
+    let config: RandomIndex = match toml::from_str(&data) {
+        Ok(result) => result,
+        Err(e) => {
+            println!("[src::chara_select] Error parsing TOML: {}", e);
+            return idx;
+        }
+    };
 
-    idx
+    match config.placement.get(icon_count - 1) {
+        Some(&value) => value,
+        None => idx
+    }
 }
 
 // formats the supplied index + chara string into valid u64 for the CSS icon vector

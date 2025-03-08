@@ -28,7 +28,6 @@ pub struct CharaData {
     sub_id: u64,
     last_selection: String,
     melee_random: bool,
-    use_default: bool,
     costume: u8,
     costume_rng: Vec<i32>,
 
@@ -42,7 +41,6 @@ impl Default for CharaData {
             sub_id: 0x0,
             last_selection: String::new(),
             melee_random: false,
-            use_default: false,
             costume: 0,
             costume_rng: (0..8).collect::<Vec<i32>>(),
 

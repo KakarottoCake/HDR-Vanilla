@@ -1,5 +1,3 @@
-[config]
-
 enabled = true # determines whether the feature is enabled
 order = "series" # determines which schema will be loaded
 
