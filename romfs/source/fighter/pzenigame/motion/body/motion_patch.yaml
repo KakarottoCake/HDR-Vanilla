@@ -161,5 +161,8 @@ step_pose_back:
 throw_lw:
   extra:
     cancel_frame: 46
+throw_f:
+  extra:
+    cancel_frame: 55
 cliff_wait:
   blend_frames: 2
