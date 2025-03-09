@@ -45,12 +45,13 @@ pub unsafe extern "C" fn kill_pledge_effects(poke_object: *mut BattleObject) {
         return;
     }
     let poke_boma = &mut *(*poke_object).module_accessor;
-    if poke_boma.kind() == *FIGHTER_KIND_PZENIGAME {
+    let poke_boma_kind = poke_boma.kind();
+    if poke_boma_kind == *FIGHTER_KIND_PZENIGAME {
         let handle = VarModule::get_int(poke_object, vars::pzenigame::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE) as u32;
         EffectModule::kill(poke_boma, handle, false, false);
         VarModule::set_int(poke_object, vars::pzenigame::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, -1);
     }
-    else if poke_boma.kind() == *FIGHTER_KIND_PFUSHIGISOU {
+    else if poke_boma_kind == *FIGHTER_KIND_PFUSHIGISOU {
         let handle = VarModule::get_int(poke_object, vars::pfushigisou::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE) as u32;
         EffectModule::kill(poke_boma, handle, false, false);
         VarModule::set_int(poke_object, vars::pfushigisou::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, -1);
@@ -76,9 +77,10 @@ pub unsafe extern "C" fn update_pledge_ui(weapon: &mut L2CFighterBase, poke_obje
     let swap_timer = VarModule::get_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER);
     let swap_timer_max = ParamModule::get_int(poke_boma.object(), ParamType::Agent, "param_special_lw.swap_lockout_frame");
     let pledge_state = VarModule::get_int(weapon.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
-    let disabled = (poke_boma.kind() == *FIGHTER_KIND_PZENIGAME   && pledge_state == *PLEDGE_STATE_WATER)
-                      || (poke_boma.kind() == *FIGHTER_KIND_PFUSHIGISOU && pledge_state == *PLEDGE_STATE_GRASS)
-                      || (poke_boma.kind() == *FIGHTER_KIND_PLIZARDON   && pledge_state == *PLEDGE_STATE_FIRE);
+    let poke_boma_kind = poke_boma.kind();
+    let disabled = (poke_boma_kind == *FIGHTER_KIND_PZENIGAME   && pledge_state == *PLEDGE_STATE_WATER)
+                      || (poke_boma_kind == *FIGHTER_KIND_PFUSHIGISOU && pledge_state == *PLEDGE_STATE_GRASS)
+                      || (poke_boma_kind == *FIGHTER_KIND_PLIZARDON   && pledge_state == *PLEDGE_STATE_FIRE);
     utils::ui::UiManager::set_ptrainer_meter_enable(entry_id, true);
     utils::ui::UiManager::set_ptrainer_meter_info(
         entry_id,
