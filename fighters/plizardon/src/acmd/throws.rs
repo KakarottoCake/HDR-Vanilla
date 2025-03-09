@@ -148,16 +148,40 @@ unsafe extern "C" fn game_throwhi(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    let pledge = if LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
+        let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+        let object = utils::util::get_battle_object_from_id(parent_id);
+        VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE)
+    } else { *PLEDGE_STATE_NONE };
     if is_excute(agent) {
-        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 1.0, 30, 88, 0, 50, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_THROW);
+        let (dmg, agl, kbg, fkb, bkb) = match (pledge) {
+            _ if pledge == *PLEDGE_STATE_WATER => (12.0, 60, 28, 0, 85),
+            _ if pledge == *PLEDGE_STATE_GRASS => (4.0, 74, 65, 0, 95),
+            _ => (1.0, 67, 130, 0, 110)
+        };
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, dmg, agl, kbg, fkb, bkb, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_THROW);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
     }
+    frame(lua_state, 1.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 12.0, 4.0);
+    frame(lua_state, 12.0);
+    FT_MOTION_RATE(agent, 1.0);
+    frame(lua_state, 20.0);
+    FT_MOTION_RATE_RANGE(agent, 20.0, 24.0, 1.0);
+    frame(lua_state, 24.0);
+    let game_frames = match (pledge) {
+        _ if pledge == *PLEDGE_STATE_WATER => 2.0,
+        _ if pledge == *PLEDGE_STATE_GRASS => 49.0,
+        _ => 25.0
+    };
+    FT_MOTION_RATE_RANGE(agent, 24.0, 49.0, game_frames);
     frame(lua_state, 24.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 1.5, 361, 100, 0, 0, 5.0, 0.0, 4.0, 2.0, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 6, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
         AttackModule::set_catch_only_all(boma, true, false);
     }
     frame(lua_state, 49.0);
+    FT_MOTION_RATE_RANGE(agent, 49.0, 55.0, 3.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
@@ -166,6 +190,7 @@ unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
         CHECK_FINISH_CAMERA(agent, 6, 0);
     }
     frame(lua_state, 55.0);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         let target = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
         let target_group = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
