@@ -14,7 +14,6 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
     }
 }
 
-// this runs as you are KO'd
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_air_lasso_hang_uniq)]
 pub unsafe fn sub_air_lasso_hang_uniq(fighter: &mut L2CFighterCommon, arg1: L2CValue) -> L2CValue {
     let ret = original!()(fighter, arg1);
