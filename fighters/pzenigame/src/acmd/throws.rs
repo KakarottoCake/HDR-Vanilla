@@ -130,7 +130,7 @@ unsafe extern "C" fn game_throwf(agent: &mut L2CAgentBase) {
         ArticleModule::generate_article(boma, *FIGHTER_PZENIGAME_GENERATE_ARTICLE_WATER, false, -1);
     }
     frame(lua_state, 34.0);
-    FT_MOTION_RATE_RANGE(agent, 34.0, 55.0, 9.0);
+    FT_MOTION_RATE_RANGE(agent, 34.0, 55.0, 4.0);
     frame(lua_state, 55.0);
     FT_MOTION_RATE(agent, 1.0);
 }
