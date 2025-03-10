@@ -34,6 +34,7 @@ unsafe extern "C" fn special_s_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
 }
 
 unsafe extern "C" fn special_s_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    VarModule::on_flag(fighter.battle_object, vars::common::instance::SIDE_SPECIAL_CANCEL_NO_HIT);
     fighter.sub_change_motion_by_situation(Hash40::new("special_s_start").into(), Hash40::new("special_air_s_start").into(), false.into());
     fighter.sub_set_special_start_common_kinetic_setting(hash40("param_special_s").into());
     WorkModule::set_int(fighter.module_accessor, 1, *FIGHTER_TRAIL_STATUS_SPECIAL_S_INT_ATTACK_COUNT);

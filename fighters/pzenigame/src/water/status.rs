@@ -50,7 +50,8 @@ pub unsafe extern "C" fn set_rot(weapon: &mut L2CWeaponCommon) {
 pub unsafe extern "C" fn regular_init(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let mut life = weapon.get_param_int("param_water", "life");
     let owner_boma = weapon.get_owner_boma();
-    if [*FIGHTER_KIND_PZENIGAME, *FIGHTER_KIND_PFUSHIGISOU, *FIGHTER_KIND_PLIZARDON].contains(&owner_boma.kind()) {
+    if [*FIGHTER_KIND_PZENIGAME, *FIGHTER_KIND_PFUSHIGISOU, *FIGHTER_KIND_PLIZARDON].contains(&owner_boma.kind())
+    && LinkModule::is_link(owner_boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
         //println!("owner is a pokemon, we can set the pledge state properly");
         let parent_id = LinkModule::get_parent_id(owner_boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
         let object = utils::util::get_battle_object_from_id(parent_id);

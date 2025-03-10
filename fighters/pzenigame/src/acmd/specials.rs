@@ -18,12 +18,14 @@ unsafe extern "C" fn game_specialnshot(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 6.0);
     if is_excute(agent) {
-        let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
-        let object = utils::util::get_battle_object_from_id(parent_id);
-        if ![*PLEDGE_STATE_NONE, *PLEDGE_STATE_WATER].contains(&VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE)) {
-            let timer = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER);
-            let pledge_use_cost_frame = ParamModule::get_int(agent.battle_object, ParamType::Agent, "param_special_lw.pledge_use_cost_frame");
-            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer - pledge_use_cost_frame);
+        if LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
+            let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+            let object = utils::util::get_battle_object_from_id(parent_id);
+            if ![*PLEDGE_STATE_NONE, *PLEDGE_STATE_WATER].contains(&VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE)) {
+                let timer = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER);
+                let pledge_use_cost_frame = ParamModule::get_int(agent.battle_object, ParamType::Agent, "param_special_lw.pledge_use_cost_frame");
+                VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer - pledge_use_cost_frame);
+            }
         }
         ArticleModule::generate_article(boma, *FIGHTER_PZENIGAME_GENERATE_ARTICLE_WATER, false, -1);
     }
@@ -90,13 +92,36 @@ unsafe extern "C" fn expression_specialnshot(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_specialsstart(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 1.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 7.0, 1.0);
+    frame(lua_state, 7.0);
+    FT_MOTION_RATE_RANGE(agent, 7.0, 17.0, 10.0);
+    frame(lua_state, 17.0);
+    FT_MOTION_RATE_RANGE(agent, 17.0, 21.0, 1.0);
+    frame(lua_state, 21.0);
+    FT_MOTION_RATE(agent, 1.0);
+}
+
 unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         JostleModule::set_status(boma, false);
         ATTACK(agent, 0, 0, Hash40::new("bust"), 8.0, 49, 48, 0, 75, 2.5, 0.0, 0.0, 0.0, Some(0.0), Some(0.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 60, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ZENIGAME_SHELLHIT, *ATTACK_REGION_BODY);
     }
+}
+
+unsafe extern "C" fn game_specialairshit(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 1.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 20.0, 15.0);
+    frame(lua_state, 20.0);
+    FT_MOTION_RATE(agent, 1.0);
 }
 
 unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
@@ -175,18 +200,19 @@ unsafe extern "C" fn game_speciallwin(agent: &mut L2CAgentBase) {
     frame(lua_state, 6.0);
     if is_excute(agent) {
         HitModule::set_whole(boma, HitStatus(*HIT_STATUS_OFF), 0);
-        let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
-        let object = utils::util::get_battle_object_from_id(parent_id);
-        VarModule::on_flag(object, vars::ptrainer::instance::SPECIAL_LW_BACKWARDS_SWITCH); // we will turn this off in opff
-        if VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE) == *PLEDGE_STATE_NONE {
-            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_WATER);
-            let pledge_duration_frame = ParamModule::get_int(agent.battle_object, ParamType::Agent, "param_special_lw.pledge_duration_frame");
-            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, pledge_duration_frame);
+        if LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
+            let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+            let object = utils::util::get_battle_object_from_id(parent_id);
+            VarModule::on_flag(object, vars::ptrainer::instance::SPECIAL_LW_BACKWARDS_SWITCH); // we will turn this off in opff
+            if VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE) == *PLEDGE_STATE_NONE {
+                VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, *PLEDGE_STATE_WATER);
+                let pledge_duration_frame = ParamModule::get_int(agent.battle_object, ParamType::Agent, "param_special_lw.pledge_duration_frame");
+                VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, pledge_duration_frame);
+            }
+            let swap_lockout_frame = ParamModule::get_int(agent.battle_object, ParamType::Agent, "param_special_lw.swap_lockout_frame");
+            VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER, swap_lockout_frame);
+            VarModule::on_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
         }
-        VarModule::on_flag(object, vars::ptrainer::instance::DISABLE_SPECIAL_LW);
-        let swap_lockout_frame = ParamModule::get_int(agent.battle_object, ParamType::Agent, "param_special_lw.swap_lockout_frame");
-        VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_LW_SWAP_TIMER, swap_lockout_frame);
-        VarModule::on_flag(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_PAUSE_TIMER);
     }
 }
 
@@ -203,8 +229,11 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("sound_specialairnshot", sound_specialnshot, Priority::Low);
     agent.acmd("expression_specialairnshot", expression_specialnshot, Priority::Low);
 
+    agent.acmd("game_specialsstart", game_specialsstart, Priority::Low);
+    agent.acmd("game_specialairsstart", game_specialsstart, Priority::Low);
     agent.acmd("game_specials", game_specials, Priority::Low);
     agent.acmd("game_specialairs", game_specials, Priority::Low);
+    agent.acmd("game_specialairshit", game_specialairshit, Priority::Low);
     agent.acmd("game_specialsend", game_specialsend, Priority::Low);
     agent.acmd("game_specialairsend", game_specialsend, Priority::Low);
 
