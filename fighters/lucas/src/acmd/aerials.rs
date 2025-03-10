@@ -150,7 +150,7 @@ unsafe extern "C" fn effect_landingairn(agent: &mut L2CAgentBase) {
 	let boma = agent.boma();
 	if is_excute(agent) {
 		LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-        LANDING_EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.4, 0, 0, 0, 0, 0, 0, false);
+        LANDING_EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.55, 0, 0, 0, 0, 0, 0, false);
         LAST_EFFECT_SET_RATE(agent, 2.5);
     }
 }

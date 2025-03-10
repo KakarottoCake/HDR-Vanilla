@@ -10,7 +10,10 @@ unsafe fn training_mode_full_meter(fighter: &mut L2CFighterCommon, boma: &mut Ba
     && boma.is_status(*FIGHTER_STATUS_KIND_APPEAL)
     && boma.is_button_on(Buttons::Guard)
     {
-        let meter_max = (MeterModule::meter_cap(fighter.object()) as f32 * MeterModule::meter_per_level(fighter.object()));
+        VarModule::set_int(fighter.battle_object, vars::dolly::instance::ADDED_METER_LEVELS, 8);
+        let meter_cap = (VarModule::get_int(fighter.battle_object, vars::dolly::instance::ADDED_METER_LEVELS) + 2).clamp(2, 10);
+        MeterModule::set_meter_cap(fighter.object(), meter_cap);
+        let meter_max = (meter_cap as f32) * MeterModule::meter_per_level(fighter.object());
         MeterModule::add(boma.object(), meter_max);
     }
 }
