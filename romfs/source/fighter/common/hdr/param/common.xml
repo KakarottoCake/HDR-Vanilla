@@ -49,4 +49,5 @@
     <float hash="attack_air_cliff_catch_frame_after_cancel_frame">5</float>
     <int hash="wall_jump_count_airtime">1</int>
     <int hash="lasso_hang_fall_disable_frame">15</int>
+    <float hash="asdi_stick">0.8</float>
 </struct>
