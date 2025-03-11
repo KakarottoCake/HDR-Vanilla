@@ -85,10 +85,10 @@ throw_b:
     cancel_frame: 37
 throw_lw:
   extra:
-    cancel_frame: 48
+    cancel_frame: 50
 throw_hi:
   extra:
-    cancel_frame: 48
+    cancel_frame: 50
 attack_11:
   extra:
     cancel_frame: 21
@@ -100,7 +100,7 @@ attack_13:
     cancel_frame: 31
 attack_lw3:
   extra:
-    cancel_frame: 31
+    cancel_frame: 32
 special_hi:
   extra:
     cancel_frame: 80
