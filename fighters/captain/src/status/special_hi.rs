@@ -33,7 +33,7 @@ pub unsafe extern "C" fn special_hi_main(fighter: &mut L2CFighterCommon) -> L2CV
     let ret = smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_SPECIAL_HI)(fighter);
     
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_AIR_MOTION) {
-        let speed_coef = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40::("speed_coef"));
+        let speed_coef = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("speed_coef"));
         WorkModule::set_float(fighter.module_accessor, speed_coef * 0.85, *FIGHTER_STATUS_WORK_ID_FLOAT_RESERVE_KINETIC_MOTION_SPEED_MUL);
     }
     
