@@ -41,6 +41,7 @@ unsafe extern "C" fn special_lw1_ground_main(fighter: &mut L2CFighterCommon) -> 
 }
 
 unsafe extern "C" fn special_lw1_air_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_CLIFF);
     fighter.set_int(0x50000000, *FIGHTER_MIIFIGHTER_STATUS_WORK_ID_KUIUCHI_HEAD_WORK_INT_FALL_HIT_OBJECT_ID);
     if fighter.is_flag(*FIGHTER_MIIFIGHTER_STATUS_WORK_ID_KUIUCHI_HEAD_FLAG_FROM_GR) {
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_lw1_loop"), 0.0, 1.0, false, 0.0, false, false);
@@ -60,16 +61,21 @@ unsafe extern "C" fn special_lw1_air_main(fighter: &mut L2CFighterCommon) -> L2C
 }
 
 unsafe extern "C" fn special_lw1_air_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    // Idk why this has to be done every frame to prevent ledgegrabbing
+    // but it do rn
+    GroundModule::set_cliff_check(fighter.module_accessor, app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE));
+
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
+
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
         || fighter.sub_air_check_fall_common().get_bool() {
             return 1.into();
         }
     }
-    WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_CLIFF);
+
     if !fighter.is_flag(*FIGHTER_MIIFIGHTER_STATUS_WORK_ID_KUIUCHI_HEAD_FLAG2) {
         if MotionModule::is_end(fighter.module_accessor) {
             fighter.on_flag(*FIGHTER_MIIFIGHTER_STATUS_WORK_ID_KUIUCHI_HEAD_FLAG2);
@@ -85,6 +91,7 @@ unsafe extern "C" fn special_lw1_air_main_loop(fighter: &mut L2CFighterCommon) -
             fighter.on_flag(*FIGHTER_MIIFIGHTER_STATUS_WORK_ID_KUIUCHI_HEAD_FLAG1);
         }
     }
+
     if !fighter.is_situation(*SITUATION_KIND_AIR) {
         if fighter.is_flag(*FIGHTER_MIIFIGHTER_STATUS_WORK_ID_KUIUCHI_HEAD_FLAG1) {
             KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_MOTION);
@@ -100,6 +107,7 @@ unsafe extern "C" fn special_lw1_air_main_loop(fighter: &mut L2CFighterCommon) -
             return 0.into();
         }
     }
+
     //Allows EQF to be cancelled into freefall with second B press
     if fighter.is_motion(Hash40::new("special_lw1_loop"))
     && (ControlModule::check_button_on_trriger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) || fighter.status_frame() >= 40) {
