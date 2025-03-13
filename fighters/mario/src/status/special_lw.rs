@@ -190,6 +190,12 @@ unsafe extern "C" fn mario_special_lw_shoot_main_loop(fighter: &mut L2CFighterCo
             return false.into();
         }
     }
+    
+    if !fighter.is_in_hitlag()
+    && !StatusModule::is_changing(fighter.module_accessor)
+    && fighter.is_situation(*SITUATION_KIND_AIR) {
+        fighter.sub_air_check_dive();
+    }
     return false.into();
 }
 

@@ -140,7 +140,7 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
         MeterModule::watch_damage(agent.battle_object, false);
     }
-    frame(lua_state, 30.0);
+    frame(lua_state, 29.0);
     if is_excute(agent) {
         if !charged {
             MeterModule::watch_damage(agent.battle_object, true);
