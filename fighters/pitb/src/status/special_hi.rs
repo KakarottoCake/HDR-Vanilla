@@ -49,7 +49,7 @@ unsafe extern "C" fn special_hi_rush_init(fighter: &mut L2CFighterCommon) -> L2C
 
     let stick_x = fighter.global_table[STICK_X].get_f32();
     let stick_y = fighter.global_table[STICK_Y].get_f32();
-    let mut rad = 0.0_f32.to_radians();
+    let mut rad = 90.0_f32.to_radians();
     let rush_speed = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("rush_speed"));
     let lr = PostureModule::lr(fighter.module_accessor);
 
