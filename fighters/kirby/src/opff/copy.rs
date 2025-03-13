@@ -1273,19 +1273,114 @@ unsafe fn packun_ptooie_scale(boma: &mut BattleObjectModuleAccessor) {
 
 unsafe extern "C" fn plant_meter(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
     unsafe {
-        if !sv_information::is_ready_go() && fighter.status_frame() < 1 {
+        if !sv_information::is_ready_go() {
+            if fighter.status_frame() < 1 {
+                return;
+            }
+            else {
+                utils::ui::UiManager::set_ptrainer_meter_enable(fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32, false);
+            }
+        } 
+        if WorkModule::get_int(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_COPY_CHARA) == *FIGHTER_KIND_PACKUN {
+            utils::ui::UiManager::set_plant_meter_enable(fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32, true);
+            utils::ui::UiManager::set_plant_meter_info(
+                fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32,
+                VarModule::get_int(fighter.object(), vars::packun::instance::CURRENT_STANCE)
+            );
             return;
         }
-
-        if WorkModule::get_int(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_COPY_CHARA) != FIGHTER_KIND_PACKUN {
+        else {
             utils::ui::UiManager::set_plant_meter_enable(fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32, false);
-            return;
         }
+    }
+}
 
-        utils::ui::UiManager::set_plant_meter_enable(fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32, true);
-        utils::ui::UiManager::set_plant_meter_info(
+unsafe extern "C" fn pledge_init(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_SWALLOW_WAIT) {
+        let opponent_boma = fighter.get_grabbed_opponent_boma();
+        if [*FIGHTER_KIND_PZENIGAME, *FIGHTER_KIND_PFUSHIGISOU, *FIGHTER_KIND_PLIZARDON].contains(&opponent_boma.kind()) {
+            if LinkModule::is_link(opponent_boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
+                let parent_id = LinkModule::get_parent_id(opponent_boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+                let object = utils::util::get_battle_object_from_id(parent_id);
+                let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
+                if pledge != *PLEDGE_STATE_NONE {
+                    VarModule::set_int(fighter.battle_object, vars::kirby::instance::SPECIAL_N_PTRAINER_PLEDGE_STATE, pledge);
+                    VarModule::set_int(fighter.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 1800);
+                    let sanity_check = VarModule::get_int(fighter.battle_object, vars::kirby::instance::SPECIAL_N_PTRAINER_PLEDGE_STATE);
+                    return;
+                }
+            }
+            // The pokemon has no active pledge or the trainer was somehow not found, so Kirby will not get a pledge
+            VarModule::set_int(fighter.battle_object, vars::kirby::instance::SPECIAL_N_PTRAINER_PLEDGE_STATE, *PLEDGE_STATE_NONE);
+            VarModule::set_int(fighter.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
+        }
+    }
+}
+
+unsafe extern "C" fn pledge_timer(fighter: &mut L2CFighterCommon) {
+    if VarModule::get_int(fighter.battle_object, vars::kirby::instance::SPECIAL_N_PTRAINER_PLEDGE_STATE) != *PLEDGE_STATE_NONE {
+        if VarModule::get_int(fighter.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER) < 0 {
+            VarModule::set_int(fighter.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
+            VarModule::set_int(fighter.battle_object, vars::kirby::instance::SPECIAL_N_PTRAINER_PLEDGE_STATE, *PLEDGE_STATE_NONE);
+
+            // kill pledge effects
+            let handle = VarModule::get_int(fighter.battle_object, vars::kirby::instance::SPECIAL_N_PTRAINER_PLEDGE_EFFECT_HANDLE) as u32;
+            EffectModule::kill(fighter.module_accessor, handle, false, false);
+            VarModule::set_int(fighter.battle_object, vars::kirby::instance::SPECIAL_N_PTRAINER_PLEDGE_EFFECT_HANDLE, -1);
+            utils::ui::UiManager::set_ptrainer_meter_enable(fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32, false);
+        } else {
+            if VarModule::get_int(fighter.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER) == 1800 {
+                pledge_init_effects(fighter);
+            }
+            VarModule::dec_int(fighter.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER);
+            pledge_update_ui(fighter);
+        }
+    }
+}
+
+unsafe extern "C" fn pledge_init_effects(fighter: &mut L2CFighterCommon) {
+    let pledge_state = VarModule::get_int(fighter.battle_object, vars::kirby::instance::SPECIAL_N_PTRAINER_PLEDGE_STATE);
+    if pledge_state == *PLEDGE_STATE_WATER {
+        let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_status_defense_up"), Hash40::new("hip"), &Vector3f::new(0.7, 0.0, 0.0), &Vector3f::zero(), 0.7, true, 0, 0, 0, 0, 0, true, true) as u32;
+        VarModule::set_int(fighter.battle_object, vars::kirby::instance::SPECIAL_N_PTRAINER_PLEDGE_EFFECT_HANDLE, handle as i32);
+        let water_fx = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_water_landing"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.0, true, 0, 0, 0, 0, 0, true, true) as u32;
+        EffectModule::set_rgb(fighter.module_accessor, water_fx, 0.2, 0.55, 1.0);
+        EffectModule::set_scale(fighter.module_accessor, water_fx, &Vector3f::new(0.6, 0.9, 0.6));
+        EffectModule::set_rate(fighter.module_accessor, water_fx, 0.7);
+    }
+    else if pledge_state == *PLEDGE_STATE_GRASS {
+        let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_status_speed_up"), Hash40::new("hip"), &Vector3f::new(0.7, 0.0, 0.0), &Vector3f::zero(), 0.7, true, 0, 0, 0, 0, 0, true, true) as u32;
+        VarModule::set_int(fighter.battle_object, vars::kirby::instance::SPECIAL_N_PTRAINER_PLEDGE_EFFECT_HANDLE, handle as i32);
+        for _ in 0..2 {
+            let grass_fx = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_grass_landing"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.0, true, 0, 0, 0, 0, 0, true, true) as u32;
+            EffectModule::set_rgb(fighter.module_accessor, grass_fx, 0.5, 2.0, 0.5);
+            EffectModule::set_scale(fighter.module_accessor, grass_fx, &Vector3f::new(1.2, 1.4, 1.2));
+            EffectModule::set_rate(fighter.module_accessor, grass_fx, 0.6);
+        }
+    }
+    else if pledge_state == *PLEDGE_STATE_FIRE {
+        let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_status_attack_up"), Hash40::new("hip"), &Vector3f::new(0.7, 0.0, 0.0), &Vector3f::zero(), 0.7, true, 0, 0, 0, 0, 0, true, true) as u32;
+        VarModule::set_int(fighter.battle_object, vars::kirby::instance::SPECIAL_N_PTRAINER_PLEDGE_EFFECT_HANDLE, handle as i32);
+        let fire_fx = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_damage_fire"), Hash40::new("top"), &Vector3f::new(0.5, 0.0, 0.0), &Vector3f::zero(), 1.0, true, 0, 0, 0, 0, 0, true, true) as u32;
+        EffectModule::set_rgb(fighter.module_accessor, fire_fx, 1.0, 0.9, 0.9);
+        EffectModule::set_scale(fighter.module_accessor, fire_fx, &Vector3f::new(1.2, 1.25, 1.2));
+        EffectModule::set_rate(fighter.module_accessor, fire_fx, 0.5);
+    }
+}
+
+unsafe extern "C" fn pledge_update_ui(fighter: &mut L2CFighterCommon) {
+    if VarModule::get_int(fighter.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER) > 0 {
+        let timer = VarModule::get_int(fighter.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER) as f32;
+        let pledge = VarModule::get_int(fighter.battle_object, vars::kirby::instance::SPECIAL_N_PTRAINER_PLEDGE_STATE);
+        utils::ui::UiManager::set_ptrainer_meter_enable(fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32, true);
+        utils::ui::UiManager::set_ptrainer_meter_info(
             fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32,
-            VarModule::get_int(fighter.object(), vars::packun::instance::CURRENT_STANCE)
+            timer,
+            1800.0,
+            0.0,
+            0.0,
+            pledge,
+            false
         );
     }
 }
@@ -1317,6 +1412,7 @@ pub unsafe fn kirby_copy_handler(fighter: &mut L2CFighterCommon, boma: &mut Batt
     // enable copying flags when inhaling an opponent
     if (0x1e3..0x1f1).contains(&inhaledstatus) {
         packun_ptooie_stance(fighter, boma, status_kind);
+        pledge_init(fighter);
         return;
     }
     if !WorkModule::is_flag(boma, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_COPY) {
@@ -1396,8 +1492,6 @@ pub unsafe fn kirby_copy_handler(fighter: &mut L2CFighterCommon, boma: &mut Batt
         // },
         // Dark Pit
         0x1F => pitb_bow_lc(boma, status_kind, situation_kind, cat[1], stick_y),
-        // Charizard
-        0x26 => plizardon_flame_cancel(boma, status_kind, situation_kind, frame),
         // Mega Man
         0x31 => blade_toss_ac(boma, status_kind, situation_kind, cat[0], frame),
         // Simon
@@ -1429,7 +1523,17 @@ pub unsafe fn kirby_copy_handler(fighter: &mut L2CFighterCommon, boma: &mut Batt
         // Mewtwo
         0x19 => mewtwo_nspecial_cancels(boma),
         // Squirtle
-        0x24 => pzenigame_nspecial_cancels(boma, status_kind, situation_kind, cat[1]),
+        0x24 => {
+            pledge_timer(fighter);
+        },
+        // Ivysaur
+        0x25 => {
+            pledge_timer(fighter);
+        },
+        // Charizard
+        0x26 => {
+            pledge_timer(fighter);
+        },
         // Lucario
         0x2C => lucario_nspecial_cancels(fighter, status_kind, situation_kind, cat[2]),
         // Wii Fit Trainer

@@ -420,7 +420,7 @@ unsafe extern "C" fn game_specialairhih(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
         if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
-            VarModule::on_flag(agent.battle_object, vars::kirby::instance::DISABLE_SPECIAL_HI);
+            VarModule::on_flag(agent.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
             StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL, false);
         }
     }

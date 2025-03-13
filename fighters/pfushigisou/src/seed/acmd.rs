@@ -124,6 +124,15 @@ unsafe extern "C" fn effect_clashpledgef(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_clashground(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 5.0);
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x199c462b5d));
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_move", game_move, Priority::Low);
     agent.acmd("effect_move", effect_move, Priority::Low);
@@ -139,4 +148,6 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_clashpledgef", game_clashpledgef, Priority::Low);
     agent.acmd("effect_clashpledgef", effect_clashpledgef, Priority::Low);
     agent.acmd("sound_clashpledgef", acmd_stub, Priority::Low);
+
+    agent.acmd("game_clashground", game_clashground, Priority::Low);
 }
