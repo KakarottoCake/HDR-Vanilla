@@ -200,6 +200,9 @@ unsafe extern "C" fn mario_special_lw_shoot_main_loop(fighter: &mut L2CFighterCo
 }
 
 unsafe extern "C" fn mario_special_lw_shoot_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+        return false.into();
+    }
     KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
     let air_accel_mul = if KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) > 0.0 {
         1.0
@@ -257,9 +260,22 @@ unsafe extern "C" fn mario_special_lw_charge_pre(fighter: &mut L2CFighterCommon)
     return false.into();
 }
 
-unsafe extern "C" fn mario_special_lw_charge_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
+unsafe extern "C" fn mario_special_lw_charge_init(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let lr = PostureModule::lr(fighter.module_accessor);
+    let mut speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) * lr;
+    let mut speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+    sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, -1.0, -1.0);
+    sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, speed_x * lr, 0.0);
+    StatusModule::set_situation_kind(fighter.module_accessor, SituationKind(*SITUATION_KIND_GROUND), false);
     GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+    GroundModule::set_correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+    // KineticModule::set_consider_ground_friction(fighter.module_accessor, false, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    dbg!(speed_x * lr);
+    return false.into();
+}
+
+unsafe extern "C" fn mario_special_lw_charge_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let motion_hash = Hash40::new("special_lw_landing");
     let jump_squat_frame = ParamModule::get_int(fighter.battle_object, ParamType::Agent, "long_jump.landing_frame") as f32;
     let start_frame = 0.0;
@@ -278,7 +294,6 @@ unsafe extern "C" fn mario_special_lw_charge_main(fighter: &mut L2CFighterCommon
         false,
         false
     );
-    KineticModule::set_consider_ground_friction(fighter.module_accessor, false, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     fighter.clear_commands(Cat1::SpecialLw);
     fighter.sub_shift_status_main(L2CValue::Ptr(mario_special_lw_charge_main_loop as *const () as _))
 }
@@ -313,6 +328,7 @@ pub fn install(agent: &mut Agent) {
     agent.status(End, *FIGHTER_MARIO_STATUS_KIND_SPECIAL_LW_SHOOT, mario_special_lw_shoot_end);
 
     agent.status(Pre, *FIGHTER_MARIO_STATUS_KIND_SPECIAL_LW_CHARGE, mario_special_lw_charge_pre);
+    agent.status(Init, *FIGHTER_MARIO_STATUS_KIND_SPECIAL_LW_CHARGE, mario_special_lw_charge_init);
     agent.status(Main, *FIGHTER_MARIO_STATUS_KIND_SPECIAL_LW_CHARGE, mario_special_lw_charge_main);
     agent.status(End, *FIGHTER_MARIO_STATUS_KIND_SPECIAL_LW_CHARGE, mario_special_lw_charge_end);
 }
