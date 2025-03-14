@@ -143,7 +143,7 @@ unsafe extern "C" fn game_speciallwlr(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, 1.6);
     frame(lua_state, 5.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 20.0, 45, 68, 0, 50, 9.0, 0.0, 4.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 12, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_BOMB, *ATTACK_REGION_NONE);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 20.0, 45, 68, 0, 50, 9.0, 0.0, 4.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 12, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_BOMB, *ATTACK_REGION_NONE);
         WorkModule::on_flag(boma, *FIGHTER_WARIO_STATUS_SPECIAL_LW_FLAG_JUMP);
     }
     frame(lua_state, 7.8);
