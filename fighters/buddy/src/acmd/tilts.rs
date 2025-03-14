@@ -219,7 +219,6 @@ unsafe extern "C" fn game_attacklw3(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, 2.0);
     frame(lua_state, 17.5);
     if is_excute(agent) {
-        HIT_NO(agent, 12, *HIT_STATUS_OFF);
         HIT_NO(agent, 13, *HIT_STATUS_OFF);
         HIT_NO(agent, 14, *HIT_STATUS_OFF);
         HIT_NO(agent, 15, *HIT_STATUS_OFF);
