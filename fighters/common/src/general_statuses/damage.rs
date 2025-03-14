@@ -199,6 +199,8 @@ unsafe extern "C" fn check_asdi(fighter: &mut L2CFighterCommon) {
         let length = fighter.Vector2__length(vector.clone());
         let asdi_stick = ParamModule::get_float(fighter.battle_object, ParamType::Common, "asdi_stick");
         if length.get_f32() < asdi_stick {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DAMAGE_FLAG_ENABLE_DOWN);
+            
             return;
         }
 
