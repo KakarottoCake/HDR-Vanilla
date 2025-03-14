@@ -148,6 +148,7 @@ unsafe extern "C" fn mario_special_lw_shoot_init(fighter: &mut L2CFighterCommon)
         sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y);
         VarModule::set_int(fighter.battle_object, vars::mario::status::SPECIAL_LW_LONG_JUMP_KIND, vars::mario::LONG_JUMP_M);
     }
+    dbg!(speed_x * lr);
     return false.into();
 }
 
