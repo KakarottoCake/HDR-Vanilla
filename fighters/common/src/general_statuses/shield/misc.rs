@@ -211,9 +211,6 @@ pub unsafe fn check_guard_attack_special_hi(
 
 pub unsafe fn check_cstick_escape_oos(fighter: &mut L2CFighterCommon, should_transition: bool) -> L2CValue {
     let boma = fighter.module_accessor;
-    if fighter.check_guard_hold().get_bool() {
-        return false.into();
-    }
 
     let c_stick_override = fighter.is_button_on(Buttons::CStickOverride);
     let c_stick_on = (
@@ -276,9 +273,6 @@ pub unsafe fn check_cstick_escape_oos(fighter: &mut L2CFighterCommon, should_tra
 
 pub unsafe fn check_escape_oos(fighter: &mut L2CFighterCommon, should_transition: bool) -> L2CValue {
     let boma = fighter.module_accessor;
-    if fighter.check_guard_hold().get_bool() {
-        return false.into();
-    }
 
     let escapes = [
         (
@@ -384,15 +378,17 @@ pub unsafe fn check_plat_drop_oos(fighter: &mut L2CFighterCommon) -> L2CValue {
         return false.into();
     }
 
-    // require a flick if locking shield
-    if fighter.check_guard_hold().get_bool() && flick_y >= pass_flick_y {
-        return false.into();
-    }
-
-    // dont override spotdodge unless exceding pass_stick_x
-    if check_escape_oos(fighter, false.into()).get_bool()
-    && stick_x.abs() < pass_stick_x {
-        return false.into();
+    let is_spotdodge_input = check_escape_oos(fighter, false.into()).get_bool();
+    if fighter.check_guard_hold().get_bool() {
+        // require a spotdodge input if locking shield
+        if !is_spotdodge_input {
+            return false.into();
+        }
+    } else {
+        // dont override spotdodge unless exceding pass_stick_x
+        if is_spotdodge_input && stick_x.abs() < pass_stick_x {
+            return false.into();
+        }
     }
 
     fighter.change_status(FIGHTER_STATUS_KIND_PASS.into(), true.into());
@@ -438,7 +434,7 @@ pub unsafe fn sub_guard_cont(fighter: &mut L2CFighterCommon) -> L2CValue {
         return true.into();
     }
 
-    if check_cstick_escape_oos(fighter, true).get_bool() {
+    if !guard_hold && check_cstick_escape_oos(fighter, true).get_bool() {
         return true.into();
     }
 
@@ -446,7 +442,7 @@ pub unsafe fn sub_guard_cont(fighter: &mut L2CFighterCommon) -> L2CValue {
         return true.into();
     }
 
-    if check_escape_oos(fighter, true).get_bool() {
+    if !guard_hold && check_escape_oos(fighter, true).get_bool() {
         return true.into();
     }
 
