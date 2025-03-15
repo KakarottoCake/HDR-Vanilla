@@ -288,6 +288,8 @@ unsafe fn status_CliffJump1(fighter: &mut L2CFighterCommon) -> L2CValue {
         MotionModule::set_rate(fighter.module_accessor, motion_rate);
         MotionModule::set_whole_rate(fighter.module_accessor, 1.0);
     }
+    InputModule::set_persist_lifetime(fighter.battle_object, 10);
+    InputModule::enable_persist(fighter.battle_object);
 
     ret
 }
@@ -297,6 +299,7 @@ unsafe fn status_end_CliffJump1(fighter: &mut L2CFighterCommon) -> L2CValue {
     if StatusModule::status_kind_next(fighter.module_accessor) != *FIGHTER_STATUS_KIND_CLIFF_JUMP2 {
         VarModule::set_int(fighter.object(), vars::common::instance::LEDGE_ID, -1);
     }
+    InputModule::disable_persist(fighter.battle_object);
     call_original!(fighter)
 }
 
