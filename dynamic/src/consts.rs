@@ -1123,7 +1123,12 @@ pub mod vars {
     pub mod miigunner_supermissile {
         pub mod instance {
             // flags
-            pub const PULSE_DETONATE: i32 = 0x0100;
+            pub const ENABLE_PULSE: i32 = 0x0100;
+            pub const PULSE_DETONATE: i32 = 0x0101;
+        }
+        pub mod status {
+            // ints
+            pub const PULSE_TIMER: i32 = 0x1100;
         }
     }
 
