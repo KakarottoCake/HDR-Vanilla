@@ -109,6 +109,12 @@ unsafe fn status_CliffWait_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
             return true.into();
         }
 
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_ATTACK)
+        && fighter.is_cat_flag(Cat1::AttackN) {
+            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_ATTACK.into(), true.into());
+            return true.into();
+        }
+
         if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_SPEICAL)
         && fighter.is_cat_flag(Cat1::SpecialAny) {
             fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_ATTACK.into(), true.into());
