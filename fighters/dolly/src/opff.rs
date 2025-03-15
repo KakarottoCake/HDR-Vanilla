@@ -87,6 +87,53 @@ unsafe fn inherit_final_cancel(fighter: &mut L2CFighterCommon) {
     }
 }
 
+unsafe fn command_normal_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
+    if fighter.is_flag(*FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL)
+    && fighter.is_status_one_of(&[
+        *FIGHTER_STATUS_KIND_ATTACK
+    ])
+    && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) 
+    && !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_PARRY)  {
+        check_command_normal_cancels(fighter, boma);
+    };
+}
+
+unsafe fn check_command_normal_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
+    // Dont use cancels if we're already in cancel frames, if we're in hitlag, or if we didn't connect
+    if CancelModule::is_enable_cancel(boma) 
+    || boma.is_in_hitlag() {
+        return;
+    }
+    
+    let terms = [
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_S3,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI3,
+    ];
+    let mut enableds = [false; 10];
+    for x in 0..terms.len() {
+        enableds[x] = WorkModule::is_enable_transition_term(fighter.module_accessor, terms[x]);
+    }
+    fighter.enable_transition_term_many(&terms);
+    for val in terms.iter() {
+        WorkModule::enable_transition_term(fighter.module_accessor, *val);
+    }
+
+    if fighter.is_cat_flag(Cat1::AttackS3)
+    && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_S3) {
+        fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_S3.into(), true.into());
+    }
+    else if fighter.is_cat_flag(Cat1::AttackHi3)
+    && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI3) {
+        fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_HI3.into(), true.into());
+    }
+
+    for x in 0..terms.len() {
+        if !enableds[x] {
+            WorkModule::unable_transition_term(fighter.module_accessor, terms[x]);
+        }
+    }
+}
+
 unsafe fn super_special_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, status_kind: i32, situation_kind: i32, motion_kind: u64, frame: f32) {
     let is_landing_cancel = {
         fighter.is_status_one_of(&[
@@ -166,6 +213,7 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     training_mode_full_meter(fighter, boma, status_kind);
     fastfall_specials(fighter);
     specials_ledgegrab_fix(fighter);
+    command_normal_cancels(fighter, boma);
     super_special_cancels(fighter, boma, status_kind, situation_kind, motion_kind, frame);
     hit_cancel_timer(fighter, boma);
 }
