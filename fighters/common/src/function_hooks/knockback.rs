@@ -216,6 +216,8 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
     let attacker_boma = &mut *(*util::get_battle_object_from_id(attacker)).module_accessor;
     // let before = std::time::Instant::now();
     // println!("");
+    VarModule::off_flag(defender_boma.object(), vars::common::instance::IS_KILLING_BLOW);
+
     if !is_potential_finishing_hit(defender_boma, attacker_boma) { 
         // let elapsed = std::time::Instant::now().duration_since(before);
         // println!("is_potential_finishing_hit calculation time: {:?}", elapsed);
@@ -232,6 +234,8 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
     }
     // let elapsed = std::time::Instant::now().duration_since(before);
     // println!("is_valid_finishing_hit calculation time: {:?}", elapsed);
+    VarModule::on_flag(defender_boma.object(), vars::common::instance::IS_KILLING_BLOW);
+    
     call_finishing_hit_effects(defender_boma, attacker_boma);
 }
 
