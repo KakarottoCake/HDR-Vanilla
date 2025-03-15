@@ -67,6 +67,10 @@ unsafe fn bind_address_call_status_CliffWait(fighter: &mut L2CFighterCommon) -> 
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_cliff_common_input)]
 unsafe fn sub_cliff_common_input(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if [*FIGHTER_STATUS_KIND_CLIFF_CATCH, *FIGHTER_STATUS_KIND_CLIFF_WAIT].contains(&fighter.status()) 
+    && fighter.is_cat_flag(Cat1::Catch) {
+        fighter.on_flag(*FIGHTER_STATUS_CLIFF_FLAG_TO_RELEASE);
+    }
     call_original!(fighter)
 }
 
@@ -97,48 +101,21 @@ unsafe fn status_CliffWait_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
     }
 
     if situation_kind == *SITUATION_KIND_CLIFF {
+        // JUMP
         if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_JUMP_BUTTON)
         && fighter.is_cat_flag(Cat1::JumpButton) {
-            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_JUMP1.into(), true.into());
+            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_JUMP1.into(), false.into());
             return true.into();
         }
 
         if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_JUMP)
         && fighter.is_flag(*FIGHTER_STATUS_CLIFF_FLAG_TO_JUMP) {
-            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_JUMP1.into(), true.into());
+            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_JUMP1.into(), false.into());
             return true.into();
         }
 
-        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_ATTACK)
-        && fighter.is_cat_flag(Cat1::AttackN) {
-            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_ATTACK.into(), true.into());
-            return true.into();
-        }
-
-        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_SPEICAL)
-        && fighter.is_cat_flag(Cat1::SpecialAny) {
-            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_ATTACK.into(), true.into());
-            return true.into();
-        }
-
-        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_ESCAPE)
-        && fighter.is_cat_flag(Cat2::CommonGuard) {
-            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_ESCAPE.into(), true.into());
-            return true.into();
-        }
-
-        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_CLIMB)
-        && fighter.is_flag(*FIGHTER_STATUS_CLIFF_FLAG_TO_CLIMB) {
-            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_CLIMB.into(), false.into());
-            return true.into();
-        }
-
+        // FALL
         if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_FALL) {
-            if fighter.is_flag(*FIGHTER_STATUS_CLIFF_FLAG_TO_ROB) {
-                fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_ROBBED.into(), false.into());
-                return true.into();
-            }
-    
             if fighter.is_flag(*FIGHTER_STATUS_CLIFF_FLAG_TO_FALL) 
             || fighter.is_flag(*FIGHTER_STATUS_CLIFF_FLAG_TO_RELEASE) {
                 if !fighter.is_flag(*FIGHTER_INSTANCE_WORK_ID_FLAG_SUB_FIGHTER) {
@@ -147,6 +124,40 @@ unsafe fn status_CliffWait_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
                 fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
                 return true.into();
             }
+        }
+
+        // ATTACK
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_ATTACK)
+        && fighter.is_cat_flag(Cat1::AttackN) {
+            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_ATTACK.into(), false.into());
+            return true.into();
+        }
+
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_SPEICAL)
+        && fighter.is_cat_flag(Cat1::SpecialAny) {
+            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_ATTACK.into(), false.into());
+            return true.into();
+        }
+
+        // ESCAPE
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_ESCAPE)
+        && fighter.is_cat_flag(Cat2::CommonGuard) {
+            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_ESCAPE.into(), false.into());
+            return true.into();
+        }
+
+        // CLIMB
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_CLIMB)
+        && fighter.is_flag(*FIGHTER_STATUS_CLIFF_FLAG_TO_CLIMB) {
+            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_CLIMB.into(), false.into());
+            return true.into();
+        }
+
+        // ROBBED
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_FALL) 
+        && fighter.is_flag(*FIGHTER_STATUS_CLIFF_FLAG_TO_ROB) {
+            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_ROBBED.into(), false.into());
+            return true.into();
         }
     }
 
@@ -168,6 +179,7 @@ unsafe fn status_end_CliffWait(fighter: &mut L2CFighterCommon) -> L2CValue {
         *FIGHTER_STATUS_KIND_CLIFF_JUMP1].contains(&StatusModule::status_kind_next(fighter.module_accessor)) {
             VarModule::set_int(fighter.object(), vars::common::instance::LEDGE_ID, -1);
     }
+    ControlModule::clear_command(fighter.module_accessor, true);
     call_original!(fighter)
 }
 
