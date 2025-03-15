@@ -104,13 +104,13 @@ unsafe fn status_CliffWait_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
         // JUMP
         if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_JUMP_BUTTON)
         && fighter.is_cat_flag(Cat1::JumpButton) {
-            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_JUMP1.into(), false.into());
+            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_JUMP1.into(), true.into());
             return true.into();
         }
 
         if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_JUMP)
         && fighter.is_flag(*FIGHTER_STATUS_CLIFF_FLAG_TO_JUMP) {
-            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_JUMP1.into(), false.into());
+            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_JUMP1.into(), true.into());
             return true.into();
         }
 
@@ -122,6 +122,22 @@ unsafe fn status_CliffWait_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
                     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x20cbc92683), 1, FIGHTER_LOG_DATA_INT_CLIFF_RELEASE_NUM);
                 }
                 fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+                fighter.clear_commands(
+                    Cat1::AttackN 
+                    | Cat1::AttackS3 
+                    | Cat1::AttackHi3 
+                    | Cat1::AttackLw3 
+                    | Cat1::AttackS4 
+                    | Cat1::AttackHi4 
+                    | Cat1::AttackLw4 
+                    | Cat1::AttackAirN 
+                    | Cat1::AttackAirF 
+                    | Cat1::AttackAirB 
+                    | Cat1::AttackAirHi 
+                    | Cat1::AttackAirLw 
+                    | Cat1::AirEscape
+                    | Cat1::Catch
+                );
                 return true.into();
             }
         }
@@ -129,20 +145,20 @@ unsafe fn status_CliffWait_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
         // ATTACK
         if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_ATTACK)
         && fighter.is_cat_flag(Cat1::AttackN) {
-            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_ATTACK.into(), false.into());
+            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_ATTACK.into(), true.into());
             return true.into();
         }
 
         if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_SPEICAL)
         && fighter.is_cat_flag(Cat1::SpecialAny) {
-            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_ATTACK.into(), false.into());
+            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_ATTACK.into(), true.into());
             return true.into();
         }
 
         // ESCAPE
         if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_ESCAPE)
         && fighter.is_cat_flag(Cat2::CommonGuard) {
-            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_ESCAPE.into(), false.into());
+            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_ESCAPE.into(), true.into());
             return true.into();
         }
 
@@ -179,7 +195,6 @@ unsafe fn status_end_CliffWait(fighter: &mut L2CFighterCommon) -> L2CValue {
         *FIGHTER_STATUS_KIND_CLIFF_JUMP1].contains(&StatusModule::status_kind_next(fighter.module_accessor)) {
             VarModule::set_int(fighter.object(), vars::common::instance::LEDGE_ID, -1);
     }
-    ControlModule::clear_command(fighter.module_accessor, true);
     call_original!(fighter)
 }
 
