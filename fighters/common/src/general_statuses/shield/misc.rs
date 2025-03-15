@@ -211,6 +211,9 @@ pub unsafe fn check_guard_attack_special_hi(
 
 pub unsafe fn check_cstick_escape_oos(fighter: &mut L2CFighterCommon, should_transition: bool) -> L2CValue {
     let boma = fighter.module_accessor;
+    if fighter.check_guard_hold().get_bool() {
+        return false.into();
+    }
 
     let c_stick_override = fighter.is_button_on(Buttons::CStickOverride);
     let c_stick_on = (
@@ -273,6 +276,9 @@ pub unsafe fn check_cstick_escape_oos(fighter: &mut L2CFighterCommon, should_tra
 
 pub unsafe fn check_escape_oos(fighter: &mut L2CFighterCommon, should_transition: bool) -> L2CValue {
     let boma = fighter.module_accessor;
+    if fighter.check_guard_hold().get_bool() {
+        return false.into();
+    }
 
     let escapes = [
         (
@@ -364,42 +370,33 @@ pub unsafe fn check_grab_oos(fighter: &mut L2CFighterCommon) -> L2CValue {
 
 pub unsafe fn check_plat_drop_oos(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
-    let cat2 = fighter.global_table[CMD_CAT2].get_i32();
-    let guard_hold = fighter.check_guard_hold().get_bool();
-    if guard_hold {
-        // If we are in shield lock, shield drop input only requires a downwards flick (or taunt input)
-        if
-            GroundModule::is_passable_ground(boma) &&
-            (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_GUARD_TO_PASS) != 0
-        {
-            fighter.change_status(FIGHTER_STATUS_KIND_PASS.into(), true.into());
-            return true.into();
-        }
-    } else {
-        // If your left stick is near the rim and you haven't triggered a roll
-        let escape_fb_stick_x = WorkModule::get_param_float(
-            boma,
-            hash40("common"),
-            hash40("escape_fb_stick_x")
-        );
-        if
-            fighter.global_table[STICK_X].get_f32().abs() > escape_fb_stick_x &&
-            (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_STICK_ESCAPE_F) == 0 &&
-            (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_STICK_ESCAPE_B) == 0 &&
-            !VarModule::is_flag(fighter.battle_object, vars::common::status::ENABLE_UCF)
-        {
-            // Enable UCF shielddrop thresholds
-            // change spotdodge y req from -0.75 to -0.8
-            // change platdrop y req from -0.71 to -0.675
-            VarModule::on_flag(fighter.battle_object, vars::common::status::ENABLE_UCF);
-        }
-        // Shielddrop with either traditional shielddrop input, or with taunt buttons
-        if GroundModule::is_passable_ground(boma) && fighter.is_cat_flag(CatHdr::ShieldDrop) {
-            fighter.change_status(FIGHTER_STATUS_KIND_PASS.into(), true.into());
-            return true.into();
-        }
+    let stick_x = ControlModule::get_stick_x(boma);
+    let stick_y = ControlModule::get_stick_y(boma);
+    let flick_y = ControlModule::get_flick_y(boma);
+    let pass_stick_x = ParamModule::get_float(fighter.battle_object, ParamType::Common, "pass_stick_x");
+    let pass_stick_y = fighter.get_param_float("common", "pass_stick_y");
+    let pass_flick_y = fighter.get_param_int("common", "pass_flick_y");
+
+    // basic shield drop requirements
+    if !GroundModule::is_passable_ground(boma)
+    || !fighter.is_button_on(Buttons::Guard)
+    || stick_y > pass_stick_y  {
+        return false.into();
     }
-    return false.into();
+
+    // require a flick if locking shield
+    if fighter.check_guard_hold().get_bool() && flick_y >= pass_flick_y {
+        return false.into();
+    }
+
+    // dont override spotdodge unless exceding pass_stick_x
+    if check_escape_oos(fighter, false.into()).get_bool()
+    && stick_x.abs() < pass_stick_x {
+        return false.into();
+    }
+
+    fighter.change_status(FIGHTER_STATUS_KIND_PASS.into(), true.into());
+    return true.into();
 }
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_guard_cont)]
@@ -441,14 +438,16 @@ pub unsafe fn sub_guard_cont(fighter: &mut L2CFighterCommon) -> L2CValue {
         return true.into();
     }
 
+    if check_cstick_escape_oos(fighter, true).get_bool() {
+        return true.into();
+    }
+
     if check_plat_drop_oos(fighter).get_bool() {
         return true.into();
     }
 
-    if !guard_hold {
-        if check_escape_oos(fighter, true).get_bool() || check_cstick_escape_oos(fighter, true).get_bool() {
-            return true.into();
-        }
+    if check_escape_oos(fighter, true).get_bool() {
+        return true.into();
     }
 
     if ItemModule::is_have_item(fighter.module_accessor, 0) {
