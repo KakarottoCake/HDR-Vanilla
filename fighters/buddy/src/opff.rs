@@ -79,7 +79,6 @@ unsafe fn beakbomb_update(fighter: &mut L2CFighterCommon) {
         *FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_DASH,
         *FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_WALL
     ]);
-    if !sideSpecial { return; }
     
     // While in Beakbomb / Wonderwing
     if VarModule::is_flag(fighter.battle_object, vars::buddy::instance::SPECIAL_S_BEAKBOMB_ACTIVE) {
