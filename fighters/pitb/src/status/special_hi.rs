@@ -61,8 +61,8 @@ unsafe extern "C" fn special_hi_rush_init(fighter: &mut L2CFighterCommon) -> L2C
     }
     let rush_angle = fighter.get_param_float("param_special_hi", "rush_angle");
     rad = rad.clamp((90.0 - 0.5 * rush_angle).to_radians(), (90.0 + 0.5 * rush_angle).to_radians());
-    dbg!(rad);
-    dbg!(rad.to_degrees());
+    // dbg!(rad);
+    // dbg!(rad.to_degrees());
     let rush_speed_x = rush_speed * rad.sin() * lr;
     let rush_speed_y = rush_speed * rad.cos();
 

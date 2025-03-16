@@ -148,7 +148,7 @@ unsafe extern "C" fn mario_special_lw_shoot_init(fighter: &mut L2CFighterCommon)
         sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y);
         VarModule::set_int(fighter.battle_object, vars::mario::status::SPECIAL_LW_LONG_JUMP_KIND, vars::mario::LONG_JUMP_M);
     }
-    dbg!(speed_x * lr);
+    //dbg!(speed_x * lr);
     return false.into();
 }
 
@@ -272,7 +272,7 @@ unsafe extern "C" fn mario_special_lw_charge_init(fighter: &mut L2CFighterCommon
     GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
     GroundModule::set_correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
     // KineticModule::set_consider_ground_friction(fighter.module_accessor, false, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-    dbg!(speed_x * lr);
+    //dbg!(speed_x * lr);
     return false.into();
 }
 

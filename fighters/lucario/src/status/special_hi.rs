@@ -84,7 +84,7 @@ unsafe extern "C" fn arrow_guide_pos(fighter: &mut L2CFighterCommon, angle: L2CV
 }
 
 unsafe extern "C" fn special_hi_guide_handler(fighter: &mut L2CFighterCommon, scale: f32) { // thanks wuboy <3
-    let mut angle = dbg!(fighter.get_float(*FIGHTER_LUCARIO_MACH_STATUS_WORK_ID_FLOAT_RUSH_DIR).to_degrees());
+    let mut angle = fighter.get_float(*FIGHTER_LUCARIO_MACH_STATUS_WORK_ID_FLOAT_RUSH_DIR).to_degrees();
 
     let mut eff_handle = VarModule::get_int(fighter.battle_object, vars::lucario::status::SPECIAL_HI_MARKER_EFFECT_HANDLE) as u32;
     let guide_pos = arrow_guide_pos(fighter, angle.into(), scale);
