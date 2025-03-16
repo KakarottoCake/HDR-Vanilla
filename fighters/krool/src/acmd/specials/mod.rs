@@ -64,7 +64,7 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
         HIT_NODE(agent, Hash40::new("shoulderl"), *HIT_STATUS_NORMAL);
         if VarModule::is_flag(agent.battle_object, vars::krool::status::SPECIAL_LW_GUT_CHARGED) {
             let damage = VarModule::get_float(agent.battle_object, vars::krool::instance::SPECIAL_LW_STORED_DAMAGE) / 5.0;
-            ATTACK(agent, 0, 0, Hash40::new("top"), 16.0 + damage, 50, 105, 0, 50, 10.5, 0.0, 10.75, 5.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
+            ATTACK(agent, 0, 0, Hash40::new("top"), 16.0 + damage, 50, 105, 0, 50, 10.5, 0.0, 10.75, 5.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
         }
         else {
             ATTACK(agent, 0, 0, Hash40::new("top"), 7.0, 69, 86, 0, 70, 9.5, 0.0, 10.0, 5.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
