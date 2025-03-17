@@ -28,7 +28,7 @@ pub extern "C" fn groundbomb_frame(weapon: &mut smash::lua2cpp::L2CFighterBase) 
                 }
             }
             if !weapon.is_flag(*WEAPON_MIIGUNNER_GROUNDBOMB_INSTANCE_WORK_ID_FLAG_DAMAGE_REFLECT)
-            && weapon.get_int(*WEAPON_MIIGUNNER_GROUNDBOMB_INSTANCE_WORK_ID_INT_DAMAGE_REFLECT_AFTER_COUNT) < 39 {
+            && weapon.get_int(*WEAPON_MIIGUNNER_GROUNDBOMB_INSTANCE_WORK_ID_INT_DAMAGE_REFLECT_AFTER_COUNT) < 37 {
                 if weapon.is_situation(*SITUATION_KIND_GROUND) {
                     AttackModule::sleep(weapon.module_accessor, true);
                 }
@@ -36,7 +36,7 @@ pub extern "C" fn groundbomb_frame(weapon: &mut smash::lua2cpp::L2CFighterBase) 
                     AttackModule::sleep(weapon.module_accessor, false);
                 }
             }
-            if weapon.get_int(*WEAPON_MIIGUNNER_GROUNDBOMB_INSTANCE_WORK_ID_INT_DAMAGE_REFLECT_AFTER_COUNT) == 39 {
+            if weapon.get_int(*WEAPON_MIIGUNNER_GROUNDBOMB_INSTANCE_WORK_ID_INT_DAMAGE_REFLECT_AFTER_COUNT) == 37 {
                 HitModule::set_whole(weapon.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
                 AttackModule::sleep(weapon.module_accessor, false);
                 GroundModule::set_attach_ground(weapon.module_accessor, true);
