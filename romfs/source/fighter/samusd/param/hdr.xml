@@ -16,11 +16,11 @@
         <float hash="start_brake_x">0.06</float>
         <float hash="start_brake_y">0.06</float>
         <int hash="rush_pass_frame">15</int>
-        <int hash="rush_brake_frame">4</int>
+        <int hash="rush_brake_frame">3</int>
         <int hash="rush_max_frame">16</int>
-        <float hash="rush_speed">2.8</float>
+        <float hash="rush_speed">3.36</float>
         <float hash="rush_impact_angle">20.0</float>
-        <float hash="rush_brake">0.05</float>
+        <float hash="rush_brake">0.06</float>
         <float hash="end_fall_x_mul">0.85</float>
         <float hash="end_stable_speed_x_mul">0.5</float>
         <float hash="end_accel_x_mul">0.375</float>

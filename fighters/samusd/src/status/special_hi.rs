@@ -225,7 +225,8 @@ unsafe extern "C" fn special_hi_rush_init(fighter: &mut L2CFighterCommon) -> L2C
 unsafe extern "C" fn special_hi_rush_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     //GroundModule::set_passable_check(fighter.module_accessor, true);
     MotionModule::change_motion(fighter.module_accessor,Hash40::new("special_hi"), 0.0, 1.0, false, 0.0, false, false);
-    if VarModule::is_flag(fighter.battle_object, vars::samusd::instance::SPECIAL_HI_RUSH_AIR) {
+    if VarModule::is_flag(fighter.battle_object, vars::samusd::instance::SPECIAL_HI_RUSH_AIR)
+    || VarModule::get_float(fighter.battle_object, vars::samusd::instance::SPECIAL_HI_RUSH_ANGLE) > 10.0 {
         StatusModule::set_situation_kind(fighter.module_accessor, app::SituationKind(*SITUATION_KIND_AIR), false);
         GroundModule::set_correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_BRAKE);
@@ -404,6 +405,9 @@ unsafe extern "C" fn special_hi_end_main(fighter: &mut L2CFighterCommon) -> L2CV
     WorkModule::set_float(fighter.module_accessor, landing_frame as f32, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
     
     let end_type = VarModule::get_int(fighter.battle_object, vars::samusd::instance::SPECIAL_HI_END_TYPE);
+    let angle = VarModule::get_float(fighter.battle_object, vars::samusd::instance::SPECIAL_HI_RUSH_ANGLE);
+    VarModule::set_float(fighter.battle_object, vars::samusd::status::SPECIAL_HI_RUSH_BRAKE, angle);
+
     let motion = match end_type {
         END_TYPE_GROUND => Hash40::new("special_hi_landing_f"),
         END_TYPE_LANDING => Hash40::new("special_hi_landing_lw"),
@@ -446,11 +450,11 @@ unsafe extern "C" fn special_hi_end_main_loop(fighter: &mut L2CFighterCommon) ->
     }
     if !StatusModule::is_changing(fighter.module_accessor)
     && StatusModule::is_situation_changed(fighter.module_accessor) {
-        EffectModule::detach_kind(fighter.module_accessor, Hash40::new("samusd_dash_attack"), 0);
+        EffectModule::kill_kind(fighter.module_accessor, Hash40::new("samusd_dash_attack"), true, true);
         fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND, *GROUND_CORRECT_KIND_AIR);
         fighter.change_kinetic_by_situation(*FIGHTER_KINETIC_TYPE_GROUND_STOP, *FIGHTER_KINETIC_TYPE_AIR_STOP);
         if fighter.is_situation(*SITUATION_KIND_GROUND) {
-           let landing_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("sjump_landing_frame"));
+        let landing_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("sjump_landing_frame"));
             WorkModule::set_float(fighter.module_accessor, landing_frame, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME); 
         }
         fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, *FIGHTER_STATUS_KIND_FALL, false);
@@ -467,9 +471,15 @@ unsafe extern "C" fn special_hi_end_exec(fighter: &mut L2CFighterCommon) -> L2CV
         special_hi_end_enable_control(fighter);
     }
     let mut angle = VarModule::get_float(fighter.battle_object, vars::samusd::instance::SPECIAL_HI_RUSH_ANGLE);
-    if angle > 0.0 {
+    let initial_angle = VarModule::get_float(fighter.battle_object, vars::samusd::status::SPECIAL_HI_RUSH_BRAKE);
+    if initial_angle > 0.0 {
         angle -= 4.0;
         VarModule::set_float(fighter.battle_object, vars::samusd::instance::SPECIAL_HI_RUSH_ANGLE, angle.max(0.0));
+        special_hi_set_joint_rotation(fighter);
+    }
+    else if initial_angle < 0.0 {
+        angle += 4.0;
+        VarModule::set_float(fighter.battle_object, vars::samusd::instance::SPECIAL_HI_RUSH_ANGLE, angle.min(0.0));
         special_hi_set_joint_rotation(fighter);
     }
 
@@ -480,7 +490,7 @@ unsafe extern "C" fn special_hi_end_exec(fighter: &mut L2CFighterCommon) -> L2CV
 
 unsafe extern "C" fn special_hi_set_joint_rotation(fighter: &mut L2CFighterCommon) {
     let angle = VarModule::get_float(fighter.battle_object, vars::samusd::instance::SPECIAL_HI_RUSH_ANGLE);
-    ModelModule::set_joint_rotate(fighter.module_accessor, Hash40::new("rot"), &Vector3f::new(-angle, 0.0, 0.0), MotionNodeRotateCompose{_address: *MOTION_NODE_ROTATE_COMPOSE_AFTER as u8}, MotionNodeRotateOrder{_address: *MOTION_NODE_ROTATE_ORDER_XYZ as u8})
+    ModelModule::set_joint_rotate(fighter.module_accessor, Hash40::new("rot"), &Vector3f::new(-angle, 0.0, 0.0), MotionNodeRotateCompose{_address: *MOTION_NODE_ROTATE_COMPOSE_AFTER as u8}, MotionNodeRotateOrder{_address: *MOTION_NODE_ROTATE_ORDER_XYZ as u8});
 }
 
 unsafe fn special_hi_ray_check(fighter: &mut L2CFighterCommon) -> bool {
