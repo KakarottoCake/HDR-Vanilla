@@ -28,7 +28,7 @@ unsafe extern "C" fn effect_specialnp(agent: &mut L2CAgentBase) {
         LAST_EFFECT_SET_COLOR(agent, 0.75, 0.01, 0.35);
         EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_atk1"), Hash40::new("top"), 0, 40, 6, 0, 0, 0, 1.25, true);
         LAST_EFFECT_SET_COLOR(agent, 1.875, 0.025, 0.875);
-        LAST_EFFECT_SET_RATE(agent, 1.6);
+        LAST_EFFECT_SET_RATE(agent, 0.8);
     }
     frame(lua_state, 18.0);
     if is_excute(agent) {
