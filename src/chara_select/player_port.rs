@@ -44,16 +44,17 @@ unsafe fn check_swap_macro(controller_id: u32) -> bool {
 
         if controller.buttons.contains(right_button) 
         && controller.pressed_buttons.contains(swap_button) {
+            if controller.buttons.contains(left_button) { // both shoulder buttons held
+                ACTION = "out"; // port will disconnect without rejoining
+                return true;
+            }
+            
             ACTION = "right"; // port will swap forwards
             return true;
         }
         else if controller.buttons.contains(left_button) 
         && controller.pressed_buttons.contains(swap_button) {
             ACTION = "left"; // port will swap backwards
-            return true;
-        }
-        else if controller.pressed_buttons.contains(swap_button) {
-            ACTION = "out"; // port will disconnect without rejoining
             return true;
         }
     }
