@@ -79,7 +79,9 @@ pub unsafe fn get_tag_from_save(idx: u8) -> String {
 #[skyline::hook(offset = 0x19fd0b0)]
 unsafe fn update_player_tag(arg1: u64, tag_index: *const u8) {
     let player_id = *((arg1 + 0x1d4) as *const u8) as usize;
-    PLAYER_TAG_INDEX[player_id] = *tag_index;
+    if (0..8).contains(&player_id) {
+        PLAYER_TAG_INDEX[player_id] = *tag_index;
+    }
     call_original!(arg1, tag_index);
 }
 

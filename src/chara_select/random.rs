@@ -137,7 +137,8 @@ unsafe fn decide_fighter_from_id(id: usize) -> String {
         Err(e) => return dbg!(default)
     };
     
-    let tag_index = PLAYER_TAG_INDEX[id];
+    let tag_id = id.clamp(0, 7);
+    let tag_index = PLAYER_TAG_INDEX[tag_id];
     let tag = &get_tag_from_save(tag_index);
     println!("Tag data for slot {}: {}", id, &tag); 
     let mut tag_data: TagData = match config.tags.get(tag) {
