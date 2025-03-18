@@ -137,6 +137,11 @@ unsafe extern "C" fn dins_refresh(weapon: &mut L2CWeaponCommon) -> L2CValue {
             SoundModule::set_se_vol(weapon.module_accessor, sound as i32, 1.2, 0);
             //kill 2nd dins
             sv_battle_object::end_inhaled(new_dins, true);
+        } else {
+            //if no detonate, refresh timer and clear fx
+            EFFECT_OFF_KIND(weapon, Hash40::new("sys_flash"), true, true);
+            MotionModule::change_motion_force_inherit_frame(weapon.module_accessor, Hash40::new("tame"), 0.0, 1.0, 1.0);
+            weapon.set_float(160.0, *WEAPON_ZELDA_DEIN_STATUS_WORK_FLOAT_LIFE);
         }
         VarModule::off_flag(weapon.battle_object, vars::zelda::status::SPECIAL_S_DINS_REFRESH);
     }
