@@ -27,7 +27,7 @@ unsafe fn teleport_logic(fighter: &mut L2CFighterCommon, boma: &mut BattleObject
             }
         }
         // Actionability when double jump isn't burned
-        if fighter.status_frame() == 8 {
+        if fighter.status_frame() == 6 {
             if VarModule::is_flag(boma.object(), vars::palutena::status::SPECIAL_HI_TELEPORT_AIR_START) {
                 CancelModule::enable_cancel(boma);
             }
