@@ -172,8 +172,6 @@ unsafe extern "C" fn game_specials1(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         AttackModule::clear_all(boma);
         WorkModule::on_flag(boma, *FIGHTER_POPO_STATUS_SPECIAL_S_FLAG_NORMAL_FALL);
-    }
-    if is_excute(agent) {
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_POPO_SPECIAL_S_END);
     }
 }
@@ -270,8 +268,6 @@ unsafe extern "C" fn game_specials1_nana(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         AttackModule::clear_all(boma);
         WorkModule::on_flag(boma, *FIGHTER_POPO_STATUS_SPECIAL_S_FLAG_NORMAL_FALL);
-    }
-    if is_excute(agent) {
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_POPO_SPECIAL_S_END);
     }
 }
@@ -356,8 +352,6 @@ unsafe extern "C" fn game_specials2(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         AttackModule::clear_all(boma);
         WorkModule::on_flag(boma, *FIGHTER_POPO_STATUS_SPECIAL_S_FLAG_NORMAL_FALL);
-    }
-    if is_excute(agent) {
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_POPO_SPECIAL_S_END);
     }
 }
@@ -454,8 +448,6 @@ unsafe extern "C" fn game_specialairs1(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         AttackModule::clear_all(boma);
         WorkModule::on_flag(boma, *FIGHTER_POPO_STATUS_SPECIAL_S_FLAG_NORMAL_FALL);
-    }
-    if is_excute(agent) {
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_POPO_SPECIAL_AIR_S_END);
     }
     frame(lua_state, 57.0);
@@ -556,8 +548,6 @@ unsafe extern "C" fn game_specialairs1_nana(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         AttackModule::clear_all(boma);
         WorkModule::on_flag(boma, *FIGHTER_POPO_STATUS_SPECIAL_S_FLAG_NORMAL_FALL);
-    }
-    if is_excute(agent) {
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_POPO_SPECIAL_AIR_S_END);
     }
     frame(lua_state, 63.0);
@@ -650,8 +640,6 @@ unsafe extern "C" fn game_specialairs2(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         AttackModule::clear_all(boma);
         WorkModule::on_flag(boma, *FIGHTER_POPO_STATUS_SPECIAL_S_FLAG_NORMAL_FALL);
-    }
-    if is_excute(agent) {
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_POPO_SPECIAL_AIR_S_END);
     }
     frame(lua_state, 59.0);
@@ -676,9 +664,9 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialairn", game_specialairn, Priority::Low);
     agent.acmd("game_specialairn_nana", game_specialairn_nana, Priority::Low);
 
-    agent.acmd("game_specials1", game_specialairs1, Priority::Low);
-    agent.acmd("game_specials1_nana", game_specialairs1_nana, Priority::Low);
-    agent.acmd("game_specials2", game_specialairs2, Priority::Low);
+    agent.acmd("game_specials1", game_specials1, Priority::Low);
+    agent.acmd("game_specials1_nana", game_specials1_nana, Priority::Low);
+    agent.acmd("game_specials2", game_specials2, Priority::Low);
 
     agent.acmd("game_specialairs1", game_specialairs1, Priority::Low);
     agent.acmd("game_specialairs1_nana", game_specialairs1_nana, Priority::Low);

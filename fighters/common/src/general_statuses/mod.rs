@@ -826,8 +826,17 @@ pub unsafe fn sub_is_dive(fighter: &mut L2CFighterCommon) -> L2CValue {
         return false.into();
     }
 
+    let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
     let status_kind = fighter.global_table[STATUS_KIND_INTERRUPT].get_i32();
     let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
+
+    if (fighter_kind == *FIGHTER_KIND_YOSHI
+        || fighter_kind == *FIGHTER_KIND_PEACH)
+    && status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL
+    && fighter.global_table[CURRENT_FRAME].get_i32() < 10 {
+        return false.into();
+    }
+
     if status_kind == *FIGHTER_STATUS_KIND_ESCAPE_AIR
     && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE) {
         return false.into();
@@ -879,6 +888,25 @@ pub unsafe fn sub_is_dive(fighter: &mut L2CFighterCommon) -> L2CValue {
     let dive_speed_y = WorkModule::get_param_float(fighter.module_accessor, hash40("dive_speed_y"), 0);
     if speed_y < -dive_speed_y {
         return false.into();
+    }
+
+    if [*FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION,
+        *FIGHTER_KINETIC_TYPE_MOTION_AIR,
+        *FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE].contains(&KineticModule::get_kinetic_type(fighter.module_accessor))
+    {
+        fighter.clear_lua_stack();
+        lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION);
+        let speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
+
+        fighter.clear_lua_stack();
+        lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
+        app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
+        
+        fighter.clear_lua_stack();
+        lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+        app::sv_kinetic_energy::enable(fighter.lua_state_agent);
+
+        KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_MOTION, fighter.module_accessor);
     }
 
     true.into()
