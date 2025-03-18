@@ -280,7 +280,7 @@ impl KnockbackCalcContext {
             let trajectory = self.get_trajectory();
             let mut trajectory_kills = false;
             for (frame, pos) in trajectory.iter().enumerate() {
-                if blastzones.contains(pos.x, pos.y) {
+                if !blastzones.contains(pos.x, pos.y) {
                     // break early so we don't waste effort
                     trajectory_kills = true;
                     break;
