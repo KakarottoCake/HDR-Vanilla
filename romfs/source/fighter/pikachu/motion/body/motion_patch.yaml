@@ -7,14 +7,9 @@ attack_air_hi:
 attack_dash:
   extra:
     cancel_frame: 41
-attack_hi3: null
 attack_hi4:
   extra:
     cancel_frame: 50
-attack_lw3: null
-attack_s3_hi: null
-attack_s3_lw: null
-attack_s3_s: null
 attack_s4_s:
   extra:
     cancel_frame: 61
