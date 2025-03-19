@@ -12,6 +12,9 @@ unsafe fn aerial_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObject
         if fighter.is_cat_flag(Cat1::SpecialN) {
             is_input_cancel = true;
             new_status = *FIGHTER_STATUS_KIND_SPECIAL_N;
+            VarModule::on_flag(fighter.battle_object, vars::bayonetta::instance::WAS_CANCEL);
+            StatusModule::change_status_force(boma, new_status, true);
+            return;
         } else if fighter.is_cat_flag(Cat1::SpecialHi) {
             if fighter.get_int(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SPECIAL_HI_USED_COUNT) < 2 {
                 is_input_cancel = true;
@@ -53,20 +56,6 @@ unsafe fn reset_flags(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
         //fighter.set_int(2, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SPECIAL_AIR_S_USED_COUNT);
         //fighter.set_int(2, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SPECIAL_HI_USED_COUNT);
     } //check vanilla lag counter
-}
-
-unsafe fn forward_tilt(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_motion(Hash40::new("attack_s3_s")) && MotionModule::frame(boma) >= 28.0 {
-        if !boma.is_cat_flag(Cat1::AttackLw3 | Cat1::Catch) {
-            if boma.is_cat_flag(Cat1::AttackHi3 | Cat1::SpecialN | Cat1::SpecialHi) {//vert kick
-                MotionModule::change_motion(boma, smash::phx::Hash40::new("attack_s3_s3"), 0.0, 1.0, false, 0.0, false, false);
-            } else if boma.is_cat_flag(Cat1::AttackS3 | Cat1::AttackN) { //side kick
-                MotionModule::change_motion(boma, smash::phx::Hash40::new("attack_s3_s2"), 0.0, 1.0, false, 0.0, false, false);
-            } else if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) && boma.is_button_on(Buttons::Attack) {
-                MotionModule::change_motion(boma, smash::phx::Hash40::new("attack_s3_s3"), 0.0, 1.0, false, 0.0, false, false);
-            }//hold
-        }
-    }
 }
 
 unsafe fn bat_within_air_motion(fighter: &mut L2CFighterCommon) {
@@ -132,7 +121,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, frame: f32) {
     aerial_cancels(fighter, boma);
     reset_flags(fighter, boma);
-    forward_tilt(boma);
     bat_within_air_motion(fighter);
     up_special_startup_ledgegrab(fighter);
     fastfall_specials(fighter);

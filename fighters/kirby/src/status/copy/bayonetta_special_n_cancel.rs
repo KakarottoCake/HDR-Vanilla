@@ -166,19 +166,7 @@ unsafe extern "C" fn motion_handling(fighter: &mut L2CFighterCommon) -> L2CValue
 unsafe extern "C" fn cancel_check(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.is_button_off(Buttons::Special) {fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_BAYONETTA_SPECIAL_N_FIRE.into(), false.into()); }
     if fighter.is_situation(*SITUATION_KIND_GROUND) {
-        if fighter.is_cat_flag(Cat2::StickEscape) {
-            VarModule::set_int(fighter.battle_object, vars::bayonetta::instance::SPECIAL_N_CANCEL_TYPE, *FIGHTER_STATUS_KIND_ESCAPE);
-            StatusModule::change_status_force(fighter.module_accessor, statuses::kirby::BAYONETTA_SPECIAL_N_CANCEL, false);
-        }
-        else if fighter.is_cat_flag(Cat2::StickEscapeF) {
-            VarModule::set_int(fighter.battle_object, vars::bayonetta::instance::SPECIAL_N_CANCEL_TYPE, *FIGHTER_STATUS_KIND_ESCAPE_F);
-            StatusModule::change_status_force(fighter.module_accessor, statuses::kirby::BAYONETTA_SPECIAL_N_CANCEL, false);
-        }
-        else if fighter.is_cat_flag(Cat2::StickEscapeB) {
-            VarModule::set_int(fighter.battle_object, vars::bayonetta::instance::SPECIAL_N_CANCEL_TYPE, *FIGHTER_STATUS_KIND_ESCAPE_B);
-            StatusModule::change_status_force(fighter.module_accessor, statuses::kirby::BAYONETTA_SPECIAL_N_CANCEL, false);
-        }
-        else if (fighter.is_cat_flag(Cat1::JumpButton) || (ControlModule::is_enable_flick_jump(fighter.module_accessor) && fighter.is_cat_flag(Cat1::Jump) && fighter.sub_check_button_frick().get_bool())) {
+        if (fighter.is_cat_flag(Cat1::JumpButton) || (ControlModule::is_enable_flick_jump(fighter.module_accessor) && fighter.is_cat_flag(Cat1::Jump) && fighter.sub_check_button_frick().get_bool())) {
             VarModule::set_int(fighter.battle_object, vars::bayonetta::instance::SPECIAL_N_CANCEL_TYPE, *FIGHTER_STATUS_KIND_JUMP_SQUAT);
             StatusModule::change_status_force(fighter.module_accessor, statuses::kirby::BAYONETTA_SPECIAL_N_CANCEL, false);
         }

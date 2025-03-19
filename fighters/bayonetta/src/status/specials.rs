@@ -85,9 +85,12 @@ unsafe extern "C" fn special_s_kick_pre(fighter: &mut L2CFighterCommon) -> L2CVa
 }
 
 unsafe extern "C" fn special_s_kick_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let shield_x = fighter.get_param_float("param_special_s", "guard_speed_mul_x");
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s_hold_end"), 0.0, 1.0, false, 0.0, false, false);
     let frame = fighter.global_table[PREV_STATUS_FRAME].get_i32() - 20;
-    let speed = 1.15 - (0.017 * frame as f32); //instant kick = 1.15, last second kick ~ 0.89
+    let mut speed = 1.15 - (0.017 * frame as f32); //instant kick = 1.15, last second kick ~ 0.89
+    if VarModule::is_flag(fighter.battle_object, vars::bayonetta::instance::WAS_CANCEL) {speed=speed*shield_x;}
+    VarModule::off_flag(fighter.battle_object, vars::bayonetta::instance::WAS_CANCEL); //shield-kick starts with cut speed
     sv_kinetic_energy!(set_speed_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, speed);
     fighter.sub_shift_status_main(L2CValue::Ptr(special_s_kick_main_loop as *const () as _))
 }
@@ -113,6 +116,7 @@ unsafe extern "C" fn special_s_slow_hit(fighter: &mut L2CFighterCommon) -> L2CVa
     fighter.on_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_S_FLAG_HIT);
     if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
         sv_kinetic_energy!(set_speed_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, shield_x);
+        VarModule::on_flag(fighter.battle_object, vars::bayonetta::instance::WAS_CANCEL);
     } else if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
         sv_kinetic_energy!(set_speed_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, mul_x);
         fighter.on_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_S_FLAG_HIT_BEFORE_GUARD);
