@@ -313,7 +313,7 @@ unsafe extern "C" fn sub_escape_air_common_main(fighter: &mut L2CFighterCommon) 
                 && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KOOPAJR_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_INTERRUPT) {
                     *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_HI_FALL
                 } else {
-                    *FIGHTER_STATUS_KIND_FALL
+                    *FIGHTER_STATUS_KIND_FALL_SPECIAL
                 };
                 fighter.change_status(
                     L2CValue::I32(status),
@@ -330,7 +330,7 @@ unsafe extern "C" fn sub_escape_air_common_main(fighter: &mut L2CFighterCommon) 
                 && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KOOPAJR_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_INTERRUPT) {
                     *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_HI_FALL
                 } else {
-                    *FIGHTER_STATUS_KIND_FALL
+                    *FIGHTER_STATUS_KIND_FALL_SPECIAL
                 };
                 fighter.change_status(
                     L2CValue::I32(status),
