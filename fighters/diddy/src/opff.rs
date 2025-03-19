@@ -9,6 +9,16 @@ unsafe fn peanut_popgun_ac(boma: &mut BattleObjectModuleAccessor, status_kind: i
     }
 }
 
+unsafe fn sideb_whiff_freefall(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_S)
+    && fighter.is_situation(*SITUATION_KIND_AIR)
+    && CancelModule::is_enable_cancel(fighter.module_accessor) {
+        fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL_SPECIAL, true);
+        let cancel_module = *(fighter.module_accessor as *mut BattleObjectModuleAccessor as *mut u64).add(0x128 / 8) as *const u64;
+        *(((cancel_module as u64) + 0x1c) as *mut bool) = false;  // CancelModule::is_enable_cancel = false
+    }
+}
+
 unsafe fn nspecial_cancels(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, status_kind: i32) {
     if status_kind == *FIGHTER_DIDDY_STATUS_KIND_SPECIAL_N_CHARGE {
         if fighter.is_situation(*SITUATION_KIND_GROUND) {
@@ -172,6 +182,7 @@ pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut
     fastfall_specials(fighter);
     fastfall_dashattack(fighter);
     no_cap(boma);
+    sideb_whiff_freefall(fighter);
 }
 
 pub extern "C" fn diddy_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
