@@ -173,8 +173,8 @@ unsafe extern "C" fn game_specialhicommand(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 9.0);
     if is_excute(agent) {
-        // HIT_NODE(agent, Hash40::new("kneer"), *HIT_STATUS_XLU);
-        // HIT_NODE(agent, Hash40::new("kneel"), *HIT_STATUS_XLU);
+        HIT_NODE(agent, Hash40::new("kneer"), *HIT_STATUS_XLU);
+        HIT_NODE(agent, Hash40::new("kneel"), *HIT_STATUS_XLU);
         agent.on_flag(*FIGHTER_DOLLY_STATUS_SPECIAL_HI_WORK_FLAG_JUMP);
         AttackModule::clear_all(boma);
         MeterModule::watch_damage(agent.battle_object, false);
@@ -306,8 +306,8 @@ unsafe extern "C" fn game_specialhicommand(agent: &mut L2CAgentBase) {
     }
     wait(lua_state, 1.0);
     if is_excute(agent) {
-        // HIT_NODE(agent, Hash40::new("kneer"), *HIT_STATUS_NORMAL);
-        // HIT_NODE(agent, Hash40::new("kneel"), *HIT_STATUS_NORMAL);
+        HIT_NODE(agent, Hash40::new("kneer"), *HIT_STATUS_NORMAL);
+        HIT_NODE(agent, Hash40::new("kneel"), *HIT_STATUS_NORMAL);
         AttackModule::clear_all(boma);
         MeterModule::watch_damage(agent.battle_object, false);
     }
