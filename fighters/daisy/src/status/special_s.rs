@@ -48,8 +48,15 @@ unsafe extern "C" fn special_s_main(fighter: &mut L2CFighterCommon) -> L2CValue 
     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
     fighter.set_situation(SITUATION_KIND_AIR.into());
     GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-    let motion = if fighter.is_situation(*SITUATION_KIND_GROUND) { Hash40::new("special_s_start") } else { Hash40::new("special_air_s_start") };
-    MotionModule::change_motion(fighter.module_accessor, motion, 0.0, 1.0, false, 0.0, false, false);
+
+    if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_PEACH_SPECIAL_S_START);
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s_start"), 0.0, 1.0, false, 0.0, false, false);
+    }
+    else {
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_PEACH_SPECIAL_S_AIR_START);
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_s_start"), 0.0, 1.0, false, 0.0, false, false);
+    }
 
     fighter.main_shift(special_s_main_loop)
 }
