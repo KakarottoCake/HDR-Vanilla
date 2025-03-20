@@ -21,11 +21,11 @@ impl Rect {
     fn contains(&self, x: f32, y: f32) -> bool {
         (self.vec[0] <= x && x <= self.vec[1]) && (self.vec[3] <= y && y <= self.vec[2])
     }
-    fn grow(&mut self, amount: f32) {
-        self.vec[0] -= amount;
-        self.vec[1] += amount;
-        self.vec[2] += amount;
-        self.vec[3] -= amount;
+    fn grow(&mut self, x: f32, y: f32) {
+        self.vec[0] -= x;
+        self.vec[1] += x;
+        self.vec[2] += y;
+        self.vec[3] -= y;
     }
 }
 
@@ -251,13 +251,19 @@ impl KnockbackCalcContext {
 
     pub unsafe fn is_finishing_hit(&mut self, is_final: bool) -> bool {
         let defender_boma = self.defender_boma;
-        let (num_angles_checked, survivable_angles_allowed, dead_area_leniency) = if is_final {
-            (NUM_ANGLES_CHECKED_FINAL, SURVIVABLE_ANGLES_ALLOWED_FINAL, DEAD_AREA_LENIENCY_FINAL)
+        let (num_angles_checked, survivable_angles_allowed, dead_area_leniency_x, dead_area_leniency_y) = if is_final {
+            (NUM_ANGLES_CHECKED_FINAL, SURVIVABLE_ANGLES_ALLOWED_FINAL, DEAD_AREA_LENIENCY_FINAL, DEAD_AREA_LENIENCY_FINAL)
         }  else {
-            (NUM_ANGLES_CHECKED, SURVIVABLE_ANGLES_ALLOWED, DEAD_AREA_LENIENCY.max(self.sdi_distance))
+            let x = DEAD_AREA_LENIENCY.max(self.sdi_distance);
+            let y = if StatusModule::situation_kind(defender_boma) != *SITUATION_KIND_GROUND {
+                DEAD_AREA_LENIENCY.max(self.sdi_distance)
+            } else {
+                DEAD_AREA_LENIENCY
+            };
+            (NUM_ANGLES_CHECKED, SURVIVABLE_ANGLES_ALLOWED, x, y)
         };
         let mut blastzones = get_dead_area();
-        blastzones.grow(dead_area_leniency);
+        blastzones.grow(dead_area_leniency_x, dead_area_leniency_y);
         let kb_angle = self.launch_speed.y.atan2(self.launch_speed.x).to_degrees();
         let di_angle = WorkModule::get_param_float(defender_boma, hash40("common"), hash40("damage_fly_correction_max"));
         let min_di = kb_angle - di_angle;
