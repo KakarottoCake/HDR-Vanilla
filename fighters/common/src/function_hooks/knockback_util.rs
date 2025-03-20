@@ -42,11 +42,12 @@ pub struct KnockbackCalcContext {
     pub hitstun: f32,
     pub damage: f32,
     pub sdi_mul: f32,
+    pub base_asdi: f32,
+    pub sdi_distance: f32,
     pub launch_radians: f32,
     pub launch_speed: Vector2f,
     pub y_chara_speed: f32,
     pub is_tumble: bool,
-    pub is_damage_fly_top: bool,
     pub gravity: f32,
     pub fall_speed: f32,
     pub pos: Vector2f,
@@ -56,6 +57,16 @@ pub struct KnockbackCalcContext {
 
     pub is_tech_possible: bool,
 }
+
+// number of DI angles checked
+const NUM_ANGLES_CHECKED: i32 = 12;
+const NUM_ANGLES_CHECKED_FINAL: i32 = 12;
+// maximum number of survivable DI angles in a finishing hit
+const SURVIVABLE_ANGLES_ALLOWED: i32 = 0;
+const SURVIVABLE_ANGLES_ALLOWED_FINAL: i32 = 1;
+// how many units into the blastzone a fighter will be declared dead
+const DEAD_AREA_LENIENCY: f32 = 3.0;
+const DEAD_AREA_LENIENCY_FINAL: f32 = 1.0;
 
 impl KnockbackCalcContext {
     pub unsafe fn new(
@@ -70,21 +81,12 @@ impl KnockbackCalcContext {
     ) -> Self {
         let fly_top_angle_lw= WorkModule::get_param_float(defender_boma, hash40("battle_object"), hash40("fly_top_angle_lw"));
         let fly_top_angle_hi= WorkModule::get_param_float(defender_boma, hash40("battle_object"), hash40("fly_top_angle_hi"));
-        let is_damage_fly_top = fly_top_angle_lw <= launch_radians && launch_radians <= fly_top_angle_hi;
         let ecb_bottom = *GroundModule::get_rhombus(defender_boma, true).add(1);
         let ecb_left =   *GroundModule::get_rhombus(defender_boma, true).add(2);
         let ecb_right =  *GroundModule::get_rhombus(defender_boma, true).add(3);
         let y_chara_speed = 0.0;
-        let gravity = if is_damage_fly_top {
-            WorkModule::get_param_float(defender_boma, hash40("air_accel_y"), hash40(""))
-        } else {
-            WorkModule::get_param_float(defender_boma, hash40("damage_fly_top_air_accel_y"), hash40(""))
-        };
-        let fall_speed = if is_damage_fly_top {
-            WorkModule::get_param_float(defender_boma, hash40("air_speed_y_stable"), hash40(""))
-        } else {
-            WorkModule::get_param_float(defender_boma, hash40("damage_fly_top_speed_y_stable"), hash40(""))
-        };
+        let gravity = WorkModule::get_param_float(defender_boma, hash40("air_accel_y"), hash40(""));
+        let fall_speed = WorkModule::get_param_float(defender_boma, hash40("air_speed_y_stable"), hash40(""));
         let pos = Vector2f::new(ecb_bottom.x, ecb_bottom.y);
         let pos_prev = Vector2f::new(pos.x, pos.y);
         let damage_air_brake = WorkModule::get_param_float(defender_boma, hash40("common"), hash40("damage_air_brake"));
@@ -93,6 +95,16 @@ impl KnockbackCalcContext {
         } else {
             1.0
         };
+        let sdi_frame =     WorkModule::get_param_int(defender_boma, hash40("common"), hash40("hit_stop_delay_flick_frame"));
+        let sdi_max_count = WorkModule::get_param_int(defender_boma, hash40("common"), hash40("hit_stop_delay_flick_max_count"));
+        let base_sdi =      WorkModule::get_param_float(defender_boma, hash40("common"), hash40("hit_stop_delay_flick_mul"));
+        let base_asdi =     WorkModule::get_param_float(defender_boma, hash40("common"), hash40("hit_stop_delay_auto_mul"));
+        let hitlag_max =    WorkModule::get_param_float(defender_boma, hash40("battle_object"), hash40("hitstop_frame_max"));
+        let hitlag_add =    WorkModule::get_param_float(defender_boma, hash40("battle_object"), hash40("hitstop_frame_add"));
+        let hitlag_mul =    WorkModule::get_param_float(defender_boma, hash40("battle_object"), hash40("hitstop_frame_mul"));
+        let hitlag = (2.0 * (damage * hitlag_mul + hitlag_add)).clamp(0.0, hitlag_max).floor();
+        let sdi_count = ((hitlag - 1.0) / (sdi_frame as f32)).clamp(0.0, sdi_max_count as f32).floor();
+        let sdi_distance = (sdi_count * base_sdi + base_asdi) * sdi_mul;
         let is_tech_possible = false;
         let mut context = Self {
             defender_boma,
@@ -105,11 +117,12 @@ impl KnockbackCalcContext {
             hitstun,
             damage,
             sdi_mul,
+            base_asdi,
+            sdi_distance,
             launch_radians,
             launch_speed,
             y_chara_speed,
             is_tumble,
-            is_damage_fly_top,
             gravity,
             fall_speed,
             pos,
@@ -128,46 +141,20 @@ impl KnockbackCalcContext {
             launch_radians.cos() * mag,
             launch_radians.sin() * mag,
         );
-        let is_damage_fly_top = self.fly_top_angle_lw <= launch_radians && launch_radians <= self.fly_top_angle_hi;
-        let defender_boma = self.defender_boma;
-        let gravity = if is_damage_fly_top {
-            WorkModule::get_param_float(defender_boma, hash40("air_accel_y"), hash40(""))
-        } else {
-            WorkModule::get_param_float(defender_boma, hash40("damage_fly_top_air_accel_y"), hash40(""))
-        };
-        let fall_speed = if is_damage_fly_top {
-            WorkModule::get_param_float(defender_boma, hash40("air_speed_y_stable"), hash40(""))
-        } else {
-            WorkModule::get_param_float(defender_boma, hash40("damage_fly_top_speed_y_stable"), hash40(""))
-        };
-
         // update the context
         self.launch_radians = launch_radians;
         self.launch_speed = launch_speed;
-        self.is_damage_fly_top = is_damage_fly_top;
-        self.gravity = gravity;
-        self.fall_speed = fall_speed;
     }
 
     pub unsafe fn initial_launch_collision_check(&mut self) {
         let defender_boma = self.defender_boma;
-        let sdi_frame =     WorkModule::get_param_int(defender_boma, hash40("common"), hash40("hit_stop_delay_flick_frame"));
-        let sdi_max_count = WorkModule::get_param_int(defender_boma, hash40("common"), hash40("hit_stop_delay_flick_max_count"));
-        let base_sdi =      WorkModule::get_param_float(defender_boma, hash40("common"), hash40("hit_stop_delay_flick_mul"));
-        let base_asdi =     WorkModule::get_param_float(defender_boma, hash40("common"), hash40("hit_stop_delay_auto_mul"));
-        let hitlag_max =    WorkModule::get_param_float(defender_boma, hash40("battle_object"), hash40("hitstop_frame_max"));
-        let hitlag_add =    WorkModule::get_param_float(defender_boma, hash40("battle_object"), hash40("hitstop_frame_add"));
-        let hitlag_mul =    WorkModule::get_param_float(defender_boma, hash40("battle_object"), hash40("hitstop_frame_mul"));
-        let hitlag = (2.0 * (self.damage * hitlag_mul + hitlag_add)).clamp(0.0, hitlag_max).floor();
-        let sdi_count = ((hitlag - 1.0) / (sdi_frame as f32)).clamp(0.0, sdi_max_count as f32).floor();
-        let sdi_distance = (sdi_count * base_sdi + base_asdi) * self.sdi_mul;
 
         // check left wall tech
         let ecb_offset = self.ecb_left.x - self.ecb_bottom.x;
         if GroundModule::ray_check(
             defender_boma, 
             &self.pos, 
-            &Vector2f{ x: -1.0 * sdi_distance + ecb_offset, y: 0.0},
+            &Vector2f{ x: -1.0 * self.sdi_distance + ecb_offset, y: 0.0},
             true
         ) == 1 {
             self.is_tech_possible = true;
@@ -179,7 +166,7 @@ impl KnockbackCalcContext {
         if GroundModule::ray_check(
             defender_boma, 
             &self.pos, 
-            &Vector2f{ x: sdi_distance + ecb_offset, y: 0.0},
+            &Vector2f{ x: self.sdi_distance + ecb_offset, y: 0.0},
             true
         ) == 1 {
             self.is_tech_possible = true;
@@ -187,11 +174,11 @@ impl KnockbackCalcContext {
         }
 
         // check floor tech
-        if self.pos.y - self.pos_prev.y < base_asdi * self.sdi_mul
+        if self.pos.y - self.pos_prev.y < self.base_asdi * self.sdi_mul
         && GroundModule::ray_check(
             defender_boma, 
             &self.pos, 
-            &Vector2f{ x: 0.0, y: sdi_distance},
+            &Vector2f{ x: 0.0, y: self.sdi_distance},
             true
         ) == 1 {
             self.is_tech_possible = true;
@@ -262,8 +249,16 @@ impl KnockbackCalcContext {
         return trajectory;
     }
 
-    pub unsafe fn is_finishing_hit(&mut self, num_angles_checked: i32, survivable_angles_allowed: i32, dead_area_leniency: f32) -> bool {
+    pub unsafe fn is_finishing_hit(&mut self, is_final: bool) -> bool {
         let defender_boma = self.defender_boma;
+        let (num_angles_checked, survivable_angles_allowed, dead_area_leniency) = if is_final {
+            (NUM_ANGLES_CHECKED_FINAL, SURVIVABLE_ANGLES_ALLOWED_FINAL, DEAD_AREA_LENIENCY_FINAL)
+        }  else {
+            (NUM_ANGLES_CHECKED, SURVIVABLE_ANGLES_ALLOWED, DEAD_AREA_LENIENCY.max(self.sdi_distance))
+        };
+        dbg!(num_angles_checked);
+        dbg!(survivable_angles_allowed);
+        dbg!(dead_area_leniency);
         let mut blastzones = get_dead_area();
         blastzones.grow(dead_area_leniency);
         let kb_angle = self.launch_speed.y.atan2(self.launch_speed.x).to_degrees();

@@ -247,16 +247,6 @@ pub unsafe extern "C" fn is_final_killing_hit(defender_boma: &mut BattleObjectMo
     return true;
 }
 
-// number of DI angles checked
-const NUM_ANGLES_CHECKED: i32 = 12;
-const NUM_ANGLES_CHECKED_FINAL: i32 = 12;
-// maximum number of survivable DI angles in a finishing hit
-const SURVIVABLE_ANGLES_ALLOWED: i32 = 0;
-const SURVIVABLE_ANGLES_ALLOWED_FINAL: i32 = 1;
-// how many units into the blastzone a fighter will be declared dead
-const DEAD_AREA_LENIENCY: f32 = 3.0;
-const DEAD_AREA_LENIENCY_FINAL: f32 = 0.0;
-
 unsafe extern "C" fn is_valid_finishing_hit(knockback_info: *const f32, defender_boma: &mut BattleObjectModuleAccessor, attacker_boma: &mut BattleObjectModuleAccessor) -> bool {
     let knockback = *knockback_info;
     let hitstun = *knockback_info.add(0x48 / 4);
@@ -276,12 +266,8 @@ unsafe extern "C" fn is_valid_finishing_hit(knockback_info: *const f32, defender
         is_tumble,
     );
 
-    let (num_angles_checked, survivable_angles_allowed, dead_area_leniency) = if is_final_killing_hit(defender_boma, attacker_boma) {
-        (NUM_ANGLES_CHECKED_FINAL, SURVIVABLE_ANGLES_ALLOWED_FINAL, DEAD_AREA_LENIENCY_FINAL)
-    }  else {
-        (NUM_ANGLES_CHECKED, SURVIVABLE_ANGLES_ALLOWED, DEAD_AREA_LENIENCY)
-    };
-    return context.is_finishing_hit(num_angles_checked, survivable_angles_allowed, dead_area_leniency);
+    let is_final = is_final_killing_hit(defender_boma, attacker_boma);
+    return context.is_finishing_hit(is_final);
 }
 
 const HANDLE: i32 = 0x01FF;
