@@ -49,4 +49,6 @@
     <float hash="attack_air_cliff_catch_frame_after_cancel_frame">5</float>
     <int hash="wall_jump_count_airtime">1</int>
     <int hash="lasso_hang_fall_disable_frame">15</int>
+    <float hash="hitstun_gravity_min">0.11</float>
+    <float hash="hitstun_gravity_max">0.17</float>
 </struct>
