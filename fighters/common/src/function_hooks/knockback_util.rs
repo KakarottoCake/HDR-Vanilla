@@ -65,8 +65,8 @@ const NUM_ANGLES_CHECKED_FINAL: i32 = 12;
 const SURVIVABLE_ANGLES_ALLOWED: i32 = 0;
 const SURVIVABLE_ANGLES_ALLOWED_FINAL: i32 = 1;
 // how many units into the blastzone a fighter will be declared dead
-const DEAD_AREA_LENIENCY: f32 = 3.0;
-const DEAD_AREA_LENIENCY_FINAL: f32 = 1.0;
+const DEAD_AREA_LENIENCY: f32 = 5.0;
+const DEAD_AREA_LENIENCY_FINAL: f32 = 2.5;
 
 impl KnockbackCalcContext {
     pub unsafe fn new(
@@ -256,9 +256,6 @@ impl KnockbackCalcContext {
         }  else {
             (NUM_ANGLES_CHECKED, SURVIVABLE_ANGLES_ALLOWED, DEAD_AREA_LENIENCY.max(self.sdi_distance))
         };
-        dbg!(num_angles_checked);
-        dbg!(survivable_angles_allowed);
-        dbg!(dead_area_leniency);
         let mut blastzones = get_dead_area();
         blastzones.grow(dead_area_leniency);
         let kb_angle = self.launch_speed.y.atan2(self.launch_speed.x).to_degrees();
