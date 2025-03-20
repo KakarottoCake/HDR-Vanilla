@@ -193,6 +193,8 @@ pub mod vars {
 
             pub const DOWN_DISABLE_PASSIVE: i32 = 0x006B;
 
+            pub const DOWN_DISABLE_A_LAND: i32 = 0x006C;
+
             // ints
 
             pub const LAST_ATTACK_RECEIVER_ENTRY_ID: i32 = 0x0000;
@@ -1401,8 +1403,6 @@ pub mod vars {
             // flags
             pub const SPECIAL_N_PLEDGE_PAUSE_TIMER: i32 = 0x0100;
             pub const SPECIAL_LW_BACKWARDS_SWITCH: i32 = 0x0101;
-            pub const DISABLE_SPECIAL_LW: i32 = 0x0102;
-            pub const METER_UI_DISABLE_COLOR: i32 = 0x0103;
 
             // ints
             pub const SPECIAL_N_PLEDGE_STATE: i32 = 0x0100; // 0 - None, 1 - Squirtle, 2 - Ivysaur, 3 - Charizard
@@ -1740,7 +1740,8 @@ pub mod vars {
         pub mod instance {
             // flags
             pub const SPECIAL_HI_GROUND_START: i32 = 0x0100;
-            pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0101;
+            pub const SPECIAL_HI_AIR_JUMP: i32 = 0x0101;
+            pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0102;
 
             // ints
             pub const ARMR_DRAGONIZE_EFFECT_HANDLE: i32 = 0x0100;

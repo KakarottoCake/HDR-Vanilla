@@ -132,7 +132,8 @@ unsafe extern "C" fn game_appealhi(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 2.0);
     if is_excute(agent) {
-        if is_training_mode() {
+        if is_training_mode()
+        && LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
             let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
             let object = utils::util::get_battle_object_from_id(parent_id);
             let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
@@ -142,7 +143,6 @@ unsafe extern "C" fn game_appealhi(agent: &mut L2CAgentBase) {
             };
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, state);
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer);
-            VarModule::off_flag(object, vars::ptrainer::instance::METER_UI_DISABLE_COLOR);
         }
     }
 }
@@ -151,7 +151,8 @@ unsafe extern "C" fn effect_appealhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        if is_training_mode() {
+        if is_training_mode()
+        && LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
             EffectModule::kill_kind(boma, Hash40::new("sys_status_attack_up"), false, false);
             EffectModule::kill_kind(boma, Hash40::new("sys_status_defense_up"), false, false);
             EffectModule::kill_kind(boma, Hash40::new("sys_status_speed_up"), false, false);
@@ -220,7 +221,8 @@ unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 2.0);
     if is_excute(agent) {
-        if is_training_mode() {
+        if is_training_mode()
+        && LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
             let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
             let object = utils::util::get_battle_object_from_id(parent_id);
             let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
@@ -230,7 +232,6 @@ unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
             };
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, state);
             VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer);
-            VarModule::off_flag(object, vars::ptrainer::instance::METER_UI_DISABLE_COLOR);
         }
     }
     frame(lua_state, 35.0);
@@ -247,7 +248,8 @@ unsafe extern "C" fn effect_appeallw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        if is_training_mode() {
+        if is_training_mode()
+        && LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
             EffectModule::kill_kind(boma, Hash40::new("sys_status_attack_up"), false, false);
             EffectModule::kill_kind(boma, Hash40::new("sys_status_defense_up"), false, false);
             EffectModule::kill_kind(boma, Hash40::new("sys_status_speed_up"), false, false);

@@ -139,6 +139,7 @@ unsafe extern "C" fn game_speciallw1loop(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
         agent.clear_lua_stack();
         lua_args!(agent, FIGHTER_KINETIC_ENERGY_ID_DAMAGE);
         app::sv_kinetic_energy::clear_speed(lua_state);

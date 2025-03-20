@@ -3,6 +3,8 @@ use super::*;
 // FIGHTER_STATUS_KIND_SPECIAL_N
 
 pub unsafe extern "C" fn special_n_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.sub_status_pre_SpecialNCommon();
+
     StatusModule::init_settings(fighter.module_accessor,
         app::SituationKind(*SITUATION_KIND_NONE),
         *FIGHTER_KINETIC_TYPE_UNIQ,
@@ -14,6 +16,7 @@ pub unsafe extern "C" fn special_n_pre(fighter: &mut L2CFighterCommon) -> L2CVal
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT,
         0
     );
+    
     FighterStatusModuleImpl::set_fighter_status_data(
         fighter.module_accessor,
         false,

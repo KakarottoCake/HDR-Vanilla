@@ -4,6 +4,9 @@ use super::*;
 use globals::*;
 
 unsafe fn special_lw_track(boma: &mut BattleObjectModuleAccessor) {
+    if !LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
+        return;
+    }
     let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
     let object = utils::util::get_battle_object_from_id(parent_id);
     if boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_LW) && !boma.is_button_on(Buttons::SpecialAll) {

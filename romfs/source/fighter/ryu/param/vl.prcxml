@@ -105,7 +105,7 @@
     <struct index="0">
       <float hash="start_speed_x_mul">0.7</float>
       <float hash="hit_stop_frame_mul">2.0</float>
-      <float hash="step_cancel_invalid_frame">5</float>
+      <float hash="step_cancel_invalid_frame">3</float>
       <float hash="hit_cancel_frame">5</float>
     </struct>
     <hash40 index="1">dummy</hash40>

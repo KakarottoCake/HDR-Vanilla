@@ -13,6 +13,7 @@ unsafe fn ptrainer_swap_backwards_hook(ctx: &mut skyline::hooks::InlineCtx) {
         };
 
         *ctx.registers[8].x.as_mut() = new;
+        VarModule::off_flag(object, vars::ptrainer::instance::SPECIAL_LW_BACKWARDS_SWITCH)
     }
 }
 

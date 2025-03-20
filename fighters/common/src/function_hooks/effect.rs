@@ -388,17 +388,20 @@ unsafe fn get_dead_effect_scale_hook(boma: &mut BattleObjectModuleAccessor, arg1
 #[skyline::hook(replace=smash::app::sv_module_access::effect)]
 unsafe fn module_access_effect_hook(lua_state: u64) {
     let mut agent: L2CAgent = L2CAgent::new(lua_state);
-    let mut params: [L2CValue ; 17] = [
-        L2CValue::new_void(), L2CValue::new_void(), L2CValue::new_void(), L2CValue::new_void(), 
-        L2CValue::new_void(), L2CValue::new_void(), L2CValue::new_void(), L2CValue::new_void(), 
-        L2CValue::new_void(), L2CValue::new_void(), L2CValue::new_void(), L2CValue::new_void(), 
-        L2CValue::new_void(), L2CValue::new_void(), L2CValue::new_void(), L2CValue::new_void(),
-        L2CValue::new_void()
-    ];
-    for i in 0..17 { params[i as usize] = agent.pop_lua_stack(i + 1) };
+    let mut params: Vec<L2CValue> = Vec::new();
+    let mut i = 0;
+    loop {
+        let param = agent.pop_lua_stack(i + 1);
+        if param.val_type == L2CValueType::Void {
+            break;
+        }
+        
+        params.push(param);
+        i += 1;
+    }
 
     agent.clear_lua_stack();
-    for i in 0..17 {
+    for i in 0..params.len() {
         if i == 1 { // effect hash index
             let mut effect_name = params[i as usize].get_hash();
             let mut hash = effect_name.hash;

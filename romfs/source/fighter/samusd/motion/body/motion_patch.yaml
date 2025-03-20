@@ -93,7 +93,7 @@ attack_lw3:
     cancel_frame: 32
 attack_hi4:
   extra:
-    cancel_frame: 62
+    cancel_frame: 63
 attack_lw4:
   extra:
     cancel_frame: 50
