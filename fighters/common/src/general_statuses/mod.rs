@@ -65,12 +65,6 @@ pub unsafe fn sub_wait_common_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_pre_DamageAir)]
 pub unsafe fn status_pre_DamageAir(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_KNOCKDOWN_THROW) {
-        // force tumble
-        fighter.set_status_kind_interrupt(*FIGHTER_STATUS_KIND_DAMAGE_FLY);
-        return 1.into();
-    }
-
     // Checks whether you have successfully CC'd into non-tumble knockback
     // This is so we can apply half hitstun upon landing from a CC'd attack
     if fighter.is_prev_status_one_of(&[*FIGHTER_STATUS_KIND_SQUAT, *FIGHTER_STATUS_KIND_SQUAT_WAIT]) {
