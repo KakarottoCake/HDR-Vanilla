@@ -280,6 +280,23 @@ unsafe fn disable_attacker_parry_pushback(ctx: &mut skyline::hooks::InlineCtx) {
     }
 }
 
+// Lowers the tumble threshold for spikes
+#[skyline::hook(offset = 0x403ce4, inline)]
+unsafe fn post_spike_check(ctx: &mut skyline::hooks::InlineCtx) {
+    let is_spike = *ctx.registers[0].w.as_ref() != 0;
+    if is_spike {
+        let mut kb: f32;
+        asm!("fmov w8, s11", out("w8") kb);
+
+        if kb >= 27.3 {
+            // Set damage level to 3 (tumble)
+            *ctx.registers[24].w.as_mut() = 3;
+        }
+    
+        asm!("fmov s11, w8", in("w8") kb)
+    }
+}
+
 pub fn install() {
     skyline::patching::Patch::in_text(0x641d84).nop();
     skyline::install_hooks!(
@@ -294,6 +311,7 @@ pub fn install() {
         set_parry_hitlag,
         x03df93c,
         notify_log_event_collision_hit,
-        disable_attacker_parry_pushback
+        disable_attacker_parry_pushback,
+        post_spike_check
     );
 }
