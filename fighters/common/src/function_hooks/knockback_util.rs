@@ -65,7 +65,7 @@ const NUM_ANGLES_CHECKED_FINAL: i32 = 12;
 const SURVIVABLE_ANGLES_ALLOWED: i32 = 0;
 const SURVIVABLE_ANGLES_ALLOWED_FINAL: i32 = 1;
 // how many units into the blastzone a fighter will be declared dead
-const DEAD_AREA_LENIENCY: f32 = 5.0;
+const DEAD_AREA_LENIENCY: f32 = 7.5;
 const DEAD_AREA_LENIENCY_FINAL: f32 = 2.5;
 
 impl KnockbackCalcContext {
