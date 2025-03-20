@@ -10,7 +10,7 @@ jobs:
   pr_build:
     env:
       PLUGIN_NAME: hdr
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     container: 
       image: wuboyth/skyline-plugin-builder:latest
     steps:

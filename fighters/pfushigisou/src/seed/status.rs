@@ -24,7 +24,8 @@ pub unsafe extern "C" fn move_init(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let mut life = weapon.get_param_int("param_seed", "life");
     let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
     let owner_boma = &mut *(*utils::util::get_battle_object_from_id(owner_id)).module_accessor;
-    if [*FIGHTER_KIND_PZENIGAME, *FIGHTER_KIND_PFUSHIGISOU, *FIGHTER_KIND_PLIZARDON].contains(&owner_boma.kind()) {
+    if [*FIGHTER_KIND_PZENIGAME, *FIGHTER_KIND_PFUSHIGISOU, *FIGHTER_KIND_PLIZARDON].contains(&owner_boma.kind())
+    && LinkModule::is_link(owner_boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
         //println!("owner is a pokemon, we can set the pledge state properly");
         let parent_id = LinkModule::get_parent_id(owner_boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
         let object = utils::util::get_battle_object_from_id(parent_id);

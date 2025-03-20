@@ -305,10 +305,10 @@ special_lw_install:
     no_stop_intp: false
 special_lw_step_b:
   extra:
-    cancel_frame: 13
+    cancel_frame: 10
 special_lw_step_f:
   extra:
-    cancel_frame: 13
+    cancel_frame: 10
 special_n:
   flags:
     move: false

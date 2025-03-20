@@ -20,7 +20,7 @@ pub unsafe extern "C" fn special_s_pre(fighter: &mut L2CFighterCommon) -> L2CVal
             app::SituationKind(*SITUATION_KIND_AIR),
             *FIGHTER_KINETIC_TYPE_UNIQ,
             *GROUND_CORRECT_KIND_KEEP as u32,
-            app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
+            app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP),
             true,
             *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG,
             *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT,
@@ -83,11 +83,10 @@ unsafe extern "C" fn special_s_main(fighter: &mut L2CFighterCommon) -> L2CValue 
     
 }
 
-unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    /* 
+unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue { 
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 0.into();
-    }*/
+    }
 
     fighter.sub_exec_special_start_common_kinetic_setting(hash40("param_special_s").into());
     special_s_armor(fighter);
@@ -127,7 +126,7 @@ pub unsafe extern "C" fn special_s_dash_pre(fighter: &mut L2CFighterCommon) -> L
             app::SituationKind(*SITUATION_KIND_AIR),
             *FIGHTER_KINETIC_TYPE_UNIQ,
             *GROUND_CORRECT_KIND_AIR as u32,
-            app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES),
+            app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
             true,
             *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG,
             *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT,
@@ -189,7 +188,98 @@ pub unsafe extern "C" fn special_s_fail_pre(fighter: &mut L2CFighterCommon) -> L
         );
         
     }
-    return smashline::original_status(Pre, fighter, *FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_FAIL)(fighter);
+    
+    StatusModule::init_settings(
+        fighter.module_accessor, 
+        app::SituationKind(*SITUATION_KIND_NONE),
+        *FIGHTER_KINETIC_TYPE_UNIQ,
+        *GROUND_CORRECT_KIND_KEEP as u32,
+        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP),
+        true,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT,
+        0
+    );
+
+    FighterStatusModuleImpl::set_fighter_status_data(
+        fighter.module_accessor,
+        false,
+        *FIGHTER_TREADED_KIND_NO_REAC,
+        false,
+        false,
+        false,
+        (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_S | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK)  as u64,
+        *FIGHTER_STATUS_ATTR_START_TURN as u32,
+        *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S as u32,
+        0
+    );
+
+    0.into()
+}
+
+// FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_END
+
+unsafe extern "C" fn special_s_end_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    StatusModule::init_settings(
+        fighter.module_accessor, 
+        app::SituationKind(*SITUATION_KIND_NONE),
+        *FIGHTER_KINETIC_TYPE_UNIQ,
+        *GROUND_CORRECT_KIND_KEEP as u32,
+        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
+        true,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT,
+        0
+    );
+
+    FighterStatusModuleImpl::set_fighter_status_data(
+        fighter.module_accessor,
+        false,
+        *FIGHTER_TREADED_KIND_NO_REAC,
+        false,
+        false,
+        false,
+        (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_S | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK)  as u64,
+        0,
+        *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S as u32,
+        0
+    );
+    
+    0.into()
+}
+
+// FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_WALL
+
+unsafe extern "C" fn special_s_wall_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    StatusModule::init_settings(
+        fighter.module_accessor, 
+        app::SituationKind(*SITUATION_KIND_AIR),
+        *FIGHTER_KINETIC_TYPE_UNIQ,
+        *GROUND_CORRECT_KIND_AIR as u32,
+        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
+        true,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT,
+        0
+    );
+
+    FighterStatusModuleImpl::set_fighter_status_data(
+        fighter.module_accessor,
+        false,
+        *FIGHTER_TREADED_KIND_NO_REAC,
+        false,
+        false,
+        false,
+        (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_S | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK)  as u64,
+        0,
+        *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S as u32,
+        0
+    );
+    
+    0.into()
 }
 
 pub fn install(agent: &mut Agent) {
@@ -200,4 +290,8 @@ pub fn install(agent: &mut Agent) {
     agent.status(Main, *FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_DASH, special_s_dash_main);
 
     agent.status(Pre, *FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_FAIL, special_s_fail_pre);
+
+    agent.status(Pre, *FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_END, special_s_end_pre);
+
+    agent.status(Pre, *FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_WALL, special_s_wall_pre);
 }

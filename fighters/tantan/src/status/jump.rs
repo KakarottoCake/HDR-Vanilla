@@ -43,7 +43,14 @@ pub unsafe extern "C" fn jump_squat_pre(fighter: &mut L2CFighterCommon) -> L2CVa
     return smashline::original_status(Pre, fighter, *FIGHTER_STATUS_KIND_JUMP_SQUAT)(fighter);
 }
 
+pub unsafe extern "C" fn jump_squat_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.uniq_process_JumpSquat_exec_status();
+    return 0.into();
+}
+
 pub fn install(agent: &mut Agent) {
     agent.status(Pre, *FIGHTER_STATUS_KIND_JUMP, jump_pre);
+
     agent.status(Pre, *FIGHTER_STATUS_KIND_JUMP_SQUAT, jump_squat_pre);
+    agent.status(Exec, *FIGHTER_STATUS_KIND_JUMP_SQUAT, jump_squat_exec);
 }
