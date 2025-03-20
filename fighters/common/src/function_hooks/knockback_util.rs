@@ -2,8 +2,6 @@ use super::*;
 use utils::ext::*;
 use std::arch::asm;
 
-const NUM_ANGLE_CHECK: i32 = 12;
-
 extern "C" {
     #[link_name = "_ZN3app6camera13get_dead_areaEv"]
     fn get_dead_area() -> Rect;
@@ -22,6 +20,12 @@ struct Rect {
 impl Rect {
     fn contains(&self, x: f32, y: f32) -> bool {
         (self.vec[0] <= x && x <= self.vec[1]) && (self.vec[3] <= y && y <= self.vec[2])
+    }
+    fn grow(&mut self, amount: f32) {
+        self.vec[0] -= amount;
+        self.vec[1] += amount;
+        self.vec[2] += amount;
+        self.vec[3] -= amount;
     }
 }
 
@@ -258,17 +262,18 @@ impl KnockbackCalcContext {
         return trajectory;
     }
 
-    pub unsafe fn is_finishing_hit(&mut self, false_angle_num_allowed: i32) -> bool {
+    pub unsafe fn is_finishing_hit(&mut self, num_angles_checked: i32, survivable_angles_allowed: i32, dead_area_leniency: f32) -> bool {
         let defender_boma = self.defender_boma;
-        let blastzones = get_dead_area();
+        let mut blastzones = get_dead_area();
+        blastzones.grow(dead_area_leniency);
         let kb_angle = self.launch_speed.y.atan2(self.launch_speed.x).to_degrees();
         let di_angle = WorkModule::get_param_float(defender_boma, hash40("common"), hash40("damage_fly_correction_max"));
         let min_di = kb_angle - di_angle;
         let max_di = kb_angle + di_angle;
-        let step = (di_angle * 2.0) / (NUM_ANGLE_CHECK as f32);
-        let mut false_angle_num = 0;
+        let step = (di_angle * 2.0) / (num_angles_checked as f32);
+        let mut survivable_angles = 0;
         let original_context = self.clone();
-        for idx in 0..NUM_ANGLE_CHECK + 1 {
+        for idx in 0..num_angles_checked + 1 {
             // calc and update the DI angle
             let new_radians = (min_di + (idx as f32 * step)).to_radians();
             
@@ -287,9 +292,9 @@ impl KnockbackCalcContext {
                 }
             }
             if !trajectory_kills {
-                false_angle_num += 1;
+                survivable_angles += 1;
             }
-            if false_angle_num > false_angle_num_allowed {
+            if survivable_angles > survivable_angles_allowed {
                 // return early so we don't waste effort
                 return false;
             }
