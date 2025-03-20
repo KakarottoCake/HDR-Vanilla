@@ -107,9 +107,9 @@ unsafe extern "C" fn game_attacklw4(agent: &mut L2CAgentBase) {
     frame(lua_state, 8.0);
     for _ in 0..5 {
         if is_excute(agent) {
-            ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 178, 30, 0, 65, 4.5, 0.0, 5.0, -10.5, None, None, None, 0.6, 0.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
-            ATTACK(agent, 1, 0, Hash40::new("top"), 2.0, 178, 30, 0, 65, 4.5, 0.0, 5.0, 10.5, None, None, None, 0.6, 0.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
-            ATTACK(agent, 2, 0, Hash40::new("top"), 2.0, 90, 30, 0, 30, 3.5, 0.0, 4.0, 0.0, None, None, None, 0.6, 0.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
+            ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 178, 100, 70, 0, 4.5, 0.0, 5.0, -10.5, None, None, None, 0.6, 0.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
+            ATTACK(agent, 1, 0, Hash40::new("top"), 2.0, 178, 100, 70, 0, 4.5, 0.0, 5.0,  10.5, None, None, None, 0.6, 0.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
+            ATTACK(agent, 2, 0, Hash40::new("top"), 2.0,  90, 100, 70, 0, 3.5, 0.0, 4.0,   0.0, None, None, None, 0.6, 0.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
             AttackModule::set_no_damage_fly_smoke_all(boma, true, false);
         }
         wait(lua_state, 2.0);
@@ -127,9 +127,65 @@ unsafe extern "C" fn game_attacklw4(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn effect_attacklw4(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 1.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("tail3"), 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pikachu_cheek"), Hash40::new("head"), 0, 0, 0, 0, -90, -90, 1, true);
+    }
+    frame(lua_state, 6.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pikachu_cheek"), Hash40::new("head"), 0, 0, 0, 0, -90, -90, 1, true);
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pikachu_elec2"), Hash40::new("top"), 0, 5, 7, 0, 0, 0, 1, true);
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pikachu_elec2"), Hash40::new("top"), 0, 5, -7, 0, 180, 0, 1, true);
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pikachu_elec"), Hash40::new("tail3"), 2, 0, 3, 0, 0, 0, 1, true);
+    }
+    frame(lua_state, 8.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW_FLIP(agent, Hash40::new("pikachu_tail_arc"), Hash40::new("pikachu_tail_arc"), Hash40::new("top"), 0, 3, 0, 0, -100, 0, 1.2, true, *EF_FLIP_YZ);
+    }
+    frame(lua_state, 14.0);
+    if is_excute(agent) {
+        agent.clear_lua_stack();
+        lua_args!(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0.to_f32(), 0.to_f32(), 0.to_f32(), 0.to_f32(), 0.to_f32(), 0.to_f32(), 1.1.to_f32(), 0.to_f32(), 0.to_f32(), 0.to_f32(), 0.to_f32(), 0.to_f32(), 0.to_f32(), false, *EF_FLIP_NONE);
+        sv_animcmd::FOOT_EFFECT_FLIP(agent.lua_state_agent);
+        agent.clear_lua_stack();
+        LAST_EFFECT_SET_ALPHA(agent, 0.5);
+        LAST_EFFECT_SET_RATE(agent, 0.9);
+    }
+    frame(lua_state, 15.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW_FLIP(agent, Hash40::new("pikachu_tail_arc"), Hash40::new("pikachu_tail_arc"), Hash40::new("top"), 0, 3, 1, 0, 90, 0, 1.2, true, *EF_FLIP_YZ);
+        EFFECT_OFF_KIND(agent, Hash40::new("pikachu_elec2"), false, true);
+        LANDING_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.75, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(lua_state, 20.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pikachu_elec2"), Hash40::new("top"), 0, 9, 0, 0, 0, 0, 1.3, true);
+        EFFECT_FOLLOW_FLIP(agent, Hash40::new("pikachu_elec_shock"), Hash40::new("pikachu_elec_shock"), Hash40::new("top"), -4, 6.4, 0, 0, 90, 0, 1.2, true, *EF_FLIP_YZ);
+        LAST_EFFECT_SET_RATE(agent, 2.0);
+    }
+    frame(lua_state, 26.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("pikachu_elec2"), false, true);
+        EFFECT_OFF_KIND(agent, Hash40::new("pikachu_elec_shock"), false, false);
+    }
+    frame(lua_state, 30.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("pikachu_elec"), false, true);
+    }
+    frame(lua_state, 35.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("pikachu_cheek"), false, true);
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_attacks4", game_attacks4, Priority::Low);
     agent.acmd("effect_attacks4", effect_attacks4, Priority::Low);
     agent.acmd("game_attackhi4", game_attackhi4, Priority::Low);
     agent.acmd("game_attacklw4", game_attacklw4, Priority::Low);
+    agent.acmd("effect_attacklw4", effect_attacklw4, Priority::Low);
 }
