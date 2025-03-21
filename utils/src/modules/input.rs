@@ -1,7 +1,7 @@
 use smash::app::{
-    lua_bind::GroundModule, lua_bind::ControlModule, lua_bind::WorkModule, BattleObject, BattleObjectModuleAccessor,
+    lua_bind::ControlModule, lua_bind::WorkModule, BattleObject, BattleObjectModuleAccessor,
 };
-use smash::lib::lua_const::{CONTROL_PAD_BUTTON_GUARD, CONTROL_PAD_BUTTON_GUARD_HOLD, SITUATION_KIND_AIR};
+use smash::lib::lua_const::SITUATION_KIND_AIR;
 use utils_dyn::ext::*;
 
 // use crate::consts::globals::*;
