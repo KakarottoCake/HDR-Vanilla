@@ -638,7 +638,7 @@ fn exec_internal(input_module: &mut InputModule, control_module: u64, call_origi
         let mut pass_flick_y = WorkModule::get_param_int(boma, hash40("common"), hash40("pass_flick_y"));
         if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD_HOLD) {
             // this lets players tilt shield down faster when holding shield lock
-            pass_flick_y = (pass_flick_y / 2).clamp(1, pass_flick_y);
+            pass_flick_y = (pass_flick_y / 3).clamp(1, pass_flick_y);
         }
 
         GroundModule::is_passable_ground(boma)
