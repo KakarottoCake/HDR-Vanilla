@@ -85,7 +85,10 @@ impl KnockbackCalcContext {
         let ecb_left =   *GroundModule::get_rhombus(defender_boma, true).add(2);
         let ecb_right =  *GroundModule::get_rhombus(defender_boma, true).add(3);
         let y_chara_speed = 0.0;
-        let gravity = WorkModule::get_param_float(defender_boma, hash40("air_accel_y"), hash40(""));
+        let air_accel_y = WorkModule::get_param_float(defender_boma, hash40("air_accel_y"), hash40(""));
+        let hitstun_gravity_min = ParamModule::get_float((*defender_boma).object(), ParamType::Common, "hitstun_gravity_min");
+        let hitstun_gravity_max = ParamModule::get_float((*defender_boma).object(), ParamType::Common, "hitstun_gravity_max");
+        let gravity = air_accel_y.clamp(hitstun_gravity_min, hitstun_gravity_max);
         let fall_speed = WorkModule::get_param_float(defender_boma, hash40("air_speed_y_stable"), hash40(""));
         let pos = Vector2f::new(ecb_bottom.x, ecb_bottom.y);
         let pos_prev = Vector2f::new(pos.x, pos.y);
