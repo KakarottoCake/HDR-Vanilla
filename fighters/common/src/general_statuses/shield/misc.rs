@@ -370,7 +370,7 @@ pub unsafe fn check_plat_drop_oos(fighter: &mut L2CFighterCommon) -> L2CValue {
         return false.into();
     }
 
-    // dont override spotdodge unless exceding pass_stick_x
+    // dont override spotdodge unless exceeding pass_stick_x
     let stick_x = fighter.global_table[STICK_X].get_f32();
     let pass_stick_x = ParamModule::get_float(fighter.battle_object, ParamType::Common, "pass_stick_x");
     if !fighter.check_guard_hold().get_bool()
