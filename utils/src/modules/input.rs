@@ -629,32 +629,6 @@ fn exec_internal(input_module: &mut InputModule, control_module: u64, call_origi
         input_module.hdr_cat.valid_frames[parry_offset] -= 1;
     }
 
-    let shielddrop_offset = CatHdr::ShieldDrop.bits().trailing_zeros() as usize;
-    let shielddrop_input = unsafe {
-        let boma = (*input_module.owner).module_accessor;
-        let stick_y = ControlModule::get_stick_y(boma);
-        let flick_y = ControlModule::get_flick_y(boma);
-        let pass_stick_y = WorkModule::get_param_float(boma, hash40("common"), hash40("pass_stick_y"));
-        let mut pass_flick_y = WorkModule::get_param_int(boma, hash40("common"), hash40("pass_flick_y"));
-        if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD_HOLD) {
-            // this lets players tilt shield down faster when holding shield lock
-            pass_flick_y = (pass_flick_y / 3).clamp(1, pass_flick_y);
-        }
-
-        GroundModule::is_passable_ground(boma)
-        && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD)
-        && stick_y < pass_stick_y
-        && flick_y < pass_flick_y
-    };
-    if shielddrop_input 
-    && input_module.hdr_cat.valid_frames[shielddrop_offset] == 0 {
-        input_module.hdr_cat.valid_frames[shielddrop_offset] = unsafe { ControlModule::get_command_life_count_max((*input_module.owner).module_accessor) as u8 };
-    }
-    if input_module.hdr_cat.valid_frames[shielddrop_offset] != 0
-    && !(parry_input && input_module.hdr_cat.valid_frames[shielddrop_offset] == 1) {
-        input_module.hdr_cat.valid_frames[shielddrop_offset] -= 1;
-    }
-
     call_original();
 
     let cats = unsafe {

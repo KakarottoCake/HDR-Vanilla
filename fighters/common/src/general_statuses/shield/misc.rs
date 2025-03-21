@@ -364,8 +364,9 @@ pub unsafe fn check_grab_oos(fighter: &mut L2CFighterCommon) -> L2CValue {
 
 pub unsafe fn check_plat_drop_oos(fighter: &mut L2CFighterCommon) -> L2CValue {
     // basic shield drop requirements
+    let cat2 = fighter.global_table[CMD_CAT2].get_i32();
     if !GroundModule::is_passable_ground(fighter.module_accessor)
-    || !fighter.is_cat_flag(CatHdr::ShieldDrop) {
+    || (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_GUARD_TO_PASS) == 0 {
         return false.into();
     }
 
