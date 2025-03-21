@@ -594,7 +594,7 @@ pub unsafe fn exec_damage_elec_hit_stop_hook(fighter: &mut L2CFighterCommon) {
         // if !is_paralyze {
         //     fighter.FighterStatusUniqProcessDamage_check_hit_stop_delay_flick(hashmap);
         // }
-        StatusModule::set_keep_situation_air(fighter.module_accessor, false);
+        // StatusModule::set_keep_situation_air(fighter.module_accessor, false);
         let release_action = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_DAMAGE_WORK_INT_STOP_RELEASE_ACTION);
         if release_action == *FIGHTER_STATUS_DAMAGE_STOP_RELEASE_ACTION_GROUND_TO_AIR {
             StatusModule::set_situation_kind(fighter.module_accessor, SituationKind(*SITUATION_KIND_AIR), false);
