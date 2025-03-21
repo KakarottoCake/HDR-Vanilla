@@ -365,30 +365,19 @@ pub unsafe fn check_grab_oos(fighter: &mut L2CFighterCommon) -> L2CValue {
 pub unsafe fn check_plat_drop_oos(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
     let stick_x = ControlModule::get_stick_x(boma);
-    let stick_y = ControlModule::get_stick_y(boma);
-    let flick_y = ControlModule::get_flick_y(boma);
     let pass_stick_x = ParamModule::get_float(fighter.battle_object, ParamType::Common, "pass_stick_x");
-    let pass_stick_y = fighter.get_param_float("common", "pass_stick_y");
-    let pass_flick_y = fighter.get_param_int("common", "pass_flick_y");
 
     // basic shield drop requirements
     if !GroundModule::is_passable_ground(boma)
-    || !fighter.is_button_on(Buttons::Guard)
-    || stick_y > pass_stick_y  {
+    || !fighter.is_cat_flag(CatHdr::ShieldDrop) {
         return false.into();
     }
 
-    let is_spotdodge_input = check_escape_oos(fighter, false.into()).get_bool();
-    if fighter.check_guard_hold().get_bool() {
-        // require a spotdodge input if locking shield
-        if !is_spotdodge_input {
-            return false.into();
-        }
-    } else {
-        // dont override spotdodge unless exceding pass_stick_x
-        if is_spotdodge_input && stick_x.abs() < pass_stick_x {
-            return false.into();
-        }
+    // dont override spotdodge unless exceding pass_stick_x
+    if !fighter.check_guard_hold().get_bool()
+    && check_escape_oos(fighter, false.into()).get_bool() 
+    && stick_x.abs() < pass_stick_x {
+        return false.into();
     }
 
     fighter.change_status(FIGHTER_STATUS_KIND_PASS.into(), true.into());
