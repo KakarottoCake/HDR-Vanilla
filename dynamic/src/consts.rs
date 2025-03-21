@@ -195,6 +195,8 @@ pub mod vars {
 
             pub const DOWN_DISABLE_A_LAND: i32 = 0x006C;
 
+            pub const IS_KILLING_BLOW: i32 = 0x006D;
+
             // ints
 
             pub const LAST_ATTACK_RECEIVER_ENTRY_ID: i32 = 0x0000;
