@@ -121,13 +121,11 @@ unsafe extern "C" fn game_throwhi(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     if is_excute(agent) {
         FT_MOTION_RATE(agent, 8.0/(5.0-1.0));
-        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 2.0, 90, 110, 0, 75, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 2.0, 90, 147, 0, 75, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
     }
     frame(lua_state, 5.0);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 1.0);
-    }
+    FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 6.0);
     if is_excute(agent) {
         CHECK_FINISH_CAMERA(agent, 2, 20);
@@ -157,16 +155,14 @@ unsafe extern "C" fn game_throwhi(agent: &mut L2CAgentBase) {
         ArticleModule::generate_article(boma, *FIGHTER_FOX_GENERATE_ARTICLE_BLASTER_BULLET, false, 0);
     }
     frame(lua_state, 27.0);
+    FT_MOTION_RATE(agent, 7.0/(31.0-27.0));
     if is_excute(agent) {
         if ArticleModule::is_exist(boma, *FIGHTER_FOX_GENERATE_ARTICLE_BLASTER){
             ArticleModule::change_motion(boma, *FIGHTER_FOX_GENERATE_ARTICLE_BLASTER, smash::phx::Hash40::new("close"), false, 0.0);
         }
-        FT_MOTION_RATE(agent, 7.0/(31.0-27.0));
     }
     frame(lua_state, 31.0);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 0.8);
-    }
+    FT_MOTION_RATE(agent, 0.8);
 }
 
 pub fn install(agent: &mut Agent) {
