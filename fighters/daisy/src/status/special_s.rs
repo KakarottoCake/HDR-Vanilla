@@ -95,7 +95,7 @@ unsafe extern "C" fn special_s_jump_pre(fighter: &mut L2CFighterCommon) -> L2CVa
         app::SituationKind(*SITUATION_KIND_AIR),
         *FIGHTER_KINETIC_TYPE_PEACH_SPECIAL_S_JUMP,
         *GROUND_CORRECT_KIND_AIR as u32,
-        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP),
+        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
         true,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT,
