@@ -830,10 +830,14 @@ pub unsafe fn sub_is_dive(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND_INTERRUPT].get_i32();
     let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
 
+    // Prevents Yoshi/Peach from fastfalling during the initial dip of their double jump
     if (fighter_kind == *FIGHTER_KIND_YOSHI
         || fighter_kind == *FIGHTER_KIND_PEACH)
-    && status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL
-    && fighter.global_table[CURRENT_FRAME].get_i32() < 10 {
+    && ((status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL
+        && MotionModule::frame(fighter.module_accessor) < 20.0)
+        || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_AIR
+            && MotionModule::frame_2nd(fighter.module_accessor) < 20.0))
+    {
         return false.into();
     }
 
@@ -891,6 +895,7 @@ pub unsafe fn sub_is_dive(fighter: &mut L2CFighterCommon) -> L2CValue {
     }
 
     if [*FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION,
+        *FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION_2ND,
         *FIGHTER_KINETIC_TYPE_MOTION_AIR,
         *FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE].contains(&KineticModule::get_kinetic_type(fighter.module_accessor))
     {
