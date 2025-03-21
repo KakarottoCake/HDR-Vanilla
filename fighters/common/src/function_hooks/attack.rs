@@ -280,7 +280,8 @@ unsafe fn disable_attacker_parry_pushback(ctx: &mut skyline::hooks::InlineCtx) {
     }
 }
 
-// Lowers the tumble threshold for spikes
+// We can manipulate your damage level here
+// e.g. force tumble
 #[skyline::hook(offset = 0x403ce4, inline)]
 unsafe fn post_spike_check(ctx: &mut skyline::hooks::InlineCtx) {
     let boma = *ctx.registers[19].x.as_ref() as *mut smash::app::BattleObjectModuleAccessor;
@@ -289,6 +290,7 @@ unsafe fn post_spike_check(ctx: &mut skyline::hooks::InlineCtx) {
         return;
     }
 
+    // Lowers the tumble threshold for spikes
     let is_spike = *ctx.registers[0].w.as_ref() != 0;
     if is_spike {
         let mut kb: f32;
@@ -304,6 +306,7 @@ unsafe fn post_spike_check(ctx: &mut skyline::hooks::InlineCtx) {
         asm!("fmov s11, w8", in("w8") kb)
     }
 
+    // Forces tumble for knockdown throws
     if VarModule::is_flag((*boma).object(), vars::common::instance::IS_KNOCKDOWN_THROW) {
         // Set damage level to 3 (tumble)
         *ctx.registers[24].w.as_mut() = 3;
