@@ -364,7 +364,7 @@ pub unsafe fn check_grab_oos(fighter: &mut L2CFighterCommon) -> L2CValue {
 
 pub unsafe fn check_plat_drop_oos(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
-    let stick_x = ControlModule::get_stick_x(boma);
+    let stick_x = fighter.global_table[STICK_X].get_f32();
     let pass_stick_x = ParamModule::get_float(fighter.battle_object, ParamType::Common, "pass_stick_x");
 
     // basic shield drop requirements
