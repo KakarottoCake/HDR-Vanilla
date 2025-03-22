@@ -142,16 +142,20 @@ unsafe extern "C" fn effect_attackairhi(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 12.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), -3, 8.5, -1, -41, 90, 37, 0.95, true);
-        LAST_EFFECT_SET_RATE(agent, 1);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), -3, 8.5, -1, -41, 90, 37, 0.92, true);
+        LAST_EFFECT_SET_SCALE_W(agent, 1.0, 1.0, 0.85);
     }
-    frame(lua_state, 16.8);
+    frame(lua_state, 16.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("sys_attack_arc_d"), false, false);
+    }
+    frame(lua_state, 18.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("sys_attack_arc_d"), true, true);
-        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), -2, 9, -0.5, -16, 110, 60, 0.98, true);
-        LAST_EFFECT_SET_RATE(agent, 1);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), -2, 9, -0.5, -16, 110, 60, 0.95, true);
+        LAST_EFFECT_SET_SCALE_W(agent, 1.0, 1.0, 0.87);
     }
-    frame(lua_state, 22.0);
+    frame(lua_state, 24.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("sys_attack_arc_d"), true, true);
     }
