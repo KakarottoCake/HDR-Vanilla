@@ -242,7 +242,7 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
             VarModule::set_float(boma.object(), vars::pichu::instance::SPECIAL_LW_DISCHARGE_DAMAGE_MUL, discharge_power_mul);
             // 75% size at minimum
             let discharge_min_size_mul = 0.75;
-            let discharge_size_mul = 1.0 - ((1.0 - (charge_state_remaining.min(discharge_decrease_power_frame)/discharge_decrease_power_frame)) * (1.0 - discharge_min_size_mul));
+            let discharge_size_mul = 1.0;// - ((1.0 - (charge_state_remaining.min(discharge_decrease_power_frame)/discharge_decrease_power_frame)) * (1.0 - discharge_min_size_mul));
             VarModule::set_float(boma.object(), vars::pichu::instance::SPECIAL_LW_DISCHARGE_SIZE_MUL, discharge_size_mul);
             VarModule::on_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK);
             VarModule::set_int(boma.object(), vars::common::instance::GIMMICK_TIMER, 0);
@@ -276,8 +276,8 @@ unsafe extern "C" fn effect_speciallw(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         if VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
             let discharge_effect_mul = VarModule::get_float(boma.object(), vars::pichu::instance::SPECIAL_LW_DISCHARGE_SIZE_MUL);
-            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit2"), Hash40::new("top"), 0, 10, 0, 0, 90, 0, 0.77 * discharge_effect_mul, true);
-            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_final_explosion"), Hash40::new("top"), 0, 10, 0, 0, 0, 0, 0.23 * discharge_effect_mul, false);
+            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit2"), Hash40::new("top"), 0, 10, 0, 0, 90, 0, 0.64 * discharge_effect_mul, true);
+            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_final_explosion"), Hash40::new("top"), 0, 10, 0, 0, 0, 0, 0.19 * discharge_effect_mul, false);
         }
     }
     frame(lua_state, 46.0);
@@ -310,7 +310,7 @@ unsafe extern "C" fn game_speciallwhit(agent: &mut L2CAgentBase) {
         }
         else {
             FT_ADD_DAMAGE(agent, 8.0 * discharge_power_mul);
-            ATTACK(agent, 0, 0, Hash40::new("top"), 20.0 * discharge_power_mul, 361, 80, 0, 70, 12.0 * discharge_size_mul, 0.0, 10.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 12, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_NONE);
+            ATTACK(agent, 0, 0, Hash40::new("top"), 20.0 * discharge_power_mul, 361, 80, 0, 70, 10.0 * discharge_size_mul, 0.0, 10.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 12, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_NONE);
             VarModule::set_int(boma.object(), vars::common::instance::GIMMICK_TIMER, 0);
         }
     }
@@ -344,8 +344,8 @@ unsafe extern "C" fn effect_speciallwhit(agent: &mut L2CAgentBase) {
     WorkModule::is_flag(boma, *FIGHTER_PIKACHU_STATUS_WORK_ID_FLAG_KAMINARI_ATTACK_HIT);
     if is_excute(agent) {
         if !VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
-            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit2"), Hash40::new("top"), 0, -2, 0, 0, 90, 0, 0.77, true);
-            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit"), Hash40::new("top"), 0, -2, 0, 0, 90, 0, 0.57, true);
+            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit2"), Hash40::new("top"), 0, -2, 0, 0, 90, 0, 0.64, true);
+            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit"), Hash40::new("top"), 0, -2, 0, 0, 90, 0, 0.47, true);
         }
     }
     if is_excute(agent) {
