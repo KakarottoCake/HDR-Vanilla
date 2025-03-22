@@ -1,8 +1,11 @@
 use super::*;
 
+use std::time::{SystemTime, UNIX_EPOCH};
 use rand::{
     prelude::SliceRandom,
-    Rng
+    Rng, 
+    rngs::StdRng,
+    SeedableRng
 };
 
 const RANDOM_CFG_TOML: &str = "ui/param/menu/chara_random_config.toml";
@@ -70,19 +73,21 @@ unsafe fn decide_random(ctx: &mut skyline::hooks::InlineCtx) {
 }
 
 unsafe fn generate_random(player_id: usize, main_data: u64, sub_data: u64) {
-    let mut chara_string = decide_fighter_from_id(player_id);
+    let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
+    let mut rng_seed = StdRng::seed_from_u64((now.as_millis() as u64 + 1) * rand::thread_rng().gen::<u64>());
+    let mut chara_string = decide_fighter_from_id(player_id, &mut rng_seed);
     let mut chara_hash = hash40(&format!("ui_chara_{}", chara_string)).0;
 
     let mut chara_data = CHARA_DATA.write().unwrap();
     chara_data.main_id = chara_hash | (main_data & KEY_MASK);
-    
+
     if chara_string == "ptrainer" {
         chara_hash = [
             hash40("ui_chara_pzenigame").0,
             hash40("ui_chara_plizardon").0,
             hash40("ui_chara_pfushigisou").0,
         ]
-        .choose(&mut rand::thread_rng()).copied()
+        .choose(&mut rng_seed).copied()
         .unwrap_or(hash40("ui_chara_random").0);
     }
     chara_data.sub_id = chara_hash | (sub_data & KEY_MASK);
@@ -90,8 +95,8 @@ unsafe fn generate_random(player_id: usize, main_data: u64, sub_data: u64) {
     // handle costume rng
     let mut rng = chara_data.costume_rng.clone();
     let costume = {
-        rng.choose(&mut rand::thread_rng()).copied()
-        .unwrap_or((rand::thread_rng().gen::<u32>() % 8) as i32)
+        rng.choose(&mut rng_seed).copied()
+        .unwrap_or((rng_seed.gen::<u32>() % 8) as i32)
     };
     rng.retain(|&x| x != costume);
 
@@ -102,7 +107,7 @@ unsafe fn generate_random(player_id: usize, main_data: u64, sub_data: u64) {
     println!("Randomly selected costume slot to be {costume}");
 }
 
-unsafe fn decide_fighter_from_id(id: usize) -> String {
+unsafe fn decide_fighter_from_id(id: usize, seed: &mut StdRng) -> String {
     let chara_data = { CHARA_DATA.read().unwrap().clone() };
     let mut whitelist = chara_data.whitelist;
 
@@ -114,7 +119,7 @@ unsafe fn decide_fighter_from_id(id: usize) -> String {
     }
 
     // choose a fighter from base whitelist
-    let mut chara_string =  match whitelist.choose(&mut rand::thread_rng()) {
+    let mut chara_string =  match whitelist.choose(seed) {
         Some(string) => string.as_str(),
         None => return dbg!("mario").to_owned()
     };
@@ -195,7 +200,7 @@ unsafe fn decide_fighter_from_id(id: usize) -> String {
     }
     // re-query with adjusted list
     println!("{} is not allowed for tag {}! Adjusting...", default, &tag);
-    chara_string = match whitelist.choose(&mut rand::thread_rng()) {
+    chara_string = match whitelist.choose(seed) {
         Some(str) => str.as_str(),
         None => return dbg!(default)
     };
