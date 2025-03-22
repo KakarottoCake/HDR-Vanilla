@@ -35,10 +35,10 @@ impl Default for CharaSchema {
             centered_random: true,
             order: [
                 // default order of fighters in the CSS for when tourney mode is enabled, or config is invalid
-                "mario", "mariod", "luigi", "peach", "daisy", "rosetta", "koopa", "koopajr", "packun", "yoshi", "wario", "donkey", "diddy", "krool", "buddy", "ice_climber", "gamewatch",
-                "link", "younglink", "toonlink", "zelda", "sheik", "ganon", "samus", "szerosuit", "ridley", "samusd", "kirby", "metaknight", "dedede", "fox", "falco", "wolf", "robot", "duckhunt",
-                "pikachu", "pichu", "ptrainer", "purin", "mewtwo", "lucario", "gekkouga", "gaogaen", "marth", "roy", "ike", "reflet", "chrom", "lucina", "kamui", "master",
-                "ness", "lucas", "captain", "pit", "pitb", "palutena", "pikmin", "murabito", "shizue", "wiifit", "littlemac", "shulk", "element", "inkling", "tantan", "miifighter", "miiswordsman", "miigunner",
+                "mario", "luigi", "mariod", "peach", "daisy", "rosetta", "koopa", "koopajr", "packun", "yoshi", "wario", "donkey", "diddy", "krool", "buddy", "murabito", "shizue",
+                "link", "younglink", "toonlink", "zelda", "sheik", "ganon", "samus", "szerosuit", "ridley", "samusd", "kirby", "metaknight", "dedede", "fox", "falco", "wolf", "ness", "lucas",
+                "pikachu", "pichu", "purin", "mewtwo", "ptrainer", "lucario", "gekkouga", "gaogaen", "marth", "roy", "ike", "reflet", "chrom", "lucina", "kamui", "master",
+                "captain", "ice_climber", "gamewatch", "pit", "pitb", "palutena", "pikmin", "robot", "wiifit", "littlemac", "shulk", "element", "duckhunt", "inkling", "tantan", "miifighter", "miiswordsman", "miigunner",
                 "snake", "simon", "richter", "sonic", "bayonetta", "jack", "rockman", "ryu", "ken", "dolly", "demon", "pacman", "cloud", "edge", "trail", "brave", "pickel"
             ]
             .map(|x| x.to_string()).to_vec()
