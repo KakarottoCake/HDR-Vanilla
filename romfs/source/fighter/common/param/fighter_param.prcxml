@@ -21,7 +21,6 @@
       <float hash="air_brake_x">0.016</float>
       <float hash="air_accel_y">0.095</float>
       <float hash="air_speed_y_stable">1.8</float>
-      <float hash="damage_fly_top_air_accel_y">0.095</float>
       <float hash="weight">100</float>
       <float hash="landing_attack_air_frame_n">7</float>
       <float hash="landing_attack_air_frame_f">11</float>
@@ -56,8 +55,6 @@
       <float hash="air_brake_x">0.02</float>
       <float hash="air_accel_y">0.12</float>
       <float hash="air_speed_y_stable">2.4</float>
-      <float hash="damage_fly_top_air_accel_y">0.12</float>
-      <float hash="damage_fly_top_speed_y_stable">2.4</float>
       <float hash="dive_speed_y">2.96</float>
       <float hash="weight">110</float>
       <float hash="landing_attack_air_frame_n">10</float>
@@ -91,8 +88,6 @@
       <float hash="air_brake_x">0.005</float>
       <float hash="air_accel_y">0.11</float>
       <float hash="air_speed_y_stable">2.13</float>
-      <float hash="damage_fly_top_air_accel_y">0.11</float>
-      <float hash="damage_fly_top_speed_y_stable">2.13</float>
       <float hash="weight">102</float>
       <float hash="landing_attack_air_frame_n">8</float>
       <float hash="landing_attack_air_frame_f">10</float>
@@ -127,8 +122,6 @@
       <float hash="air_brake_x">0.0125</float>
       <float hash="air_accel_y">0.066</float>
       <float hash="air_speed_y_stable">1.43</float>
-      <float hash="damage_fly_top_air_accel_y">0.09</float>
-      <float hash="damage_fly_top_speed_y_stable">1.43</float>
       <float hash="dive_speed_y">2.24</float>
       <float hash="weight">108</float>
       <float hash="landing_attack_air_frame_n">7</float>
@@ -163,8 +156,6 @@
       <float hash="air_brake_x">0.009</float>
       <float hash="air_accel_y">0.094</float>
       <float hash="air_speed_y_stable">1.9</float>
-      <float hash="damage_fly_top_air_accel_y">0.094</float>
-      <float hash="damage_fly_top_speed_y_stable">1.9</float>
       <float hash="dive_speed_y">2.93</float>
       <float hash="weight">104</float>
       <float hash="landing_attack_air_frame_f">11</float>
@@ -199,8 +190,6 @@
       <float hash="air_brake_x">0.02</float>
       <float hash="air_accel_y">0.082</float>
       <float hash="air_speed_y_stable">1.6</float>
-      <float hash="damage_fly_top_air_accel_y">0.09</float>
-      <float hash="damage_fly_top_speed_y_stable">1.6</float>
       <float hash="dive_speed_y">2.217</float>
       <float hash="weight">79</float>
       <float hash="landing_attack_air_frame_n">7</float>
@@ -239,8 +228,6 @@
       <float hash="air_brake_x">0.02</float>
       <float hash="air_accel_y">0.23</float>
       <float hash="air_speed_y_stable">2.8</float>
-      <float hash="damage_fly_top_air_accel_y">0.15</float>
-      <float hash="damage_fly_top_speed_y_stable">2.8</float>
       <float hash="dive_speed_y">3.4</float>
       <float hash="weight">75</float>
       <float hash="landing_attack_air_frame_f">15</float>
@@ -276,8 +263,6 @@
       <float hash="air_brake_x">0.01</float>
       <float hash="air_accel_y">0.11</float>
       <float hash="air_speed_y_stable">1.9</float>
-      <float hash="damage_fly_top_air_accel_y">0.11</float>
-      <float hash="damage_fly_top_speed_y_stable">1.9</float>
       <float hash="dive_speed_y">2.7</float>
       <float hash="weight">80</float>
       <float hash="landing_attack_air_frame_n">8</float>
@@ -316,8 +301,6 @@
       <float hash="air_brake_x">0.01</float>
       <float hash="air_accel_y">0.079</float>
       <float hash="air_speed_y_stable">1.71</float>
-      <float hash="damage_fly_top_air_accel_y">0.09</float>
-      <float hash="damage_fly_top_speed_y_stable">1.71</float>
       <float hash="dive_speed_y">2.2</float>
       <float hash="weight">100</float>
       <float hash="landing_attack_air_frame_n">7</float>
@@ -356,8 +339,6 @@
       <float hash="air_brake_x">0.01</float>
       <float hash="air_accel_y">0.09</float>
       <float hash="air_speed_y_stable">1.83</float>
-      <float hash="damage_fly_top_air_accel_y">0.09</float>
-      <float hash="damage_fly_top_speed_y_stable">1.83</float>
       <float hash="dive_speed_y">2.23</float>
       <float hash="weight">94</float>
       <float hash="landing_attack_air_frame_n">8</float>
@@ -398,8 +379,6 @@
       <float hash="air_brake_x">0.01</float>
       <float hash="air_accel_y">0.13</float>
       <float hash="air_speed_y_stable">2.808</float>
-      <float hash="damage_fly_top_air_accel_y">0.13</float>
-      <float hash="damage_fly_top_speed_y_stable">2.808</float>
       <float hash="dive_speed_y">3.5</float>
       <float hash="weight">104</float>
       <float hash="landing_attack_air_frame_f">12</float>
@@ -431,8 +410,6 @@
       <float hash="air_brake_x">0.04</float>
       <float hash="air_accel_y">0.064</float>
       <float hash="air_speed_y_stable">1.3</float>
-      <float hash="damage_fly_top_air_accel_y">0.09</float>
-      <float hash="damage_fly_top_speed_y_stable">1.3</float>
       <float hash="dive_speed_y">1.588</float>
       <float hash="weight">65</float>
       <float hash="landing_attack_air_frame_b">10</float>
@@ -468,8 +445,6 @@
       <float hash="air_brake_x">0.005</float>
       <float hash="air_accel_y">0.08</float>
       <float hash="air_speed_y_stable">1.5</float>
-      <float hash="damage_fly_top_air_accel_y">0.09</float>
-      <float hash="damage_fly_top_speed_y_stable">1.5</float>
       <float hash="dive_speed_y">2.1</float>
       <float hash="weight">90</float>
       <float hash="landing_attack_air_frame_n">8</float>
@@ -504,8 +479,6 @@
       <float hash="air_brake_x">0.01</float>
       <float hash="air_accel_y">0.13</float>
       <float hash="air_speed_y_stable">2.12</float>
-      <float hash="damage_fly_top_air_accel_y">0.13</float>
-      <float hash="damage_fly_top_speed_y_stable">2.12</float>
       <float hash="dive_speed_y">2.812</float>
       <float hash="weight">120</float>
       <float hash="landing_attack_air_frame_n">10</float>
@@ -541,8 +514,6 @@
       <float hash="air_brake_x">0.02</float>
       <float hash="air_accel_y">0.1</float>
       <float hash="air_speed_y_stable">1.61</float>
-      <float hash="damage_fly_top_air_accel_y">0.1</float>
-      <float hash="damage_fly_top_speed_y_stable">1.61</float>
       <float hash="dive_speed_y">2.167</float>
       <float hash="weight">88</float>
       <float hash="landing_attack_air_frame_n">8</float>
@@ -575,8 +546,6 @@
       <float hash="air_brake_x">0.02</float>
       <float hash="air_accel_y">0.1</float>
       <float hash="air_speed_y_stable">1.61</float>
-      <float hash="damage_fly_top_air_accel_y">0.1</float>
-      <float hash="damage_fly_top_speed_y_stable">1.61</float>
       <float hash="dive_speed_y">2.167</float>
       <float hash="weight">88</float>
       <float hash="landing_attack_air_frame_n">8</float>
@@ -608,8 +577,6 @@
       <float hash="air_speed_x_stable">1.0175</float>
       <float hash="air_brake_x">0.0115</float>
       <float hash="air_speed_y_stable">2.15</float>
-      <float hash="damage_fly_top_air_accel_y">0.15</float>
-      <float hash="damage_fly_top_speed_y_stable">2.15</float>
       <float hash="dive_speed_y">3.08</float>
       <float hash="weight">85</float>
       <float hash="landing_attack_air_frame_n">8</float>
@@ -650,8 +617,6 @@
       <float hash="air_speed_x_stable">1.051</float>
       <float hash="air_accel_y">0.077</float>
       <float hash="air_speed_y_stable">1.5</float>
-      <float hash="damage_fly_top_air_accel_y">0.09</float>
-      <float hash="damage_fly_top_speed_y_stable">1.5</float>
       <float hash="dive_speed_y">2.245</float>
       <float hash="weight">89</float>
       <float hash="landing_attack_air_frame_n">9</float>
@@ -687,8 +652,6 @@
       <float hash="air_brake_x">0.011</float>
       <float hash="air_accel_y">0.0965</float>
       <float hash="air_speed_y_stable">2</float>
-      <float hash="damage_fly_top_air_accel_y">0.0965</float>
-      <float hash="damage_fly_top_speed_y_stable">2</float>
       <float hash="dive_speed_y">2.7</float>
       <float hash="weight">104</float>
       <float hash="landing_attack_air_frame_n">8</float>
@@ -727,8 +690,6 @@
       <float hash="air_brake_x">0.01</float>
       <float hash="air_accel_y">0.165</float>
       <float hash="air_speed_y_stable">2.65</float>
-      <float hash="damage_fly_top_air_accel_y">0.15</float>
-      <float hash="damage_fly_top_speed_y_stable">2.65</float>
       <float hash="dive_speed_y">3.344</float>
       <float hash="weight">68</float>
       <float hash="landing_attack_air_frame_f">10</float>
@@ -765,8 +726,6 @@
       <float hash="air_brake_x">0.02</float>
       <float hash="air_accel_y">0.17</float>
       <float hash="air_speed_y_stable">3.1</float>
-      <float hash="damage_fly_top_air_accel_y">0.15</float>
-      <float hash="damage_fly_top_speed_y_stable">3.1</float>
       <float hash="dive_speed_y">3.5</float>
       <float hash="weight">82</float>
       <float hash="landing_attack_air_frame_n">7</float>
@@ -805,8 +764,6 @@
       <float hash="air_brake_x">0.005</float>
       <float hash="air_accel_y">0.085</float>
       <float hash="air_speed_y_stable">2.2</float>
-      <float hash="damage_fly_top_air_accel_y">0.09</float>
-      <float hash="damage_fly_top_speed_y_stable">2.2</float>
       <float hash="dive_speed_y">2.728</float>
       <float hash="weight">87</float>
       <float hash="landing_attack_air_frame_f">9</float>
@@ -839,8 +796,6 @@
       <float hash="air_brake_x">0.005</float>
       <float hash="air_accel_y">0.11</float>
       <float hash="air_speed_y_stable">2.16</float>
-      <float hash="damage_fly_top_air_accel_y">0.11</float>
-      <float hash="damage_fly_top_speed_y_stable">2.16</float>
       <float hash="dive_speed_y">2.9</float>
       <float hash="weight">85</float>
       <float hash="landing_attack_air_frame_n">8</float>
@@ -878,8 +833,6 @@
       <float hash="air_brake_x">0.02</float>
       <float hash="air_accel_y">0.13</float>
       <float hash="air_speed_y_stable">2</float>
-      <float hash="damage_fly_top_air_accel_y">0.13</float>
-      <float hash="damage_fly_top_speed_y_stable">2</float>
       <float hash="weight">111</float>
       <float hash="landing_attack_air_frame_n">11</float>
       <float hash="landing_attack_air_frame_f">12</float>
@@ -911,8 +864,6 @@
       <float hash="air_speed_x_stable">1.2</float>
       <float hash="air_accel_y">0.082</float>
       <float hash="air_speed_y_stable">1.5</float>
-      <float hash="damage_fly_top_air_accel_y">0.09</float>
-      <float hash="damage_fly_top_speed_y_stable">1.5</float>
       <float hash="dive_speed_y">2.3</float>
       <float hash="weight">87</float>
       <float hash="landing_attack_air_frame_f">9</float>
@@ -944,8 +895,6 @@
       <float hash="air_speed_x_stable">0.95</float>
       <float hash="air_accel_y">0.115</float>
       <float hash="air_speed_y_stable">2.4</float>
-      <float hash="damage_fly_top_air_accel_y">0.115</float>
-      <float hash="damage_fly_top_speed_y_stable">2.4</float>
       <float hash="dive_speed_y">3.024</float>
       <float hash="weight">85</float>
       <float hash="landing_attack_air_frame_n">10</float>
@@ -981,8 +930,6 @@
       <float hash="air_brake_x">0.016</float>
       <float hash="air_accel_y">0.095</float>
       <float hash="air_speed_y_stable">1.71</float>
-      <float hash="damage_fly_top_air_accel_y">0.095</float>
-      <float hash="damage_fly_top_speed_y_stable">1.71</float>
       <float hash="dive_speed_y">2.28</float>
       <float hash="weight">75</float>
       <float hash="landing_attack_air_frame_n">9</float>
@@ -1019,8 +966,6 @@
       <float hash="air_brake_x">0.015</float>
       <float hash="air_accel_y">0.13</float>
       <float hash="air_speed_y_stable">2.6</float>
-      <float hash="damage_fly_top_air_accel_y">0.13</float>
-      <float hash="damage_fly_top_speed_y_stable">2.6</float>
       <float hash="dive_speed_y">3.281</float>
       <float hash="weight">78</float>
       <float hash="landing_attack_air_frame_n">9</float>
@@ -1057,8 +1002,6 @@
       <float hash="air_brake_x">0.01</float>
       <float hash="air_accel_y">0.095</float>
       <float hash="air_speed_y_stable">1.9</float>
-      <float hash="damage_fly_top_air_accel_y">0.095</float>
-      <float hash="damage_fly_top_speed_y_stable">1.9</float>
       <float hash="dive_speed_y">2.43</float>
       <float hash="weight">80</float>
       <float hash="landing_attack_air_frame_n">9</float>
@@ -1096,8 +1039,6 @@
       <float hash="air_brake_x">0.005</float>
       <float hash="air_accel_y">0.135</float>
       <float hash="air_speed_y_stable">2.05</float>
-      <float hash="damage_fly_top_air_accel_y">0.135</float>
-      <float hash="damage_fly_top_speed_y_stable">2.05</float>
       <float hash="dive_speed_y">2.75</float>
       <float hash="weight">80</float>
       <float hash="landing_attack_air_frame_n">9</float>
@@ -1136,8 +1077,6 @@
       <float hash="air_brake_x">0.04</float>
       <float hash="air_accel_y">0.122</float>
       <float hash="air_speed_y_stable">1.93</float>
-      <float hash="damage_fly_top_air_accel_y">0.122</float>
-      <float hash="damage_fly_top_speed_y_stable">1.93</float>
       <float hash="dive_speed_y">2.486</float>
       <float hash="weight">106</float>
       <float hash="landing_attack_air_frame_n">8</float>
@@ -1174,8 +1113,6 @@
       <float hash="air_speed_x_stable">0.94</float>
       <float hash="air_accel_y">0.098</float>
       <float hash="air_speed_y_stable">2.12</float>
-      <float hash="damage_fly_top_air_accel_y">0.098</float>
-      <float hash="damage_fly_top_speed_y_stable">2.12</float>
       <float hash="dive_speed_y">2.89</float>
       <float hash="weight">105</float>
       <float hash="landing_attack_air_frame_n">12</float>
@@ -1211,8 +1148,6 @@
       <float hash="air_brake_x">0.01</float>
       <float hash="air_accel_y">0.103</float>
       <float hash="air_speed_y_stable">2.05</float>
-      <float hash="damage_fly_top_air_accel_y">0.103</float>
-      <float hash="damage_fly_top_speed_y_stable">2.05</float>
       <float hash="dive_speed_y">2.9</float>
       <float hash="weight">104</float>
       <float hash="landing_attack_air_frame_n">9</float>
@@ -1252,8 +1187,6 @@
       <float hash="air_brake_x">0.006</float>
       <float hash="air_accel_y">0.128</float>
       <float hash="air_speed_y_stable">2.25</float>
-      <float hash="damage_fly_top_air_accel_y">0.128</float>
-      <float hash="damage_fly_top_speed_y_stable">2.25</float>
       <float hash="dive_speed_y">2.9</float>
       <float hash="weight">75</float>
       <float hash="landing_attack_air_frame_n">10</float>
@@ -1293,8 +1226,6 @@
       <float hash="air_brake_x">0.018</float>
       <float hash="air_accel_y">0.098</float>
       <float hash="air_speed_y_stable">2.0</float>
-      <float hash="damage_fly_top_air_accel_y">0.098</float>
-      <float hash="damage_fly_top_speed_y_stable">2.0</float>
       <float hash="dive_speed_y">2.5</float>
       <float hash="weight">91</float>
       <float hash="landing_attack_air_frame_n">10</float>
@@ -1335,8 +1266,6 @@
       <float hash="air_brake_x">0.012</float>
       <float hash="air_accel_y">0.092</float>
       <float hash="air_speed_y_stable">1.85</float>
-      <float hash="damage_fly_top_air_accel_y">0.092</float>
-      <float hash="damage_fly_top_speed_y_stable">1.85</float>
       <float hash="dive_speed_y">2.51</float>
       <float hash="weight">110</float>
       <float hash="landing_attack_air_frame_n">11</float>
@@ -1371,8 +1300,6 @@
       <float hash="air_speed_x_stable">1</float>
       <float hash="air_brake_x">0.012</float>
       <float hash="air_speed_y_stable">2.55</float>
-      <float hash="damage_fly_top_air_accel_y">0.125</float>
-      <float hash="damage_fly_top_speed_y_stable">2.55</float>
       <float hash="dive_speed_y">3.023</float>
       <float hash="weight">85</float>
       <float hash="landing_attack_air_frame_f">11</float>
@@ -1408,8 +1335,6 @@
       <float hash="air_speed_x_stable">1</float>
       <float hash="air_accel_y">0.125</float>
       <float hash="air_speed_y_stable">2.3</float>
-      <float hash="damage_fly_top_air_accel_y">0.125</float>
-      <float hash="damage_fly_top_speed_y_stable">2.3</float>
       <float hash="air_brake_y">0.0225</float>
       <float hash="dive_speed_y">2.7</float>
       <float hash="weight">85</float>
@@ -1448,8 +1373,6 @@
       <float hash="air_speed_x_stable">1.11</float>
       <float hash="air_accel_y">0.111</float>
       <float hash="air_speed_y_stable">1.98</float>
-      <float hash="damage_fly_top_air_accel_y">0.111</float>
-      <float hash="damage_fly_top_speed_y_stable">1.98</float>
       <float hash="dive_speed_y">2.67</float>
       <float hash="weight">82</float>
       <float hash="landing_attack_air_frame_n">8</float>
@@ -1487,8 +1410,6 @@
       <float hash="air_brake_x">0.005</float>
       <float hash="air_accel_y">0.095</float>
       <float hash="air_speed_y_stable">2.25</float>
-      <float hash="damage_fly_top_air_accel_y">0.095</float>
-      <float hash="damage_fly_top_speed_y_stable">2.25</float>
       <float hash="dive_speed_y">3.3</float>
       <float hash="weight">113</float>
       <float hash="landing_attack_air_frame_n">11</float>
@@ -1529,8 +1450,6 @@
       <float hash="air_brake_x">0.02</float>
       <float hash="air_accel_y">0.09</float>
       <float hash="air_speed_y_stable">1.9</float>
-      <float hash="damage_fly_top_air_accel_y">0.09</float>
-      <float hash="damage_fly_top_speed_y_stable">1.9</float>
       <float hash="dive_speed_y">2.46</float>
       <float hash="weight">83</float>
       <float hash="landing_attack_air_frame_n">7</float>
@@ -1568,8 +1487,6 @@
       <float hash="air_brake_x">0.005</float>
       <float hash="air_accel_y">0.125</float>
       <float hash="air_speed_y_stable">2.02</float>
-      <float hash="damage_fly_top_air_accel_y">0.125</float>
-      <float hash="damage_fly_top_speed_y_stable">2.02</float>
       <float hash="dive_speed_y">2.728</float>
       <float hash="weight">96</float>
       <float hash="landing_attack_air_frame_n">10</float>
@@ -1607,8 +1524,6 @@
       <float hash="air_speed_x_stable">1.08</float>
       <float hash="air_brake_x">0.01</float>
       <float hash="air_speed_y_stable">2</float>
-      <float hash="damage_fly_top_air_accel_y">0.09</float>
-      <float hash="damage_fly_top_speed_y_stable">2</float>
       <float hash="dive_speed_y">2.648</float>
       <float hash="weight">105</float>
       <float hash="landing_attack_air_frame_n">9</float>
@@ -1644,8 +1559,6 @@
       <float hash="air_brake_x">0.005</float>
       <float hash="air_accel_y">0.11</float>
       <float hash="air_speed_y_stable">2.06</float>
-      <float hash="damage_fly_top_air_accel_y">0.11</float>
-      <float hash="damage_fly_top_speed_y_stable">2.06</float>
       <float hash="dive_speed_y">2.831</float>
       <float hash="weight">85</float>
       <float hash="landing_attack_air_frame_f">9</float>
@@ -1685,8 +1598,6 @@
       <float hash="air_brake_x">0.015</float>
       <float hash="air_accel_y">0.16</float>
       <float hash="air_speed_y_stable">2.7</float>
-      <float hash="damage_fly_top_air_accel_y">0.15</float>
-      <float hash="damage_fly_top_speed_y_stable">2.7</float>
       <float hash="dive_speed_y">3.4</float>
       <float hash="weight">84</float>
       <float hash="landing_attack_air_frame_n">7</float>
@@ -1723,8 +1634,6 @@
       <float hash="air_brake_x">0.0175</float>
       <float hash="air_accel_y">0.084</float>
       <float hash="air_speed_y_stable">1.649</float>
-      <float hash="damage_fly_top_air_accel_y">0.09</float>
-      <float hash="damage_fly_top_speed_y_stable">1.649</float>
       <float hash="dive_speed_y">2.225</float>
       <float hash="weight">85</float>
       <float hash="landing_attack_air_frame_n">7</float>
@@ -1761,8 +1670,6 @@
       <float hash="air_brake_x">0.025</float>
       <float hash="air_accel_y">0.11</float>
       <float hash="air_speed_y_stable">2.18</float>
-      <float hash="damage_fly_top_air_accel_y">0.11</float>
-      <float hash="damage_fly_top_speed_y_stable">2.18</float>
       <float hash="dive_speed_y">2.91</float>
       <float hash="weight">102</float>
       <float hash="landing_attack_air_frame_n">7</float>
@@ -1800,8 +1707,6 @@
       <float hash="air_speed_x_stable">0.977</float>
       <float hash="air_accel_y">0.113</float>
       <float hash="air_speed_y_stable">1.816</float>
-      <float hash="damage_fly_top_air_accel_y">0.113</float>
-      <float hash="damage_fly_top_speed_y_stable">1.816</float>
       <float hash="dive_speed_y">2.414</float>
       <float hash="weight">96</float>
       <float hash="landing_attack_air_frame_n">7</float>
@@ -1835,8 +1740,6 @@
       <float hash="air_brake_x">0.009</float>
       <float hash="air_accel_y">0.081</float>
       <float hash="air_speed_y_stable">1.6</float>
-      <float hash="damage_fly_top_air_accel_y">0.09</float>
-      <float hash="damage_fly_top_speed_y_stable">1.6</float>
       <float hash="dive_speed_y">2.287</float>
       <float hash="weight">89</float>
       <float hash="landing_attack_air_frame_n">7</float>
@@ -1874,8 +1777,6 @@
       <float hash="air_brake_x">0.01</float>
       <float hash="air_accel_y">0.117</float>
       <float hash="air_speed_y_stable">2.165</float>
-      <float hash="damage_fly_top_air_accel_y">0.117</float>
-      <float hash="damage_fly_top_speed_y_stable">2.165</float>
       <float hash="dive_speed_y">3</float>
       <float hash="weight">90</float>
       <float hash="landing_attack_air_frame_n">8</float>
@@ -1911,8 +1812,6 @@
       <float hash="air_speed_x_stable">1.09</float>
       <float hash="air_brake_x">0.01125</float>
       <float hash="air_speed_y_stable">2.49</float>
-      <float hash="damage_fly_top_air_accel_y">0.15</float>
-      <float hash="damage_fly_top_speed_y_stable">2.49</float>
       <float hash="dive_speed_y">3.441</float>
       <float hash="weight">85</float>
       <float hash="landing_attack_air_frame_n">9</float>
@@ -1949,8 +1848,6 @@
       <float hash="air_brake_x">0.0065</float>
       <float hash="air_accel_y">0.124</float>
       <float hash="air_speed_y_stable">1.915</float>
-      <float hash="damage_fly_top_air_accel_y">0.124</float>
-      <float hash="damage_fly_top_speed_y_stable">1.915</float>
       <float hash="dive_speed_y">2.51</float>
       <float hash="weight">90</float>
       <float hash="landing_attack_air_frame_n">9</float>
@@ -1987,8 +1884,6 @@
       <float hash="air_brake_x">0.0125</float>
       <float hash="air_accel_y">0.085</float>
       <float hash="air_speed_y_stable">1.7</float>
-      <float hash="damage_fly_top_air_accel_y">0.09</float>
-      <float hash="damage_fly_top_speed_y_stable">1.7</float>
       <float hash="dive_speed_y">2.472</float>
       <float hash="weight">90</float>
       <float hash="landing_attack_air_frame_n">7</float>
@@ -2025,8 +1920,6 @@
       <float hash="air_brake_x">0.008</float>
       <float hash="air_accel_y">0.099</float>
       <float hash="air_speed_y_stable">2.25</float>
-      <float hash="damage_fly_top_air_accel_y">0.099</float>
-      <float hash="damage_fly_top_speed_y_stable">2.25</float>
       <float hash="dive_speed_y">3</float>
       <float hash="weight">93</float>
       <float hash="landing_attack_air_frame_n">9</float>
@@ -2064,8 +1957,6 @@
       <float hash="air_brake_x">0.0065</float>
       <float hash="air_accel_y">0.106</float>
       <float hash="air_speed_y_stable">2.18</float>
-      <float hash="damage_fly_top_air_accel_y">0.106</float>
-      <float hash="damage_fly_top_speed_y_stable">2.18</float>
       <float hash="dive_speed_y">2.68</float>
       <float hash="weight">96</float>
       <float hash="landing_attack_air_frame_n">10</float>
@@ -2100,8 +1991,6 @@
       <float hash="air_speed_x_stable">0.98</float>
       <float hash="air_accel_y">0.111</float>
       <float hash="air_speed_y_stable">2.238</float>
-      <float hash="damage_fly_top_air_accel_y">0.111</float>
-      <float hash="damage_fly_top_speed_y_stable">2.238</float>
       <float hash="dive_speed_y">3.007</float>
       <float hash="weight">110</float>
       <float hash="landing_attack_air_frame_n">7</float>
@@ -2138,8 +2027,6 @@
       <float hash="air_brake_x">0.0135</float>
       <float hash="air_accel_y">0.088</float>
       <float hash="air_speed_y_stable">1.91</float>
-      <float hash="damage_fly_top_air_accel_y">0.09</float>
-      <float hash="damage_fly_top_speed_y_stable">1.91</float>
       <float hash="dive_speed_y">2.8</float>
       <float hash="weight">85</float>
       <float hash="landing_attack_air_frame_n">7</float>
@@ -2179,8 +2066,6 @@
       <float hash="air_brake_x">0.005</float>
       <float hash="air_accel_y">0.12</float>
       <float hash="air_speed_y_stable">1.857</float>
-      <float hash="damage_fly_top_air_accel_y">0.12</float>
-      <float hash="damage_fly_top_speed_y_stable">1.857</float>
       <float hash="dive_speed_y">2.6</float>
       <float hash="weight">103</float>
       <float hash="landing_attack_air_frame_n">7</float>
@@ -2217,8 +2102,6 @@
       <float hash="air_brake_x">0.0105</float>
       <float hash="air_accel_y">0.114</float>
       <float hash="air_speed_y_stable">2.375</float>
-      <float hash="damage_fly_top_air_accel_y">0.114</float>
-      <float hash="damage_fly_top_speed_y_stable">2.375</float>
       <float hash="dive_speed_y">3.225</float>
       <float hash="weight">101</float>
       <float hash="landing_attack_air_frame_n">10</float>
@@ -2255,8 +2138,6 @@
       <float hash="air_brake_x">0.00525</float>
       <float hash="air_accel_y">0.1</float>
       <float hash="air_speed_y_stable">2.08</float>
-      <float hash="damage_fly_top_air_accel_y">0.1</float>
-      <float hash="damage_fly_top_speed_y_stable">2.08</float>
       <float hash="dive_speed_y">2.848</float>
       <float hash="weight">98</float>
       <float hash="landing_attack_air_frame_n">10</float>
@@ -2293,8 +2174,6 @@
       <float hash="air_brake_x">0.007</float>
       <float hash="air_accel_y">0.132</float>
       <float hash="air_speed_y_stable">2.35</float>
-      <float hash="damage_fly_top_air_accel_y">0.132</float>
-      <float hash="damage_fly_top_speed_y_stable">2.35</float>
       <float hash="dive_speed_y">2.9</float>
       <float hash="weight">84</float>
       <float hash="landing_attack_air_frame_n">8</float>
@@ -2336,8 +2215,6 @@
       <float hash="air_brake_x">0.0125</float>
       <float hash="air_accel_y">0.095</float>
       <float hash="air_speed_y_stable">2.05</float>
-      <float hash="damage_fly_top_air_accel_y">0.095</float>
-      <float hash="damage_fly_top_speed_y_stable">2.05</float>
       <float hash="dive_speed_y">3.15</float>
       <float hash="weight">94</float>
       <float hash="landing_attack_air_frame_n">7</float>
@@ -2372,8 +2249,6 @@
       <float hash="air_brake_x">0.02</float>
       <float hash="air_accel_y">0.11</float>
       <float hash="air_speed_y_stable">2.19</float>
-      <float hash="damage_fly_top_air_accel_y">0.11</float>
-      <float hash="damage_fly_top_speed_y_stable">2.19</float>
       <float hash="dive_speed_y">2.993</float>
       <float hash="weight">98</float>
       <float hash="landing_attack_air_frame_n">10</float>
@@ -2409,8 +2284,6 @@
       <float hash="air_speed_x_stable">0.965</float>
       <float hash="air_brake_x">0.015</float>
       <float hash="air_speed_y_stable">2</float>
-      <float hash="damage_fly_top_air_accel_y">0.09</float>
-      <float hash="damage_fly_top_speed_y_stable">2</float>
       <float hash="weight">105</float>
       <float hash="landing_attack_air_frame_n">8</float>
       <float hash="landing_attack_air_frame_f">12</float>
@@ -2448,8 +2321,6 @@
       <float hash="air_brake_x">0.0175</float>
       <float hash="air_accel_y">0.118</float>
       <float hash="air_speed_y_stable">2.3</float>
-      <float hash="damage_fly_top_air_accel_y">0.118</float>
-      <float hash="damage_fly_top_speed_y_stable">2.3</float>
       <float hash="dive_speed_y">3.05</float>
       <float hash="weight">116</float>
       <float hash="landing_attack_air_frame_n">9</float>
@@ -2483,8 +2354,6 @@
       <float hash="air_speed_x_stable">0.978</float>
       <float hash="air_accel_y">0.084</float>
       <float hash="air_speed_y_stable">1.76</float>
-      <float hash="damage_fly_top_air_accel_y">0.09</float>
-      <float hash="damage_fly_top_speed_y_stable">1.76</float>
       <float hash="dive_speed_y">2.37</float>
       <float hash="weight">82</float>
       <float hash="landing_attack_air_frame_n">7</float>
@@ -2523,8 +2392,6 @@
       <float hash="air_speed_x_stable">0.97</float>
       <float hash="air_brake_x">0.0115</float>
       <float hash="air_speed_y_stable">2.2</float>
-      <float hash="damage_fly_top_air_accel_y">0.126</float>
-      <float hash="damage_fly_top_speed_y_stable">2.2</float>
       <float hash="dive_speed_y">2.953</float>
       <float hash="weight">112</float>
       <float hash="landing_attack_air_frame_n">9</float>
@@ -2562,8 +2429,6 @@
       <float hash="air_speed_x_stable">0.981</float>
       <float hash="air_brake_x">0.0125</float>
       <float hash="air_speed_y_stable">2.2</float>
-      <float hash="damage_fly_top_air_accel_y">0.14</float>
-      <float hash="damage_fly_top_speed_y_stable">2.2</float>
       <float hash="dive_speed_y">2.3</float>
       <float hash="weight">109</float>
       <float hash="landing_attack_air_frame_n">8</float>
@@ -2600,8 +2465,6 @@
       <float hash="air_speed_x_stable">1.01</float>
       <float hash="air_accel_y">0.145</float>
       <float hash="air_speed_y_stable">2.45</float>
-      <float hash="damage_fly_top_air_accel_y">0.145</float>
-      <float hash="damage_fly_top_speed_y_stable">2.45</float>
       <float hash="dive_speed_y">3.32</float>
       <float hash="weight">87</float>
       <float hash="landing_attack_air_frame_n">8</float>
@@ -2637,8 +2500,6 @@
       <float hash="air_speed_x_stable">0.96</float>
       <float hash="air_accel_y">0.111</float>
       <float hash="air_speed_y_stable">1.98</float>
-      <float hash="damage_fly_top_air_accel_y">0.111</float>
-      <float hash="damage_fly_top_speed_y_stable">1.98</float>
       <float hash="dive_speed_y">2.7</float>
       <float hash="weight">101</float>
       <float hash="landing_attack_air_frame_n">8</float>
@@ -2675,8 +2536,6 @@
       <float hash="air_brake_x">0.013</float>
       <float hash="air_accel_y">0.127</float>
       <float hash="air_speed_y_stable">2.33</float>
-      <float hash="damage_fly_top_air_accel_y">0.127</float>
-      <float hash="damage_fly_top_speed_y_stable">2.33</float>
       <float hash="dive_speed_y">3.1</float>
       <float hash="weight">100</float>
       <float hash="landing_attack_air_frame_n">9</float>
@@ -2715,8 +2574,6 @@
       <float hash="air_brake_x">0.011</float>
       <float hash="air_accel_y">0.105</float>
       <float hash="air_speed_y_stable">2.05</float>
-      <float hash="damage_fly_top_air_accel_y">0.105</float>
-      <float hash="damage_fly_top_speed_y_stable">2.05</float>
       <float hash="dive_speed_y">2.9</float>
       <float hash="weight">104</float>
       <float hash="landing_attack_air_frame_n">7</float>
@@ -2752,8 +2609,6 @@
       <float hash="air_brake_x">0.009</float>
       <float hash="air_accel_y">0.109</float>
       <float hash="air_speed_y_stable">2.2</float>
-      <float hash="damage_fly_top_air_accel_y">0.109</float>
-      <float hash="damage_fly_top_speed_y_stable">2.2</float>
       <float hash="dive_speed_y">3.106</float>
       <float hash="weight">100</float>
       <float hash="landing_attack_air_frame_n">10</float>
@@ -2789,8 +2644,6 @@
       <float hash="air_speed_x_stable">0.86</float>
       <float hash="air_brake_x">0.012</float>
       <float hash="air_speed_y_stable">1.815</float>
-      <float hash="damage_fly_top_air_accel_y">0.11</float>
-      <float hash="damage_fly_top_speed_y_stable">1.815</float>
       <float hash="weight">92</float>
       <float hash="landing_attack_air_frame_n">8</float>
       <float hash="landing_attack_air_frame_f">11</float>
@@ -2826,8 +2679,6 @@
       <float hash="air_brake_x">0.0065</float>
       <float hash="air_accel_y">0.0875</float>
       <float hash="air_speed_y_stable">1.825</float>
-      <float hash="damage_fly_top_air_accel_y">0.09</float>
-      <float hash="damage_fly_top_speed_y_stable">1.825</float>
       <float hash="dive_speed_y">2.464</float>
       <float hash="weight">91</float>
       <float hash="landing_attack_air_frame_f">10</float>
@@ -2859,7 +2710,6 @@
       <float hash="air_speed_x_stable">0.91</float>
       <float hash="air_speed_y_stable">1.8</float>
       <float hash="weight">110</float>
-      <float hash="damage_fly_top_air_accel_y">0.108</float>
       <float hash="landing_attack_air_frame_f">8</float>
       <float hash="landing_attack_air_frame_b">9</float>
       <float hash="landing_attack_air_frame_lw">22</float>
@@ -2892,8 +2742,6 @@
       <float hash="air_speed_x_stable">1.03</float>
       <float hash="air_accel_y">0.0875</float>
       <float hash="air_speed_y_stable">2.14</float>
-      <float hash="damage_fly_top_air_accel_y">0.09</float>
-      <float hash="damage_fly_top_speed_y_stable">2.14</float>
       <float hash="dive_speed_y">2.889</float>
       <float hash="weight">85</float>
       <float hash="landing_attack_air_frame_n">10</float>
@@ -2924,8 +2772,6 @@
       <float hash="air_speed_x_stable">1.05</float>
       <float hash="air_accel_y">0.089</float>
       <float hash="air_speed_y_stable">2.02</float>
-      <float hash="damage_fly_top_air_accel_y">0.09</float>
-      <float hash="damage_fly_top_speed_y_stable">2.02</float>
       <float hash="dive_speed_y">2.884</float>
       <float hash="weight">95</float>
       <float hash="landing_attack_air_frame_n">10</float>
@@ -2957,8 +2803,6 @@
       <float hash="air_speed_x_stable">1.125</float>
       <float hash="air_accel_y">0.134</float>
       <float hash="air_speed_y_stable">2.62</float>
-      <float hash="damage_fly_top_air_accel_y">0.134</float>
-      <float hash="damage_fly_top_speed_y_stable">2.62</float>
       <float hash="dive_speed_y">3.368</float>
       <float hash="weight">78</float>
       <float hash="landing_attack_air_frame_n">9</float>
@@ -2992,8 +2836,6 @@
       <float hash="air_speed_x_stable">0.911</float>
       <float hash="air_accel_y">0.109</float>
       <float hash="air_speed_y_stable">2.33</float>
-      <float hash="damage_fly_top_air_accel_y">0.109</float>
-      <float hash="damage_fly_top_speed_y_stable">2.33</float>
       <float hash="dive_speed_y">3.239</float>
       <float hash="weight">80</float>
       <float hash="landing_attack_air_frame_f">12</float>
@@ -3033,8 +2875,6 @@
       <float hash="air_brake_x">0.01</float>
       <float hash="air_accel_y">0.145</float>
       <float hash="air_speed_y_stable">2.5</float>
-      <float hash="damage_fly_top_air_accel_y">0.145</float>
-      <float hash="damage_fly_top_speed_y_stable">2.5</float>
       <float hash="dive_speed_y">3.272</float>
       <float hash="weight">85</float>
       <float hash="landing_attack_air_frame_n">7</float>
@@ -3076,8 +2916,6 @@
       <float hash="air_brake_x">0.005</float>
       <float hash="air_accel_y">0.11</float>
       <float hash="air_speed_y_stable">2.06</float>
-      <float hash="damage_fly_top_air_accel_y">0.11</float>
-      <float hash="damage_fly_top_speed_y_stable">2.06</float>
       <float hash="dive_speed_y">2.76</float>
       <float hash="weight">98</float>
       <float hash="landing_attack_air_frame_n">8</float>
@@ -3113,8 +2951,6 @@
       <float hash="air_brake_x">0.01</float>
       <float hash="air_accel_y">0.102</float>
       <float hash="air_speed_y_stable">1.78</float>
-      <float hash="damage_fly_top_air_accel_y">0.102</float>
-      <float hash="damage_fly_top_speed_y_stable">1.78</float>
       <float hash="weight">101</float>
       <float hash="landing_attack_air_frame_n">9</float>
       <float hash="landing_attack_air_frame_f">11</float>
@@ -3153,8 +2989,6 @@
       <float hash="air_brake_y">0.012</float>
       <float hash="air_accel_y">0.1</float>
       <float hash="air_speed_y_stable">1.87</float>
-      <float hash="damage_fly_top_air_accel_y">0.1</float>
-      <float hash="damage_fly_top_speed_y_stable">1.87</float>
       <float hash="dive_speed_y">2.604</float>
       <float hash="weight">88</float>
       <float hash="landing_attack_air_frame_n">13</float>
@@ -3192,8 +3026,6 @@
       <float hash="air_speed_x_stable">1.055</float>
       <float hash="air_accel_y">0.12</float>
       <float hash="air_speed_y_stable">2.34</float>
-      <float hash="damage_fly_top_air_accel_y">0.12</float>
-      <float hash="damage_fly_top_speed_y_stable">2.34</float>
       <float hash="dive_speed_y">3.2</float>
       <float hash="weight">78</float>
       <float hash="landing_attack_air_frame_n">8</float>
@@ -3233,8 +3065,6 @@
       <float hash="air_brake_x">0.006</float>
       <float hash="air_accel_y">0.091</float>
       <float hash="air_speed_y_stable">2.28</float>
-      <float hash="damage_fly_top_air_accel_y">0.091</float>
-      <float hash="damage_fly_top_speed_y_stable">2.28</float>
       <float hash="dive_speed_y">2.698</float>
       <float hash="weight">84</float>
       <float hash="landing_attack_air_frame_n">12</float>
@@ -3269,8 +3099,6 @@
       <float hash="air_accel_x_add">0.03</float>
       <float hash="air_speed_x_stable">1.11</float>
       <float hash="air_speed_y_stable">2.33</float>
-      <float hash="damage_fly_top_air_accel_y">0.114</float>
-      <float hash="damage_fly_top_speed_y_stable">2.33</float>
       <float hash="dive_speed_y">2.98</float>
       <float hash="weight">90</float>
       <float hash="landing_attack_air_frame_n">10</float>
@@ -3307,8 +3135,6 @@
       <float hash="air_brake_x">0.015</float>
       <float hash="air_accel_y">0.11</float>
       <float hash="air_speed_y_stable">2.42</float>
-      <float hash="damage_fly_top_air_accel_y">0.11</float>
-      <float hash="damage_fly_top_speed_y_stable">2.42</float>
       <float hash="dive_speed_y">3.146</float>
       <float hash="weight">82</float>
       <float hash="landing_attack_air_frame_n">9</float>
@@ -3346,8 +3172,6 @@
       <float hash="air_brake_x">0.005</float>
       <float hash="air_accel_y">0.13</float>
       <float hash="air_speed_y_stable">2.07</float>
-      <float hash="damage_fly_top_air_accel_y">0.13</float>
-      <float hash="damage_fly_top_speed_y_stable">2.07</float>
       <float hash="dive_speed_y">2.9</float>
       <float hash="weight">93</float>
       <float hash="landing_attack_air_frame_n">7</float>
@@ -3383,8 +3207,6 @@
       <float hash="air_brake_x">0.013</float>
       <float hash="air_accel_y">0.11</float>
       <float hash="air_speed_y_stable">2.23</float>
-      <float hash="damage_fly_top_air_accel_y">0.11</float>
-      <float hash="damage_fly_top_speed_y_stable">2.23</float>
       <float hash="dive_speed_y">3</float>
       <float hash="weight">96</float>
       <float hash="landing_attack_air_frame_n">9</float>
@@ -3414,8 +3236,6 @@
       <float hash="jump_y">40</float>
       <float hash="mini_jump_y">18</float>
       <float hash="jump_aerial_y">45</float>
-      <float hash="damage_fly_top_air_accel_y">0.15</float>
-      <float hash="damage_fly_top_speed_y_stable">2.2</float>
       <float hash="weight">140</float>
       <float hash="landing_attack_air_frame_n">15</float>
       <float hash="landing_attack_air_frame_f">19</float>
