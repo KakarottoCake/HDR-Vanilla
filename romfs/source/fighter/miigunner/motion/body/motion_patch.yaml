@@ -315,12 +315,18 @@ special_hi2_squat:
   extra:
     xlu_start: 0
     xlu_end: 0
+special_lw2:
+  extra:
+    cancel_frame: 47
+special_air_lw2:
+  extra:
+    cancel_frame: 47
 special_lw3_end:
   extra:
-    cancel_frame: 16
+    cancel_frame: 18
 special_air_lw3_end:
   extra:
-    cancel_frame: 16
+    cancel_frame: 18
 catch_dash:
   extra:
     cancel_frame: 41

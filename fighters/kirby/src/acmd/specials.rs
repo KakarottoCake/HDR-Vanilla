@@ -229,6 +229,44 @@ unsafe extern "C" fn game_specialairss(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        ArticleModule::generate_article(boma, *FIGHTER_KIRBY_GENERATE_ARTICLE_FINALCUTTER, false, -1);
+        ArticleModule::change_motion(boma, *FIGHTER_KIRBY_GENERATE_ARTICLE_FINALCUTTER, Hash40::new("special_hi"), false, -1.0);
+    }
+    frame(lua_state, 15.0);
+    if is_excute(agent) {
+        if ControlModule::get_stick_x(boma).abs() >= 0.85
+        && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL_RAW) {
+            if ControlModule::get_stick_x(boma) * PostureModule::lr(boma) < 0.0 {
+                REVERSE_LR(agent);
+            }
+            StatusModule::change_status_request_from_script(boma, statuses::kirby::SPECIAL_HI_H, false);
+        }
+    }
+}
+
+unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        ArticleModule::generate_article(boma, *FIGHTER_KIRBY_GENERATE_ARTICLE_FINALCUTTER, false, -1);
+        ArticleModule::change_motion(boma, *FIGHTER_KIRBY_GENERATE_ARTICLE_FINALCUTTER, Hash40::new("special_hi"), false, -1.0);
+    }
+    frame(lua_state, 17.0);
+    if is_excute(agent) {
+        if ControlModule::get_stick_x(boma).abs() >= 0.85
+        && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL_RAW) {
+            if ControlModule::get_stick_x(boma) * PostureModule::lr(boma) < 0.0 {
+                REVERSE_LR(agent);
+            }
+            StatusModule::change_status_request_from_script(boma, statuses::kirby::SPECIAL_HI_H, false);
+        }
+    }
+}
+
 unsafe extern "C" fn game_specialairhi2(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -396,6 +434,10 @@ unsafe extern "C" fn game_specialairhih(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         ArticleModule::generate_article(boma, *FIGHTER_KIRBY_GENERATE_ARTICLE_FINALCUTTER, false, -1);
         ArticleModule::change_motion(boma, *FIGHTER_KIRBY_GENERATE_ARTICLE_FINALCUTTER, Hash40::new("special_hi1"), false, -1.0);
+        let article = ArticleModule::get_article(boma, *FIGHTER_KIRBY_GENERATE_ARTICLE_FINALCUTTER);
+        let article_id = smash::app::lua_bind::Article::get_battle_object_id(article) as u32;
+        let article_boma = sv_battle_object::module_accessor(article_id);
+        PostureModule::set_scale(article_boma, 0.9, false);
     }
     frame(lua_state, 15.0);
     if is_excute(agent) {
@@ -420,7 +462,7 @@ unsafe extern "C" fn game_specialairhih(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
         if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
-            VarModule::on_flag(agent.battle_object, vars::kirby::instance::DISABLE_SPECIAL_HI);
+            VarModule::on_flag(agent.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
             StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL, false);
         }
     }
@@ -634,8 +676,12 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialairs", game_specialairs, Priority::Low);
     agent.acmd("game_specialairss", game_specialairss, Priority::Low);
 
+    agent.acmd("game_specialhi", game_specialhi, Priority::Low);
+    agent.acmd("game_specialairhi", game_specialairhi, Priority::Low);
+
     agent.acmd("game_specialairhi2", game_specialairhi2, Priority::Low);
     agent.acmd("effect_specialairhi2", effect_specialairhi2, Priority::Low);
+
     agent.acmd("game_specialhih", game_specialhih, Priority::Low);
     agent.acmd("effect_specialhih", effect_specialhih, Priority::Low);
     agent.acmd("sound_specialhih", sound_specialhih, Priority::Low);

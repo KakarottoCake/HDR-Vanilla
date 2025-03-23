@@ -83,7 +83,7 @@ pub unsafe extern "C" fn special_n_hold_main_loop(fighter: &mut L2CFighterCommon
             notify_event_msc_cmd!(fighter, Hash40::new_raw(0x240e24407a));
         }
     }
-    if fighter.is_button_trigger(Buttons::Special) {
+    if fighter.is_button_trigger(Buttons::Special | Buttons::Attack) {
         fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_PACMAN_SPECIAL_N_SHOOT.into(), false.into());
         return 1.into();
     }
