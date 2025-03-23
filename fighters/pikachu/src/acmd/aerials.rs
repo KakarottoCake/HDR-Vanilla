@@ -36,12 +36,12 @@ unsafe extern "C" fn effect_attackairn(agent: &mut L2CAgentBase) {
     frame(lua_state, 3.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pikachu_elec_spark"), Hash40::new("top"), 0, 2, 0, 0, 0, 0, 0.65, true);
-        EFFECT_FOLLOW_FLIP(agent, Hash40::new("pikachu_elec_shock"), Hash40::new("pikachu_elec_shock"), Hash40::new("top"), -17, 4.25, 0, 0, 90, 0, 1.1, true, *EF_FLIP_YZ);
-        EffectModule::enable_sync_init_pos_last(boma);
         BURN_COLOR(agent, 0.4, 0.6, 4, 0.7);
     }
     frame(lua_state, 4.0);
     if is_excute(agent) {
+        EFFECT_FOLLOW_FLIP(agent, Hash40::new("pikachu_elec_shock"), Hash40::new("pikachu_elec_shock"), Hash40::new("top"), -17, 4.25, 0, 0, 90, 0, 0.8, true, *EF_FLIP_YZ);
+        EffectModule::enable_sync_init_pos_last(boma);
         BURN_COLOR_FRAME(agent, 2, 0.4, 0.6, 4, 0);
     }
     frame(lua_state, 6.0);
