@@ -52,7 +52,8 @@ unsafe extern "C" fn straight_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValu
             let weapon_team = TeamModule::team_no(weapon.module_accessor);
             let owner_team = TeamModule::team_no(weapon.get_owner_boma());
             if weapon_team == owner_team {
-                if weapon.get_owner_boma().is_cat_flag(Cat1::SpecialS) {
+                if weapon.status_frame() >= 15
+                && weapon.get_owner_boma().is_cat_flag(Cat1::SpecialS) {
                     VarModule::on_flag(weapon.battle_object, vars::miigunner_supermissile::instance::ENABLE_PULSE);
                     VarModule::set_int(weapon.battle_object, vars::miigunner_supermissile::status::PULSE_TIMER, PULSE_LIFE);
                     let speed_x = KineticModule::get_sum_speed_x(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
