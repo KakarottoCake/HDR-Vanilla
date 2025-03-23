@@ -3,12 +3,13 @@ use globals::*;
 // status script import
 
 mod copy;
+mod landing_fall_special;
 mod special_hi_h;
 mod special_lw;
 mod special_s;
 
 unsafe extern "C" fn should_use_special_hi_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.is_situation(*SITUATION_KIND_AIR) && VarModule::is_flag(fighter.battle_object, vars::kirby::instance::DISABLE_SPECIAL_HI) {
+    if fighter.is_situation(*SITUATION_KIND_AIR) && VarModule::is_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_CANCEL) {
         false.into()
     } else {
         true.into()
@@ -16,32 +17,17 @@ unsafe extern "C" fn should_use_special_hi_callback(fighter: &mut L2CFighterComm
 }
 
 unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if (fighter.is_situation(*SITUATION_KIND_GROUND) || fighter.is_situation(*SITUATION_KIND_CLIFF))
-    || fighter.is_status_one_of(&[
-        *FIGHTER_STATUS_KIND_DAMAGE,
-        *FIGHTER_STATUS_KIND_DAMAGE_AIR,
-        *FIGHTER_STATUS_KIND_DAMAGE_FLY,
-        *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL,
-        *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR,
-        *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR,
-        *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_U,
-        *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_D,
-        *FIGHTER_STATUS_KIND_DAMAGE_FALL]) {
-            VarModule::off_flag(fighter.battle_object, vars::kirby::instance::DISABLE_SPECIAL_HI);
-    }
-
     /// Ganon: Re-enables the ability to use aerial specials when connecting to ground or cliff
-    if fighter.is_situation(*SITUATION_KIND_GROUND) || fighter.is_situation(*SITUATION_KIND_CLIFF)
-    || fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_REBIRTH, *FIGHTER_STATUS_KIND_DEAD]) {
+    if fighter.is_situation(*SITUATION_KIND_GROUND) || fighter.is_situation(*SITUATION_KIND_CLIFF) {
         VarModule::off_flag(fighter.battle_object, vars::ganon::instance::DISABLE_SPECIAL_N);
     }
 
     /// Bowser: Remove fireball ready effect
     if fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_ENTRY,*FIGHTER_STATUS_KIND_DEAD,*FIGHTER_STATUS_KIND_REBIRTH,
         *FIGHTER_STATUS_KIND_WIN,*FIGHTER_STATUS_KIND_LOSE]) || !sv_information::is_ready_go() {
-        EFFECT_OFF_KIND(fighter,Hash40::new("koopa_breath_m_fire"),false,false);
-        VarModule::set_int(fighter.battle_object, vars::koopa::instance::SPECIAL_N_FIREBALL_EFFECT_ID,0);
-        VarModule::set_int(fighter.battle_object, vars::koopa::instance::SPECIAL_N_FIREBALL_COOLDOWN,KOOPA_MAX_COOLDOWN);
+        EFFECT_OFF_KIND(fighter, Hash40::new("koopa_breath_m_fire"), false, false);
+        VarModule::set_int(fighter.battle_object, vars::koopa::instance::SPECIAL_N_FIREBALL_EFFECT_ID, 0);
+        VarModule::set_int(fighter.battle_object, vars::koopa::instance::SPECIAL_N_FIREBALL_COOLDOWN, KOOPA_MAX_COOLDOWN);
     }
 
     return true.into();
@@ -269,10 +255,10 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
 
 
     if is_training_mode() {
-        VarModule::set_int(fighter.battle_object, vars::koopa::instance::SPECIAL_N_FIREBALL_COOLDOWN,0);
+        VarModule::set_int(fighter.battle_object, vars::koopa::instance::SPECIAL_N_FIREBALL_COOLDOWN, 0);
     }
     else {
-        VarModule::set_int(fighter.battle_object, vars::koopa::instance::SPECIAL_N_FIREBALL_COOLDOWN,KOOPA_MAX_COOLDOWN);
+        VarModule::set_int(fighter.battle_object, vars::koopa::instance::SPECIAL_N_FIREBALL_COOLDOWN, KOOPA_MAX_COOLDOWN);
     }
 
     //let charge_time = ParamModule::get_int(fighter.object(), ParamType::Agent, "attack_up_charge_time");
@@ -282,6 +268,29 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     VarModule::off_flag(fighter.object(), vars::lucas::instance::SPECIAL_N_OFFENSE_UP_RELEASE_AFTER_WHIFF);
 }
 
+unsafe extern "C" fn entry_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    VarModule::set_int(fighter.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 0);
+    VarModule::set_int(fighter.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
+    smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_ENTRY)(fighter)
+}
+
+unsafe extern "C" fn dead_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    VarModule::set_int(fighter.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 0);
+    VarModule::set_int(fighter.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
+    VarModule::off_flag(fighter.battle_object, vars::ganon::instance::DISABLE_SPECIAL_N);
+
+    utils::ui::UiManager::set_ptrainer_meter_enable(fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32, false);
+
+    smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_DEAD)(fighter)
+}
+
+unsafe extern "C" fn rebirth_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    VarModule::set_int(fighter.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 0);
+    VarModule::set_int(fighter.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
+    VarModule::off_flag(fighter.battle_object, vars::ganon::instance::DISABLE_SPECIAL_N);
+    smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_REBIRTH)(fighter)
+}
+
 pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
     
@@ -289,7 +298,12 @@ pub fn install(agent: &mut Agent) {
     agent.status(MapCorrection, *FIGHTER_STATUS_KIND_THROW_KIRBY, throw_kirby_map_correction);
     agent.status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_N, special_n_pre);
 
+    agent.status(Main, *FIGHTER_STATUS_KIND_ENTRY, entry_main);
+    agent.status(Main, *FIGHTER_STATUS_KIND_DEAD, dead_main);
+    agent.status(Main, *FIGHTER_STATUS_KIND_REBIRTH, rebirth_main);
+
     copy::install(agent);
+    landing_fall_special::install(agent);
     special_hi_h::install(agent);
     special_lw::install(agent);
     special_s::install(agent);

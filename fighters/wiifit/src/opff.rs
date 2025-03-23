@@ -2,32 +2,6 @@
 utils::import_noreturn!(common::opff::fighter_common_opff);
 use super::*;
 use globals::*;
- 
-unsafe fn header_cancel(boma: &mut BattleObjectModuleAccessor) {
-    let status_kind_prev = StatusModule::prev_status_kind(boma, 0);
-    if boma.is_status(*FIGHTER_STATUS_KIND_FALL_SPECIAL)
-        && boma.is_prev_status_one_of(&[
-            *FIGHTER_STATUS_KIND_SPECIAL_S,
-            *FIGHTER_WIIFIT_STATUS_KIND_SPECIAL_S_JUMP,
-            *FIGHTER_WIIFIT_STATUS_KIND_SPECIAL_S_HEADING])
-        && boma.is_situation(*SITUATION_KIND_AIR) {
-        if !VarModule::is_flag(boma.object(), vars::common::instance::SIDE_SPECIAL_CANCEL) {
-            VarModule::on_flag(boma.object(), vars::common::instance::SIDE_SPECIAL_CANCEL);
-            ControlModule::reset_trigger(boma);
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL, true);
-        }
-    }
-}
-
-unsafe fn nspecial_cancels(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_status(*FIGHTER_WIIFIT_STATUS_KIND_SPECIAL_N_CANCEL) {
-        if boma.is_situation(*SITUATION_KIND_AIR) {
-            if WorkModule::get_int(boma, *FIGHTER_WIIFIT_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE) == *FIGHTER_WIIFIT_SPECIAL_N_CANCEL_TYPE_AIR_ESCAPE_AIR {
-                WorkModule::set_int(boma, *FIGHTER_WIIFIT_SPECIAL_N_CANCEL_TYPE_NONE, *FIGHTER_WIIFIT_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
-            }
-        }
-    }
-}
 
 /// Starts ring effect for hitboxes
 pub unsafe fn start_ring(fighter: &mut L2CFighterCommon, duration: f32, start_size: f32, end_size: f32, bone: Hash40, mut offset: Vector3f, mut color: Vector3f, mut color2: Vector3f, follow: bool) {
@@ -172,29 +146,10 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         ]) 
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
-        if fighter.is_flag(*FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE) {
-            if [*FIGHTER_KINETIC_TYPE_MOTION_AIR, *FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE].contains(&KineticModule::get_kinetic_type(fighter.module_accessor)) {
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION);
-                let speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
-
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
-                app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
-                
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-                app::sv_kinetic_energy::enable(fighter.lua_state_agent);
-
-                KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_MOTION, fighter.module_accessor);
-            }
-        }
     }
 }
 
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
-    header_cancel(boma);
-    nspecial_cancels(boma);
     up_special_startup_ledgegrab(fighter);
     fastfall_specials(fighter);
     //update_ring(fighter);

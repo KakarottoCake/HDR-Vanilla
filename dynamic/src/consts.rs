@@ -783,13 +783,16 @@ pub mod vars {
     pub mod kirby {
         pub mod instance {
             // flags
-            pub const DISABLE_SPECIAL_HI: i32 = 0x01FF; //Weird value to avoid conflicts with copy ability values
+            //pub const DISABLE_SPECIAL_HI: i32 = 0x01FF; //Weird value to avoid conflicts with copy ability values
             pub const SPECIAL_N_PICKEL_CYCLE_MATERIAL: i32 = 0x01F4;
             pub use super::super::ridley::instance::SPECIAL_N_EXPLODE;
 
             // ints
             pub const SPECIAL_N_PICKEL_MATERIAL_INDEX: i32 = 0x01F5;
             pub use super::super::bayonetta::instance::SPECIAL_N_CANCEL_TYPE;
+            pub const SPECIAL_N_PTRAINER_PLEDGE_STATE: i32 = 0x01F6;    // Unique var as it doesn't like borrowing from ptrainer
+            pub use super::super::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER;
+            pub const SPECIAL_N_PTRAINER_PLEDGE_EFFECT_HANDLE: i32 = 0x01F7;
 
             // floats
             pub use super::super::reflet::instance::SPECIAL_N_CHARGE;
@@ -1124,7 +1127,12 @@ pub mod vars {
     pub mod miigunner_supermissile {
         pub mod instance {
             // flags
-            pub const PULSE_DETONATE: i32 = 0x0100;
+            pub const ENABLE_PULSE: i32 = 0x0100;
+            pub const PULSE_DETONATE: i32 = 0x0101;
+        }
+        pub mod status {
+            // ints
+            pub const PULSE_TIMER: i32 = 0x1100;
         }
     }
 

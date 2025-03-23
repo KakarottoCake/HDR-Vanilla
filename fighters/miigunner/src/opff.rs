@@ -51,7 +51,7 @@ unsafe fn special_waza_charge_handle(boma: &mut BattleObjectModuleAccessor) {
 }
 
 unsafe fn reflector_jc(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_LW) && WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FRAME_IN_AIR) <= 1 {
+    if boma.is_motion_one_of(&[Hash40::new("special_lw1_start"), Hash40::new("special_air_lw1_start")]) && WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FRAME_IN_AIR) <= 1 {
         GroundModule::correct(boma, app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
     }
     if boma.is_status_one_of(&[
@@ -116,7 +116,12 @@ unsafe fn stealth_burst_land_cancel(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
-unsafe fn vortex_item_grab(fighter: &mut L2CFighterCommon) {
+unsafe fn vortex_item_grab_ac(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status_one_of(&[*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW3_HIT, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW3_END])
+    && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
+    && !fighter.is_in_hitlag() {
+        fighter.check_airdodge_cancel();
+    }
     if fighter.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW3_END) {
         if fighter.status_frame() < 6 {
             fighter.try_pickup_item(15.0, Some(Hash40::new("top")), Some(&Vector2f::new(0.0, 0.0)));
@@ -182,23 +187,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     )
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
-        if fighter.is_flag(*FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE) {
-            if [*FIGHTER_KINETIC_TYPE_MOTION_AIR, *FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE].contains(&KineticModule::get_kinetic_type(fighter.module_accessor)) {
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION);
-                let speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
-
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
-                app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
-                
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-                app::sv_kinetic_energy::enable(fighter.lua_state_agent);
-
-                KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_MOTION, fighter.module_accessor);
-            }
-        }
     }
 }
 
@@ -209,7 +197,7 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     remove_homing_missiles(boma);
     missile_land_cancel(boma);
     stealth_burst_land_cancel(boma);
-    vortex_item_grab(fighter);
+    vortex_item_grab_ac(fighter);
     fastfall_specials(fighter);
 }
 

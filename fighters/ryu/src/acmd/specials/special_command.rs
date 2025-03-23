@@ -88,13 +88,13 @@ unsafe extern "C" fn effect_attackcommand4(agent: &mut L2CAgentBase) {
     let strength = agent.get_int(*FIGHTER_RYU_STATUS_WORK_ID_SPECIAL_COMMON_INT_STRENGTH);
     if is_excute(agent) {
         let distance = if VarModule::is_flag(agent.battle_object, vars::shotos::instance::EX_SPECIAL_USED) {
-            30.0
+            22.0
         } else if strength == *FIGHTER_RYU_STRENGTH_S {
-            30.0
+            22.0
         } else if strength == *FIGHTER_RYU_STRENGTH_M {
-            19.0
+            18.5
         } else {
-            8.0
+            15.0
         };
         EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 12, distance, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         if VarModule::is_flag(agent.battle_object, vars::shotos::instance::EX_SPECIAL_USED) {

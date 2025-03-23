@@ -172,12 +172,15 @@ unsafe extern "C" fn sound_throwhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {
-        PLAY_SEQUENCE(agent, Hash40::new("seq_pfushigisou_rnd_attack"));
+        PLAY_SE(agent, Hash40::new("seq_pfushigisou_rnd_attack"));
+        let rand = sv_math::rand(hash40("fighter"), 4);
+        match rand {
+            0 => PLAY_SE(agent, Hash40::new("vc_pfushigisou_attack01")),
+            1 => PLAY_SE(agent, Hash40::new("vc_pfushigisou_attack02")),
+            2 => PLAY_SE(agent, Hash40::new("vc_pfushigisou_attack03")),
+            _ => PLAY_SE(agent, Hash40::new("vc_pfushigisou_attack04")),
+        }
         PLAY_SE(agent, Hash40::new("se_common_punch_kick_swing_l"));
-    }
-    frame(lua_state, 22.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("vc_pfushigisou_special_n01"));
     }
     frame(lua_state, 25.0);
     if is_excute(agent) {

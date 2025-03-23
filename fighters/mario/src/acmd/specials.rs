@@ -495,9 +495,13 @@ unsafe extern "C" fn game_longjump(agent: &mut L2CAgentBase) {
         VarModule::on_flag(agent.battle_object, vars::common::status::DISABLE_ECB_SHIFT);
         let lr = PostureModule::lr(agent.module_accessor);
         let speed_x = KineticModule::get_sum_speed_x(agent.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) * lr;
-        let back_speed_x_hitbox_threshold = ParamModule::get_float(agent.battle_object, ParamType::Agent, "long_jump.back_speed_x_hitbox_threshold");
-        if speed_x <= back_speed_x_hitbox_threshold {
-            ATTACK(agent, 0, 0, Hash40::new("top"), 7.5, 45, 100, 0, 64, 3.0, 0.0, 5.0, 1.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
+        let back_speed_x_hitbox_max = ParamModule::get_float(agent.battle_object, ParamType::Agent, "long_jump.back_speed_x_hitbox_max");
+        let back_speed_x_hitbox_min = ParamModule::get_float(agent.battle_object, ParamType::Agent, "long_jump.back_speed_x_hitbox_min");
+        if speed_x <= back_speed_x_hitbox_max {
+            let ratio = (speed_x - back_speed_x_hitbox_max) / (back_speed_x_hitbox_min - back_speed_x_hitbox_max);
+            let dmg = util::nlerp(9.0, 15.0, 1.0, ratio);
+            let hitlag = util::nlerp(1.0, 1.5, 1.0, ratio);
+            ATTACK(agent, 0, 0, Hash40::new("top"), dmg, 45, 45, 0, 100, 3.0, 0.0, 5.0, 1.0, None, None, None, hitlag, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
         }
     }
 }
@@ -511,8 +515,8 @@ unsafe extern "C" fn sound_longjump(agent: &mut L2CAgentBase) {
         else {
             let lr = PostureModule::lr(agent.module_accessor);
             let speed_x = KineticModule::get_sum_speed_x(agent.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) * lr;
-            let back_speed_x_hitbox_threshold = ParamModule::get_float(agent.battle_object, ParamType::Agent, "long_jump.back_speed_x_hitbox_threshold");
-            if speed_x > back_speed_x_hitbox_threshold {
+            let back_speed_x_hitbox_max = ParamModule::get_float(agent.battle_object, ParamType::Agent, "long_jump.back_speed_x_hitbox_max");
+            if speed_x > back_speed_x_hitbox_max {
                 // standard long jump
                 let handle = SoundModule::play_se(agent.module_accessor, Hash40::new("vc_mario_longjumpback01"), false, false, false, false, enSEType(0));
                 SoundModule::set_se_vol(agent.module_accessor, handle as i32, 0.45, 0);
