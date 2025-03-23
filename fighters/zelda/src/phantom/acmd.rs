@@ -397,7 +397,7 @@ unsafe extern "C" fn game_attackl(agent: &mut L2CAgentBase) {
 		AttackModule::set_attack_height_all(boma, app::AttackHeight(*ATTACK_HEIGHT_HIGH), false);
 	}
 	frame(lua_state, 13.0);
-	FT_MOTION_RATE_RANGE(agent, 13.0, 74.0, 100.0);
+	FT_MOTION_RATE_RANGE(agent, 13.0, 74.0, 80.0);
 	if is_excute(agent) {
 		AttackModule::clear_all(boma);
 		ReflectorModule::clear_all(boma);
@@ -540,7 +540,7 @@ unsafe extern "C" fn game_attackmax(agent: &mut L2CAgentBase) {
 		ATTACK(agent, 3, 0, Hash40::new("shoulderr"), 11.0, 46, 90, 0, 60, 6.0, 0.0, 0.0, 0.0, None, None, None, 1.75, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 7, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_OBJECT);
 	}
 	frame(lua_state, 17.0);
-	FT_MOTION_RATE_RANGE(agent, 17.0, 119.0, 120.0);
+	FT_MOTION_RATE_RANGE(agent, 17.0, 119.0, 100.0);
 	if is_excute(agent) {
 		AttackModule::clear_all(boma);
 		ReflectorModule::clear_all(boma);
