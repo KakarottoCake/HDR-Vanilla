@@ -20,14 +20,14 @@ unsafe extern "C" fn game_attacks3(agent: &mut L2CAgentBase) {
     }
 }
 
-// unsafe extern "C" fn effect_attacks3(agent: &mut L2CAgentBase) {
-//     let lua_state = agent.lua_state_agent;
-//     let boma = agent.boma();
-//     frame(lua_state, 6.0);
-//     // if is_excute(agent) && WorkModule::is_flag(boma, vars::wiifit::instance::IS_ZEN_MODE) {
-//     //     crate::opff::start_ring(utils::util::get_fighter_common_from_accessor(boma), 14.0, 1.0, 1.5, Hash40::new("kneel"), Vector3f::new(1.5, 2.5, 0.0), Vector3f::new(3000.0, 0.7, 0.7), Vector3f::new(0.7, 1000.0, 0.7), false);
-//     // }
-// }
+unsafe extern "C" fn effect_attacks3(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 6.0);
+    // if is_excute(agent) && WorkModule::is_flag(boma, vars::wiifit::instance::IS_ZEN_MODE) {
+    //     crate::opff::start_ring(utils::util::get_fighter_common_from_accessor(boma), 14.0, 1.0, 1.5, Hash40::new("kneel"), Vector3f::new(1.5, 2.5, 0.0), Vector3f::new(3000.0, 0.7, 0.7), Vector3f::new(0.7, 1000.0, 0.7), false);
+    // }
+}
 
 unsafe extern "C" fn effect_attacks3(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
@@ -36,15 +36,15 @@ unsafe extern "C" fn effect_attacks3(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
-    // frame(lua_state, 4.0);
-    // if is_excute(agent) {
-    //     EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_c"), Hash40::new("sys_attack_arc_c"), Hash40::new("top"), 0, 8, -5, 180, 0, 90, 1, true, *EF_FLIP_YZ);
-    //     LAST_EFFECT_SET_RATE(agent, 1.3);
-    // }
-    // frame(lua_state, 6.0);
-    // if is_excute(agent) {
-    //     EFFECT_FOLLOW(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 11.5, 8.5, 0, 0, 0, 1, true);
-    // }
+    frame(lua_state, 4.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_c"), Hash40::new("sys_attack_arc_c"), Hash40::new("top"), 0, 8, -5, 180, 0, 90, 1, true, *EF_FLIP_YZ);
+        LAST_EFFECT_SET_RATE(agent, 1.3);
+    }
+    frame(lua_state, 6.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 11.5, 8.5, 0, 0, 0, 1, true);
+    }
 }
 
 unsafe extern "C" fn expression_attacks3(agent: &mut L2CAgentBase) {
@@ -98,14 +98,14 @@ unsafe extern "C" fn effect_attackhi3(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), -5, 0, -1.5, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
-    // frame(lua_state, 4.0);
-    // if is_excute(agent) {
-    //     EFFECT_FOLLOW(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 4, 6, 0.25, -90, 0, 0, 0.8, true);
-    // }
-    // frame(lua_state, 5.0);
-    // if is_excute(agent) {
-    //     EFFECT_FOLLOW(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 20, 0.25, 0, 0, 0, 1, true);
-    // }
+    frame(lua_state, 4.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 4, 6, 0.25, -90, 0, 0, 0.8, true);
+    }
+    frame(lua_state, 5.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 20, 0.25, 0, 0, 0, 1, true);
+    }
 }
 
 unsafe extern "C" fn game_attacklw3(agent: &mut L2CAgentBase) {
@@ -140,14 +140,14 @@ unsafe extern "C" fn game_attacklw3(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_attacklw3(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    // frame(lua_state, 7.0);
-    // if is_excute(agent) {
-    //     EFFECT_FOLLOW(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 2, -1, 5, -30, 0, 0, 0.8, true);
-    // }
+    frame(lua_state, 7.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 2, -1, 5, -30, 0, 0, 0.8, true);
+    }
     frame(lua_state, 9.0);
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("wiifit_atk_smoke"), Hash40::new("top"), 5, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, false);
-        //EFFECT_FOLLOW(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 5, 14.5, 0, 0, 0, 0.8, true);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 5, 14.5, 0, 0, 0, 0.8, true);
     }
 }
 

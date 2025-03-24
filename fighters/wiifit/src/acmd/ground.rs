@@ -21,13 +21,13 @@ unsafe extern "C" fn game_attack11(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn effect_attack11(agent: &mut L2CAgentBase) {
-    // let lua_state = agent.lua_state_agent;
-    // let boma = agent.boma();
-    // frame(lua_state, 4.0);
-    // if is_excute(agent) {
-    //     EFFECT_FOLLOW(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 13.5, 7.75, 0, 0, 0, 0.85, true);
-    //     EFFECT_FOLLOW(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 5.5, -9.5, 0, 0, 0, 0.7, true);
-    // }
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 4.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 13.5, 7.75, 0, 0, 0, 0.85, true);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 5.5, -9.5, 0, 0, 0, 0.7, true);
+    }
 }
 
 unsafe extern "C" fn game_attack12(agent: &mut L2CAgentBase) {
@@ -65,10 +65,10 @@ unsafe extern "C" fn effect_attack12(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
     }
-    // frame(lua_state, 3.0);
-    // if is_excute(agent) {
-    //     EFFECT_FOLLOW(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 10, 7, 0, 0, 0, 1, true);
-    // }
+    frame(lua_state, 3.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 10, 7, 0, 0, 0, 1, true);
+    }
 }
 
 unsafe extern "C" fn game_attack13(agent: &mut L2CAgentBase) {
@@ -128,7 +128,7 @@ unsafe extern "C" fn effect_attackdash(agent: &mut L2CAgentBase) {
 
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_attack11", game_attack11, Priority::Low);
-    //agent.acmd("effect_attack11", effect_attack11, Priority::Low);
+    agent.acmd("effect_attack11", effect_attack11, Priority::Low);
 
     agent.acmd("game_attack12", game_attack12, Priority::Low);
     agent.acmd("effect_attack12", effect_attack12, Priority::Low);
