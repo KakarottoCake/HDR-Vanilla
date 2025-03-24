@@ -43,8 +43,8 @@
   </list>
   <list hash="param_bowarrow">
     <struct index="0">
-      <int hash="life">42</int>
-      <float hash="speed_min">1.65</float>
+      <int hash="life">60</int>
+      <float hash="speed_min">2.65</float>
       <float hash="power_min">5</float>
       <float hash="accel_y">0.045</float>
     </struct>

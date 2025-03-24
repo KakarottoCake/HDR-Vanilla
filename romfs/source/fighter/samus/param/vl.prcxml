@@ -16,9 +16,9 @@
   <list hash="param_gbeam">
     <struct index="0">
       <int hash="rewind_frame">18</int>
-	    <float hash="shoot_length_max">27</float>
-      <float hash="air_lasso_length_max">27</float>
-      <float hash="reach_length_max">37.5</float>
+	    <float hash="shoot_length_max">54</float>
+      <float hash="air_lasso_length_max">54</float>
+      <float hash="reach_length_max">75</float>
     </struct>
   </list>
   <list hash="air_lasso_data">
@@ -36,7 +36,7 @@
   </list>
   <list hash="param_special_s">
     <struct index="0">
-      <int hash="supermissile_max_req">2</int>
+      <int hash="supermissile_max_req">5</int>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>
@@ -57,9 +57,9 @@
   </list>
   <list hash="param_supermissile">
     <struct index="0">
-      <int hash="s_life">40</int>
+      <int hash="s_life">240</int>
       <float hash="s_spd_x0">0.18</float>
-      <int hash="s_acc_f">15</int>
+      <int hash="s_acc_f">120</int>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>
@@ -76,9 +76,9 @@
   </list>
   <list hash="param_special_lw">
     <struct index="0">
-      <float hash="sp_lw_ar_vy0">1.0</float>
+      <float hash="sp_lw_ar_vy0">1.5</float>
       <float hash="sp_lw_bj_ang_max">50</float>
-      <float hash="sp_lw_bj_spd0">1.0</float>
+      <float hash="sp_lw_bj_spd0">1.5</float>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>

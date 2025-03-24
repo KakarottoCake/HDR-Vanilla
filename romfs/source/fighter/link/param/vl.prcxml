@@ -19,7 +19,7 @@
       <float hash="speed_min">2.3</float>
       <float hash="speed_max">11</float>
       <float hash="power_max">17</float>
-      <float hash="charge_attack_mul">1.0</float>
+      <float hash="charge_attack_mul">3.0</float>
       <int hash="item_life">60</int>
     </struct>
     <hash40 index="1">dummy</hash40>
@@ -47,7 +47,7 @@
   </list>
   <list hash="param_linkbomb">
     <struct index="0">
-      <float hash="linkbomb_scale_mul">1.55</float>
+      <float hash="linkbomb_scale_mul">2.55</float>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>
