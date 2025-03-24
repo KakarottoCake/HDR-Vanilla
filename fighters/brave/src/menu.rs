@@ -152,7 +152,7 @@ pub unsafe extern "C" fn hero_rng_hook_impl(fighter: &mut BattleObject) {
             VarModule::on_flag(fighter, vars::brave::instance::PERSIST_RNG);
             index = 0;
             let we_ball = smash::app::sv_math::rand(smash::hash40("fighter"), 100);
-            if we_ball == 1 {
+            if we_ball >= 50 {
                 EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_level_up"), Hash40::new("top"), &Vector3f::new(0.0, 10.0, 0.0), &Vector3f::new(0.0, 0.0, 0.0), 0.8, false, 0, 0, 0, 0, 0, false, false);
                 SoundModule::play_se_no3d(fighter.module_accessor, Hash40::new("se_item_specialflag_1up"), true, true);
                 let mut rand: i32;

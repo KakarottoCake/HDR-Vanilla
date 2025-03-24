@@ -32,6 +32,23 @@ unsafe fn sideb_freefall(fighter: &mut L2CFighterCommon) {
     }
 }
 
+unsafe fn dtilt_bounce(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor){
+    if fighter.is_motion(Hash40::new("attack_lw32"))
+    && fighter.motion_frame() > 1.0 {
+        let mut speed = -0.2;
+        if fighter.motion_frame() < 18.0 { 
+            speed = -0.05;
+        }
+        if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) {
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_air_lw2"), 0.0, 1.0, false, 0.0, false, false);
+            KineticModule::clear_speed_energy_id(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+            KineticModule::add_speed(fighter.module_accessor, &Vector3f::new(0.0, speed, 0.0));
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+            WorkModule::off_flag(boma, *FIGHTER_SIMON_STATUS_ATTACK_LW32_WORK_ID_FLAG_LANDING_AIR);
+        }
+    }
+}
+
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
@@ -66,6 +83,7 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     whip_angling(fighter, boma, frame, stick_y);
     fastfall_specials(fighter);
     sideb_freefall(fighter);
+    dtilt_bounce(fighter, boma);
 }
 
 pub extern "C" fn richter_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {

@@ -283,10 +283,10 @@ unsafe extern "C" fn status_AttackDash_Main(fighter: &mut L2CFighterCommon) -> L
         let min_speed = ParamModule::get_float(fighter.battle_object, ParamType::Common, "dacus.min_speed");
         let max_speed = ParamModule::get_float(fighter.battle_object, ParamType::Common, "dacus.max_speed");
         //println!("Unadjusted speed: {}", speed_x);
-        let dacus_mul = ParamModule::get_float(fighter.object(), ParamType::Shared, "dacus_mul");
-        if !(min_speed..max_speed).contains(&speed_x.abs()) {
-            speed_x = speed_x.abs().clamp(min_speed, max_speed) * PostureModule::lr(fighter.module_accessor);
-        }
+        let dacus_mul = ParamModule::get_float(fighter.object(), ParamType::Shared, "dacus_mul") * 5.0;
+        // if !(min_speed..max_speed).contains(&speed_x.abs()) {
+        //     speed_x = speed_x.abs().clamp(min_speed, max_speed) * PostureModule::lr(fighter.module_accessor);
+        // }
         speed_x = speed_x * dacus_mul;
         //println!("Adjusted speed: {}", speed_x);
         VarModule::set_float(fighter.object(), vars::common::instance::DACUS_TRANSITION_SPEED, speed_x);
@@ -302,10 +302,10 @@ unsafe extern "C" fn status_AttackDash_Main(fighter: &mut L2CFighterCommon) -> L
         let min_speed = ParamModule::get_float(fighter.battle_object, ParamType::Common, "dacus.min_speed");
         let max_speed = ParamModule::get_float(fighter.battle_object, ParamType::Common, "dacus.max_speed");
         //println!("Unadjusted speed: {}", speed_x);
-        let dacds_mul = ParamModule::get_float(fighter.object(), ParamType::Shared, "dacds_mul");
-        if !(min_speed..max_speed).contains(&speed_x.abs()) {
-            speed_x = speed_x.abs().clamp(min_speed, max_speed) * PostureModule::lr(fighter.module_accessor);
-        }
+        let dacds_mul = ParamModule::get_float(fighter.object(), ParamType::Shared, "dacds_mul") * 5.0;
+        // if !(min_speed..max_speed).contains(&speed_x.abs()) {
+        //     speed_x = speed_x.abs().clamp(min_speed, max_speed) * PostureModule::lr(fighter.module_accessor);
+        // }
         speed_x = speed_x * dacds_mul;
         //println!("Adjusted speed: {}", speed_x);
         VarModule::set_float(fighter.object(), vars::common::instance::DACUS_TRANSITION_SPEED, speed_x);

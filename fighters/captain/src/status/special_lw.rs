@@ -62,6 +62,7 @@ unsafe extern "C" fn special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2C
     }
     if fighter.get_int(*FIGHTER_CAPTAIN_STATUS_WORK_ID_INT_FALCON_KICK_START_SITUATION) == *SITUATION_KIND_GROUND {
         if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
+            fighter.check_jump_cancel(true, true);
             fighter.change_status(FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_LW_END.into(), false.into());
             return 0.into();
         }
