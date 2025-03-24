@@ -4,6 +4,7 @@ use super::*;
 mod control;
 mod motion;
 mod stop;
+mod damage;
 
 #[repr(C)]
 pub struct KineticEnergyVTable {
@@ -158,4 +159,5 @@ pub fn install() {
     control::install();
     motion::install();
     stop::install();
+    damage::install();
 }

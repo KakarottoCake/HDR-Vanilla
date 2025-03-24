@@ -120,7 +120,10 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 12.0);
     if is_excute(agent) {
-        ATTACK(agent, 1, 0, Hash40::new("top"), 2.0, 145, 100, 95, 0, 5.0, 0.0, 11.5, -12.0, Some(0.0), Some(11.0), Some(-9.0), 0.75, 0.3, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        //Air
+        ATTACK(agent, 1, 0, Hash40::new("top"), 2.0, 145, 100, 95, 0, 5.0, 0.0, 11.5, -12.0, Some(0.0), Some(11.0), Some(-9.0), 0.75, 0.3, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        //Ground
+        ATTACK(agent, 2, 0, Hash40::new("top"), 2.0, 145, 100, 30, 0, 5.0, 0.0, 11.5, -12.0, Some(0.0), Some(11.0), Some(-9.0), 0.75, 0.3, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         let hit1 = Vector2f { x: 10.0, y: 20.0 };
         AttackModule::set_vec_target_pos(boma, 1, Hash40::new("top"), &hit1, 10, false);
         AttackModule::set_no_damage_fly_smoke_all(boma, true, false);
@@ -140,7 +143,10 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {
-        ATTACK(agent, 1, 0, Hash40::new("top"), 2.0, 145, 100, 95, 0, 5.0, 0.0, 11.5, -12.5, Some(0.0), Some(11.0), Some(-9.0), 0.75, 0.3, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        //Air
+        ATTACK(agent, 1, 0, Hash40::new("top"), 2.0, 145, 100, 95, 0, 5.0, 0.0, 11.5, -12.5, Some(0.0), Some(11.0), Some(-9.0), 0.75, 0.3, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        //Ground
+        ATTACK(agent, 2, 0, Hash40::new("top"), 2.0, 145, 100, 30, 0, 5.0, 0.0, 11.5, -12.5, Some(0.0), Some(11.0), Some(-9.0), 0.75, 0.3, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         let hit1 = Vector2f { x: 10.0, y: 20.0 };
         AttackModule::set_vec_target_pos(boma, 1, Hash40::new("top"), &hit1, 10, false);
         AttackModule::set_no_damage_fly_smoke_all(boma, true, false);
@@ -161,7 +167,10 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
     frame(lua_state, 26.0);
     if is_excute(agent) {
         JostleModule::set_status(boma, false);
-        ATTACK(agent, 1, 0, Hash40::new("sword2"), 2.0, 150, 100, 95, 0, 5.0, 2.0, 0.0, 0.0, Some(5.5), Some(0.0), Some(0.0), 0.75, 0.3, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        //Air
+        ATTACK(agent, 1, 0, Hash40::new("sword2"), 2.0, 150, 100, 95, 0, 5.0, 2.0, 0.0, 0.0, Some(5.5), Some(0.0), Some(0.0), 0.75, 0.3, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        //Ground
+        ATTACK(agent, 2, 0, Hash40::new("sword2"), 2.0, 150, 100, 30, 0, 5.0, 2.0, 0.0, 0.0, Some(5.5), Some(0.0), Some(0.0), 0.75, 0.3, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         let hit1 = Vector2f { x: 10.0, y: 20.0 };
         AttackModule::set_vec_target_pos(boma, 1, Hash40::new("top"), &hit1, 10, false);
         AttackModule::set_no_damage_fly_smoke_all(boma, true, false);
@@ -182,7 +191,10 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 38.0);
     if is_excute(agent) {
-        ATTACK(agent, 1, 0, Hash40::new("sword2"), 2.0, 160, 100, 95, 0, 5.0, 2.0, 0.0, 0.0, Some(5.5), Some(0.0), Some(0.0), 0.75, 0.3, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        //Air
+        ATTACK(agent, 1, 0, Hash40::new("sword2"), 2.0, 160, 100, 95, 0, 5.0, 2.0, 0.0, 0.0, Some(5.5), Some(0.0), Some(0.0), 0.75, 0.3, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        //Ground
+        ATTACK(agent, 2, 0, Hash40::new("sword2"), 2.0, 160, 100, 30, 0, 5.0, 2.0, 0.0, 0.0, Some(5.5), Some(0.0), Some(0.0), 0.75, 0.3, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         let hit1 = Vector2f { x: 10.0, y: 20.0 };
         AttackModule::set_vec_target_pos(boma, 1, Hash40::new("top"), &hit1, 10, false);
         AttackModule::set_no_damage_fly_smoke_all(boma, true, false);

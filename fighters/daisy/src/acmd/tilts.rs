@@ -84,8 +84,7 @@ unsafe extern "C" fn effect_attackhi3(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 6.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_b"), Hash40::new("top"), 0, 11, 0.5, 180, 260, 90, 0.85, true);
-        LAST_EFFECT_SET_RATE(agent, 0.45);
+        EFFECT(agent, Hash40::new("sys_attack_arc"), Hash40::new("top"), 0, 11, 0.5, 0, -95, -82, 0.85, 0, 0, 0, 0, 0, 0, true);
         LAST_EFFECT_SET_SCALE_W(agent, 0.75, 0.85, 0.85);
     }
     frame(lua_state, 23.0);

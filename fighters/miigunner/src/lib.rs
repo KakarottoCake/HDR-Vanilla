@@ -63,7 +63,7 @@ pub fn install() {
     bottomshoot::install();
     fullthrottle::install();
     grenadelauncher::install();
-    //groundbomb::install();    // not yet
+    groundbomb::install();
     gunnercharge::install();
     rapidshot_bullet::install();
     stealthbomb::install();
