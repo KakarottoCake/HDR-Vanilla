@@ -43,12 +43,12 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
         }
 
         WorkModule::on_flag(boma, *FIGHTER_PIKMIN_STATUS_SPECIAL_LW_FLAG_SORT);
-        damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_ALWAYS, 0);
+        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_ALWAYS, 0);
         shield!(agent, *MA_MSC_CMD_REFLECTOR, *COLLISION_KIND_REFLECTOR, 0, hash40("top"), 7.5, 0.0, 7.0, -8.5, 0.0, 7.0, 8.5, 1.5, 1.0, 50, false, 0.8, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {
-        damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
+        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
         shield!(agent, *MA_MSC_CMD_SHIELD_OFF, *COLLISION_KIND_REFLECTOR, 0, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
     }
 }

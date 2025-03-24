@@ -20,14 +20,14 @@ unsafe extern "C" fn game_attacks3(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn effect_attacks3(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    frame(lua_state, 6.0);
-    // if is_excute(agent) && WorkModule::is_flag(boma, vars::wiifit::instance::IS_ZEN_MODE) {
-    //     crate::opff::start_ring(utils::util::get_fighter_common_from_accessor(boma), 14.0, 1.0, 1.5, Hash40::new("kneel"), Vector3f::new(1.5, 2.5, 0.0), Vector3f::new(3000.0, 0.7, 0.7), Vector3f::new(0.7, 1000.0, 0.7), false);
-    // }
-}
+// unsafe extern "C" fn effect_attacks3(agent: &mut L2CAgentBase) {
+//     let lua_state = agent.lua_state_agent;
+//     let boma = agent.boma();
+//     frame(lua_state, 6.0);
+//     // if is_excute(agent) && WorkModule::is_flag(boma, vars::wiifit::instance::IS_ZEN_MODE) {
+//     //     crate::opff::start_ring(utils::util::get_fighter_common_from_accessor(boma), 14.0, 1.0, 1.5, Hash40::new("kneel"), Vector3f::new(1.5, 2.5, 0.0), Vector3f::new(3000.0, 0.7, 0.7), Vector3f::new(0.7, 1000.0, 0.7), false);
+//     // }
+// }
 
 unsafe extern "C" fn effect_attacks3(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
