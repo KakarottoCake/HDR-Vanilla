@@ -45,6 +45,7 @@ unsafe fn reset_flags(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     if lag < 1.0 { //same methd as vanilla
         //filters out lag-cancel techs
         if fighter.get_int(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SPECIAL_AIR_S_USED_COUNT) == 0 && fighter.get_int(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SPECIAL_HI_USED_COUNT) == 0 {
+            VarModule::off_flag(fighter.battle_object, vars::bayonetta::instance::SPECIAL_S_WHIFF);
             if fighter.is_situation(*SITUATION_KIND_AIR) && resource >= 1 {
                 VarModule::set_int(fighter.battle_object, vars::bayonetta::instance::RECOVERY_RESOURCE_COUNT, 1);
             } else { //only gives back 2nd resource

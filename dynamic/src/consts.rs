@@ -338,6 +338,8 @@ pub mod vars {
 
     pub mod bayonetta {
         pub mod instance {
+            // flag
+            pub const SPECIAL_S_WHIFF: i32 = 0x0100;
             // ints
             pub const RECOVERY_RESOURCE_COUNT: i32 = 0x0100;
             pub const ATTACK_AIR_F_COUNT: i32 = 0x0101;
