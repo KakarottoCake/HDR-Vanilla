@@ -283,7 +283,7 @@ unsafe extern "C" fn status_AttackDash_Main(fighter: &mut L2CFighterCommon) -> L
         let min_speed = ParamModule::get_float(fighter.battle_object, ParamType::Common, "dacus.min_speed");
         let max_speed = ParamModule::get_float(fighter.battle_object, ParamType::Common, "dacus.max_speed");
         //println!("Unadjusted speed: {}", speed_x);
-        let dacus_mul = ParamModule::get_float(fighter.object(), ParamType::Shared, "dacus_mul") * 5.0;
+        let dacus_mul = ParamModule::get_float(fighter.object(), ParamType::Shared, "dacus_mul") * 2.0;
         // if !(min_speed..max_speed).contains(&speed_x.abs()) {
         //     speed_x = speed_x.abs().clamp(min_speed, max_speed) * PostureModule::lr(fighter.module_accessor);
         // }
@@ -302,7 +302,7 @@ unsafe extern "C" fn status_AttackDash_Main(fighter: &mut L2CFighterCommon) -> L
         let min_speed = ParamModule::get_float(fighter.battle_object, ParamType::Common, "dacus.min_speed");
         let max_speed = ParamModule::get_float(fighter.battle_object, ParamType::Common, "dacus.max_speed");
         //println!("Unadjusted speed: {}", speed_x);
-        let dacds_mul = ParamModule::get_float(fighter.object(), ParamType::Shared, "dacds_mul") * 5.0;
+        let dacds_mul = ParamModule::get_float(fighter.object(), ParamType::Shared, "dacds_mul") * 2.0;
         // if !(min_speed..max_speed).contains(&speed_x.abs()) {
         //     speed_x = speed_x.abs().clamp(min_speed, max_speed) * PostureModule::lr(fighter.module_accessor);
         // }

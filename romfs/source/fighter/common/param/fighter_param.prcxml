@@ -750,7 +750,7 @@
       <float hash="landing_attack_air_frame_b">13</float>
       <float hash="landing_attack_air_frame_hi">9</float>
       <float hash="landing_attack_air_frame_lw">14</float>
-      <float hash="scale">3</float>
+      <float hash="scale">2</float>
       <float hash="shield_radius">8.3</float>
       <float hash="tread_jump_speed_y_mul">0.82</float>
       <float hash="tread_mini_jump_speed_y_mul">0.82</float>
@@ -2433,7 +2433,7 @@
       <int hash="landing_heavy_frame">5</int>
       <int hash="attack_100_enable_cnt">2</int>
       <int hash="jump_count_max">4</int>
-      <float hash="scale">2</float>
+      <float hash="scale">1.5</float>
       <float hash="tread_jump_speed_y_mul">0.8</float>
       <float hash="tread_mini_jump_speed_y_mul">0.8</float>
       <float hash="passive_wall_jump_x_speed">1.1</float>
