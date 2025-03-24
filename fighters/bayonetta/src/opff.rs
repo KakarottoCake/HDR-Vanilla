@@ -4,7 +4,10 @@ utils::import_noreturn!(common::opff::fighter_common_opff);
 
 unsafe fn magic_series_aerial_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     //gr cancels
-    if !AttackModule::is_attack(boma, 0, false) { fighter.check_magicseries(); }
+    if !AttackModule::is_attack(boma, 0, false) 
+    && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
+        fighter.check_magicseries();
+    }
     //air cancels
     if fighter.is_motion_one_of(&[Hash40::new("attack_air_n"), Hash40::new("attack_air_hi"), Hash40::new("attack_air_lw"), Hash40::new("attack_air_f3"), Hash40::new("attack_air_b")]) //dont cancel with fair 1/2
     && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) //dont cancel on shield
