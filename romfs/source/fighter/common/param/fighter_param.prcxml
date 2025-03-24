@@ -2433,6 +2433,7 @@
       <int hash="landing_heavy_frame">5</int>
       <int hash="attack_100_enable_cnt">2</int>
       <int hash="jump_count_max">4</int>
+      <float hash="scale">2</float>
       <float hash="tread_jump_speed_y_mul">0.8</float>
       <float hash="tread_mini_jump_speed_y_mul">0.8</float>
       <float hash="passive_wall_jump_x_speed">1.1</float>
