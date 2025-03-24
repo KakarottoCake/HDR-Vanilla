@@ -7,6 +7,7 @@
   </list>
   <list hash="param_special_s">
     <struct index="0">
+      <int hash="stop_y">8</int>
       <int hash="no_bang">4</int>
     </struct>
     <hash40 index="1">dummy</hash40>
