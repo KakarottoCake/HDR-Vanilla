@@ -55,7 +55,7 @@ unsafe extern "C" fn game_attackairbboost(agent: &mut L2CAgentBase) {
     frame(lua_state, 9.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
-        let addSpeed1 = Vector3f{ x: 0.66, y: 0.1, z: 0.0 };
+        let addSpeed1 = Vector3f{ x: 1.24, y: 0.1, z: 0.0 };
         KineticModule::add_speed(boma, &addSpeed1);
         ATTACK(agent, 0, 0, Hash40::new("shoulderr"), 8.0, 50, 90, 0, 44, 4.0, -1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("armr"), 8.0, 50, 90, 0, 44, 4.0, 0.5, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PUNCH);
