@@ -52,17 +52,17 @@ pub unsafe extern "C" fn throw_nana(fighter: &mut L2CFighterCommon) -> L2CValue 
         // It will fail if grabbing from a platform that's past ledge, 
         // or if grabbing on a stage that has been shifted far horizontally in lvd.
         if PostureModule::lr(fighter.boma()) == GroundModule::get_center_pos(fighter.boma()).signum() {
-            Hash40::new("throw_f")
-        } else {
             Hash40::new("throw_b")
+        } else {
+            Hash40::new("throw_f")
         }
     } else if is_under_platform {
-        Hash40::new("throw_hi")
+        Hash40::new("throw_lw")
     } else {
         let selected = app::sv_math::rand(hash40("fighter"), 100);
         match selected {
-            0..=49 => Hash40::new("throw_f"),
-            _ => Hash40::new("throw_lw")
+            0..=49 => Hash40::new("throw_b"),
+            _ => Hash40::new("throw_hi")
         }
     };
 
