@@ -67,9 +67,9 @@ unsafe extern "C" fn game_specialsstart(agent : &mut L2CAgentBase) {
         if !VarModule::is_flag(agent.battle_object, vars::snake::instance::SPECIAL_S_FORCE_RELOAD) {
             VarModule::inc_int(agent.battle_object, vars::snake::instance::SPECIAL_S_AMMO_COUNT);
             ArticleModule::set_flag(boma, *FIGHTER_SNAKE_GENERATE_ARTICLE_NIKITA, true, *WEAPON_SNAKE_NIKITA_INSTANCE_WORK_ID_FLAG_SHOOT);
-            if VarModule::get_int(agent.battle_object, vars::snake::instance::SPECIAL_S_AMMO_COUNT) == 3 {
-                VarModule::on_flag(agent.battle_object, vars::snake::instance::SPECIAL_S_RELOAD_VULNERABLE);
-            }
+            // if VarModule::get_int(agent.battle_object, vars::snake::instance::SPECIAL_S_AMMO_COUNT) == 3 {
+            //     VarModule::on_flag(agent.battle_object, vars::snake::instance::SPECIAL_S_RELOAD_VULNERABLE);
+            // }
         }
     }
     frame(lua_state, 38.0);
