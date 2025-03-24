@@ -47,7 +47,7 @@
       <float hash="rush_end_speed_rate_x">0.15</float>
       <float hash="rush_end_speed_rate_y">0.15</float>
       <int hash="landing_frame">42</int>
-      <float hash="rush_angle">160</float>
+      <float hash="rush_angle">170</float>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>
