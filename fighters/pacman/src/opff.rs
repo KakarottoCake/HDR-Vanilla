@@ -89,6 +89,13 @@ pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut
     up_special_proper_landing(fighter);
     empty_hydrant_physics(fighter);
     fastfall_specials(fighter);
+    if !CancelModule::is_enable_cancel(fighter) 
+    && !fighter.is_in_hitlag() 
+    && fighter.is_situation(*SITUATION_KIND_AIR)
+    && AttackModule::is_infliction_status(fighter, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
+    && !AttackModule::is_infliction_status(fighter, *crate::consts::COLLISION_KIND_MASK_PARRY) {
+        fighter.check_airdodge_cancel();
+    }
 }
 
 pub extern "C" fn pacman_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
