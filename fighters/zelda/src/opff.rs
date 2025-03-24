@@ -125,7 +125,7 @@ pub unsafe fn phantom_usability_effects(fighter:&mut smash::lua2cpp::L2CFighterC
 }
 
 unsafe fn sideb_freefall(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_S)
+    if fighter.is_status(*FIGHTER_ZELDA_STATUS_KIND_SPECIAL_S_END)
     && fighter.is_situation(*SITUATION_KIND_AIR)
     && CancelModule::is_enable_cancel(fighter.module_accessor) {
         fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL_SPECIAL, true);
