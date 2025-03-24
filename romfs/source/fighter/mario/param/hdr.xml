@@ -33,7 +33,7 @@
     <float hash="air_accel_y_mul">0.4</float>
     <int hash="jump_squat_frame">6</int>
     <int hash="landing_frame">12</int>
-    <int hash="attack_cancel_frame">8</int>
+    <int hash="attack_cancel_frame">1</int>
   </struct>
   <struct hash="ground_pound">
     <float hash="fall_speed">4.0</float>
