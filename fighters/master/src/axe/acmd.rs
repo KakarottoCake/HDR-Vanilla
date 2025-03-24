@@ -27,10 +27,6 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
             ATTACK(agent, 0, 0, Hash40::new("haver"), 18.0, 275, 50, 0, 20, 5.7, 0.0, 14.0, 1.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 24, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MASTER_AXE, *ATTACK_REGION_OBJECT);
             ATK_SET_SHIELD_SETOFF_MUL(agent, 0, 3.0);
         }
-        else if owner_module_accessor.is_situation(*SITUATION_KIND_GROUND) {
-            ATTACK(fighter, 0, 1, Hash40::new("top"), 30.0, 270, 0, 0, 1, 300.0, 0.0, 0.0, 0.0, None, None, None, 0.1, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, f32::NAN, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_OBJECT);
-            AttackModule::set_add_reaction_frame(boma, 0, 60.0, false);
-        }
     }
     frame(lua_state, 67.0);
     if is_excute(agent) {

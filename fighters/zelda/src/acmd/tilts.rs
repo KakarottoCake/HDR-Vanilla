@@ -203,7 +203,7 @@ unsafe extern "C" fn game_attacklw3(agent: &mut L2CAgentBase) {
         VarModule::on_flag(agent.battle_object, vars::zelda::status::SPECIAL_LW_PHANTOM_CANCEL_FRAME);
     }
     frame(lua_state, 9.0);
-    FT_MOTION_RATE_RANGE(agent, 9.0, 22.0, 15.0);
+    FT_MOTION_RATE_RANGE(agent, 9.0, 22.0, 16.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }

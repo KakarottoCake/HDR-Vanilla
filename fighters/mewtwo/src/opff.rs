@@ -89,6 +89,16 @@ pub unsafe fn mewtwo_teleport_wall_ride(fighter: &mut smash::lua2cpp::L2CFighter
     }
 }
 
+unsafe fn float_cancel(boma: &mut BattleObjectModuleAccessor) {
+    if boma.is_status(*FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR) {
+        let prev_status_0 = StatusModule::prev_status_kind(boma, 0);
+        let prev_status_1 = StatusModule::prev_status_kind(boma, 1);
+        if prev_status_0 == statuses::mewtwo::FLOAT || prev_status_1 == statuses::mewtwo::FLOAT {
+            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_LANDING, true);
+        }
+    }
+}
+
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
@@ -127,6 +137,7 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     teleport_logic(fighter, boma);
     mewtwo_teleport_wall_ride(fighter, boma, status_kind, id);
     dj_upB_jump_refresh(fighter);
+    float_cancel(boma);
     fastfall_specials(fighter);
 }
 

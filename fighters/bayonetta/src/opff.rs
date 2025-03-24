@@ -2,9 +2,13 @@ use super::*;
 use globals::*;
 utils::import_noreturn!(common::opff::fighter_common_opff);
 
-unsafe fn aerial_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
+unsafe fn magic_series_aerial_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
+    //gr cancels
+    if !AttackModule::is_attack(boma, 0, false) { fighter.check_magicseries(); }
+    //air cancels
     if fighter.is_motion_one_of(&[Hash40::new("attack_air_n"), Hash40::new("attack_air_hi"), Hash40::new("attack_air_lw"), Hash40::new("attack_air_f3"), Hash40::new("attack_air_b")]) //dont cancel with fair 1/2
-    && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) //dont cancel on shield
+    && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) //dont cancel on shield
+    && !AttackModule::is_infliction_status(boma, *crate::consts::COLLISION_KIND_MASK_PARRY)
     && !fighter.is_in_hitlag() //dont cancel during hitstop
     && !fighter.is_flag(*FIGHTER_BAYONETTA_STATUS_ATTACK_AIR_FLAG_SHOOTING) { //don't cancel DURING bullet arts
         let mut new_status = 0;
@@ -130,7 +134,7 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 }
 
 pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, frame: f32) {
-    aerial_cancels(fighter, boma);
+    magic_series_aerial_cancels(fighter, boma);
     reset_flags(fighter, boma);
     forward_tilt(boma);
     bat_within_air_motion(fighter);

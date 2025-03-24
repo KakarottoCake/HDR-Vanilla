@@ -938,7 +938,7 @@
       <float hash="landing_attack_air_frame_f">9</float>
       <float hash="landing_attack_air_frame_b">12</float>
       <float hash="landing_attack_air_frame_hi">9</float>
-      <int hash="landing_heavy_frame">5</int>
+      <int hash="landing_heavy_frame">6</int>
       <bool hash="wall_jump_type">true</bool>
       <int hash="attack_combo_max">2</int>
       <float hash="combo_attack_12_end">20</float>

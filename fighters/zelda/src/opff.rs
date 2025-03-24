@@ -44,16 +44,20 @@ unsafe fn teleport_tech(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &m
     //}
 }
 
-unsafe fn phantom_special_cancel(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
+unsafe fn special_cancel(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) 
     && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_PARRY)
     && !fighter.is_in_hitlag()
     && VarModule::is_flag(fighter.battle_object, vars::zelda::status::SPECIAL_LW_PHANTOM_CANCEL_FRAME) {
-        if fighter.is_cat_flag(Cat1::SpecialLw) && !ArticleModule::is_exist(boma, *FIGHTER_ZELDA_GENERATE_ARTICLE_PHANTOM) {
-            if !fighter.is_status(*FIGHTER_STATUS_KIND_ATTACK_AIR) { //displacement flag
-                VarModule::on_flag(fighter.battle_object, vars::zelda::instance::SPECIAL_LW_FORWARD_PHANTOM);
-            }//cancel if phantom is off cd
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_LW, false);
+        if fighter.is_cat_flag(Cat1::SpecialLw) {
+            if !ArticleModule::is_exist(boma, *FIGHTER_ZELDA_GENERATE_ARTICLE_PHANTOM) {
+                if !fighter.is_status(*FIGHTER_STATUS_KIND_ATTACK_AIR) { //displacement flag
+                    VarModule::on_flag(fighter.battle_object, vars::zelda::instance::SPECIAL_LW_FORWARD_PHANTOM);
+                }//cancel if phantom is off cd
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_LW, false);
+            }
+        } else if fighter.is_cat_flag(Cat1::SpecialHi) {
+            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_HI, false);
         }
     }
 }
@@ -169,7 +173,7 @@ pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut
     teleport_tech(fighter, boma, frame);
     dins_fire_cancels(boma);
     nayru_land_cancel(boma);
-    phantom_special_cancel(fighter, boma);
+    special_cancel(fighter, boma);
     phantom_usability_effects(fighter, boma);
     fastfall_specials(fighter);
     sideb_freefall(fighter);

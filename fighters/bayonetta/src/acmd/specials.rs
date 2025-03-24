@@ -202,8 +202,8 @@ unsafe extern "C" fn game_specialairsu(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         JostleModule::set_status(boma, true);
         AttackModule::clear_all(boma);
-        if !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
-            VarModule::inc_int(boma.object(), vars::bayonetta::instance::RECOVERY_RESOURCE_COUNT);
+        if !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) {
+            VarModule::inc_int(agent.battle_object, vars::bayonetta::instance::RECOVERY_RESOURCE_COUNT);
         }
         agent.on_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_ACTION);
         agent.on_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_MOTION_STOP);
@@ -274,7 +274,7 @@ unsafe extern "C" fn game_specialairsd(agent: &mut L2CAgentBase) {
     frame(lua_state, 25.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
-        VarModule::inc_int(boma.object(), vars::bayonetta::instance::RECOVERY_RESOURCE_COUNT);
+        VarModule::inc_int(agent.battle_object, vars::bayonetta::instance::RECOVERY_RESOURCE_COUNT);
     }
     frame(lua_state, 27.0);
     if is_excute(agent) {
@@ -366,8 +366,8 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         AttackModule::clear_all(boma);
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2bfb02b69a), true);
-        if !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
-            VarModule::inc_int(boma.object(), vars::bayonetta::instance::RECOVERY_RESOURCE_COUNT);
+        if !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) {
+            VarModule::inc_int(agent.battle_object, vars::bayonetta::instance::RECOVERY_RESOURCE_COUNT);
         }
     }
     frame(lua_state, 27.0);
