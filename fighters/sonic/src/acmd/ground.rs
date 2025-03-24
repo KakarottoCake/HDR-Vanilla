@@ -127,7 +127,7 @@ unsafe extern "C" fn game_attackdash(agent: &mut L2CAgentBase) {
         ATTACK(agent, 0, 0, Hash40::new("kneel"), 4.0, 48, 130, 0, 40, 3.6, 3.5, 0.0, 2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
     }
     frame(lua_state, 21.0);
-    FT_MOTION_RATE_RANGE(agent, 21.0, 50.0, 38.0);
+    FT_MOTION_RATE_RANGE(agent, 21.0, 50.0, 68.0);
     frame(lua_state, 25.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
