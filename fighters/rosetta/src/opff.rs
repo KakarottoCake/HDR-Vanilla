@@ -62,7 +62,7 @@ unsafe fn teleport(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModule
 	&& !VarModule::is_flag(boma.object(), SPECIAL_LW_INVALID_WARP) 
 	&& !VarModule::is_flag(boma.object(), SPECIAL_LW_WARP_GROUND_START) {
 		//println!("successful aerial teleport. entering special fall");
-		StatusModule::change_status_request(boma, *FIGHTER_STATUS_KIND_FALL_SPECIAL, false);
+		StatusModule::change_status_request(boma, *FIGHTER_STATUS_KIND_FALL, false);
 	} 
 }
 

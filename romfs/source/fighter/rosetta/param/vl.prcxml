@@ -53,7 +53,8 @@
   </list>
   <list hash="param_tico">
     <struct index="0">
-      <float hash="hp">90</float>
+      <float hash="hp">1</float>
+      <int hash="dead_frame">1</int>
       <float hash="follow_damage_air_brake">0.075</float>
       <float hash="free_damage_for_reaction">45</float>
       <float hash="free_damage_air_brake">0.15</float>

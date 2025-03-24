@@ -98,7 +98,7 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
                     VisibilityModule::set_whole(tico_boma, true);
                     HitModule::set_whole(tico_boma, HitStatus(*HIT_STATUS_NORMAL), 0);
                 }
-                VarModule::set_int(boma.object(), GIMMICK_TIMER, 300); // 300 Frame (5 second) cooldown
+                VarModule::set_int(boma.object(), GIMMICK_TIMER, 1); // 300 Frame (5 second) cooldown
             }
             frame(lua_state, 38.0);
             if is_excute(agent) {
