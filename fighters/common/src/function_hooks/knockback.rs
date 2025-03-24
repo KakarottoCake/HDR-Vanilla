@@ -411,6 +411,11 @@ unsafe extern "C" fn is_valid_finishing_hit(knockback_info: *const f32, defender
     let max_di = kb_angle + di_angle;
     // println!("base kb angle: {}, di angle: {}, min_di: {}, max_di: {}", kb_angle, di_angle, min_di, max_di);
 
+    if is_final_killing_hit(defender_boma, attacker_boma)
+    && 0 == app::sv_math::rand(hash40("fighter"), 128) {
+        return true.into();
+    }
+
     let step = (di_angle * 2.0) / (NUM_ANGLE_CHECK as f32);
     let context_ref = context;
     let mut false_angle_num = 0;
