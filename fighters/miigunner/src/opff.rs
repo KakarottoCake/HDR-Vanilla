@@ -75,7 +75,8 @@ unsafe fn laser_blaze_ff_land_cancel(boma: &mut BattleObjectModuleAccessor) {
         Hash40::new("special_n2_loop"),
         Hash40::new("special_n2_end") ]) {
         if boma.is_situation(*SITUATION_KIND_GROUND) && boma.is_prev_situation(*SITUATION_KIND_AIR) {
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_LANDING, false);
+            fighter.set_float(6.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
+            fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
         }
         if StatusModule::is_changing(boma)
         && boma.is_situation(*SITUATION_KIND_AIR) {
