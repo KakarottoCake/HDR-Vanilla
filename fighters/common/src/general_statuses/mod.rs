@@ -836,6 +836,7 @@ pub unsafe fn sub_is_dive(fighter: &mut L2CFighterCommon) -> L2CValue {
     && ((status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL
         && MotionModule::frame(fighter.module_accessor) < 20.0)
         || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_AIR
+            && KineticModule::get_kinetic_type(fighter.module_accessor) == *FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION_2ND
             && MotionModule::frame_2nd(fighter.module_accessor) < 20.0))
     {
         return false.into();

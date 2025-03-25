@@ -320,6 +320,13 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
             VarModule::on_flag(boma.object(), vars::common::instance::IS_CC_NON_TUMBLE);
         }
 
+        // Prevents multijump characters from bypassing successive aerial jump lockout
+        // when interrupting an aerial jump with another action
+        if next_status == *FIGHTER_STATUS_KIND_FLY
+        && VarModule::get_int(boma.object(), vars::common::instance::FLY_NEXT_FRAME) > 0 {
+            return 0;
+        }
+
         if boma.kind() == *FIGHTER_KIND_TRAIL {
             if StatusModule::status_kind(boma) == *FIGHTER_TRAIL_STATUS_KIND_SPECIAL_S_SEARCH
             && next_status == *FIGHTER_TRAIL_STATUS_KIND_SPECIAL_S_TURN

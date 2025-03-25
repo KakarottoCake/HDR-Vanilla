@@ -18,6 +18,7 @@
         <float index="1">1.97</float>
         <float index="2">1.76</float>
       </list>
+      <int hash="shoot_fly_next_frame">25</int>
     </struct>
   </list>
   <list hash="param_bowarrow">
