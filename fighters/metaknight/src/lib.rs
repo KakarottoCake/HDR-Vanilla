@@ -6,6 +6,7 @@ pub mod acmd;
 
 pub mod opff;
 pub mod status;
+pub mod meta_quick;
 
 use smash::{
     lib::{
@@ -44,5 +45,6 @@ pub fn install() {
     acmd::install(agent);
     opff::install(agent);
     status::install(agent);
+    meta_quick::install(agent);
     agent.install();
 }
