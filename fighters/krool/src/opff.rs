@@ -58,6 +58,11 @@ pub unsafe fn armored_charge(fighter: &mut L2CFighterCommon, motion_kind: u64) {
             MotionModule::set_rate(fighter.module_accessor, 1.0);
         }
     }
+    if fighter.is_motion(Hash40::new("throw_lw")) {
+        if fighter.status_frame() <= 35 && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CATCH | *CONTROL_PAD_BUTTON_ATTACK) {
+            MotionModule::set_rate(fighter.module_accessor, 0.5);
+        }
+    }
 }
 
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {

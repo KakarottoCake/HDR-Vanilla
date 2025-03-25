@@ -107,7 +107,7 @@ unsafe extern "C" fn game_attackdash(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
     }
     frame(lua_state, 24.0);
-    FT_MOTION_RATE_RANGE(agent, 24.0, 42.0, 27.0);
+    FT_MOTION_RATE_RANGE(agent, 24.0, 42.0, 15.0);
 }
 
 pub fn install(agent: &mut Agent) {

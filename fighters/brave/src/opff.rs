@@ -60,7 +60,7 @@ unsafe fn psych_up_crit(fighter: &mut L2CFighterCommon) {
 unsafe fn dash_cancel_frizz(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_BRAVE_STATUS_KIND_SPECIAL_N_SHOOT)
     && fighter.is_situation(*SITUATION_KIND_GROUND)
-    && fighter.is_motion(Hash40::new("special_n1"))
+    && fighter.is_motion_one_of(&[Hash40::new("special_n1"), Hash40::new("special_n2"), Hash40::new("special_n3")])
     && fighter.motion_frame() > 20.0 && fighter.motion_frame() < 44.0 // after F20 and before the FAF
     && (WorkModule::get_float(fighter.module_accessor, *FIGHTER_BRAVE_INSTANCE_WORK_ID_FLOAT_SP) > 12.0) {
         if fighter.check_dash_cancel() {
@@ -73,7 +73,7 @@ unsafe fn dash_cancel_frizz(fighter: &mut L2CFighterCommon) {
 
 unsafe fn kaclang_jc(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_STEEL) {
-        if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) && !fighter.is_in_hitlag() {
+        if !fighter.is_in_hitlag() {
             fighter.check_jump_cancel(false, false);
         }
     }

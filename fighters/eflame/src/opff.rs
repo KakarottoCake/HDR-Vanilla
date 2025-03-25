@@ -11,7 +11,8 @@ unsafe fn hit_cancel_blade_switch(boma: &mut BattleObjectModuleAccessor, cat1: i
         *FIGHTER_STATUS_KIND_ATTACK_DASH,
         *FIGHTER_STATUS_KIND_ATTACK_S4,
         *FIGHTER_STATUS_KIND_ATTACK_HI4,
-        *FIGHTER_STATUS_KIND_ATTACK_LW4
+        *FIGHTER_STATUS_KIND_ATTACK_LW4,
+        *FIGHTER_STATUS_KIND_THROW
     ].contains(&status_kind)
     || ([*FIGHTER_STATUS_KIND_ATTACK].contains(&status_kind) && motion_kind == hash40("attack_13")){
         if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {

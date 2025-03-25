@@ -199,7 +199,7 @@ unsafe extern "C" fn game_attacklw3(agent: &mut L2CAgentBase) {
     frame(lua_state, 11.0);
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 12.0);
-    sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 1.1);
+    sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 1.9);
     if is_excute(agent) {
         HIT_NO(agent, 13, *HIT_STATUS_NORMAL);
         HIT_NO(agent, 14, *HIT_STATUS_NORMAL);

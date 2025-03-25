@@ -130,11 +130,12 @@ unsafe extern "C" fn game_throwhi(agent: &mut L2CAgentBase) {
     frame(lua_state, 17.0);
     FT_MOTION_RATE_RANGE(agent, 17.0, 43.0, 13.0);
     frame(lua_state, 43.0);
-    FT_MOTION_RATE(agent, 1.0);
+    FT_MOTION_RATE_RANGE(agent, 43.0, 47.0, 12.0);
     if is_excute(agent) {
         CAM_ZOOM_OUT(agent);
     }
     frame(lua_state, 47.0);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_STATUS_THROW_FLAG_STOP);
     }   

@@ -59,6 +59,7 @@
     <struct index="0">
       <int hash="s_life">240</int>
       <float hash="s_spd_x0">0.18</float>
+      <float hash="s_spd_y0">0.05</float>
       <int hash="s_acc_f">120</int>
     </struct>
     <hash40 index="1">dummy</hash40>
@@ -76,9 +77,9 @@
   </list>
   <list hash="param_special_lw">
     <struct index="0">
-      <float hash="sp_lw_ar_vy0">1.5</float>
+      <float hash="sp_lw_ar_vy0">3.0</float>
       <float hash="sp_lw_bj_ang_max">50</float>
-      <float hash="sp_lw_bj_spd0">1.5</float>
+      <float hash="sp_lw_bj_spd0">3.0</float>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>

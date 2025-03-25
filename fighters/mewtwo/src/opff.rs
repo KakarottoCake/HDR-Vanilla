@@ -14,12 +14,12 @@ unsafe fn teleport_logic(fighter: &mut L2CFighterCommon, boma: &mut BattleObject
             if boma.get_num_used_jumps() < boma.get_jump_count_max() {
                 VarModule::on_flag(fighter.battle_object, vars::mewtwo::instance::SPECIAL_HI_TELEPORT_CANCEL);
                 if !VarModule::is_flag(fighter.battle_object, vars::mewtwo::instance::SPECIAL_HI_GROUNDED_TELEPORT) {
-                    WorkModule::inc_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
-                    VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_FLOAT);
+                    //WorkModule::inc_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
+                    //VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_FLOAT);
                 }
             } else {//takes jump and float frame 0, takes away tourney winner if teleport is used 
-                VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_FLOAT);
-                VarModule::off_flag(fighter.battle_object, vars::mewtwo::instance::SPECIAL_HI_TELEPORT_CANCEL);
+                //VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_FLOAT);
+                //VarModule::off_flag(fighter.battle_object, vars::mewtwo::instance::SPECIAL_HI_TELEPORT_CANCEL);
             }
             VarModule::off_flag(fighter.battle_object, vars::mewtwo::instance::SPECIAL_HI_GROUNDED_TELEPORT);
         } else if MotionModule::is_end(boma) {

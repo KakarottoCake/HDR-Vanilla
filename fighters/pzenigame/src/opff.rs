@@ -35,6 +35,9 @@ unsafe fn side_special_startup_ledgegrab(fighter: &mut L2CFighterCommon) {
         // allows ledgegrab during sideB startup
         fighter.sub_transition_group_check_air_cliff();
     }
+    if fighter.is_status_one_of(&[*FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_S_LOOP, *FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_S_END]) {
+        fighter.check_jump_cancel(false, false);
+    }
 }
 
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {

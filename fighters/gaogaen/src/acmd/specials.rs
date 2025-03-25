@@ -876,11 +876,11 @@ unsafe extern "C" fn game_specialairhiturn(agent: &mut L2CAgentBase) {
         if VarModule::is_flag(boma.object(), vars::gaogaen::status::SPECIAL_HI_RISE_END) {
             VarModule::off_flag(boma.object(), vars::gaogaen::status::SPECIAL_HI_RISE_END);
             VarModule::on_flag(boma.object(), vars::common::instance::UP_SPECIAL_CANCEL);
-            let accel_x_mul = ParamModule::get_float(boma.object(), ParamType::Agent, "param_special_hi.fall_special_accel_x_mul");
-            let speed_x_max_mul = ParamModule::get_float(boma.object(), ParamType::Agent, "param_special_hi.fall_special_speed_x_max_mul");
-            WorkModule::set_float(boma, accel_x_mul, *FIGHTER_INSTANCE_WORK_ID_FLOAT_MUL_FALL_X_ACCEL);
-            WorkModule::set_float(boma, speed_x_max_mul, *FIGHTER_INSTANCE_WORK_ID_FLOAT_FALL_X_MAX_MUL);
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL_SPECIAL, true);
+            // let accel_x_mul = ParamModule::get_float(boma.object(), ParamType::Agent, "param_special_hi.fall_special_accel_x_mul");
+            // let speed_x_max_mul = ParamModule::get_float(boma.object(), ParamType::Agent, "param_special_hi.fall_special_speed_x_max_mul");
+            // WorkModule::set_float(boma, accel_x_mul, *FIGHTER_INSTANCE_WORK_ID_FLOAT_MUL_FALL_X_ACCEL);
+            // WorkModule::set_float(boma, speed_x_max_mul, *FIGHTER_INSTANCE_WORK_ID_FLOAT_FALL_X_MAX_MUL);
+            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL, true);
         }
         else {
             WorkModule::on_flag(boma, *FIGHTER_GAOGAEN_STATUS_SPECIAL_HI_FLAG_FALL_TYPE_CHECK);
@@ -964,13 +964,14 @@ unsafe extern "C" fn game_speciallwstart(agent: &mut L2CAgentBase) {
     frame(lua_state, 21.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_GAOGAEN_STATUS_SPECIAL_LW_FLAG_STANCE_END);
+        
     }
     frame(lua_state, 28.0);
     FT_MOTION_RATE(agent, 0.5);
     frame(lua_state, 32.0);
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
+        WorkModule::on_flag(boma, *FIGHTER_GAOGAEN_STATUS_SPECIAL_LW_FLAG_STANCE_END);
     }
     frame(lua_state, 46.0);
     FT_MOTION_RATE(agent, 1.0);

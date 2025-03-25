@@ -10,6 +10,9 @@ unsafe fn flare_blitz_edge_cancel(fighter: &mut L2CFighterCommon) {
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         }
     }
+    if fighter.is_status_one_of(&[*FIGHTER_PLIZARDON_STATUS_KIND_SPECIAL_S_RUSH, *FIGHTER_PLIZARDON_STATUS_KIND_SPECIAL_S_END]) {
+        fighter.check_jump_cancel(false, false);
+    }
 }
 
 unsafe fn special_lw_track(boma: &mut BattleObjectModuleAccessor) {

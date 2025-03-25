@@ -47,7 +47,7 @@
       <float hash="special_lw_throw_ang">110</float>
       <float hash="special_lw_throw_spd_x">1.35</float>
       <float hash="special_lw_smash_throw_spd_mul">1.55</float>
-      <int hash="special_lw_banana_num_max">1</int>
+      <int hash="special_lw_banana_num_max">4</int>
       <int hash="special_lw_interval">150</int>
     </struct>
     <hash40 index="1">dummy</hash40>

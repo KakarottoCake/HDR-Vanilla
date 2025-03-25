@@ -159,6 +159,7 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     angled_skewer(fighter);
     fastfall_specials(fighter);
     sideb_whiff_freefall(fighter);
+    fighter.check_airdodge_cancel();
 }
 
 pub extern "C" fn ridley_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {

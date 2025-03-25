@@ -16,6 +16,9 @@ unsafe fn training_mode_full_meter(fighter: &mut L2CFighterCommon, boma: &mut Ba
         let meter_max = (meter_cap as f32) * MeterModule::meter_per_level(fighter.object());
         MeterModule::add(boma.object(), meter_max);
     }
+    if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
+        boma.check_dash_cancel();
+    }
 }
 
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
