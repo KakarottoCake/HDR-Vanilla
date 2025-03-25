@@ -6,23 +6,27 @@ unsafe extern "C" fn sound_specials(agent: &mut L2CAgentBase) {
 
     let rng = app::sv_math::rand(smash::hash40("fighter"), 2);
 
-    if rng == 0 {
+    //if rng == 0 {
         frame(lua_state, 5.0);
         if is_excute(agent) {
             PLAY_SE_REMAIN(agent, Hash40::new("vc_ness_002"));
+            let rand = app::sv_math::rand(smash::hash40("fighter"), 20);
+            if (2..9).contains(&rand) {
+                SoundModule::set_se_pitch_ratio(boma, Hash40::new("vc_ness_002"), (rand + 1) as f32 * 0.2);
+            }
             PLAY_SE(agent, Hash40::new("se_ness_special_s03"));
         }
-    }
-    else {
-        frame(lua_state, 5.0);
-        if is_excute(agent) {
-            PLAY_SE(agent, Hash40::new("se_ness_special_s03"));
-        }
-        frame(lua_state, 20.0);
-        if is_excute(agent) {
-            PLAY_SE_REMAIN(agent, Hash40::new("vc_ness_attack04"));
-        }
-    }
+    // }
+    // else {
+    //     frame(lua_state, 5.0);
+    //     if is_excute(agent) {
+    //         PLAY_SE(agent, Hash40::new("se_ness_special_s03"));
+    //     }
+    //     frame(lua_state, 20.0);
+    //     if is_excute(agent) {
+    //         PLAY_SE_REMAIN(agent, Hash40::new("vc_ness_attack04"));
+    //     }
+    // }
 }
 
 unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
@@ -60,18 +64,22 @@ unsafe extern "C" fn sound_specialairs(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     let rng = app::sv_math::rand(smash::hash40("fighter"), 2);
 
-    if rng == 0 {
+    //if rng == 0 {
         frame(lua_state, 5.0);
         if is_excute(agent) {
             PLAY_SE_REMAIN(agent, Hash40::new("vc_ness_002"));
+            let rand = app::sv_math::rand(smash::hash40("fighter"), 10);
+            if (2..9).contains(&rand) {
+                SoundModule::set_se_pitch_ratio(boma, Hash40::new("vc_ness_002"), (rand + 1) as f32 * 0.2);
+            }
         }
-    }
-    else {
-        frame(lua_state, 20.0);
-        if is_excute(agent) {
-            PLAY_SE_REMAIN(agent, Hash40::new("vc_ness_attack04"));
-        }
-    }
+    // }
+    // else {
+    //     frame(lua_state, 20.0);
+    //     if is_excute(agent) {
+    //         PLAY_SE_REMAIN(agent, Hash40::new("vc_ness_attack04"));
+    //     }
+    // }
 }
 
 unsafe extern "C" fn game_specialhistart(agent: &mut L2CAgentBase) {

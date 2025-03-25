@@ -24,11 +24,11 @@ unsafe extern "C" fn game_specialnend(agent: &mut L2CAgentBase) {
         }
         ArticleModule::generate_article(boma, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SEED, false, -1);
     }
-    frame(lua_state, 4.0);
+    frame(lua_state, 8.0);
     if is_excute(agent) {
         ArticleModule::generate_article(boma, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SEED, false, -1);
     }
-    frame(lua_state, 8.0);
+    frame(lua_state, 16.0);
     if is_excute(agent) {
         ArticleModule::generate_article(boma, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SEED, false, -1);
     }

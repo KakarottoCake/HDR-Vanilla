@@ -27,8 +27,8 @@
   <list hash="param_special_hi">
     <struct index="0">
       <float hash="y_spd_max">2.31</float>
-      <float hash="y_spd_add">4.61</float>
-      <float hash="y_up_spd_max">4.2</float>
+      <float hash="y_spd_add">2.61</float>
+      <float hash="y_up_spd_max">2.2</float>
       <float hash="hop_max">5</float>
       <float hash="egg_angle_max">150</float>
       <float hash="egg_angle_min">10</float>	

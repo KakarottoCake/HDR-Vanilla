@@ -126,6 +126,7 @@ pub unsafe extern "C" fn special_hi_init(fighter: &mut L2CFighterCommon) -> L2CV
 }
 
 pub unsafe extern "C" fn special_hi_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    VarModule::on_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
     WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_CLIFF);
     fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_hi_1"), L2CValue::Hash40s("special_air_hi_1"), false.into());
     fighter.sub_change_kinetic_type_by_situation(FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE.into(), FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE.into());

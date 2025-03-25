@@ -47,11 +47,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
             }
         }
     }
-    if fighter.is_status(*FIGHTER_YOSHI_STATUS_KIND_SPECIAL_AIR_LW) {
-        if fighter.is_cat_flag(Cat1::SpecialLw) {
-            fighter.change_status(FIGHTER_STATUS_KIND_SPECIAL_LW.into(), false.into());
-        }
-    }
 }
 
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {

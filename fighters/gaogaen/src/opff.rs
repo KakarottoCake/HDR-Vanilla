@@ -25,7 +25,7 @@ unsafe fn fthrow_movement(fighter: &mut L2CFighterCommon) {
      && fighter.is_motion(smash::phx::Hash40::new("throw_f"))
      && fighter.status_frame() <= 58
      && fighter.stick_x() != 0.0 {
-        let motion_mul = if WorkModule::is_flag(fighter.boma(), *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_IS_REVENGE) {1.0} else {0.5};
+        let motion_mul = if WorkModule::is_flag(fighter.boma(), *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_IS_REVENGE) {2.0} else {1.5};
         let motion_vec = x_motion_vec(motion_mul, fighter.stick_x());
         KineticModule::add_speed_outside(fighter.module_accessor, *KINETIC_OUTSIDE_ENERGY_TYPE_WIND_NO_ADDITION, &motion_vec);
     }

@@ -31,7 +31,7 @@
       <float hash="min_init_speed">1.6</float>
       <float hash="max_init_speed">2.3</float>
       <float hash="max_attack_mul">3.0</float>
-      <float hash="max_size_mul">5.0</float>
+      <float hash="max_size_mul">2.5</float>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>

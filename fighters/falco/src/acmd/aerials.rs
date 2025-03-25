@@ -329,12 +329,11 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     frame(lua_state, 23.0);  // f25
     FT_MOTION_RATE_RANGE(agent, 23.0, 44.0, 27.0);
     if is_excute(agent) {
-        
+        //AttackModule::clear_all(boma);
     }
     frame(lua_state, 28.44);  // f32
     if is_excute(agent) {
         WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-        AttackModule::clear_all(boma);
     }
     frame(lua_state, 44.0); // f52 (cancel frame)
 

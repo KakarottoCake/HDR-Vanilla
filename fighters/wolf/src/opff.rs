@@ -19,11 +19,11 @@ unsafe fn airdodge_cancel(boma: &mut BattleObjectModuleAccessor, status_kind: i3
                 0
             );
             boma.check_airdodge_cancel();
+            boma.check_dash_cancel();
         }
         if situation_kind == *SITUATION_KIND_GROUND && StatusModule::prev_situation_kind(boma) == *SITUATION_KIND_AIR {
             StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_LANDING, false);
         }
-        boma.check_dash_cancel();
     }
 }
 

@@ -159,7 +159,10 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     angled_skewer(fighter);
     fastfall_specials(fighter);
     sideb_whiff_freefall(fighter);
-    fighter.check_airdodge_cancel();
+    if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
+    && !fighter.is_in_hitlag() {
+        fighter.check_airdodge_cancel();
+    }
 }
 
 pub extern "C" fn ridley_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {

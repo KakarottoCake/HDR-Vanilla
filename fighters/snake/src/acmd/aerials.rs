@@ -134,12 +134,11 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 23.0);
     if is_excute(agent) {
-        
+        //AttackModule::clear_all(boma);
     }
     frame(lua_state, 36.0);
     if is_excute(agent) {
         WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-        AttackModule::clear_all(boma);
     }
 }
 

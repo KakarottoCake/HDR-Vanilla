@@ -195,7 +195,7 @@ unsafe extern "C" fn effect_attackairhi(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         AFTER_IMAGE_OFF(agent, 3);
     }
-    frame(lua_state, 19.0);
+    frame(lua_state, 34.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND_WORK(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_EFFECT_KIND_SWORD_FLARE, false, true);
     }
