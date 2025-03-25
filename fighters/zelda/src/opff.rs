@@ -127,7 +127,9 @@ pub unsafe fn phantom_usability_effects(fighter:&mut smash::lua2cpp::L2CFighterC
 unsafe fn sideb_freefall(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_ZELDA_STATUS_KIND_SPECIAL_S_END)
     && fighter.is_situation(*SITUATION_KIND_AIR)
-    && CancelModule::is_enable_cancel(fighter.module_accessor) {
+    && MotionModule::is_end(fighter.module_accessor) {
+        let landing_lag = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.landing_lag");
+        WorkModule::set_float(fighter.module_accessor, landing_lag as f32, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
         fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL_SPECIAL, true);
         let cancel_module = *(fighter.module_accessor as *mut BattleObjectModuleAccessor as *mut u64).add(0x128 / 8) as *const u64;
         *(((cancel_module as u64) + 0x1c) as *mut bool) = false;  // CancelModule::is_enable_cancel = false

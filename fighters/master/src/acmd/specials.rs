@@ -649,6 +649,7 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
         FT_MOTION_RATE(agent, motion_rate);
         ArticleModule::set_rate(boma, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, 1.0/motion_rate);
         DamageModule::set_damage_mul(boma, 1.25);
+        WorkModule::off_flag(boma, *FIGHTER_MASTER_STATUS_SPECIAL_LW_FLAG_TURN_CHECK);
     }
     if VarModule::get_int(agent.battle_object, vars::master::status::SPECIAL_LW_HOLD) > 0 {
         WorkModule::on_flag(boma, *FIGHTER_MASTER_STATUS_SPECIAL_LW_FLAG_START_SUPER_ARMOR);
@@ -737,7 +738,7 @@ unsafe extern "C" fn effect_speciallw(agent: &mut L2CAgentBase) {
             LAST_EFFECT_SET_COLOR(agent, 0.3, 0.3, 0.3);
             
             COL_PRI(agent, 200);
-            FLASH(agent, 0.325, 0.157, 0.05, 0.75);
+            FLASH(agent, 0.95, 0.522, 0.051, 0.7);
         }
     }
     frame(lua_state, 40.0);

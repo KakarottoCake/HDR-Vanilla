@@ -278,8 +278,8 @@ unsafe extern "C" fn sub_escape_air_common_main(fighter: &mut L2CFighterCommon) 
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return L2CValue::Bool(true);
     }
-    if !CancelModule::is_enable_cancel(fighter.module_accessor)
-        || (!fighter.sub_wait_ground_check_common(L2CValue::Bool(false)).get_bool() && !fighter.sub_air_check_fall_common().get_bool()){
+    if /* !CancelModule::is_enable_cancel(fighter.module_accessor)
+        ||*/ (!fighter.sub_wait_ground_check_common(L2CValue::Bool(false)).get_bool() && !fighter.sub_air_check_fall_common().get_bool()){
         if fighter.sub_escape_air_common_strans_main().get_bool() {
             return L2CValue::Bool(true);
         }
