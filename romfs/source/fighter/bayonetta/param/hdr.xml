@@ -2,7 +2,7 @@
 <struct>
     <struct hash="param_special_lag">
         <float hash="base_lag">8.0</float>
-        <float hash="whiff_lag">5.0</float>
+        <float hash="whiff_lag">6.0</float>
         <float hash="dive_side_special">3.0</float>
         <float hash="side_special">6.0</float>
         <float hash="up_special">6.0</float>

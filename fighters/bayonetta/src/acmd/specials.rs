@@ -7,25 +7,29 @@ unsafe extern "C" fn game_specialnstarth(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     if agent.kind() == *FIGHTER_KIND_BAYONETTA {
         let startup_frame = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.startup_frame") -1.0;
-        FT_MOTION_RATE_RANGE(agent, 1.0, 30.0, startup_frame);//van (15f before charge)
+        MotionModule::set_rate(boma, 30.0/startup_frame);//van (15f before charge)
+        if VarModule::is_flag(agent.battle_object, vars::common::instance::WAS_PREV_STATUS_CANCELABLE) {
+            VarModule::off_flag(agent.battle_object, vars::bayonetta::instance::WAS_CANCEL);//should maybe hopefully disable the flag if she didnt cancel into it w/o messing with end statuses
+        }
     } else {
-        FT_MOTION_RATE_RANGE(agent, 1.0, 30.0, 15.0);//van (15f before charge)
-    }
+        MotionModule::set_rate(boma, 30.0/15.0);//van (15f before charge)
+    } //kirby
 }
 
 unsafe extern "C" fn game_specialnchargeh(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let charge_frame_max = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.charge_frame_max");
-    let charge_frame_max_cancel = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.charge_frame_max_cancel");
+    frame(lua_state, 1.0);
     if agent.kind() == *FIGHTER_KIND_BAYONETTA {
+        let charge_frame_max = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.charge_frame_max") -1.0;//? 
+        let charge_frame_max_cancel = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.charge_frame_max_cancel") -1.0;
         if VarModule::is_flag(agent.battle_object, vars::bayonetta::instance::WAS_CANCEL) {
-            MotionModule::set_rate(boma, 15.0/charge_frame_max_cancel);//van - 4, 35f total
+            MotionModule::set_rate(boma, (15.0-1.0)/charge_frame_max_cancel);//van - 4, 35f total
         } else {
-            MotionModule::set_rate(boma, 15.0/charge_frame_max);//van + 4, 45f total
+            MotionModule::set_rate(boma, (15.0-1.0)/charge_frame_max);//van + 4, 44f total (1 decimal off goes to 46f??)
         }
     } else {
-        MotionModule::set_rate(boma, 15.0/25.0); //van
+        MotionModule::set_rate(boma, (15.0-1.0)/24.0); //van
     }
 }
 
@@ -41,17 +45,16 @@ unsafe extern "C" fn game_specialnendh(agent: &mut L2CAgentBase) {
         let remaining_repeats = agent.get_int(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_ADD_FIRE_COUNT);
         let used_rounds = (max_repeat - remaining_repeats) as f32;
         let lag_per_round = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.lag_per_round");
-        let base_endlag: f32 = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.base_endlag"); //31 endlag van, 25 here and 40 max
+        let base_endlag: f32 = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.base_endlag") -1.0; //32 faf van, 25 here and 40 max
         //check for accumulated BA lag
         if !agent.is_status(statuses::bayonetta::SPECIAL_N_CANCEL) {
             MotionModule::set_rate(boma, (58.0 - 1.0)/(base_endlag + lag_per_round*used_rounds));
         } else if special_lag < cancel_frame_param {
             MotionModule::set_rate(boma, (58.0 - 1.0)/base_endlag);
         }//do not change motion rate on special lag cancel anim
-        VarModule::off_flag(agent.battle_object, vars::bayonetta::instance::WAS_CANCEL);
     } else {
         if !agent.is_status(statuses::bayonetta::SPECIAL_N_CANCEL) {
-            MotionModule::set_rate(boma, (58.0 - 1.0)/25.0);
+            MotionModule::set_rate(boma, (58.0 - 1.0)/24.0);
         } else {
             let cancel_frame_param = agent.get_param_int("param_special_n", "cancel_frame") as f32;
             MotionModule::set_rate(boma, (58.0 - 1.0)/cancel_frame_param);
@@ -68,16 +71,15 @@ unsafe extern "C" fn game_specialnendf(agent: &mut L2CAgentBase) {
         let remaining_repeats = agent.get_int(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_ADD_FIRE_COUNT);
         let used_rounds = (max_repeat - remaining_repeats) as f32;
         let lag_per_round = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.lag_per_round");
-        let base_endlag: f32 = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.base_endlag"); //31 endlag van, 25 here and 40 max
+        let base_endlag: f32 = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.base_endlag") -1.0; //32 faf van, 25 here and 40 max
         if agent.is_status(statuses::bayonetta::SPECIAL_N_CANCEL) {
             MotionModule::set_rate(boma, (48.0 - 1.0)/base_endlag);
         } else {
             MotionModule::set_rate(boma, (48.0 - 1.0)/(base_endlag + lag_per_round*used_rounds));
         }
-        VarModule::off_flag(agent.battle_object, vars::bayonetta::instance::WAS_CANCEL);
     } else {
         if !agent.is_status(statuses::bayonetta::SPECIAL_N_CANCEL) {
-            MotionModule::set_rate(boma, (48.0 - 1.0)/25.0);
+            MotionModule::set_rate(boma, (48.0 - 1.0)/23.0);
         } else {
             let cancel_frame_param = agent.get_param_int("param_special_n", "cancel_frame") as f32;
             MotionModule::set_rate(boma, (48.0 - 1.0)/cancel_frame_param);
@@ -389,7 +391,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2b7cb92b79), *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, true, 20);
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2b7cb92b79), *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, false, false, true, 20);
     }
-    frame(lua_state, 7.0);
+    frame(lua_state, 8.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 1.0, 368, 10, 0, 0, 3.0, 0.0, 4.5, 0.0, Some(0.0), Some(12.5), Some(0.0), 1.0, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("top"), 1.0, 368, 10, 0, 0, 3.5, 0.0, 5.5, 5.0, Some(0.0), Some(10.0), Some(5.0), 1.0, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PUNCH);
