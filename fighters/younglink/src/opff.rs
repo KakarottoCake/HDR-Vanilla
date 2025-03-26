@@ -11,6 +11,9 @@ unsafe fn da_jump(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleA
             StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_JUMP,true);
             KineticModule::add_speed(boma, &Vector3f::new(0.0, -2.0, 0.0)); //Reduces the jump height from fullhop height
         }
+        if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) && !boma.is_in_hitlag() {
+            boma.check_jump_cancel(false, false);
+        }
     }
 }
 

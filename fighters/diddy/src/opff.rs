@@ -7,6 +7,13 @@ unsafe fn peanut_popgun_ac(boma: &mut BattleObjectModuleAccessor, status_kind: i
     if status_kind == *FIGHTER_DIDDY_STATUS_KIND_SPECIAL_N_SHOOT && frame > 5.0 {
         boma.check_airdodge_cancel();
     }
+    if boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_DIDDY_STATUS_KIND_SPECIAL_HI_CHARGE]) {
+        if ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_GUARD)
+        && ArticleModule::is_exist(boma, *FIGHTER_DIDDY_GENERATE_ARTICLE_BARRELJET) {
+            ArticleModule::change_status(boma, *FIGHTER_DIDDY_GENERATE_ARTICLE_BARRELJET, *WEAPON_DIDDY_BARRELJET_STATUS_KIND_FLY, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+            boma.change_status_req(FIGHTER_STATUS_KIND_FALL_SPECIAL.into(), false);
+        }
+    }
 }
 
 unsafe fn sideb_whiff_freefall(fighter: &mut L2CFighterCommon) {

@@ -30,6 +30,9 @@ unsafe fn up_special_proper_landing(fighter: &mut L2CFighterCommon) {
     && fighter.is_situation(*SITUATION_KIND_GROUND) {
         fighter.change_status_req(*FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, false);
     }
+    if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) && !fighter.is_in_hitlag() {
+        fighter.check_dash_cancel();
+    }
 }
 
 unsafe fn empty_hydrant_physics(fighter: &mut L2CFighterCommon) {

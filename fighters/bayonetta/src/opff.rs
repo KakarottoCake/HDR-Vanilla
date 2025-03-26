@@ -144,6 +144,7 @@ pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut
     bat_within_air_motion(fighter);
     up_special_startup_ledgegrab(fighter);
     fastfall_specials(fighter);
+    fighter.check_magicseries();
 }
 
 pub unsafe extern "C" fn bayonetta_frame_wrapper(fighter: &mut L2CFighterCommon) {
