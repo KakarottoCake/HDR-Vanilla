@@ -349,8 +349,8 @@ unsafe extern "C" fn fighterstatusdamage_init_damage_speed_up_by_speed(
 ) {
     let angle = angle.get_f32();
     let angle_threshold = 29.358;
-    let speed_start_horizontal = 4.65; // the start of scaling at angles below the angle_threshold
-    let speed_start_vertical = 5.63; // the start of scaling at completely vertical angles
+    let speed_start_horizontal = 4.6; // the start of scaling at angles below the angle_threshold
+    let speed_start_vertical = 5.57; // the start of scaling at completely vertical angles
     let speed_end = 7.2; // the end of scaling
 
     // calculate true speed_start using angle
@@ -368,7 +368,7 @@ unsafe extern "C" fn fighterstatusdamage_init_damage_speed_up_by_speed(
     }
 
     // calculate speed_up_mul
-    let min_mul = 1.0;
+    let min_mul = 1.1;
     let max_mul = 1.65;
     let power = 1.0;
     let ratio = ((speed - speed_start) / (speed_end - speed_start));
