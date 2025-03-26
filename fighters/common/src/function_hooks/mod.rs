@@ -789,7 +789,7 @@ unsafe fn phantom_hit_check(ctx: &mut skyline::hooks::InlineCtx) {
     let mut phantom_threshold: f32;
     asm!("fmov w8, s9", out("w8") phantom_threshold);
 
-    if opponent_boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_DAMAGE, *FIGHTER_STATUS_KIND_GUARD_OFF]) {
+    if opponent_boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_DAMAGE]) {
         // threshold while shielding
         phantom_threshold = 1.0;
     }
