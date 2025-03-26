@@ -11,7 +11,7 @@ unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
     frame(lua_state, 13.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 1.0, 160, 45, 0, 12, 4.5, 0.0, 8.0, -9.5, Some(0.0), Some(8.0), Some(9.5), 0.75, 0.75, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 4, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 1.0, 160, 45, 0, 12, 4.5, 0.0, 8.0, -9.5, Some(0.0), Some(8.0), Some(9.5), 0.75, 0.75, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
     }
     frame(lua_state, 25.0);
     if is_excute(agent) {
