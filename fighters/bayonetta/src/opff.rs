@@ -29,6 +29,9 @@ unsafe fn magic_series_aerial_cancels(fighter: &mut L2CFighterCommon, boma: &mut
                 is_input_cancel = true;
                 new_status = *FIGHTER_STATUS_KIND_SPECIAL_S;
             }
+        } else if fighter.is_cat_flag(Cat1::SpecialLw) {
+            is_input_cancel = true;
+            new_status = *FIGHTER_STATUS_KIND_SPECIAL_LW;
         }
         if !fighter.is_motion(Hash40::new("attack_air_lw")) {fighter.check_airdodge_cancel(); }
         if is_input_cancel && VarModule::get_int(fighter.battle_object, vars::bayonetta::instance::RECOVERY_RESOURCE_COUNT) < 2 {
@@ -144,7 +147,6 @@ pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut
     bat_within_air_motion(fighter);
     up_special_startup_ledgegrab(fighter);
     fastfall_specials(fighter);
-    fighter.check_magicseries();
 }
 
 pub unsafe extern "C" fn bayonetta_frame_wrapper(fighter: &mut L2CFighterCommon) {
