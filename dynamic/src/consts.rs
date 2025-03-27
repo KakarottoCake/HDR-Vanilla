@@ -208,6 +208,8 @@ pub mod vars {
 
             pub const HITFALL_BUFFER: i32 = 0x0004;
 
+            pub const FLY_NEXT_FRAME: i32 = 0x0005;
+
             // pub const JUMP_SQUAT_FRAME: i32 = 0x0005;
 
             pub const GIMMICK_TIMER: i32 = 0x0006;
