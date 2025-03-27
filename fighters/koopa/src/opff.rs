@@ -28,7 +28,7 @@ unsafe fn ground_bowser_bomb_jump_drift(boma: &mut BattleObjectModuleAccessor, s
     if [*FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_LW_G].contains(&status_kind) {
         if frame > 14.0 && frame < 31.0 {
             if stick_x != 0.0 {
-                let motion_vec = x_motion_vec(1.25, stick_x);
+                let motion_vec = x_motion_vec(1.0, stick_x);
                 KineticModule::add_speed_outside(boma, *KINETIC_OUTSIDE_ENERGY_TYPE_WIND_NO_ADDITION, &motion_vec);
             }
         }
