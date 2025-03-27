@@ -145,6 +145,15 @@ unsafe extern "C" fn effect_speciallwstart(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn sound_speciallwstart(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 5.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_pitb_special_l01"));
+    }
+}
+
 unsafe extern "C" fn game_speciallwhold(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -185,6 +194,10 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("effect_speciallwstartr", effect_speciallwstart, Priority::Low);
     agent.acmd("effect_specialairlwstartl", effect_speciallwstart, Priority::Low);
     agent.acmd("effect_specialairlwstartr", effect_speciallwstart, Priority::Low);
+    agent.acmd("sound_speciallwstartl", sound_speciallwstart, Priority::Low);
+    agent.acmd("sound_speciallwstartr", sound_speciallwstart, Priority::Low);
+    agent.acmd("sound_specialairlwstartl", sound_speciallwstart, Priority::Low);
+    agent.acmd("sound_specialairlwstartr", sound_speciallwstart, Priority::Low);
 
     agent.acmd("game_speciallwhold", game_speciallwhold, Priority::Low);
     agent.acmd("game_specialairlwhold", game_speciallwhold, Priority::Low);

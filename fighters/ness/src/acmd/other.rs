@@ -6,27 +6,33 @@ unsafe extern "C" fn sound_damagefly(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     if is_excute(agent) {
         if !StopModule::is_stop(boma) {
-            let play_vc = if DamageModule::reaction(boma, 0) < 100.0 {
-                app::sv_math::rand(hash40("fighter"), 10)
-            } else {
-                0
-            };
-            if play_vc == 0 {PLAY_FLY_VOICE(agent, Hash40::new("seq_ness_rnd_futtobi01"), Hash40::new("seq_ness_rnd_futtobi02"));}
             if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
                 PLAY_SE(agent, Hash40::new("vc_ness_damagefly02"));
+            }
+            else {
+                let play_vc = if DamageModule::reaction(boma, 0) < 100.0 {
+                    app::sv_math::rand(hash40("fighter"), 10)
+                } else {
+                    0
+                };
+                if play_vc == 0 {PLAY_FLY_VOICE(agent, Hash40::new("seq_ness_rnd_futtobi01"), Hash40::new("seq_ness_rnd_futtobi02"));}
             }
         }
     }
     frame(lua_state, 1.1);
     if is_excute(agent) {
-        let play_vc = if DamageModule::reaction(boma, 0) < 100.0 {
-            app::sv_math::rand(hash40("fighter"), 10)
-        } else {
-            0
-        };
-        if play_vc == 0 {PLAY_FLY_VOICE(agent, Hash40::new("seq_ness_rnd_futtobi01"), Hash40::new("seq_ness_rnd_futtobi02"));}
-        if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
-            PLAY_SE(agent, Hash40::new("vc_ness_damagefly02"));
+        if !SoundModule::is_playing_voice(boma) {
+            if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
+                PLAY_SE(agent, Hash40::new("vc_ness_damagefly02"));
+            }
+            else {
+                let play_vc = if DamageModule::reaction(boma, 0) < 100.0 {
+                    app::sv_math::rand(hash40("fighter"), 10)
+                } else {
+                    0
+                };
+                if play_vc == 0 {PLAY_FLY_VOICE(agent, Hash40::new("seq_ness_rnd_futtobi01"), Hash40::new("seq_ness_rnd_futtobi02"));}
+            }
         }
     }
 }
