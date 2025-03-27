@@ -191,7 +191,7 @@ unsafe extern "C" fn game_specialsstart(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, 0x2127e37c07u64, *GROUND_CLIFF_CHECK_KIND_ON_DROP);
     }
-    frame(lua_state, 49.0);
+    frame(lua_state, 47.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_RIDLEY_STATUS_SPECIAL_S_FLAG_ENABLE_GRAVITY);
     }
