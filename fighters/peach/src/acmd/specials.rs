@@ -148,9 +148,9 @@ unsafe extern "C" fn game_specialairhistart(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         ATTACK(agent, 1, 0, Hash40::new("havel"), 1.0, 368, 100, 80, 0, 1.5, 2.0, 4.5, 2.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 5, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PARASOL);
         ATTACK(agent, 2, 0, Hash40::new("havel"), 1.0, 368, 100, 70, 0, 3.5, 0.0, 4.0, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 5, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PARASOL);
-        let hit1 = Vector2f { x: 6.0, y: 25.0 };
-        AttackModule::set_vec_target_pos(boma, 1, Hash40::new("top"), &hit1, 12, false);
-        AttackModule::set_vec_target_pos(boma, 2, Hash40::new("top"), &hit1, 12, false);
+        let hit1 = Vector2f { x: 4.0, y: 25.0 };
+        AttackModule::set_vec_target_pos(boma, 1, Hash40::new("top"), &hit1, 13, false);
+        AttackModule::set_vec_target_pos(boma, 2, Hash40::new("top"), &hit1, 13, false);
         AttackModule::set_no_damage_fly_smoke_all(boma, true, false);
     }
     frame(lua_state, 28.0);
