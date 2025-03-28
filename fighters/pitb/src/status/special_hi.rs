@@ -49,7 +49,7 @@ unsafe extern "C" fn special_hi_rush_init(fighter: &mut L2CFighterCommon) -> L2C
 
     let stick_x = fighter.global_table[STICK_X].get_f32();
     let stick_y = fighter.global_table[STICK_Y].get_f32();
-    let mut rad = 0.0_f32.to_radians();
+    let mut rad = 90.0_f32.to_radians();
     let rush_speed = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("rush_speed"));
     let lr = PostureModule::lr(fighter.module_accessor);
 
@@ -61,8 +61,8 @@ unsafe extern "C" fn special_hi_rush_init(fighter: &mut L2CFighterCommon) -> L2C
     }
     let rush_angle = fighter.get_param_float("param_special_hi", "rush_angle");
     rad = rad.clamp((90.0 - 0.5 * rush_angle).to_radians(), (90.0 + 0.5 * rush_angle).to_radians());
-    dbg!(rad);
-    dbg!(rad.to_degrees());
+    // dbg!(rad);
+    // dbg!(rad.to_degrees());
     let rush_speed_x = rush_speed * rad.sin() * lr;
     let rush_speed_y = rush_speed * rad.cos();
 
