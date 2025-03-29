@@ -105,6 +105,12 @@ unsafe extern "C" fn special_n_cancel_main(fighter: &mut L2CFighterCommon) -> L2
     fighter.set_int(cancel_frame, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_CANCEL_FRAME);
     fighter.set_float(1.0, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_FLOAT_MOTION_RATE);
     motion_handling(fighter);
+    if !fighter.is_situation(*SITUATION_KIND_GROUND) {
+        let start_y = fighter.get_param_float("param_special_n", "air_start_speed_mul_y");
+        let gravity_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY) as *mut app::KineticEnergy;
+        let speed_y = lua_bind::KineticEnergy::get_speed_y(gravity_energy);
+        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y * start_y);
+    }   //cut speed f0 of cancel
     fighter.clear_lua_stack();
     lua_args!(fighter, MA_MSC_CMD_EFFECT_EFFECT_OFF_KIND, Hash40::new("bayonetta_bulletclimax_circle"), true, true);
     sv_module_access::effect(fighter.lua_state_agent);
@@ -115,6 +121,7 @@ unsafe extern "C" fn special_n_cancel_main(fighter: &mut L2CFighterCommon) -> L2
 }
 
 unsafe extern "C" fn special_n_cancel_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if StatusModule::is_situation_changed(fighter.module_accessor) {motion_handling(fighter); }
     WorkModule::dec_int(fighter.module_accessor, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_CANCEL_FRAME);
     if fighter.get_int(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_CANCEL_FRAME) == 0 {
         let status = VarModule::get_int(fighter.battle_object, vars::bayonetta::instance::SPECIAL_N_CANCEL_TYPE);
@@ -144,23 +151,29 @@ unsafe extern "C" fn motion_handling(fighter: &mut L2CFighterCommon) -> L2CValue
     if fighter.is_situation(*SITUATION_KIND_GROUND) {
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
         GroundModule::set_correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
-        //motion
-        if fighter.is_motion(Hash40::new("bayonetta_special_air_n_charge_h")) {MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("bayonetta_special_n_charge_h"), -1.0, 1.0, 0.0, true, true); }
-        else if fighter.is_motion(Hash40::new("bayonetta_special_air_n_start_h")) {MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("bayonetta_special_n_start_h"), -1.0, 1.0, 0.0, true, true); }
-        else if fighter.is_motion(Hash40::new("bayonetta_special_air_n_loop_h")) {MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("bayonetta_special_n_loop_h"), -1.0, 1.0, 0.0, true, true); }
-        else if fighter.is_motion(Hash40::new("bayonetta_special_air_n_end_h")) {MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("bayonetta_special_n_end_h"), -1.0, 1.0, 0.0, true, true); }
+        //air -> gr
+        if fighter.is_motion(Hash40::new("bayonetta_special_air_n_charge_h")) {MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("bayonetta_special_n_charge_h"), -1.0, 1.0, 0.0, false, false); }
+        else if fighter.is_motion(Hash40::new("bayonetta_special_air_n_start_h")) {MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("bayonetta_special_n_start_h"), -1.0, 1.0, 0.0, false, false); }
+        else if fighter.is_motion(Hash40::new("bayonetta_special_air_n_loop_h")) {MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("bayonetta_special_n_loop_h"), -1.0, 1.0, 0.0, false, false); }
+        else if fighter.is_motion(Hash40::new("bayonetta_special_air_n_end_h")) {MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("bayonetta_special_n_end_h"), -1.0, 1.0, 0.0, false, false); }
     } else {
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
-        GroundModule::set_correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        let air_accel_y = fighter.get_param_float("param_special_n", "air_start_accel_y");
-        let air_stable_y = fighter.get_param_float("param_special_n", "air_start_max_speed_y");
-        sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -air_accel_y);
-        sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, air_stable_y);
-        sv_kinetic_energy!(controller_set_accel_x_mul, fighter, 0.04);
-        sv_kinetic_energy!(controller_set_accel_x_add, fighter, 0.009);
-        sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.4, 0.0);
+        drift_limits(fighter);
     }
     return 0.into();
+}
+
+unsafe extern "C" fn drift_limits(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let air_accel_y = fighter.get_param_float("param_special_n", "air_start_accel_y");
+    let air_stable_y = fighter.get_param_float("param_special_n", "air_start_max_speed_y");
+    let air_accel_x_mul: f32 = 0.04;
+    let max_air_speed_x: f32 = 0.4;
+    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
+    sv_kinetic_energy!(controller_set_accel_x_mul, fighter, air_accel_x_mul);
+    sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, max_air_speed_x, 0.0);
+    GroundModule::set_correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+    sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -air_accel_y);
+    sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, air_stable_y);
+    0.into()
 }
 
 unsafe extern "C" fn cancel_check(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -184,6 +197,48 @@ unsafe extern "C" fn cancel_check(fighter: &mut L2CFighterCommon) -> L2CValue {
     return 0.into();
 }
 
+unsafe extern "C" fn special_n_fire_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let remaining_repeats = fighter.get_int(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_ADD_FIRE_COUNT);
+    VarModule::set_int(fighter.battle_object, vars::bayonetta::instance::SPECIAL_N_CANCEL_TYPE, remaining_repeats);
+    if !(&[*FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_N_CHARGE, *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_N_FIRE, *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_N_END].contains(&fighter.global_table[STATUS_KIND].get_i32())) {
+        fighter.on_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SPECIAL_N_EFFECT_OFF);
+    }
+    0.into()
+}
+
+//unsafe extern "C" fn special_n_end_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+//    if fighter.is_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_FLAG_SPECIAL_N_FOOT) {
+//        fighter.sub_change_motion_by_situation(Hash40::new("bayonetta_special_n_end_f").into(), Hash40::new("bayonetta_special_air_n_end_f").into(), false.into());
+//    } else {
+//        fighter.sub_change_motion_by_situation(Hash40::new("bayonetta_special_n_end_h").into(), Hash40::new("bayonetta_special_air_n_end_h").into(), false.into());
+//    }
+//    //notify_event_msc_cmd!(fighter, Hash40::new_raw(0x31b6af34a0), false);
+//    fighter.set_float(1.0, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_FLOAT_MOTION_RATE);
+//    motion_handling(fighter);//remove weird vanilla motion rating mechanic that bayo is able to ignore somehow>?
+//    fighter.clear_lua_stack();
+//    lua_args!(fighter, MA_MSC_CMD_EFFECT_EFFECT_OFF_KIND, Hash40::new("bayonetta_bulletclimax_circle"), true, true);
+//    sv_module_access::effect(fighter.lua_state_agent);
+//    fighter.clear_lua_stack();
+//    lua_args!(fighter, MA_MSC_CMD_EFFECT_EFFECT_OFF_KIND, Hash40::new("bayonetta_chargebullet_start"), true, true);
+//    sv_module_access::effect(fighter.lua_state_agent);
+//    fighter.sub_shift_status_main(L2CValue::Ptr(special_n_end_main_loop as *const () as _))
+//}
+//
+//unsafe extern "C" fn special_n_end_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+//    if StatusModule::is_situation_changed(fighter.module_accessor) {motion_handling(fighter); }
+//    if CancelModule::is_enable_cancel(fighter.module_accessor) {
+//        if fighter.sub_wait_ground_check_common(false.into()).get_bool()
+//        || fighter.sub_air_check_fall_common().get_bool() {
+//            return 1.into();
+//        }
+//    }
+//    if MotionModule::is_end(fighter.module_accessor) {
+//        if fighter.is_situation(*SITUATION_KIND_GROUND) {fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into()); }
+//        else {fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into()); }
+//    }
+//    return 0.into();
+//}
+
 pub fn install(agent: &mut Agent) {
         agent.status(Init, *FIGHTER_KIRBY_STATUS_KIND_BAYONETTA_SPECIAL_N, special_n_init);
         agent.status(Main, *FIGHTER_KIRBY_STATUS_KIND_BAYONETTA_SPECIAL_N, special_n_main);
@@ -192,4 +247,6 @@ pub fn install(agent: &mut Agent) {
         agent.status(Pre, statuses::kirby::BAYONETTA_SPECIAL_N_CANCEL, special_n_cancel_pre);
         agent.status(Main, statuses::kirby::BAYONETTA_SPECIAL_N_CANCEL, special_n_cancel_main);
         agent.status(End, statuses::kirby::BAYONETTA_SPECIAL_N_CANCEL, special_n_cancel_end);
+        agent.status(End, *FIGHTER_KIRBY_STATUS_KIND_BAYONETTA_SPECIAL_N_FIRE, special_n_fire_end);
+        //agent.status(Main, *FIGHTER_KIRBY_STATUS_KIND_BAYONETTA_SPECIAL_N_END, special_n_end_main);
 }

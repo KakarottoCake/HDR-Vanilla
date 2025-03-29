@@ -1142,8 +1142,9 @@ unsafe extern "C" fn plant_meter(fighter: &mut L2CFighterCommon) {
 
 
 unsafe fn bayo_air_special_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
+unsafe fn bayo_air_special_cancels(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_STATUS_KIND_ATTACK_AIR)
-    && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) //dont cancel on shield
+    && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) //dont cancel on shield
     && !fighter.is_in_hitlag() { //dont cancel during hitstop
         let mut new_status = 0;
         if fighter.is_cat_flag(Cat1::SpecialN) {
@@ -1158,7 +1159,7 @@ unsafe fn bayo_air_special_cancels(fighter: &mut L2CFighterCommon, boma: &mut Ba
         //}
         //fighter.check_airdodge_cancel();
         if new_status != 0 {
-            StatusModule::change_status_force(boma, new_status, true);
+            StatusModule::change_status_force(fighter.module_accessor, new_status, true);
         } //special cancel
     }
 }
@@ -1297,7 +1298,7 @@ pub unsafe fn kirby_copy_handler(fighter: &mut L2CFighterCommon) {
             trail_flower_frame(fighter);
         },
         // Bayonetta
-        0x40 => bayo_air_special_cancels(fighter, boma),
+        0x40 => bayo_air_special_cancels(fighter),
         _ => {}
     }
 }

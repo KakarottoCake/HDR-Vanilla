@@ -35,15 +35,15 @@ unsafe extern "C" fn game_specialnendh(agent: &mut L2CAgentBase) {
     let special_lag = agent.get_float(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLOAT_SPECIAL_LANDING_FRAME);
     //check for accumulated BA lag
     let max_repeat = agent.get_param_int("param_special_n", "add_fire_max");
-    let remaining_repeats = agent.get_int(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_ADD_FIRE_COUNT);
+    let remaining_repeats = VarModule::get_int(agent.battle_object, vars::bayonetta::instance::SPECIAL_N_CANCEL_TYPE);
     let used_rounds = (max_repeat - remaining_repeats) as f32;
     let lag_per_round = if agent.kind() == *FIGHTER_KIND_BAYONETTA {ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.lag_per_round")} else {5.0};
     let base_endlag= if agent.kind() == *FIGHTER_KIND_BAYONETTA {ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.base_endlag") -1.0} else {24.0}; //32 faf van, 25 here and 40 max
     let cancel_frame= if agent.kind() == *FIGHTER_KIND_BAYONETTA {58.0} else {58.0};
-    if !agent.is_status(statuses::bayonetta::SPECIAL_N_CANCEL) {
-        MotionModule::set_rate(boma, (cancel_frame - 1.0)/(base_endlag + lag_per_round*used_rounds));
-    } else if special_lag < cancel_frame_param {
+    if agent.is_status(statuses::bayonetta::SPECIAL_N_CANCEL) {
         MotionModule::set_rate(boma, (cancel_frame - 1.0)/base_endlag);
+    } else if special_lag < cancel_frame_param {
+        MotionModule::set_rate(boma, (cancel_frame - 1.0)/(base_endlag + lag_per_round*used_rounds));
     }//do not change motion rate on special lag cancel anim
 }
 
@@ -53,7 +53,7 @@ unsafe extern "C" fn game_specialnendf(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     FT_MOTION_RATE(agent, 1.0);
     let max_repeat = agent.get_param_int("param_special_n", "add_fire_max");
-    let remaining_repeats = agent.get_int(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_ADD_FIRE_COUNT);
+    let remaining_repeats = VarModule::get_int(agent.battle_object, vars::bayonetta::instance::SPECIAL_N_CANCEL_TYPE);
     let used_rounds = (max_repeat - remaining_repeats) as f32;
     let lag_per_round = if agent.kind() == *FIGHTER_KIND_BAYONETTA {ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.lag_per_round")} else {5.0};
     let base_endlag= if agent.kind() == *FIGHTER_KIND_BAYONETTA {ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.base_endlag") -1.0} else {24.0}; //32 faf van, 25 here and 40 max
