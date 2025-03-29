@@ -9,8 +9,8 @@
     </struct>
     <struct hash="param_special_n">
         <float hash="startup_frame">15.0</float>
-        <float hash="charge_frame_max">30.0</float>
-        <float hash="charge_frame_max_cancel">20.0</float>
+        <float hash="charge_frame_max">29.0</float>
+        <float hash="charge_frame_max_cancel">19.0</float>
         <float hash="base_endlag">25.0</float>
         <float hash="lag_per_round">5.0</float>
         <float hash="max_air_speed_x">0.4</float>

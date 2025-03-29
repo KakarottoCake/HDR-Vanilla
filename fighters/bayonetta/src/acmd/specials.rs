@@ -5,31 +5,23 @@ unsafe extern "C" fn game_specialnstarth(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    if agent.kind() == *FIGHTER_KIND_BAYONETTA {
-        let startup_frame = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.startup_frame") -1.0;
-        MotionModule::set_rate(boma, 30.0/startup_frame);//van (15f before charge)
-        if VarModule::is_flag(agent.battle_object, vars::common::instance::WAS_PREV_STATUS_CANCELABLE) {
-            VarModule::off_flag(agent.battle_object, vars::bayonetta::instance::WAS_CANCEL);//should maybe hopefully disable the flag if she didnt cancel into it w/o messing with end statuses
-        }
-    } else {
-        MotionModule::set_rate(boma, 30.0/15.0);//van (15f before charge)
-    } //kirby
+    let startup_frame = if agent.kind() == *FIGHTER_KIND_BAYONETTA {ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.startup_frame") -1.0} else {14.0};
+    MotionModule::set_rate(boma, 30.0/startup_frame);//van (15f before charge)
+    if VarModule::is_flag(agent.battle_object, vars::common::instance::WAS_PREV_STATUS_CANCELABLE) {
+        VarModule::off_flag(agent.battle_object, vars::bayonetta::instance::WAS_CANCEL);//should maybe hopefully disable the flag if she didnt cancel into it w/o messing with end statuses
+    }//if change update kirby manually
 }
 
 unsafe extern "C" fn game_specialnchargeh(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    if agent.kind() == *FIGHTER_KIND_BAYONETTA {
-        let charge_frame_max = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.charge_frame_max") -1.0;//? 
-        let charge_frame_max_cancel = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.charge_frame_max_cancel") -1.0;
-        if VarModule::is_flag(agent.battle_object, vars::bayonetta::instance::WAS_CANCEL) {
-            MotionModule::set_rate(boma, (15.0-1.0)/charge_frame_max_cancel);//van - 4, 35f total
-        } else {
-            MotionModule::set_rate(boma, (15.0-1.0)/charge_frame_max);//van + 4, 44f total (1 decimal off goes to 46f??)
-        }
+    let charge_frame_max = if agent.kind() == *FIGHTER_KIND_BAYONETTA {ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.charge_frame_max") -1.0} else {28.0} ;
+    let charge_frame_max_cancel = if agent.kind() == *FIGHTER_KIND_BAYONETTA {ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.charge_frame_max_cancel") -1.0} else {18.0};
+    if VarModule::is_flag(agent.battle_object, vars::bayonetta::instance::WAS_CANCEL) {
+        MotionModule::set_rate(boma, (15.0-1.0)/charge_frame_max_cancel);//van - 4, 35f total
     } else {
-        MotionModule::set_rate(boma, (15.0-1.0)/24.0); //van
+        MotionModule::set_rate(boma, (15.0-1.0)/charge_frame_max);//van + 4, 44f total (1 decimal off goes to 46f??)
     }
 }
 
@@ -37,53 +29,39 @@ unsafe extern "C" fn game_specialnendh(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    if agent.kind() == *FIGHTER_KIND_BAYONETTA {
-        let cancel_frame_param = agent.get_param_int("param_special_n", "cancel_frame") as f32;
-        let special_lag = agent.get_float(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLOAT_SPECIAL_LANDING_FRAME);
-        //check for accumulated special lag on a2g BA
-        let max_repeat = agent.get_param_int("param_special_n", "add_fire_max");
-        let remaining_repeats = agent.get_int(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_ADD_FIRE_COUNT);
-        let used_rounds = (max_repeat - remaining_repeats) as f32;
-        let lag_per_round = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.lag_per_round");
-        let base_endlag: f32 = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.base_endlag") -1.0; //32 faf van, 25 here and 40 max
-        //check for accumulated BA lag
-        if !agent.is_status(statuses::bayonetta::SPECIAL_N_CANCEL) {
-            MotionModule::set_rate(boma, (58.0 - 1.0)/(base_endlag + lag_per_round*used_rounds));
-        } else if special_lag < cancel_frame_param {
-            MotionModule::set_rate(boma, (58.0 - 1.0)/base_endlag);
-        }//do not change motion rate on special lag cancel anim
-    } else {
-        if !agent.is_status(statuses::bayonetta::SPECIAL_N_CANCEL) {
-            MotionModule::set_rate(boma, (58.0 - 1.0)/24.0);
-        } else {
-            let cancel_frame_param = agent.get_param_int("param_special_n", "cancel_frame") as f32;
-            MotionModule::set_rate(boma, (58.0 - 1.0)/cancel_frame_param);
-        }
-    }
+    FT_MOTION_RATE(agent, 1.0);
+    //check for accumulated special lag on a2g BA
+    let cancel_frame_param = agent.get_param_int("param_special_n", "cancel_frame") as f32;
+    let special_lag = agent.get_float(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLOAT_SPECIAL_LANDING_FRAME);
+    //check for accumulated BA lag
+    let max_repeat = agent.get_param_int("param_special_n", "add_fire_max");
+    let remaining_repeats = agent.get_int(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_ADD_FIRE_COUNT);
+    let used_rounds = (max_repeat - remaining_repeats) as f32;
+    let lag_per_round = if agent.kind() == *FIGHTER_KIND_BAYONETTA {ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.lag_per_round")} else {5.0};
+    let base_endlag= if agent.kind() == *FIGHTER_KIND_BAYONETTA {ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.base_endlag") -1.0} else {24.0}; //32 faf van, 25 here and 40 max
+    let cancel_frame= if agent.kind() == *FIGHTER_KIND_BAYONETTA {58.0} else {58.0};
+    if !agent.is_status(statuses::bayonetta::SPECIAL_N_CANCEL) {
+        MotionModule::set_rate(boma, (cancel_frame - 1.0)/(base_endlag + lag_per_round*used_rounds));
+    } else if special_lag < cancel_frame_param {
+        MotionModule::set_rate(boma, (cancel_frame - 1.0)/base_endlag);
+    }//do not change motion rate on special lag cancel anim
 }
 
 unsafe extern "C" fn game_specialnendf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    if agent.kind() == *FIGHTER_KIND_BAYONETTA {
-        let max_repeat = agent.get_param_int("param_special_n", "add_fire_max");
-        let remaining_repeats = agent.get_int(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_ADD_FIRE_COUNT);
-        let used_rounds = (max_repeat - remaining_repeats) as f32;
-        let lag_per_round = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.lag_per_round");
-        let base_endlag: f32 = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.base_endlag") -1.0; //32 faf van, 25 here and 40 max
-        if agent.is_status(statuses::bayonetta::SPECIAL_N_CANCEL) {
-            MotionModule::set_rate(boma, (48.0 - 1.0)/base_endlag);
-        } else {
-            MotionModule::set_rate(boma, (48.0 - 1.0)/(base_endlag + lag_per_round*used_rounds));
-        }
+    FT_MOTION_RATE(agent, 1.0);
+    let max_repeat = agent.get_param_int("param_special_n", "add_fire_max");
+    let remaining_repeats = agent.get_int(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_ADD_FIRE_COUNT);
+    let used_rounds = (max_repeat - remaining_repeats) as f32;
+    let lag_per_round = if agent.kind() == *FIGHTER_KIND_BAYONETTA {ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.lag_per_round")} else {5.0};
+    let base_endlag= if agent.kind() == *FIGHTER_KIND_BAYONETTA {ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_n.base_endlag") -1.0} else {24.0}; //32 faf van, 25 here and 40 max
+    let cancel_frame= if agent.kind() == *FIGHTER_KIND_BAYONETTA {48.0} else {48.0};
+    if agent.is_status(statuses::bayonetta::SPECIAL_N_CANCEL) {
+        MotionModule::set_rate(boma, (cancel_frame - 1.0)/base_endlag);
     } else {
-        if !agent.is_status(statuses::bayonetta::SPECIAL_N_CANCEL) {
-            MotionModule::set_rate(boma, (48.0 - 1.0)/23.0);
-        } else {
-            let cancel_frame_param = agent.get_param_int("param_special_n", "cancel_frame") as f32;
-            MotionModule::set_rate(boma, (48.0 - 1.0)/cancel_frame_param);
-        }
+        MotionModule::set_rate(boma, (cancel_frame - 1.0)/(base_endlag + lag_per_round*used_rounds));
     }
 }
 

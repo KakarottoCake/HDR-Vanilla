@@ -1311,6 +1311,28 @@ unsafe fn ken_hado_landcancel(boma: &mut BattleObjectModuleAccessor, frame: f32)
     }
 }
 
+unsafe fn bayo_air_special_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
+    if fighter.is_status(*FIGHTER_STATUS_KIND_ATTACK_AIR)
+    && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) //dont cancel on shield
+    && !fighter.is_in_hitlag() { //dont cancel during hitstop
+        let mut new_status = 0;
+        if fighter.is_cat_flag(Cat1::SpecialN) {
+            new_status = *FIGHTER_STATUS_KIND_SPECIAL_N;
+            VarModule::on_flag(fighter.battle_object, vars::bayonetta::instance::WAS_CANCEL);
+        } //else if fighter.is_cat_flag(Cat1::SpecialHi) {
+        //    if !VarModule::is_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_CANCEL) {
+        //        new_status = *FIGHTER_STATUS_KIND_SPECIAL_HI;
+        //    }
+        //} else if fighter.is_cat_flag(Cat1::SpecialS) {
+        //    new_status = *FIGHTER_STATUS_KIND_SPECIAL_S;
+        //}
+        //fighter.check_airdodge_cancel();
+        if new_status != 0 {
+            StatusModule::change_status_force(boma, new_status, true);
+        } //special cancel
+    }
+}
+
 
 pub unsafe fn kirby_copy_handler(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
     let inhaledstatus = StatusModule::status_kind(fighter.module_accessor);
@@ -1440,6 +1462,8 @@ pub unsafe fn kirby_copy_handler(fighter: &mut L2CFighterCommon, boma: &mut Batt
         0x4A => miigunner_nspecial_cancels(boma, status_kind, situation_kind, cat[1], cat[2]),
         // Byleth
         0x56 => master_nspecial_cancels(boma, status_kind, situation_kind),
+        // Bayonetta
+        0x40 => bayo_air_special_cancels(fighter, boma),
         _ => {}
     }
 }
