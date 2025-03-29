@@ -350,7 +350,7 @@ pub mod vars {
             // ints
             pub const RECOVERY_RESOURCE_COUNT: i32 = 0x0100;
             pub const ATTACK_AIR_F_COUNT: i32 = 0x0101;
-            pub const SPECIAL_N_CANCEL_TYPE: i32 = 0x0102;
+            pub const SPECIAL_N_CANCEL_TYPE: i32 = 0x0102; //used for both cancel and firing
             pub const SPECIAL_S_DABK_COUNT: i32 = 0x0103;
         }
         pub mod status {

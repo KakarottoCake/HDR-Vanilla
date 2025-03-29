@@ -200,6 +200,7 @@ unsafe extern "C" fn cancel_check(fighter: &mut L2CFighterCommon) -> L2CValue {
 unsafe extern "C" fn special_n_fire_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     let remaining_repeats = fighter.get_int(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_ADD_FIRE_COUNT);
     VarModule::set_int(fighter.battle_object, vars::bayonetta::instance::SPECIAL_N_CANCEL_TYPE, remaining_repeats);
+    //re-uses flag from cancel, resets on start status. can't enter firing and cancel on the same nspecial usage
     if !(&[*FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_N_CHARGE, *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_N_FIRE, *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_N_END].contains(&fighter.global_table[STATUS_KIND].get_i32())) {
         fighter.on_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SPECIAL_N_EFFECT_OFF);
     }
