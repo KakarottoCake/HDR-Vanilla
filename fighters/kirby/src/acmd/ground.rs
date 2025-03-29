@@ -138,6 +138,12 @@ unsafe extern "C" fn game_attackdash(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
         JostleModule::set_status(boma, true);
     }
+    frame(lua_state, 43.0);
+    if is_excute(agent) {
+        if agent.is_situation(*SITUATION_KIND_AIR) {
+            boma.change_status_req(*FIGHTER_STATUS_KIND_FALL, true);
+        }
+    }
     frame(lua_state, 65.0);
     FT_MOTION_RATE(agent, 1.0);
     

@@ -170,10 +170,10 @@ unsafe extern "C" fn effect_attacklw4(agent: &mut L2CAgentBase) {
     frame(lua_state, 12.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 3, 0, -1, 0, 0, 0, 1.2, true);
-        EFFECT_FOLLOW(agent, Hash40::new("samusd_throw_hi"), Hash40::new("top"), 0, 0, -9, 0, 0, 0, 0.7, true);
+        EFFECT_FOLLOW(agent, Hash40::new("samusd_throw_hi"), Hash40::new("top"), 0, 0, -9, 0, 0, 0, 0.8, true);
         LAST_EFFECT_SET_RATE(agent, 0.85);
         EFFECT_FOLLOW(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, -9, 0, 0, 0, 0.45, true);
-        EFFECT_FOLLOW(agent, Hash40::new("samusd_throw_hi"), Hash40::new("top"), 0, 0, 14, 0, 0, 0, 0.7, true);
+        EFFECT_FOLLOW(agent, Hash40::new("samusd_throw_hi"), Hash40::new("top"), 0, 0, 14, 0, 0, 0, 0.8, true);
         LAST_EFFECT_SET_RATE(agent, 0.85);
         EFFECT_FOLLOW(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, 14, 0, 0, 0, 0.45, true);
         EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("clavicler"), 2.0, 0.0, 0.5, 0, 0, 0, 2.0, true);

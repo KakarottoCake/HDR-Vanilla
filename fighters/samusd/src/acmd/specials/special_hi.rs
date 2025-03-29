@@ -52,9 +52,11 @@ unsafe extern "C" fn effect_specialhihold(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn sound_specialhihold(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
     frame(lua_state, 2.0);
     if is_excute(agent) {
-        PLAY_STATUS(agent, Hash40::new("se_samusd_special_h01"));
+        let sound = SoundModule::play_status_se(boma, Hash40::new("se_samusd_special_h01"), false, false, false);
+        SoundModule::set_se_pitch_ratio(boma, Hash40::new("se_samusd_special_h01"), 0.8);
     }
 }
 

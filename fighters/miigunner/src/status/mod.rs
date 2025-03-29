@@ -69,6 +69,13 @@ unsafe extern "C" fn should_use_special_s_callback(fighter: &mut L2CFighterCommo
     }
 }
 
+unsafe extern "C" fn should_use_special_lw_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_MIIGUNNER_GENERATE_ARTICLE_GROUNDBOMB) {
+        return false.into();
+    }
+    return true.into();
+}
+
 unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.is_situation(*SITUATION_KIND_GROUND) || fighter.is_situation(*SITUATION_KIND_CLIFF)
     || fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_REBIRTH, *FIGHTER_STATUS_KIND_DEAD, *FIGHTER_STATUS_KIND_LANDING]) {
@@ -82,6 +89,7 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     set_move_customizer(fighter, move_customizer);
     move_customizer(fighter);
     fighter.global_table[globals::USE_SPECIAL_S_CALLBACK].assign(&L2CValue::Ptr(should_use_special_s_callback as *const () as _));
+    fighter.global_table[globals::USE_SPECIAL_LW_CALLBACK].assign(&L2CValue::Ptr(should_use_special_lw_callback as *const () as _));
     fighter.global_table[globals::STATUS_CHANGE_CALLBACK].assign(&L2CValue::Ptr(change_status_callback as *const () as _));   
 }
 

@@ -17,30 +17,7 @@ unsafe fn final_cutter_landing_bugfix(fighter: &mut L2CFighterCommon) {
     }
 }
 
-unsafe fn horizontal_cutter(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_HI) {
-        if (((fighter.is_situation(*SITUATION_KIND_GROUND) && fighter.status_frame() == 15)
-            || (fighter.is_situation(*SITUATION_KIND_AIR) && fighter.status_frame() == 17))
-            && ControlModule::get_stick_x(fighter.module_accessor).abs() >= 0.85)
-            && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL_RAW) {
-            if ControlModule::get_stick_x(fighter.module_accessor) * PostureModule::lr(fighter.module_accessor) < 0.0 {
-                REVERSE_LR(fighter);
-            }
-            StatusModule::change_status_request_from_script(fighter.module_accessor, statuses::kirby::SPECIAL_HI_H, false);
-        }
-    }
-}
-
-unsafe fn dash_attack_jump_cancels(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_status(*FIGHTER_STATUS_KIND_ATTACK_DASH)
-    && boma.is_situation(*SITUATION_KIND_AIR) {
-        if MotionModule::frame(boma) >= 43.0 {
-            boma.change_status_req(*FIGHTER_STATUS_KIND_FALL, true);
-        }
-    }
-}
-
-unsafe fn hammer_swing_drift_landcancel(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
+unsafe fn hammer_swing_drift_landcancel(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK) {
         if fighter.is_situation(*SITUATION_KIND_GROUND) && fighter.is_prev_situation(*SITUATION_KIND_AIR) {
             AttackModule::clear_all(fighter.module_accessor);
@@ -50,7 +27,7 @@ unsafe fn hammer_swing_drift_landcancel(fighter: &mut smash::lua2cpp::L2CFighter
     }
     if fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK]) {
         if fighter.is_situation(*SITUATION_KIND_AIR) {
-            if KineticModule::get_kinetic_type(boma) != *FIGHTER_KINETIC_TYPE_FALL {
+            if KineticModule::get_kinetic_type(fighter.module_accessor) != *FIGHTER_KINETIC_TYPE_FALL {
                 KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
             }
         }
@@ -83,49 +60,16 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
             ])
         || (0x206..0x377).contains(&copystatus) {
             fighter.sub_air_check_dive();
-            if fighter.is_flag(*FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE) {
-                if [*FIGHTER_KINETIC_TYPE_MOTION_AIR, *FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE].contains(&KineticModule::get_kinetic_type(fighter.module_accessor)) {
-                    fighter.clear_lua_stack();
-                    lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION);
-                    let speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
-
-                    fighter.clear_lua_stack();
-                    lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
-                    app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
-
-                    fighter.clear_lua_stack();
-                    lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-                    app::sv_kinetic_energy::enable(fighter.lua_state_agent);
-
-                    KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_MOTION, fighter.module_accessor);
-                }
-            }
         }
     }
 }
 
-// Shrink sword
-unsafe fn cutter_size(boma: &mut BattleObjectModuleAccessor, status_kind: i32) {
-    if ArticleModule::is_exist(boma, *FIGHTER_KIRBY_GENERATE_ARTICLE_FINALCUTTER) {
-        let article = ArticleModule::get_article(boma, *FIGHTER_KIRBY_GENERATE_ARTICLE_FINALCUTTER);
-        let article_id = smash::app::lua_bind::Article::get_battle_object_id(article) as u32;
-        let article_boma = sv_battle_object::module_accessor(article_id);
-        let article_motion = MotionModule::motion_kind(article_boma);
-        if article_motion == hash40("special_hi2") {
-            PostureModule::set_scale(article_boma, 0.8, false);
-        }
-    }
-}
-
-pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
+pub unsafe fn moveset(fighter: &mut L2CFighterCommon) {
     final_cutter_landing_bugfix(fighter);
-    horizontal_cutter(fighter);
-    dash_attack_jump_cancels(boma);
-    hammer_swing_drift_landcancel(fighter, boma);
+    hammer_swing_drift_landcancel(fighter);
     fastfall_specials(fighter);
-    cutter_size(boma, status_kind);
 
-    copy::kirby_copy_handler(fighter, boma, id, cat, status_kind, situation_kind, motion_kind, stick_x, stick_y, facing, frame);
+    copy::kirby_copy_handler(fighter);
 }
 
 pub extern "C" fn kirby_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
@@ -137,7 +81,7 @@ pub extern "C" fn kirby_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCo
 
 pub unsafe fn kirby_frame(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
     if let Some(info) = FrameInfo::update_and_get(fighter) {
-        moveset(fighter, &mut *info.boma, info.id, info.cat, info.status_kind, info.situation_kind, info.motion_kind.hash, info.stick_x, info.stick_y, info.facing, info.frame);
+        moveset(fighter);
     }
 }
 

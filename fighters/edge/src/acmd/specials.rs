@@ -392,8 +392,8 @@ unsafe extern "C" fn game_speciallwhit(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE_RANGE(agent, 7.0, 20.0, 7.0);
     if is_excute(agent) {
         ArticleModule::generate_article(boma, *FIGHTER_EDGE_GENERATE_ARTICLE_FLASH, false, -1);
-        ATTACK(agent, 0, 0, Hash40::new("armr"), 4.0, 30, 20, 0, 75, 3.5, -2.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_ELBOW);
-        ATTACK(agent, 1, 0, Hash40::new("armr"), 4.0, 30, 20, 0, 75, 3.5, 5.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_ELBOW);
+        ATTACK(agent, 0, 0, Hash40::new("armr"), 4.0, 30, 20, 0, 75, 3.5, -2.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_ELBOW);
+        ATTACK(agent, 1, 0, Hash40::new("armr"), 4.0, 30, 20, 0, 75, 3.5, 5.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_ELBOW);
     }
     frame(lua_state, 15.0);
     if is_excute(agent) {
