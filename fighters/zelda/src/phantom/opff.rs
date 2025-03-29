@@ -69,7 +69,7 @@ pub unsafe extern "C" fn phantom_callback(weapon: &mut smash::lua2cpp::L2CFighte
             *FIGHTER_STATUS_KIND_SPECIAL_LW,
             *FIGHTER_ZELDA_STATUS_KIND_SPECIAL_LW_CHARGE,
             *FIGHTER_ZELDA_STATUS_KIND_SPECIAL_LW_END,
-            *FIGHTER_STATUS_KIND_THROWN
+            *FIGHTER_STATUS_KIND_THROW
         ])
             || WorkModule::is_flag(zelda_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_GANON_SPECIAL_S_DAMAGE_FALL_AIR)
             || WorkModule::is_flag(zelda_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_GANON_SPECIAL_S_DAMAGE_FALL_GROUND)
@@ -78,8 +78,7 @@ pub unsafe extern "C" fn phantom_callback(weapon: &mut smash::lua2cpp::L2CFighte
             return
         }
 
-        if ((AttackModule::is_infliction_status(zelda_boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) && !zelda_boma.is_status(*FIGHTER_STATUS_KIND_THROW))
-        || (VarModule::is_flag(zelda, vars::zelda::status::SPECIAL_LW_PHANTOM_CANCEL_FRAME) && zelda_boma.is_status(*FIGHTER_STATUS_KIND_THROW)))
+        if AttackModule::is_infliction_status(zelda_boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
         && !AttackModule::is_infliction_status(zelda_boma, *COLLISION_KIND_MASK_PARRY)
         && zelda_boma.is_cat_flag(Cat1::SpecialLw) {
             let sound = SoundModule::play_se(zelda_boma, Hash40::new("se_zelda_special_l09"), true, false, false, false, app::enSEType(0));
