@@ -267,8 +267,8 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("expression_attackairhi", expression_attackairhi, Priority::Low);
 
     agent.acmd("game_attackairlw", game_attackairlw, Priority::Low);
-    agent.acmd("game_landingairlw", acmd_stub, Priority::Low);
-    agent.acmd("effect_landingairlw", acmd_stub, Priority::Low);
-    agent.acmd("sound_landingairlw", acmd_stub, Priority::Low);
-    agent.acmd("expression_landingairlw", acmd_stub, Priority::Low);
+    // agent.acmd("game_landingairlw", acmd_stub, Priority::Low);
+    // agent.acmd("effect_landingairlw", acmd_stub, Priority::Low);
+    // agent.acmd("sound_landingairlw", acmd_stub, Priority::Low);
+    // agent.acmd("expression_landingairlw", acmd_stub, Priority::Low);
 }
