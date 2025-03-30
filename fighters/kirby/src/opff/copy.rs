@@ -1141,7 +1141,6 @@ unsafe extern "C" fn plant_meter(fighter: &mut L2CFighterCommon) {
 }
 
 
-unsafe fn bayo_air_special_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
 unsafe fn bayo_air_special_cancels(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_STATUS_KIND_ATTACK_AIR)
     && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) //dont cancel on shield
@@ -1150,14 +1149,14 @@ unsafe fn bayo_air_special_cancels(fighter: &mut L2CFighterCommon) {
         if fighter.is_cat_flag(Cat1::SpecialN) {
             new_status = *FIGHTER_STATUS_KIND_SPECIAL_N;
             VarModule::on_flag(fighter.battle_object, vars::bayonetta::instance::WAS_CANCEL);
-        } //else if fighter.is_cat_flag(Cat1::SpecialHi) {
-        //    if !VarModule::is_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_CANCEL) {
-        //        new_status = *FIGHTER_STATUS_KIND_SPECIAL_HI;
-        //    }
-        //} else if fighter.is_cat_flag(Cat1::SpecialS) {
-        //    new_status = *FIGHTER_STATUS_KIND_SPECIAL_S;
-        //}
-        //fighter.check_airdodge_cancel();
+        } else if fighter.is_cat_flag(Cat1::SpecialHi) {
+            if !VarModule::is_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_CANCEL) {
+                new_status = *FIGHTER_STATUS_KIND_SPECIAL_HI;
+            }
+        } else if fighter.is_cat_flag(Cat1::SpecialS) {
+            new_status = *FIGHTER_STATUS_KIND_SPECIAL_S;
+        }
+        fighter.check_airdodge_cancel();
         if new_status != 0 {
             StatusModule::change_status_force(fighter.module_accessor, new_status, true);
         } //special cancel
