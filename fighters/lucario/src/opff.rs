@@ -43,6 +43,8 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     magic_series(fighter, boma, id, cat, status_kind, situation_kind, motion_kind, stick_x, stick_y, facing, frame);
     hit_cancel_timer(fighter, boma);
     training_mode_max_meter(fighter, boma, status_kind);
+    boma.check_hitfall();
+    boma.check_airdash();
 }
 
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
@@ -289,11 +291,27 @@ unsafe fn magic_series(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMo
     || !VarModule::is_flag(fighter.battle_object, vars::lucario::status::HIT_CANCEL) {
         return;
     }
+
+    // Jab cancels
+    if [
+        *FIGHTER_STATUS_KIND_ATTACK_DASH,
+        *FIGHTER_STATUS_KIND_CATCH_ATTACK,
+        *FIGHTER_STATUS_KIND_CLIFF_ATTACK,
+        *FIGHTER_STATUS_KIND_SLIP_STAND_ATTACK,
+    ].contains(&status_kind) {
+        if boma.is_cat_flag(Cat1::AttackN) {
+            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK,false);
+        }
+    }
+
     
     // Tilt cancels
     if [
         *FIGHTER_STATUS_KIND_ATTACK, 
         *FIGHTER_STATUS_KIND_ATTACK_DASH,
+        *FIGHTER_STATUS_KIND_CATCH_ATTACK,
+        *FIGHTER_STATUS_KIND_CLIFF_ATTACK,
+        *FIGHTER_STATUS_KIND_SLIP_STAND_ATTACK,
     ].contains(&status_kind) {
         if boma.is_cat_flag(Cat1::AttackS3) {
             StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_S3,false);
@@ -310,9 +328,12 @@ unsafe fn magic_series(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMo
     if [
         *FIGHTER_STATUS_KIND_ATTACK, 
         *FIGHTER_STATUS_KIND_ATTACK_DASH, 
-        // *FIGHTER_STATUS_KIND_ATTACK_S3,
-        // *FIGHTER_STATUS_KIND_ATTACK_HI3,
-        // *FIGHTER_STATUS_KIND_ATTACK_LW3,
+        *FIGHTER_STATUS_KIND_CATCH_ATTACK,
+        *FIGHTER_STATUS_KIND_CLIFF_ATTACK,
+        *FIGHTER_STATUS_KIND_SLIP_STAND_ATTACK,
+        *FIGHTER_STATUS_KIND_ATTACK_S3,
+        *FIGHTER_STATUS_KIND_ATTACK_HI3,
+        *FIGHTER_STATUS_KIND_ATTACK_LW3,
     ].contains(&status_kind) {
         if boma.is_cat_flag(Cat1::AttackS4) {
             StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_S4_START,true);
@@ -329,6 +350,9 @@ unsafe fn magic_series(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMo
     if [
         *FIGHTER_STATUS_KIND_ATTACK, 
         *FIGHTER_STATUS_KIND_ATTACK_DASH, 
+        *FIGHTER_STATUS_KIND_CATCH_ATTACK,
+        *FIGHTER_STATUS_KIND_CLIFF_ATTACK,
+        *FIGHTER_STATUS_KIND_SLIP_STAND_ATTACK,
         *FIGHTER_STATUS_KIND_ATTACK_S3,
         *FIGHTER_STATUS_KIND_ATTACK_HI3,
         *FIGHTER_STATUS_KIND_ATTACK_LW3,
@@ -349,6 +373,22 @@ unsafe fn magic_series(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMo
         if boma.is_cat_flag(Cat1::SpecialLw) {
             StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_LW,false);
         }
+    }
+
+    // Jump cancels
+    if [
+        *FIGHTER_STATUS_KIND_ATTACK_HI3,
+        *FIGHTER_STATUS_KIND_ATTACK_HI4,
+        *FIGHTER_STATUS_KIND_ATTACK_AIR
+    ].contains(&status_kind) {
+        boma.check_jump_cancel(true, false);
+    }
+
+    // Airdodge cancels
+    if [
+        *FIGHTER_STATUS_KIND_ATTACK_AIR
+    ].contains(&status_kind) {
+        boma.check_airdodge_cancel();
     }
 }
 
