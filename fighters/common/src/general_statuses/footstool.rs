@@ -84,6 +84,12 @@ pub unsafe fn sub_transition_group_check_air_tread_jump(fighter: &mut L2CFighter
                         fighter.change_status(FIGHTER_STATUS_KIND_TREAD_JUMP.into(), true.into());
                         return true.into();
                     }
+                    else {
+                        if WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_NO_TREAD_FRAME) == 0 {
+                            let footstool_lockout = ParamModule::get_int(fighter.battle_object, ParamType::Common, "footstool_lockout_frame");
+                            WorkModule::set_int(fighter.module_accessor, footstool_lockout, *FIGHTER_INSTANCE_WORK_ID_INT_NO_TREAD_FRAME);
+                        }
+                    }
                 }
             }
             if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TREAD_JUMP_NO_TRIGGER) {
