@@ -25,6 +25,7 @@ unsafe extern "C" fn special_hi_main(fighter: &mut L2CFighterCommon) -> L2CValue
 
 unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     if !fighter.sub_transition_group_check_air_cliff().get_bool() {
+        fighter.sub_air_check_dive();
         // let enable_uniq = WorkModule::get_int(fighter.module_accessor, *FIGHTER_PEACH_STATUS_SPECIAL_HI_WORK_INT_ENABLE_UNIQ);
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_PEACH_STATUS_SPECIAL_HI_FLAG_MOVE_TRANS) {
             fighter.set_situation(SITUATION_KIND_AIR.into());
