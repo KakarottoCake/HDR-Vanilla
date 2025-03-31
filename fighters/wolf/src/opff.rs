@@ -93,6 +93,12 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     firefox_startup_ledgegrab(fighter);
     awoo(fighter);
     fastfall_specials(fighter);
+    if fighter.is_status(*FIGHTER_STATUS_KIND_JUMP_SQUAT)
+    && fighter.status_frame() >= 3
+    && fighter.is_button_on(Buttons::Special)
+    && fighter.left_stick_y() < -0.3 {
+        fighter.change_status(FIGHTER_STATUS_KIND_SPECIAL_LW.into(), true.into());
+    }
 }
 
 pub extern "C" fn wolf_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
