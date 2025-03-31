@@ -374,11 +374,6 @@ unsafe extern "C" fn effect_landingairlw(agent: &mut L2CAgentBase) {
         EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
         LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, -3, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
         LAST_EFFECT_SET_RATE(agent, 0.8);
-        EFFECT(agent, Hash40::new("sys_merikomi"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
-    }
-    frame(lua_state, 15.0);
-    if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("sys_merikomi"),false,true);
     }
 }
 
