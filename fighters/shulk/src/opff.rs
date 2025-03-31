@@ -84,7 +84,7 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     up_special_proper_landing(fighter);
     fastfall_specials(fighter);
     arts_cancelling(fighter, status_kind);
-    sideb_freefall(fighter);
+    //sideb_freefall(fighter);
 }
 
 pub extern "C" fn shulk_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {

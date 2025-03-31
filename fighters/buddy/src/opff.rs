@@ -512,7 +512,7 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     up_special_freefall(fighter);
     up_special_startup_ledgegrab(fighter);
     fastfall_specials(fighter);
-    sideb_freefall(fighter);
+    //sideb_freefall(fighter);
 
     if boma.is_status_one_of(&[
         *FIGHTER_STATUS_KIND_ENTRY,

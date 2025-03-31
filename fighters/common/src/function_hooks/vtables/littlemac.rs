@@ -6,7 +6,7 @@ pub unsafe extern "C" fn hook_ko_meter_gain(vtable: u64, battle_object: *mut Bat
     let boma = (&mut *(battle_object)).boma();
     let opponent_boma = &mut *(sv_battle_object::module_accessor(collisionLog.opponent_battle_object_id));
     //if HitModule::get_status(opponent_boma, collisionLog.receiver_part_id as i32, 0) != 0 { return call_original!(vtable, battle_object, collisionLog, 0.0); }
-    let mut meter_gain = 10.0;
+    let mut meter_gain = 5.0;
 
     // this effectively stubs the logic handling critical zoom unless at full meter
     if boma.is_status(*FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_N2) {
@@ -29,7 +29,7 @@ pub unsafe extern "C" fn hook_ko_meter_gain(vtable: u64, battle_object: *mut Bat
         *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_U,
         *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_D,
         *FIGHTER_STATUS_KIND_DAMAGE_FALL]) {
-        meter_gain = 20.0;
+        meter_gain = 10.0;
     }
     if opponent_boma.is_status_one_of(&[
         *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD,
@@ -43,7 +43,7 @@ pub unsafe extern "C" fn hook_ko_meter_gain(vtable: u64, battle_object: *mut Bat
             SlowModule::set(boma, 0, 2, 10, false, 0x50000000);
             SlowModule::set(opponent_boma, 0, 2, 10, false, 0x50000000);
         }
-        meter_gain = 60.0;
+        meter_gain = 30.0;
     }
     if opponent_boma.is_status(*FIGHTER_STATUS_KIND_APPEAL) {
         if FighterUtil::get_team_color(boma) != FighterUtil::get_team_color(opponent_boma) {
@@ -84,7 +84,7 @@ pub unsafe extern "C" fn hook_ko_meter_gain(vtable: u64, battle_object: *mut Bat
         if boma.is_motion(Hash40::new("attack_13"))
         && VarModule::is_flag(boma.object(), vars::littlemac::instance::ATTACK_13_DREAMLAND_EXPRESS) {
             EffectModule::req_on_joint(boma, Hash40::new("sys_hit_magic"), Hash40::new("handl"), &Vector3f::zero(), &Vector3f::zero(), 0.4, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
-            meter_gain += 20.0;
+            meter_gain += 10.0;
         }
     }
     if boma.is_status(*FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_S_JUMP) {

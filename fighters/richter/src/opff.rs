@@ -82,7 +82,7 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
     whip_angling(fighter, boma, frame, stick_y);
     fastfall_specials(fighter);
-    sideb_freefall(fighter);
+    //sideb_freefall(fighter);
     dtilt_bounce(fighter, boma);
 }
 

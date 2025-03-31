@@ -89,7 +89,7 @@ pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut
     //sonic_lightspeed_dash(boma, status_kind, motion_kind, situation_kind, cat[0], id);
     up_special_freefall(fighter);
     fastfall_specials(fighter);
-    sideb_freefall(fighter);
+    //sideb_freefall(fighter);
     
 }
 

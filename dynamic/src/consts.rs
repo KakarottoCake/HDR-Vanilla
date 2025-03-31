@@ -656,6 +656,7 @@ pub mod vars {
         pub mod instance {
             // flags
             pub const SPECIAL_LW_DISABLE_STALL: i32 = 0x0100;
+            pub const HANDS_OFF_MY: i32 = 0x0101;
         }
         pub mod status {
             // flags

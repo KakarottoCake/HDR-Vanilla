@@ -83,7 +83,7 @@ unsafe fn up_special_proper_landing(fighter: &mut L2CFighterCommon) {
 
 unsafe fn dreamland_express(fighter: &mut L2CFighterCommon) {
     if fighter.is_motion(Hash40::new("attack_12"))
-    && (17.0..19.0).contains(&fighter.motion_frame())
+    && (15.0..23.0).contains(&fighter.motion_frame())
     && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
         VarModule::on_flag(fighter.battle_object, vars::littlemac::instance::ATTACK_13_DREAMLAND_EXPRESS);
     }
@@ -149,7 +149,7 @@ pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut
     side_special_whiff_ledgegrab(fighter);
     fastfall_specials(fighter);
     training_mode_meter(fighter, boma);
-    sideb_freefall(fighter);
+    //sideb_freefall(fighter);
 }
 
 pub extern "C" fn littlemac_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
