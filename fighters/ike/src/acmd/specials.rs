@@ -29,6 +29,7 @@ unsafe extern "C" fn game_specialsstart(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     FT_MOTION_RATE(agent, 0.5);
     frame(lua_state, 18.0);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_IKE_STATUS_SPECIAL_S_FLAG_CHARGE);
     }
@@ -40,22 +41,26 @@ unsafe extern "C" fn effect_specialshold(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("ike_iaigiri_hold"), Hash40::new("sword"), 0, 0, 0, 0, 0, 0, 1, true);
         EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("sword"), 0, 7, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true);
-        FOOT_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), -5, 0, 0, 0, 0, 0, 1, 15, 0, 4, 0, 0, 0, false);
-        EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("sword"), 0, 10, 0, 0, 0, 0, 0.5, 3, 10, 3, 0, 0, 0, true);
     }
-    wait(lua_state, 3.0);
-    if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("sword"), 0, 10, 0, 0, 0, 0, 0.75, 3, 10, 3, 0, 0, 0, true);
+    loop {
+        wait(lua_state, 2.0);
+        if is_excute(agent) {
+            FOOT_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), -5, 0, 0, 0, 0, 0, 1, 15, 0, 4, 0, 0, 0, false);
+            EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("sword"), 0, 10, 0, 0, 0, 0, 0.5, 3, 10, 3, 0, 0, 0, true);
+        }
+        wait(lua_state, 3.0);
+        if is_excute(agent) {
+            EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("sword"), 0, 10, 0, 0, 0, 0, 0.75, 3, 10, 3, 0, 0, 0, true);
+        }
+        wait(lua_state, 2.0);
+        if is_excute(agent) {
+            EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("sword"), 0, 10, 0, 0, 0, 0, 0.5, 3, 10, 3, 0, 0, 0, true);
+        }
+        wait(lua_state, 3.0);
+        if is_excute(agent) {
+            EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("sword"), 0, 10, 0, 0, 0, 0, 0.75, 3, 10, 3, 0, 0, 0, true);
+        }
     }
-    wait(lua_state, 2.0);
-    if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("sword"), 0, 10, 0, 0, 0, 0, 0.5, 3, 10, 3, 0, 0, 0, true);
-    }
-    wait(lua_state, 3.0);
-    if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("sword"), 0, 10, 0, 0, 0, 0, 0.75, 3, 10, 3, 0, 0, 0, true);
-    }
-    wait(lua_state, 2.0);
 }
 
 unsafe extern "C" fn game_specialsdash(agent: &mut L2CAgentBase) {
@@ -99,12 +104,14 @@ unsafe extern "C" fn effect_specialsdash(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_specialsdash(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    let rng = app::sv_math::rand(smash::hash40("fighter"), 2);
+    let sound = if rng == 0 { "vc_ike_special_s01" } else { "vc_ike_attack05" };
     if is_excute(agent) {
         if VarModule::is_flag(boma.object(), vars::ike::status::SPECIAL_S_INSTAKILL){
             PLAY_SE(agent, Hash40::new("vc_ike_appeal02"));
         }
         else{
-            PLAY_SE(agent, Hash40::new("vc_ike_special_s01"));
+            PLAY_SE(agent, Hash40::new(sound));
         }
     }
     wait(lua_state, 2.0);
@@ -504,10 +511,12 @@ pub fn install(agent: &mut Agent) {;
     agent.acmd("game_specialsstart", game_specialsstart, Priority::Low);
     agent.acmd("game_specialairsstart", game_specialsstart, Priority::Low);
     agent.acmd("effect_specialshold", effect_specialshold, Priority::Low);
+    agent.acmd("effect_specialairshold", effect_specialshold, Priority::Low);
     agent.acmd("game_specialsdash", game_specialsdash, Priority::Low);
     agent.acmd("effect_specialsdash", effect_specialsdash, Priority::Low);
     agent.acmd("sound_specialsdash", sound_specialsdash, Priority::Low);
     agent.acmd("game_specialairsdash", game_specialairsdash, Priority::Low);
+    agent.acmd("sound_specialairsdash", sound_specialsdash, Priority::Low);
     agent.acmd("game_specialsattack", game_specialsattack, Priority::Low);
     agent.acmd("effect_specialsattack", effect_specialsattack, Priority::Low);
     agent.acmd("game_specialairsattack", game_specialairsattack, Priority::Low);
