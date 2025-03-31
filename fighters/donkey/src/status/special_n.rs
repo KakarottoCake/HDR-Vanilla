@@ -95,8 +95,8 @@ unsafe extern "C" fn special_n_loop_main_loop(fighter: &mut L2CFighterCommon) ->
         return 1.into();
     }
     if fighter.is_situation(*SITUATION_KIND_GROUND) {
-        if fighter.is_pad_flag(PadFlag::GuardTrigger) {
-            fighter.set_int(*FIGHTER_DONKEY_SPECIAL_N_CANCEL_TYPE_GROUND_GUARD, *FIGHTER_DONKEY_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
+        if fighter.sub_check_command_guard().get_bool() || fighter.is_pad_flag(PadFlag::GuardTrigger) {
+            fighter.set_int(*FIGHTER_DONKEY_SPECIAL_N_CANCEL_TYPE_NONE, *FIGHTER_DONKEY_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
             fighter.change_status(FIGHTER_DONKEY_STATUS_KIND_SPECIAL_N_CANCEL.into(), false.into());
             return 1.into();
         }
@@ -112,17 +112,15 @@ unsafe extern "C" fn special_n_loop_main_loop(fighter: &mut L2CFighterCommon) ->
             }
         }
         else {
-            if !fighter.is_flag(*FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_ESCAPE_AIR) {
-                if fighter.is_pad_flag(PadFlag::GuardTrigger) {
-                    fighter.set_int(*FIGHTER_DONKEY_SPECIAL_N_CANCEL_TYPE_AIR_ESCAPE_AIR, *FIGHTER_DONKEY_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
-                    fighter.change_status(FIGHTER_DONKEY_STATUS_KIND_SPECIAL_N_CANCEL.into(), true.into());
-                    return 1.into();
-                }
-                if fighter.sub_check_jump_in_charging().get_bool() {
-                    fighter.set_int(*FIGHTER_DONKEY_SPECIAL_N_CANCEL_TYPE_AIR_JUMP, *FIGHTER_DONKEY_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
-                    fighter.change_status(FIGHTER_DONKEY_STATUS_KIND_SPECIAL_N_JUMP_CANCEL.into(), true.into());
-                    return 1.into();
-                }
+            if fighter.sub_check_command_guard().get_bool() || fighter.is_pad_flag(PadFlag::GuardTrigger) {
+                fighter.set_int(*FIGHTER_DONKEY_SPECIAL_N_CANCEL_TYPE_AIR_ESCAPE_AIR, *FIGHTER_DONKEY_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
+                fighter.change_status(FIGHTER_DONKEY_STATUS_KIND_SPECIAL_N_CANCEL.into(), true.into());
+                return 1.into();
+            }
+            if fighter.sub_check_jump_in_charging().get_bool() {
+                fighter.set_int(*FIGHTER_DONKEY_SPECIAL_N_CANCEL_TYPE_AIR_JUMP, *FIGHTER_DONKEY_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
+                fighter.change_status(FIGHTER_DONKEY_STATUS_KIND_SPECIAL_N_JUMP_CANCEL.into(), true.into());
+                return 1.into();
             }
         }
     }

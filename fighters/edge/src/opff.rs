@@ -17,18 +17,6 @@ unsafe fn sword_length(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
-unsafe fn nspecial_cancels(boma: &mut BattleObjectModuleAccessor, status_kind: i32, situation_kind: i32, cat2: i32) {
-    //PM-like neutral-b canceling
-    if status_kind == *FIGHTER_EDGE_STATUS_KIND_SPECIAL_N_CANCEL {
-        if situation_kind == *SITUATION_KIND_AIR {
-            if WorkModule::get_int(boma, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS) == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
-                WorkModule::set_int(boma, *STATUS_KIND_NONE, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS);
-                ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_AIR_ESCAPE);
-            }
-        }
-    }
-}
-
 unsafe fn refresh_flare(boma: &mut BattleObjectModuleAccessor) {
     if VarModule::get_int(boma.object(), vars::edge::instance::FIRE_ID) != -1
     && ArticleModule::get_active_num(boma, *FIGHTER_EDGE_GENERATE_ARTICLE_FIRE) < 1 {
@@ -62,7 +50,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
     sword_length(boma);
-    nspecial_cancels(boma, status_kind, situation_kind, cat[1]);
     refresh_flare(boma);
     up_special_startup_ledgegrab(fighter);
     fastfall_specials(fighter);

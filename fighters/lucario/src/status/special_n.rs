@@ -220,9 +220,8 @@ unsafe extern "C" fn special_n_max_end(fighter: &mut L2CFighterCommon) -> L2CVal
 }
 
 unsafe extern "C" fn special_n_check_cancel(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let buffer = ControlModule::get_command_life_count_max(fighter.module_accessor) as usize;
     if fighter.is_situation(*SITUATION_KIND_AIR) {
-        if InputModule::get_trigger_count(fighter.battle_object, Buttons::Guard) < buffer {
+        if fighter.sub_check_command_guard().get_bool() || fighter.is_pad_flag(PadFlag::GuardTrigger) {
             fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
             return true.into();
         }
@@ -257,13 +256,8 @@ unsafe extern "C" fn special_n_check_cancel(fighter: &mut L2CFighterCommon) -> L
         //     }
         //     return true.into();
         // }
-        if fighter.sub_check_command_guard().get_bool()
-        || InputModule::get_trigger_count(fighter.battle_object, Buttons::Guard) < buffer {
-            if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON) {
-                fighter.set_int(*FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
-            } else {
-                fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
-            }
+        if fighter.sub_check_command_guard().get_bool() || fighter.is_pad_flag(PadFlag::GuardTrigger) {
+            fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
             return true.into();
         }
         if fighter.is_cat_flag(Cat1::AttackHi4) {
