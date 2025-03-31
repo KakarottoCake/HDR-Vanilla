@@ -1155,6 +1155,8 @@ unsafe fn bayo_air_special_cancels(fighter: &mut L2CFighterCommon) {
             }
         } else if fighter.is_cat_flag(Cat1::SpecialS) {
             new_status = *FIGHTER_STATUS_KIND_SPECIAL_S;
+        } else if fighter.is_cat_flag(Cat1::SpecialLw) {
+            new_status = *FIGHTER_STATUS_KIND_SPECIAL_LW;
         }
         fighter.check_airdodge_cancel();
         if new_status != 0 {
