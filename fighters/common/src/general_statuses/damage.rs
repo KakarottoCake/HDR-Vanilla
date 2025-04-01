@@ -347,7 +347,7 @@ unsafe extern "C" fn fighterstatusdamage_init_damage_speed_up_by_speed(
 
     // calculate speed_up_mul
     let min_mul = 1.3;
-    let max_mul = 3.0;
+    let max_mul = 2.25;
     let early_factor = 2.0; // lower means the curve scales up earlier
     let late_factor = 8.0; // lower means the curve tapers off for longer
     let power = (speed_end - speed_start).powf(early_factor) / (speed - speed_start).powf(late_factor);
