@@ -37,6 +37,11 @@ unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2C
 
         if KineticModule::get_kinetic_type(fighter.module_accessor) == *FIGHTER_KINETIC_TYPE_FALL {
             fighter.sub_air_check_dive();
+
+            if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
+                fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
+                return 1.into();
+            }
         }
 
         if MotionModule::is_end(fighter.module_accessor) {
