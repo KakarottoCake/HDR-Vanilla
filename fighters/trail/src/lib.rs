@@ -45,7 +45,7 @@ use smashline::*;
 #[macro_use] extern crate smash_script;
 
 // how many frames sora has to wait between spells
-pub const MAGIC_COOLDOWN_FRAME: i32 = 35;
+pub const MAGIC_COOLDOWN_FRAME: i32 = 1;
 
 pub fn install() {
     let agent = &mut Agent::new("trail");

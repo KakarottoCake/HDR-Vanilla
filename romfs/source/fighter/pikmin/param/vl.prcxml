@@ -34,19 +34,19 @@
   </list>
   <list hash="param_pikmin_particular">
     <struct index="0">
-      <int hash="hp">8</int>
+      <int hash="hp">14</int>
     </struct>
     <struct index="1">
-      <int hash="hp">11</int>
+      <int hash="hp">18</int>
     </struct>
     <struct index="2">
-      <int hash="hp">8</int>
+      <int hash="hp">14</int>
     </struct>
     <struct index="3">
-      <int hash="hp">5</int>
+      <int hash="hp">10</int>
     </struct>
     <struct index="4">
-      <int hash="hp">14</int>
+      <int hash="hp">22</int>
     </struct>
     <hash40 index="5">dummy</hash40>
     <hash40 index="6">dummy</hash40>

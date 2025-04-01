@@ -66,6 +66,7 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     // dtaunt_counter(boma, motion_kind, frame);
     wizards_foot_jump_refresh(boma);
     fastfall_specials(fighter);
+    fighter.check_magicseries();
 }
 
 pub extern "C" fn ganon_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {

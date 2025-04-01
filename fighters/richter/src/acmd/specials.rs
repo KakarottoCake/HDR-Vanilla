@@ -43,7 +43,12 @@ unsafe extern "C" fn sound_specialn(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 14.0);
     if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_richter_special_l01"));
+        if app::sv_math::rand(hash40("fighter"), 2) == 0 {
+            PLAY_SEQUENCE(agent, Hash40::new("seq_richter_rnd_special_s"));
+        }
+        else {
+            PLAY_SE(agent, Hash40::new("vc_richter_special_l01"));
+        }
         PLAY_SEQUENCE(agent, Hash40::new("seq_richter_rnd_special_s"));
     }
 }

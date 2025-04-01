@@ -39,7 +39,7 @@
 	    We simply pretend that Sora is already on the second Sonic Blade.
 	  </!-->
       <float hash="end_brake_x">0.23</float>
-      <int hash="attack_num">4</int>
+      <int hash="attack_num">3</int>
       <float hash="attack_speed_x">4.5</float>
       <float hash="0x15530d2d10">0.82</float>
     </struct>

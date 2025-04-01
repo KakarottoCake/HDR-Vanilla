@@ -31,6 +31,11 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
             }
         }
     }
+    if fighter.is_status(*FIGHTER_STATUS_KIND_ATTACK_LW3)
+    && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
+    && !fighter.is_in_hitlag() {
+        fighter.check_jump_cancel(false, false);
+    }
 }
 
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon) {

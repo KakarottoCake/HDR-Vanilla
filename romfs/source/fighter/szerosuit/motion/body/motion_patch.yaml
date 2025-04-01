@@ -131,8 +131,8 @@ attack_air_hi:
 attack_s4_hold:
 special_lw_start:
   extra:
-    intangible_start_frame: 0
-    intangible_end_frame: 0
+    intangible_start_frame: 1
+    intangible_end_frame: 20
 air_catch_landing:
   extra:
     cancel_frame: 34
@@ -150,8 +150,8 @@ special_air_lw_kick:
     cancel_frame: 35
 special_air_lw_start:
   extra:
-    intangible_start_frame: 0
-    intangible_end_frame: 0
+    intangible_start_frame: 1
+    intangible_end_frame: 20
 special_lw_kick_landing:
   extra:
     cancel_frame: 25

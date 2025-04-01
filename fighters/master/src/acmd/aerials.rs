@@ -193,8 +193,8 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
         WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
     frame(lua_state, 10.0);
-    FT_MOTION_RATE_RANGE(agent, 10.0, 24.0, 10.0);
-    ArticleModule::set_rate(boma, *FIGHTER_MASTER_GENERATE_ARTICLE_SWORD, (24.0-10.0)/10.0);
+    FT_MOTION_RATE_RANGE(agent, 10.0, 24.0, 18.0);
+    ArticleModule::set_rate(boma, *FIGHTER_MASTER_GENERATE_ARTICLE_SWORD, (24.0-10.0)/18.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 85, 100, 45, 0, 4.5, 0.0, 21.5, 0.0, Some(0.0), Some(18.5), Some(0.0), 0.75, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         ATTACK(agent, 4, 0, Hash40::new("top"), 2.0, 366, 100, 45, 0, 4.5, 0.0, 21.5, 0.0, Some(0.0), Some(18.5), Some(0.0), 0.75, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
@@ -212,7 +212,7 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
         AttackModule::clear(boma, 4, false);
     }
     frame(lua_state, 24.0);
-    FT_MOTION_RATE_RANGE(agent, 24.0, 48.0, 28.0);
+    FT_MOTION_RATE_RANGE(agent, 24.0, 48.0, 20.0);
     ArticleModule::set_rate(boma, *FIGHTER_MASTER_GENERATE_ARTICLE_SWORD, 1.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);

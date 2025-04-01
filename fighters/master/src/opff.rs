@@ -19,6 +19,14 @@ unsafe fn up_special_whiff_ledgegrab(fighter: &mut L2CFighterCommon) {
     }
 }
 
+unsafe fn aymr_slowdown(boma: &mut BattleObjectModuleAccessor) {
+    if boma.is_status(*FIGHTER_MASTER_STATUS_KIND_SPECIAL_LW_HIT) && VarModule::get_int(boma.object(), vars::master::status::SPECIAL_LW_HOLD) == 1 {
+        if AttackModule::is_infliction(boma, *COLLISION_KIND_MASK_HIT) && MotionModule::frame(boma) < 10.0 {
+            SlowModule::set_whole(boma, 7, 100);
+        }
+    }
+}
+
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
@@ -63,6 +71,7 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     specialhi_reset(fighter);
     up_special_whiff_ledgegrab(fighter);
+    aymr_slowdown(boma);
     fastfall_specials(fighter);
 }
 

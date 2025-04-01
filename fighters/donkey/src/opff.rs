@@ -37,6 +37,9 @@ unsafe fn barrel_pull(boma: &mut BattleObjectModuleAccessor) {
             }
         }
     }
+    if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) {
+        boma.check_dash_cancel();
+    }
 }
 
 // DK Headbutt aerial stall

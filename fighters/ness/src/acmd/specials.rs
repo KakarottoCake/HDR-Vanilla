@@ -6,23 +6,27 @@ unsafe extern "C" fn sound_specials(agent: &mut L2CAgentBase) {
 
     let rng = app::sv_math::rand(smash::hash40("fighter"), 2);
 
-    if rng == 0 {
+    //if rng == 0 {
         frame(lua_state, 5.0);
         if is_excute(agent) {
             PLAY_SE_REMAIN(agent, Hash40::new("vc_ness_002"));
+            let rand = app::sv_math::rand(smash::hash40("fighter"), 20);
+            if (2..9).contains(&rand) {
+                SoundModule::set_se_pitch_ratio(boma, Hash40::new("vc_ness_002"), (rand + 1) as f32 * 0.2);
+            }
             PLAY_SE(agent, Hash40::new("se_ness_special_s03"));
         }
-    }
-    else {
-        frame(lua_state, 5.0);
-        if is_excute(agent) {
-            PLAY_SE(agent, Hash40::new("se_ness_special_s03"));
-        }
-        frame(lua_state, 20.0);
-        if is_excute(agent) {
-            PLAY_SE_REMAIN(agent, Hash40::new("vc_ness_attack04"));
-        }
-    }
+    // }
+    // else {
+    //     frame(lua_state, 5.0);
+    //     if is_excute(agent) {
+    //         PLAY_SE(agent, Hash40::new("se_ness_special_s03"));
+    //     }
+    //     frame(lua_state, 20.0);
+    //     if is_excute(agent) {
+    //         PLAY_SE_REMAIN(agent, Hash40::new("vc_ness_attack04"));
+    //     }
+    // }
 }
 
 unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
@@ -60,18 +64,22 @@ unsafe extern "C" fn sound_specialairs(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     let rng = app::sv_math::rand(smash::hash40("fighter"), 2);
 
-    if rng == 0 {
+    //if rng == 0 {
         frame(lua_state, 5.0);
         if is_excute(agent) {
             PLAY_SE_REMAIN(agent, Hash40::new("vc_ness_002"));
+            let rand = app::sv_math::rand(smash::hash40("fighter"), 10);
+            if (2..9).contains(&rand) {
+                SoundModule::set_se_pitch_ratio(boma, Hash40::new("vc_ness_002"), (rand + 1) as f32 * 0.2);
+            }
         }
-    }
-    else {
-        frame(lua_state, 20.0);
-        if is_excute(agent) {
-            PLAY_SE_REMAIN(agent, Hash40::new("vc_ness_attack04"));
-        }
-    }
+    // }
+    // else {
+    //     frame(lua_state, 20.0);
+    //     if is_excute(agent) {
+    //         PLAY_SE_REMAIN(agent, Hash40::new("vc_ness_attack04"));
+    //     }
+    // }
 }
 
 unsafe extern "C" fn game_specialhistart(agent: &mut L2CAgentBase) {
@@ -168,8 +176,8 @@ unsafe extern "C" fn game_speciallwhold(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     for _ in 0..999 {
         if is_excute(agent) {
-            ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 55, 96, 0, 32, 2.5, 0.0, 6.5, 2.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_ENERGY);
-            ATTACK(agent, 1, 0, Hash40::new("top"), 5.0, 55, 96, 0, 32, 8.9, 0.0, 6.7, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_ENERGY);
+            ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 55, 96, 0, 32, 3.0, 0.0, 6.5, 2.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_ENERGY);
+            ATTACK(agent, 1, 0, Hash40::new("top"), 5.0, 55, 96, 0, 32, 10.68, 0.0, 6.7, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_ENERGY);
             ATK_SET_SHIELD_SETOFF_MUL(agent, 0, 0.36);
             ATK_SET_SHIELD_SETOFF_MUL(agent, 1, 0.36);
         }
@@ -186,8 +194,8 @@ unsafe extern "C" fn game_specialairlwhold(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     for _ in 0..999 {
         if is_excute(agent) {
-            ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 55, 96, 0, 32, 2.5, 0.0, 6.5, 2.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_ENERGY);
-            ATTACK(agent, 1, 0, Hash40::new("top"), 5.0, 55, 96, 0, 32, 8.9, 0.0, 6.7, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_ENERGY);
+            ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 55, 96, 0, 32, 3.0, 0.0, 6.5, 2.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_ENERGY);
+            ATTACK(agent, 1, 0, Hash40::new("top"), 5.0, 55, 96, 0, 32, 10.68, 0.0, 6.7, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_ENERGY);
             ATK_SET_SHIELD_SETOFF_MUL(agent, 0, 0.36);
             ATK_SET_SHIELD_SETOFF_MUL(agent, 1, 0.36);
         }   

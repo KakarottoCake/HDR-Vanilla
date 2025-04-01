@@ -10,6 +10,9 @@ unsafe fn flare_blitz_edge_cancel(fighter: &mut L2CFighterCommon) {
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         }
     }
+    if fighter.is_status_one_of(&[*FIGHTER_PLIZARDON_STATUS_KIND_SPECIAL_S_RUSH, *FIGHTER_PLIZARDON_STATUS_KIND_SPECIAL_S_END]) {
+        fighter.check_jump_cancel(false, false);
+    }
 }
 
 unsafe fn special_lw_track(boma: &mut BattleObjectModuleAccessor) {
@@ -43,6 +46,16 @@ unsafe fn side_special_startup_ledgegrab(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_S) {
         // allows ledgegrab during sideB startup
         fighter.sub_transition_group_check_air_cliff();
+    }
+}
+
+unsafe fn sideb_whiff_freefall(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_S)
+    && fighter.is_situation(*SITUATION_KIND_AIR)
+    && CancelModule::is_enable_cancel(fighter.module_accessor) {
+        fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL_SPECIAL, true);
+        let cancel_module = *(fighter.module_accessor as *mut BattleObjectModuleAccessor as *mut u64).add(0x128 / 8) as *const u64;
+        *(((cancel_module as u64) + 0x1c) as *mut bool) = false;  // CancelModule::is_enable_cancel = false
     }
 }
 
@@ -80,6 +93,7 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     special_lw_track(boma);
     side_special_startup_ledgegrab(fighter);
     fastfall_specials(fighter);
+    sideb_whiff_freefall(fighter);
 }
 
 pub extern "C" fn plizardon_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
