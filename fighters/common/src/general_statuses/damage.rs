@@ -327,9 +327,9 @@ unsafe extern "C" fn fighterstatusdamage_init_damage_speed_up_by_speed(
 ) {
     let angle = angle.get_f32();
     let angle_threshold = 29.358;
-    let speed_start_horizontal = 4.5; // the start of scaling at angles below the angle_threshold
-    let speed_start_vertical = 5.25; // the start of scaling at completely vertical angles
-    let speed_end = 8.0; // the end of scaling
+    let speed_start_horizontal = 4.0; // the start of scaling at angles below the angle_threshold
+    let speed_start_vertical = 5.0; // the start of scaling at completely vertical angles
+    let speed_end = 7.5; // the end of scaling
 
     // calculate true speed_start using angle
     let angle_factor = get_angle_factor(angle_threshold, angle); // the actual angle factor
@@ -346,9 +346,11 @@ unsafe extern "C" fn fighterstatusdamage_init_damage_speed_up_by_speed(
     }
 
     // calculate speed_up_mul
-    let min_mul = 1.5;
+    let min_mul = 1.3;
     let max_mul = 3.0;
-    let power = 1.0;
+    let early_factor = 2.0; // lower means the curve scales up earlier
+    let late_factor = 8.0; // lower means the curve tapers off for longer
+    let power = (speed_end - speed_start).powf(early_factor) / (speed - speed_start).powf(late_factor);
     let ratio = ((speed - speed_start) / (speed_end - speed_start));
     let speed_up_mul = util::nlerp(min_mul, max_mul, power, ratio);
 
