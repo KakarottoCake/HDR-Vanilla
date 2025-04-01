@@ -150,7 +150,7 @@ unsafe fn zippy_zap_jump_cancel(boma: &mut BattleObjectModuleAccessor, status_ki
 // Full Meter Gain/Drain via shield during up/down taunt
 unsafe fn charge_training_taunt(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, status_kind: i32) {
     let mut agent_base = fighter.fighter_base.agent_base;
-    if is_training_mode() {
+    if true {
         if status_kind == *FIGHTER_STATUS_KIND_APPEAL {
             if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) {
                 if VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED) == 0 { 

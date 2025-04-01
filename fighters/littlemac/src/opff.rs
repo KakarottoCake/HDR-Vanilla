@@ -126,8 +126,7 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 }
 
 unsafe fn training_mode_meter(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
-    if app::smashball::is_training_mode()
-    && boma.is_status(*FIGHTER_STATUS_KIND_APPEAL)
+    if boma.is_status(*FIGHTER_STATUS_KIND_APPEAL)
     && boma.is_button_trigger(Buttons::Guard) {
         let meter = WorkModule::get_float(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
         let meter_inc = (meter + 40.0).clamp(0.0, 100.0);

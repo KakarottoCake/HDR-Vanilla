@@ -100,8 +100,7 @@ pub unsafe fn check_burnout(agent: &mut L2CAgentBase) {
 }
 
 unsafe fn training_mode_max_meter(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, status_kind: i32) {
-    if app::smashball::is_training_mode()
-    && boma.is_status(*FIGHTER_STATUS_KIND_APPEAL)
+    if boma.is_status(*FIGHTER_STATUS_KIND_APPEAL)
     && boma.is_button_on(Buttons::Guard)
     {
         let meter_max = (MeterModule::meter_cap(fighter.object()) as f32 * MeterModule::meter_per_level(fighter.object()));
