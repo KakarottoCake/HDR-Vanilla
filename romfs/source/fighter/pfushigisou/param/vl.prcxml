@@ -34,4 +34,13 @@
       <float hash="rewind_frame">18</float>
     </struct>
   </list>
+  <list hash="param_special_hi">
+    <struct index="0">
+      <float hash="angle_max_z_f">359</float>
+      <float hash="angle_max_z_b">1</float>
+    </struct>
+    <hash40 index="1">dummy</hash40>
+    <hash40 index="2">dummy</hash40>
+    <hash40 index="3">dummy</hash40>
+  </list>
 </struct>

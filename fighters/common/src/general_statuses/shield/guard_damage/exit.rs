@@ -10,6 +10,7 @@ unsafe fn sub_ftStatusUniqProcessGuardDamage_exitStatus_common(fighter: &mut L2C
 
     if !fighter.is_flag(*FIGHTER_STATUS_GUARD_ON_WORK_FLAG_JUST_SHIELD) {
         fighter.clear_commands(CatHdr::Parry);
+        ControlModule::clear_command(fighter.module_accessor, false);
         
         ControlModule::set_command_life_extend(fighter.module_accessor, 0);
 

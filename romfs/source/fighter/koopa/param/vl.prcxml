@@ -6,7 +6,7 @@
     </struct>
   </list>
   <struct hash="param_private">
-    <float hash="reaction_value">0</float>
+    <float hash="reaction_value">40</float>
   </struct>
   <list hash="param_special_n">
     <struct index="0">

@@ -140,6 +140,15 @@ unsafe extern "C" fn sound_escapen(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = sv_system::battle_object_module_accessor(lua_state);
+    frame(lua_state, 49.0);
+    if is_excute(agent) {
+        VarModule::on_flag(agent.battle_object, vars::falco::instance::HANDS_OFF_MY);
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_cliffescape", acmd_stub, Priority::Low);
 
@@ -159,4 +168,7 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_escapeairslide", game_escapeairslide, Priority::Low);
     agent.acmd("sound_escapeairslide", sound_escapeairslide, Priority::Low);
     agent.acmd("sound_escapen", sound_escapen, Priority::Low);
+
+    agent.acmd("game_appeallwl", game_appeallw, Priority::Low);
+    agent.acmd("game_appeallwr", game_appeallw, Priority::Low);
 }

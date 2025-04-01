@@ -10,6 +10,7 @@ unsafe extern "C" fn game_attackcommand1(agent: &mut L2CAgentBase) {
         dmg = 1.05;
     }
     if is_excute(agent) {
+        boma.on_flag(*FIGHTER_RYU_STATUS_ATTACK_FLAG_HIT_CANCEL);
         boma.on_flag(*FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
         VarModule::set_int(agent.battle_object, vars::shotos::status::HIT_CANCEL_TIMER, 12);
     }
@@ -53,6 +54,7 @@ unsafe extern "C" fn game_attackcommand2(agent: &mut L2CAgentBase) {
         dmg = 1.05;
     }
     if is_excute(agent) {
+        boma.on_flag(*FIGHTER_RYU_STATUS_ATTACK_FLAG_HIT_CANCEL);
         boma.on_flag(*FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
         VarModule::set_int(agent.battle_object, vars::shotos::status::HIT_CANCEL_TIMER, 12);
     }
@@ -86,6 +88,7 @@ unsafe extern "C" fn game_attackcommand3(agent: &mut L2CAgentBase) {
         dmg = 1.05;
     }
     if is_excute(agent) {
+        boma.on_flag(*FIGHTER_RYU_STATUS_ATTACK_FLAG_HIT_CANCEL);
         boma.on_flag(*FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
         VarModule::set_int(agent.battle_object, vars::shotos::status::HIT_CANCEL_TIMER, 12);
     }
@@ -121,6 +124,7 @@ unsafe extern "C" fn game_attackcommand4(agent: &mut L2CAgentBase) {
         dmg = 1.05;
     }
     if is_excute(agent) {
+        boma.on_flag(*FIGHTER_RYU_STATUS_ATTACK_FLAG_HIT_CANCEL);
         boma.on_flag(*FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
         VarModule::set_int(agent.battle_object, vars::shotos::status::HIT_CANCEL_TIMER, 12);
     }

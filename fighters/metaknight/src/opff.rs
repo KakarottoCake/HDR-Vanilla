@@ -113,6 +113,7 @@ pub extern "C" fn metaknight_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFigh
     unsafe {
         common::opff::fighter_common_opff(fighter);
 		metaknight_frame(fighter);
+        meta_quick::run(fighter);
     }
 }
 

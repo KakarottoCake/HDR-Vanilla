@@ -104,6 +104,23 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 17.0);
+    if is_excute(agent) {
+        if sv_math::rand(hash40("fighter"), 10) == 0 {
+            ItemModule::have_item(boma, app::ItemKind(*ITEM_KIND_PITFALL), 0, 0, false, false);
+        }
+        else {
+            WorkModule::on_flag(boma, *FIGHTER_LINK_STATUS_WORK_ID_FLAG_BOMB_GENERATE_LINKBOMB);
+        }
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialairhi", game_specialairhi, Priority::Low);
+
+    agent.acmd("game_speciallw", game_speciallw, Priority::Low);
+    agent.acmd("game_specialairlw", game_speciallw, Priority::Low);
 }

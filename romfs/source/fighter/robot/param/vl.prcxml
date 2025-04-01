@@ -24,7 +24,7 @@
   </list>
   <list hash="param_special_hi">
     <struct index="0">
-      <float hash="energy_max_frame">200</float>
+      <float hash="energy_max_frame">500</float>
       <float hash="recovery_energy">0.75</float>
     </struct>
     <hash40 index="1">dummy</hash40>

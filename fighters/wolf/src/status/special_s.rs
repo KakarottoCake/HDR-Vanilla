@@ -320,7 +320,7 @@ unsafe extern "C" fn special_s_end_main_loop(fighter: &mut L2CFighterCommon) -> 
             } else if VarModule::is_flag(fighter.object(), SPECIAL_S_RESERVE_FALL) {
                 fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
             } else {
-                fighter.change_status(FIGHTER_STATUS_KIND_FALL_SPECIAL.into(), false.into());
+                fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
             }
             return 0.into();
         } else if StatusModule::is_situation_changed(fighter.module_accessor) {

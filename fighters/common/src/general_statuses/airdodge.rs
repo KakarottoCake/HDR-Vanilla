@@ -206,18 +206,18 @@ unsafe extern "C" fn sub_escape_air_uniq(fighter: &mut L2CFighterCommon, arg: L2
             if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE) {
                 fighter.exec_escape_air_slide();
             }
-            // else {
-            //     // Allows fastfall during nairdodge
-            //     if KineticModule::get_kinetic_type(fighter.module_accessor) == *FIGHTER_KINETIC_TYPE_FALL
-            //     && !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE)
-            //     && KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) < 0.0
-            //     && fighter.global_table[STICK_Y].get_f32() <= WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("dive_cont_value"))
-            //     && fighter.global_table[FLICK_Y].get_i32() < WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("dive_flick_frame_value")) {
-            //         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE);
-            //         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_REQUEST_DIVE_EFFECT);
-            //         fighter.check_mach_stamp();
-            //     }
-            // }
+            else {
+                // Allows fastfall during nairdodge
+                if KineticModule::get_kinetic_type(fighter.module_accessor) == *FIGHTER_KINETIC_TYPE_FALL
+                && !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE)
+                && KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) < 0.0
+                && fighter.global_table[STICK_Y].get_f32() <= WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("dive_cont_value"))
+                && fighter.global_table[FLICK_Y].get_i32() < WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("dive_flick_frame_value")) {
+                    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE);
+                    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_REQUEST_DIVE_EFFECT);
+                    fighter.check_mach_stamp();
+                }
+            }
             if 0 < WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_ADD_XLU_START_FRAME) {
                 if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_FLAG_HIT_XLU) {
                     let stale_motion_rate = WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_WORK_FLOAT_MOTION_RATE_PENALTY);
@@ -278,8 +278,8 @@ unsafe extern "C" fn sub_escape_air_common_main(fighter: &mut L2CFighterCommon) 
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return L2CValue::Bool(true);
     }
-    if !CancelModule::is_enable_cancel(fighter.module_accessor)
-        || (!fighter.sub_wait_ground_check_common(L2CValue::Bool(false)).get_bool() && !fighter.sub_air_check_fall_common().get_bool()){
+    if /* !CancelModule::is_enable_cancel(fighter.module_accessor)
+        ||*/ (!fighter.sub_wait_ground_check_common(L2CValue::Bool(false)).get_bool() && !fighter.sub_air_check_fall_common().get_bool()){
         if fighter.sub_escape_air_common_strans_main().get_bool() {
             return L2CValue::Bool(true);
         }
@@ -313,7 +313,7 @@ unsafe extern "C" fn sub_escape_air_common_main(fighter: &mut L2CFighterCommon) 
                 && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KOOPAJR_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_INTERRUPT) {
                     *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_HI_FALL
                 } else {
-                    *FIGHTER_STATUS_KIND_FALL
+                    *FIGHTER_STATUS_KIND_FALL_SPECIAL
                 };
                 fighter.change_status(
                     L2CValue::I32(status),
@@ -330,7 +330,7 @@ unsafe extern "C" fn sub_escape_air_common_main(fighter: &mut L2CFighterCommon) 
                 && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KOOPAJR_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_INTERRUPT) {
                     *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_HI_FALL
                 } else {
-                    *FIGHTER_STATUS_KIND_FALL
+                    *FIGHTER_STATUS_KIND_FALL_SPECIAL
                 };
                 fighter.change_status(
                     L2CValue::I32(status),
@@ -546,14 +546,14 @@ unsafe fn exec_escape_air_slide(fighter: &mut L2CFighterCommon) {
     }
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_KINE_FALL) {
         // Allows fastfall during directional airdodge
-        // if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE)
-        // && KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) < 0.0
-        // && fighter.global_table[STICK_Y].get_f32() <= WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("dive_cont_value"))
-        // && fighter.global_table[FLICK_Y].get_i32() < WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("dive_flick_frame_value")) {
-        //     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE);
-        //     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_REQUEST_DIVE_EFFECT);
-        //     fighter.check_mach_stamp();
-        // }
+        if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE)
+        && KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) < 0.0
+        && fighter.global_table[STICK_Y].get_f32() <= WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("dive_cont_value"))
+        && fighter.global_table[FLICK_Y].get_i32() < WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("dive_flick_frame_value")) {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_REQUEST_DIVE_EFFECT);
+            fighter.check_mach_stamp();
+        }
         return;
     }
     step = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_INT_SLIDE_STEP);

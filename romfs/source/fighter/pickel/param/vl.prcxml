@@ -11,9 +11,9 @@
   <struct hash="param_private">
     <int hash="material_normal_max">64</int>
     <int hash="material_red_stone_max">15</int>
-    <int hash="start_material_grade_1_num">8</int>
-    <int hash="start_material_wood_num">4</int>
-    <int hash="start_material_iron_num">0</int>
+    <int hash="start_material_grade_1_num">0</int>
+    <int hash="start_material_wood_num">0</int>
+    <int hash="start_material_iron_num">12</int>
     <int hash="start_material_red_stone_num">3</int>
     <int hash="table_entry_frame">99999</int>
     <float hash="move_rate_speed_max_walk">1</float>
@@ -21,7 +21,7 @@
   </struct>
   <list hash="param_stuff">
       <struct index="0">
-        <float hash="meltobject_scale">1.0</float>
+        <float hash="meltobject_scale">1.5</float>
       </struct>
   </list>
   <list hash="param_forge">
@@ -58,7 +58,7 @@
     <struct index="0">
       <float hash="start_speed_x_mul_ground">0.9</float>
       <float hash="speed_y_on_jump">1.2</float>
-      <float hash="reaction_threshold_to_damage">0</float>
+      <float hash="reaction_threshold_to_damage">120</float>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>
@@ -67,17 +67,17 @@
   <list hash="param_trolley">
     <struct index="0">
       <float hash="speed_limit">2.0</float>
-      <float hash="reaction_threshold_to_damage_motion_s">0</float>
-      <float hash="reaction_threshold_to_damage_motion_l">0</float>
+      <float hash="reaction_threshold_to_damage_motion_s">60</float>
+      <float hash="reaction_threshold_to_damage_motion_l">120</float>
       <float hash="accel_on_powered_rail">0.12</float>
-      <float hash="speed_limit_on_powered_rail">2.5</float>
+      <float hash="speed_limit_on_powered_rail">4.0</float>
     </struct>
     <struct index="1">
       <float hash="speed_limit">2.0</float>
-      <float hash="reaction_threshold_to_damage_motion_s">0</float>
-      <float hash="reaction_threshold_to_damage_motion_l">0</float>
+      <float hash="reaction_threshold_to_damage_motion_s">60</float>
+      <float hash="reaction_threshold_to_damage_motion_l">120</float>
       <float hash="accel_on_powered_rail">0.12</float>
-      <float hash="speed_limit_on_powered_rail">2.5</float>
+      <float hash="speed_limit_on_powered_rail">4.0</float>
     </struct>
     <hash40 index="2">dummy</hash40>
     <hash40 index="3">dummy</hash40>
@@ -95,16 +95,16 @@
     <hash40 index="3">dummy</hash40>
   </list>
   <struct hash="param_pickelobject">
-    <float hash="hp_grade_1">7</float>
-    <float hash="hp_wood">10</float>
-    <float hash="hp_stone">13</float>
-    <float hash="hp_iron">16</float>
+    <float hash="hp_grade_1">120</float>
+    <float hash="hp_wood">240</float>
+    <float hash="hp_stone">480</float>
+    <float hash="hp_iron">640</float>
     <float hash="fighter_landing_damage_mul">7.0</float>
     <int hash="fighter_landing_damage_mul_frame">24</int>
   </struct>
   <list hash="param_table">
     <struct index="0">
-      <float hash="hp">15</float>
+      <float hash="hp">32</float>
     </struct>
   </list>
   <struct hash="param_craft_data_table">

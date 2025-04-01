@@ -109,6 +109,76 @@ unsafe extern "C" fn game_escapeairslide(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn sound_metaquicksummon(fighter: &mut L2CAgentBase) {
+    if is_excute(fighter) {
+        // plays the sword slash effect
+        PLAY_SE(fighter, Hash40::new("se_metaknight_final01"));
+
+        if VarModule::is_flag(fighter.battle_object, vars::metaknight::instance::META_QUICK_PLAY_VC) {
+            PLAY_SE(fighter, Hash40::new("vc_metaknight_final02"));
+        }
+    }
+}
+
+unsafe extern "C" fn effect_metaquicksummon(fighter: &mut L2CAgentBase) {
+    if is_excute(fighter) {
+        EffectModule::remove_common(fighter.module_accessor, Hash40::new("charge_max"));
+        VarModule::set_int(fighter.battle_object, vars::metaknight::instance::META_QUICK_CHARGE_EFFECT_HANDLE, -1);
+        lua_args! {
+            fighter,
+            Hash40::new("sys_bg_black"),
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+        };
+        smash::app::sv_animcmd::EFFECT_GLOBAL_BACK_GROUND(fighter.lua_state_agent);
+        let handle = EffectModule::req_follow(
+            fighter.boma(),
+            Hash40::new("sys_aura_light"),
+            Hash40::new("head"),
+            &Vector3f::zero(),
+            &Vector3f::zero(),
+            6.0,
+            true,
+            0,
+            0,
+            0,
+            0,
+            0,
+            true,
+            true
+        ) as u32;
+
+        let handle2 = EffectModule::req_follow(
+            fighter.boma(),
+            Hash40::new("sys_aura_light"),
+            Hash40::new("head"),
+            &Vector3f::zero(),
+            &Vector3f::zero(),
+            6.0,
+            true,
+            0,
+            0,
+            0,
+            0,
+            0,
+            true,
+            true
+        ) as u32;
+
+        EffectModule::set_alpha(fighter.module_accessor, handle, 1.0);
+        EffectModule::set_rgb(fighter.module_accessor, handle, 101.0 / 255.0, 32.0 / 255.0, 153.0 / 255.0);
+        EffectModule::set_alpha(fighter.module_accessor, handle2, 1.0);
+        EffectModule::set_rgb(fighter.module_accessor, handle2, 101.0 / 255.0, 32.0 / 255.0, 153.0 / 255.0);
+        VarModule::set_int(fighter.battle_object, vars::metaknight::instance::META_QUICK_EFFECT_HANDLE, handle as i32);
+        VarModule::set_int(fighter.battle_object, vars::metaknight::instance::META_QUICK_EFFECT_HANDLE2, handle2 as i32);
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_cliffescape", acmd_stub, Priority::Low);
 
@@ -124,4 +194,7 @@ pub fn install(agent: &mut Agent) {
     
     agent.acmd("game_escapeair", game_escapeair, Priority::Low);
     agent.acmd("game_escapeairslide", game_escapeairslide, Priority::Low);
+
+    agent.acmd("effect_metaquicksummon", effect_metaquicksummon, Priority::Low);
+    agent.acmd("sound_metaquicksummon", sound_metaquicksummon, Priority::Low);
 }

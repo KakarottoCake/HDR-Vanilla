@@ -51,7 +51,7 @@ unsafe extern "C" fn game_attack12(agent: &mut L2CAgentBase) {
         WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_100);
         WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
     }
-    frame(lua_state, 20.0);
+    frame(lua_state, 24.0);
     if is_excute(agent) {
         VarModule::on_flag(agent.battle_object, vars::littlemac::instance::ATTACK_13_LATE_DLE_INPUT);
     }
@@ -70,13 +70,13 @@ unsafe extern "C" fn game_attack13(agent: &mut L2CAgentBase) {
     }
     if is_excute(agent) {
         let is_dle = VarModule::is_flag(agent.battle_object, vars::littlemac::instance::ATTACK_13_DREAMLAND_EXPRESS);
-        let damage = if is_dle { 7.0 } else { 5.0 };
-        let angle = if is_dle { 70 } else { 62 };
-        let bkb = if is_dle { 62 } else { 68 };
-        let kbg = if is_dle { 40 } else { 99 };
-        let hitlag = if is_dle { 1.5 } else { 1.0 };
-        let sdi = if is_dle { 0.6 } else { 1.0 };
-        let collision_attr = if is_dle { Hash40::new("collision_attr_elec") } else { Hash40::new("collision_attr_normal") };
+        let damage = if is_dle { 14.5 } else { 5.0 };
+        let angle = if is_dle { 86 } else { 62 };
+        let bkb = if is_dle { 80 } else { 68 };
+        let kbg = if is_dle { 18 } else { 99 };
+        let hitlag = if is_dle { 0.31 } else { 1.0 };
+        let sdi = if is_dle { 0.4 } else { 1.0 };
+        let collision_attr = if is_dle { Hash40::new("collision_attr_paralyze") } else { Hash40::new("collision_attr_normal") };
         ATTACK(agent, 0, 0, Hash40::new("arml"), damage, angle, kbg, 0, bkb, 3.2, 2.0, 0.0, 0.0, None, None, None, hitlag, sdi, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, collision_attr, *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("shoulderl"), damage, angle, kbg, 0, bkb, 3.0, 0.0, 0.0, 0.0, None, None, None, hitlag, sdi, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, collision_attr, *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 2, 0, Hash40::new("bust"), damage, angle, kbg, 0, bkb, 3.0, 0.0, 0.0, 0.0, None, None, None, hitlag, sdi, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, collision_attr, *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);

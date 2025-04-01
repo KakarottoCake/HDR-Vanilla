@@ -21,7 +21,7 @@ unsafe fn up_special_reverse(boma: &mut BattleObjectModuleAccessor, fighter_kind
 
 // Lengthen swords
 unsafe fn sword_length(boma: &mut BattleObjectModuleAccessor) {
-    let long_sword_scale = Vector3f{x: 1.015, y: 1.115, z: 1.045};
+    let long_sword_scale = Vector3f{x: 1.421, y: 1.561, z: 1.463};
     ModelModule::set_joint_scale(boma, smash::phx::Hash40::new("havel"), &long_sword_scale);
     ModelModule::set_joint_scale(boma, smash::phx::Hash40::new("haver"), &long_sword_scale);
 }

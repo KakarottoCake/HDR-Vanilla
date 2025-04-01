@@ -29,7 +29,7 @@
       <float hash="count">92</float>
       <float hash="size_min">0.6</float>
       <float hash="size_max">1.5</float>
-      <int hash="bang_time">13</int>
+      <int hash="bang_time">3</int>
       <float hash="angle">90</float>
     </struct>
     <hash40 index="1">dummy</hash40>
@@ -38,11 +38,11 @@
   </list>
     <list hash="param_pkfire">
     <struct index="0">
-      <int hash="life">24</int>
+      <int hash="life">40</int>
       <float hash="angle_ground">-4.4</float>
       <float hash="angle_air">-40</float>
-      <int hash="pillar_life">55</int>
-      <float hash="pillar_scale_min">0.65</float>
+      <int hash="pillar_life">300</int>
+      <float hash="pillar_scale_min">0.95</float>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>
@@ -90,8 +90,8 @@
       <float hash="accel_y">0.02</float>
       <float hash="brake_x_on_air">0.015</float>
       <float hash="start_ymul">0.1</float>
-      <float hash="phy_magnet_size">9.9</float>
-      <float hash="phy_magnet_effect_scale">0.54</float>
+      <float hash="phy_magnet_size">11.88</float>
+      <float hash="phy_magnet_effect_scale">0.648</float>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>

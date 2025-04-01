@@ -27,6 +27,9 @@ unsafe fn wall_bounce(boma: &mut BattleObjectModuleAccessor, status_kind: i32) {
                 VarModule::on_flag(boma.object(), vars::peach::instance::SPECIAL_S_WALL_BOUNCE);
                 StatusModule::change_status_request_from_script(boma, *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_HIT_END, true);
         }
+        if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
+            StatusModule::change_status_request_from_script(boma, *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_HIT_END, true);
+        }
     }
     else if status_kind == *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_HIT_END {
         if VarModule::is_flag(boma.object(), vars::peach::instance::SPECIAL_S_WALL_BOUNCE) {
