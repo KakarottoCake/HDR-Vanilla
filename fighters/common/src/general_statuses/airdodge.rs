@@ -278,63 +278,65 @@ unsafe extern "C" fn sub_escape_air_common_main(fighter: &mut L2CFighterCommon) 
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return L2CValue::Bool(true);
     }
-
-    if fighter.sub_escape_air_common_strans_main().get_bool() {
-        return L2CValue::Bool(true);
-    }
-    if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING) {
-        let status = if fighter.global_table[FIGHTER_KIND] == FIGHTER_KIND_KOOPAJR
-        && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KOOPAJR_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_INTERRUPT) {
-            *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_HI_LANDING
-        } else {
-            *FIGHTER_STATUS_KIND_LANDING
-        };
-        fighter.change_status(
-            L2CValue::I32(status),
-            L2CValue::Bool(false)
-        );
-        return L2CValue::Bool(true);
-    }
-    if MotionModule::end_frame(fighter.module_accessor) < cancel_frame {
-        // If our airdodge animation is shorter than its FAF
-        if curr_frame < (cancel_frame as i32) {
-            // Stop the animation on its second-to-last frame
-            // Continue looping the status until our FAF is reached
-            if MotionModule::prev_frame(fighter.module_accessor) < (MotionModule::end_frame(fighter.module_accessor) - 1.0)
-            && MotionModule::frame(fighter.module_accessor) >= (MotionModule::end_frame(fighter.module_accessor) - 1.0)
-            {
-                MotionModule::set_rate(fighter.module_accessor, 0.0);
-            }
-            return L2CValue::Bool(false);
-        } else {
-            // Transition to fall on FAF
-            let status = if fighter.global_table[FIGHTER_KIND] == FIGHTER_KIND_KOOPAJR
-            && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KOOPAJR_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_INTERRUPT) {
-                *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_HI_FALL
-            } else {
-                *FIGHTER_STATUS_KIND_FALL_SPECIAL
-            };
-            fighter.change_status(
-                L2CValue::I32(status),
-                L2CValue::Bool(false)
-            );
+    if /* !CancelModule::is_enable_cancel(fighter.module_accessor)
+        ||*/ (!fighter.sub_wait_ground_check_common(L2CValue::Bool(false)).get_bool() && !fighter.sub_air_check_fall_common().get_bool()){
+        if fighter.sub_escape_air_common_strans_main().get_bool() {
+            return L2CValue::Bool(true);
         }
-    }
-    else {
-        // Vanilla logic
-        if !MotionModule::is_end(fighter.module_accessor) {
-            return L2CValue::Bool(false);
-        } else {
+        if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING) {
             let status = if fighter.global_table[FIGHTER_KIND] == FIGHTER_KIND_KOOPAJR
             && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KOOPAJR_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_INTERRUPT) {
-                *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_HI_FALL
+                *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_HI_LANDING
             } else {
-                *FIGHTER_STATUS_KIND_FALL_SPECIAL
+                *FIGHTER_STATUS_KIND_LANDING
             };
             fighter.change_status(
                 L2CValue::I32(status),
                 L2CValue::Bool(false)
             );
+            return L2CValue::Bool(true);
+        }
+        if MotionModule::end_frame(fighter.module_accessor) < cancel_frame {
+            // If our airdodge animation is shorter than its FAF
+            if curr_frame < (cancel_frame as i32) {
+                // Stop the animation on its second-to-last frame
+                // Continue looping the status until our FAF is reached
+                if MotionModule::prev_frame(fighter.module_accessor) < (MotionModule::end_frame(fighter.module_accessor) - 1.0)
+                && MotionModule::frame(fighter.module_accessor) >= (MotionModule::end_frame(fighter.module_accessor) - 1.0)
+                {
+                    MotionModule::set_rate(fighter.module_accessor, 0.0);
+                }
+                return L2CValue::Bool(false);
+            } else {
+                // Transition to fall on FAF
+                let status = if fighter.global_table[FIGHTER_KIND] == FIGHTER_KIND_KOOPAJR
+                && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KOOPAJR_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_INTERRUPT) {
+                    *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_HI_FALL
+                } else {
+                    *FIGHTER_STATUS_KIND_FALL_SPECIAL
+                };
+                fighter.change_status(
+                    L2CValue::I32(status),
+                    L2CValue::Bool(false)
+                );
+            }
+        }
+        else {
+            // Vanilla logic
+            if !MotionModule::is_end(fighter.module_accessor) {
+                return L2CValue::Bool(false);
+            } else {
+                let status = if fighter.global_table[FIGHTER_KIND] == FIGHTER_KIND_KOOPAJR
+                && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KOOPAJR_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_INTERRUPT) {
+                    *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_HI_FALL
+                } else {
+                    *FIGHTER_STATUS_KIND_FALL_SPECIAL
+                };
+                fighter.change_status(
+                    L2CValue::I32(status),
+                    L2CValue::Bool(false)
+                );
+            }
         }
     }
     L2CValue::Bool(true)
