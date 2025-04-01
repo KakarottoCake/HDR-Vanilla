@@ -107,14 +107,6 @@ unsafe extern "C" fn game_escapeairslide(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn game_appealhi(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    if is_excute(agent) {
-        ItemModule::have_item(boma, app::ItemKind(*ITEM_KIND_GREENSHELL), 0, 0, false, false);
-    }
-}
-
 unsafe extern "C" fn game_appealsl(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -189,8 +181,6 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_escapeair", game_escapeair, Priority::Low);
     agent.acmd("game_escapeairslide", game_escapeairslide, Priority::Low);
 
-    agent.acmd("game_appealhil", game_appealhi, Priority::Low);
-    agent.acmd("game_appealhir", game_appealhi, Priority::Low);
     agent.acmd("game_appealsl", game_appealsl, Priority::Low);
     agent.acmd("game_appealsr", game_appealsr, Priority::Low);
     agent.acmd("expression_appealsl", expression_appeals, Priority::Low);

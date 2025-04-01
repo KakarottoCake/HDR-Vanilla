@@ -217,20 +217,11 @@ unsafe extern "C" fn game_attackhi4(agent: &mut L2CAgentBase) {
         if is_excute(agent) {
             MotionModule::set_rate(boma, 1.0);
         }
-        frame(lua_state, 28.0);
-        if is_excute(agent) {
-            ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 110, 90, 110, 0, 6.0, 0.0, 5.0, -10.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PSI);
-            ATTACK(agent, 1, 0, Hash40::new("top"), 2.0, 110, 90, 110, 0, 6.0, 0.0, 5.0, 10.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PSI);
-        }
         frame(lua_state, 30.0);
         if is_excute(agent) {
             HitModule::set_status_all(boma, app::HitStatus(*HIT_STATUS_NORMAL), 0);
             ATTACK(agent, 0, 0, Hash40::new("top"), 24.0, 95, 74, 0, 48, 12.0, 0.0, 25.0, 1.0, None, None, None, 1.25, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_LL, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PSI);
             ATTACK(agent, 1, 0, Hash40::new("head"), 24.0, 95, 74, 0, 48, 5.0, 3.0, 0.0, 1.0, None, None, None, 1.25, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_LL, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PSI);
-        }
-        frame(lua_state, 37.0);
-        if is_excute(agent) {
-            AttackModule::clear_all(boma);
         }
         frame(lua_state, 43.0);
         if is_excute(agent) {

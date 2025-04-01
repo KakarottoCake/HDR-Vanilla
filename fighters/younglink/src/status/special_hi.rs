@@ -136,7 +136,7 @@ unsafe extern "C" fn special_hi_end_main_loop(fighter: &mut L2CFighterCommon) ->
     }
     if MotionModule::frame(fighter.module_accessor) < 46.0 {
         if fighter.stick_x() != 0.0 {
-            let motion_value = 1.1;
+            let motion_value = 0.55;
             KineticModule::add_speed_outside(fighter.module_accessor, *KINETIC_OUTSIDE_ENERGY_TYPE_WIND_NO_ADDITION, &Vector3f { x: (motion_value * fighter.stick_x().signum()), y: 0.0, z: 0.0});
         }
     }

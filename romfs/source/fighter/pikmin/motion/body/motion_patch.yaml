@@ -151,9 +151,3 @@ throw_lw:
     cancel_frame: 50
 cliff_wait:
   blend_frames: 2
-special_lw:
-  extra:
-    cancel_frame: 12
-special_air_lw:
-  extra:
-    cancel_frame: 12

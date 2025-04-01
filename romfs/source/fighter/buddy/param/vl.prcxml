@@ -72,7 +72,6 @@
       <float hash="dash_end_gravity_mul">0.9</float>
 	  
       <float hash="hud_offset_y">-2000</float>
-      <float hash="0x1b49546378">50</float>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>

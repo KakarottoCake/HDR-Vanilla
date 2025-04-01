@@ -6,7 +6,7 @@ unsafe extern "C" fn game_spsremved(agent: &mut L2CAgentBase) {
     let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
     let p = PikminInfo::from(variation);
     FT_MOTION_RATE(agent, 1.0);
-    if true {
+    if VarModule::is_flag(agent.battle_object, vars::pikmin::instance::SPECIAL_S_PIKMIN_DETONATE_IS_DETACH_FOR_DETONATE) {
         if is_excute(agent) {
             AttackModule::clear_all(boma);
             let dmg = 4.8;

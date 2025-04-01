@@ -25,10 +25,10 @@ pub unsafe extern "C" fn special_s_run_main(fighter: &mut L2CFighterCommon) -> L
 
 pub unsafe extern "C" fn special_s_jump_end_init(fighter: &mut L2CFighterCommon) -> L2CValue {
     // Burn double jump when jumping out of Splat Roller
-    // if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_AIR
-    // && fighter.get_num_used_jumps() < fighter.get_jump_count_max() {
-    //     WorkModule::inc_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
-    // }
+    if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_AIR
+    && fighter.get_num_used_jumps() < fighter.get_jump_count_max() {
+        WorkModule::inc_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
+    }
     0.into()
 }
 

@@ -41,7 +41,7 @@ unsafe extern "C" fn special_hi_main(fighter: &mut L2CFighterCommon) -> L2CValue
     fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_hi_hold"), L2CValue::Hash40s("special_hi_hold_air"), false.into());
     fighter.sub_change_kinetic_type_by_situation(FIGHTER_KINETIC_TYPE_GROUND_STOP.into(), FIGHTER_KINETIC_TYPE_AIR_STOP.into());
     special_hi_set_kinetic(fighter);
-    VarModule::on_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
+    
     fighter.main_shift(special_hi_main_loop)
 }
 
@@ -288,7 +288,6 @@ unsafe extern "C" fn special_hi_rush_main_loop(fighter: &mut L2CFighterCommon) -
         return 0.into();
     }
     if !fighter.global_table[IS_STOPPING].get_bool() {
-        fighter.check_wall_jump_cancel();
         special_hi_rush_substatus(fighter);
         let to_return = special_hi_rush_handle_bound(fighter);
         if to_return == 1 {

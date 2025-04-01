@@ -82,11 +82,11 @@ pub unsafe extern "C" fn special_s_main(fighter: &mut L2CFighterCommon) -> L2CVa
     //Recatch momentum
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_GORDO_GET){   
         if StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_AIR {
-            KineticModule::mul_speed(fighter.module_accessor, &Vector3f{x: 2.1, y: 0.0, z:1.0}, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
+            KineticModule::mul_speed(fighter.module_accessor, &Vector3f{x: 1.8, y: 0.0, z:1.0}, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_s_get"), 0.0, 1.0, false, 0.0, false, false);
         }
         else{
-            KineticModule::mul_speed(fighter.module_accessor, &Vector3f{x: 1.8, y: 0.0, z:1.0}, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
+            KineticModule::mul_speed(fighter.module_accessor, &Vector3f{x: 1.2, y: 0.0, z:1.0}, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s_get"), 0.0, 1.0, false, 0.0, false, false);
         }
     } 

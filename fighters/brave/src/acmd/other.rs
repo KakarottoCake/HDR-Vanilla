@@ -108,7 +108,7 @@ unsafe extern "C" fn game_appealhi(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 10.0);
     if is_excute(agent) {
-        if true
+        if app::smashball::is_training_mode()
         && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_APPEAL_HI) {
             let mut brave_fighter = app::Fighter{battle_object: *(agent.battle_object)};
             FighterSpecializer_Brave::add_sp(&mut brave_fighter, 100.0);

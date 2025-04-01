@@ -15,7 +15,9 @@ unsafe extern "C" fn game_attacks4(agent: &mut L2CAgentBase) {
 		ATTACK(agent, 1, 0, Hash40::new("sword2"), 7.0, 64, 12, 0, 45, 3.5, 0.0, 0.0, -2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
 		ATTACK(agent, 2, 0, Hash40::new("sword2"), 7.0, 69, 12, 0, 45, 3.5, 4.25, 0.0, -2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
 		ATTACK(agent, 3, 0, Hash40::new("sword2"), 7.0, 69, 12, 0, 45, 3.5, 8.5, 0.0, -2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
-		ArticleModule::generate_article(boma,*FIGHTER_LINK_GENERATE_ARTICLE_SWORD_BEAM, false, 0);
+		if DamageModule::damage(boma, 0) == 0.0 {
+			ArticleModule::generate_article(boma,*FIGHTER_LINK_GENERATE_ARTICLE_SWORD_BEAM, false, 0);
+		}
 	}
 	frame(lua_state, 15.0);
 	FT_MOTION_RATE(agent, 1.0);

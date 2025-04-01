@@ -46,20 +46,24 @@ pub unsafe extern "C" fn throw_nana(fighter: &mut L2CFighterCommon) -> L2CValue 
         &Vector2f{ x: 0.0, y: -26.0},
         true
     ) == 1;
-    let motion = if !is_near_cliff {
+    let motion = if is_near_cliff {
         // TODO: this check assumes that the direction of ledge is always outwards,
         // and that the mathematical origin is contained within the stage.
         // It will fail if grabbing from a platform that's past ledge, 
         // or if grabbing on a stage that has been shifted far horizontally in lvd.
         if PostureModule::lr(fighter.boma()) == GroundModule::get_center_pos(fighter.boma()).signum() {
-            Hash40::new("throw_b")
-        } else {
             Hash40::new("throw_f")
+        } else {
+            Hash40::new("throw_b")
         }
     } else if is_under_platform {
         Hash40::new("throw_hi")
     } else {
-        Hash40::new("throw_lw")
+        let selected = app::sv_math::rand(hash40("fighter"), 100);
+        match selected {
+            0..=49 => Hash40::new("throw_f"),
+            _ => Hash40::new("throw_lw")
+        }
     };
 
     // change into the selected motion

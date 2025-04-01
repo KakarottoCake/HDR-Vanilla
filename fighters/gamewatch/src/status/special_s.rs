@@ -19,9 +19,9 @@ unsafe extern "C" fn special_s_init(fighter: &mut L2CFighterCommon) -> L2CValue 
     match math_state {
         0 => {
             // start math if rolling a 9
-            //if rng == 8 {
+            if rng == 8 {
                 VarModule::set_int(fighter.battle_object, vars::gamewatch::instance::SPECIAL_S_MATH_STATE, 1);
-            //}
+            }
         },
         1 => {
             // take the next two rolls...

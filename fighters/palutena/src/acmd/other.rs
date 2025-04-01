@@ -114,7 +114,9 @@ unsafe extern "C" fn game_appealhil(agent: &mut L2CAgentBase) {
         ArticleModule::change_motion(boma, *FIGHTER_PALUTENA_GENERATE_ARTICLE_GODWING, Hash40::new("appeal_hi_l"), false, -1.0);
     }
     if is_excute(agent) {
-        VarModule::set_int(agent.battle_object, vars::palutena::instance::SPECIAL_N_GAINED_COLOR, 2);
+        if is_training_mode() {
+            VarModule::set_int(agent.battle_object, vars::palutena::instance::SPECIAL_N_GAINED_COLOR, 2);
+        }
     }
 }
 
@@ -127,7 +129,9 @@ unsafe extern "C" fn game_appealhir(agent: &mut L2CAgentBase) {
         ArticleModule::change_motion(boma, *FIGHTER_PALUTENA_GENERATE_ARTICLE_GODWING, Hash40::new("appeal_hi_r"), false, -1.0);
     }
     if is_excute(agent) {
-        VarModule::set_int(agent.battle_object, vars::palutena::instance::SPECIAL_N_GAINED_COLOR, 2);
+        if is_training_mode() {
+            VarModule::set_int(agent.battle_object, vars::palutena::instance::SPECIAL_N_GAINED_COLOR, 2);
+        }
     }
 }
 
@@ -136,7 +140,9 @@ unsafe extern "C" fn game_appeals(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 2.0);
     if is_excute(agent) {
-        VarModule::set_int(agent.battle_object, vars::palutena::instance::SPECIAL_N_GAINED_COLOR, 3);
+        if is_training_mode() {
+            VarModule::set_int(agent.battle_object, vars::palutena::instance::SPECIAL_N_GAINED_COLOR, 3);
+        }
     }
 }
 
@@ -144,7 +150,9 @@ unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        VarModule::set_int(agent.battle_object, vars::palutena::instance::SPECIAL_N_GAINED_COLOR, 1);
+        if is_training_mode() {
+            VarModule::set_int(agent.battle_object, vars::palutena::instance::SPECIAL_N_GAINED_COLOR, 1);
+        }
     }
 }
 

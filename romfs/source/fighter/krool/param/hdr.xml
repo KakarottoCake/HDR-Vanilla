@@ -13,10 +13,10 @@
     <float hash="special_lw_charge_end">2.0</float>
   </struct>
   <struct hash="param_charge">
-    <float hash="charge_damage_mul">0.3</float>
+    <float hash="charge_damage_mul">0.15</float>
     <float hash="charge_hitlag_mul">0.01</float>
-    <float hash="charge_shield_stun_mul">0.08</float>
-    <float hash="charge_shield_damage_mul">1.0</float>
+    <float hash="charge_shield_stun_mul">0.04</float>
+    <float hash="charge_shield_damage_mul">0.5</float>
   </struct>
   <struct hash="param_special_hi">
     <int hash="rise_min_frame">12</int>

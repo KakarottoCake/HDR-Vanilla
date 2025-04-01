@@ -66,14 +66,6 @@ unsafe fn var_reset(fighter: &mut L2CFighterCommon) {
     || !sv_information::is_ready_go() {
         VarModule::on_flag(fighter.object(), vars::palutena::instance::SPECIAL_N_FLUSH_BOARD);
     }
-    if fighter.is_status_one_of(&[
-        *FIGHTER_STATUS_KIND_ATTACK_S3,
-        *FIGHTER_STATUS_KIND_ATTACK_HI3,
-        *FIGHTER_STATUS_KIND_ATTACK_LW3,
-    ]) && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
-    && !fighter.is_in_hitlag() {
-        fighter.check_dash_cancel();
-    }
 }
 
 // sets set_color var, controlling when a color is charged

@@ -76,8 +76,8 @@ unsafe extern "C" fn game_attackairlwboost(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         let charge = VarModule::get_float(agent.battle_object, vars::miigunner::status::ATTACK_CHARGE);
-        let charge_mul = 1.0 + (charge * 0.0125);
-        let mul = if VarModule::is_flag(agent.object(), vars::miigunner::instance::BOOSTED_ATTACK_AIR_LW_AIRTIME) { 1.0 } else { 1.4 };
+        let charge_mul = 1.0 + (charge * 0.025);
+        let mul = if VarModule::is_flag(agent.object(), vars::miigunner::instance::BOOSTED_ATTACK_AIR_LW_AIRTIME) { 0.5 } else { 0.7 };
         if !VarModule::is_flag(agent.object(), vars::miigunner::instance::BOOSTED_ATTACK_AIR_LW_AIRTIME) {
             VarModule::on_flag(agent.object(), vars::miigunner::instance::BOOSTED_ATTACK_AIR_LW_AIRTIME);
         }

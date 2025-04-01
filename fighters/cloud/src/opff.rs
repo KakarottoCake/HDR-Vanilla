@@ -24,7 +24,7 @@ unsafe fn up_special_proper_landing(fighter: &mut L2CFighterCommon) {
 }
 
 unsafe fn training_mode_limit(fighter: &mut L2CFighterCommon) {
-    // if !is_training_mode() { return; }
+    if !is_training_mode() { return; }
 
     let limit = fighter.get_float(*FIGHTER_CLOUD_INSTANCE_WORK_ID_FLOAT_LIMIT_GAUGE);
     if fighter.is_status(*FIGHTER_CLOUD_STATUS_KIND_SPECIAL_LW_CHARGE) 

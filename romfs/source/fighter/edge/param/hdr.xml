@@ -29,7 +29,7 @@
         <float hash="speed_x_l_stick_y_sub">0.3</float>
     </struct>
     <struct hash="param_flash">
-        <int hash="life">6000</int>
+        <int hash="life">600</int>
         <float hash="hold_offset_x">23</float>
         <float hash="burst_dist_mod_x">10.0</float>
         <float hash="burst_dist_mod_y">18.0</float>

@@ -10,11 +10,6 @@ unsafe fn holy_water_ac(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectM
             boma.check_airdodge_cancel();
         }
     }
-    if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S {
-        if frame > 20.0 {
-            boma.check_dash_cancel();
-        }
-    }
 }
 
 unsafe fn axe_drift(boma: &mut BattleObjectModuleAccessor, status_kind: i32, situation_kind: i32, cat2: i32, stick_y: f32) {

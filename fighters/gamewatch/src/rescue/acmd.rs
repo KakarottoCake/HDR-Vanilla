@@ -8,7 +8,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
         VisibilityModule::set_int64(boma, hash40("down") as i64, hash40("off") as i64);
     }
     frame(lua_state, 1.0);
-    //FT_MOTION_RATE_RANGE(agent, 1.0, 8.0, 11.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 8.0, 11.0);
     if is_excute(agent) {
         VisibilityModule::set_int64(boma, hash40("down") as i64, hash40("on") as i64);
     }
@@ -27,7 +27,7 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
         VisibilityModule::set_int64(boma, hash40("down") as i64, hash40("off") as i64);
     }
     frame(lua_state, 1.0);
-    //FT_MOTION_RATE_RANGE(agent, 1.0, 8.0, 9.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 8.0, 9.0);
     if is_excute(agent) {
         VisibilityModule::set_int64(boma, hash40("down") as i64, hash40("on") as i64);
     }

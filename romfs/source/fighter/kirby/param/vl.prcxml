@@ -46,8 +46,7 @@
   </list>
   <list hash="param_finalcuttershot">
     <struct index="0">
-      <float hash="life">70</float>
-      <float hash="speed">2.5</float>
+      <float hash="speed">4.5</float>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>

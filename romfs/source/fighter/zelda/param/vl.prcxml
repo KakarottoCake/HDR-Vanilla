@@ -88,7 +88,7 @@
       <float hash="offset2_x">1.5</float>
       <float hash="offset2_y">-2.5</float>
       <float hash="offset2_z">-2.5</float>
-      <float hash="size">8.0</float>
+      <float hash="size">1.5</float>
     </struct>
   </list>
 </struct>

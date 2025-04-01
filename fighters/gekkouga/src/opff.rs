@@ -4,8 +4,7 @@ use super::*;
 use globals::*;
 
 unsafe fn max_water_shuriken_dc(boma: &mut BattleObjectModuleAccessor, status_kind: i32, situation_kind: i32, cat1: i32, frame: f32) {
-    if status_kind == *FIGHTER_GEKKOUGA_STATUS_KIND_SPECIAL_N_MAX_SHOT
-    || status_kind == *FIGHTER_GEKKOUGA_STATUS_KIND_SPECIAL_N_SHOT {
+    if status_kind == *FIGHTER_GEKKOUGA_STATUS_KIND_SPECIAL_N_MAX_SHOT {
         if frame > 12.0 {
             boma.check_dash_cancel();
         }
@@ -117,7 +116,7 @@ pub unsafe fn substitute_teleport_check(fighter: &mut L2CFighterCommon) {
         let distance = sv_math::vec2_distance(pos_x, pos_y, doll_pos_x, doll_pos_y);
         // println!("distance: {}", distance);
 
-        let can_teleport = distance <= 160.0;
+        let can_teleport = distance <= 80.0;
         VarModule::set_flag(fighter.battle_object, vars::gekkouga::instance::SPECIAL_LW_CAN_TELEPORT, can_teleport);
 
         if distance >= 20.0 {

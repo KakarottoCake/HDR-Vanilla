@@ -29,12 +29,6 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     bow_lc(boma);
     guardian_orbitar_jc(boma, status_kind, situation_kind, cat[0], stick_x, facing, frame);
     pits_common(fighter, boma, status_kind);
-    if fighter.is_status(*FIGHTER_STATUS_KIND_JUMP_SQUAT)
-    && fighter.status_frame() >= 3
-    && fighter.is_button_on(Buttons::Special)
-    && fighter.left_stick_y() < -0.3 {
-        fighter.change_status(FIGHTER_STATUS_KIND_SPECIAL_LW.into(), true.into());
-    }
 }
 
 pub extern "C" fn pitb_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {

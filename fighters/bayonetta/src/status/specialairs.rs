@@ -94,9 +94,9 @@ unsafe extern "C" fn special_air_s_u_end(fighter: &mut L2CFighterCommon) -> L2CV
 
 unsafe extern "C" fn bounce_check(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.is_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_AIR_S_D_FLAG_HIT) {
-        if !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) {
+        if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) 
+        && !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
             VarModule::inc_int(fighter.battle_object, vars::bayonetta::instance::RECOVERY_RESOURCE_COUNT);
-            VarModule::on_flag(fighter.battle_object, vars::bayonetta::instance::SPECIAL_S_WHIFF);
         }
         fighter.change_status(FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_D_HIT.into(), false.into());
     } else {
@@ -113,10 +113,9 @@ unsafe extern "C" fn wall_check(fighter: &mut L2CFighterCommon) -> L2CValue {
         touch_wall = GroundModule::is_wall_touch_line(fighter.module_accessor, *GROUND_TOUCH_FLAG_LEFT as u32);
     }
     if touch_wall {
-        if !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
+        if !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT)
         && AttackModule::is_attack(fighter.module_accessor, 0, false) { //checks if hitbox cleared to prevent double dipping
             VarModule::inc_int(fighter.battle_object, vars::bayonetta::instance::RECOVERY_RESOURCE_COUNT);
-            VarModule::on_flag(fighter.battle_object, vars::bayonetta::instance::SPECIAL_S_WHIFF);
         }
         fighter.change_status(FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_WALL_END.into(), false.into());
     }

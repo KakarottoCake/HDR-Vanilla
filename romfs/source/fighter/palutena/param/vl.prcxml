@@ -27,7 +27,7 @@
   </list>
   <list hash="param_autoaimbullet">
     <struct index="0">
-      <float hash="speed">4.2</float>
+      <float hash="speed">2.4</float>
       <int hash="life">280</int>
     </struct>
     <struct index="1">
@@ -76,7 +76,7 @@
   </list>
   <list hash="param_reflectionboard">
     <struct index="0">
-      <float hash="life">600</float>
+      <float hash="life">147</float>
       <int hash="durability">100</int>
       <int hash="move_frame">50</int>
       <float hash="move_speed">0.27</float>

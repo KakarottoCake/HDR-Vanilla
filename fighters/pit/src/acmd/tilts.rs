@@ -32,7 +32,7 @@ unsafe extern "C" fn game_attackhi3(agent: &mut L2CAgentBase) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 6.0, 72, 48, 0, 71, 6.0, 0.0, 23.5, 6.0, Some(0.0), Some(20.0), Some(5.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
     }
     frame(lua_state, 17.0);
-    FT_MOTION_RATE_RANGE(agent, 17.0, 34.0, 4.0);
+    FT_MOTION_RATE_RANGE(agent, 17.0, 34.0, 11.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }

@@ -41,7 +41,7 @@
       <float hash="bounded_speed_y_max">1.8</float>
       <int hash="bound_count_max">7</int>
       <float hash="wall_check_angle">60</float>
-      <int hash="is_penetration">1</int>
+      <int hash="is_penetration">0</int>
       <float hash="gravity_acl_max">0</float>
     </struct>
     <hash40 index="1">dummy</hash40>
@@ -55,8 +55,8 @@
   </struct>
   <list hash="param_special_hi">
     <struct index="0">
-      <float hash="speed_y_max">1.5</float>
-      <float hash="speed_x_max">1.6</float>
+      <float hash="speed_y_max">1.35</float>
+      <float hash="speed_x_max">1.4</float>
       <int hash="start_no_landing_frame">11</int>
       <int hash="start_rise_frame">7</int>
       <float hash="tilt_degree_per_frame">5</float>

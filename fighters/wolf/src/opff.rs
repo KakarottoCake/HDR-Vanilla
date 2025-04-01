@@ -19,10 +19,6 @@ unsafe fn airdodge_cancel(boma: &mut BattleObjectModuleAccessor, status_kind: i3
                 0
             );
             boma.check_airdodge_cancel();
-            boma.check_dash_cancel();
-        }
-        if situation_kind == *SITUATION_KIND_GROUND && StatusModule::prev_situation_kind(boma) == *SITUATION_KIND_AIR {
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_LANDING, false);
         }
     }
 }
@@ -93,12 +89,6 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     firefox_startup_ledgegrab(fighter);
     awoo(fighter);
     fastfall_specials(fighter);
-    if fighter.is_status(*FIGHTER_STATUS_KIND_JUMP_SQUAT)
-    && fighter.status_frame() >= 3
-    && fighter.is_button_on(Buttons::Special)
-    && fighter.left_stick_y() < -0.3 {
-        fighter.change_status(FIGHTER_STATUS_KIND_SPECIAL_LW.into(), true.into());
-    }
 }
 
 pub extern "C" fn wolf_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {

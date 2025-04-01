@@ -114,7 +114,7 @@ unsafe extern "C" fn game_appeallwr(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 16.0);
     if is_excute(agent) {
-        if agent.is_button_on(Buttons::Guard) {
+        if agent.is_button_on(Buttons::Guard) && is_training_mode() {
             let charge_time = ParamModule::get_int(agent.object(), ParamType::Agent, "attack_up_charge_time");
             VarModule::set_int(agent.object(), vars::lucas::instance::SPECIAL_N_OFFENSE_UP_CHARGE_LEVEL, charge_time);
             VarModule::on_flag(agent.object(), vars::lucas::instance::SPECIAL_N_OFFENSE_UP_ACTIVE);

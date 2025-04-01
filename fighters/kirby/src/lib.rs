@@ -41,10 +41,10 @@ use utils::{
 use smashline::*;
 #[macro_use] extern crate smash_script;
 
-pub const KOOPA_MAX_COOLDOWN : i32 = 9;
+pub const KOOPA_MAX_COOLDOWN : i32 = 900;
 pub const LUCAS_CHARGE_TIME : i32 = 120;
 static mut BAYONET_EGGS:[i32;8] = [0; 8]; //I have no idea why varmod doesn't work with this, so this will have to do
-pub const MAGIC_COOLDOWN_FRAME: i32 = 1; // how many frames sora has to wait between spells
+pub const MAGIC_COOLDOWN_FRAME: i32 = 35; // how many frames sora has to wait between spells
 
 pub fn install() {
     let agent = &mut Agent::new("kirby");

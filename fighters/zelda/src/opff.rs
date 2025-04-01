@@ -44,20 +44,16 @@ unsafe fn teleport_tech(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &m
     //}
 }
 
-unsafe fn special_cancel(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
+unsafe fn phantom_special_cancel(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) 
     && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_PARRY)
     && !fighter.is_in_hitlag()
     && VarModule::is_flag(fighter.battle_object, vars::zelda::status::SPECIAL_LW_PHANTOM_CANCEL_FRAME) {
-        if fighter.is_cat_flag(Cat1::SpecialLw) {
-            if !ArticleModule::is_exist(boma, *FIGHTER_ZELDA_GENERATE_ARTICLE_PHANTOM) {
-                if !fighter.is_status(*FIGHTER_STATUS_KIND_ATTACK_AIR) { //displacement flag
-                    VarModule::on_flag(fighter.battle_object, vars::zelda::instance::SPECIAL_LW_FORWARD_PHANTOM);
-                }//cancel if phantom is off cd
-                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_LW, false);
-            }
-        } else if fighter.is_cat_flag(Cat1::SpecialHi) {
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_HI, false);
+        if fighter.is_cat_flag(Cat1::SpecialLw) && !ArticleModule::is_exist(boma, *FIGHTER_ZELDA_GENERATE_ARTICLE_PHANTOM) {
+            if !fighter.is_status(*FIGHTER_STATUS_KIND_ATTACK_AIR) { //displacement flag
+                VarModule::on_flag(fighter.battle_object, vars::zelda::instance::SPECIAL_LW_FORWARD_PHANTOM);
+            }//cancel if phantom is off cd
+            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_LW, false);
         }
     }
 }
@@ -124,16 +120,6 @@ pub unsafe fn phantom_usability_effects(fighter:&mut smash::lua2cpp::L2CFighterC
     }
 }
 
-unsafe fn sideb_freefall(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status(*FIGHTER_ZELDA_STATUS_KIND_SPECIAL_S_END)
-    && fighter.is_situation(*SITUATION_KIND_AIR)
-    && MotionModule::is_end(fighter.module_accessor) {
-        fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL_SPECIAL, true);
-        let cancel_module = *(fighter.module_accessor as *mut BattleObjectModuleAccessor as *mut u64).add(0x128 / 8) as *const u64;
-        *(((cancel_module as u64) + 0x1c) as *mut bool) = false;  // CancelModule::is_enable_cancel = false
-    }
-}
-
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
@@ -173,10 +159,9 @@ pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut
     teleport_tech(fighter, boma, frame);
     dins_fire_cancels(boma);
     nayru_land_cancel(boma);
-    special_cancel(fighter, boma);
+    phantom_special_cancel(fighter, boma);
     phantom_usability_effects(fighter, boma);
     fastfall_specials(fighter);
-    sideb_freefall(fighter);
 }
 
 pub extern "C" fn zelda_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {

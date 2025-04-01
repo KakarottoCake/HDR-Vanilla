@@ -11,7 +11,6 @@ unsafe fn side_special_cancels(fighter: &mut L2CFighterCommon) {
         return;
     }
 
-    fighter.check_jump_cancel(false, false);
     let transition_air = match MotionModule::motion_kind(fighter.module_accessor) {
         utils::hash40!("special_s3_hi") | utils::hash40!("special_air_s3_hi") if fighter.is_cat_flag(Cat1::AttackHi3) => {
             if fighter.is_situation(*SITUATION_KIND_GROUND) {

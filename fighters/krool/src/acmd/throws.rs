@@ -128,7 +128,7 @@ unsafe extern "C" fn game_throwhi(agent: &mut L2CAgentBase) {
         WorkModule::on_flag(boma, *FIGHTER_STATUS_THROW_FLAG_START_AIR);
     }
     frame(lua_state, 17.0);
-    FT_MOTION_RATE_RANGE(agent, 17.0, 43.0, 40.0);
+    FT_MOTION_RATE_RANGE(agent, 17.0, 43.0, 13.0);
     frame(lua_state, 43.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
@@ -160,8 +160,6 @@ unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 10.0, 270, 30, 0, 30, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 2.0, 361, 100, 0, 40, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
     }
-    frame(lua_state, 35.0);
-    FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 40.0);
     if is_excute(agent) {
         ModelModule::set_joint_translate(boma, Hash40::new("throw"), &Vector3f{x: 0.0, y: -5.0, z: 6.868900}, false, false);

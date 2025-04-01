@@ -449,16 +449,6 @@ unsafe fn up_special_startup_ledgegrab(fighter: &mut L2CFighterCommon) {
     }
 }
 
-unsafe fn sideb_freefall(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_S)
-    && fighter.is_situation(*SITUATION_KIND_AIR)
-    && CancelModule::is_enable_cancel(fighter.module_accessor) {
-        fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL_SPECIAL, true);
-        let cancel_module = *(fighter.module_accessor as *mut BattleObjectModuleAccessor as *mut u64).add(0x128 / 8) as *const u64;
-        *(((cancel_module as u64) + 0x1c) as *mut bool) = false;  // CancelModule::is_enable_cancel = false
-    }
-}
-
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
@@ -512,7 +502,6 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     up_special_freefall(fighter);
     up_special_startup_ledgegrab(fighter);
     fastfall_specials(fighter);
-    //sideb_freefall(fighter);
 
     if boma.is_status_one_of(&[
         *FIGHTER_STATUS_KIND_ENTRY,

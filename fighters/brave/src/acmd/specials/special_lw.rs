@@ -306,7 +306,7 @@ unsafe extern "C" fn game_speciallw21(agent: &mut L2CAgentBase) {
         let mut brave = app::Fighter{battle_object: *(agent.battle_object)};
         FighterSpecializer_Brave::special_lw_active_command(&mut brave);
         VarModule::on_flag(agent.battle_object, vars::brave::instance::PSYCHE_UP_ACTIVE);
-        VarModule::set_int(agent.battle_object, vars::common::instance::GIMMICK_TIMER, 9000);
+        VarModule::set_int(agent.battle_object, vars::common::instance::GIMMICK_TIMER, 900);
     }
 }
 

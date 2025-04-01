@@ -44,29 +44,10 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     fighter.global_table[globals::STATUS_CHANGE_CALLBACK].assign(&L2CValue::Ptr(change_status_callback as *const () as _));
 
     VarModule::off_flag(fighter.object(), vars::metaknight::instance::SPECIAL_S_HIT);
-    VarModule::set_int(fighter.battle_object, vars::metaknight::instance::META_QUICK_CHARGE_EFFECT_HANDLE, -1);
-    VarModule::set_int(fighter.battle_object, vars::metaknight::instance::META_QUICK_EFFECT_HANDLE, -1);
-    VarModule::set_int(fighter.battle_object, vars::metaknight::instance::META_QUICK_EFFECT_HANDLE2, -1);
-    VarModule::set_int(fighter.battle_object, vars::common::instance::GIMMICK_TIMER, 0);
-    MeterModule::reset(fighter.battle_object);
-}
-
-unsafe extern "C" fn appeal_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.is_cat_flag(Cat2::AppealLw)
-    && MeterModule::level(fighter.battle_object) >= 10
-    {
-        MeterModule::drain(fighter.battle_object, 10);
-        meta_quick::start_meta_quick(fighter, 8 * 60);
-        fighter.set_status_kind_interrupt(statuses::metaknight::METAQUICK_SUMMON);
-        return 1.into();
-    }
-
-    return smashline::original_status(Pre, fighter, *FIGHTER_STATUS_KIND_APPEAL)(fighter);
 }
 
 pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
-    agent.status(Pre, *FIGHTER_STATUS_KIND_APPEAL, appeal_pre);
 
     special_s::install(agent);
     attack_100::install(agent);

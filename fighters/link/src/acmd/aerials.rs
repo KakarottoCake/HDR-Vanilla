@@ -24,7 +24,7 @@ unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 27.0);
     if is_excute(agent) {
-        //AttackModule::clear_all(boma);
+        AttackModule::clear_all(boma);
     }
     frame(lua_state, 36.0);
     if is_excute(agent) {

@@ -53,29 +53,6 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn game_specialairsend(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    if is_excute(agent) {
-        shield!(agent, *MA_MSC_CMD_SHIELD_ON, *COLLISION_KIND_REFLECTOR, *FIGHTER_PIT_REFLECTOR_KIND_SPECIAL_S, *FIGHTER_PIT_REFLECTOR_GROUP_SPECIAL_S);
-    }
-    frame(lua_state, 2.0);
-    if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 9.5, 40, 86, 0, 90, 6.2, 5.0, 4.0, 9.0, Some(5.0), Some(10.0), Some(9.0), 1.5, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_PUNCH);
-    }
-    frame(lua_state, 4.0);
-    if is_excute(agent) {
-        KineticModule::add_speed(boma, &Vector3f{x: -0.5, y: 2.5, z: 0.0});
-    }
-    frame(lua_state, 6.0);
-    if is_excute(agent) {
-        AttackModule::clear_all(boma);
-        shield!(agent, *MA_MSC_CMD_SHIELD_OFF, *COLLISION_KIND_REFLECTOR, *FIGHTER_PIT_REFLECTOR_KIND_SPECIAL_S, *FIGHTER_PIT_REFLECTOR_GROUP_SPECIAL_S);
-    }
-    frame(lua_state, 22.0);
-    FT_MOTION_RATE(agent, 0.83);
-}
-
 unsafe extern "C" fn game_specialairsstart(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -133,10 +110,7 @@ unsafe extern "C" fn game_speciallwstart(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    if is_excute(agent) {
-        sv_kinetic_energy!(set_speed, agent, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
-    }
-    FT_MOTION_RATE_RANGE(agent, 1.0, 5.9, 1.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 5.9, 2.0);
     frame(lua_state, 5.9);
     FT_MOTION_RATE_RANGE(agent, 5.9, 6.0, 1.0);
     if is_excute(agent) {
@@ -146,7 +120,6 @@ unsafe extern "C" fn game_speciallwstart(agent: &mut L2CAgentBase) {
     frame(lua_state, 6.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
-        sv_kinetic_energy!(set_speed, agent, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
         ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 70, 85, 0, 77, 7.5, 0.0, 7.0, -1.5, Some(0.0), Some(7.0), Some(1.5), 0.9, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_NONE);
     }
     frame(lua_state, 7.0);
@@ -201,7 +174,6 @@ unsafe extern "C" fn effect_speciallwend(agent: &mut L2CAgentBase) {
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialsstart", game_specialsstart, Priority::Low);
     agent.acmd("game_specialsend", game_specialsend, Priority::Low);
-    agent.acmd("game_specialairsend", game_specialairsend, Priority::Low);
     agent.acmd("game_specialairsstart", game_specialairsstart, Priority::Low);
 
     agent.acmd("game_specialhi", game_specialhi, Priority::Low);

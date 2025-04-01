@@ -110,7 +110,7 @@ pub unsafe extern "C" fn special_hi_end_main(fighter: &mut L2CFighterCommon) -> 
 unsafe extern "C" fn specialhi_end_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let stick_x = fighter.global_table[STICK_X].get_f32();
     let frame = MotionModule::frame(fighter.module_accessor);
-    let mut motion_value = 1.1;
+    let mut motion_value = 0.55;
 
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into()

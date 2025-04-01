@@ -90,7 +90,7 @@ unsafe extern "C" fn game_specialnfire(agent: &mut L2CAgentBase) {
         if is_excute(agent) {
             VarModule::on_flag(agent.object(), vars::lucas::instance::SPECIAL_N_OFFENSE_UP_RELEASE_AFTER_WHIFF);
             ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 45, 60, 0, 60, 3.0, 0.0, 10.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_ice"), *ATTACK_SOUND_LEVEL_LL, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PSI);
-            ATTACK(agent, 1, 0, Hash40::new("top"), 10.0, 60, 100, 0, 50, 11.0, 0.0, 10.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_ice"), *ATTACK_SOUND_LEVEL_LL, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PSI);
+            ATTACK(agent, 1, 0, Hash40::new("top"), 10.0, 60, 100, 0, 50, 11.0, 0.0, 10.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_LL, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PSI);
         }
         wait(lua_state, 2.0);
         if is_excute(agent) {
@@ -168,7 +168,7 @@ unsafe extern "C" fn game_specialairs(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    FT_MOTION_RATE_RANGE(agent, 1.0, 21.0, 15.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 21.0, 13.0);
     frame(lua_state, 21.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
@@ -192,7 +192,19 @@ unsafe extern "C" fn sound_specials(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_lucas_smash_h01"));
         PLAY_SE(agent, Hash40::new("se_lucas_special_s03"));
-        PLAY_SE(agent, Hash40::new("vc_lucas_003"));
+        let rand = sv_math::rand(hash40("fighter"), 7) as i32;
+        if rand == 0 {
+            PLAY_SE_REMAIN(agent, Hash40::new("vc_lucas_attack01"));
+        }
+        else if rand == 1 {
+            PLAY_SE_REMAIN(agent, Hash40::new("vc_lucas_attack02"));
+        }
+        else if rand == 2 {
+            PLAY_SE_REMAIN(agent, Hash40::new("vc_lucas_attack03"));
+        }
+        else if rand == 3 {
+            PLAY_SE_REMAIN(agent, Hash40::new("vc_lucas_cliffcatch"));
+        }
     }
 }
 
