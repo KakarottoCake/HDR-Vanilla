@@ -12,6 +12,9 @@ unsafe fn aerial_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObject
         if fighter.is_cat_flag(Cat1::SpecialN) {
             is_input_cancel = true;
             new_status = *FIGHTER_STATUS_KIND_SPECIAL_N;
+            VarModule::on_flag(fighter.battle_object, vars::bayonetta::instance::WAS_CANCEL);
+            StatusModule::change_status_request_from_script(boma, new_status, true);
+            return;
         } else if fighter.is_cat_flag(Cat1::SpecialHi) {
             if fighter.get_int(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SPECIAL_HI_USED_COUNT) < 2 {
                 is_input_cancel = true;
