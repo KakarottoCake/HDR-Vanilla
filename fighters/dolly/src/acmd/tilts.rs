@@ -3,6 +3,11 @@ use super::*;
 unsafe extern "C" fn game_attackhi3(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    let lr = PostureModule::lr(boma);
+    frame(lua_state, 1.0);
+    if is_excute(agent) {
+        PostureModule::add_pos_2d(boma, &Vector2f {x: 1.5 * lr, y: 0.0});
+    }
     frame(lua_state, 7.0);
     if is_excute(agent) {
         HIT_NODE(agent, Hash40::new("shoulderl"), *HIT_STATUS_XLU);
