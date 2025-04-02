@@ -18,13 +18,21 @@ unsafe extern "C" fn game_specialnshot(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 6.0);
     if is_excute(agent) {
-        if LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
-            let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
-            let object = utils::util::get_battle_object_from_id(parent_id);
-            if ![*PLEDGE_STATE_NONE, *PLEDGE_STATE_WATER].contains(&VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE)) {
-                let timer = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER);
-                let pledge_use_cost_frame = ParamModule::get_int(agent.battle_object, ParamType::Agent, "param_special_lw.pledge_use_cost_frame");
-                VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer - pledge_use_cost_frame);
+        if agent.kind() == *FIGHTER_KIND_KIRBY {
+            if ![*PLEDGE_STATE_NONE, *PLEDGE_STATE_WATER].contains(&VarModule::get_int(agent.battle_object, vars::kirby::instance::SPECIAL_N_PTRAINER_PLEDGE_STATE)) {
+                let timer = VarModule::get_int(agent.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER);
+                VarModule::set_int(agent.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer - 180);
+            }
+        }
+        else {
+            if LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
+                let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+                let object = utils::util::get_battle_object_from_id(parent_id);
+                if ![*PLEDGE_STATE_NONE, *PLEDGE_STATE_WATER].contains(&VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE)) {
+                    let timer = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER);
+                    let pledge_use_cost_frame = ParamModule::get_int(agent.battle_object, ParamType::Agent, "param_special_lw.pledge_use_cost_frame");
+                    VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer - pledge_use_cost_frame);
+                }
             }
         }
         ArticleModule::generate_article(boma, *FIGHTER_PZENIGAME_GENERATE_ARTICLE_WATER, false, -1);
@@ -155,7 +163,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE_RANGE(agent, 9.0, 43.0, 24.0);
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
-        ATTACK(agent, 0, 0, Hash40::new("top"), 1.0, 367, 100, 40, 0, 6.0, 0.0, 4.0, 6.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 5, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_coin"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_COIN, *ATTACK_REGION_WATER);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 1.0, 367, 100, 40, 0, 6.0, 0.0, 4.0, 6.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 5, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_WATER, *ATTACK_REGION_WATER);
     }
     frame(lua_state, 42.0);
     if is_excute(agent) {

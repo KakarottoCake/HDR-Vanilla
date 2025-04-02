@@ -19,7 +19,7 @@ unsafe extern "C" fn game_specialn2(agent: &mut L2CAgentBase) {
         let kbg = if agent.is_situation(*SITUATION_KIND_GROUND) { 104 } else { 124 };
         let hitlag = if meter_lvl == 0 { 1.0 } else if meter_lvl == 1 { 1.2 } else { 1.5 };
         let sfx_lvl = if meter_lvl == 0 { *ATTACK_SOUND_LEVEL_M } else { *ATTACK_SOUND_LEVEL_L };
-        let sound_attr = if meter_lvl == 0 { *COLLISION_SOUND_ATTR_PUNCH } else if meter_lvl == 1 { *COLLISION_SOUND_ATTR_HEAVY } else { *COLLISION_SOUND_ATTR_KICK };
+        let sound_attr = if meter_lvl == 0 { *COLLISION_SOUND_ATTR_PUNCH } else if meter_lvl == 1 { *COLLISION_SOUND_ATTR_PUNCH } else { *COLLISION_SOUND_ATTR_KICK };
         ATTACK(agent, 0, 0, Hash40::new("armr"), damage, angle, kbg, 0, bkb, 5.0, 3.0, 0.0, 0.0, None, None, None, hitlag, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 2, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), sfx_lvl, sound_attr, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("armr"), damage, angle, kbg, 0, bkb, 3.0, -1.0, 0.0, 0.0, None, None, None, hitlag, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 2, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), sfx_lvl, sound_attr, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 2, 0, Hash40::new("shoulderr"), damage, angle, kbg, 0, bkb, 3.0, 0.0, 0.0, 0.0, None, None, None, hitlag, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 2, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), sfx_lvl, sound_attr, *ATTACK_REGION_PUNCH);
@@ -319,7 +319,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
             ATTACK(agent, 0, 0, Hash40::new("top"), 3.0, 80, 197, 0, 45, 6.5, 0.0, 22.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         }
         else {
-            ATTACK(agent, 0, 0, Hash40::new("top"), 3.0, 70, 190, 0, 35, 6.5, 0.0, 22.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+            ATTACK(agent, 0, 0, Hash40::new("top"), 3.0, 75, 195, 0, 40, 6.5, 0.0, 22.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         }
     }
     frame(lua_state, 25.0);

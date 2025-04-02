@@ -6,22 +6,34 @@ unsafe extern "C" fn sound_damagefly(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     if is_excute(agent) {
         if !StopModule::is_stop(boma) {
-            let play_vc = if DamageModule::reaction(boma, 0) < 100.0 {
-                app::sv_math::rand(hash40("fighter"), 3)
-            } else {
-                0
-            };
-            if play_vc == 0 {PLAY_FLY_VOICE(agent, Hash40::new("seq_palutena_rnd_futtobi01"), Hash40::new("seq_palutena_rnd_futtobi02"));}
+            if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
+                PLAY_SE(agent, Hash40::new("vc_palutena_damagefly02"));
+            }
+            else {
+                let play_vc = if DamageModule::reaction(boma, 0) < 100.0 {
+                    app::sv_math::rand(hash40("fighter"), 3)
+                } else {
+                    0
+                };
+                if play_vc == 0 {PLAY_FLY_VOICE(agent, Hash40::new("seq_palutena_rnd_futtobi01"), Hash40::new("seq_palutena_rnd_futtobi02"));}
+            }
         }
     }
     frame(lua_state, 1.1);
     if is_excute(agent) {
-        let play_vc = if DamageModule::reaction(boma, 0) < 100.0 {
-            app::sv_math::rand(hash40("fighter"), 3)
-        } else {
-            0
-        };
-        if play_vc == 0 {PLAY_FLY_VOICE(agent, Hash40::new("seq_palutena_rnd_futtobi01"), Hash40::new("seq_palutena_rnd_futtobi02"));}
+        if !SoundModule::is_playing_voice(boma) {
+            if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
+                PLAY_SE(agent, Hash40::new("vc_palutena_damagefly02"));
+            }
+            else {
+                let play_vc = if DamageModule::reaction(boma, 0) < 100.0 {
+                    app::sv_math::rand(hash40("fighter"), 3)
+                } else {
+                    0
+                };
+                if play_vc == 0 {PLAY_FLY_VOICE(agent, Hash40::new("seq_palutena_rnd_futtobi01"), Hash40::new("seq_palutena_rnd_futtobi02"));}
+            }
+        }
     }
 }
 
@@ -31,12 +43,24 @@ unsafe extern "C" fn sound_damageflyroll(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     if is_excute(agent) {
         if !StopModule::is_stop(boma) {
-            PLAY_FLY_VOICE(agent, Hash40::new("seq_palutena_rnd_futtobi01"), Hash40::new("seq_palutena_rnd_futtobi02"));
+            if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
+                PLAY_SE(agent, Hash40::new("vc_palutena_damagefly02"));
+            }
+            else {
+                PLAY_FLY_VOICE(agent, Hash40::new("seq_palutena_rnd_futtobi01"), Hash40::new("seq_palutena_rnd_futtobi02"));
+            }
         }
     }
     frame(lua_state, 1.1);
     if is_excute(agent) {
-        PLAY_FLY_VOICE(agent, Hash40::new("seq_palutena_rnd_futtobi01"), Hash40::new("seq_palutena_rnd_futtobi02"));
+        if !SoundModule::is_playing_voice(boma) {
+            if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
+                PLAY_SE(agent, Hash40::new("vc_palutena_damagefly02"));
+            }
+            else {
+                PLAY_FLY_VOICE(agent, Hash40::new("seq_palutena_rnd_futtobi01"), Hash40::new("seq_palutena_rnd_futtobi02"));
+            }
+        }
     }
 }
 
@@ -114,7 +138,9 @@ unsafe extern "C" fn game_appealhil(agent: &mut L2CAgentBase) {
         ArticleModule::change_motion(boma, *FIGHTER_PALUTENA_GENERATE_ARTICLE_GODWING, Hash40::new("appeal_hi_l"), false, -1.0);
     }
     if is_excute(agent) {
-        VarModule::set_int(agent.battle_object, vars::palutena::instance::SPECIAL_N_GAINED_COLOR, 2);
+        if is_training_mode() {
+            VarModule::set_int(agent.battle_object, vars::palutena::instance::SPECIAL_N_GAINED_COLOR, 2);
+        }
     }
 }
 
@@ -127,7 +153,9 @@ unsafe extern "C" fn game_appealhir(agent: &mut L2CAgentBase) {
         ArticleModule::change_motion(boma, *FIGHTER_PALUTENA_GENERATE_ARTICLE_GODWING, Hash40::new("appeal_hi_r"), false, -1.0);
     }
     if is_excute(agent) {
-        VarModule::set_int(agent.battle_object, vars::palutena::instance::SPECIAL_N_GAINED_COLOR, 2);
+        if is_training_mode() {
+            VarModule::set_int(agent.battle_object, vars::palutena::instance::SPECIAL_N_GAINED_COLOR, 2);
+        }
     }
 }
 
@@ -136,7 +164,9 @@ unsafe extern "C" fn game_appeals(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 2.0);
     if is_excute(agent) {
-        VarModule::set_int(agent.battle_object, vars::palutena::instance::SPECIAL_N_GAINED_COLOR, 3);
+        if is_training_mode() {
+            VarModule::set_int(agent.battle_object, vars::palutena::instance::SPECIAL_N_GAINED_COLOR, 3);
+        }
     }
 }
 
@@ -144,7 +174,9 @@ unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        VarModule::set_int(agent.battle_object, vars::palutena::instance::SPECIAL_N_GAINED_COLOR, 1);
+        if is_training_mode() {
+            VarModule::set_int(agent.battle_object, vars::palutena::instance::SPECIAL_N_GAINED_COLOR, 1);
+        }
     }
 }
 

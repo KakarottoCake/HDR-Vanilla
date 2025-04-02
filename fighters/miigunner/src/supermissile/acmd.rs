@@ -9,7 +9,6 @@ unsafe extern "C" fn game_straight(agent: &mut L2CAgentBase) {
        VarModule::set_int(gunner, vars::miigunner::instance::SPECIAL_S3_MISSILE_OBJECT_ID, agent.battle_object_id as i32);
     }
     if is_excute(agent) {
-        VarModule::off_flag(agent.battle_object, vars::miigunner_supermissile::instance::PULSE_DETONATE);
         ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 60, 90, 0, 50, 2.5, 0.0, 0.0, 1.2, Some(0.0), Some(0.0), Some(2.5), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BOMB);
     }
 }
@@ -20,15 +19,6 @@ unsafe extern "C" fn effect_straight(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("miigunner_missile_straight"), Hash40::new("rot"), 0, 0, 1, 0, 0, 0, 1, true);
     }
-    frame(lua_state, 30.0);
-    for h in 0..3 {
-        if is_excute(agent) {
-            EFFECT_FOLLOW(agent, Hash40::new("sys_sp_flash"), Hash40::new("top"), 1, 0, 3, 0, 0, 0, 0.3 + 0.125 * h as f32, false);
-            LAST_EFFECT_SET_COLOR(agent, 0.5 + 3.75 * h as f32, 2.0, 1.0);
-            LAST_EFFECT_SET_RATE(agent, 0.6);
-        }
-        wait(lua_state, 30.0);
-    }
 }
 
 unsafe extern "C" fn sound_straight(agent: &mut L2CAgentBase) {
@@ -37,33 +27,21 @@ unsafe extern "C" fn sound_straight(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_miigunner_special_c3_s04"));
     }
-    frame(lua_state, 30.0);
-    for h in 0..3 {
-        if is_excute(agent) {
-            let handle = SoundModule::play_se_no3d(boma, Hash40::new("se_common_spirits_floor_elec_spark2"), true, true);
-            SoundModule::set_se_vol(boma, handle as i32, 1.25 + 0.125 * h as f32, 0);
-            let handle2 = SoundModule::play_se_no3d(boma, Hash40::new("se_common_spirits_floor_elec_spark1"), true, true);
-            SoundModule::set_se_vol(boma, handle2 as i32, 1.5 + 0.125 * h as f32, 0);
-        }
-        wait(lua_state, 30.0);
-    }
 }
 
 unsafe extern "C" fn game_sburst(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 1.0);
     if is_excute(agent) {
         if VarModule::is_flag(agent.battle_object, vars::miigunner_supermissile::instance::PULSE_DETONATE) {
-            QUAKE(agent, *CAMERA_QUAKE_KIND_M);
-            ATTACK(agent, 0, 0, Hash40::new("top"), 20.0, 50, 86, 0, 50, 14.0, 3.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 20, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_LL, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_BOMB);
+            ATTACK(agent, 0, 0, Hash40::new("top"), 20.0, 50, 80, 0, 49, 10.0, 3.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 20, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_LL, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_BOMB);
         }
     }
     frame(lua_state, 4.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
-    frame(lua_state, 4.0);
+    frame(lua_state, 5.0);
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x199c462b5d));
     }
@@ -72,12 +50,20 @@ unsafe extern "C" fn game_sburst(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_sburst(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    if is_excute(agent) {
-        if VarModule::is_flag(agent.battle_object, vars::miigunner_supermissile::instance::PULSE_DETONATE) {
-            EFFECT(agent, Hash40::new("miigunner_atk_shot5"), Hash40::new("top"), -16, 0, 0, 0, 0, 0, 2.03, 0, 0, 0, 0, 0, 0, false);
-            LAST_EFFECT_SET_COLOR(agent, 0.5, 10.0, 25.0);
+    if VarModule::is_flag(agent.battle_object, vars::miigunner_supermissile::instance::PULSE_DETONATE) {
+        let handle = EffectModule::req_on_joint(boma, Hash40::new("miigunner_atk_shot5"), Hash40::new("top"), &Vector3f::new(-11.25, 0.0, 0.0), &Vector3f::zero(), 1.4, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
+        if is_excute(agent) {
+            EffectModule::set_rate(boma, handle as u32, 2.0);
+            EffectModule::set_rgb(boma, handle as u32, 0.5, 10.0, 25.0);
         }
-        else {
+        frame(lua_state, 4.0);
+        if is_excute(agent) {
+            EffectModule::set_rate(boma, handle as u32, 0.6);
+            EFFECT_DETACH_KIND(agent, Hash40::new("miigunner_atk_shot5"), 0);
+        }
+    }
+    else {
+        if is_excute(agent) {
             EFFECT(agent, Hash40::new("sys_misfire"), Hash40::new("top"), 0, -1, 2, 0, 0, 0, 1.75, 0, 0, 0, 0, 0, 0, false);
             EFFECT(agent, Hash40::new("sys_bomb_a"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.6, 0, 0, 0, 0, 0, 0, false);
             LAST_EFFECT_SET_RATE(agent, 1.5);

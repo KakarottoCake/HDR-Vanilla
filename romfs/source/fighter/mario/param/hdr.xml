@@ -18,10 +18,10 @@
     <float hash="ground_accel_x_mul">0.055</float>
   </struct>
   <struct hash="long_jump">
-    <float hash="speed_x_add">0.75</float>
-    <float hash="speed_x_mul">2.75</float>
+    <float hash="speed_x_add">0.4</float>
+    <float hash="speed_x_mul">1.6</float>
     <float hash="speed_x_min">1.0</float>
-    <float hash="speed_x_max">3.5</float>
+    <float hash="speed_x_max">2.0</float>
     <float hash="speed_y_min">1.4</float>
     <float hash="speed_y_max">1.6</float>
     <float hash="back_speed_x_threshold">-0.2</float>
@@ -33,7 +33,7 @@
     <float hash="air_accel_y_mul">0.4</float>
     <int hash="jump_squat_frame">6</int>
     <int hash="landing_frame">12</int>
-    <int hash="attack_cancel_frame">1</int>
+    <int hash="attack_cancel_frame">8</int>
   </struct>
   <struct hash="ground_pound">
     <float hash="fall_speed">4.0</float>

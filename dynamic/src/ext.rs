@@ -275,7 +275,7 @@ bitflags! {
     #[derive(Copy, Clone)]
     pub struct CatHdr: i32 {
         const Wavedash = 0x1;
-        const ShieldDrop = 0x2;
+        // const ShieldDrop = 0x2;
         const WallJumpLeft = 0x4;
         const WallJumpRight = 0x8;
         const Parry = 0x10;
@@ -1153,18 +1153,8 @@ impl BomaExt for BattleObjectModuleAccessor {
                     fighter.module_accessor,
                     *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START,
                 );
-                WorkModule::enable_transition_term(
-                    fighter.module_accessor,
-                    *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH,
-                );
-                WorkModule::enable_transition_term(
-                    fighter.module_accessor,
-                    *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI,
-                );
             }
             if fighter.sub_transition_group_check_ground_jump_mini_attack().get_bool() // buffered aerials
-            || (!skip_other_checks && fighter.sub_transition_group_check_ground_catch().get_bool()) // grab
-            || (!skip_other_checks && fighter.sub_transition_group_check_ground_special().get_bool()) // up special
             || (!skip_other_checks && fighter.sub_transition_group_check_ground_attack().get_bool()) // up smash
             || fighter.sub_transition_group_check_ground_jump().get_bool() // regular jumps
             {
@@ -1202,51 +1192,6 @@ impl BomaExt for BattleObjectModuleAccessor {
                 return true;
             }
         }
-
-        if fighter.is_situation(*SITUATION_KIND_GROUND)
-        && fighter.is_button_on(Buttons::Special)
-        && fighter.left_stick_y() < -0.3 {
-            if fighter.kind() == *FIGHTER_KIND_FOX
-            && fighter.is_status_one_of(&[
-                *FIGHTER_STATUS_KIND_SPECIAL_LW,
-                *FIGHTER_FOX_STATUS_KIND_SPECIAL_LW_HIT,
-                *FIGHTER_FOX_STATUS_KIND_SPECIAL_LW_LOOP,
-                *FIGHTER_FOX_STATUS_KIND_SPECIAL_LW_END
-            ]) {
-                fighter.change_status(FIGHTER_STATUS_KIND_JUMP_SQUAT.into(), false.into());
-                return true;
-            }
-            if fighter.kind() == *FIGHTER_KIND_FALCO
-            && fighter.is_status_one_of(&[
-                *FIGHTER_STATUS_KIND_SPECIAL_LW,
-                0x1e8,
-                0x1e9,
-                0x1ea,
-            ]) {
-                fighter.change_status(FIGHTER_STATUS_KIND_JUMP_SQUAT.into(), false.into());
-                return true;
-            }
-            if fighter.kind() == *FIGHTER_KIND_WOLF
-            && fighter.is_status_one_of(&[
-                *FIGHTER_STATUS_KIND_SPECIAL_LW,
-                *FIGHTER_WOLF_STATUS_KIND_SPECIAL_LW_HIT,
-                *FIGHTER_WOLF_STATUS_KIND_SPECIAL_LW_LOOP,
-                *FIGHTER_WOLF_STATUS_KIND_SPECIAL_LW_END
-            ]) {
-                fighter.change_status(FIGHTER_STATUS_KIND_JUMP_SQUAT.into(), false.into());
-                return true;
-            }
-            if fighter.kind() == *FIGHTER_KIND_PITB
-            && fighter.is_status_one_of(&[
-                *FIGHTER_STATUS_KIND_SPECIAL_LW,
-                *FIGHTER_PIT_STATUS_KIND_SPECIAL_LW_HOLD,
-                *FIGHTER_PIT_STATUS_KIND_SPECIAL_LW_END
-            ]) {
-                fighter.change_status(FIGHTER_STATUS_KIND_JUMP_SQUAT.into(), false.into());
-                return true;
-            }
-        }
-
         false
     }
 

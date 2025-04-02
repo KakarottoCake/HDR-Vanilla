@@ -34,7 +34,7 @@ unsafe extern "C" fn special_n_hold_main_loop(fighter: &mut L2CFighterCommon) ->
     let hold_frame = fighter.get_int(*FIGHTER_BRAVE_INSTANCE_WORK_ID_INT_SPECIAL_N_HOLD_FRAME);
     if hold_frame <= hold_frame_l {
         if fighter.is_situation(*SITUATION_KIND_GROUND) {
-            if fighter.is_pad_flag(PadFlag::GuardTrigger) {
+            if fighter.sub_check_command_guard().get_bool() || fighter.is_pad_flag(PadFlag::GuardTrigger) {
                 fighter.set_int(*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_BRAVE_STATUS_SPECIAL_N_HOLD_INT_NEXT_STATUS);
                 fighter.change_status(FIGHTER_BRAVE_STATUS_KIND_SPECIAL_N_CANCEL.into(), false.into());
                 return 1.into();
@@ -46,7 +46,7 @@ unsafe extern "C" fn special_n_hold_main_loop(fighter: &mut L2CFighterCommon) ->
             }
         }
         else {
-            if fighter.is_pad_flag(PadFlag::GuardTrigger) {
+            if fighter.sub_check_command_guard().get_bool() || fighter.is_pad_flag(PadFlag::GuardTrigger) {
                 fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_BRAVE_STATUS_SPECIAL_N_HOLD_INT_NEXT_STATUS);
                 fighter.change_status(FIGHTER_BRAVE_STATUS_KIND_SPECIAL_N_CANCEL.into(), false.into());
                 return 1.into();

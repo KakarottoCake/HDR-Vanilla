@@ -4,8 +4,7 @@ use super::*;
 use globals::*;
 
 unsafe fn max_water_shuriken_dc(boma: &mut BattleObjectModuleAccessor, status_kind: i32, situation_kind: i32, cat1: i32, frame: f32) {
-    if status_kind == *FIGHTER_GEKKOUGA_STATUS_KIND_SPECIAL_N_MAX_SHOT
-    || status_kind == *FIGHTER_GEKKOUGA_STATUS_KIND_SPECIAL_N_SHOT {
+    if status_kind == *FIGHTER_GEKKOUGA_STATUS_KIND_SPECIAL_N_MAX_SHOT {
         if frame > 12.0 {
             boma.check_dash_cancel();
         }
@@ -66,23 +65,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         ]) 
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
-        if fighter.is_flag(*FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE) {
-            if [*FIGHTER_KINETIC_TYPE_MOTION_AIR, *FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE].contains(&KineticModule::get_kinetic_type(fighter.module_accessor)) {
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION);
-                let speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
-
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
-                app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
-                
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-                app::sv_kinetic_energy::enable(fighter.lua_state_agent);
-
-                KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_MOTION, fighter.module_accessor);
-            }
-        }
     }
 }
 
@@ -117,7 +99,7 @@ pub unsafe fn substitute_teleport_check(fighter: &mut L2CFighterCommon) {
         let distance = sv_math::vec2_distance(pos_x, pos_y, doll_pos_x, doll_pos_y);
         // println!("distance: {}", distance);
 
-        let can_teleport = distance <= 160.0;
+        let can_teleport = distance <= 80.0;
         VarModule::set_flag(fighter.battle_object, vars::gekkouga::instance::SPECIAL_LW_CAN_TELEPORT, can_teleport);
 
         if distance >= 20.0 {

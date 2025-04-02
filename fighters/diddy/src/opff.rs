@@ -7,23 +7,6 @@ unsafe fn peanut_popgun_ac(boma: &mut BattleObjectModuleAccessor, status_kind: i
     if status_kind == *FIGHTER_DIDDY_STATUS_KIND_SPECIAL_N_SHOOT && frame > 5.0 {
         boma.check_airdodge_cancel();
     }
-    if boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_DIDDY_STATUS_KIND_SPECIAL_HI_CHARGE]) {
-        if ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_GUARD)
-        && ArticleModule::is_exist(boma, *FIGHTER_DIDDY_GENERATE_ARTICLE_BARRELJET) {
-            ArticleModule::change_status(boma, *FIGHTER_DIDDY_GENERATE_ARTICLE_BARRELJET, *WEAPON_DIDDY_BARRELJET_STATUS_KIND_FLY, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-            boma.change_status_req(FIGHTER_STATUS_KIND_FALL_SPECIAL.into(), false);
-        }
-    }
-}
-
-unsafe fn sideb_whiff_freefall(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_S)
-    && fighter.is_situation(*SITUATION_KIND_AIR)
-    && CancelModule::is_enable_cancel(fighter.module_accessor) {
-        fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL_SPECIAL, true);
-        let cancel_module = *(fighter.module_accessor as *mut BattleObjectModuleAccessor as *mut u64).add(0x128 / 8) as *const u64;
-        *(((cancel_module as u64) + 0x1c) as *mut bool) = false;  // CancelModule::is_enable_cancel = false
-    }
 }
 
 unsafe fn nspecial_cancels(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, status_kind: i32) {
@@ -122,23 +105,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         ]) 
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
-        if fighter.is_flag(*FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE) {
-            if [*FIGHTER_KINETIC_TYPE_MOTION_AIR, *FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE].contains(&KineticModule::get_kinetic_type(fighter.module_accessor)) {
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION);
-                let speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
-
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
-                app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
-                
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-                app::sv_kinetic_energy::enable(fighter.lua_state_agent);
-
-                KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_MOTION, fighter.module_accessor);
-            }
-        }
     }
 }
 
@@ -189,7 +155,6 @@ pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut
     fastfall_specials(fighter);
     fastfall_dashattack(fighter);
     no_cap(boma);
-    sideb_whiff_freefall(fighter);
 }
 
 pub extern "C" fn diddy_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {

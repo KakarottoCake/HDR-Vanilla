@@ -7,8 +7,8 @@
   </list>
   <struct hash="param_private">
     <float hash="sp_max">100</float>
-    <int hash="sp_recover_frame">90</int>
-    <float hash="recover_sp">1.5</float>
+    <int hash="sp_recover_frame">60</int>
+    <float hash="recover_sp">1</float>
     <float hash="sp_recover_damage_mul">0.5</float>
     <float hash="sp_recover_shield_mul">0.5</float>
     <float hash="sp_special_n1">7</float>

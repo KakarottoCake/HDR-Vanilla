@@ -43,7 +43,7 @@ use utils::{
 use smashline::*;
 #[macro_use] extern crate smash_script;
 
-pub const MAX_COOLDOWN : i32 = 9;
+pub const MAX_COOLDOWN : i32 = 900;
 
 pub fn install() {
     let agent = &mut Agent::new("koopa");

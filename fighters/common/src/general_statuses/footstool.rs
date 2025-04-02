@@ -64,7 +64,11 @@ pub unsafe fn sub_transition_group_check_air_tread_jump(fighter: &mut L2CFighter
             if fighter.is_cat_flag(Cat2::AppealAll) {
                 if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TREAD_JUMP_BUTTON) {
                     let do_footstool;
-                    if WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_NO_TREAD_FRAME) != 0 {
+                    let footstool_lockout = ParamModule::get_int(fighter.battle_object, ParamType::Common, "footstool_lockout_frame");
+                    let prev_appeal_trigger_count = ControlModule::get_trigger_count_prev(fighter.module_accessor, (*CONTROL_PAD_BUTTON_APPEAL_S_R | *CONTROL_PAD_BUTTON_APPEAL_S_L | *CONTROL_PAD_BUTTON_APPEAL_HI | *CONTROL_PAD_BUTTON_APPEAL_LW) as u8) & 0xff;
+                        
+                    if WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_NO_TREAD_FRAME) != 0
+                    || prev_appeal_trigger_count < footstool_lockout {
                         do_footstool = false;
                     }
                     else {

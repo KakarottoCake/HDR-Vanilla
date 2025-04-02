@@ -9,7 +9,7 @@
     <struct index="0">
       <int hash="charge_up_frame">10</int>
       <int hash="max_charge_frame">12</int>
-      <int hash="target_max_num">5</int>
+      <int hash="target_max_num">2</int>
       <int hash="changed_charge_up_frame">10</int>
     </struct>
     <hash40 index="1">dummy</hash40>
@@ -18,7 +18,7 @@
   </list>
   <list hash="param_cherry">
     <struct index="0">
-      <int hash="life">120</int>
+      <int hash="life">60</int>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>
@@ -26,7 +26,7 @@
   </list>
   <list hash="param_strawberry">
     <struct index="0">
-      <int hash="life">120</int>
+      <int hash="life">60</int>
       <int hash="reflection_max_num">3</int>
     </struct>
     <hash40 index="1">dummy</hash40>
@@ -35,7 +35,7 @@
   </list>
   <list hash="param_orange">
     <struct index="0">
-      <int hash="life">110</int>
+      <int hash="life">55</int>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>
@@ -43,7 +43,7 @@
   </list>
   <list hash="param_apple">
     <struct index="0">
-      <int hash="throw_away_life">360</int>
+      <int hash="throw_away_life">180</int>
       <int hash="reflection_max_num">3</int>
     </struct>
     <hash40 index="1">dummy</hash40>
@@ -52,7 +52,7 @@
   </list>
   <list hash="param_melon">
     <struct index="0">
-      <int hash="life">360</int>
+      <int hash="life">180</int>
       <int hash="reflection_max_num">3</int>
     </struct>
     <hash40 index="1">dummy</hash40>
@@ -61,7 +61,7 @@
   </list>
   <list hash="param_boss">
     <struct index="0">
-      <int hash="life">360</int>
+      <int hash="life">180</int>
       <float hash="reflection_x_speed_mul">0.5</float>
       <float hash="reflection_y_speed_mul">0.9</float>
       <int hash="reflection_max_num">3</int>
@@ -74,7 +74,7 @@
   </list>
   <list hash="param_bell">
     <struct index="0">
-      <int hash="life">220</int>
+      <int hash="life">110</int>
       <int hash="reflection_max_num">3</int>
     </struct>
     <hash40 index="1">dummy</hash40>
@@ -83,7 +83,7 @@
   </list>
   <list hash="param_key">
     <struct index="0">
-      <int hash="life">90</int>
+      <int hash="life">45</int>
       <int hash="reflection_max_num">3</int>
       <float hash="reflection_x_speed_mul">0.1</float>
       <float hash="reflection_y_speed_mul">0.75</float>
@@ -124,7 +124,7 @@
   <list hash="param_firehydrant">
     <struct index="0">
       <int hash="hp">12</int>
-      <float hash="smash_reflect_speed_mul">1.2</float>
+      <float hash="smash_reflect_speed_mul">0.85</float>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>

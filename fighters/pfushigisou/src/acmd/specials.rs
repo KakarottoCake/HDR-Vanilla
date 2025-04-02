@@ -13,23 +13,23 @@ unsafe extern "C" fn game_specialnend(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        if LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
-            let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
-            let object = utils::util::get_battle_object_from_id(parent_id);
-            if ![*PLEDGE_STATE_NONE, *PLEDGE_STATE_GRASS].contains(&VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE)) {
-                let timer = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER);
-                let pledge_use_cost_frame = ParamModule::get_int(agent.battle_object, ParamType::Agent, "param_special_lw.pledge_use_cost_frame");
-                VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer - pledge_use_cost_frame);
+        if agent.kind() == *FIGHTER_KIND_KIRBY {
+            if ![*PLEDGE_STATE_NONE, *PLEDGE_STATE_GRASS].contains(&VarModule::get_int(agent.battle_object, vars::kirby::instance::SPECIAL_N_PTRAINER_PLEDGE_STATE)) {
+                let timer = VarModule::get_int(agent.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER);
+                VarModule::set_int(agent.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer - 180);
             }
         }
-        ArticleModule::generate_article(boma, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SEED, false, -1);
-    }
-    frame(lua_state, 8.0);
-    if is_excute(agent) {
-        ArticleModule::generate_article(boma, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SEED, false, -1);
-    }
-    frame(lua_state, 16.0);
-    if is_excute(agent) {
+        else {
+            if LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
+                let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
+                let object = utils::util::get_battle_object_from_id(parent_id);
+                if ![*PLEDGE_STATE_NONE, *PLEDGE_STATE_GRASS].contains(&VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE)) {
+                    let timer = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER);
+                    let pledge_use_cost_frame = ParamModule::get_int(agent.battle_object, ParamType::Agent, "param_special_lw.pledge_use_cost_frame");
+                    VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer - pledge_use_cost_frame);
+                }
+            }  
+        }
         ArticleModule::generate_article(boma, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SEED, false, -1);
     }
 }
@@ -98,7 +98,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
             WorkModule::on_flag(boma, *FIGHTER_PFUSHIGISOU_STATUS_SPECIAL_HI_SET_MAP_COLL_OFFSET);
         }
         frame(lua_state, 1.0);
-        //FT_MOTION_RATE_RANGE(agent, 1.0, 12.0, 16.0);
+        FT_MOTION_RATE_RANGE(agent, 1.0, 12.0, 16.0);
         frame(lua_state, 12.0);
         FT_MOTION_RATE(agent, 1.0);
         if is_excute(agent) {
@@ -111,17 +111,17 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     }
     else {
         frame(lua_state, 1.0);
-        //FT_MOTION_RATE_RANGE(agent, 1.0, 12.0, 16.0);
+        FT_MOTION_RATE_RANGE(agent, 1.0, 12.0, 16.0);
         frame(lua_state, 12.0);
         FT_MOTION_RATE(agent, 1.0);
     }
     frame(lua_state, 15.0);
     if is_excute(agent) {
-        //WorkModule::set_float(boma, 35.0 * agent.lr(), *FIGHTER_PFUSHIGISOU_STATUS_SPECIAL_HI_FLOAT_ANGLE);
-        ATTACK(agent, 0, 0, Hash40::new("viner2"), 15.0, 50, 68, 0, 52, 4.5, 1.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_BAT, *ATTACK_REGION_OBJECT);
-        ATTACK(agent, 1, 0, Hash40::new("viner3"), 15.0, 50, 68, 0, 52, 4.2, 1.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_BAT, *ATTACK_REGION_OBJECT);
-        ATTACK(agent, 2, 0, Hash40::new("viner4"), 15.0, 50, 68, 0, 52, 3.8, 1.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_BAT, *ATTACK_REGION_OBJECT);
-        ATTACK(agent, 3, 0, Hash40::new("viner5"), 15.0, 50, 68, 0, 52, 3.5, 1.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_BAT, *ATTACK_REGION_OBJECT);
+        WorkModule::set_float(boma, 35.0 * agent.lr(), *FIGHTER_PFUSHIGISOU_STATUS_SPECIAL_HI_FLOAT_ANGLE);
+        ATTACK(agent, 0, 0, Hash40::new("viner2"), 12.0, 50, 68, 0, 52, 4.5, 1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_OBJECT);
+        ATTACK(agent, 1, 0, Hash40::new("viner3"), 12.0, 50, 68, 0, 52, 4.2, 1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_OBJECT);
+        ATTACK(agent, 2, 0, Hash40::new("viner4"), 12.0, 50, 68, 0, 52, 3.8, 1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_OBJECT);
+        ATTACK(agent, 3, 0, Hash40::new("viner5"), 12.0, 50, 68, 0, 52, 3.5, 1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_OBJECT);
         ATTACK(agent, 4, 0, Hash40::new("viner5"), 15.0, 50, 68, 0, 52, 4.5, 8.3, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_BAT, *ATTACK_REGION_OBJECT);
     }
     frame(lua_state, 18.0);
@@ -174,6 +174,7 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("effect_specialnstart", acmd_stub, Priority::Low);
     agent.acmd("game_specialairnstart", game_specialnstart, Priority::Low);
     agent.acmd("effect_specialairnstart", acmd_stub, Priority::Low);
+
     agent.acmd("game_specialn", acmd_stub, Priority::Low);
     agent.acmd("game_specialairn", acmd_stub, Priority::Low);
 

@@ -137,10 +137,10 @@ unsafe fn apply_status_speed_mul(fighter: &mut smash::lua2cpp::L2CFighterCommon,
 
 unsafe fn ptooie_scale(boma: &mut BattleObjectModuleAccessor) {
     if VarModule::get_int(boma.object(), vars::packun::instance::CURRENT_STANCE) == 2 {
-        VarModule::set_float(boma.object(), vars::packun::instance::SPECIAL_N_PTOOIE_SCALE, 1.6);
+        VarModule::set_float(boma.object(), vars::packun::instance::SPECIAL_N_PTOOIE_SCALE, 1.3);
     }
     else {
-        VarModule::set_float(boma.object(), vars::packun::instance::SPECIAL_N_PTOOIE_SCALE, 1.3);
+        VarModule::set_float(boma.object(), vars::packun::instance::SPECIAL_N_PTOOIE_SCALE, 1.0);
     }
 }
 
@@ -224,23 +224,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         ]) 
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
-        if fighter.is_flag(*FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE) {
-            if [*FIGHTER_KINETIC_TYPE_MOTION_AIR, *FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE].contains(&KineticModule::get_kinetic_type(fighter.module_accessor)) {
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION);
-                let speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
-
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
-                app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
-                
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-                app::sv_kinetic_energy::enable(fighter.lua_state_agent);
-
-                KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_MOTION, fighter.module_accessor);
-            }
-        }
     }
 }
 

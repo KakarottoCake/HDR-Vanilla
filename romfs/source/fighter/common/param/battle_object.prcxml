@@ -6,10 +6,6 @@
   <float hash="damage_level3">33.6</float>
   <float hash="damage_speed_mul">0.03</float>
   <float hash="damage_angle_ground_max">44</float>
-  <float hash="damage_sync_speed_mul">0.333</float>
-  <float hash="damage_pull_speed_mul">0.1</float>
-  <float hash="damage_pull_speed_down_mul">0.1</float>
-  <float hash="damage_pull_attack_speed_max">2</float>
   <float hash="damage_fly_quake_l">90</float>
   <int hash="damage_fly_speed_up_reaction_frame_min">63</int>
   <int hash="damage_fly_speed_up_reaction_frame_max">102</int>

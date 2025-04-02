@@ -158,10 +158,10 @@ unsafe fn flower_frame(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
-unsafe fn side_special_freefall(boma: &mut BattleObjectModuleAccessor) {
+unsafe fn side_special_actionability(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_status(*FIGHTER_TRAIL_STATUS_KIND_SPECIAL_S_END) {
         if MotionModule::frame(boma) > MotionModule::end_frame(boma) - 1.0 {
-            boma.change_status_req(*FIGHTER_STATUS_KIND_FALL_SPECIAL, true);
+            boma.change_status_req(*FIGHTER_STATUS_KIND_FALL, true);
         }
     }
 }
@@ -264,23 +264,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         || (fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_HI) && fighter.status_frame() > 10) )
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
-        if fighter.is_flag(*FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE) {
-            if [*FIGHTER_KINETIC_TYPE_MOTION_AIR, *FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE].contains(&KineticModule::get_kinetic_type(fighter.module_accessor)) {
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION);
-                let speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
-
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
-                app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
-                
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-                app::sv_kinetic_energy::enable(fighter.lua_state_agent);
-
-                KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_MOTION, fighter.module_accessor);
-            }
-        }
     }
 }
 
@@ -306,7 +289,7 @@ pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut
     attack_lw4_rebound(boma, frame);
     magic_handling(fighter, boma, frame);
     flower_frame(boma);
-    side_special_freefall(boma);
+    side_special_actionability(boma);
     side_special_hit_check(fighter, boma);
     side_special_walljump(boma);
     side_special_effect_handler(boma);

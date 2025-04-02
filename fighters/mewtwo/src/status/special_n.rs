@@ -203,7 +203,7 @@ unsafe extern "C" fn special_n_max_end(fighter: &mut L2CFighterCommon) -> L2CVal
 
 unsafe extern "C" fn special_n_check_cancel(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.is_situation(*SITUATION_KIND_AIR) {
-        if fighter.is_button_on(Buttons::Guard) {
+        if fighter.sub_check_command_guard().get_bool() || fighter.is_pad_flag(PadFlag::GuardTrigger)  {
             fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_MEWTWO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
             return true.into();
         }
@@ -238,12 +238,8 @@ unsafe extern "C" fn special_n_check_cancel(fighter: &mut L2CFighterCommon) -> L
         //     }
         //     return true.into();
         // }
-        if fighter.sub_check_command_guard().get_bool() {
-            if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON) {
-                fighter.set_int(*FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_MEWTWO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
-            } else {
-                fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_MEWTWO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
-            }
+        if fighter.sub_check_command_guard().get_bool() || fighter.is_pad_flag(PadFlag::GuardTrigger) {
+            fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_MEWTWO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
             return true.into();
         }
         if fighter.sub_check_jump_in_charging_for_cancel_status((*FIGHTER_MEWTWO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS).into()).get_bool() {

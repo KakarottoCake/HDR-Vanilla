@@ -107,9 +107,6 @@
       <float hash="hit_stop_frame_mul">2.0</float>
       <float hash="step_cancel_invalid_frame">3</float>
       <float hash="hit_cancel_frame">5</float>
-      <float hash="endurance_min">64</float>
-      <float hash="endurance_max">128</float>
-      <float hash="defense_mul">0.1</float>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>

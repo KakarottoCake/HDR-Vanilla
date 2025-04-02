@@ -7,6 +7,7 @@
   </list>
   <list hash="param_special_s">
     <struct index="0">
+      <int hash="stop_y">8</int>
       <int hash="no_bang">4</int>
     </struct>
     <hash40 index="1">dummy</hash40>
@@ -88,7 +89,7 @@
       <float hash="offset2_x">1.5</float>
       <float hash="offset2_y">-2.5</float>
       <float hash="offset2_z">-2.5</float>
-      <float hash="size">8.0</float>
+      <float hash="size">1.5</float>
     </struct>
   </list>
 </struct>

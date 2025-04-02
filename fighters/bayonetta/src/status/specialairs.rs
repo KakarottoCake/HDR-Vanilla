@@ -25,8 +25,10 @@ unsafe extern "C" fn special_air_s_d_main_loop(fighter: &mut L2CFighterCommon) -
         if fighter.is_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_S_FLAG_LANDING_FALL_SPECIAL) {
             fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
         } else {
-            let special_lag = fighter.get_float(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLOAT_SPECIAL_LANDING_FRAME); 
-            let dabk_slide_lag = special_lag.max(fighter.get_param_int("param_special_s", "ab_d_landing_frame") as f32); //solid 30f landing lag.
+            let mut special_lag = fighter.get_float(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLOAT_SPECIAL_LANDING_FRAME); 
+            let whiff_lag = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lag.whiff_lag"); //5
+            if AttackModule::is_attack(fighter.module_accessor, 0, false) {special_lag+=whiff_lag;} //if resource hasnt been used yet manually add the lag
+            let dabk_slide_lag = special_lag.max(fighter.get_param_int("param_special_s", "ab_d_landing_frame") as f32); //solid 30f landing lag min
             fighter.set_float(dabk_slide_lag, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLOAT_SPECIAL_LANDING_FRAME); 
             fighter.change_status(FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_D_LANDING.into(), false.into());
         }
@@ -94,9 +96,9 @@ unsafe extern "C" fn special_air_s_u_end(fighter: &mut L2CFighterCommon) -> L2CV
 
 unsafe extern "C" fn bounce_check(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.is_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_AIR_S_D_FLAG_HIT) {
-        if !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) {
+        if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) 
+        && !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
             VarModule::inc_int(fighter.battle_object, vars::bayonetta::instance::RECOVERY_RESOURCE_COUNT);
-            VarModule::on_flag(fighter.battle_object, vars::bayonetta::instance::SPECIAL_S_WHIFF);
         }
         fighter.change_status(FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_D_HIT.into(), false.into());
     } else {
@@ -113,10 +115,9 @@ unsafe extern "C" fn wall_check(fighter: &mut L2CFighterCommon) -> L2CValue {
         touch_wall = GroundModule::is_wall_touch_line(fighter.module_accessor, *GROUND_TOUCH_FLAG_LEFT as u32);
     }
     if touch_wall {
-        if !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
+        if !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT)
         && AttackModule::is_attack(fighter.module_accessor, 0, false) { //checks if hitbox cleared to prevent double dipping
             VarModule::inc_int(fighter.battle_object, vars::bayonetta::instance::RECOVERY_RESOURCE_COUNT);
-            VarModule::on_flag(fighter.battle_object, vars::bayonetta::instance::SPECIAL_S_WHIFF);
         }
         fighter.change_status(FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_WALL_END.into(), false.into());
     }
@@ -285,7 +286,7 @@ unsafe fn set_lag(fighter: &mut L2CFighterCommon) {
     let dabk_lag = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lag.dive_side_special");//9
     let abk_lag = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lag.side_special");//6
     let witch_twist_lag = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lag.up_special");//6
-    let base_lag: f32 = 8.0;
+    let base_lag: f32 = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lag.whiff_lag"); //8
     let special_landing_frame_mul = fighter.get_param_float("special_landing_frame_mul", "");
     //normal special lag calc 
     //reworked from hard coded value based on move order (contrived) ->

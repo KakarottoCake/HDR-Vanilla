@@ -6,22 +6,34 @@ unsafe extern "C" fn sound_damagefly(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     if is_excute(agent) {
         if !StopModule::is_stop(boma) {
-            let play_vc = if DamageModule::reaction(boma, 0) < 100.0 {
-                app::sv_math::rand(hash40("fighter"), 3)
-            } else {
-                0
-            };
-            if play_vc == 0 {PLAY_FLY_VOICE(agent, Hash40::new("seq_falco_rnd_futtobi01"), Hash40::new("seq_falco_rnd_futtobi02"));}
+            if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
+                PLAY_SE(agent, Hash40::new("vc_falco_damagefly02"));
+            }
+            else {
+                let play_vc = if DamageModule::reaction(boma, 0) < 100.0 {
+                    app::sv_math::rand(hash40("fighter"), 3)
+                } else {
+                    0
+                };
+                if play_vc == 0 {PLAY_FLY_VOICE(agent, Hash40::new("seq_falco_rnd_futtobi01"), Hash40::new("seq_falco_rnd_futtobi02"));}
+            }
         }
     }
     frame(lua_state, 1.1);
     if is_excute(agent) {
-        let play_vc = if DamageModule::reaction(boma, 0) < 100.0 {
-            app::sv_math::rand(hash40("fighter"), 3)
-        } else {
-            0
-        };
-        if play_vc == 0 {PLAY_FLY_VOICE(agent, Hash40::new("seq_falco_rnd_futtobi01"), Hash40::new("seq_falco_rnd_futtobi02"));}
+        if !SoundModule::is_playing_voice(boma) {
+            if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
+                PLAY_SE(agent, Hash40::new("vc_falco_damagefly02"));
+            }
+            else {
+                let play_vc = if DamageModule::reaction(boma, 0) < 100.0 {
+                    app::sv_math::rand(hash40("fighter"), 3)
+                } else {
+                    0
+                };
+                if play_vc == 0 {PLAY_FLY_VOICE(agent, Hash40::new("seq_falco_rnd_futtobi01"), Hash40::new("seq_falco_rnd_futtobi02"));}
+            }
+        }
     }
 }
 
@@ -31,12 +43,24 @@ unsafe extern "C" fn sound_damageflyroll(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     if is_excute(agent) {
         if !StopModule::is_stop(boma) {
-            PLAY_FLY_VOICE(agent, Hash40::new("seq_falco_rnd_futtobi01"), Hash40::new("seq_falco_rnd_futtobi02"));
+            if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
+                PLAY_SE(agent, Hash40::new("vc_falco_damagefly02"));
+            }
+            else {
+                PLAY_FLY_VOICE(agent, Hash40::new("seq_falco_rnd_futtobi01"), Hash40::new("seq_falco_rnd_futtobi02"));
+            }
         }
     }
     frame(lua_state, 1.1);
     if is_excute(agent) {
-        PLAY_FLY_VOICE(agent, Hash40::new("seq_falco_rnd_futtobi01"), Hash40::new("seq_falco_rnd_futtobi02"));
+        if !SoundModule::is_playing_voice(boma) {
+            if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
+                PLAY_SE(agent, Hash40::new("vc_falco_damagefly02"));
+            }
+            else {
+                PLAY_FLY_VOICE(agent, Hash40::new("seq_falco_rnd_futtobi01"), Hash40::new("seq_falco_rnd_futtobi02"));
+            }
+        }
     }
 }
 
@@ -140,15 +164,6 @@ unsafe extern "C" fn sound_escapen(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
-    frame(lua_state, 49.0);
-    if is_excute(agent) {
-        VarModule::on_flag(agent.battle_object, vars::falco::instance::HANDS_OFF_MY);
-    }
-}
-
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_cliffescape", acmd_stub, Priority::Low);
 
@@ -168,7 +183,4 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_escapeairslide", game_escapeairslide, Priority::Low);
     agent.acmd("sound_escapeairslide", sound_escapeairslide, Priority::Low);
     agent.acmd("sound_escapen", sound_escapen, Priority::Low);
-
-    agent.acmd("game_appeallwl", game_appeallw, Priority::Low);
-    agent.acmd("game_appeallwr", game_appeallw, Priority::Low);
 }

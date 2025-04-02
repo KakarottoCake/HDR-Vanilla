@@ -36,9 +36,17 @@ pub unsafe extern "C" fn move_init(weapon: &mut L2CWeaponCommon) -> L2CValue {
             life = 30;
         }
     }
+    else if owner_boma.kind() == *FIGHTER_KIND_KIRBY {
+        let pledge_state = VarModule::get_int(owner_boma.object(), vars::kirby::instance::SPECIAL_N_PTRAINER_PLEDGE_STATE);
+        VarModule::set_int(weapon.battle_object, vars::pfushigisou_seed::instance::PLEDGE_TYPE, pledge_state);
+        if [*PLEDGE_STATE_NONE, *PLEDGE_STATE_GRASS].contains(&pledge_state) {
+            // No pledge
+            life = 30;
+        }
+    }
     else {
         //println!("ERROR: owner is not a Pokemon, things will probably crash without this failsafe");
-        VarModule::set_int(weapon.battle_object, vars::pfushigisou_seed::instance::PLEDGE_TYPE, 2);
+        VarModule::set_int(weapon.battle_object, vars::pfushigisou_seed::instance::PLEDGE_TYPE, 0);
     }
     weapon.set_int(life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     weapon.set_int(life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);

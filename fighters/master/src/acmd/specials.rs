@@ -295,7 +295,7 @@ unsafe extern "C" fn game_specialairsf(agent: &mut L2CAgentBase) {
             let stick_y = ControlModule::get_stick_y(boma);
             VarModule::on_flag(agent.battle_object, vars::common::instance::SPECIAL_STALL_USED);
             if stick_y > 0.0 {
-                KineticModule::add_speed(boma, &Vector3f::new(0.0, 2.0 * stick_y, 0.0));
+                KineticModule::add_speed(boma, &Vector3f::new(0.0, 1.25 * stick_y, 0.0));
             }
         }
     }
@@ -594,9 +594,8 @@ unsafe extern "C" fn game_specialairhiovertake(agent: &mut L2CAgentBase) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
         ArticleModule::generate_article(boma, *FIGHTER_MASTER_GENERATE_ARTICLE_SWORD, false, 0);
         ArticleModule::change_motion(boma, *FIGHTER_MASTER_GENERATE_ARTICLE_SWORD, smash::phx::Hash40::new("special_air_hi_overtake"), false, 0.0);
-        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 6.5, 70, 70, 0, 70, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_KICK);
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 6.5, 110, 70, 0, 70, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_KICK);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 1, 6.5, 114, 65, 0, 65, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_KICK);
-        
     }
     frame(lua_state, 11.0);
     if is_excute(agent) {
@@ -643,21 +642,15 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
         }
     }
     frame(lua_state, 34.0);
-    if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) || ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL_RAW) {
-        VarModule::set_int(agent.battle_object, vars::master::status::SPECIAL_LW_HOLD, 2);
-        let motion_rate = 48.0/(42.0-34.0);
-        FT_MOTION_RATE(agent, motion_rate);
-        ArticleModule::set_rate(boma, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, 1.0/motion_rate);
-        DamageModule::set_damage_mul(boma, 1.25);
-        WorkModule::off_flag(boma, *FIGHTER_MASTER_STATUS_SPECIAL_LW_FLAG_TURN_CHECK);
-    }
-    if VarModule::get_int(agent.battle_object, vars::master::status::SPECIAL_LW_HOLD) > 0 {
-        WorkModule::on_flag(boma, *FIGHTER_MASTER_STATUS_SPECIAL_LW_FLAG_START_SUPER_ARMOR);
-    }
-    if VarModule::get_int(agent.battle_object, vars::master::status::SPECIAL_LW_HOLD) == 1 {
-        let motion_rate = 5.0/(42.0-34.0);
-        FT_MOTION_RATE(agent, motion_rate);
-        ArticleModule::set_rate(boma, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, 1.0/motion_rate);
+    if is_excute(agent) {
+        if VarModule::get_int(agent.battle_object, vars::master::status::SPECIAL_LW_HOLD) > 0 {
+            WorkModule::on_flag(boma, *FIGHTER_MASTER_STATUS_SPECIAL_LW_FLAG_START_SUPER_ARMOR);
+        }
+        if VarModule::get_int(agent.battle_object, vars::master::status::SPECIAL_LW_HOLD) == 1 {
+            let motion_rate = 5.0/(42.0-34.0);
+            FT_MOTION_RATE(agent, motion_rate);
+            ArticleModule::set_rate(boma, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, 1.0/motion_rate);
+        }
     }
     frame(lua_state, 42.0);
     FT_MOTION_RATE(agent, 1.0);
@@ -736,9 +729,6 @@ unsafe extern "C" fn effect_speciallw(agent: &mut L2CAgentBase) {
             LAST_EFFECT_SET_COLOR(agent, 0.0, 0.0, 0.0);
             EFFECT_FOLLOW(agent, Hash40::new("master_axe_hold_end"), Hash40::new("haver"), 0, 13, 0.6, 0, 0, 0, 1, true);
             LAST_EFFECT_SET_COLOR(agent, 0.3, 0.3, 0.3);
-            
-            COL_PRI(agent, 200);
-            FLASH(agent, 0.95, 0.522, 0.051, 0.7);
         }
     }
     frame(lua_state, 40.0);
@@ -775,48 +765,13 @@ unsafe extern "C" fn effect_speciallw(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_speciallwhit(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    if is_excute(agent) {
-        if VarModule::get_int(agent.battle_object, vars::master::status::SPECIAL_LW_HOLD) > 1 {
-            ATTACK(agent, 0, 1, Hash40::new("top"), 30.0, 270, 0, 0, 1, 300.0, 0.0, 0.0, 0.0, None, None, None, 0.1, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, f32::NAN, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_OBJECT);
-            AttackModule::set_add_reaction_frame(boma, 0, 60.0, false);
-        }
-    }
-    frame(lua_state, 5.0);
-    if is_excute(agent) {
-        AttackModule::clear_all(boma);
-    }
-    frame(lua_state, 50.0);
-    if VarModule::get_int(agent.battle_object, vars::master::status::SPECIAL_LW_HOLD) > 1 {
-        if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT){
-            let motion_rate = 1.0;
-            FT_MOTION_RATE(agent, motion_rate);
-            ArticleModule::set_rate(boma, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, 1.0/motion_rate);
-        }
-        else{
-            let motion_rate = 7.0;
-            FT_MOTION_RATE(agent, motion_rate);
-            ArticleModule::set_rate(boma, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, 1.0/motion_rate);
-        }
-    }
-    frame(lua_state, 52.0);
-    if is_excute(agent) {
-        if VarModule::get_int(agent.battle_object, vars::master::status::SPECIAL_LW_HOLD) > 1 {
-            AttackModule::clear_all(boma);
-            if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
-                ATTACK(agent, 0, 2, Hash40::new("top"), 1.0, 270, 0, 0, 10, 300.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, f32::NAN, 0.0, 0, false, false, false, true, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_saving"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_OBJECT);
-                AttackModule::set_attack_level(boma, 0, 5 as u8);
-            }
-        }
-    }
-    frame(lua_state, 53.0);
-    if is_excute(agent) {
-        AttackModule::clear_all(boma);
-    }
     frame(lua_state, 54.0);
-    WorkModule::on_flag(boma, *FIGHTER_MASTER_STATUS_SPECIAL_LW_FLAG_PULL_AXE);
-    let motion_rate = 1.0;
-    FT_MOTION_RATE(agent, motion_rate);
-    ArticleModule::set_rate(boma, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, 1.0/motion_rate);
+    if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_MASTER_STATUS_SPECIAL_LW_FLAG_PULL_AXE);
+        let motion_rate = 1.0;
+        FT_MOTION_RATE(agent, motion_rate);
+        ArticleModule::set_rate(boma, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, 1.0/motion_rate);
+    }
     frame(lua_state, 56.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_MASTER_STATUS_SPECIAL_LW_FLAG_REVERT_DEGREE_X);
@@ -838,17 +793,6 @@ unsafe extern "C" fn effect_speciallwhit(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 0, 0, 17, 0, 0, 0, 1.3, 0, 0, 0, 0, 0, 0, true);
         LAST_EFFECT_SET_RATE(agent, 0.9);
-    }
-    frame(lua_state, 1.0);
-    if is_excute(agent) {
-        if VarModule::get_int(agent.battle_object, vars::master::status::SPECIAL_LW_HOLD) > 1 {
-            EFFECT_FOLLOW(agent, Hash40::new("master_axe_slash_particle"), Hash40::new("top"), 0, 4, 0, -10, 0, 0, 3.0, true);
-            EFFECT_OFF_KIND(agent, Hash40::new("master_axe_slash_air_reverb"), true, true);
-        }
-        else{
-            EFFECT_FOLLOW(agent, Hash40::new("master_axe_slash_particle"), Hash40::new("top"), 0, 4, 0, -10, 0, 0, 1, true);
-            EFFECT_OFF_KIND(agent, Hash40::new("master_axe_slash_air_reverb"), true, true);
-        }
     }
     frame(lua_state, 56.0);
     if is_excute(agent) {

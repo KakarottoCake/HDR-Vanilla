@@ -61,16 +61,6 @@ unsafe fn tech_roll_help(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
-unsafe fn sideb_freefall(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_S)
-    && fighter.is_situation(*SITUATION_KIND_AIR)
-    && CancelModule::is_enable_cancel(fighter.module_accessor) {
-        fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL_SPECIAL, true);
-        let cancel_module = *(fighter.module_accessor as *mut BattleObjectModuleAccessor as *mut u64).add(0x128 / 8) as *const u64;
-        *(((cancel_module as u64) + 0x1c) as *mut bool) = false;  // CancelModule::is_enable_cancel = false
-    }
-}
-
 // Fixes weird vanilla behavior where touching ground during upB puts you into special fall for 1f before landing
 unsafe fn up_special_proper_landing(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_HI_JUMP)
@@ -83,7 +73,7 @@ unsafe fn up_special_proper_landing(fighter: &mut L2CFighterCommon) {
 
 unsafe fn dreamland_express(fighter: &mut L2CFighterCommon) {
     if fighter.is_motion(Hash40::new("attack_12"))
-    && (15.0..=23.0).contains(&fighter.motion_frame())
+    && (17.0..=19.0).contains(&fighter.motion_frame())
     && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
         VarModule::on_flag(fighter.battle_object, vars::littlemac::instance::ATTACK_13_DREAMLAND_EXPRESS);
     }
@@ -105,28 +95,12 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         ]) 
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
-        if fighter.is_flag(*FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE) {
-            if [*FIGHTER_KINETIC_TYPE_MOTION_AIR, *FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE].contains(&KineticModule::get_kinetic_type(fighter.module_accessor)) {
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION);
-                let speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
-
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
-                app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
-                
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-                app::sv_kinetic_energy::enable(fighter.lua_state_agent);
-
-                KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_MOTION, fighter.module_accessor);
-            }
-        }
     }
 }
 
 unsafe fn training_mode_meter(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_status(*FIGHTER_STATUS_KIND_APPEAL)
+    if app::smashball::is_training_mode()
+    && boma.is_status(*FIGHTER_STATUS_KIND_APPEAL)
     && boma.is_button_trigger(Buttons::Guard) {
         let meter = WorkModule::get_float(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
         let meter_inc = (meter + 40.0).clamp(0.0, 100.0);
@@ -148,7 +122,6 @@ pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut
     side_special_whiff_ledgegrab(fighter);
     fastfall_specials(fighter);
     training_mode_meter(fighter, boma);
-    //sideb_freefall(fighter);
 }
 
 pub extern "C" fn littlemac_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {

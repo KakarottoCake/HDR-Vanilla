@@ -166,23 +166,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         ]) 
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
-        if fighter.is_flag(*FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE) {
-            if [*FIGHTER_KINETIC_TYPE_MOTION_AIR, *FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE].contains(&KineticModule::get_kinetic_type(fighter.module_accessor)) {
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION);
-                let speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
-
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
-                app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
-                
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-                app::sv_kinetic_energy::enable(fighter.lua_state_agent);
-
-                KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_MOTION, fighter.module_accessor);
-            }
-        }
     }
 }
 
@@ -229,34 +212,6 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     fastfall_specials(fighter);
     up_special_freefall(fighter, boma);
     camera_lockout(fighter);
-    // EWGF macro
-    fighter.unable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_U);
-    fighter.unable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_S);
-    if (
-        CancelModule::is_enable_cancel(fighter.module_accessor) 
-        || WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_LW)
-    )
-    && !fighter.is_in_hitlag()
-    && fighter.is_situation(*SITUATION_KIND_GROUND) {
-        let lr = PostureModule::lr(fighter.module_accessor);
-        if fighter.is_button_on(Buttons::AppealHi) {
-            fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ATTACK_STEP_2F.into(), true.into());
-        }
-        if fighter.is_button_on(Buttons::AppealSL) {
-            if lr > 0.0 {
-                PostureModule::reverse_lr(fighter.module_accessor);
-                PostureModule::update_rot_y_lr(fighter.module_accessor);
-            }
-            fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ATTACK_STEP_2F.into(), true.into());
-        }
-        if fighter.is_button_on(Buttons::AppealSR) {
-            if lr < 0.0 {
-                PostureModule::reverse_lr(fighter.module_accessor);
-                PostureModule::update_rot_y_lr(fighter.module_accessor);
-            }
-            fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ATTACK_STEP_2F.into(), true.into());
-        }
-    }
 }
 
 pub extern "C" fn demon_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {

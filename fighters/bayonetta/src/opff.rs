@@ -2,16 +2,9 @@ use super::*;
 use globals::*;
 utils::import_noreturn!(common::opff::fighter_common_opff);
 
-unsafe fn magic_series_aerial_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
-    //gr cancels
-    if !AttackModule::is_attack(boma, 0, false) 
-    && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
-        fighter.check_magicseries();
-    }
-    //air cancels
+unsafe fn aerial_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     if fighter.is_motion_one_of(&[Hash40::new("attack_air_n"), Hash40::new("attack_air_hi"), Hash40::new("attack_air_lw"), Hash40::new("attack_air_f3"), Hash40::new("attack_air_b")]) //dont cancel with fair 1/2
-    && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) //dont cancel on shield
-    && !AttackModule::is_infliction_status(boma, *crate::consts::COLLISION_KIND_MASK_PARRY)
+    && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) //dont cancel on shield
     && !fighter.is_in_hitlag() //dont cancel during hitstop
     && !fighter.is_flag(*FIGHTER_BAYONETTA_STATUS_ATTACK_AIR_FLAG_SHOOTING) { //don't cancel DURING bullet arts
         let mut new_status = 0;
@@ -19,6 +12,9 @@ unsafe fn magic_series_aerial_cancels(fighter: &mut L2CFighterCommon, boma: &mut
         if fighter.is_cat_flag(Cat1::SpecialN) {
             is_input_cancel = true;
             new_status = *FIGHTER_STATUS_KIND_SPECIAL_N;
+            VarModule::on_flag(fighter.battle_object, vars::bayonetta::instance::WAS_CANCEL);
+            StatusModule::change_status_request_from_script(boma, new_status, true);
+            return;
         } else if fighter.is_cat_flag(Cat1::SpecialHi) {
             if fighter.get_int(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SPECIAL_HI_USED_COUNT) < 2 {
                 is_input_cancel = true;
@@ -29,9 +25,6 @@ unsafe fn magic_series_aerial_cancels(fighter: &mut L2CFighterCommon, boma: &mut
                 is_input_cancel = true;
                 new_status = *FIGHTER_STATUS_KIND_SPECIAL_S;
             }
-        } else if fighter.is_cat_flag(Cat1::SpecialLw) {
-            is_input_cancel = true;
-            new_status = *FIGHTER_STATUS_KIND_SPECIAL_LW;
         }
         if !fighter.is_motion(Hash40::new("attack_air_lw")) {fighter.check_airdodge_cancel(); }
         if is_input_cancel && VarModule::get_int(fighter.battle_object, vars::bayonetta::instance::RECOVERY_RESOURCE_COUNT) < 2 {
@@ -51,7 +44,6 @@ unsafe fn reset_flags(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     if lag < 1.0 { //same methd as vanilla
         //filters out lag-cancel techs
         if fighter.get_int(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SPECIAL_AIR_S_USED_COUNT) == 0 && fighter.get_int(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SPECIAL_HI_USED_COUNT) == 0 {
-            VarModule::off_flag(fighter.battle_object, vars::bayonetta::instance::SPECIAL_S_WHIFF);
             if fighter.is_situation(*SITUATION_KIND_AIR) && resource >= 1 {
                 VarModule::set_int(fighter.battle_object, vars::bayonetta::instance::RECOVERY_RESOURCE_COUNT, 1);
             } else { //only gives back 2nd resource
@@ -120,28 +112,11 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_WALL_END]) 
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
-        if fighter.is_flag(*FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE) {
-            if [*FIGHTER_KINETIC_TYPE_MOTION_AIR, *FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE].contains(&KineticModule::get_kinetic_type(fighter.module_accessor)) {
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION);
-                let speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
-
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
-                app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
-                
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-                app::sv_kinetic_energy::enable(fighter.lua_state_agent);
-
-                KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_MOTION, fighter.module_accessor);
-            }
-        }
     }
 }
 
 pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, frame: f32) {
-    magic_series_aerial_cancels(fighter, boma);
+    aerial_cancels(fighter, boma);
     reset_flags(fighter, boma);
     forward_tilt(boma);
     bat_within_air_motion(fighter);

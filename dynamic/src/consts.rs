@@ -193,6 +193,10 @@ pub mod vars {
 
             pub const DOWN_DISABLE_PASSIVE: i32 = 0x006B;
 
+            pub const DOWN_DISABLE_A_LAND: i32 = 0x006C;
+
+            pub const IS_KILLING_BLOW: i32 = 0x006D;
+
             // ints
 
             pub const LAST_ATTACK_RECEIVER_ENTRY_ID: i32 = 0x0000;
@@ -203,6 +207,8 @@ pub mod vars {
             pub const FLOAT_STATUS_KIND: i32 = 0x0003;
 
             pub const HITFALL_BUFFER: i32 = 0x0004;
+
+            pub const FLY_NEXT_FRAME: i32 = 0x0005;
 
             // pub const JUMP_SQUAT_FRAME: i32 = 0x0005;
 
@@ -338,12 +344,13 @@ pub mod vars {
 
     pub mod bayonetta {
         pub mod instance {
-            // flag
-            pub const SPECIAL_S_WHIFF: i32 = 0x0100;
+            // flags
+            pub const WAS_CANCEL: i32 = 0x0100;
+
             // ints
             pub const RECOVERY_RESOURCE_COUNT: i32 = 0x0100;
             pub const ATTACK_AIR_F_COUNT: i32 = 0x0101;
-            pub const SPECIAL_N_CANCEL_TYPE: i32 = 0x0102;
+            pub const SPECIAL_N_CANCEL_TYPE: i32 = 0x0102; //used for both cancel and firing
             pub const SPECIAL_S_DABK_COUNT: i32 = 0x0103;
         }
         pub mod status {
@@ -656,7 +663,6 @@ pub mod vars {
         pub mod instance {
             // flags
             pub const SPECIAL_LW_DISABLE_STALL: i32 = 0x0100;
-            pub const HANDS_OFF_MY: i32 = 0x0101;
         }
         pub mod status {
             // flags
@@ -782,13 +788,16 @@ pub mod vars {
     pub mod kirby {
         pub mod instance {
             // flags
-            pub const DISABLE_SPECIAL_HI: i32 = 0x01FF; //Weird value to avoid conflicts with copy ability values
+            //pub const DISABLE_SPECIAL_HI: i32 = 0x01FF; //Weird value to avoid conflicts with copy ability values
             pub const SPECIAL_N_PICKEL_CYCLE_MATERIAL: i32 = 0x01F4;
             pub use super::super::ridley::instance::SPECIAL_N_EXPLODE;
 
             // ints
             pub const SPECIAL_N_PICKEL_MATERIAL_INDEX: i32 = 0x01F5;
             pub use super::super::bayonetta::instance::SPECIAL_N_CANCEL_TYPE;
+            pub const SPECIAL_N_PTRAINER_PLEDGE_STATE: i32 = 0x01F6;    // Unique var as it doesn't like borrowing from ptrainer
+            pub use super::super::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER;
+            pub const SPECIAL_N_PTRAINER_PLEDGE_EFFECT_HANDLE: i32 = 0x01F7;
 
             // floats
             pub use super::super::reflet::instance::SPECIAL_N_CHARGE;
@@ -1067,16 +1076,6 @@ pub mod vars {
         pub mod instance {
             // flags
             pub const SPECIAL_S_HIT: i32 = 0x0100;
-            pub const COMPLETED_SET_SPEEDS: i32 = 0x0101;
-            pub const META_QUICK_NEED_SET_SPEEDS: i32 = 0x0102;
-            pub const META_QUICK_PLAY_VC: i32 = 0x0103;
-
-            // ints
-            pub const META_QUICK_READY_FLASH_TIMER: i32 = 0x0100;
-            pub const META_QUICK_STATUS: i32 = 0x0101;
-            pub const META_QUICK_EFFECT_HANDLE: i32 = 0x0102;
-            pub const META_QUICK_EFFECT_HANDLE2: i32 = 0x0103;
-            pub const META_QUICK_CHARGE_EFFECT_HANDLE: i32 = 0x0104;
         }
     }
 
@@ -1133,7 +1132,12 @@ pub mod vars {
     pub mod miigunner_supermissile {
         pub mod instance {
             // flags
-            pub const PULSE_DETONATE: i32 = 0x0100;
+            pub const ENABLE_PULSE: i32 = 0x0100;
+            pub const PULSE_DETONATE: i32 = 0x0101;
+        }
+        pub mod status {
+            // ints
+            pub const PULSE_TIMER: i32 = 0x1100;
         }
     }
 
@@ -1962,10 +1966,6 @@ pub mod statuses {
         pub const GROUND_POUND_START: i32 = 0x1E3;
         pub const GROUND_POUND_FALL: i32 = 0x1E4;
         pub const GROUND_POUND_END: i32 = 0x1E5;
-    }
-
-    pub mod metaknight {
-        pub const METAQUICK_SUMMON: i32 = 0x1F1;
     }
 
     pub mod mewtwo {

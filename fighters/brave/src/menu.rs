@@ -72,17 +72,17 @@ pub unsafe fn roll_spells(fighter: &mut BattleObject, vals: &mut Vec<i32>) {
         used_vals.push(VarModule::get_int(fighter, vars::brave::instance::SPELL_SLOT_USED_2_2));
         used_vals.push(VarModule::get_int(fighter, vars::brave::instance::SPELL_SLOT_USED_2_3));
         used_vals.push(VarModule::get_int(fighter, vars::brave::instance::SPELL_SLOT_USED_2_4));
-        let roll = smash::app::sv_math::rand(smash::hash40("fighter"), 200);
+        let roll = smash::app::sv_math::rand(smash::hash40("fighter"), 100);
 
         // rarer rolls
         let mut val = match roll {
             0 => 0x8,
             1..=3 => 0x7,
             4..=6 => 0x5,
-            7..=12 => 0x6,
+            7..=9 => 0x6,
+            10..=12 => 0xE,
             13..=22 => 0x9,
             23..=32 => 0x12,
-            33..=132 => 0xE, // lots of hocus pocus lol
             _ => 0xF
         };
 
@@ -152,7 +152,7 @@ pub unsafe extern "C" fn hero_rng_hook_impl(fighter: &mut BattleObject) {
             VarModule::on_flag(fighter, vars::brave::instance::PERSIST_RNG);
             index = 0;
             let we_ball = smash::app::sv_math::rand(smash::hash40("fighter"), 100);
-            if we_ball >= 50 {
+            if we_ball == 1 {
                 EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_level_up"), Hash40::new("top"), &Vector3f::new(0.0, 10.0, 0.0), &Vector3f::new(0.0, 0.0, 0.0), 0.8, false, 0, 0, 0, 0, 0, false, false);
                 SoundModule::play_se_no3d(fighter.module_accessor, Hash40::new("se_item_specialflag_1up"), true, true);
                 let mut rand: i32;

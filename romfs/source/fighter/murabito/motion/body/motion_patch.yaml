@@ -159,6 +159,3 @@ step_pose_back:
     cancel_frame: 6
 cliff_wait:
   blend_frames: 2
-attack_air_f:
-  extra:
-    cancel_frame: 35

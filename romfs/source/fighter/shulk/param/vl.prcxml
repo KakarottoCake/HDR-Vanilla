@@ -8,16 +8,16 @@
   </list>
   <list hash="param_special_n">
     <struct index="0">
-      <float hash="active_time_jump">30</float>
-      <float hash="active_time_speed">30</float>
-      <float hash="active_time_shield">30</float>
-      <float hash="active_time_buster">30</float>
-      <float hash="active_time_smash">30</float>
-      <float hash="unavailable_time_jump">1</float>
-      <float hash="unavailable_time_speed">1</float>
-      <float hash="unavailable_time_shield">1</float>
-      <float hash="unavailable_time_buster">1</float>
-      <float hash="unavailable_time_smash">1</float>
+      <float hash="active_time_jump">9</float>
+      <float hash="active_time_speed">6</float>
+      <float hash="active_time_shield">12</float>
+      <float hash="active_time_buster">9</float>
+      <float hash="active_time_smash">9</float>
+      <float hash="unavailable_time_jump">15</float>
+      <float hash="unavailable_time_speed">15</float>
+      <float hash="unavailable_time_shield">15</float>
+      <float hash="unavailable_time_buster">15</float>
+      <float hash="unavailable_time_smash">15</float>
       <float hash="jump_height_mul">1.9</float>
       <float hash="jump_air_speed_x_mul">1.6</float>
       <float hash="jump_air_speed_y_mul">1.35</float>

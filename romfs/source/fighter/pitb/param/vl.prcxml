@@ -18,6 +18,7 @@
         <float index="1">1.97</float>
         <float index="2">1.76</float>
       </list>
+      <int hash="shoot_fly_next_frame">25</int>
     </struct>
   </list>
   <list hash="param_bowarrow">
@@ -43,11 +44,11 @@
   <list hash="param_special_hi">
     <struct index="0">
       <float hash="rush_speed">2.75</float>
-      <int hash="rush_brake_frame">10</int>
+      <int hash="rush_brake_frame">12</int>
       <float hash="rush_end_speed_rate_x">0.15</float>
       <float hash="rush_end_speed_rate_y">0.15</float>
       <int hash="landing_frame">42</int>
-      <float hash="rush_angle">140</float>
+      <float hash="rush_angle">170</float>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>

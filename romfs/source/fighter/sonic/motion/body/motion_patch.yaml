@@ -532,21 +532,3 @@ step_pose_back:
     cancel_frame: 6
 cliff_wait:
   blend_frames: 2
-appeal_hi_l:
-  extra:
-    cancel_frame: 1
-appeal_hi_r:
-  extra:
-    cancel_frame: 1
-appeal_s_l:
-  extra:
-    cancel_frame: 1
-appeal_s_r:
-  extra:
-    cancel_frame: 1
-appeal_lw_l:
-  extra:
-    cancel_frame: 1
-appeal_lw_r:
-  extra:
-    cancel_frame: 1

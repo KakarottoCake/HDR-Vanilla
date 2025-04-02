@@ -19,27 +19,19 @@ unsafe extern "C" fn game_attacks4(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 21.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 14.0, 361, 105, 0, 10, 3.5, 0.0, 3.5, 13.0, Some(0.0), Some(3.5), Some(6.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 14.0, 361, 105, 0, 10, 3.5, 0.0, 3.5, 13.0, Some(0.0), Some(5.0), Some(6.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
         AttackModule::clear(boma, 1, false);
         AttackModule::clear(boma, 2, false);
     }
     frame(lua_state, 22.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 14.0, 361, 105, 0, 10, 3.5, 0.0, 3.5, 12.0, Some(0.0), Some(3.5), Some(5.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 14.0, 361, 105, 0, 10, 3.5, 0.0, 3.5, 12.0, Some(0.0), Some(5.0), Some(5.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
     }
     frame(lua_state, 23.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 14.0, 361, 105, 0, 10, 3.5, 0.0, 3.5, 11.0, Some(0.0), Some(3.5), Some(4.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 14.0, 361, 105, 0, 10, 3.5, 0.0, 3.5, 11.0, Some(0.0), Some(5.0), Some(4.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
     }
     frame(lua_state, 24.0);
-    if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 14.0, 361, 105, 0, 10, 3.5, 0.0, 3.5, 10.0, Some(0.0), Some(3.5), Some(3.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
-    }
-    frame(lua_state, 25.0);
-    if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 14.0, 361, 105, 0, 10, 3.5, 0.0, 3.5, 9.0, Some(0.0), Some(3.5), Some(2.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
-    }
-    frame(lua_state, 26.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
@@ -132,50 +124,10 @@ unsafe extern "C" fn game_attackhi4(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn game_attacklw4(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    if is_excute(agent) {
-        if !agent.is_prev_status_one_of(&[*FIGHTER_STATUS_KIND_APPEAL, *FIGHTER_STATUS_KIND_SQUAT]) {
-            VarModule::off_flag(agent.battle_object, vars::falco::instance::HANDS_OFF_MY);
-        }
-    }
-    frame(lua_state, 2.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
-    }
-    frame(lua_state, 3.0);
-    if is_excute(agent) {
-        HIT_NODE(agent, Hash40::new("kneer"), *HIT_STATUS_XLU);
-        HIT_NODE(agent, Hash40::new("kneel"), *HIT_STATUS_XLU);
-        HIT_NODE(agent, Hash40::new("legr"), *HIT_STATUS_XLU);
-        HIT_NODE(agent, Hash40::new("legl"), *HIT_STATUS_XLU);
-    }
-    frame(lua_state, 8.0);
-    if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 15.0, 25, 78, 0, 20, 4.3, 0.0, 1.7, 9.1, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.4, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 15.0, 25, 78, 0, 20, 4.3, 0.0, 1.7, -12.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.4, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        ATTACK(agent, 2, 0, Hash40::new("top"), 12.0, 361, 78, 0, 20, 3.5, 0.0, 1.7, 3.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.4, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        ATTACK(agent, 3, 0, Hash40::new("top"), 12.0, 361, 78, 0, 20, 3.5, 0.0, 1.7, -5.1, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.4, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        AttackModule::set_attack_height_all(boma, AttackHeight(*ATTACK_HEIGHT_LOW), false);
-    }
-    wait(lua_state, 1.0);
-    if is_excute(agent) {
-        HitModule::set_status_all(boma, HitStatus(*HIT_STATUS_NORMAL), 0);
-    }
-    wait(lua_state, 2.0);
-    if is_excute(agent) {
-        VarModule::off_flag(agent.battle_object, vars::falco::instance::HANDS_OFF_MY);
-        AttackModule::clear_all(boma);
-    }
-}
-
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_attacks4", game_attacks4, Priority::Low);
     agent.acmd("effect_attacks4", effect_attacks4, Priority::Low);
     agent.acmd("expression_attacks4", expression_attacks4, Priority::Low);
     
     agent.acmd("game_attackhi4", game_attackhi4, Priority::Low);
-
-    agent.acmd("game_attacklw4", game_attacklw4, Priority::Low);
 }

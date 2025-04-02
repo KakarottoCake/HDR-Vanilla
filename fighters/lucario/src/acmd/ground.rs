@@ -85,15 +85,15 @@ unsafe extern "C" fn game_attackdash(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 7.0);
     FT_MOTION_RATE_RANGE(agent, 7.0, 18.0, 6.0);
-    sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.7);
+    sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.55);
     if is_excute(agent) {
         MeterModule::watch_damage(agent.battle_object, true);
         VarModule::on_flag(agent.battle_object, vars::lucario::status::HIT_CANCEL);
         VarModule::set_int(agent.battle_object, vars::lucario::status::HIT_CANCEL_TIMER, 12);
-        ATTACK(agent, 0, 0, Hash40::new("top"),   9.0, 55, 66, 0, 42, 3.8, 0.0, 4.0, 2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_LUCARIO, *ATTACK_REGION_KICK);
-        ATTACK(agent, 1, 0, Hash40::new("legl"),  9.0, 55, 66, 0, 42, 3.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_LUCARIO, *ATTACK_REGION_KICK);
-        ATTACK(agent, 2, 0, Hash40::new("kneel"), 9.0, 55, 66, 0, 42, 3.5, -0.5, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_LUCARIO, *ATTACK_REGION_KICK);
-        ATTACK(agent, 3, 0, Hash40::new("footl"), 11.0, 60, 66, 0, 48, 4.5, 2.5, 0.0, 0.0, None, None, None, 1.15, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_LUCARIO, *ATTACK_REGION_KICK);
+        ATTACK(agent, 0, 0, Hash40::new("top"),   7.5, 55, 66, 0, 42, 3.8, 0.0, 4.0, 2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_LUCARIO, *ATTACK_REGION_KICK);
+        ATTACK(agent, 1, 0, Hash40::new("legl"),  7.5, 55, 66, 0, 42, 3.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_LUCARIO, *ATTACK_REGION_KICK);
+        ATTACK(agent, 2, 0, Hash40::new("kneel"), 7.5, 55, 66, 0, 42, 3.5, -0.5, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_LUCARIO, *ATTACK_REGION_KICK);
+        ATTACK(agent, 3, 0, Hash40::new("footl"), 8.0, 60, 66, 0, 48, 4.5, 2.5, 0.0, 0.0, None, None, None, 1.15, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_LUCARIO, *ATTACK_REGION_KICK);
     }
     frame(lua_state, 18.0);
     FT_MOTION_RATE(agent, 1.0);
@@ -107,7 +107,7 @@ unsafe extern "C" fn game_attackdash(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
     }
     frame(lua_state, 24.0);
-    FT_MOTION_RATE_RANGE(agent, 24.0, 42.0, 15.0);
+    FT_MOTION_RATE_RANGE(agent, 24.0, 42.0, 27.0);
 }
 
 pub fn install(agent: &mut Agent) {

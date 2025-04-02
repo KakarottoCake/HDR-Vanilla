@@ -31,6 +31,41 @@
       <float hash="p1_y">21</float>
     </struct>
   </list>
+  <list size="11" hash="hit_durability_data">
+    <struct index="0">
+      <float hash="power_mul">1.0</float>
+    </struct>
+    <struct index="1">
+      <float hash="power_mul">1.0</float>
+    </struct>
+    <struct index="2">
+      <float hash="power_mul">1.0</float>
+    </struct>
+    <struct index="3">
+      <float hash="power_mul">1.0</float>
+    </struct>
+    <struct index="4">
+      <float hash="power_mul">1.0</float>
+    </struct>
+    <struct index="5">
+      <float hash="power_mul">1.0</float>
+    </struct>
+    <struct index="6">
+      <float hash="power_mul">1.0</float>
+    </struct>
+    <struct index="7">
+      <float hash="power_mul">1.0</float>
+    </struct>
+    <struct index="8">
+      <float hash="power_mul">1.0</float>
+    </struct>
+    <struct index="9">
+      <float hash="power_mul">1.0</float>
+    </struct>
+    <struct index="10">
+      <float hash="power_mul">1.0</float>
+    </struct>
+  </list>
   <list hash="param_cannonball">
     <struct index="0">
       <float hash="speed_min">1.2</float>
@@ -62,8 +97,8 @@
   <list hash="param_special_hi">
     <struct index="0">
       <float hash="shoot_speed_y">3.7</float>
-      <float hash="shoot_accel_mul">1.5</float>
-      <float hash="shoot_limit_x_mul">2.0</float>
+      <float hash="shoot_accel_mul">1.0</float>
+      <float hash="shoot_limit_x_mul">1.1</float>
       <int hash="shoot_gravity_frame">1</int>
       <float hash="shoot_gravity">0.111</float>
       <float hash="fall_limit_x_mul">0.85</float>
