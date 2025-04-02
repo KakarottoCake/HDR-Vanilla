@@ -44,7 +44,7 @@ unsafe fn set_lag(fighter: &mut L2CFighterCommon) {
     let dabk_lag = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lag.dive_side_special");//9
     let abk_lag = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lag.side_special");//6
     let witch_twist_lag = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lag.up_special");//6
-    let base_lag: f32 = 8.0;
+    let base_lag: f32 = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lag.whiff_lag"); //8
     let special_landing_frame_mul = fighter.get_param_float("special_landing_frame_mul", "");
     //normal special lag calc 
     //reworked from hard coded value based on move order (contrived) ->

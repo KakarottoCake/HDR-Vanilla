@@ -14,7 +14,7 @@ unsafe extern "C" fn effect_tame(agent: &mut L2CAgentBase) {
 			let tame_size = agent.get_float(*WEAPON_ZELDA_DEIN_STATUS_WORK_FLOAT_COUNT);
 			// Generate and store effects
 			let flash_handle = EffectModule::req_follow(boma, Hash40::new("sys_flash"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.35 + 0.005 * tame_size, false, 0, 0, 0, 0, 0, false, false);
-			let fire_handle = EffectModule::req_follow(boma, Hash40::new("zelda_appeal_s_fire"), Hash40::new("top"), &Vector3f::new(2.0, 0.0, 0.0), &Vector3f::zero(), 0.8 + 0.024 * tame_size, false, 0, 0, 0, 0, 0, false, false);
+			let fire_handle = EffectModule::req_follow(boma, Hash40::new("zelda_appeal_s_fire"), Hash40::new("top"), &Vector3f::new(2.0, -1.0, 0.0), &Vector3f::zero(), 0.8 + 0.024 * tame_size, false, 0, 0, 0, 0, 0, false, false);
 			VarModule::set_int64(zelda, vars::zelda::instance::SPECIAL_S_DEIN_FLASH_EFFECT_HANDLE, flash_handle);
 			VarModule::set_int64(zelda, vars::zelda::instance::SPECIAL_S_DEIN_FIRE_EFFECT_HANDLE, fire_handle);
 		}
@@ -49,7 +49,7 @@ unsafe extern "C" fn effect_tame(agent: &mut L2CAgentBase) {
 					let flash_size = if h == 50 { 0.45 + 0.01 * tame_size * 0.95} else if h == 80 { 0.6 + 0.0145 * tame_size * 0.95} else if h == 112 { 0.75 + 0.019 * tame_size * 0.95} else { 0.9 + 0.023 * tame_size * 0.95};
 					let fire_size = if h == 146 { 1.2 + 0.036 * tame_size } else { 0.8 + 0.024 * tame_size };
 					let flash_handle = EffectModule::req_follow(boma, Hash40::new("sys_flash"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), flash_size, false, 0, 0, 0, 0, 0, false, false);
-					let fire_handle = EffectModule::req_follow(boma, Hash40::new("zelda_appeal_s_fire"), Hash40::new("top"), &Vector3f::new(2.0, 0.0, 0.0), &Vector3f::zero(), fire_size, false, 0, 0, 0, 0, 0, false, false);
+					let fire_handle = EffectModule::req_follow(boma, Hash40::new("zelda_appeal_s_fire"), Hash40::new("top"), &Vector3f::new(2.0, -1.0, 0.0), &Vector3f::zero(), fire_size, false, 0, 0, 0, 0, 0, false, false);
 					// Apply color blend
 					EffectModule::set_rgb(boma, flash_handle as u32, blend_vector.x, blend_vector.y, blend_vector.z);
 					EffectModule::set_rgb(boma, fire_handle as u32, flame_blend_vector.x, flame_blend_vector.y, flame_blend_vector.z);
