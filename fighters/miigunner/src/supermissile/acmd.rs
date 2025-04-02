@@ -59,6 +59,7 @@ unsafe extern "C" fn effect_sburst(agent: &mut L2CAgentBase) {
         frame(lua_state, 4.0);
         if is_excute(agent) {
             EffectModule::set_rate(boma, handle as u32, 0.6);
+            EFFECT_DETACH_KIND(agent, Hash40::new("miigunner_atk_shot5"), 0);
         }
     }
     else {

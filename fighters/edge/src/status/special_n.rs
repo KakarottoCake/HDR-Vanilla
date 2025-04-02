@@ -9,8 +9,11 @@ unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue 
     WorkModule::set_int(fighter.module_accessor, -1, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS);
     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_GUARD);
     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_JUMP);
+    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT);
+    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON);
     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_ESCAPE);
-    ControlModule::set_add_jump_mini_button_life(fighter.module_accessor, 8);
+    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_JUMP_AERIAL);
+    // ControlModule::set_add_jump_mini_button_life(fighter.module_accessor, 8);
     fighter.main_shift(special_n_main_loop)
 }
 
@@ -26,7 +29,7 @@ unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_EDGE_STATUS_SPECIAL_N_FLAG_REQUEST_SHOOT) {
         if WorkModule::get_int(fighter.module_accessor, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CHARGE_KIND) != *FIGHTER_EDGE_SPECIAL_N_NONE {
             fighter.change_status(FIGHTER_EDGE_STATUS_KIND_SPECIAL_N_SHOOT.into(), false.into());
-            return 0.into()
+            return 0.into();
         }
     }
     if MotionModule::is_end(fighter.module_accessor) {
@@ -45,34 +48,32 @@ unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
         }
     }
     else {
-        if fighter.sub_check_command_guard().get_bool() {
+        if fighter.sub_check_command_guard().get_bool() || fighter.is_pad_flag(PadFlag::GuardTrigger) {
             if fighter.is_situation(*SITUATION_KIND_GROUND) {
-                WorkModule::set_int(fighter.module_accessor, *FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS);
+                WorkModule::set_int(fighter.module_accessor, *FIGHTER_STATUS_KIND_WAIT, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS);
                 fighter.change_status(FIGHTER_EDGE_STATUS_KIND_SPECIAL_N_CANCEL.into(), false.into());
-                return 1.into()
+                return 1.into();
             }
             else {
-                if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_ESCAPE_AIR) {
-                    WorkModule::set_int(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS);
-                    fighter.change_status(FIGHTER_EDGE_STATUS_KIND_SPECIAL_N_CANCEL.into(), false.into());
-                    return 1.into()
-                }
+                WorkModule::set_int(fighter.module_accessor, *STATUS_KIND_NONE, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS);
+                fighter.change_status(FIGHTER_EDGE_STATUS_KIND_SPECIAL_N_CANCEL.into(), false.into());
+                return 1.into();
+            }
+        }
+        if fighter.is_situation(*SITUATION_KIND_AIR) {
+            if fighter.sub_check_jump_in_charging_for_cancel_status((*FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS).into()).get_bool() {
+                WorkModule::set_int(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS);
+                fighter.change_status(FIGHTER_EDGE_STATUS_KIND_SPECIAL_N_JUMP_CANCEL.into(), true.into());
+                return 1.into();
             }
         }
         else {
-            if fighter.is_situation(*SITUATION_KIND_AIR) {
-                if fighter.sub_check_jump_in_charging().get_bool() {
-                    WorkModule::set_int(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS);
-                    fighter.change_status(FIGHTER_EDGE_STATUS_KIND_SPECIAL_N_JUMP_CANCEL.into(), true.into());
-                }
+            if fighter.sub_check_jump_in_charging_for_cancel_status((*FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS).into()).get_bool() {
+                WorkModule::set_int(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS);
+                fighter.change_status(FIGHTER_EDGE_STATUS_KIND_SPECIAL_N_CANCEL.into(), true.into());
+                return 1.into();
             }
-            else {
-                if (fighter.is_cat_flag(Cat1::JumpButton) || (ControlModule::is_enable_flick_jump(fighter.module_accessor) && fighter.is_cat_flag(Cat1::Jump) && fighter.sub_check_button_frick().get_bool())) {
-                    WorkModule::set_int(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS);
-                    fighter.change_status(FIGHTER_EDGE_STATUS_KIND_SPECIAL_N_CANCEL.into(), true.into());
-                }
-                // roll transitions removed
-            }
+            // roll transitions removed
         }
     }
 

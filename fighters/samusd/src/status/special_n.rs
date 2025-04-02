@@ -138,26 +138,11 @@ unsafe extern "C" fn special_n_h_main_loop(fighter: &mut L2CFighterCommon) -> L2
     }
     if fighter.is_situation(*SITUATION_KIND_GROUND) {
         if fighter.sub_check_jump_in_charging().get_bool() {
-            if fighter.sub_check_button_jump().get_bool() {
-                fighter.set_int(*FIGHTER_SAMUS_SPECIAL_N_CANCEL_TYPE_GROUND_JUMP, *FIGHTER_SAMUS_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
-            }
-            else {
-                fighter.set_int(*FIGHTER_SAMUS_SPECIAL_N_CANCEL_TYPE_NONE, *FIGHTER_SAMUS_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
-            }
+            fighter.set_int(*FIGHTER_SAMUS_SPECIAL_N_CANCEL_TYPE_GROUND_JUMP, *FIGHTER_SAMUS_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
             fighter.change_status(FIGHTER_SAMUS_STATUS_KIND_SPECIAL_N_C.into(), true.into());
             return 1.into();
         }
-        if fighter.sub_check_command_guard().get_bool() {
-            if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON) {
-                fighter.set_int(*FIGHTER_SAMUS_SPECIAL_N_CANCEL_TYPE_GROUND_GUARD, *FIGHTER_SAMUS_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
-            }
-            else {
-                fighter.set_int(*FIGHTER_SAMUS_SPECIAL_N_CANCEL_TYPE_NONE, *FIGHTER_SAMUS_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
-            }
-            fighter.change_status(FIGHTER_SAMUS_STATUS_KIND_SPECIAL_N_C.into(), true.into());
-            return 1.into();
-        }
-        if fighter.is_pad_flag(PadFlag::GuardTrigger) {
+        if fighter.sub_check_command_guard().get_bool() || fighter.is_pad_flag(PadFlag::GuardTrigger) {
             fighter.set_int(*FIGHTER_SAMUS_SPECIAL_N_CANCEL_TYPE_NONE, *FIGHTER_SAMUS_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
             fighter.change_status(FIGHTER_SAMUS_STATUS_KIND_SPECIAL_N_C.into(), true.into());
             return 1.into();
@@ -169,30 +154,10 @@ unsafe extern "C" fn special_n_h_main_loop(fighter: &mut L2CFighterCommon) -> L2
             fighter.change_status(FIGHTER_SAMUS_STATUS_KIND_SPECIAL_N_C.into(), true.into());
             return 1.into();
         }
-        if fighter.is_cat_flag(Cat1::Jump) {
-            if fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT) < fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX) {
-                if ControlModule::is_enable_flick_jump(fighter.module_accessor)
-                && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL) {
-                    fighter.set_int(*FIGHTER_SAMUS_SPECIAL_N_CANCEL_TYPE_AIR_JUMP_AERIAL, *FIGHTER_SAMUS_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
-                }
-                else {
-                    fighter.set_int(*FIGHTER_SAMUS_SPECIAL_N_CANCEL_TYPE_NONE, *FIGHTER_SAMUS_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
-                }
-                fighter.change_status(FIGHTER_SAMUS_STATUS_KIND_SPECIAL_N_JUMP_CANCEL.into(), true.into());
-                return 1.into();
-            }
-        }
-        if fighter.is_cat_flag(Cat1::JumpButton) {
-            if fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT) < fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX) {
-                if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL) {
-                    fighter.set_int(*FIGHTER_SAMUS_SPECIAL_N_CANCEL_TYPE_AIR_JUMP_AERIAL, *FIGHTER_SAMUS_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
-                }
-                else {
-                    fighter.set_int(*FIGHTER_SAMUS_SPECIAL_N_CANCEL_TYPE_NONE, *FIGHTER_SAMUS_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
-                }
-                fighter.change_status(FIGHTER_SAMUS_STATUS_KIND_SPECIAL_N_JUMP_CANCEL.into(), true.into());
-                return 1.into();
-            }
+        if fighter.sub_check_jump_in_charging().get_bool() {
+            fighter.set_int(*FIGHTER_SAMUS_SPECIAL_N_CANCEL_TYPE_AIR_JUMP_AERIAL, *FIGHTER_SAMUS_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
+            fighter.change_status(FIGHTER_SAMUS_STATUS_KIND_SPECIAL_N_JUMP_CANCEL.into(), true.into());
+            return 1.into();
         }
     }
     if !fighter.global_table[IS_STOPPING].get_bool() {

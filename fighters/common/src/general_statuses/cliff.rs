@@ -67,10 +67,14 @@ unsafe fn bind_address_call_status_CliffWait(fighter: &mut L2CFighterCommon) -> 
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_cliff_common_input)]
 unsafe fn sub_cliff_common_input(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if [*FIGHTER_STATUS_KIND_CLIFF_CATCH, *FIGHTER_STATUS_KIND_CLIFF_WAIT].contains(&fighter.status()) 
-    && fighter.is_cat_flag(Cat1::Catch) {
+    let status_kind = fighter.global_table[STATUS_KIND].clone();
+
+    if (status_kind == FIGHTER_STATUS_KIND_CLIFF_CATCH
+        || status_kind == FIGHTER_STATUS_KIND_CLIFF_WAIT)
+    && fighter.global_table[CMD_CAT1].get_i32() & *FIGHTER_PAD_CMD_CAT1_FLAG_CATCH != 0 {
         fighter.on_flag(*FIGHTER_STATUS_CLIFF_FLAG_TO_RELEASE);
     }
+
     call_original!(fighter)
 }
 
@@ -121,23 +125,8 @@ unsafe fn status_CliffWait_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
                 if !fighter.is_flag(*FIGHTER_INSTANCE_WORK_ID_FLAG_SUB_FIGHTER) {
                     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x20cbc92683), 1, FIGHTER_LOG_DATA_INT_CLIFF_RELEASE_NUM);
                 }
-                fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
-                fighter.clear_commands(
-                    Cat1::AttackN 
-                    | Cat1::AttackS3 
-                    | Cat1::AttackHi3 
-                    | Cat1::AttackLw3 
-                    | Cat1::AttackS4 
-                    | Cat1::AttackHi4 
-                    | Cat1::AttackLw4 
-                    | Cat1::AttackAirN 
-                    | Cat1::AttackAirF 
-                    | Cat1::AttackAirB 
-                    | Cat1::AttackAirHi 
-                    | Cat1::AttackAirLw 
-                    | Cat1::AirEscape
-                    | Cat1::Catch
-                );
+                fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), true.into());
+                ControlModule::reset_trigger(fighter.module_accessor);
                 return true.into();
             }
         }

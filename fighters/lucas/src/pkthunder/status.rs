@@ -6,6 +6,11 @@ utils::import!(common::djc::attack_air_main_status);
 // WEAPON_LUCAS_PK_THUNDER_STATUS_KIND_MOVE //
 
 unsafe extern "C" fn move_exec(weapon: &mut L2CFighterCommon) -> L2CValue {
+    if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_REFLECTOR) {
+        AttackModule::clear_inflict_kind_status(weapon.module_accessor);
+        let life = weapon.get_param_float("param_pkthunder", "life") as i32;
+        weapon.set_int(life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    }
     if !VarModule::is_flag(weapon.object(), vars::lucas::status::SPECIAL_HI_THUNDER_LOOSE) {
         let parent_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID);
         let parent_object = get_battle_object_from_id(parent_id as u32);

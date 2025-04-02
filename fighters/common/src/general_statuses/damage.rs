@@ -368,7 +368,7 @@ unsafe extern "C" fn fighterstatusdamage_init_damage_speed_up_by_speed(
     }
 
     // calculate speed_up_mul
-    let min_mul = 1.1;
+    let min_mul = 1.15;
     let max_mul = 1.65;
     let power = 1.0;
     let ratio = ((speed - speed_start) / (speed_end - speed_start));
