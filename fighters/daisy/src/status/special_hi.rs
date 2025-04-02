@@ -40,7 +40,7 @@ unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2C
 
             if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
                 fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
-                return 1.into();
+                return 0.into();
             }
         }
 

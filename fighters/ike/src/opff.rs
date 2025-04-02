@@ -403,7 +403,7 @@ unsafe fn fair_wrist_bend(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
-unsafe fn quickdraw_attack_whiff_freefall(fighter: &mut L2CFighterCommon) {
+unsafe fn quickdraw_attack_freefall(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_IKE_STATUS_KIND_SPECIAL_S_ATTACK)
     && fighter.is_situation(*SITUATION_KIND_AIR)
     && CancelModule::is_enable_cancel(fighter.module_accessor) {
@@ -442,7 +442,7 @@ pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut
     jab_lean(boma);
     grab_lean(boma);
     fair_wrist_bend(boma);
-    quickdraw_attack_whiff_freefall(fighter);
+    quickdraw_attack_freefall(fighter);
     fastfall_specials(fighter);
 }
 
