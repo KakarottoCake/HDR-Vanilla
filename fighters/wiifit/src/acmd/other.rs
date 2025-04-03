@@ -7,7 +7,7 @@ unsafe extern "C" fn sound_damagefly(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         if !StopModule::is_stop(boma) {
             if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
-                PLAY_SE(agent, Hash40::new("vc_wiifit_damagefly02"));
+                PLAY_SE(agent, Hash40::new("vc_wiifit_futtobi02"));
             }
             else {
                 let play_vc = if DamageModule::reaction(boma, 0) < 100.0 {
@@ -23,7 +23,7 @@ unsafe extern "C" fn sound_damagefly(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         if !SoundModule::is_playing_voice(boma) {
             if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
-                PLAY_SE(agent, Hash40::new("vc_wiifit_damagefly02"));
+                PLAY_SE(agent, Hash40::new("vc_wiifit_futtobi02"));
             }
             else {
                 let play_vc = if DamageModule::reaction(boma, 0) < 100.0 {
@@ -44,7 +44,7 @@ unsafe extern "C" fn sound_damageflyroll(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         if !StopModule::is_stop(boma) {
             if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
-                PLAY_SE(agent, Hash40::new("vc_wiifit_damagefly02"));
+                PLAY_SE(agent, Hash40::new("vc_wiifit_futtobi02"));
             }
             else {
                 PLAY_FLY_VOICE(agent, Hash40::new("seq_wiifit_rnd_futtobi01"), Hash40::new("seq_wiifit_rnd_futtobi02"));
@@ -55,7 +55,7 @@ unsafe extern "C" fn sound_damageflyroll(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         if !SoundModule::is_playing_voice(boma) {
             if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
-                PLAY_SE(agent, Hash40::new("vc_wiifit_damagefly02"));
+                PLAY_SE(agent, Hash40::new("vc_wiifit_futtobi02"));
             }
             else {
                 PLAY_FLY_VOICE(agent, Hash40::new("seq_wiifit_rnd_futtobi01"), Hash40::new("seq_wiifit_rnd_futtobi02"));
