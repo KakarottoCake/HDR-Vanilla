@@ -25,8 +25,7 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
     *FIGHTER_STATUS_KIND_DAMAGE_FALL];
 
     if (fighter.is_situation(*SITUATION_KIND_GROUND) || fighter.is_situation(*SITUATION_KIND_CLIFF))
-    || fighter.is_status_one_of(damage_statuses)
-    || fighter.is_status(*FIGHTER_STATUS_KIND_GIMMICK_SPRING_JUMP) { 
+    || fighter.is_status_one_of(damage_statuses) { 
         //Re-enable Pyra UpB
         VarModule::off_flag(fighter.battle_object, vars::eflame::instance::DISABLE_SPECIAL_HI);
 

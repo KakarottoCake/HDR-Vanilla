@@ -76,6 +76,7 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
             *FIGHTER_STATUS_KIND_MIIFIGHTER_COUNTER_THROWN,
             *FIGHTER_STATUS_KIND_BITTEN_WARIO_START,
             *FIGHTER_STATUS_KIND_CAPTURE_JACK_WIRE,
+            *FIGHTER_STATUS_KIND_CAPTURE_MASTER_SWORD
         ])) {
             VarModule::off_flag(fighter.battle_object, vars::gamewatch::instance::SPECIAL_HI_ENABLE_PARACHUTE);
         }
