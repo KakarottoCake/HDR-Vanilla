@@ -105,7 +105,7 @@ unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
 		AttackModule::set_catch_only_all(boma, true, false);
 	}
 	frame(lua_state, 50.0);
-	FT_MOTION_RATE_RANGE(agent, 50.0, 78.0, 14.0);
+	FT_MOTION_RATE_RANGE(agent, 50.0, 78.0, 13.0);
 	if is_excute(agent) {
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
 		AttackModule::clear_all(boma);

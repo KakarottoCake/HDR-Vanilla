@@ -139,7 +139,9 @@ unsafe extern "C" fn game_throwb(agent: &mut L2CAgentBase) {
         CAM_ZOOM_OUT(agent);
     }
     frame(lua_state, 48.0);
-    FT_MOTION_RATE(agent, 0.375);
+    FT_MOTION_RATE_RANGE(agent, 48.0, 84.0, 12.0);
+    frame(lua_state, 84.0);
+    FT_MOTION_RATE(agent, 1.0);
 }
 
 unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
