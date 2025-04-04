@@ -4,7 +4,7 @@ use globals::*;
 
 mod copy;
 mod landing_fall_special;
-mod special_hi_h;
+mod special_hi;
 mod special_lw;
 mod special_s;
 
@@ -305,7 +305,7 @@ pub fn install(agent: &mut Agent) {
 
     copy::install(agent);
     landing_fall_special::install(agent);
-    special_hi_h::install(agent);
+    special_hi::install(agent);
     special_lw::install(agent);
     special_s::install(agent);
 }
