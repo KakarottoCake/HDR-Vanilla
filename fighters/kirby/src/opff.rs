@@ -22,7 +22,7 @@ unsafe fn hammer_swing_drift_landcancel(fighter: &mut smash::lua2cpp::L2CFighter
         if fighter.is_situation(*SITUATION_KIND_GROUND) && fighter.is_prev_situation(*SITUATION_KIND_AIR) {
             AttackModule::clear_all(fighter.module_accessor);
             MotionModule::change_motion_force_inherit_frame(fighter.module_accessor, Hash40::new("special_s"), 33.0, 1.0, 1.0);
-            MotionModule::set_rate(fighter.module_accessor, (55.0 - 33.0)/25.0);    // equates to 17F landing lag
+            MotionModule::set_rate(fighter.module_accessor, (55.0 - 33.0)/27.0);    // equates to 19F landing lag
         }
     }
     if fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK]) {
