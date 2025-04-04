@@ -1058,10 +1058,7 @@ pub mod vars {
             // flags
             pub const ATTACK_S4_SPECIAL: i32 = 0x0100;
             pub const SPECIAL_HI_CATCH_USED: i32 = 0x0101;
-        }
-        pub mod status {
-            // flags
-            pub const SPECIAL_LW_HOLD: i32 = 0x1100;
+            pub const SPECIAL_LW_HOLD: i32 = 0x0102;
         }
     }
 
