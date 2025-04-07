@@ -580,13 +580,6 @@ pub mod vars {
         }
     }
 
-    pub mod duckhunt_can {
-        pub mod instance {
-            // flags
-            pub const KILLSHOT_EXPLODE: i32 = 0x0100;
-        }
-    }
-
     pub mod edge {
         pub mod instance {
             // flags
