@@ -4,6 +4,59 @@ use vars::common::instance::GIMMICK_TIMER;
 use vars::rosetta::instance::*;
 use vars::rosetta::status::*;
 
+unsafe extern "C" fn effect_specialnchargestart(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        //EFFECT_FOLLOW(agent, Hash40::new("rosetta_wand_light"), Hash40::new("havel"), 0, 7.5, 0, 0, 0, 0, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("rosetta_wand_stardust"), Hash40::new("havel"), 0, 7.5, 0, 0, 0, 0, 1, true);
+        EffectModule::enable_sync_init_pos_last(boma);
+        EFFECT_FOLLOW(agent, Hash40::new("rosetta_ticoshot_hold_end"), Hash40::new("havel"), 0, 7.5, 0, 0, 0, 0, 1, true);
+    }
+    frame(lua_state, 7.0);
+    if is_excute(agent) {
+        FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, -3, 0, 0, 0, 1, 2, 0, 4, 0, 0, 0, true);
+    }
+    wait(lua_state, 6.0);
+}
+
+unsafe extern "C" fn sound_specialnchargestart(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 1.0);
+    if is_excute(agent) {
+        let sound = SoundModule::play_status_se(boma, Hash40::new("se_rosetta_special_n01"), true, false, false);
+        SoundModule::set_se_vol(boma, sound as i32, 0.45, 0);
+        //PLAY_STATUS(agent, Hash40::new("se_rosetta_special_n01"));
+    }
+}
+
+unsafe extern "C" fn game_specialnreturn(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 1.0);
+    FT_MOTION_RATE(agent, 0.6);
+    if ArticleModule::is_exist(boma, *FIGHTER_ROSETTA_GENERATE_ARTICLE_TICO) {
+        let tico = ArticleModule::get_article(boma, *FIGHTER_ROSETTA_GENERATE_ARTICLE_TICO);
+        let tico_id = smash::app::lua_bind::Article::get_battle_object_id(tico) as u32;
+        let tico_battle_object: *mut BattleObject = utils::util::get_battle_object_from_id(tico_id);
+        let tico_boma: &mut BattleObjectModuleAccessor = &mut *(*tico_battle_object).module_accessor;
+        if !VarModule::is_flag(agent.battle_object, vars::rosetta::instance::SPECIAL_LW_TICO_UNAVAILABLE) {//if lima is just floating around
+            StatusModule::change_status_force(tico_boma, statuses::rosetta_tico::STANDBY, true); //sit still for me deer
+        }
+    }
+    frame(lua_state, 8.0);
+    if is_excute(agent) {
+        ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 361, 100, 30, 0, 6.0, 0.0, 12.0, 14.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, true, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
+    }
+    frame(lua_state, 16.0);
+    if is_excute(agent) {
+        AttackModule::clear_all(boma);
+    }
+    frame(lua_state, 31.0);
+    FT_MOTION_RATE(agent, 0.75);
+}
+
 unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -216,6 +269,14 @@ unsafe extern "C" fn expression_speciallw(agent: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.acmd("effect_specialnchargestart", effect_specialnchargestart, Priority::Low);
+    agent.acmd("sound_specialnchargestart", sound_specialnchargestart, Priority::Low);
+    agent.acmd("effect_specialairnchargestart", effect_specialnchargestart, Priority::Low);
+    agent.acmd("sound_specialairnchargestart", sound_specialnchargestart, Priority::Low);
+
+    agent.acmd("game_specialnreturn", game_specialnreturn, Priority::Low);
+    agent.acmd("game_specialairnreturn", game_specialnreturn, Priority::Low);
+
     agent.acmd("game_specialhi", game_specialhi, Priority::Low);
     agent.acmd("game_specialhiend", game_specialhiend, Priority::Low);
 

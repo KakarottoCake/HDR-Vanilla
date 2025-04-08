@@ -1563,9 +1563,7 @@ pub mod vars {
             pub const ROSA_Y: i32 = 0x0102;
             pub const TICO_X: i32 = 0x0103;
             pub const TICO_Y: i32 = 0x0104;
-            pub const TICO_RAYCAST: i32 = 0x0106;
-            pub const TICO_X_DIST: i32 = 0x0107;
-            pub const TICO_Y_DIST: i32 = 0x0108;
+            pub const TICO_CHARGE_LEVEL: i32 = 0x0105;
 
             // flags
             pub const SPECIAL_LW_TICO_UNAVAILABLE: i32 = 0x0100;
@@ -2013,6 +2011,11 @@ pub mod statuses {
 
     pub mod reflet {
         pub const FLOAT: i32 = 0x1FD;
+    }
+
+    pub mod rosetta_tico {
+        pub const STANDBY: i32 = 0x34;
+        pub const POP: i32 = 0x35;
     }
 
     pub mod ryu {
