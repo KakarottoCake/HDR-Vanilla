@@ -8,8 +8,8 @@ unsafe fn hitstun_gravity_1(ctx: &mut skyline::hooks::InlineCtx) {
     let work_module = *ctx.registers[19].x.as_ref();
     let boma = *(work_module as *mut *mut BattleObjectModuleAccessor).add(1);
     let air_accel_y = WorkModule::get_param_float(boma, hash40("air_accel_y"), 0);
-    let hitstun_gravity_min: f32 = 0.11;
-    let hitstun_gravity_max: f32 = 0.17;
+    let hitstun_gravity_min = ParamModule::get_float((*boma).object(), ParamType::Common, "hitstun_gravity_min");
+    let hitstun_gravity_max = ParamModule::get_float((*boma).object(), ParamType::Common, "hitstun_gravity_max");
 
     let hitstun_gravity = air_accel_y.clamp(hitstun_gravity_min, hitstun_gravity_max);
 
@@ -29,8 +29,8 @@ unsafe fn hitstun_fall_speed_1(ctx: &mut skyline::hooks::InlineCtx) {
 unsafe fn hitstun_gravity_2(ctx: &mut skyline::hooks::InlineCtx) {
     let boma = *ctx.registers[1].x.as_ref() as *mut smash::app::BattleObjectModuleAccessor;
     let air_accel_y = WorkModule::get_param_float(boma, hash40("air_accel_y"), 0);
-    let hitstun_gravity_min: f32 = 0.11;
-    let hitstun_gravity_max: f32 = 0.17;
+    let hitstun_gravity_min = ParamModule::get_float((*boma).object(), ParamType::Common, "hitstun_gravity_min");
+    let hitstun_gravity_max = ParamModule::get_float((*boma).object(), ParamType::Common, "hitstun_gravity_max");
 
     let hitstun_gravity = air_accel_y.clamp(hitstun_gravity_min, hitstun_gravity_max);
 
@@ -50,8 +50,8 @@ unsafe fn hitstun_gravity_3(ctx: &mut skyline::hooks::InlineCtx) {
     let work_module = *ctx.registers[20].x.as_ref();
     let boma = *(work_module as *mut *mut BattleObjectModuleAccessor).add(1);
     let air_accel_y = WorkModule::get_param_float(boma, hash40("air_accel_y"), 0);
-    let hitstun_gravity_min: f32 = 0.11;
-    let hitstun_gravity_max: f32 = 0.17;
+    let hitstun_gravity_min = ParamModule::get_float((*boma).object(), ParamType::Common, "hitstun_gravity_min");
+    let hitstun_gravity_max = ParamModule::get_float((*boma).object(), ParamType::Common, "hitstun_gravity_max");
 
     let hitstun_gravity = air_accel_y.clamp(hitstun_gravity_min, hitstun_gravity_max);
 
