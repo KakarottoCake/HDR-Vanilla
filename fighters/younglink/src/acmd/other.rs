@@ -68,9 +68,7 @@ unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 40.0);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 2.500);
-    }
+    FT_MOTION_RATE(agent, 2.5);
     frame(lua_state, 61.0);
     if is_excute(agent) {
         if DamageModule::damage(boma, 0) > 2.5 {
@@ -78,9 +76,7 @@ unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
         }
     }
     frame(lua_state, 71.0);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 1.000);
-    }
+    FT_MOTION_RATE(agent, 1.0);
 }
 
 unsafe extern "C" fn game_dash(agent: &mut L2CAgentBase) {

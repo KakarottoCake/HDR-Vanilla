@@ -34,6 +34,27 @@ unsafe fn hammer_swing_drift_landcancel(fighter: &mut smash::lua2cpp::L2CFighter
     }
 }
 
+unsafe fn inhale_forced_end(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_EAT_FALL) {
+        if fighter.is_prev_status(*FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_SWALLOW) {
+            // inhaled in midair
+            if fighter.status_frame() >= 20 {
+                fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_SPIT.into(), false.into());
+            }
+        }
+        else {
+            // inhaled then walked offstage
+            if fighter.status_frame() >= 40 {
+                fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_SPIT.into(), false.into());
+            }
+        }
+    }
+    if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_EAT_JUMP2) && fighter.status_frame() >= 80 {
+        // inhaled then jumped offstage
+        fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_SPIT.into(), false.into());
+    }
+}
+
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     let copystatus = StatusModule::status_kind(fighter.module_accessor);
     if !fighter.is_in_hitlag()
@@ -67,6 +88,7 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon) {
     final_cutter_landing_bugfix(fighter);
     hammer_swing_drift_landcancel(fighter);
+    inhale_forced_end(fighter);
     fastfall_specials(fighter);
 
     copy::kirby_copy_handler(fighter);

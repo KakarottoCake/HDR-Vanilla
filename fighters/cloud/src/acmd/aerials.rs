@@ -57,9 +57,12 @@ unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
     }
     frame(lua_state, 43.0);
+    FT_MOTION_RATE_RANGE(agent, 43.0, 54.0, 6.0);
     if is_excute(agent) {
         WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
+    frame(lua_state, 54.0);
+    FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 77.0);
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);

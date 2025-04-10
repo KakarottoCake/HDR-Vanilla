@@ -25,8 +25,10 @@ unsafe extern "C" fn special_air_s_d_main_loop(fighter: &mut L2CFighterCommon) -
         if fighter.is_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_S_FLAG_LANDING_FALL_SPECIAL) {
             fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
         } else {
-            let special_lag = fighter.get_float(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLOAT_SPECIAL_LANDING_FRAME); 
-            let dabk_slide_lag = special_lag.max(fighter.get_param_int("param_special_s", "ab_d_landing_frame") as f32); //solid 30f landing lag.
+            let mut special_lag = fighter.get_float(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLOAT_SPECIAL_LANDING_FRAME); 
+            let whiff_lag = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lag.whiff_lag"); //5
+            if AttackModule::is_attack(fighter.module_accessor, 0, false) {special_lag+=whiff_lag;} //if resource hasnt been used yet manually add the lag
+            let dabk_slide_lag = special_lag.max(fighter.get_param_int("param_special_s", "ab_d_landing_frame") as f32); //solid 30f landing lag min
             fighter.set_float(dabk_slide_lag, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLOAT_SPECIAL_LANDING_FRAME); 
             fighter.change_status(FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_D_LANDING.into(), false.into());
         }
@@ -284,7 +286,7 @@ unsafe fn set_lag(fighter: &mut L2CFighterCommon) {
     let dabk_lag = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lag.dive_side_special");//9
     let abk_lag = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lag.side_special");//6
     let witch_twist_lag = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lag.up_special");//6
-    let base_lag: f32 = 8.0;
+    let base_lag: f32 = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lag.whiff_lag"); //8
     let special_landing_frame_mul = fighter.get_param_float("special_landing_frame_mul", "");
     //normal special lag calc 
     //reworked from hard coded value based on move order (contrived) ->

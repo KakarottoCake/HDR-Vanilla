@@ -84,7 +84,7 @@ unsafe extern "C" fn auraball_set_scale(fighter: &mut L2CFighterCommon) {
     let max_charge_frame = fighter.get_int(*WEAPON_LUCARIO_AURABALL_INSTANCE_WORK_ID_INT_PARAM_MAX_CHARGE_FRAME);
     let charge_frame = fighter.get_int(*WEAPON_LUCARIO_AURABALL_INSTANCE_WORK_ID_INT_CHARGE_FRAME);
     let charge_ratio = (charge_frame as f32) / (max_charge_frame as f32);
-    println!("charge_ratio: {}", charge_ratio);
+    //println!("charge_ratio: {}", charge_ratio);
 
     let mut hvar4 = "";
     let mut min_scale = 0.0;
@@ -96,7 +96,7 @@ unsafe extern "C" fn auraball_set_scale(fighter: &mut L2CFighterCommon) {
         hvar4 = "charge_max_scale_mid";
         min_scale = fighter.get_param_float("param_auraball", "charge_min_scale");
         if 1.0 <= charge_ratio {
-            println!("if conditional");
+            //println!("if conditional");
             max_scale = fighter.get_param_float("param_auraball", "charge_max_scale");
             let fvar9 = fighter.get_param_float("param_auraball", "charge_max_scale_mid");
             fighter.set_float(fvar9 / max_scale, *WEAPON_LUCARIO_AURABALL_INSTANCE_WORK_ID_FLOAT_EFFECT_JOINT_SCALE);
@@ -112,8 +112,8 @@ unsafe extern "C" fn auraball_set_scale(fighter: &mut L2CFighterCommon) {
 
     let scale = work_scale * (1.0 / original_size) * 
         ((charge_ratio * max_scale + (1.0 - charge_ratio) * min_scale) * work_aurapower * scale_mul + scale_add);
-    println!("scale: {}, work_scale: {}, original_size: {}, charge_ratio: {}, max_scale: {}, min_scale: {}, work_aurapower: {}, scale_mul: {}, scale_add: {}", 
-        scale, work_scale, original_size, charge_ratio, max_scale, min_scale, work_aurapower, scale_mul, scale_add);
+    // println!("scale: {}, work_scale: {}, original_size: {}, charge_ratio: {}, max_scale: {}, min_scale: {}, work_aurapower: {}, scale_mul: {}, scale_add: {}", 
+    //     scale, work_scale, original_size, charge_ratio, max_scale, min_scale, work_aurapower, scale_mul, scale_add);
     PostureModule::set_scale(fighter.module_accessor, scale, false);
 }
 

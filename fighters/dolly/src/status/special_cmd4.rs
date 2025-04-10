@@ -67,7 +67,7 @@ pub unsafe extern "C" fn attack_command_4_main_loop(fighter: &mut L2CFighterComm
     let frame = fighter.status_frame();
     if !VarModule::is_flag(fighter.battle_object, vars::dolly::status::ATTACK_COMMAND_4_RELEASE_BUTTON) && !ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
         VarModule::on_flag(fighter.battle_object, vars::dolly::status::ATTACK_COMMAND_4_RELEASE_BUTTON);
-        let button_strength = if motion_frame <= 4.0 {
+        let button_strength = if motion_frame <= 6.0 {
             *FIGHTER_DOLLY_STRENGTH_W
         } else {
             *FIGHTER_DOLLY_STRENGTH_S

@@ -54,7 +54,7 @@
       <float hash="accel_y">0.002</float>
       <int hash="time">0</int>
       <float hash="landing_frame">22</float>
-      <int hash="stop_time">20</int>
+      <int hash="stop_time">16</int>
       <float hash="attack_speed">3.5</float>
       <float hash="bound_angle">85</float>
       <float hash="attack_brake">0.08</float>
