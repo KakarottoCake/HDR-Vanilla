@@ -96,6 +96,8 @@ attack_s4_s:
   extra:
     cancel_frame: 52
 attack_s3_s:
+  extra:
+    cancel_frame: 35
 attack_s4_hi:
   extra:
     cancel_frame: 48
