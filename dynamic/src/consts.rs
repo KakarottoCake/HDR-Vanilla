@@ -1281,6 +1281,7 @@ pub mod vars {
         pub mod instance {
             //flags
             pub const CHARGE_STATE_ATTACK: i32 = 0x0102;
+            pub const SPECIAL_LW_DISCHARGE_AIR_START: i32 = 0x0103;
 
             //ints
             pub const CHARGE_STATE_ENABLED: i32 = 0x0100;
