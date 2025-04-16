@@ -121,6 +121,7 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
         let item_kind = agent.get_int(*FIGHTER_PEACH_STATUS_SPECIAL_LW_WORK_INT_UNIQ_ITEM_KIND); 
         if item_kind == *ITEM_KIND_NONE {
             ArticleModule::generate_article(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_DAIKON, false, -1);
+            notify_event_msc_cmd!(agent, Hash40::new_raw(0x2508b59a2b), FIGHTER_ITEM_HOLD_KIND_GRIP);//?
         } else if item_kind == *ITEM_KIND_BOMBHEI {
             ItemModule::have_item(boma, app::ItemKind(*ITEM_KIND_BOMBHEI), 0, 0, false, false);
         } else if item_kind == *ITEM_KIND_DOSEISAN {
@@ -161,7 +162,19 @@ unsafe extern "C" fn sound_speciallw(agent: &mut L2CAgentBase) {
     wait(lua_state, 12.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_peach_special_l01"));
-        if agent.get_int(*FIGHTER_PEACH_STATUS_SPECIAL_LW_WORK_INT_UNIQ_ITEM_KIND) != *ITEM_KIND_NONE 
+        // cant figure out
+        //let item_variation = -1;
+        //if ItemModule::is_have_item(boma, 0) {
+        //    //use smash2::app::ItemManager;
+        //    let item_manager = smash2::app::ItemManager::instance().unwrap();
+        //    let have_id = ItemModule::get_have_item_id(boma, 0);
+        //    let item = item_manager.find_active_item_from_id(have_id as u32) as *mut smash::app::Item;
+        //    let item_module_accessor = smash::app::lua_bind::Item::item_module_accessor(item) as *mut ItemModuleAccessor;
+        //    let item_boma = &mut (*item_module_accessor).battle_object_module_accessor;
+        //    let item_variation = WorkModule::get_int(item_boma, *ITEM_INSTANCE_WORK_INT_VARIATION);
+        //}
+        if agent.get_int(*FIGHTER_PEACH_STATUS_SPECIAL_LW_WORK_INT_UNIQ_ITEM_KIND) != *ITEM_KIND_NONE
+        //|| item_variation == *ITEM_VARIATION_PEACHDAIKON_8
         && ItemModule::is_have_item(boma, 0) {
             PLAY_SE(agent, Hash40::new("vc_peach_appeal01"));
         } 
