@@ -85,7 +85,13 @@ attack_11:
     cancel_frame: 17
 attack_dash:
   extra:
-    cancel_frame: 38
+    cancel_frame: 37
+attack_s3_s:
+  extra:
+    cancel_frame: 37
+attack_hi3:
+  extra:
+    cancel_frame: 35
 attack_lw3:
   flags:
     move: false
@@ -95,9 +101,6 @@ attack_hi4:
 attack_s4_s:
   extra:
     cancel_frame: 52
-attack_s3_s:
-  extra:
-    cancel_frame: 37
 attack_s4_hi:
   extra:
     cancel_frame: 48
@@ -152,6 +155,12 @@ special_air_n:
 throw_hi:
   extra:
     cancel_frame: 42
+special_n_hit:
+  extra:
+    cancel_frame: 55
+special_air_n_hit:
+  extra:
+    cancel_frame: 55
 furafura_end:
   extra:
     cancel_frame: 34

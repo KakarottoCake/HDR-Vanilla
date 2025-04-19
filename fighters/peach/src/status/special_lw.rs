@@ -55,6 +55,7 @@ unsafe extern "C" fn special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2C
             else {
                 GroundModule::correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
                 KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+                EFFECT_DETACH_KIND(fighter, Hash40::new("peach_hikkonuki"), -1);
             }
         }
     }
@@ -63,6 +64,12 @@ unsafe extern "C" fn special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2C
 
 unsafe extern "C" fn special_lw_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     if ItemModule::is_have_item(fighter.module_accessor, 0) {
+        let item_kind = fighter.get_int(*FIGHTER_PEACH_STATUS_SPECIAL_LW_WORK_INT_UNIQ_ITEM_KIND);
+        if item_kind != *ITEM_KIND_BEAMSWORD {
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2508b59a2b), FIGHTER_ITEM_HOLD_KIND_HAVE);//tells her to use correct item run ig, pull anim uses grip instead to position the turnip
+        } else {
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2508b59a2b), FIGHTER_ITEM_HOLD_KIND_GRIP);
+        }
         if StopModule::is_stop(fighter.module_accessor) && fighter.global_table[CURRENT_FRAME].get_i32() < 35 {
             ItemModule::drop_item(fighter.module_accessor, 90.0, 0.0, 0);
         }
