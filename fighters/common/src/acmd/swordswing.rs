@@ -13,16 +13,16 @@ pub unsafe fn game_SwordSwing3Common(fighter: &mut L2CFighterAnimcmdGameCommon) 
     if excute {
         ItemModule::set_have_item_scale_anim(boma, 1, 1.88, 0);
         agent.clear_lua_stack();
-        lua_args!(agent, 0, 0, Hash40::new("commonhave"), 8.0, 361, 88, 0, 35, 3.5, 0.0, 19.5, -2.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        lua_args!(agent, 0, 0, Hash40::new("commonhave"), 8.0, 50, 88, 0, 35, 3.5, 0.0, 19.5, -2.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         ATTACK(lua_state);
         agent.clear_lua_stack();
-        lua_args!(agent, 1, 0, Hash40::new("commonhave"), 8.0, 361, 88, 0, 35, 4.0, 0.0, 13.0, -2.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        lua_args!(agent, 2, 0, Hash40::new("commonhave"), 8.0, 50, 88, 0, 35, 4.0, 0.0, 13.0, -2.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         ATTACK(lua_state);
         agent.clear_lua_stack();
-        lua_args!(agent, 2, 0, Hash40::new("commonhave"), 9.0, 361, 88, 0, 35, 4.0, 0.0, 6.5, -2.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        lua_args!(agent, 3, 0, Hash40::new("commonhave"), 9.0, 361, 88, 0, 35, 4.0, 0.0, 6.5, -2.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         ATTACK(lua_state);
         agent.clear_lua_stack();
-        lua_args!(agent, 4, 0, Hash40::new("commonhave"), 9.0, 361, 88, 0, 35, 4.0, 0.0, 0.0, -2.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        lua_args!(agent, 1, 0, Hash40::new("commonhave"), 9.0, 361, 88, 0, 35, 4.0, 0.0, 0.0, -2.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         ATTACK(lua_state);
         agent.clear_lua_stack();
         lua_args!(agent, Hash40::new("se_item_beamsword_m"));
@@ -46,16 +46,16 @@ pub unsafe fn game_SwordSwing4Common(fighter: &mut L2CFighterAnimcmdGameCommon) 
     if excute {
         ItemModule::set_have_item_scale_anim(boma, 1, 2.96, 0);
         agent.clear_lua_stack();
-        lua_args!(agent, 0, 0, Hash40::new("commonhave"), 13.0, 361, 97, 0, 50, 4.5, 0.0, 29.0, -2.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        lua_args!(agent, 0, 0, Hash40::new("commonhave"), 13.0, 50, 97, 0, 50, 4.5, 0.0, 29.0, -2.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         ATTACK(lua_state);
         agent.clear_lua_stack();
-        lua_args!(agent, 1, 0, Hash40::new("commonhave"), 13.0, 361, 97, 0, 50, 5.0, 0.0, 20.0, -2.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        lua_args!(agent, 2, 0, Hash40::new("commonhave"), 13.0, 50, 97, 0, 50, 5.0, 0.0, 20.0, -2.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         ATTACK(lua_state);
         agent.clear_lua_stack();
-        lua_args!(agent, 2, 0, Hash40::new("commonhave"), 14.0, 361, 97, 0, 50, 5.0, 0.0, 10.0, -2.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        lua_args!(agent, 3, 0, Hash40::new("commonhave"), 14.0, 361, 97, 0, 50, 5.0, 0.0, 10.0, -2.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         ATTACK(lua_state);
         agent.clear_lua_stack();
-        lua_args!(agent, 4, 0, Hash40::new("commonhave"), 14.0, 361, 97, 0, 50, 5.0, 0.0, 0.0, -2.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        lua_args!(agent, 1, 0, Hash40::new("commonhave"), 14.0, 361, 97, 0, 50, 5.0, 0.0, 0.0, -2.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         ATTACK(lua_state);
         agent.clear_lua_stack();
         lua_args!(agent, Hash40::new("se_item_beamsword_l"));
@@ -79,16 +79,16 @@ pub unsafe fn game_SwordSwingDashCommon(fighter: &mut L2CFighterAnimcmdGameCommo
     if excute {
         ItemModule::set_have_item_scale_anim(boma, 1, 2.07, 0);
         agent.clear_lua_stack();
-        lua_args!(agent, 0, 0, Hash40::new("commonhave"), 7.0, 67, 70, 0, 80, 3.8, 0.0, 20.0, 0.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        lua_args!(agent, 0, 0, Hash40::new("commonhave"), 7.0, 72, 70, 0, 80, 3.8, 0.0, 20.0, 0.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         ATTACK(lua_state);
         agent.clear_lua_stack();
-        lua_args!(agent, 1, 0, Hash40::new("commonhave"), 7.0, 67, 70, 0, 80, 4.0, 0.0, 13.0, 0.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        lua_args!(agent, 2, 0, Hash40::new("commonhave"), 7.0, 72, 70, 0, 80, 4.0, 0.0, 13.0, 0.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         ATTACK(lua_state);
         agent.clear_lua_stack();
-        lua_args!(agent, 2, 0, Hash40::new("commonhave"), 8.0, 67, 70, 0, 80, 4.0, 0.0, 6.5, 0.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        lua_args!(agent, 3, 0, Hash40::new("commonhave"), 8.0, 67, 70, 0, 80, 4.0, 0.0, 6.5, 0.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         ATTACK(lua_state);
         agent.clear_lua_stack();
-        lua_args!(agent, 3, 0, Hash40::new("commonhave"), 8.0, 67, 70, 0, 80, 4.0, 0.0, 0.0, 0.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        lua_args!(agent, 1, 0, Hash40::new("commonhave"), 8.0, 67, 70, 0, 80, 4.0, 0.0, 0.0, 0.0, LUA_VOID, LUA_VOID, LUA_VOID, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         ATTACK(lua_state);
         agent.clear_lua_stack();
         lua_args!(agent, Hash40::new("se_item_beamsword_m"));

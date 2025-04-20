@@ -3,6 +3,7 @@ use globals::*;
 // status script import
 
 mod attack_air;
+mod item_throw;
 mod jump_aerial;
 mod special_hi;
 mod special_s;
@@ -36,8 +37,12 @@ unsafe extern "C" fn should_use_special_lw_callback(fighter: &mut L2CFighterComm
     if ItemModule::is_have_item(fighter.module_accessor, 0) {
         PostureModule::set_lr(fighter.module_accessor, direc);
         PostureModule::update_rot_y_lr(fighter.module_accessor);
-        fighter.change_status(FIGHTER_STATUS_KIND_ITEM_THROW.into(), false.into());
-        false.into()
+        ControlModule::reset_trigger(fighter.module_accessor);//force soft toss
+        ControlModule::clear_command(fighter.module_accessor, true);
+        VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
+        StatusModule::set_status_kind_interrupt(fighter.module_accessor, *FIGHTER_STATUS_KIND_ITEM_THROW);
+        fighter.change_status(FIGHTER_STATUS_KIND_ITEM_THROW.into(), true.into());
+        return false.into()
     } else if fighter.is_situation(*SITUATION_KIND_GROUND) {
         PostureModule::set_lr(fighter.module_accessor, direc);
         PostureModule::update_rot_y_lr(fighter.module_accessor);
@@ -80,6 +85,7 @@ pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
     
     attack_air::install(agent);
+    item_throw::install(agent);
     jump_aerial::install(agent);
     special_hi::install(agent);
     special_s::install(agent);

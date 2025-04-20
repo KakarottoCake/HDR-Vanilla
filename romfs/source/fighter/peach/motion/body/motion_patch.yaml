@@ -77,15 +77,15 @@ guard_off:
   blend_frames: 4
   extra:
     cancel_frame: 12
-attack_12:
-  extra:
-    cancel_frame: 20
 attack_11:
   extra:
     cancel_frame: 17
+attack_12:
+  extra:
+    cancel_frame: 20
 attack_dash:
   extra:
-    cancel_frame: 37
+    cancel_frame: 38
 attack_s3_s:
   extra:
     cancel_frame: 37
@@ -104,19 +104,19 @@ attack_s4_s:
 attack_s4_hi:
   extra:
     cancel_frame: 48
-attack_air_b:
-  flags:
-    move: false
+attack_air_n:
   extra:
-    cancel_frame: 42
+    cancel_frame: 44
 attack_air_f:
   flags:
     move: false
   extra:
     cancel_frame: 52
-attack_air_n:
+attack_air_b:
+  flags:
+    move: false
   extra:
-    cancel_frame: 44
+    cancel_frame: 42
 attack_s4_lw:
   extra:
     cancel_frame: 56
