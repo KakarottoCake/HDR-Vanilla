@@ -165,7 +165,7 @@ unsafe extern "C" fn game_throwhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 20.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("handr"), 2.0, 80, 100, 20, 0, 3.8, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("handr"), 2.0, 80, 100, 20, 0, 3.8, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PUNCH);
         AttackModule::set_catch_only_all(boma, true, false);
         CHECK_FINISH_CAMERA(agent, 0, 24);
     }
@@ -191,9 +191,11 @@ unsafe extern "C" fn effect_throwhi(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FLIP(agent, Hash40::new("sys_attack_speedline"), Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 17, -0.5, 90, 0, 0, 1, 0, 1, 0, 0, 0, 0, true, *EF_FLIP_YZ);
     }
-    frame(lua_state, 25.0);
+    frame(lua_state, 19.0);
     if is_excute(agent) {
-        EFFECT_FLIP(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("sys_smash_flash_s"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 1.1, 0, 1, 0, 0, 0, 0, true, *EF_FLIP_YZ);
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("peach_attack_heart"), Hash40::new("handr"), 0, 23.5, 0, 0, 90, 0, 0.5, true);
+        EFFECT_FOLLOW(agent, Hash40::new("peach_attack_hi3"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 0.83, true);
+        LAST_EFFECT_SET_RATE(agent, 1.33);
     }
     frame(lua_state, 40.0);
     if is_excute(agent) {

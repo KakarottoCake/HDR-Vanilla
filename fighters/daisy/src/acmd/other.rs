@@ -280,7 +280,7 @@ unsafe extern "C" fn game_itemlightthrowf(agent: &mut L2CAgentBase) {
         if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK) {
             let have_item = ItemModule::get_have_item_id(boma, 0) as u32;
             let have_item_boma = sv_battle_object::module_accessor(have_item);
-            ItemModule::throw_item(boma, 40.0, 2.15, 1.0, 0, true, agent.get_float(*ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_POWER));
+            ItemModule::throw_item(boma, 42.0, 2.15, 1.0, 0, true, agent.get_float(*ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_POWER));
             PostureModule::add_pos_2d(have_item_boma, &Vector2f {x: (4.0 * agent.lr()), y: 1.3});
         }
     }
