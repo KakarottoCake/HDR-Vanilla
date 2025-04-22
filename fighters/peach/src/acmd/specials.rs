@@ -8,9 +8,9 @@ unsafe extern "C" fn game_specialnhit(agent: &mut L2CAgentBase) {
             let special_n_attack_speed_y = agent.get_param_float("param_special_n", "special_n_attack_speed_y");
             sv_kinetic_energy!(set_speed, agent, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, special_n_attack_speed_y);
             let special_n_attack_stable_y = agent.get_param_float("param_special_n", "special_n_attack_stable_y");
-            sv_kinetic_energy!(set_stable_speed, agent, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, special_n_attack_stable_y);
+            sv_kinetic_energy!(set_stable_speed, agent, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -special_n_attack_stable_y);
             let special_n_attack_accel_y = agent.get_param_float("param_special_n", "special_n_attack_accel_y");
-            sv_kinetic_energy!(set_accel, agent, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, special_n_attack_accel_y);
+            sv_kinetic_energy!(set_accel, agent, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -special_n_attack_accel_y);
         } //force activation to use the same momentum handling 
         ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 0, 100, 20, 0, 5.5, 0.0, 7.5, 1.5, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 2, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
         ATTACK(agent, 1, 0, Hash40::new("top"), 0.0, 361, 100, 15, 0, 6.0, 0.0, 7.5, 2.0, Some(0.0), Some(7.5), Some(5.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 2, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
