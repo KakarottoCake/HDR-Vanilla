@@ -35,8 +35,8 @@ pub mod globals {
     pub const CMD_CAT3: i32 = 0x22;
     pub const CMD_CAT4: i32 = 0x23;
     // 0x24
-    // 0x25 transition handler, e.g. special resources and ground-only moves
-    // 0x26
+    // 0x25
+    // 0x26 transition handler, e.g. special resources and vegetable pull
     // 0x27
     // 0x28 some substatus
     pub const DASH_CALLBACK: i32 = 0x29;
