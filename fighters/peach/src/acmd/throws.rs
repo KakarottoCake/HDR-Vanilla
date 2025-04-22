@@ -135,30 +135,14 @@ unsafe extern "C" fn game_throwb(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
     }
     frame(lua_state, 35.0);
-    FT_MOTION_RATE_RANGE(agent, 35.0, 50.0, 8.0);   
+    FT_MOTION_RATE_RANGE(agent, 35.0, 50.0, 8.0);
+    frame(lua_state, 38.0);
     if is_excute(agent) {
         ArticleModule::remove_exist(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIO, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     }
     frame(lua_state, 45.0);
     if is_excute(agent) {
         REVERSE_LR(agent);
-    }
-}
-
-unsafe extern "C" fn effect_throwb(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_erace_smoke"), Hash40::new("top"), -5.0 *boma.lr(), 5, -0.5, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, true);
-        LAST_EFFECT_SET_RATE(agent, 1.33);
-    }
-    frame(lua_state, 19.0);
-    if is_excute(agent) {
-        LANDING_EFFECT_FLIP(agent, Hash40::new("sys_atk_smoke"), Hash40::new("sys_atk_smoke"), Hash40::new("top"), -5, 0, 0, 0, 180, 0, 0.7, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
-    }
-    frame(lua_state, 27.0);
-    if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true);
     }
 }
 
@@ -197,10 +181,6 @@ unsafe extern "C" fn game_throwhi(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_throwhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_erace_smoke"), Hash40::new("top"), -5.0 *boma.lr(), 5, -0.5, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, true);
-        LAST_EFFECT_SET_RATE(agent, 1.33);
-    }
     frame(lua_state, 18.0);
     if is_excute(agent) {
         EFFECT_FLIP(agent, Hash40::new("sys_attack_speedline"), Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 17, -0.5, 90, 0, 0, 1, 0, 1, 0, 0, 0, 0, true, *EF_FLIP_YZ);
@@ -214,6 +194,9 @@ unsafe extern "C" fn effect_throwhi(agent: &mut L2CAgentBase) {
     frame(lua_state, 40.0);
     if is_excute(agent) {
         LANDING_EFFECT_FLIP(agent, Hash40::new("sys_landing_smoke_s"), Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true, *EF_FLIP_NONE);
+        LANDING_EFFECT_FLIP(agent, Hash40::new("sys_landing_smoke_s"), Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), -7.0 * boma.lr(), 0, 7, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
+        EFFECT(agent, Hash40::new("sys_erace_smoke"), Hash40::new("top"), -5.0 * boma.lr(), 4, 7, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, true);
+        LAST_EFFECT_SET_RATE(agent, 1.2);
     }
 }
 
@@ -260,7 +243,6 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_throwf", game_throwf, Priority::Low);
 
     agent.acmd("game_throwb", game_throwb, Priority::Low);
-    agent.acmd("effect_throwb", effect_throwb, Priority::Low);
     
     agent.acmd("game_throwhi", game_throwhi, Priority::Low);
     agent.acmd("effect_throwhi", effect_throwhi, Priority::Low);
