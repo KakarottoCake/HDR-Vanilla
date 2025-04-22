@@ -112,9 +112,13 @@ unsafe extern "C" fn game_throwb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        ArticleModule::remove_exist(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIO, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 9.0, 127, 80, 0, 40, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 40, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        if IS_EXIST_ARTICLE(agent, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIO) {
+            if is_excute(agent) {
+                ArticleModule::change_motion(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIO, Hash40::new("throw_b"), false, -1.0);
+            }
+        }
     }
     frame(lua_state, 20.0);
     if is_excute(agent) {
@@ -132,6 +136,9 @@ unsafe extern "C" fn game_throwb(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 35.0);
     FT_MOTION_RATE_RANGE(agent, 35.0, 50.0, 8.0);   
+    if is_excute(agent) {
+        ArticleModule::remove_exist(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIO, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+    }
     frame(lua_state, 45.0);
     if is_excute(agent) {
         REVERSE_LR(agent);
@@ -159,9 +166,13 @@ unsafe extern "C" fn game_throwhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        ArticleModule::remove_exist(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIO, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 6.0, 84, 56, 0, 70, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 40, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        if IS_EXIST_ARTICLE(agent, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIO) {
+            if is_excute(agent) {
+                ArticleModule::change_motion(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIO, Hash40::new("throw_hi"), false, -1.0);
+            }
+        }
     }
     frame(lua_state, 20.0);
     if is_excute(agent) {
@@ -177,7 +188,10 @@ unsafe extern "C" fn game_throwhi(agent: &mut L2CAgentBase) {
         let target_no = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
     }
-    frame(lua_state, 42.0);
+    frame(lua_state, 40.0);
+    if is_excute(agent) {
+        ArticleModule::remove_exist(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIO, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+    }
 }
 
 unsafe extern "C" fn effect_throwhi(agent: &mut L2CAgentBase) {
