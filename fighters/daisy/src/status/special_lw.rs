@@ -27,6 +27,13 @@ unsafe extern "C" fn special_lw_pre(fighter: &mut L2CFighterCommon) -> L2CValue 
         *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW as u32,
         0
     );
+    if ItemModule::is_have_item(fighter.module_accessor, 0) {
+        ControlModule::reset_trigger(fighter.module_accessor);//force soft toss
+        ControlModule::clear_command(fighter.module_accessor, true);
+        VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
+        StatusModule::set_status_kind_interrupt(fighter.module_accessor, *FIGHTER_STATUS_KIND_ITEM_THROW);
+        return 1.into()
+    }
     0.into()
 }
 
@@ -69,7 +76,7 @@ unsafe extern "C" fn special_lw_end(fighter: &mut L2CFighterCommon) -> L2CValue 
         } else {
             notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2508b59a2b), FIGHTER_ITEM_HOLD_KIND_PICKUP);
         }
-        if StopModule::is_stop(fighter.module_accessor) && fighter.global_table[CURRENT_FRAME].get_i32() < 35 {
+        if fighter.global_table[globals::STATUS_KIND] != FIGHTER_STATUS_KIND_FALL && fighter.global_table[CURRENT_FRAME].get_i32() < 35 {
             ItemModule::drop_item(fighter.module_accessor, 90.0, 0.0, 0);
         }
     }

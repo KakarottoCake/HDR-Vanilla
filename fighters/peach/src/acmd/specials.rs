@@ -8,8 +8,8 @@ unsafe extern "C" fn game_specialnhit(agent: &mut L2CAgentBase) {
             let special_n_attack_speed_y = agent.get_param_float("param_special_n", "special_n_attack_speed_y");
             sv_kinetic_energy!(set_speed, agent, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, special_n_attack_speed_y);
         }
-        ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 0, 100, 25, 0, 5.0, 0.0, 7.5, 1.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 2, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 0.0, 361, 100, 25, 0, 6.0, 0.0, 7.5, 2.0, Some(0.0), Some(7.5), Some(5.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 2, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 0, 100, 20, 0, 5.5, 0.0, 7.5, 1.5, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 2, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 0.0, 361, 100, 15, 0, 6.0, 0.0, 7.5, 2.0, Some(0.0), Some(7.5), Some(5.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 2, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
     }
     frame(lua_state, 3.0);
     if is_excute(agent) {
@@ -167,6 +167,7 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
             let have_item = ItemModule::get_have_item_id(boma, 0) as u32;
             let have_item_boma = sv_battle_object::module_accessor(have_item);
             StatusModule::change_status_request_from_script(have_item_boma, *ITEM_STATUS_KIND_HAVE, true);//fix invisibility
+            notify_event_msc_cmd!(agent, Hash40::new_raw(0x2508b59a2b), FIGHTER_ITEM_HOLD_KIND_GRIP);
         } else if item_kind == *ITEM_KIND_BOMBHEI {
             ItemModule::have_item(boma, app::ItemKind(*ITEM_KIND_BOMBHEI), 0, 0, false, false);
             notify_event_msc_cmd!(agent, Hash40::new_raw(0x2508b59a2b), FIGHTER_ITEM_HOLD_KIND_GRIP);//make look better

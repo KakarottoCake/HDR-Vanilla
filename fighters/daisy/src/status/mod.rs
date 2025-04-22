@@ -2,17 +2,18 @@ use super::*;
 use globals::*;
 // status script import
 
+mod appeal;
 mod attack_air;
 mod attack_s4;
+mod catch;
+mod guard_damage;
+mod item_throw;
+mod pass;
 mod special_hi;
 mod special_lw;
 mod special_n;
 mod special_s;
 mod uniq_float;
-mod catch;
-mod appeal;
-mod guard_damage;
-mod item_throw;
 
 // Prevents sideB from being used again if it has already been used once in the current airtime
 unsafe extern "C" fn should_use_special_s_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -35,21 +36,12 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
 // Holding Item -> Toss
 unsafe extern "C" fn should_use_special_lw_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
     //try turnaround but no reverse
-    let turn_stick_x = fighter.get_param_float("common", "turn_stick_x") * fighter.lr() ;
+    let turn_stick_x = fighter.get_param_float("common", "turn_stick_x") * fighter.lr();
     let direc = if fighter.left_stick_x() <= turn_stick_x {-1.0} else {1.0};
-    if ItemModule::is_have_item(fighter.module_accessor, 0) {
+    if ItemModule::is_have_item(fighter.module_accessor, 0) || fighter.is_situation(*SITUATION_KIND_GROUND) {
         PostureModule::set_lr(fighter.module_accessor, direc);
         PostureModule::update_rot_y_lr(fighter.module_accessor);
-        ControlModule::reset_trigger(fighter.module_accessor);//force soft toss
-        ControlModule::clear_command(fighter.module_accessor, true);
-        VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
-        StatusModule::set_status_kind_interrupt(fighter.module_accessor, *FIGHTER_STATUS_KIND_ITEM_THROW);
-        fighter.change_status(FIGHTER_STATUS_KIND_ITEM_THROW.into(), true.into());
-        return false.into()
-    } else if fighter.is_situation(*SITUATION_KIND_GROUND) {
-        PostureModule::set_lr(fighter.module_accessor, direc);
-        PostureModule::update_rot_y_lr(fighter.module_accessor);
-        true.into()
+        true.into() //needs to enter status before tossing
     } else {
         false.into()
     }
@@ -85,16 +77,17 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
 
 pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
-
+    
+    appeal::install(agent);
     attack_air::install(agent);
     attack_s4::install(agent);
+    catch::install(agent);
+    guard_damage::install(agent);
+    item_throw::install(agent);
+    pass::install(agent);
     special_hi::install(agent);
     special_lw::install(agent);
     special_n::install(agent);
     special_s::install(agent);
     uniq_float::install(agent);
-    catch::install(agent);
-    appeal::install(agent);
-    guard_damage::install(agent);
-    item_throw::install(agent);
 }

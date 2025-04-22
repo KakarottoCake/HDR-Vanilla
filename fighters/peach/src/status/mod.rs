@@ -5,6 +5,7 @@ use globals::*;
 mod attack_air;
 mod item_throw;
 mod jump_aerial;
+mod pass;
 mod special_hi;
 mod special_s;
 mod special_lw;
@@ -32,23 +33,14 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
 // Holding Item -> Toss
 unsafe extern "C" fn should_use_special_lw_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
     //try turnaround but no reverse
-    let turn_stick_x = fighter.get_param_float("common", "turn_stick_x") * fighter.lr() ;
+    let turn_stick_x = fighter.get_param_float("common", "turn_stick_x") * fighter.lr();
     let direc = if fighter.left_stick_x() <= turn_stick_x {-1.0} else {1.0};
-    if ItemModule::is_have_item(fighter.module_accessor, 0) {
-        PostureModule::set_lr(fighter.module_accessor, direc);
-        PostureModule::update_rot_y_lr(fighter.module_accessor);
-        ControlModule::reset_trigger(fighter.module_accessor);//force soft toss
-        ControlModule::clear_command(fighter.module_accessor, true);
-        VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
-        StatusModule::set_status_kind_interrupt(fighter.module_accessor, *FIGHTER_STATUS_KIND_ITEM_THROW);
-        fighter.change_status(FIGHTER_STATUS_KIND_ITEM_THROW.into(), true.into());
+    if !ItemModule::is_have_item(fighter.module_accessor, 0) && !fighter.is_situation(*SITUATION_KIND_GROUND) {
         return false.into()
-    } else if fighter.is_situation(*SITUATION_KIND_GROUND) {
+    } else {
         PostureModule::set_lr(fighter.module_accessor, direc);
         PostureModule::update_rot_y_lr(fighter.module_accessor);
-        true.into()
-    } else {
-        false.into()
+        return true.into()
     }
 }
 
@@ -87,6 +79,7 @@ pub fn install(agent: &mut Agent) {
     attack_air::install(agent);
     item_throw::install(agent);
     jump_aerial::install(agent);
+    pass::install(agent);
     special_hi::install(agent);
     special_s::install(agent);
     special_lw::install(agent);

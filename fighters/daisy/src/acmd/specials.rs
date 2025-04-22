@@ -444,10 +444,10 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
             let have_item = ItemModule::get_have_item_id(boma, 0) as u32;
             let have_item_boma = sv_battle_object::module_accessor(have_item);
             StatusModule::change_status_request_from_script(have_item_boma, *ITEM_STATUS_KIND_HAVE, true);//fix invisibility
+            notify_event_msc_cmd!(agent, Hash40::new_raw(0x2508b59a2b), FIGHTER_ITEM_HOLD_KIND_GRIP);
         } else if item_kind == *ITEM_KIND_BOMBHEI {
             ItemModule::have_item(boma, app::ItemKind(*ITEM_KIND_FIREFLOWER), 0, 0, false, false);
             notify_event_msc_cmd!(agent, Hash40::new_raw(0x2508b59a2b), FIGHTER_ITEM_HOLD_KIND_HAVE);
-
         } else if item_kind == *ITEM_KIND_DOSEISAN {
             ItemModule::have_item(boma, app::ItemKind(*ITEM_KIND_SOCCERBALL), 0, 0, false, false);
             let have_item = ItemModule::get_have_item_id(boma, 0) as u32;
