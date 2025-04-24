@@ -3,35 +3,18 @@ use super::*;
 unsafe extern "C" fn sound_damagefly(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 1.0);
+    frame(lua_state, 2.0);
     if is_excute(agent) {
-        if !StopModule::is_stop(boma) {
-            if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
-                PLAY_SE(agent, Hash40::new("vc_pzenigame_damagefly02"));
-            }
-            else {
-                let play_vc = if DamageModule::reaction(boma, 0) < 100.0 {
-                    app::sv_math::rand(hash40("fighter"), 3)
-                } else {
-                    0
-                };
-                if play_vc == 0 {PLAY_FLY_VOICE(agent, Hash40::new("seq_pzenigame_rnd_futtobi01"), Hash40::new("seq_pzenigame_rnd_futtobi02"));}
-            }
-        }
-    }
-    frame(lua_state, 1.1);
-    if is_excute(agent) {
-        if !SoundModule::is_playing_voice(boma) {
-            if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
-                PLAY_SE(agent, Hash40::new("vc_pzenigame_damagefly02"));
-            }
-            else {
-                let play_vc = if DamageModule::reaction(boma, 0) < 100.0 {
-                    app::sv_math::rand(hash40("fighter"), 3)
-                } else {
-                    0
-                };
-                if play_vc == 0 {PLAY_FLY_VOICE(agent, Hash40::new("seq_pzenigame_rnd_futtobi01"), Hash40::new("seq_pzenigame_rnd_futtobi02"));}
+        if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
+            PLAY_SE(agent, Hash40::new("vc_pzenigame_damagefly02"));
+        } else {
+            let play_vc = if DamageModule::reaction(boma, 0) < 100.0 {
+                app::sv_math::rand(hash40("fighter"), 3)
+            } else {
+                0
+            };
+            if play_vc == 0 {
+                PLAY_FLY_VOICE(agent, Hash40::new("seq_pzenigame_rnd_futtobi01"), Hash40::new("seq_pzenigame_rnd_futtobi02"));
             }
         }
     }
@@ -40,26 +23,12 @@ unsafe extern "C" fn sound_damagefly(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_damageflyroll(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 1.0);
+    frame(lua_state, 2.0);
     if is_excute(agent) {
-        if !StopModule::is_stop(boma) {
-            if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
-                PLAY_SE(agent, Hash40::new("vc_pzenigame_damagefly02"));
-            }
-            else {
-                PLAY_FLY_VOICE(agent, Hash40::new("seq_pzenigame_rnd_futtobi01"), Hash40::new("seq_pzenigame_rnd_futtobi02"));
-            }
-        }
-    }
-    frame(lua_state, 1.1);
-    if is_excute(agent) {
-        if !SoundModule::is_playing_voice(boma) {
-            if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
-                PLAY_SE(agent, Hash40::new("vc_pzenigame_damagefly02"));
-            }
-            else {
-                PLAY_FLY_VOICE(agent, Hash40::new("seq_pzenigame_rnd_futtobi01"), Hash40::new("seq_pzenigame_rnd_futtobi02"));
-            }
+        if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
+            PLAY_SE(agent, Hash40::new("vc_pzenigame_damagefly02"));
+        } else {
+            PLAY_FLY_VOICE(agent, Hash40::new("seq_pzenigame_rnd_futtobi01"), Hash40::new("seq_pzenigame_rnd_futtobi02"));
         }
     }
 }
@@ -191,8 +160,7 @@ unsafe extern "C" fn game_appealhi(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 2.0);
     if is_excute(agent) {
-        if is_training_mode()
-        && LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
+        if is_training_mode() && LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
             let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
             let object = utils::util::get_battle_object_from_id(parent_id);
             let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
@@ -210,8 +178,7 @@ unsafe extern "C" fn effect_appealhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        if is_training_mode()
-        && LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
+        if is_training_mode() && LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
             EffectModule::kill_kind(boma, Hash40::new("sys_status_attack_up"), false, false);
             EffectModule::kill_kind(boma, Hash40::new("sys_status_defense_up"), false, false);
             EffectModule::kill_kind(boma, Hash40::new("sys_status_speed_up"), false, false);
@@ -220,8 +187,7 @@ unsafe extern "C" fn effect_appealhi(agent: &mut L2CAgentBase) {
             let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE) as i32;
             if pledge == *PLEDGE_STATE_GRASS {
                 VarModule::set_int(boma.object(), vars::pzenigame::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, -1);
-            }
-            else {
+            } else {
                 let handle = EffectModule::req_follow(boma, Hash40::new("sys_status_speed_up"), Hash40::new("hip"), &Vector3f::new(0.7, 0.0, 0.0), &Vector3f::zero(), 0.7, true, 0, 0, 0, 0, 0, true, true) as u32;
                 VarModule::set_int(agent.battle_object, vars::pzenigame::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, handle as i32);
                 boma.play_pledge_effect(*PLEDGE_STATE_GRASS);
@@ -239,8 +205,7 @@ unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 2.0);
     if is_excute(agent) {
-        if is_training_mode()
-        && LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
+        if is_training_mode() && LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
             let parent_id = LinkModule::get_parent_id(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
             let object = utils::util::get_battle_object_from_id(parent_id);
             let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
@@ -258,8 +223,7 @@ unsafe extern "C" fn effect_appeallw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        if is_training_mode()
-        && LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
+        if is_training_mode() && LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
             EffectModule::kill_kind(boma, Hash40::new("sys_status_attack_up"), false, false);
             EffectModule::kill_kind(boma, Hash40::new("sys_status_defense_up"), false, false);
             EffectModule::kill_kind(boma, Hash40::new("sys_status_speed_up"), false, false);
@@ -268,8 +232,7 @@ unsafe extern "C" fn effect_appeallw(agent: &mut L2CAgentBase) {
             let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE) as i32;
             if pledge == *PLEDGE_STATE_FIRE {
                 VarModule::set_int(boma.object(), vars::pzenigame::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, -1);
-            }
-            else {
+            } else {
                 let handle = EffectModule::req_follow(boma, Hash40::new("sys_status_attack_up"), Hash40::new("hip"), &Vector3f::new(0.7, 0.0, 0.0), &Vector3f::zero(), 0.7, true, 0, 0, 0, 0, 0, true, true) as u32;
                 VarModule::set_int(agent.battle_object, vars::pzenigame::instance::SPECIAL_N_PLEDGE_EFFECT_HANDLE, handle as i32);
                 boma.play_pledge_effect(*PLEDGE_STATE_FIRE);
@@ -303,7 +266,7 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("sound_damageflyn", sound_damagefly, Priority::Low);
     agent.acmd("sound_damageflytop", sound_damagefly, Priority::Low);
     agent.acmd("sound_damageflyroll", sound_damageflyroll, Priority::Low);
-    
+
     agent.acmd("effect_dash", effect_dash, Priority::Low);
     agent.acmd("sound_dash", sound_dash, Priority::Low);
 
