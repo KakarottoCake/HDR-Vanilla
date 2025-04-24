@@ -6,7 +6,7 @@ unsafe extern "C" fn sound_damagefly(agent: &mut L2CAgentBase) {
     frame(lua_state, 2.0);
     if is_excute(agent) {
         if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
-            PLAY_SE(agent, Hash40::new("vc_wiifit_damagefly02"));
+            PLAY_SE(agent, Hash40::new("vc_wiifit_futtobi02"));
         } else {
             let play_vc = if DamageModule::reaction(boma, 0) < 100.0 {
                 app::sv_math::rand(hash40("fighter"), 3)
@@ -26,7 +26,7 @@ unsafe extern "C" fn sound_damageflyroll(agent: &mut L2CAgentBase) {
     frame(lua_state, 2.0);
     if is_excute(agent) {
         if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_KILLING_BLOW) {
-            PLAY_SE(agent, Hash40::new("vc_wiifit_damagefly02"));
+            PLAY_SE(agent, Hash40::new("vc_wiifit_futtobi02"));
         } else {
             PLAY_FLY_VOICE(agent, Hash40::new("seq_wiifit_rnd_futtobi01"), Hash40::new("seq_wiifit_rnd_futtobi02"));
         }
