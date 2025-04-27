@@ -780,6 +780,20 @@ pub unsafe fn virtual_ftStatusUniqProcessDamage_exec_common(fighter: &mut L2CFig
     }
 }
 
+// Calculates the hitstun-gravity-based vertical knockback speedup threshold (speed_start_vertical) modifier
+// Characters with higher hitstun gravity will trigger vertical knockback speedup later
+// to prevent speedup from interfering with juggle situations
+unsafe extern "C" fn get_gravity_factor(fighter: &mut L2CFighterCommon) -> f32 {
+    let hitstun_gravity_min = ParamModule::get_float(fighter.battle_object, ParamType::Common, "hitstun_gravity_min");
+    let hitstun_gravity_max = ParamModule::get_float(fighter.battle_object, ParamType::Common, "hitstun_gravity_max");
+    let fighter_gravity = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_y"), 0);
+
+    let fighter_hitstun_gravity = fighter_gravity.clamp(hitstun_gravity_min, hitstun_gravity_max);
+
+    let scalar = ((fighter_hitstun_gravity - hitstun_gravity_min) / (hitstun_gravity_max - hitstun_gravity_min));
+    0.8.lerp(&1.0, &scalar)
+}
+
 // calculates launch angle factor
 // "compares the length of the vector to the corner of the screen, to the length of the kb vector" -JOB
 unsafe extern "C" fn get_angle_factor(angle_threshold: f32, angle: f32) -> f32 {
@@ -814,7 +828,8 @@ unsafe extern "C" fn fighterstatusdamage_init_damage_speed_up_by_speed(
     let angle = angle.get_f32();
     let angle_threshold = 29.358;
     let speed_start_horizontal = 3.8; // the start of scaling at angles below the angle_threshold
-    let speed_start_vertical = 6.2; // the start of scaling at completely vertical angles
+    let gravity_factor = get_gravity_factor(fighter);
+    let speed_start_vertical = 6.2 * gravity_factor; // the start of scaling at completely vertical angles
     let speed_end = 7.2; // the end of scaling
 
     // calculate true speed_start using angle
@@ -825,7 +840,7 @@ unsafe extern "C" fn fighterstatusdamage_init_damage_speed_up_by_speed(
 
     // exit if speed is too slow
     let speed = factor.get_f32();
-    println!("{}", speed);
+
     if check_damage_speed_up_fail(fighter) || speed <= speed_start {
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGE_SPEED_UP);
         WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DAMAGE_SPEED_UP_MAX_MAG);
@@ -833,7 +848,7 @@ unsafe extern "C" fn fighterstatusdamage_init_damage_speed_up_by_speed(
     }
 
     // calculate speed_up_mul
-    let min_mul = 1.21;
+    let min_mul = 1.25;
     let max_mul = 1.6;
     let power = 1.0;
     let ratio = ((speed - speed_start) / (speed_end - speed_start));
@@ -846,7 +861,6 @@ unsafe extern "C" fn fighterstatusdamage_init_damage_speed_up_by_speed(
     };
 
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGE_SPEED_UP);
-    EffectModule::req_on_joint(fighter.module_accessor, Hash40::new("sys_hammer_hit"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.0, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
     WorkModule::set_float(fighter.module_accessor, speed_up_mul, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DAMAGE_SPEED_UP_MAX_MAG);
 }
 
