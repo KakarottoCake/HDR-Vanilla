@@ -8,7 +8,12 @@ unsafe extern "C" fn sound_damagefly(fighter: &mut L2CAgentBase) {
         if VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_KILLING_BLOW) {
             PLAY_SE(fighter, Hash40::new("vc_richter_damagefly02"));
         } else {
-            let play_vc = if DamageModule::reaction(boma, 0) < 100.0 {
+            let damage_speed_x = fighter.get_speed_x(*FIGHTER_KINETIC_ENERGY_ID_DAMAGE);
+            let damage_speed_y = fighter.get_speed_y(*FIGHTER_KINETIC_ENERGY_ID_DAMAGE);
+
+            let speed_vector = sv_math::vec2_length(damage_speed_x, damage_speed_y);
+
+            let play_vc = if speed_vector < 3.8 {
                 app::sv_math::rand(hash40("fighter"), 3)
             } else {
                 0
