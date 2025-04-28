@@ -118,16 +118,12 @@ pub unsafe extern "C" fn process_item_on_collision(defender: u32, attacker: u32)
             }
             else if attacker_boma.is_item() {
                 let owner_id;
-                if !LinkModule::is_link(attacker_boma, *ITEM_LINK_NO_CREATEOWNER) {
-                    if !LinkModule::is_link(attacker_boma, *ITEM_LINK_NO_TEAMOWNER) {
-                        // this item somehow isn't able to have its team found, get out of here
-                        return;
-                    } else {
-                        owner_id = LinkModule::get_parent_id(attacker_boma, *ITEM_LINK_NO_TEAMOWNER, true) as u32;
-                    }
-                }
-                else {
+                if LinkModule::is_link(attacker_boma, *ITEM_LINK_NO_CREATEOWNER) {
                     owner_id = LinkModule::get_parent_id(attacker_boma, *ITEM_LINK_NO_CREATEOWNER, true) as u32;
+                } else if !LinkModule::is_link(attacker_boma, *ITEM_LINK_NO_TEAMOWNER) {
+                    owner_id = LinkModule::get_parent_id(attacker_boma, *ITEM_LINK_NO_TEAMOWNER, true) as u32;
+                } else {
+                    return; // this item somehow isn't able to have its team found, get out of here
                 }
                 let owner_boma = &mut *(*utils::util::get_battle_object_from_id(owner_id));
                 // failsafe in case this somehow isn't a fighter
