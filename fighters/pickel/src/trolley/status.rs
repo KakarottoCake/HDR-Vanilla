@@ -234,6 +234,7 @@ unsafe extern "C" fn pearl_fly_end(weapon: &mut L2CWeaponCommon) -> L2CValue {
     return 0.into();
 }
 
+// removes the automatic consumption of available gold
 unsafe extern "C" fn start_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.boma();
 
@@ -283,5 +284,5 @@ pub fn install(agent: &mut Agent) {
     agent.status(Main, WEAPON_PICKEL_TROLLEY_STATUS_KIND_PEARL_FLY, pearl_fly_main);
     agent.status(End, WEAPON_PICKEL_TROLLEY_STATUS_KIND_PEARL_FLY, pearl_fly_end);
 
-    agent.status(Main, *WEAPON_PICKEL_TROLLEY_STATUS_KIND_START, start_main);
+    // agent.status(Main, *WEAPON_PICKEL_TROLLEY_STATUS_KIND_START, start_main);
 }

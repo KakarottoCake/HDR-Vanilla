@@ -1,19 +1,8 @@
 use super::*;
  
-// FIGHTER_STATUS_KIND_ATTACK_DASH
+// FIGHTER_PICKEL_STATUS_KIND_ATTACK_DASH_SPECIAL
 
-pub unsafe extern "C" fn attack_dash_pre(fighter: &mut L2CFighterCommon) -> L2CValue{
-    if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_PICKEL_GENERATE_ARTICLE_TROLLEY) {
-        fighter.set_status_kind_interrupt(*FIGHTER_PICKEL_STATUS_KIND_SPECIAL_S_FAILED);
-        return 1.into();
-    } 
-
-    let pickel = fighter.global_table[0x5].get_ptr() as *mut BattleObjectModuleAccessor;
-    if !FighterSpecializer_Pickel::check_material_special_s_generate_trolley(pickel) {
-        fighter.set_status_kind_interrupt(*FIGHTER_PICKEL_STATUS_KIND_SPECIAL_S_FAILED);
-        return 1.into();
-    }
-
+pub unsafe extern "C" fn attack_dash_special_pre(fighter: &mut L2CFighterCommon) -> L2CValue{
     StatusModule::init_settings(
         fighter.module_accessor,
         app::SituationKind(*SITUATION_KIND_NONE),
@@ -44,10 +33,10 @@ pub unsafe extern "C" fn attack_dash_pre(fighter: &mut L2CFighterCommon) -> L2CV
 
 const FIGHTER_TEAM_2ND_PICKEL_TROLLEY: i32 = 0x1f;
 
-pub unsafe extern "C" fn attack_dash_main(fighter: &mut L2CFighterCommon) -> L2CValue{
+pub unsafe extern "C" fn attack_dash_special_main(fighter: &mut L2CFighterCommon) -> L2CValue{
     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_RESET);
     KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
-    MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_dash"), 0.0, 1.0, false, 0.0, false, false);
+    MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_dash_special"), 0.0, 1.0, false, 0.0, false, false);
 
     let team_id = fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) + FIGHTER_TEAM_2ND_PICKEL_TROLLEY;
     TeamModule::set_team_second(fighter.module_accessor, team_id);
@@ -62,14 +51,14 @@ pub unsafe extern "C" fn attack_dash_main_loop(fighter: &mut L2CFighterCommon) -
     return 0.into();
 }
 
-pub unsafe extern "C" fn attack_dash_end(fighter: &mut L2CFighterCommon) -> L2CValue{
+pub unsafe extern "C" fn attack_dash_special_end(fighter: &mut L2CFighterCommon) -> L2CValue{
     KineticModule::clear_speed_all(fighter.module_accessor);
     
     return 0.into();
 }
 
 pub fn install(agent: &mut Agent) {
-    agent.status(Pre, *FIGHTER_STATUS_KIND_ATTACK_DASH, attack_dash_pre);
-    agent.status(Main, *FIGHTER_STATUS_KIND_ATTACK_DASH, attack_dash_main);
-    agent.status(End, *FIGHTER_STATUS_KIND_ATTACK_DASH, attack_dash_end);
+    agent.status(Pre, FIGHTER_PICKEL_STATUS_KIND_ATTACK_DASH_SPECIAL, attack_dash_special_pre);
+    agent.status(Main, FIGHTER_PICKEL_STATUS_KIND_ATTACK_DASH_SPECIAL, attack_dash_special_main);
+    agent.status(End, FIGHTER_PICKEL_STATUS_KIND_ATTACK_DASH_SPECIAL, attack_dash_special_end);
 }

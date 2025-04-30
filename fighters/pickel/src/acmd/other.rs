@@ -3,13 +3,11 @@ use super::*;
 unsafe extern "C" fn game_dash(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    FT_MOTION_RATE_RANGE(agent, 1.0, 11.0, 12.0);
+	frame(lua_state, 11.0);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
-        FT_MOTION_RATE(agent, 1.4);
-    }
-	frame(lua_state, 11.0); // Effectively F15
-    if is_excute(agent) {
-		FT_MOTION_RATE(agent, 1.0);
-		WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
+        WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
     }
 }
 
@@ -40,6 +38,26 @@ unsafe extern "C" fn game_turndash(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
 		FT_MOTION_RATE(agent, 1.0);
         WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
+    }
+}
+
+unsafe extern "C" fn effect_run(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 1.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_flash"), Hash40::new("sys_flash"), Hash40::new("top"), -4.0, 14.0, 3.0, 0, 0, 0, 0.5, false, *EF_FLIP_YZ, 0.25);
+    }
+    loop {
+        frame(lua_state, 14.0);
+        if is_excute(agent) {
+            FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+        frame(lua_state, 29.0);
+        FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        agent.clear_lua_stack();
+        sv_animcmd::wait_loop_sync_mot(lua_state);
+        agent.pop_lua_stack(1);
     }
 }
 
@@ -142,6 +160,8 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_dash", game_dash, Priority::Low);
     agent.acmd("sound_dash", sound_dash, Priority::Low);
     agent.acmd("game_turndash", game_turndash, Priority::Low);
+
+    agent.acmd("effect_run", effect_run, Priority::Low);
 
     agent.acmd("game_escapeair", game_escapeair, Priority::Low);
     agent.acmd("game_escapeairslide", game_escapeairslide, Priority::Low);

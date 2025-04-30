@@ -48,6 +48,7 @@ use utils::{
 use smashline::*;
 #[macro_use] extern crate smash_script;
 
+pub const FIGHTER_PICKEL_STATUS_KIND_ATTACK_DASH_SPECIAL: i32 = statuses::pickel::ATTACK_DASH_SPECIAL;
 pub const WEAPON_PICKEL_TROLLEY_STATUS_KIND_PEARL_FLY: i32 = statuses::pickel_trolley::PEARL_FLY;
 
 pub fn install() {

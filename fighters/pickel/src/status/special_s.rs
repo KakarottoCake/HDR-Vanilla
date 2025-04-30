@@ -3,6 +3,25 @@ use super::*;
 // FIGHTER_STATUS_KIND_SPECIAL_S
 
 pub unsafe extern "C" fn special_s_pre(fighter: &mut L2CFighterCommon) -> L2CValue{
+    if fighter.is_situation(*SITUATION_KIND_GROUND) 
+    && fighter.is_prev_status_one_of(&[
+        // *FIGHTER_STATUS_KIND_DASH,
+        *FIGHTER_STATUS_KIND_RUN
+    ]) {
+        let pickel = fighter.global_table[0x5].get_ptr() as *mut BattleObjectModuleAccessor;
+        let new_status = (
+            if !FighterSpecializer_Pickel::check_material_special_s_generate_trolley(pickel) 
+            || ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_PICKEL_GENERATE_ARTICLE_TROLLEY) {
+                *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_S_FAILED
+            } else {
+                FIGHTER_PICKEL_STATUS_KIND_ATTACK_DASH_SPECIAL
+            }
+        );
+
+        fighter.set_status_kind_interrupt(new_status);
+        return 1.into();
+    } 
+
     StatusModule::init_settings(
         fighter.module_accessor,
         app::SituationKind(*SITUATION_KIND_NONE),

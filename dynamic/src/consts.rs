@@ -1999,6 +1999,10 @@ pub mod statuses {
         pub const MOVE: i32 = 0x0;
     }
 
+    pub mod pickel {
+        pub const ATTACK_DASH_SPECIAL: i32 = 0x21B;
+    }
+
     pub mod pickel_trolley {
         pub const PEARL_FLY: i32 = 0x2;
     }
