@@ -30,6 +30,7 @@ unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue 
     special_n_joint_translate(fighter);
     ControlModule::set_add_jump_mini_button_life(fighter.module_accessor, 8);
     ControlModule::clear_command(fighter.module_accessor, true);
+    fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
     fighter.sub_shift_status_main(L2CValue::Ptr(special_n_main_loop as *const () as _))
 }
 
@@ -67,6 +68,10 @@ unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
             return 0.into();
         }
         return 0.into();
+    }
+    // We check the cancel but don't actually act on it. This allows us to set the cancel status and buffer that cancel in the hold state.
+    if fighter.get_int(*FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS) == *STATUS_KIND_NONE {
+        special_n_check_cancel(fighter);
     }
     0.into()
 }
@@ -198,10 +203,6 @@ unsafe extern "C" fn special_n_max_main_loop(fighter: &mut L2CFighterCommon) -> 
         return 0.into();
     }
 
-    // if fighter.check_jump_cancel(true, false) {
-    //     return 0.into();
-    // }
-
     if special_n_check_cancel(fighter).get_bool() {
         fighter.change_status(FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_CANCEL.into(), true.into());
         return 0.into();
@@ -220,52 +221,25 @@ unsafe extern "C" fn special_n_max_end(fighter: &mut L2CFighterCommon) -> L2CVal
 }
 
 unsafe extern "C" fn special_n_check_cancel(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.is_situation(*SITUATION_KIND_AIR) {
-        if fighter.sub_check_command_guard().get_bool() || fighter.is_pad_flag(PadFlag::GuardTrigger) {
-            fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
-            return true.into();
-        }
-        if fighter.sub_check_jump_in_charging_for_cancel_status((*FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS).into()).get_bool() {
-            return true.into();
-        }
+    // Buffered transitions
+    if fighter.get_int(*FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS) != *STATUS_KIND_NONE {
+        return true.into();
     }
-    if fighter.is_situation(*SITUATION_KIND_GROUND) {
-        // vanilla code for transitioning directly into spotdodge/guard is removed
-        // this is to prevent accidental dodges/rolls during ASC
-        // if fighter.is_cat_flag(Cat2::StickEscape) {
-        //     if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE) {
-        //         fighter.set_int(*FIGHTER_STATUS_KIND_ESCAPE, *FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
-        //     } else {
-        //         fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
-        //     }
-        //     return true.into();
-        // }
-        // if fighter.is_cat_flag(Cat2::StickEscapeF) {
-        //     if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_F) {
-        //         fighter.set_int(*FIGHTER_STATUS_KIND_ESCAPE_F, *FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
-        //     } else {
-        //         fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
-        //     }
-        //     return true.into();
-        // }
-        // if fighter.is_cat_flag(Cat2::StickEscapeB) {
-        //     if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_B) {
-        //         fighter.set_int(*FIGHTER_STATUS_KIND_ESCAPE_B, *FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
-        //     } else {
-        //         fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
-        //     }
-        //     return true.into();
-        // }
-        if fighter.sub_check_command_guard().get_bool() || fighter.is_pad_flag(PadFlag::GuardTrigger) {
-            fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
-            return true.into();
-        }
-        if fighter.is_cat_flag(Cat1::AttackHi4) {
-            fighter.set_int(*FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
-        }
-        if fighter.sub_check_jump_in_charging_for_cancel_status((*FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS).into()).get_bool() {
-            return true.into();
-        }
+
+    // Shield
+    if fighter.is_cat_flag(Cat2::CommonGuard) {
+        let next_status = if fighter.is_situation(*SITUATION_KIND_GROUND) {
+            *FIGHTER_STATUS_KIND_WAIT
+        } else {
+            *FIGHTER_STATUS_KIND_FALL
+        };
+        fighter.set_int(next_status, *FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
+        return true.into();
+    }
+
+    // Jump
+    if fighter.sub_check_jump_in_charging_for_cancel_status((*FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS).into()).get_bool() {
+        return true.into();
     }
     return false.into();
 }
