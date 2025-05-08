@@ -379,7 +379,7 @@ impl TagSubMenu for GamecubeMenu {
                 if controls.controls_mut().gc_absmash & 2 != 0 {
                     b"Parry Input: Taunt"
                 } else {
-                    b"Parry Input: Shield"
+                    b"Parry Input: Special"
                 }
             }
             Self::RIVALS_WJ => {
