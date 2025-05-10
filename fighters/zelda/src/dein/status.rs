@@ -67,9 +67,12 @@ pub unsafe extern "C" fn dein_remove(weapon: &mut smash::lua2cpp::L2CFighterBase
             VarModule::set_int(zelda, vars::zelda::instance::SPECIAL_S_DEIN_OBJECT_ID_2, thisdins);
             //check if dins 1 of 3 is in pos to det
             if detonate_conditions(weapon, dein) == true {
-                //detonate always clear out all dins
-                delete_effects(weapon, dein2);
-                sv_battle_object::end_inhaled(dein2 as u32, true);
+                if detonate_conditions(weapon, dein2) == true {
+                    //if both are eligible, delete 2nd one and det first (avoid crash)
+                    VarModule::off_flag(dein2_battle_object, vars::zelda::status::SPECIAL_S_DINS_REFRESH);
+                    VarModule::set_int(zelda, vars::zelda::instance::SPECIAL_S_DEIN_OBJECT_ID_2, 0);
+                    sv_battle_object::end_inhaled(dein2 as u32, true);
+                }
             } else {
                 detonate_conditions(weapon, dein2);
             }
