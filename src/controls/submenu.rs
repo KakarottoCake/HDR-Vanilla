@@ -63,7 +63,7 @@ impl TagSubMenu for TopLevel {
     fn get_button_text(&self, button_index: usize) -> Option<Vec<u8>> {
         let name: &[u8] = match button_index {
             Self::PRESETS => b"Shortcuts",
-            Self::GAMECUBE => b"Gamecube",
+            Self::GAMECUBE => b"GameCube",
             Self::PRO_CONTROLLER => b"Pro Controller",
             Self::JOY_CONS => b"Joy-Cons",
             _ => return None,
@@ -363,9 +363,10 @@ impl TagSubMenu for GamecubeMenu {
             Self::Z => b"Z",
             Self::L => b"L",
             Self::R => b"R",
-            Self::DPAD_UP => b"DPad Up",
-            Self::DPAD_LR => b"DPad Side",
-            Self::DPAD_DOWN => b"DPad Down",
+            Self::DPAD_UP => b"D-Pad Up",
+            Self::DPAD_LR => b"D-Pad Side",
+            Self::DPAD_DOWN => b"D-Pad Down",
+            Self::RIGHT_STICK => b"C-Stick",
             Self::TAP_JUMP => {
                 let mut controls = unsafe { get_ptr_to_controls(self.controls_id) };
                 if controls.controls_mut().gc_tapjump {
@@ -379,7 +380,7 @@ impl TagSubMenu for GamecubeMenu {
                 if controls.controls_mut().gc_absmash & 2 != 0 {
                     b"Parry Input: Taunt"
                 } else {
-                    b"Parry Input: Shield"
+                    b"Parry Input: Special"
                 }
             }
             Self::RIVALS_WJ => {
@@ -623,9 +624,9 @@ impl TagSubMenu for ProControllerMenu {
             Self::R => b"R",
             Self::ZL => b"ZL",
             Self::ZR => b"ZR",
-            Self::DPAD_UP => b"DPad Up",
-            Self::DPAD_LR => b"DPad Side",
-            Self::DPAD_DOWN => b"DPad Down",
+            Self::DPAD_UP => b"D-Pad Up",
+            Self::DPAD_LR => b"D-Pad Side",
+            Self::DPAD_DOWN => b"D-Pad Down",
             Self::TAP_JUMP => {
                 let mut controls = unsafe { get_ptr_to_controls(self.controls_id) };
                 if controls.controls_mut().pro_tapjump {
@@ -634,6 +635,7 @@ impl TagSubMenu for ProControllerMenu {
                     b"Tap Jump: Off"
                 }
             }
+            Self::RIGHT_STICK => b"Right Stick",
             Self::PARRY_INPUT => {
                 let mut controls = unsafe { get_ptr_to_controls(self.controls_id) };
                 if controls.controls_mut().pro_absmash & 2 != 0 {
@@ -842,7 +844,7 @@ impl TagSubMenu for JoyConMenu {
     }
 
     fn get_title(&self) -> &'static [u8] {
-        b"Single JoyCon"
+        b"Single Joy-Con"
     }
 
     fn get_button_text(&self, button_index: usize) -> Option<Vec<u8>> {
