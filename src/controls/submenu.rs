@@ -351,7 +351,7 @@ impl TagSubMenu for GamecubeMenu {
     }
 
     fn get_title(&self) -> &'static [u8] {
-        b"Gamecube"
+        b"GameCube"
     }
 
     fn get_button_text(&self, button_index: usize) -> Option<Vec<u8>> {
@@ -641,7 +641,7 @@ impl TagSubMenu for ProControllerMenu {
                 if controls.controls_mut().pro_absmash & 2 != 0 {
                     b"Parry Input: Taunt"
                 } else {
-                    b"Parry Input: Shield"
+                    b"Parry Input: Special"
                 }
             }
             Self::RIVALS_WJ => {
@@ -870,7 +870,7 @@ impl TagSubMenu for JoyConMenu {
                 if controls.controls_mut().pro_absmash & 2 != 0 {
                     b"Parry Input: Taunt"
                 } else {
-                    b"Parry Input: Shield"
+                    b"Parry Input: Special"
                 }
             }
             Self::RIVALS_WJ => {
