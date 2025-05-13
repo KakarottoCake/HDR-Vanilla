@@ -236,6 +236,8 @@ pub mod vars {
 
             pub const PREV_STATUS_TRANSITION_FRAME: i32 = 0x0013;
 
+            pub const LAST_RECEIVED_ATTACK_HITBOX_ID: i32 = 0x0014;
+
             // floats
 
             pub const LAST_ATTACK_DAMAGE_DEALT: i32 = 0x0000;
@@ -274,6 +276,10 @@ pub mod vars {
             pub const RUN_HIP_OFFSET_X: i32 = 0x0021;
             pub const DACUS_TRANSITION_SPEED: i32 = 0x0022;
             pub const ATTACK_S3_CSTICK_X: i32 = 0x0023;
+            pub const LAST_RECEIVED_ATTACK_HIT_LOCATION: i32 = 0x0024;
+            pub const LAST_RECEIVED_ATTACK_HIT_LOCATION_X: i32 = 0x0024;
+            pub const LAST_RECEIVED_ATTACK_HIT_LOCATION_Y: i32 = 0x0025;
+            pub const LAST_RECEIVED_ATTACK_HIT_LOCATION_Z: i32 = 0x0026;
         }
         pub mod status {
             // flags

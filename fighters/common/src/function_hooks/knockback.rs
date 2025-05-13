@@ -306,3 +306,25 @@ pub unsafe extern "C" fn call_finishing_hit_effects(defender_boma: &mut BattleOb
         EffectModule::set_rate_last(defender_boma, 2.5);
     }
 }
+
+// prev line:
+// ldr        s14,[x20, #0x160]
+// x20 is fp
+#[skyline::hook(offset = 0x403cf4, inline)]
+unsafe fn set_damage_lr(ctx: &skyline::hooks::InlineCtx) {
+    // TODO:
+    // get boma
+    // compare LAST_RECEIVED_ATTACK_HIT_LOCATION_X with PostureModule::pos_x
+    // move new damage_lr to s14
+    // set [x20, #0x160] to new damage_lr
+}
+
+// this line:
+// mov        v0.16B,v8.16B
+#[skyline::hook(offset = 0x6c5950, inline)]
+unsafe fn set_damage_lr2(ctx: &skyline::hooks::InlineCtx) {
+    // TODO:
+    // get boma
+    // compare LAST_RECEIVED_ATTACK_HIT_LOCATION_X with PostureModule::pos_x
+    // move new damage_lr to s0
+}
