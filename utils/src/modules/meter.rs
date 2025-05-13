@@ -388,7 +388,6 @@ unsafe fn hit_module_handle_attack_event(ctx: &InlineCtx)  {
         return;
     }
 
-    VarModule::set_int(receiver_boma.object(), vars::common::instance::LAST_RECEIVED_ATTACK_HITBOX_ID, collision_id as i32);
     VarModule::set_vec3(receiver_boma.object(), vars::common::instance::LAST_RECEIVED_ATTACK_HIT_LOCATION, Vector3f { x: loc_x, y: loc_y, z: loc_z });
 }
 
