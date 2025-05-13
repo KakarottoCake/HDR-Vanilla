@@ -104,7 +104,7 @@ pub mod vars {
 
             pub const ENABLE_AIR_ESCAPE_MAGNET: i32 = 0x0010;
 
-            pub const DITCIT_SLIDING: i32 = 0x0011;
+            // pub const DITCIT_SLIDING: i32 = 0x0011;
 
             pub const FOOTSTOOL_AIRDODGE_LOCKOUT: i32 = 0x0012;
 
