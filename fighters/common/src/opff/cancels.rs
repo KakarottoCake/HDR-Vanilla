@@ -13,6 +13,8 @@ use smash::hash40;
 //=================================================================
 //== DITCIT
 //=================================================================
+// TODO: move this to status scripts
+static mut APPLIED_SPEED: f32 = 0.0;
 unsafe fn ditcit(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_status(*FIGHTER_STATUS_KIND_ITEM_THROW_DASH) {
         if boma.status_frame() > 2 && boma.status_frame() < 6
@@ -22,13 +24,19 @@ unsafe fn ditcit(boma: &mut BattleObjectModuleAccessor) {
              || (boma.is_cat_flag(Cat1::AttackHi3))
              || (boma.is_cat_flag(Cat1::AttackLw3))
              || (boma.is_cat_flag(Cat1::AttackS3))) {
+            let dash_throw_motion_speed = util::get_fighter_common_from_accessor(boma).get_speed_x(*FIGHTER_KINETIC_ENERGY_ID_MOTION);
+            APPLIED_SPEED = dash_throw_motion_speed;
             StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ITEM_THROW, false);
-            
-            let added_speed_x = 2.8 * (MotionModule::end_frame(boma) - MotionModule::frame(boma)) / MotionModule::end_frame(boma);
-            let added_speed = Vector3f{x: added_speed_x, y: 0.0, z: 0.0};
-
-            KineticModule::add_speed(boma, &added_speed);
         }
+    }
+    
+    if boma.is_status(*FIGHTER_STATUS_KIND_ITEM_THROW)
+    && boma.is_prev_status(*FIGHTER_STATUS_KIND_ITEM_THROW_DASH)
+    && StatusModule::is_changing(boma) {
+        let added_speed_x = APPLIED_SPEED * (MotionModule::end_frame(boma) - MotionModule::frame(boma)) / MotionModule::end_frame(boma);
+        let added_speed = Vector3f{x: added_speed_x, y: 0.0, z: 0.0};
+
+        KineticModule::add_speed(boma, &added_speed);
     }
 }
 
