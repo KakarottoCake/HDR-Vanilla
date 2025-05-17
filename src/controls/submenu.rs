@@ -283,7 +283,12 @@ impl TagSubMenu for GamecubeMenu {
                 controls_id: self.controls_id,
                 return_to: Box::new(move || Some(Box::new(return_to))),
                 initial: controls.gc_cstick,
-                set_input_kind: |ctrls, input| ctrls.gc_cstick = input,
+                set_input_kind: |ctrls, mut input| {
+                    if input == InputKind::TiltAttack {
+                        input = InputKind::Attack;
+                    }
+                    ctrls.gc_cstick = input
+                },
             })),
             Self::TAP_JUMP => {
                 let mut controls = unsafe { get_ptr_to_controls(self.controls_id) };
@@ -543,7 +548,12 @@ impl TagSubMenu for ProControllerMenu {
                 controls_id: self.controls_id,
                 return_to: Box::new(move || Some(Box::new(return_to))),
                 initial: controls.pro_cstick,
-                set_input_kind: |ctrls, input| ctrls.pro_cstick = input,
+                set_input_kind: |ctrls, mut input| {
+                    if input == InputKind::TiltAttack {
+                        input = InputKind::Attack;
+                    }
+                    ctrls.pro_cstick = input
+                },
             })),
             Self::TAP_JUMP => {
                 let mut controls = unsafe { get_ptr_to_controls(self.controls_id) };
