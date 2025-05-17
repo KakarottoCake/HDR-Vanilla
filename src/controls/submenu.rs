@@ -282,8 +282,8 @@ impl TagSubMenu for GamecubeMenu {
             Self::RIGHT_STICK => Some(Box::new(ButtonSelector {
                 controls_id: self.controls_id,
                 return_to: Box::new(move || Some(Box::new(return_to))),
-                initial: controls.pro_cstick,
-                set_input_kind: |ctrls, input| ctrls.pro_cstick = input,
+                initial: controls.gc_cstick,
+                set_input_kind: |ctrls, input| ctrls.gc_cstick = input,
             })),
             Self::TAP_JUMP => {
                 let mut controls = unsafe { get_ptr_to_controls(self.controls_id) };
