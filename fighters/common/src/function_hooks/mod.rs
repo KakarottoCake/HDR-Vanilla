@@ -116,7 +116,6 @@ unsafe fn skip_early_main_status(boma: *mut BattleObjectModuleAccessor, status_k
         *FIGHTER_STATUS_KIND_AIR_LASSO_HANG,
         *FIGHTER_STATUS_KIND_AIR_LASSO_REWIND,
         *FIGHTER_STATUS_KIND_ITEM_THROW,
-        *FIGHTER_STATUS_KIND_ITEM_THROW_DASH,
         *FIGHTER_STATUS_KIND_ITEM_THROW_HEAVY,
         *FIGHTER_STATUS_KIND_FINAL].contains(&status_kind)
 
