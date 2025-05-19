@@ -14,6 +14,7 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
             status_end_CliffCatchMove,
             status_end_CliffCatch,
             bind_address_call_status_CliffWait,
+            status_CliffWait_Main,
             status_end_CliffWait,
             status_CliffAttack_Main,
             status_end_CliffAttack,
@@ -61,6 +62,118 @@ unsafe fn status_end_CliffCatch(fighter: &mut L2CFighterCommon) -> L2CValue {
 unsafe fn bind_address_call_status_CliffWait(fighter: &mut L2CFighterCommon) -> L2CValue {
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("cliff_wait"), 0.0, 1.0, false, 0.0, false, false);
     call_original!(fighter)
+}
+
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_CliffWait_Main)]
+unsafe fn status_CliffWait_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+
+    if situation_kind == *SITUATION_KIND_GROUND {
+        fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
+        return true.into();
+    }
+
+    if situation_kind == *SITUATION_KIND_AIR
+    || !GroundModule::is_status_cliff(fighter.module_accessor) {
+        fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+        return true.into();
+    }
+
+    if app::sv_information::stage_id() == *StageID::SP_Edit 
+    && FighterUtil::check_cliff_separated(fighter.module_accessor) {
+        fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+        return true.into();
+    }
+
+    if fighter.is_flag(*FIGHTER_STATUS_CLIFF_FLAG_TO_DAMAGE_FALL) {
+        fighter.change_status(FIGHTER_STATUS_KIND_DAMAGE_FALL.into(), false.into());
+        return true.into();
+    }
+
+    if situation_kind == *SITUATION_KIND_CLIFF {
+        // JUMP
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_JUMP_BUTTON)
+        && fighter.global_table[CMD_CAT1].get_i32() & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON != 0 {
+            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_JUMP1.into(), true.into());
+            return true.into();
+        }
+
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_JUMP)
+        && fighter.is_flag(*FIGHTER_STATUS_CLIFF_FLAG_TO_JUMP) {
+            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_JUMP1.into(), true.into());
+            return true.into();
+        }
+
+        // FALL
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_FALL) {
+            if fighter.is_flag(*FIGHTER_STATUS_CLIFF_FLAG_TO_FALL) 
+            || fighter.is_flag(*FIGHTER_STATUS_CLIFF_FLAG_TO_RELEASE) 
+            || fighter.global_table[CMD_CAT1].get_i32() & *FIGHTER_PAD_CMD_CAT1_FLAG_CATCH != 0 {
+                if !fighter.is_flag(*FIGHTER_INSTANCE_WORK_ID_FLAG_SUB_FIGHTER) {
+                    notify_event_msc_cmd!(fighter, Hash40::new_raw(0x20cbc92683), 1, FIGHTER_LOG_DATA_INT_CLIFF_RELEASE_NUM);
+                }
+
+                // Ignores attack input if you used C-stick or grab to drop from ledge
+                if fighter.global_table[CMD_CAT1].get_i32() & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N != 0 {
+                    fighter.clear_commands(
+                        Cat1::AttackN
+                        | Cat1::AirEscape
+                        | Cat1::Catch
+                    );
+                    fighter.clear_commands(Cat3::ItemLightThrowAirAll);
+
+                    ControlModule::reset_trigger(fighter.module_accessor);
+                }
+
+                fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+                
+                return true.into();
+            }
+        }
+
+        // ATTACK
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_ATTACK)
+        && fighter.global_table[CMD_CAT1].get_i32() & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N != 0 {
+            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_ATTACK.into(), true.into());
+            return true.into();
+        }
+
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_SPEICAL)
+        && fighter.global_table[CMD_CAT1].get_i32() & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_ANY != 0 {
+            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_ATTACK.into(), true.into());
+            return true.into();
+        }
+
+        // ESCAPE
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_ESCAPE)
+        && fighter.global_table[CMD_CAT2].get_i32() & *FIGHTER_PAD_CMD_CAT2_FLAG_COMMON_GUARD != 0 {
+            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_ESCAPE.into(), true.into());
+            return true.into();
+        }
+
+        // CLIMB
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_CLIMB)
+        && fighter.is_flag(*FIGHTER_STATUS_CLIFF_FLAG_TO_CLIMB) {
+            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_CLIMB.into(), false.into());
+            return true.into();
+        }
+
+        // ROBBED
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_FALL) 
+        && fighter.is_flag(*FIGHTER_STATUS_CLIFF_FLAG_TO_ROB) {
+            fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_ROBBED.into(), false.into());
+            return true.into();
+        }
+    }
+
+    fighter.sub_cliff_uniq_process_main();
+
+    if fighter.get_motion_kind().get_hash() == Hash40::new("cliff_catch")
+    && MotionModule::is_end(fighter.module_accessor) {
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("cliff_wait"), 0.0, 1.0, false, 0.0, false, false);
+    }
+
+    return false.into();
 }
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_end_CliffWait)]
@@ -179,6 +292,8 @@ unsafe fn status_CliffJump1(fighter: &mut L2CFighterCommon) -> L2CValue {
         MotionModule::set_rate(fighter.module_accessor, motion_rate);
         MotionModule::set_whole_rate(fighter.module_accessor, 1.0);
     }
+    InputModule::set_persist_lifetime(fighter.battle_object, 10);
+    InputModule::enable_persist(fighter.battle_object);
 
     ret
 }
@@ -188,6 +303,7 @@ unsafe fn status_end_CliffJump1(fighter: &mut L2CFighterCommon) -> L2CValue {
     if StatusModule::status_kind_next(fighter.module_accessor) != *FIGHTER_STATUS_KIND_CLIFF_JUMP2 {
         VarModule::set_int(fighter.object(), vars::common::instance::LEDGE_ID, -1);
     }
+    InputModule::disable_persist(fighter.battle_object);
     call_original!(fighter)
 }
 

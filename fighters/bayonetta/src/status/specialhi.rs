@@ -1,5 +1,33 @@
 use super::*;
 
+unsafe extern "C" fn special_hi_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    StatusModule::init_settings(fighter.module_accessor,
+        app::SituationKind(*SITUATION_KIND_NONE),
+        *FIGHTER_KINETIC_TYPE_UNIQ,
+        *GROUND_CORRECT_KIND_KEEP as u32,
+        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES),
+        true,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT,
+        0
+    );
+    FighterStatusModuleImpl::set_fighter_status_data(
+        fighter.module_accessor,
+        false,
+        *FIGHTER_TREADED_KIND_NO_REAC,
+        false,
+        false,
+        false,
+        (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_HI | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64,
+        *FIGHTER_STATUS_ATTR_START_TURN as u32,
+        *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_HI as u32,
+        0
+    );
+
+    return 0.into();
+}
+
 unsafe extern "C" fn special_hi_jump_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     let ret = smashline::original_status(End, fighter, *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_HI_JUMP)(fighter);
     set_lag(fighter);
@@ -16,7 +44,7 @@ unsafe fn set_lag(fighter: &mut L2CFighterCommon) {
     let dabk_lag = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lag.dive_side_special");//9
     let abk_lag = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lag.side_special");//6
     let witch_twist_lag = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lag.up_special");//6
-    let base_lag: f32 = 8.0;
+    let base_lag: f32 = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lag.whiff_lag"); //8
     let special_landing_frame_mul = fighter.get_param_float("special_landing_frame_mul", "");
     //normal special lag calc 
     //reworked from hard coded value based on move order (contrived) ->
@@ -29,5 +57,6 @@ unsafe fn set_lag(fighter: &mut L2CFighterCommon) {
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_HI, special_hi_pre);
     agent.status(End, *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_HI_JUMP, special_hi_jump_end);
 }

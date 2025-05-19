@@ -26,7 +26,6 @@ unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
         FighterAreaModuleImpl::enable_fix_jostle_area_xy(boma, 5.5, 3.0, 9.0, 3.0);
         JostleModule::set_team(boma, 1);
         // JostleModule::set_overlap_rate_mul(boma, 2.0);
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
         if agent.get_int(*FIGHTER_RYU_STATUS_WORK_ID_SPECIAL_S_INT_START_SITUATION) == *SITUATION_KIND_GROUND {
             shield!(agent, *MA_MSC_CMD_REFLECTOR, *COLLISION_KIND_REFLECTOR, 0, hash40("top"), 11.0, 0.0, 11.0, 4.0, 0.0, 11.0, -4.0, 0.0, 0.0, 1, false, 0.0, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
         }
@@ -51,6 +50,7 @@ unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
             agent.off_flag(*FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
         }
         if VarModule::is_flag(boma.object(), vars::shotos::instance::EX_SPECIAL_USED) {
+            MeterModule::watch_damage(agent.battle_object, false);
             ATTACK(agent, 0, 0, Hash40::new("top"), 2.4, 366, 100, 70, 0, 3.5, 0.0, 12.5, -10.0, Some(0.0), Some(12.5), Some(10.0), 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_RYU_KICK, *ATTACK_REGION_KICK);
             ATTACK(agent, 1, 0, Hash40::new("top"), 2.4, 366, 100, 70, 0, 3.5, 0.0, 5.5, -5.0, Some(0.0), Some(5.5), Some(5.0), 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_RYU_KICK, *ATTACK_REGION_KICK);
         } else {
@@ -101,6 +101,7 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
         JostleModule::set_team(boma, 1);
         // JostleModule::set_overlap_rate_mul(boma, 2.0);
         HitModule::set_status_all(boma, app::HitStatus(*HIT_STATUS_NORMAL), 0);
@@ -120,7 +121,11 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
         JostleModule::set_team(boma, 0);
         JostleModule::set_overlap_rate_mul(boma, 1.0);
     }
-    wait(lua_state, 10.0);
+    frame(lua_state, 9.0);
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
+    }
+    frame(lua_state, 16.0);
     if is_excute(agent) {
         agent.off_flag(*FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_FINAL_HIT_CANCEL);
     }

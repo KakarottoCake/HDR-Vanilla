@@ -25,7 +25,7 @@
   </list>
   <list hash="cliff_hang_data">
     <struct index="0">
-      <float hash="p1_y">23</float>
+      <float hash="p1_y">21</float>
     </struct>
     <struct index="1">
       <float hash="p1_y">19</float>
@@ -64,7 +64,7 @@
   <list hash="param_special_lw">
     <struct index="0">
       <int hash="special_lw_uniq_item_beamsword_rate">3</int>
-      <int hash="special_lw_uniq_item_rate">62</int>
+      <int hash="special_lw_uniq_item_rate">161</int>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>

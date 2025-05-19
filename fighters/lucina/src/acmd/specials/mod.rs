@@ -260,6 +260,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     frame(lua_state, 5.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
         ATTACK(agent, 0, 0, Hash40::new("sword2"), 11.0, 361, 89, 0, 70, 3.5, 2.0, 0.0, 0.6, None, None, None, 0.9, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         ATTACK(agent, 1, 0, Hash40::new("sword2"), 10.0, 74, 74, 0, 70, 3.5, 1.5, 0.0, 6.5, None, None, None, 0.9, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         ATTACK(agent, 2, 0, Hash40::new("armr"), 10.0, 74, 74, 0, 70, 3.5, -1.0, 0.0, 0.0, None, None, None, 0.9, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
@@ -287,6 +288,7 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 4.0);
+    FT_MOTION_RATE_RANGE(agent, 4.0, 15.0, 9.0);
     if is_excute(agent) {
         HitModule::set_hit_stop_mul(boma, 3.0, HitStopMulTarget{_address: (*HIT_STOP_MUL_TARGET_OPPONENT) as u8}, 0.0);
         DamageModule::set_damage_mul(boma, 0.5);
@@ -294,14 +296,15 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
         VarModule::set_float(boma.object(), vars::lucina::instance::CURRENT_DAMAGE, DamageModule::damage(boma, 0));
     }
     frame(lua_state, 15.0);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         DamageModule::set_damage_mul(boma, 1.0);
         HitModule::set_hit_stop_mul(boma, 1.0, HitStopMulTarget{_address: (*HIT_STOP_MUL_TARGET_OPPONENT) as u8}, 0.0);
         damage!(agent, MA_MSC_DAMAGE_DAMAGE_NO_REACTION, DAMAGE_NO_REACTION_MODE_NORMAL, 0);
         VarModule::on_flag(agent.battle_object, vars::lucina::status::SPECIAL_LW_SPECIAL_CHECK);
     }
-    frame(lua_state, 28.0);
-    FT_MOTION_RATE_RANGE(agent, 28.0, 64.0, 12.0);
+    frame(lua_state, 26.0);
+    FT_MOTION_RATE_RANGE(agent, 26.0, 64.0, 16.0);
     if is_excute(agent) {
         VarModule::off_flag(agent.battle_object, vars::lucina::status::SPECIAL_LW_SPECIAL_CHECK);
     }
@@ -313,6 +316,7 @@ unsafe extern "C" fn game_specialairlw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 4.0);
+    FT_MOTION_RATE_RANGE(agent, 4.0, 15.0, 9.0);
     if is_excute(agent) {
         HitModule::set_hit_stop_mul(boma, 3.0, HitStopMulTarget{_address: (*HIT_STOP_MUL_TARGET_OPPONENT) as u8}, 0.0);
         DamageModule::set_damage_mul(boma, 0.5);
@@ -320,6 +324,7 @@ unsafe extern "C" fn game_specialairlw(agent: &mut L2CAgentBase) {
         VarModule::set_float(boma.object(), vars::lucina::instance::CURRENT_DAMAGE, DamageModule::damage(boma, 0));
     }
     frame(lua_state, 15.0);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         DamageModule::set_damage_mul(boma, 1.0);
         HitModule::set_hit_stop_mul(boma, 1.0, HitStopMulTarget{_address: (*HIT_STOP_MUL_TARGET_OPPONENT) as u8}, 0.0);
@@ -327,9 +332,12 @@ unsafe extern "C" fn game_specialairlw(agent: &mut L2CAgentBase) {
         VarModule::on_flag(agent.battle_object, vars::lucina::status::SPECIAL_LW_SPECIAL_CHECK);
     }
     frame(lua_state, 28.0);
+    FT_MOTION_RATE_RANGE(agent, 28.0, 64.0, 30.0);
     if is_excute(agent) {
         VarModule::off_flag(agent.battle_object, vars::lucina::status::SPECIAL_LW_SPECIAL_CHECK);
     }
+    frame(lua_state, 64.0);
+    FT_MOTION_RATE(agent, 1.0);
 }
 
 pub fn install(agent: &mut Agent) {

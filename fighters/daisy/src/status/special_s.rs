@@ -1,12 +1,15 @@
 use super::*;
 
+
+// FIGHTER_STATUS_KIND_SPECIAL_S
+
 unsafe extern "C" fn special_s_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(
         fighter.module_accessor, 
         app::SituationKind(*SITUATION_KIND_NONE),
         *FIGHTER_KINETIC_TYPE_UNIQ,
         *GROUND_CORRECT_KIND_KEEP as u32,
-        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
+        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP),
         true,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT,
@@ -45,8 +48,15 @@ unsafe extern "C" fn special_s_main(fighter: &mut L2CFighterCommon) -> L2CValue 
     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
     fighter.set_situation(SITUATION_KIND_AIR.into());
     GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-    let motion = if fighter.is_situation(*SITUATION_KIND_GROUND) { Hash40::new("special_s_start") } else { Hash40::new("special_air_s_start") };
-    MotionModule::change_motion(fighter.module_accessor, motion, 0.0, 1.0, false, 0.0, false, false);
+
+    if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_PEACH_SPECIAL_S_START);
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s_start"), 0.0, 1.0, false, 0.0, false, false);
+    }
+    else {
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_PEACH_SPECIAL_S_AIR_START);
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_s_start"), 0.0, 1.0, false, 0.0, false, false);
+    }
 
     fighter.main_shift(special_s_main_loop)
 }
@@ -77,13 +87,15 @@ unsafe extern "C" fn special_s_check_flick(fighter: &mut L2CFighterCommon) -> L2
     return 0.into();
 }
 
+// FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_JUMP
+
 unsafe extern "C" fn special_s_jump_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(
         fighter.module_accessor, 
         app::SituationKind(*SITUATION_KIND_AIR),
         *FIGHTER_KINETIC_TYPE_PEACH_SPECIAL_S_JUMP,
         *GROUND_CORRECT_KIND_AIR as u32,
-        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP),
+        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
         true,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT,

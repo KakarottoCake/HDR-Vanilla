@@ -73,7 +73,7 @@ unsafe extern "C" fn special_hi2_main_loop(fighter: &mut L2CFighterCommon) -> L2
             GroundModule::set_passable_check(fighter.module_accessor, false);
         }
         if frame == cliff_check_frame {
-            fighter.sub_fighter_cliff_check(GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES.into());
+            fighter.sub_fighter_cliff_check(GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES.into());
         }
         if frame < 2 {fighter.on_flag(*FIGHTER_ZELDA_STATUS_SPECIAL_HI_FLAG_CHECK_GROUND);}
     }

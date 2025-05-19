@@ -56,13 +56,16 @@ unsafe fn chain_hit(fighter: &mut L2CFighterCommon) {
             VarModule::set_int(fighter.object(), vars::common::instance::LAST_ATTACK_HITBOX_ID, -1);
         }
         let last_id = VarModule::get_int(fighter.object(), vars::common::instance::LAST_ATTACK_HITBOX_ID);
-        if fighter.is_motion_one_of(&[Hash40::new("attack_lw3"), Hash40::new("attack_hi3")]) {
-            if !(last_id == 2 || last_id == 4) { return; }
+        if fighter.is_motion(Hash40::new("attack_lw3")) {
+            if last_id != 2 { return; }
+        }
+        else if fighter.is_motion(Hash40::new("attack_hi3")) {
+            if !(last_id == 2 || last_id == 3) { return; }
         }
         else {
-            if !(last_id == 1 || last_id == 3) { return; }
+            if !(last_id == 1 || last_id == 2) { return; }
         }
-        ATTACK(fighter, 5, 1, Hash40::new("haver"), 2.0, 367, 0, 0, 0, 4.5, 0.0, 5.7, -1.5, Some(0.0), Some(6.0), Some(-1.5), 0.0, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_SWORD);
+        ATTACK(fighter, 4, 1, Hash40::new("haver"), 2.0, 367, 0, 0, 0, 4.0, 0.0, 0.0, -1.25, Some(0.0), Some(4.0), Some(-1.25), 0.0, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_SWORD);
         VarModule::set_int(fighter.object(), vars::common::instance::LAST_ATTACK_HITBOX_ID, -1);
     }
 }
@@ -88,23 +91,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         ]) 
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
-        if fighter.is_flag(*FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE) {
-            if [*FIGHTER_KINETIC_TYPE_MOTION_AIR, *FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE].contains(&KineticModule::get_kinetic_type(fighter.module_accessor)) {
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION);
-                let speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
-
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
-                app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
-                
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-                app::sv_kinetic_energy::enable(fighter.lua_state_agent);
-
-                KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_MOTION, fighter.module_accessor);
-            }
-        }
     }
 }
 

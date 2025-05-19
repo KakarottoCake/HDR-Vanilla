@@ -168,10 +168,10 @@ unsafe extern "C" fn game_attacklw3(agent: &mut L2CAgentBase) {
 		HIT_NODE(agent, Hash40::new("tail2"), *HIT_STATUS_XLU);
     }
     frame(lua_state, 11.0);
+	FT_MOTION_RATE(agent, 0.9);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
 		HitModule::set_status_all(boma, app::HitStatus(*HIT_STATUS_NORMAL), 0);
-        FT_MOTION_RATE(agent, 0.900);
     }
 }
 

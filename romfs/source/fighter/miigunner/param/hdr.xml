@@ -4,6 +4,8 @@
     <float hash="max_charge_frames">20.0</float>
     <float hash="attack_air_lw_charge_start">10.0</float>
     <float hash="attack_air_lw_charge_end">14.0</float>
+    <float hash="attack_air_lw_charge_speed_x_mul">0.7</float>
+    <float hash="attack_air_lw_charge_speed_y_mul">0.735</float>
     <float hash="special_n3_charge_start">10.0</float>
     <float hash="special_n3_charge_end">15.0</float>
     <float hash="special_n3_charge_max_angle">44.0</float>

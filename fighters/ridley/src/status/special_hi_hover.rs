@@ -58,6 +58,15 @@ unsafe extern "C" fn special_hi_hover_main_loop(fighter: &mut L2CFighterCommon) 
         return 1.into();
     }
 
+    let hover_stop_y_frame = ParamModule::get_int(fighter.battle_object, ParamType::Agent, "param_special_hi.hover_stop_y_frame");
+    if fighter.global_table[CURRENT_FRAME].get_i32() < hover_stop_y_frame {
+        sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
+    }
+    else {
+        let hover_accel_y = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.hover_accel_y");
+        sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -hover_accel_y);
+    }
+
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status(FIGHTER_RIDLEY_STATUS_KIND_SPECIAL_HI_CHARGE_HI.into(), false.into());
     }

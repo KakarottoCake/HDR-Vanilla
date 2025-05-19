@@ -1,8 +1,40 @@
 use super::*;
 
+
 // FIGHTER_STATUS_KIND_SPECIAL_S
 
+unsafe extern "C" fn special_s_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    StatusModule::init_settings(
+        fighter.module_accessor, 
+        app::SituationKind(*SITUATION_KIND_NONE),
+        *FIGHTER_KINETIC_TYPE_UNIQ,
+        *GROUND_CORRECT_KIND_KEEP as u32,
+        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP),
+        true,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT,
+        0
+    );
+
+    FighterStatusModuleImpl::set_fighter_status_data(
+        fighter.module_accessor,
+        false,
+        *FIGHTER_TREADED_KIND_NO_REAC,
+        false,
+        false,
+        false,
+        *FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_S as u64,
+        *FIGHTER_STATUS_ATTR_START_TURN as u32,
+        *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S as u32,
+        0
+    );
+    
+    0.into()
+}
+
 unsafe extern "C" fn special_s_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    VarModule::on_flag(fighter.battle_object, vars::common::instance::SIDE_SPECIAL_CANCEL_NO_HIT);
     fighter.sub_change_motion_by_situation(Hash40::new("special_s_start").into(), Hash40::new("special_air_s_start").into(), false.into());
     fighter.sub_set_special_start_common_kinetic_setting(hash40("param_special_s").into());
     WorkModule::set_int(fighter.module_accessor, 1, *FIGHTER_TRAIL_STATUS_SPECIAL_S_INT_ATTACK_COUNT);
@@ -115,6 +147,7 @@ pub unsafe extern "C" fn special_s_end_end(fighter: &mut L2CFighterCommon) -> L2
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_S, special_s_pre);
     agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_S, special_s_main);
     agent.status(End, *FIGHTER_STATUS_KIND_SPECIAL_S, special_s_end);
     agent.status(End, *FIGHTER_TRAIL_STATUS_KIND_SPECIAL_S_END, special_s_end_end);

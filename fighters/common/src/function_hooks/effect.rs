@@ -22,15 +22,17 @@ const SMOKE_FX: [u64 ; 19] = [hash40("sys_atk_smoke"),
                             hash40("sys_action_smoke_v"),
                             hash40("null")];
 
-unsafe extern "C" fn is_tech_lockout(boma: &mut BattleObjectModuleAccessor) -> bool {
+unsafe extern "C" fn was_passive_disabled(boma: &mut BattleObjectModuleAccessor) -> bool {
     if !boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_DOWN, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_D, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_U, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR]) {
         return false;
     }
 
-    if StatusModule::prev_status_kind(boma, 1) == *FIGHTER_STATUS_KIND_CATCHED_AIR_END_GANON {
+    // Covers untechable situations
+    if VarModule::is_flag(boma.object(), vars::common::instance::DOWN_DISABLE_PASSIVE) {
         return true;
     }
 
+    // Covers tech lockout window
     let passive_trigger_frame = WorkModule::get_param_int(boma, hash40("common"), hash40("passive_trigger_frame"));
     let no_rapid_frame_value = WorkModule::get_param_int(boma, hash40("common"), hash40("no_rapid_frame_value"));
     let guard_trigger_count = ControlModule::get_trigger_count(boma, *CONTROL_PAD_BUTTON_GUARD as u8) & 0xff;
@@ -248,7 +250,7 @@ unsafe fn req_hook(effect_module: u64, effHash: smash::phx::Hash40, pos: *mut Ve
             0.7
         };
 
-        if is_tech_lockout(&mut *boma) {
+        if was_passive_disabled(&mut *boma) {
             effect_size_mul = 0.5;
             new_eff_hash = Hash40::new("sys_nopassive");
         }
@@ -278,7 +280,7 @@ unsafe fn req_on_joint_hook(effect_module: u64, effHash: smash::phx::Hash40, bon
             0.7
         };
         
-        if is_tech_lockout(&mut *boma) {
+        if was_passive_disabled(&mut *boma) {
             effect_size_mul = 0.5;
             new_eff_hash = Hash40::new("sys_nopassive");
         }
@@ -325,7 +327,7 @@ unsafe fn req_follow(effect_module: u64, effHash: smash::phx::Hash40, boneHash: 
             0.7
         };
         
-        if is_tech_lockout(&mut *boma) {
+        if was_passive_disabled(&mut *boma) {
             effect_size_mul = 0.5;
             new_eff_hash = Hash40::new("sys_nopassive");
         }
@@ -386,17 +388,20 @@ unsafe fn get_dead_effect_scale_hook(boma: &mut BattleObjectModuleAccessor, arg1
 #[skyline::hook(replace=smash::app::sv_module_access::effect)]
 unsafe fn module_access_effect_hook(lua_state: u64) {
     let mut agent: L2CAgent = L2CAgent::new(lua_state);
-    let mut params: [L2CValue ; 17] = [
-        L2CValue::new_void(), L2CValue::new_void(), L2CValue::new_void(), L2CValue::new_void(), 
-        L2CValue::new_void(), L2CValue::new_void(), L2CValue::new_void(), L2CValue::new_void(), 
-        L2CValue::new_void(), L2CValue::new_void(), L2CValue::new_void(), L2CValue::new_void(), 
-        L2CValue::new_void(), L2CValue::new_void(), L2CValue::new_void(), L2CValue::new_void(),
-        L2CValue::new_void()
-    ];
-    for i in 0..17 { params[i as usize] = agent.pop_lua_stack(i + 1) };
+    let mut params: Vec<L2CValue> = Vec::new();
+    let mut i = 0;
+    loop {
+        let param = agent.pop_lua_stack(i + 1);
+        if param.val_type == L2CValueType::Void {
+            break;
+        }
+        
+        params.push(param);
+        i += 1;
+    }
 
     agent.clear_lua_stack();
-    for i in 0..17 {
+    for i in 0..params.len() {
         if i == 1 { // effect hash index
             let mut effect_name = params[i as usize].get_hash();
             let mut hash = effect_name.hash;

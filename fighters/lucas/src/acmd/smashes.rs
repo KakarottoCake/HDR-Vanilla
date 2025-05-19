@@ -139,8 +139,8 @@ unsafe extern "C" fn sound_attacks4(agent: &mut L2CAgentBase) {
     frame(lua_state, 10.0);
     if is_excute(agent) {
         if VarModule::is_flag(agent.object(), vars::lucas::instance::SPECIAL_N_OFFENSE_UP_ACTIVE) {
-            PLAY_SE_REMAIN(agent, Hash40::new("se_lucas_special_n04_ll"));
-            PLAY_SE_REMAIN(agent, Hash40::new("se_common_electric_hit_l"));
+            PLAY_SE(agent, Hash40::new("se_lucas_special_n04_ll"));
+            PLAY_SE(agent, Hash40::new("se_common_electric_hit_l"));
         }
     }
     wait(lua_state, 4.0);
@@ -195,12 +195,11 @@ unsafe extern "C" fn effect_attacks4(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_attackhi4(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    frame(lua_state, 5.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
+    }
     if VarModule::is_flag(agent.object(), vars::lucas::instance::SPECIAL_N_OFFENSE_UP_ACTIVE) {
-        frame(lua_state, 5.0);
-        app::sv_animcmd::execute(lua_state, 5.0);
-        if is_excute(agent) {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
-        }
         frame(lua_state, 7.0);
         if is_excute(agent) {
             //println!("Whiffchk starts");
@@ -236,11 +235,6 @@ unsafe extern "C" fn game_attackhi4(agent: &mut L2CAgentBase) {
         }
     }
     else {
-        frame(lua_state, 5.0);
-        app::sv_animcmd::execute(lua_state, 5.0);
-        if is_excute(agent) {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
-        }
         frame(lua_state, 7.0);
         if is_excute(agent) {
             MotionModule::set_rate(boma, 1.751);
@@ -359,8 +353,8 @@ unsafe extern "C" fn sound_attackhi4(agent: &mut L2CAgentBase) {
     frame(lua_state, 7.0);
     if is_excute(agent) {
         if VarModule::is_flag(agent.object(), vars::lucas::instance::SPECIAL_N_OFFENSE_UP_ACTIVE) {
-            PLAY_SE_REMAIN(agent, Hash40::new("se_lucas_special_n04_ll"));
-            PLAY_SE_REMAIN(agent, Hash40::new("se_common_electric_hit_l"));
+            PLAY_SE(agent, Hash40::new("se_lucas_special_n04_ll"));
+            PLAY_SE(agent, Hash40::new("se_common_electric_hit_l"));
         }
     }
     wait(lua_state, 18.0);
@@ -443,8 +437,8 @@ unsafe extern "C" fn sound_attacklw4(agent: &mut L2CAgentBase) {
     frame(lua_state, 8.0);
     if is_excute(agent) {
         if VarModule::is_flag(agent.object(), vars::lucas::instance::SPECIAL_N_OFFENSE_UP_ACTIVE) {
-            PLAY_SE_REMAIN(agent, Hash40::new("se_lucas_special_n04_ll"));
-            PLAY_SE_REMAIN(agent, Hash40::new("se_common_electric_hit_l"));
+            PLAY_SE(agent, Hash40::new("se_lucas_special_n04_ll"));
+            PLAY_SE(agent, Hash40::new("se_common_electric_hit_l"));
         }
     }
     wait(lua_state, 9.0);

@@ -117,7 +117,7 @@ attack_13:
     freeze_during_hitstop: true
 attack_lw3:
   extra:
-    cancel_frame: 38
+    cancel_frame: 40
 special_lw:
   extra:
     cancel_frame: 40

@@ -139,13 +139,14 @@ unsafe extern "C" fn game_speciallw1loop(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
         agent.clear_lua_stack();
         lua_args!(agent, FIGHTER_KINETIC_ENERGY_ID_DAMAGE);
         app::sv_kinetic_energy::clear_speed(lua_state);
         KineticModule::clear_speed_all(boma);
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
         SET_SPEED_EX(agent, 3.0, -2.5, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        ATTACK(agent, 0, 0, Hash40::new("hip"), 16.0, 361, 66, 0, 60, 6.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_KICK);
+        ATTACK(agent, 0, 0, Hash40::new("hip"), 16.0, 361, 66, 0, 60, 6.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
     }
     frame(lua_state, 12.0); //f9
     if is_excute(agent) {
@@ -253,6 +254,15 @@ unsafe extern "C" fn game_specialairlw2kick(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, 1.5);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
+    }
+}
+
+unsafe extern "C" fn effect_specialairlw2kick(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 8.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("miifighter_illusion_line"), Hash40::new("top"), 0, 0, -5, 140, 0, 0, 0.9, true);
     }
 }
 
@@ -428,6 +438,7 @@ pub fn install(agent: &mut Agent) {;
     agent.acmd("game_specialairlw2start", game_speciallw2start, Priority::Low);
 
     agent.acmd("game_specialairlw2kick", game_specialairlw2kick, Priority::Low);
+    agent.acmd("effect_specialairlw2kick", effect_specialairlw2kick, Priority::Low);
     agent.acmd("game_specialairlw2autoattack", game_specialairlw2autoattack, Priority::Low);
     
     agent.acmd("game_speciallw3catch", game_speciallw3catch, Priority::Low);

@@ -63,10 +63,6 @@ unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
         }
         AttackModule::set_attack_keep_rumble(boma, 0, true);
     }
-    frame(lua_state, 11.0);
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), GROUND_CLIFF_CHECK_KIND_ALWAYS);
-    }
     frame(lua_state, 16.0);
     if is_excute(agent) {
         sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.5);
@@ -125,7 +121,7 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
         if VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
             FT_DESIRED_RATE(agent, 26.0, 33.0);
         }
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
     }
 }
 
@@ -133,10 +129,14 @@ unsafe extern "C" fn game_specialairsmissend(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
+        GroundModule::select_cliff_hangdata(boma, *FIGHTER_PICHU_CLIFF_HANG_DATA_SPECIAL_S as u32);
         if VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
             FT_DESIRED_RATE(agent, 26.0, 33.0);
         }
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+    }
+    frame(lua_state, 7.0);
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
     }
     frame(lua_state, 35.0);
     if is_excute(agent) {
@@ -157,7 +157,7 @@ unsafe extern "C" fn game_specialhi1(agent: &mut L2CAgentBase) {
             MeterModule::drain_direct(boma.object(), (50.0/(charge_state_time as f32)) * 120.0);
         }
         if VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
-            ATTACK(agent, 0, 0, Hash40::new("neck"), 2.0, 70, 50, 0, 20, 1.6, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
+            ATTACK(agent, 0, 0, Hash40::new("hip"), 2.0, 70, 50, 0, 20, 1.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
             FT_ADD_DAMAGE(agent, 1.0);
         }
         else {
@@ -193,7 +193,7 @@ unsafe extern "C" fn game_specialhi2(agent: &mut L2CAgentBase) {
     let charged = VarModule::get_int(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED) == 1;
     if is_excute(agent) {
         if VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
-            ATTACK(agent, 0, 0, Hash40::new("neck"), 3.0, 70, 150, 0, 20, 1.6, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
+            ATTACK(agent, 0, 0, Hash40::new("hip"), 3.0, 70, 150, 0, 20, 1.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
             FT_ADD_DAMAGE(agent, 2.0);
         }
         else {
@@ -230,12 +230,11 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
     let charged = VarModule::get_int(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED) == 1;
     frame(lua_state, 1.0);
     if is_excute(agent) {
-        VarModule::off_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK);
-        if !charged {
-            VarModule::off_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK);
-            WorkModule::on_flag(boma, /*Flag*/ *FIGHTER_PIKACHU_STATUS_WORK_ID_FLAG_KAMINARI_GENERATE);
-        }
-        else {
+        if charged {
+            if !VarModule::is_flag(agent.battle_object, vars::pichu::instance::SPECIAL_LW_DISCHARGE_AIR_START)
+            && boma.is_situation(*SITUATION_KIND_AIR) {
+                VarModule::on_flag(agent.battle_object, vars::pichu::instance::SPECIAL_LW_DISCHARGE_AIR_START);
+            }
             let charge_state_time = ParamModule::get_int(boma.object(), ParamType::Agent, "charge_state_time") as f32;
             let charge_state_remaining = VarModule::get_int(boma.object(), vars::common::instance::GIMMICK_TIMER) as f32;
             // 5 seconds to use full strength Discharge before it starts decreasing in power
@@ -246,28 +245,60 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
             VarModule::set_float(boma.object(), vars::pichu::instance::SPECIAL_LW_DISCHARGE_DAMAGE_MUL, discharge_power_mul);
             // 75% size at minimum
             let discharge_min_size_mul = 0.75;
-            let discharge_size_mul = 1.0 - ((1.0 - (charge_state_remaining.min(discharge_decrease_power_frame)/discharge_decrease_power_frame)) * (1.0 - discharge_min_size_mul));
+            let discharge_size_mul = 1.0;// - ((1.0 - (charge_state_remaining.min(discharge_decrease_power_frame)/discharge_decrease_power_frame)) * (1.0 - discharge_min_size_mul));
             VarModule::set_float(boma.object(), vars::pichu::instance::SPECIAL_LW_DISCHARGE_SIZE_MUL, discharge_size_mul);
             VarModule::on_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK);
             VarModule::set_int(boma.object(), vars::common::instance::GIMMICK_TIMER, 0);
             MeterModule::drain_direct(boma.object(), 999.0);
         }
+        else {
+            VarModule::off_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK);
+        }
+    }
+    frame(lua_state, 5.0);
+    if is_excute(agent) {
+        if !charged && !VarModule::is_flag(agent.battle_object, vars::pichu::instance::SPECIAL_LW_DISCHARGE_AIR_START) {
+            WorkModule::on_flag(boma, *FIGHTER_PIKACHU_STATUS_WORK_ID_FLAG_KAMINARI_GENERATE);
+        }
     }
     if VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
-        frame(lua_state, 7.0);
-        if is_excute(agent) {
-            WHOLE_HIT(agent, *HIT_STATUS_XLU);
-        }
         frame(lua_state, 15.0);
         FT_DESIRED_RATE(agent, 6.0, 3.0);
-        if is_excute(agent) {
-            HitModule::set_status_all(boma, app::HitStatus(*HIT_STATUS_NORMAL), 0);
-        }
         frame(lua_state, 21.0);
         if is_excute(agent) {
             boma.change_status_req(*FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_LW_HIT, true);
         }
     }
+}
+
+unsafe extern "C" fn effect_speciallw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 16.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_cheek"), Hash40::new("head"), 0, 0, 0, 0, -90, -90, 1, true);
+    }
+    frame(lua_state, 18.0);
+    if is_excute(agent) {
+        if VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
+            let discharge_effect_mul = VarModule::get_float(boma.object(), vars::pichu::instance::SPECIAL_LW_DISCHARGE_SIZE_MUL);
+            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit2"), Hash40::new("top"), 0, 10, 0, 0, 90, 0, 0.64 * discharge_effect_mul, true);
+            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_final_explosion"), Hash40::new("top"), 0, 10, 0, 0, 0, 0, 0.19 * discharge_effect_mul, false);
+        }
+    }
+    frame(lua_state, 46.0);
+    if is_excute(agent) {
+        FLASH(agent, 1, 1, 1, 0.314);
+    }
+    wait(lua_state, 1.0);
+    if is_excute(agent) {
+        FLASH(agent, 0, 0, 0, 0.314);
+    }
+    wait(lua_state, 1.0);
+    if is_excute(agent) {
+        COL_NORMAL(agent);
+    }
+    wait(lua_state, 1.0);
 }
 
 unsafe extern "C" fn game_speciallwhit(agent: &mut L2CAgentBase) {
@@ -284,8 +315,16 @@ unsafe extern "C" fn game_speciallwhit(agent: &mut L2CAgentBase) {
             ATTACK(agent, 0, 0, Hash40::new("top"), 14.0, 361, 71, 0, 90, 11.0, 0.0, 10.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 12, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_NONE);
         }
         else {
+            if boma.is_situation(*SITUATION_KIND_GROUND) {
+                let ground_brake = WorkModule::get_param_float(boma, hash40("ground_brake"), 0);
+                sv_kinetic_energy!(set_brake, agent, FIGHTER_KINETIC_ENERGY_ID_STOP, ground_brake, 0.0);
+            }
+            else {
+                let air_brake_x = WorkModule::get_param_float(boma, hash40("air_brake_x"), 0);
+                sv_kinetic_energy!(set_brake, agent, FIGHTER_KINETIC_ENERGY_ID_STOP, air_brake_x, 0.0);
+            }
             FT_ADD_DAMAGE(agent, 8.0 * discharge_power_mul);
-            ATTACK(agent, 0, 0, Hash40::new("top"), 20.0 * discharge_power_mul, 361, 80, 0, 70, 18.0 * discharge_size_mul, 0.0, 10.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 12, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_NONE);
+            ATTACK(agent, 0, 0, Hash40::new("top"), 20.0 * discharge_power_mul, 361, 80, 0, 70, 10.0 * discharge_size_mul, 0.0, 10.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 12, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_NONE);
             VarModule::set_int(boma.object(), vars::common::instance::GIMMICK_TIMER, 0);
         }
     }
@@ -299,8 +338,8 @@ unsafe extern "C" fn game_speciallwhit(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 15.0);
     if is_excute(agent) {
-        if VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) && agent.is_situation(*SITUATION_KIND_AIR) {
-            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+        if VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
+            boma.change_kinetic_by_situation(*FIGHTER_KINETIC_TYPE_GROUND_STOP, *FIGHTER_KINETIC_TYPE_FALL);
         }
     }
 }
@@ -311,19 +350,16 @@ unsafe extern "C" fn effect_speciallwhit(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_cheek"), Hash40::new("head"), 0, 0, 0, 0, -90, -90, 1, true);
-        LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        if agent.is_situation(*SITUATION_KIND_GROUND) {
+            LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
     }
     frame(lua_state, 1.0);
     WorkModule::is_flag(boma, *FIGHTER_PIKACHU_STATUS_WORK_ID_FLAG_KAMINARI_ATTACK_HIT);
     if is_excute(agent) {
-        if VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
-            let discharge_effect_mul = VarModule::get_float(boma.object(), vars::pichu::instance::SPECIAL_LW_DISCHARGE_SIZE_MUL);
-            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit2"), Hash40::new("hip"), 0, 0, 0, 0, 90, 0, 1.15 * discharge_effect_mul, true);
-            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_final_explosion"), Hash40::new("hip"), 0, 0, 0, 0, 0, 0, 0.3 * discharge_effect_mul, false);
-        }
-        else {
-            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit2"), Hash40::new("top"), 0, -2, 0, 0, 90, 0, 1.15, true);
-            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit"), Hash40::new("top"), 0, -2, 0, 0, 90, 0, 0.85, true);
+        if !VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
+            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit2"), Hash40::new("top"), 0, -2, 0, 0, 90, 0, 0.64, true);
+            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit"), Hash40::new("top"), 0, -2, 0, 0, 90, 0, 0.47, true);
         }
     }
     if is_excute(agent) {
@@ -420,121 +456,9 @@ unsafe extern "C" fn effect_speciallwhit(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 34.0);
     if is_excute(agent) {
-        FOOT_EFFECT(agent, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
-    }
-}
-
-unsafe extern "C" fn effect_specialairlwhit(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    frame(lua_state, 1.0);
-    if is_excute(agent) {
-        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_cheek"), Hash40::new("head"), 0, 0, 0, 0, -90, -90, 1, true);
-    }
-    frame(lua_state, 1.0);
-    WorkModule::is_flag(boma, *FIGHTER_PIKACHU_STATUS_WORK_ID_FLAG_KAMINARI_ATTACK_HIT);
-    if is_excute(agent) {
-        if VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
-            let discharge_effect_mul = VarModule::get_float(boma.object(), vars::pichu::instance::SPECIAL_LW_DISCHARGE_SIZE_MUL);
-            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit2"), Hash40::new("hip"), 0, 0, 0, 0, 90, 0, 1.15 * discharge_effect_mul, true);
-            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_final_explosion"), Hash40::new("hip"), 0, 0, 0, 0, 0, 0, 0.3 * discharge_effect_mul, false);
+        if agent.is_situation(*SITUATION_KIND_GROUND) {
+            FOOT_EFFECT(agent, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
         }
-        else {
-            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit2"), Hash40::new("top"), 0, -2, 0, 0, 90, 0, 1.15, true);
-            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("pichu_kaminari_hit"), Hash40::new("top"), 0, -2, 0, 0, 90, 0, 0.85, true);
-        }
-    }
-    if is_excute(agent) {
-        FLASH(agent, 0, 0, 0, 0);
-        BURN_COLOR(agent, 2, 2, 0.5, 0.9);
-    }
-    wait(lua_state, 2.0);
-    if is_excute(agent) {
-        FLASH_FRM(agent, 2, 0, 0, 0, 0);
-        BURN_COLOR_FRAME(agent, 2, 2, 2, 0.5, 0.7);
-    }
-    wait(lua_state, 2.0);
-    if is_excute(agent) {
-        FLASH_FRM(agent, 2, 0, 0, 0, 0);
-        BURN_COLOR_FRAME(agent, 2, 2, 2, 0.5, 0);
-    }
-    wait(lua_state, 2.0);
-    if is_excute(agent) {
-        BURN_COLOR_NORMAL(agent);
-        COL_NORMAL(agent);
-    }
-    wait(lua_state, 1.0);
-    if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("pichu_kaminari_hit2"), false, true);
-    }
-    if is_excute(agent) {
-        FLASH(agent, 0, 0, 0, 0);
-        BURN_COLOR(agent, 2, 2, 0.5, 0.9);
-    }
-    wait(lua_state, 2.0);
-    if is_excute(agent) {
-        FLASH_FRM(agent, 2, 0, 0, 0, 0);
-        BURN_COLOR_FRAME(agent, 2, 2, 2, 0.5, 0.7);
-    }
-    wait(lua_state, 2.0);
-    if is_excute(agent) {
-        FLASH_FRM(agent, 2, 0, 0, 0, 0);
-        BURN_COLOR_FRAME(agent, 2, 2, 2, 0.5, 0);
-    }
-    wait(lua_state, 2.0);
-    if is_excute(agent) {
-        BURN_COLOR_NORMAL(agent);
-        COL_NORMAL(agent);
-    }
-    wait(lua_state, 1.0);
-    frame(lua_state, 15.0);
-    if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("pichu_kaminari_hit"), false, true);
-    }
-    for _ in 0..3{
-        if is_excute(agent) {
-            FLASH(agent, 0, 0, 0, 0);
-            BURN_COLOR(agent, 2, 2, 0.5, 0.9);
-        }
-        wait(lua_state, 2.0);
-        if is_excute(agent) {
-            FLASH_FRM(agent, 2, 0, 0, 0, 0);
-            BURN_COLOR_FRAME(agent, 2, 2, 2, 0.5, 0.7);
-        }
-        wait(lua_state, 2.0);
-        if is_excute(agent) {
-            FLASH_FRM(agent, 2, 0, 0, 0, 0);
-            BURN_COLOR_FRAME(agent, 2, 2, 2, 0.5, 0);
-        }
-        wait(lua_state, 2.0);
-        if is_excute(agent) {
-            BURN_COLOR_NORMAL(agent);
-            COL_NORMAL(agent);
-        }
-        wait(lua_state, 1.0);
-    }
-    if is_excute(agent) {
-        FLASH(agent, 0, 0, 0, 0);
-        BURN_COLOR(agent, 2, 2, 0.5, 0.9);
-    }
-    wait(lua_state, 2.0);
-    if is_excute(agent) {
-        FLASH_FRM(agent, 2, 0, 0, 0, 0);
-        BURN_COLOR_FRAME(agent, 2, 2, 2, 0.5, 0.7);
-    }
-    wait(lua_state, 2.0);
-    if is_excute(agent) {
-        FLASH_FRM(agent, 2, 0, 0, 0, 0);
-        BURN_COLOR_FRAME(agent, 2, 2, 2, 0.5, 0);
-    }
-    wait(lua_state, 2.0);
-    if is_excute(agent) {
-        BURN_COLOR_NORMAL(agent);
-        COL_NORMAL(agent);
-    }
-    frame(lua_state, 30.0);
-    if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("pichu_cheek"), false, true);
     }
 }
 
@@ -559,8 +483,11 @@ pub fn install(agent: &mut Agent) {
 
     agent.acmd("game_speciallw", game_speciallw, Priority::Low);
     agent.acmd("game_specialairlw", game_speciallw, Priority::Low);
+    agent.acmd("effect_speciallw", effect_speciallw, Priority::Low);
+    agent.acmd("effect_specialairlw", effect_speciallw, Priority::Low);
+    
     agent.acmd("game_speciallwhit", game_speciallwhit, Priority::Low);
     agent.acmd("game_specialairlwhit", game_speciallwhit, Priority::Low);
     agent.acmd("effect_speciallwhit", effect_speciallwhit, Priority::Low);
-    agent.acmd("effect_specialairlwhit", effect_specialairlwhit, Priority::Low);
+    agent.acmd("effect_specialairlwhit", effect_speciallwhit, Priority::Low);
 }

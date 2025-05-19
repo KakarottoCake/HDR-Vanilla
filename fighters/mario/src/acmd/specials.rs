@@ -187,7 +187,7 @@ unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
     }
     frame(lua_state, 4.0);
     if is_excute(agent) {
@@ -195,6 +195,7 @@ unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
         ATTACK(agent, 0, 0, Hash40::new("top"), 8.0, 70, 40, 0, 88, 3.2, 0.0, 9.0, 6.0, Some(0.0), Some(9.0), Some(-6.0), 1.4, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("top"), 8.0, 70, 40, 0, 88, 3.0, 0.0, 9.0, 0.0, Some(0.0), Some(5.0), Some(-0.0), 1.4, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PUNCH);
     }
@@ -241,8 +242,11 @@ unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 25.0);
     if is_excute(agent){
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         agent.on_flag(*FIGHTER_MARIO_STATUS_SPECIAL_S_FLAG_SPECIAL_FALL);
+    }
+    frame(lua_state, 28.0);
+    if is_excute(agent){
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
     }
 }
 
@@ -378,6 +382,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
         ATTACK(agent, 1, 0, Hash40::new("top"), 4.0, 86, 100, 150, 0, 4.0, 0.0, 4.5, 5.0, None, None, None, 1.0, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, attr, *ATTACK_SOUND_LEVEL_M, collision_sound_attr, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 2, 0, Hash40::new("top"), 4.0, 100, 100, 150, 0, 4.0, 0.0, 4.3, 9.2, None, None, None, 1.0, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, attr, *ATTACK_SOUND_LEVEL_M, collision_sound_attr, *ATTACK_REGION_PUNCH);
         AttackModule::set_no_damage_fly_smoke_all(boma, true, false);
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
     }
     wait(lua_state, 2.0);
     if is_excute(agent) {
@@ -391,7 +396,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 0.6, 60, 100, 180, 0, 3.0, 0.0, 4.5, 2.5, None, None, None, 0.75, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 2, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, attr, *ATTACK_SOUND_LEVEL_M, collision_sound_attr, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("top"), 0.6, 92, 100, 170, 0, 3.8, 0.0, 4.5, 7.5, None, None, None, 0.75, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 2, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, attr, *ATTACK_SOUND_LEVEL_M, collision_sound_attr, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 2, 0, Hash40::new("top"), 0.6, 60, 100, 110, 0, 3.0, 0.0, 8.0, 2.5, None, None, None, 0.75, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 2, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, attr, *ATTACK_SOUND_LEVEL_M, collision_sound_attr, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 3, 0, Hash40::new("top"), 0.6, 92, 100, 110, 0, 3.8, 0.0, 8.0, 8.0, None, None, None, 0.75, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 2, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, attr, *ATTACK_SOUND_LEVEL_M, collision_sound_attr, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 3, 0, Hash40::new("top"), 0.6, 92, 100, 110, 0, 3.0, 0.0, 8.0, 8.0, None, None, None, 0.75, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 2, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, attr, *ATTACK_SOUND_LEVEL_M, collision_sound_attr, *ATTACK_REGION_PUNCH);
         AttackModule::set_no_finish_camera(boma, 0, true, false);
         AttackModule::set_no_finish_camera(boma, 1, true, false);
         AttackModule::set_no_finish_camera(boma, 2, true, false);
@@ -402,8 +407,8 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         let sound_attr = if (WorkModule::is_flag(boma, *FIGHTER_MARIO_STATUS_SPECIAL_HI_FLAG_CAPPY)) { *COLLISION_SOUND_ATTR_MARIO_LOCAL_COIN_LAST } else { *COLLISION_SOUND_ATTR_MARIO_COIN_LAST };
         AttackModule::clear_all(boma);
-        ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 60, 125, 0, 50, 6.5, 0.0, 9.5, 8.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, attr, *ATTACK_SOUND_LEVEL_L, sound_attr, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 5.0, 60, 125, 0, 50, 6.5, 0.0, 9.5, 2.5, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, attr, *ATTACK_SOUND_LEVEL_L, sound_attr, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("shoulderl"), 3.0, 60, 140, 0, 50, 8.75, 0.0, 0.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, attr, *ATTACK_SOUND_LEVEL_L, sound_attr, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 1, 0, Hash40::new("hip"), 3.0, 60, 140, 0, 50, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, attr, *ATTACK_SOUND_LEVEL_L, sound_attr, *ATTACK_REGION_PUNCH);
     }
     wait(lua_state, 2.0);
     if is_excute(agent) {
@@ -490,9 +495,13 @@ unsafe extern "C" fn game_longjump(agent: &mut L2CAgentBase) {
         VarModule::on_flag(agent.battle_object, vars::common::status::DISABLE_ECB_SHIFT);
         let lr = PostureModule::lr(agent.module_accessor);
         let speed_x = KineticModule::get_sum_speed_x(agent.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) * lr;
-        let back_speed_x_hitbox_threshold = ParamModule::get_float(agent.battle_object, ParamType::Agent, "long_jump.back_speed_x_hitbox_threshold");
-        if speed_x <= back_speed_x_hitbox_threshold {
-            ATTACK(agent, 0, 0, Hash40::new("top"), 7.5, 45, 100, 0, 64, 3.0, 0.0, 5.0, 1.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
+        let back_speed_x_hitbox_max = ParamModule::get_float(agent.battle_object, ParamType::Agent, "long_jump.back_speed_x_hitbox_max");
+        let back_speed_x_hitbox_min = ParamModule::get_float(agent.battle_object, ParamType::Agent, "long_jump.back_speed_x_hitbox_min");
+        if speed_x <= back_speed_x_hitbox_max {
+            let ratio = (speed_x - back_speed_x_hitbox_max) / (back_speed_x_hitbox_min - back_speed_x_hitbox_max);
+            let dmg = util::nlerp(9.0, 15.0, 1.0, ratio);
+            let hitlag = util::nlerp(1.0, 1.5, 1.0, ratio);
+            ATTACK(agent, 0, 0, Hash40::new("top"), dmg, 45, 45, 0, 100, 3.0, 0.0, 5.0, 1.0, None, None, None, hitlag, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
         }
     }
 }
@@ -506,8 +515,8 @@ unsafe extern "C" fn sound_longjump(agent: &mut L2CAgentBase) {
         else {
             let lr = PostureModule::lr(agent.module_accessor);
             let speed_x = KineticModule::get_sum_speed_x(agent.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) * lr;
-            let back_speed_x_hitbox_threshold = ParamModule::get_float(agent.battle_object, ParamType::Agent, "long_jump.back_speed_x_hitbox_threshold");
-            if speed_x > back_speed_x_hitbox_threshold {
+            let back_speed_x_hitbox_max = ParamModule::get_float(agent.battle_object, ParamType::Agent, "long_jump.back_speed_x_hitbox_max");
+            if speed_x > back_speed_x_hitbox_max {
                 // standard long jump
                 let handle = SoundModule::play_se(agent.module_accessor, Hash40::new("vc_mario_longjumpback01"), false, false, false, false, enSEType(0));
                 SoundModule::set_se_vol(agent.module_accessor, handle as i32, 0.45, 0);

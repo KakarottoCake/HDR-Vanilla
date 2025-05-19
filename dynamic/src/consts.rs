@@ -191,6 +191,12 @@ pub mod vars {
 
             pub const IS_ENTER_DASH_CANCEL: i32 = 0x006A;
 
+            pub const DOWN_DISABLE_PASSIVE: i32 = 0x006B;
+
+            pub const DOWN_DISABLE_A_LAND: i32 = 0x006C;
+
+            pub const IS_KILLING_BLOW: i32 = 0x006D;
+
             // ints
 
             pub const LAST_ATTACK_RECEIVER_ENTRY_ID: i32 = 0x0000;
@@ -201,6 +207,8 @@ pub mod vars {
             pub const FLOAT_STATUS_KIND: i32 = 0x0003;
 
             pub const HITFALL_BUFFER: i32 = 0x0004;
+
+            pub const FLY_NEXT_FRAME: i32 = 0x0005;
 
             // pub const JUMP_SQUAT_FRAME: i32 = 0x0005;
 
@@ -336,10 +344,13 @@ pub mod vars {
 
     pub mod bayonetta {
         pub mod instance {
+            // flags
+            pub const WAS_CANCEL: i32 = 0x0100;
+
             // ints
             pub const RECOVERY_RESOURCE_COUNT: i32 = 0x0100;
             pub const ATTACK_AIR_F_COUNT: i32 = 0x0101;
-            pub const SPECIAL_N_CANCEL_TYPE: i32 = 0x0102;
+            pub const SPECIAL_N_CANCEL_TYPE: i32 = 0x0102; //used for both cancel and firing
             pub const SPECIAL_S_DABK_COUNT: i32 = 0x0103;
         }
         pub mod status {
@@ -569,6 +580,13 @@ pub mod vars {
         }
     }
 
+    pub mod duckhunt_can {
+        pub mod instance {
+            // flags
+            pub const KILLSHOT_EXPLODE: i32 = 0x0100;
+        }
+    }
+
     pub mod edge {
         pub mod instance {
             // flags
@@ -776,13 +794,16 @@ pub mod vars {
     pub mod kirby {
         pub mod instance {
             // flags
-            pub const DISABLE_SPECIAL_HI: i32 = 0x01FF; //Weird value to avoid conflicts with copy ability values
+            //pub const DISABLE_SPECIAL_HI: i32 = 0x01FF; //Weird value to avoid conflicts with copy ability values
             pub const SPECIAL_N_PICKEL_CYCLE_MATERIAL: i32 = 0x01F4;
             pub use super::super::ridley::instance::SPECIAL_N_EXPLODE;
 
             // ints
             pub const SPECIAL_N_PICKEL_MATERIAL_INDEX: i32 = 0x01F5;
             pub use super::super::bayonetta::instance::SPECIAL_N_CANCEL_TYPE;
+            pub const SPECIAL_N_PTRAINER_PLEDGE_STATE: i32 = 0x01F6;    // Unique var as it doesn't like borrowing from ptrainer
+            pub use super::super::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER;
+            pub const SPECIAL_N_PTRAINER_PLEDGE_EFFECT_HANDLE: i32 = 0x01F7;
 
             // floats
             pub use super::super::reflet::instance::SPECIAL_N_CHARGE;
@@ -867,6 +888,7 @@ pub mod vars {
             pub const ATTACK_13_DREAMLAND_EXPRESS: i32 = 0x0100;
             pub const ATTACK_13_LATE_DLE_INPUT: i32 = 0x0101;
             pub const SPECIAL_N_MOTION_AIR: i32 = 0x0102;
+            pub const SPECIAL_HI_GROUND_START: i32 = 0x0103;
 
             // floats
             pub const CURRENT_DAMAGE: i32 = 0x0100;
@@ -987,6 +1009,8 @@ pub mod vars {
             pub const SPECIAL_S_SMOKE_EFFECT_HANDLE: i32 = 0x0101;
             /// This int stores the handle of the pulsing effect for killing it if we store misfire
             pub const SPECIAL_S_PULSE_EFFECT_HANDLE: i32 = 0x0102;
+            pub const SPECIAL_S_MISFIRE_COUNT: i32 = 0x0103;
+            pub const SPECIAL_S_MISFIRE_BITFLAG: i32 = 0x0104;
 
             // float
             /// This float holds the current multiplier on damage for misfire
@@ -1040,10 +1064,7 @@ pub mod vars {
             // flags
             pub const ATTACK_S4_SPECIAL: i32 = 0x0100;
             pub const SPECIAL_HI_CATCH_USED: i32 = 0x0101;
-        }
-        pub mod status {
-            // flags
-            pub const SPECIAL_LW_HOLD: i32 = 0x1100;
+            pub const SPECIAL_LW_HOLD: i32 = 0x0102;
         }
     }
 
@@ -1114,7 +1135,12 @@ pub mod vars {
     pub mod miigunner_supermissile {
         pub mod instance {
             // flags
-            pub const PULSE_DETONATE: i32 = 0x0100;
+            pub const ENABLE_PULSE: i32 = 0x0100;
+            pub const PULSE_DETONATE: i32 = 0x0101;
+        }
+        pub mod status {
+            // ints
+            pub const PULSE_TIMER: i32 = 0x1100;
         }
     }
 
@@ -1244,13 +1270,24 @@ pub mod vars {
     }
 
     pub mod pfushigisou {
+        pub mod instance {
+            // ints
+            pub const SPECIAL_N_PLEDGE_EFFECT_HANDLE: i32 = 0x0100;
+        }
+    }
 
+    pub mod pfushigisou_seed {
+        pub mod instance {
+            // ints
+            pub const PLEDGE_TYPE: i32 = 0x0100;
+        }
     }
 
     pub mod pichu {
         pub mod instance {
             //flags
             pub const CHARGE_STATE_ATTACK: i32 = 0x0102;
+            pub const SPECIAL_LW_DISCHARGE_AIR_START: i32 = 0x0103;
 
             //ints
             pub const CHARGE_STATE_ENABLED: i32 = 0x0100;
@@ -1348,18 +1385,69 @@ pub mod vars {
 
     pub mod plizardon {
         pub mod instance {
+            // flags
             pub const DISABLE_SPECIAL_S: i32 = 0x0100;
+
+            // ints
+            pub const SPECIAL_N_PLEDGE_EFFECT_HANDLE: i32 = 0x0100;
+        }
+    }
+
+    pub mod plizardon_rock {
+        pub mod status {
+            // flags
+            pub const ENABLE_BREAK: i32 = 0x1100;
+
+            // ints
+            pub const MAX_STONES: i32 = 0x1100;
+            pub const REMAINING_STONES: i32 = 0x1101;
+            pub const SPAWN_COOLDOWN: i32 = 0x1102;
+        }
+    }
+
+    pub mod plizardon_rockstone {
+        pub mod status {
+            // flags
+            pub const INFLICTED: i32 = 0x1100;
+        }
+        pub mod instance {
+            // ints
+            pub const ANGLE: i32 = 0x0100;
+            pub const ROT: i32 = 0x0101;
         }
     }
 
     pub mod ptrainer {
         pub mod instance {
-            pub const SPECIAL_LW_BACKWARDS_SWITCH: i32 = 0x0100;
+            // flags
+            pub const SPECIAL_N_PLEDGE_PAUSE_TIMER: i32 = 0x0100;
+            pub const SPECIAL_LW_BACKWARDS_SWITCH: i32 = 0x0101;
+
+            // ints
+            pub const SPECIAL_N_PLEDGE_STATE: i32 = 0x0100; // 0 - None, 1 - Squirtle, 2 - Ivysaur, 3 - Charizard
+            pub const SPECIAL_N_PLEDGE_TIMER: i32 = 0x0101;
+            pub const SPECIAL_LW_SWAP_TIMER: i32 = 0x0102;
+        }
+        pub mod status {
+            // flags
+            pub const VOICE_FORWARD_SWITCH: i32 = 0x1100;
+            pub const VOICE_USE_OUT_POKE_KIND: i32 = 0x1101;
+            pub const CONTINUE_VOICE: i32 = 0x1102;
         }
     }
 
     pub mod pzenigame {
+        pub mod instance {
+            // ints
+            pub const SPECIAL_N_PLEDGE_EFFECT_HANDLE: i32 = 0x0100;
+        }
+    }
 
+    pub mod pzenigame_water {
+        pub mod instance {
+            // ints
+            pub const PLEDGE_TYPE: i32 = 0x0100;
+        }
     }
 
     pub mod reflet {
@@ -1671,7 +1759,8 @@ pub mod vars {
         pub mod instance {
             // flags
             pub const SPECIAL_HI_GROUND_START: i32 = 0x0100;
-            pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0101;
+            pub const SPECIAL_HI_AIR_JUMP: i32 = 0x0101;
+            pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0102;
 
             // ints
             pub const ARMR_DRAGONIZE_EFFECT_HANDLE: i32 = 0x0100;
@@ -1913,6 +2002,15 @@ pub mod statuses {
         pub const PEARL_FLY: i32 = 0x2;
     }
 
+    pub mod plizardon_rock {
+        pub const HAVED: i32 = 0x0;
+    }
+
+    pub mod plizardon_rockstone {
+        pub const START: i32 = 0x0;
+        pub const MOVE: i32 = 0x2;
+    }
+
     pub mod purin_disarming_voice {
         pub const SHOOT: i32 = 0x0;
     }
@@ -1945,6 +2043,11 @@ pub mod statuses {
 pub mod articles {
     pub mod packun {
         pub const FIREBREATH: i32 = 0x4;
+    }
+
+    pub mod plizardon {
+        pub const ROCK: i32 = 0x3;
+        pub const ROCKSTONE: i32 = 0x4;
     }
     
     pub mod purin {
@@ -1981,3 +2084,8 @@ pub mod melee_mode {
 
 // extra lua_consts
 pub const COLLISION_KIND_MASK_PARRY: smash::lib::LuaConst = smash::lib::LuaConst::new(0x80);
+
+pub const PLEDGE_STATE_NONE: smash::lib::LuaConst = smash::lib::LuaConst::new(0x0);
+pub const PLEDGE_STATE_WATER: smash::lib::LuaConst = smash::lib::LuaConst::new(0x1);
+pub const PLEDGE_STATE_GRASS: smash::lib::LuaConst = smash::lib::LuaConst::new(0x2);
+pub const PLEDGE_STATE_FIRE: smash::lib::LuaConst = smash::lib::LuaConst::new(0x3);

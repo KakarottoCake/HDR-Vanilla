@@ -1,6 +1,8 @@
 use super::*;
 
 unsafe extern "C" fn special_n_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.sub_status_pre_SpecialNCommon();
+
     StatusModule::init_settings(
         fighter.module_accessor,
         app::SituationKind(*SITUATION_KIND_NONE),
@@ -13,6 +15,7 @@ unsafe extern "C" fn special_n_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT,
         0
     );
+    
     FighterStatusModuleImpl::set_fighter_status_data(
         fighter.module_accessor,
         false,
@@ -80,7 +83,7 @@ pub unsafe extern "C" fn special_n_hold_main_loop(fighter: &mut L2CFighterCommon
             notify_event_msc_cmd!(fighter, Hash40::new_raw(0x240e24407a));
         }
     }
-    if fighter.is_button_trigger(Buttons::Special) {
+    if fighter.is_button_trigger(Buttons::Special | Buttons::Attack) {
         fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_PACMAN_SPECIAL_N_SHOOT.into(), false.into());
         return 1.into();
     }

@@ -73,7 +73,7 @@ unsafe fn up_special_proper_landing(fighter: &mut L2CFighterCommon) {
 
 unsafe fn dreamland_express(fighter: &mut L2CFighterCommon) {
     if fighter.is_motion(Hash40::new("attack_12"))
-    && (17.0..19.0).contains(&fighter.motion_frame())
+    && (17.0..=19.0).contains(&fighter.motion_frame())
     && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
         VarModule::on_flag(fighter.battle_object, vars::littlemac::instance::ATTACK_13_DREAMLAND_EXPRESS);
     }
@@ -95,23 +95,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         ]) 
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
-        if fighter.is_flag(*FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE) {
-            if [*FIGHTER_KINETIC_TYPE_MOTION_AIR, *FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE].contains(&KineticModule::get_kinetic_type(fighter.module_accessor)) {
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION);
-                let speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
-
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
-                app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
-                
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-                app::sv_kinetic_energy::enable(fighter.lua_state_agent);
-
-                KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_MOTION, fighter.module_accessor);
-            }
-        }
     }
 }
 

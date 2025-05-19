@@ -8,7 +8,7 @@ pub unsafe extern "C" fn special_s_pre(fighter: &mut L2CFighterCommon) -> L2CVal
         SituationKind(*SITUATION_KIND_NONE),
         *FIGHTER_KINETIC_TYPE_UNIQ,
         *GROUND_CORRECT_KIND_KEEP as u32,
-        GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
+        GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP),
         true,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT,
@@ -227,7 +227,6 @@ unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
                 FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
                 y_speed
             );
-            fighter.sub_fighter_cliff_check(GROUND_CLIFF_CHECK_KIND_ON_DROP.into());
             VarModule::set_int(fighter.battle_object, vars::sonic::status::SPECIAL_S_STEP, vars::sonic::SPECIAL_S_STEP_DASH);
         }
         else if step == vars::sonic::SPECIAL_S_STEP_DASH {

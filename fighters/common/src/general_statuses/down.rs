@@ -12,6 +12,7 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
         skyline::install_hooks!(
             sub_DamageFlyChkUniq,
             status_pre_Down,
+            status_Down,
             status_Down_Main,
             status_end_Down,
             status_DownStand_Main,
@@ -68,21 +69,39 @@ unsafe fn sub_DamageFlyChkUniq(fighter: &mut L2CFighterCommon) -> L2CValue {
     ret
 }
 
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_Down)]
+unsafe fn status_Down(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.sub_down_common_pre();
+
+    let down_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("down_frame"));
+    WorkModule::set_float(fighter.module_accessor, down_frame, *FIGHTER_STATUS_DOWN_WORK_FLOAT_DOWN_FRAME);
+
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_LANDING_CANCEL);
+
+    // Input lag forgiveness mechanic:
+    // Allow teching during first 2 frames of knockdown
+    if !VarModule::is_flag(fighter.battle_object, vars::common::instance::DOWN_DISABLE_PASSIVE) {
+        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE);
+        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE_FB);
+    }
+
+    fighter.sub_shift_status_main(L2CValue::Ptr(L2CFighterCommon_bind_address_call_status_Down_Main as *const () as _))
+}
+
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_Down_Main)]
 unsafe fn status_Down_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[CURRENT_FRAME].get_i32() <= 2 {
         // Input lag forgiveness mechanic:
         // Allow teching during first 2 frames of knockdown
-        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE);
-        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE_FB);
-
         if fighter.sub_AirChkPassive_for_damage().get_bool() {
             return 1.into();
         }
 
         // Input lag forgiveness mechanic:
         // Allow A-landing during first 2 frames of knockdown
-        if fighter.global_table[PREV_STATUS_KIND] == FIGHTER_STATUS_KIND_DAMAGE_FALL {
+        if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND
+        && fighter.global_table[PREV_STATUS_KIND] == FIGHTER_STATUS_KIND_DAMAGE_FALL
+        && !VarModule::is_flag(fighter.battle_object, vars::common::instance::DOWN_DISABLE_A_LAND) {
             if fighter.is_button_trigger(Buttons::AttackAll)
             || fighter.is_button_trigger(Buttons::TiltAttack) {
                 fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_AIR.into(), true.into());
@@ -122,6 +141,9 @@ unsafe fn status_end_Down(fighter: &mut L2CFighterCommon) -> L2CValue {
         CameraModule::stop_quake(fighter.module_accessor, *CAMERA_QUAKE_KIND_S);
         CameraModule::stop_quake(fighter.module_accessor, *CAMERA_QUAKE_KIND_M);
     }
+
+    VarModule::off_flag(fighter.battle_object, vars::common::instance::DOWN_DISABLE_PASSIVE);
+    VarModule::off_flag(fighter.battle_object, vars::common::instance::DOWN_DISABLE_A_LAND);
 
     0.into()
 }

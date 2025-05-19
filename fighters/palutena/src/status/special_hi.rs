@@ -120,8 +120,8 @@ unsafe extern "C" fn sub_special_hi2(fighter: &mut L2CFighterCommon, param: L2CV
             GroundModule::set_passable_check(fighter.module_accessor, false);
         }
         let cliff_check = fighter.get_param_int("param_special_hi", "special_hi_move_cliff_check");
-        if cliff_check == move_xlu {
-            fighter.sub_fighter_cliff_check(GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES.into());
+        if frame == cliff_check {
+            fighter.sub_fighter_cliff_check(GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES.into());
         }
     }
 

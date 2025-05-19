@@ -154,11 +154,29 @@
 		"fighter/pfushigisou/cmn": [
 			"fighter/pfushigisou/param/hdr.xml"
 		],
+		"fighter/plizardon/cmn": [
+			"fighter/plizardon/param/hdr.xml"
+		],
+		"fighter/pzenigame/cmn": [
+			"fighter/pzenigame/param/hdr.xml"
+		],
 		"fighter/tantan/cmn": [
 			"fighter/tantan/param/hdr.xml"
 		],
 		"fighter/zelda/cmn": [
 			"fighter/zelda/param/hdr.xml"
+		],
+		"fighter/pikachu/cmn": [
+			"fighter/pikachu/param/hdr.xml"
+		],
+		"fighter/ridley/cmn": [
+			"fighter/ridley/param/hdr.xml"
+		],
+		"fighter/robot/cmn": [
+			"fighter/robot/param/hdr.xml"
+		],
+		"fighter/shulk/cmn": [
+			"fighter/shulk/param/hdr.xml"
 		]
 	}
 }

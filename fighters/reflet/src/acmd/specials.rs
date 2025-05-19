@@ -27,6 +27,9 @@ unsafe extern "C" fn game_specialairntronend(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
+    }
     frame(lua_state, 1.0);
     FT_MOTION_RATE_RANGE(agent, 1.0, 8.0, 8.0);
     frame(lua_state, 8.0);
@@ -37,6 +40,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 9.0);
     if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
         VarModule::on_flag(agent.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
     }
     frame(lua_state, 12.0);
@@ -55,6 +59,9 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialhi2(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
+    }
     frame(lua_state, 17.0);
     if is_excute(agent) {
         ArticleModule::generate_article(boma, *FIGHTER_REFLET_GENERATE_ARTICLE_ELWIND, false, -1);
@@ -62,7 +69,7 @@ unsafe extern "C" fn game_specialhi2(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 27.0);
     if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
     }
 }
 

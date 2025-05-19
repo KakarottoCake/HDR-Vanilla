@@ -20,35 +20,25 @@ pub unsafe extern "C" fn special_n1_hold_main_loop(fighter: &mut L2CFighterCommo
         return 1.into();
     }
     if fighter.is_situation(*SITUATION_KIND_GROUND) {
-        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON) {
-            if fighter.sub_check_command_guard().get_bool() {
-                fighter.set_int(*FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_MIIGUNNER_STATUS_GUNNER_CHARGE_WORK_INT_CANCEL_STATUS);
-                fighter.change_status(FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_CANCEL.into(), true.into());
-                return 0.into();
-            }
+        if fighter.sub_check_command_guard().get_bool() || fighter.is_pad_flag(PadFlag::GuardTrigger) {
+            fighter.set_int(*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_MIIGUNNER_STATUS_GUNNER_CHARGE_WORK_INT_CANCEL_STATUS);
+            fighter.change_status(FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_CANCEL.into(), true.into());
+            return 0.into();
         }
-        if fighter.sub_check_jump_in_charging().get_bool() {
+        if fighter.sub_check_jump_in_charging_for_cancel_status((*FIGHTER_MIIGUNNER_STATUS_GUNNER_CHARGE_WORK_INT_CANCEL_STATUS).into()).get_bool() {
             fighter.set_int(*FIGHTER_STATUS_KIND_JUMP_SQUAT, *FIGHTER_MIIGUNNER_STATUS_GUNNER_CHARGE_WORK_INT_CANCEL_STATUS);
             fighter.change_status(FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_CANCEL.into(), true.into());
             return 0.into();
         }
     }
     else {
-        if WorkModule::is_enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_ESCAPE) {
-            if fighter.is_cat_flag(Cat1::AirEscape) {
-                fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_MIIGUNNER_STATUS_GUNNER_CHARGE_WORK_INT_CANCEL_STATUS);
-                fighter.change_status(FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_CANCEL.into(), true.into());
-                return 0.into();
-            }
+        if fighter.is_cat_flag(Cat1::AirEscape) {
+            fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_MIIGUNNER_STATUS_GUNNER_CHARGE_WORK_INT_CANCEL_STATUS);
+            fighter.change_status(FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_CANCEL.into(), true.into());
+            return 0.into();
         }
-        if fighter.sub_check_jump_in_charging().get_bool() {
-            let aerial_type = WorkModule::get_param_int(fighter.module_accessor, hash40("aerial_type"), 0);
-            if aerial_type == *FIGHTER_JUMP_AERIAL_TYPE_NORMAL {
-                fighter.set_int(*FIGHTER_STATUS_KIND_JUMP_AERIAL, *FIGHTER_MIIGUNNER_STATUS_GUNNER_CHARGE_WORK_INT_CANCEL_STATUS);
-            }
-            else {
-                fighter.set_int(*FIGHTER_STATUS_KIND_FLY, *FIGHTER_MIIGUNNER_STATUS_GUNNER_CHARGE_WORK_INT_CANCEL_STATUS);
-            }
+        if fighter.sub_check_jump_in_charging_for_cancel_status((*FIGHTER_MIIGUNNER_STATUS_GUNNER_CHARGE_WORK_INT_CANCEL_STATUS).into()).get_bool() {
+            fighter.set_int(*FIGHTER_STATUS_KIND_JUMP_AERIAL, *FIGHTER_MIIGUNNER_STATUS_GUNNER_CHARGE_WORK_INT_CANCEL_STATUS);
             fighter.change_status(FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_CANCEL.into(), true.into());
             return 0.into();
         }

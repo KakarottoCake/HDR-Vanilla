@@ -4,6 +4,7 @@ use globals::*;
 
 mod jump;
 mod catch;
+mod pass;
 
 mod attack;
 mod attack_air;
@@ -27,8 +28,10 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
         VarModule::set_int(fighter.object(),vars::tantan::instance::ARMR_DRAGONIZE_EFFECT_HANDLE,0);
     }
     if fighter.is_situation(*SITUATION_KIND_GROUND) || fighter.is_situation(*SITUATION_KIND_CLIFF)
-    || fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_REBIRTH, *FIGHTER_STATUS_KIND_DEAD]) {
+    || fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_REBIRTH, *FIGHTER_STATUS_KIND_DEAD, *FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_GIMMICK_SPRING_JUMP]) {
+        // println!("reset flag");
         VarModule::off_flag(fighter.battle_object, vars::tantan::instance::SPECIAL_HI_GROUND_START);
+        VarModule::off_flag(fighter.battle_object, vars::tantan::instance::SPECIAL_HI_AIR_JUMP);
         VarModule::off_flag(fighter.battle_object, vars::tantan::instance::SPECIAL_HI_ENABLE_FREEFALL);
     }
     true.into()
@@ -37,6 +40,9 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
 unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     // set the callbacks on fighter init
     fighter.global_table[globals::STATUS_CHANGE_CALLBACK].assign(&L2CValue::Ptr(change_status_callback as *const () as _));
+    VarModule::off_flag(fighter.battle_object, vars::tantan::instance::SPECIAL_HI_GROUND_START);
+    VarModule::off_flag(fighter.battle_object, vars::tantan::instance::SPECIAL_HI_AIR_JUMP);
+    VarModule::off_flag(fighter.battle_object, vars::tantan::instance::SPECIAL_HI_ENABLE_FREEFALL);
 }
 
 pub fn install(agent: &mut Agent) {
@@ -44,6 +50,7 @@ pub fn install(agent: &mut Agent) {
 
     jump::install(agent);
     catch::install(agent);
+    pass::install(agent);
 
     attack::install(agent);
     attack_air::install(agent);

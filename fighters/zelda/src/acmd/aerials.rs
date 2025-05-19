@@ -14,12 +14,12 @@ unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
             ATTACK(agent, 0, 0, Hash40::new("armr"), 2.0, 366, 50, 0, 28, 4.5, 5.0, 0.0, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
             ATTACK(agent, 1, 0, Hash40::new("arml"), 2.0, 366, 50, 0, 28, 4.5, 5.0, 0.0, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
             ATTACK(agent, 2, 0, Hash40::new("waist"), 2.0, 366, 50, 0, 28, 5.0, 0.0, 0.0, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
-            ATTACK(agent, 3, 0, Hash40::new("head"), 2.0, 366, 50, 0, 28, 4.0, 0.0, 0.0, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
+            ATTACK(agent, 3, 0, Hash40::new("head"), 2.0, 366, 50, 0, 28, 4.0, 0.0, 0.0, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
             // Ground-only
             ATTACK(agent, 4, 0, Hash40::new("armr"), 2.0, 100, 50, 0, 28, 4.5, 5.0, 0.0, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
             ATTACK(agent, 5, 0, Hash40::new("arml"), 2.0, 100, 50, 0, 28, 4.5, 5.0, 0.0, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
             ATTACK(agent, 6, 0, Hash40::new("waist"), 2.0, 80, 50, 0, 28, 5.0, 0.0, 0.0, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
-            ATTACK(agent, 7, 0, Hash40::new("head"), 2.0, 80, 50, 0, 28, 4.0, 0.0, 0.0, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
+            ATTACK(agent, 7, 0, Hash40::new("head"), 2.0, 80, 50, 0, 28, 4.0, 0.0, 0.0, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
         }
         wait(lua_state, 2.0);
         if is_excute(agent) {
@@ -101,6 +101,17 @@ unsafe extern "C" fn effect_attackairf(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("zelda_atk"), Hash40::new("toel"), 0.0, 0.0, -2.0, 0, 0, 0, 1.0, true);
         LAST_EFFECT_SET_RATE(agent, 1.5);
+    }
+}
+
+unsafe extern "C" fn sound_attackairf(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 8.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("vc_zelda_attackair_f01"));
+        SoundModule::play_se(boma, Hash40::new("se_zelda_attackair_f01"), true, false, false, false, app::enSEType(0));
+        SoundModule::set_se_pitch_ratio(boma, Hash40::new("se_zelda_attackair_f01"), 0.96);
     }
 }
 
@@ -296,6 +307,7 @@ pub fn install(agent: &mut Agent) {
 
     agent.acmd("game_attackairf", game_attackairf, Priority::Low);
     agent.acmd("effect_attackairf", effect_attackairf, Priority::Low);
+    agent.acmd("sound_attackairf", sound_attackairf, Priority::Low);
 
     agent.acmd("game_attackairb", game_attackairb, Priority::Low);
     agent.acmd("effect_attackairb", effect_attackairb, Priority::Low);

@@ -32,6 +32,7 @@ mod dead;
 mod down;
 mod float;
 mod slip;
+mod lasso;
 // [LUA-REPLACE-REBASE]
 // [SHOULD-CHANGE]
 // Reimplement the whole status script (already done) instead of doing this.
@@ -127,6 +128,7 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
             sys_line_status_system_control_hook,
             status_FallSub_hook,
             super_jump_punch_main_hook,
+            super_jump_punch_uniq,
             sub_cliff_uniq_process_exec_fix_pos,
             end_pass_ground,
             virtual_ftStatusUniqProcessDamage_exec_common,
@@ -599,6 +601,75 @@ pub unsafe fn super_jump_punch_main_hook(fighter: &mut L2CFighterCommon) {
     }
 }
 
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_super_jump_punch_uniq)]
+pub unsafe fn super_jump_punch_uniq(fighter: &mut L2CFighterCommon, arg2: L2CValue) -> L2CValue {
+    if arg2.get_bool() {
+        return 0.into();
+    }
+
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_CHANGE_KINE)
+    || !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_MOVE_TRANS) {
+        if fighter.global_table[FIGHTER_KIND] != FIGHTER_KIND_SZEROSUIT {
+            if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_CHANGE_KINE) {
+                if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_MOVE_TRANS)
+                && KineticModule::get_kinetic_type(fighter.module_accessor) != *FIGHTER_KINETIC_TYPE_AIR_STOP {
+                    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+                    
+                    let speed_x_mul = WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_MOVE_TRANS_END_SPEED_X_MUL);
+                    let speed_y_mul = WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_MOVE_TRANS_END_SPEED_Y_MUL);
+
+                    if speed_x_mul > 0.0
+                    && speed_x_mul != 1.0 {
+                        fighter.clear_lua_stack();
+                        lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_STOP);
+                        let speed_x = app::sv_kinetic_energy::get_speed_x(fighter.lua_state_agent);
+
+                        fighter.clear_lua_stack();
+                        lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, speed_x * speed_x_mul, 0.0);
+                        app::sv_kinetic_energy::set_speed(fighter.lua_state_agent);
+                    }
+
+                    if speed_y_mul > 0.0
+                    && speed_y_mul != 1.0 {
+                        fighter.clear_lua_stack();
+                        lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+                        let speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
+
+                        fighter.clear_lua_stack();
+                        lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y * speed_y_mul);
+                        app::sv_kinetic_energy::set_speed(fighter.lua_state_agent);
+                    }
+                }
+            }
+        }
+    }
+    else {
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_CHANGE_KINE);
+
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_SUPER_JUMP_PUNCH_AIR_TRANS);
+
+        StatusModule::set_situation_kind(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_AIR), false);
+        let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+        fighter.global_table[PREV_SITUATION_KIND].assign(&L2CValue::I32(situation_kind));
+        fighter.global_table[SITUATION_KIND].assign(&L2CValue::I32(*SITUATION_KIND_AIR));
+
+        GroundModule::correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+    }
+
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_REVERSE_LR) {
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_REVERSE_LR);
+
+        let reverse_lr_stick_x = WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_CONST_LR_STICK_X);
+
+        if fighter.global_table[STICK_X].get_f32().abs() > reverse_lr_stick_x {
+            PostureModule::set_stick_lr(fighter.module_accessor, 0.0);
+            PostureModule::update_rot_y_lr(fighter.module_accessor);
+        }
+    }
+
+    0.into()
+}
+
 // I honestly don't know why this function was needed in vanilla in the first place
 // Forces situation kind changes during ledge actions, even though situation kind automatically changes based on character position
 // Also forces ECB shape changes, while stubbing this doesn't affect ECB shape whatsoever
@@ -755,8 +826,22 @@ pub unsafe fn sub_is_dive(fighter: &mut L2CFighterCommon) -> L2CValue {
         return false.into();
     }
 
+    let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
     let status_kind = fighter.global_table[STATUS_KIND_INTERRUPT].get_i32();
     let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
+
+    // Prevents Yoshi/Peach from fastfalling during the initial dip of their double jump
+    if (fighter_kind == *FIGHTER_KIND_YOSHI
+        || fighter_kind == *FIGHTER_KIND_PEACH)
+    && ((status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL
+        && MotionModule::frame(fighter.module_accessor) < 20.0)
+        || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_AIR
+            && KineticModule::get_kinetic_type(fighter.module_accessor) == *FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION_2ND
+            && MotionModule::frame_2nd(fighter.module_accessor) < 20.0))
+    {
+        return false.into();
+    }
+
     if status_kind == *FIGHTER_STATUS_KIND_ESCAPE_AIR
     && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE) {
         return false.into();
@@ -808,6 +893,26 @@ pub unsafe fn sub_is_dive(fighter: &mut L2CFighterCommon) -> L2CValue {
     let dive_speed_y = WorkModule::get_param_float(fighter.module_accessor, hash40("dive_speed_y"), 0);
     if speed_y < -dive_speed_y {
         return false.into();
+    }
+
+    if [*FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION,
+        *FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION_2ND,
+        *FIGHTER_KINETIC_TYPE_MOTION_AIR,
+        *FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE].contains(&KineticModule::get_kinetic_type(fighter.module_accessor))
+    {
+        fighter.clear_lua_stack();
+        lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION);
+        let speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
+
+        fighter.clear_lua_stack();
+        lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
+        app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
+        
+        fighter.clear_lua_stack();
+        lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+        app::sv_kinetic_energy::enable(fighter.lua_state_agent);
+
+        KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_MOTION, fighter.module_accessor);
     }
 
     true.into()
@@ -997,6 +1102,7 @@ pub fn install() {
     // damageflyreflect::install();
     down::install();
     slip::install();
+    lasso::install();
 
     skyline::nro::add_hook(nro_hook);
 }

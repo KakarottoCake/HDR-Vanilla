@@ -116,7 +116,7 @@ unsafe extern "C" fn special_lw_pogo_bounce_check(fighter: &mut L2CFighterCommon
                     slope_angle = 360.0 -((-pos_diff_y / 5.0).atan().to_degrees());
                 }
             }
-            EFFECT(fighter, Hash40::new("sys_crown"), Hash40::new("top"), (ground_hit_pos.x - pos_x_global) * lr, ground_hit_pos.y - pos_y_global, 0, slope_angle, 0, 0, 0.2, 0, 0, 0, 0, 0, 0, false);
+            EFFECT(fighter, Hash40::new("sys_crown"), Hash40::new("top"), (ground_hit_pos.x - pos_x_global) * lr, ground_hit_pos.y - pos_y_global, 0, slope_angle, 0, 0, 0.3, 0, 0, 0, 0, 0, 0, false);
             EFFECT(fighter, Hash40::new("sys_quake"), Hash40::new("top"), (ground_hit_pos.x - pos_x_global) * lr, ground_hit_pos.y - pos_y_global, 0, slope_angle, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, false);
             PLAY_SE(fighter, Hash40::new("se_ridley_special_h03"));
             QUAKE(fighter, *CAMERA_QUAKE_KIND_S);

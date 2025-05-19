@@ -4,13 +4,9 @@ unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 4.0);
-    }
+    FT_MOTION_RATE(agent, 4.0);
     frame(lua_state, 2.0);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 2.0);
-    }
+    FT_MOTION_RATE(agent, 2.0);
     frame(lua_state, 3.0);
     if is_excute(agent) {
         if ArticleModule::is_exist(boma, *FIGHTER_EFLAME_GENERATE_ARTICLE_ESWORD) {
@@ -21,9 +17,7 @@ unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
         }
     }
     frame(lua_state, 4.0);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 1.0);
-    }
+    FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 6.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
@@ -54,19 +48,15 @@ unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
-    frame(lua_state, 75.0);
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
-    }
 }
 
 unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 3.0);
+    FT_MOTION_RATE(agent, 2.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-        FT_MOTION_RATE(agent, 2.0);
     }
     frame(lua_state, 4.0);
     if is_excute(agent) {
@@ -78,9 +68,7 @@ unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
         }
     }
     frame(lua_state, 6.0);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 1.0);
-    }
+    FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 8.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("armr"), 11.0, 50, 99, 0, 30, 3.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
@@ -105,24 +93,18 @@ unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
-    frame(lua_state, 69.0);
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
-    }
 }
 
 unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 6.0);
+    FT_MOTION_RATE(agent, 2.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-        FT_MOTION_RATE(agent, 2.0);
     }
     frame(lua_state, 8.0);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 1.0);
-    }
+    FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 9.0);
     if is_excute(agent) {
         if ArticleModule::is_exist(boma, *FIGHTER_EFLAME_GENERATE_ARTICLE_ESWORD) {
@@ -156,10 +138,6 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
-    frame(lua_state, 71.0);
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
-    }
 }
 
 unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
@@ -170,13 +148,9 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
         WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
     frame(lua_state, 4.0);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 2.0);
-    }
+    FT_MOTION_RATE(agent, 2.0);
     frame(lua_state, 6.0);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 1);
-    }
+    FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 6.0);
     if is_excute(agent) {
         if ArticleModule::is_exist(boma, *FIGHTER_EFLAME_GENERATE_ARTICLE_ESWORD) {
@@ -188,12 +162,12 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 11.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("armr"), 12.0, 76, 88, 0, 52, 3.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 1, 0, Hash40::new("haver"), 12.0, 76, 88, 0, 52, 4.0, 0.0, 3.0, -0.9, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 2, 0, Hash40::new("haver"), 14.0, 81, 88, 0, 52, 3.6, 0.0, 9.0, -0.9, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 3, 0, Hash40::new("haver"), 14.0, 81, 88, 0, 52, 3.2, 0.0, 15.0, -1.1, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 0, 0, Hash40::new("armr"), 12.0, 76, 84, 0, 52, 3.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 1, 0, Hash40::new("haver"), 12.0, 76, 84, 0, 52, 4.0, 0.0, 3.0, -0.9, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 2, 0, Hash40::new("haver"), 14.0, 81, 84, 0, 52, 3.6, 0.0, 9.0, -0.9, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 3, 0, Hash40::new("haver"), 14.0, 81, 84, 0, 52, 3.2, 0.0, 15.0, -1.1, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_SWORD);
     }
-        frame(lua_state, 16.0);
+    frame(lua_state, 16.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
@@ -208,10 +182,6 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
         WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         FT_MOTION_RATE(agent, 0.7);
     }
-    frame(lua_state, 79.0);
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
-    }
 }
 
 unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
@@ -222,13 +192,9 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
         WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
     frame(lua_state, 6.0);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 2.0);
-    }
+    FT_MOTION_RATE(agent, 2.0);
     frame(lua_state, 8.0);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 1.0);
-    }
+    FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 9.0);
     if is_excute(agent) {
         if ArticleModule::is_exist(boma, *FIGHTER_EFLAME_GENERATE_ARTICLE_ESWORD) {
@@ -262,9 +228,9 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
         }
     }
     frame(lua_state, 33.0);
+    FT_MOTION_RATE(agent, 0.7);
     if is_excute(agent) {
         WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-        FT_MOTION_RATE(agent, 0.7);
     }
 }
 

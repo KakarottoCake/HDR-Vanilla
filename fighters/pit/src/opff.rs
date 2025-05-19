@@ -5,19 +5,19 @@ use globals::*;
 
 #[no_mangle]
 pub unsafe extern "Rust" fn pits_common(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, status_kind: i32) {
-    power_of_flight_cancel(boma, status_kind);
     upperdash_arm_whiff_freefall(fighter);
+    up_special_startup_ledgegrab(fighter);
     fastfall_specials(fighter);
 }
 
 // Pits Power of Flight cancel
-unsafe fn power_of_flight_cancel(boma: &mut BattleObjectModuleAccessor, status_kind: i32) {
-    if status_kind == *FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH {
-        if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) {
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH_END, false);
-        }
-    }
-}
+// unsafe fn power_of_flight_cancel(boma: &mut BattleObjectModuleAccessor, status_kind: i32) {
+//     if status_kind == *FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH {
+//         if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) {
+//             StatusModule::change_status_request_from_script(boma, *FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH_END, false);
+//         }
+//     }
+// }
  
 unsafe fn upperdash_arm_jump_and_aerial_cancel(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_S) || (boma.is_status(*FIGHTER_PIT_STATUS_KIND_SPECIAL_S_END) && boma.status_frame() > 6) {
@@ -28,7 +28,8 @@ unsafe fn upperdash_arm_jump_and_aerial_cancel(boma: &mut BattleObjectModuleAcce
     }
     if boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_S) {
         let start_frame = if boma.is_situation(*SITUATION_KIND_GROUND) { 16 } else { 19 };
-        if (start_frame..35).contains(&boma.status_frame()) && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL_RAW) {
+        if (start_frame..35).contains(&boma.status_frame()) 
+        && boma.is_cat_flag(Cat1::SpecialAny) {
             WorkModule::on_flag(boma, *FIGHTER_PIT_STATUS_SPECIAL_S_WORK_ID_FLAG_HIT);
         }
     }
@@ -40,6 +41,13 @@ unsafe fn upperdash_arm_whiff_freefall(fighter: &mut L2CFighterCommon) {
     && MotionModule::frame(fighter.module_accessor) >= MotionModule::end_frame(fighter.module_accessor) - 1.0
     && !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_PIT_STATUS_SPECIAL_S_WORK_ID_FLAG_HIT) {
         fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL_SPECIAL, true);
+    }
+}
+
+unsafe fn up_special_startup_ledgegrab(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_HI) {
+        // allows ledgegrab during upB startup
+        fighter.sub_transition_group_check_air_cliff();
     }
 }
 
@@ -56,23 +64,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         ]) 
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
-        if fighter.is_flag(*FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE) {
-            if [*FIGHTER_KINETIC_TYPE_MOTION_AIR, *FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE].contains(&KineticModule::get_kinetic_type(fighter.module_accessor)) {
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION);
-                let speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
-
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
-                app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
-                
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-                app::sv_kinetic_energy::enable(fighter.lua_state_agent);
-
-                KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_MOTION, fighter.module_accessor);
-            }
-        }
     }
 }
 

@@ -267,6 +267,9 @@ throw_f:
 throw_hi:
   extra:
     cancel_frame: 75
+throw_lw:
+  extra:
+    cancel_frame: 54
 item_light_throw_f:
   flags:
     move: false

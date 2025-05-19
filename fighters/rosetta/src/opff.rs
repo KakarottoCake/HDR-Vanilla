@@ -4,14 +4,14 @@ use super::*;
 use globals::*;
 
 //Launch Star Cancel
-unsafe fn launch_star_cancel(boma: &mut BattleObjectModuleAccessor, status_kind: i32) {
-    if status_kind == *FIGHTER_ROSETTA_STATUS_KIND_SPECIAL_HI_JUMP
-	&& MotionModule::frame(boma) > 2.0 {
-        if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) {
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_ROSETTA_STATUS_KIND_SPECIAL_HI_END, false);
-        }
-    }
-}
+// unsafe fn launch_star_cancel(boma: &mut BattleObjectModuleAccessor) {
+//     if boma.is_status(*FIGHTER_ROSETTA_STATUS_KIND_SPECIAL_HI_JUMP)
+// 	&& MotionModule::frame(boma) > 2.0 {
+//         if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD | *CONTROL_PAD_BUTTON_SPECIAL) {
+//             StatusModule::change_status_request_from_script(boma, *FIGHTER_ROSETTA_STATUS_KIND_SPECIAL_HI_END, false);
+//         }
+//     }
+// }
 
 extern "Rust" {
     fn gimmick_flash(boma: &mut BattleObjectModuleAccessor);
@@ -22,7 +22,7 @@ use vars::rosetta::instance::*;
 use vars::rosetta::status::*;
 
 // down special teleport
-unsafe fn teleport(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, frame: f32) {
+unsafe fn teleport(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
 	// handle the cooldown timer
 	let cooldown_frame = VarModule::get_int(boma.object(), GIMMICK_TIMER);
 	if cooldown_frame > 0 { VarModule::dec_int(boma.object(), GIMMICK_TIMER); }
@@ -52,18 +52,25 @@ unsafe fn teleport(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModule
 
 	if !can_teleport {
 		// prevent the successful teleport logic if Luma is put into hitstun or killed during startup
-		if (13.0..17.0).contains(&frame) {
+		if (13.0..17.0).contains(&fighter.motion_frame()) {
 			VarModule::on_flag(boma.object(), SPECIAL_LW_INVALID_WARP);
 		}
 	}
 
 	// transition rosalina to special fall after a successful aerial teleport
-	if frame > 38.0 
+	if fighter.motion_frame() > 38.0 
 	&& !VarModule::is_flag(boma.object(), SPECIAL_LW_INVALID_WARP) 
 	&& !VarModule::is_flag(boma.object(), SPECIAL_LW_WARP_GROUND_START) {
 		//println!("successful aerial teleport. entering special fall");
 		StatusModule::change_status_request(boma, *FIGHTER_STATUS_KIND_FALL_SPECIAL, false);
 	} 
+}
+
+unsafe fn up_special_startup_ledgegrab(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_HI) {
+        // allows ledgegrab during upB startup
+        fighter.sub_transition_group_check_air_cliff();
+    }
 }
 
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
@@ -78,29 +85,13 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         ]) 
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
-        if fighter.is_flag(*FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE) {
-            if [*FIGHTER_KINETIC_TYPE_MOTION_AIR, *FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE].contains(&KineticModule::get_kinetic_type(fighter.module_accessor)) {
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION);
-                let speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
-
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
-                app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
-                
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-                app::sv_kinetic_energy::enable(fighter.lua_state_agent);
-
-                KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_MOTION, fighter.module_accessor);
-            }
-        }
     }
 }
 
-pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
-    launch_star_cancel(boma, status_kind);
-	teleport(fighter, boma, frame);
+pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
+    // launch_star_cancel(boma);
+	teleport(fighter, boma);
+	up_special_startup_ledgegrab(fighter);
 	fastfall_specials(fighter);
 }
 
@@ -113,7 +104,7 @@ pub extern "C" fn rosetta_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighter
 
 pub unsafe fn rosetta_frame(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
     if let Some(info) = FrameInfo::update_and_get(fighter) {
-        moveset(fighter, &mut *info.boma, info.id, info.cat, info.status_kind, info.situation_kind, info.motion_kind.hash, info.stick_x, info.stick_y, info.facing, info.frame);
+        moveset(fighter, &mut *info.boma);
     }
 }
 

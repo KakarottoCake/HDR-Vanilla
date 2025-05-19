@@ -239,6 +239,7 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
             },
             _ => {}
         }
+
         // Allow buffered wavedashes when Shield is pressed at any time within Jump input's buffer window
         if next_status == *FIGHTER_STATUS_KIND_JUMP_SQUAT {
             if boma.is_cat_flag(Cat1::AirEscape) && !boma.is_cat_flag(Cat1::AttackN) {
@@ -252,6 +253,7 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
                 }
             }
         }
+
         // Clears buffer when sliding off an edge in a damaged state, to prevent accidental buffered aerials/airdodges (common on missed techs)
         if ( [
             *FIGHTER_STATUS_KIND_DOWN,
@@ -276,6 +278,22 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
 
             clear_buffer = true;
         }
+
+        // Allows us to detect when knockdown was induced due to untechable situations
+        // (e.g., Ganon aerial Flame Choke, Charizard Flare Blitz rebound)
+        if next_status == *FIGHTER_STATUS_KIND_DOWN {
+            if !WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE)
+            || WorkModule::is_flag(boma, *FIGHTER_STATUS_DAMAGE_FLAG_FLY_DISABLE_PASSIVE)
+            || StatusModule::prev_status_kind(boma, 0) == *FIGHTER_STATUS_KIND_CATCHED_AIR_END_GANON {   
+                VarModule::on_flag(boma.object(), vars::common::instance::DOWN_DISABLE_PASSIVE);
+            }
+
+            if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_GANON_SPECIAL_S_DAMAGE_FALL_GROUND)
+            || WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_GANON_SPECIAL_S_DAMAGE_FALL_AIR) {
+                VarModule::on_flag(boma.object(), vars::common::instance::DOWN_DISABLE_A_LAND);
+            }
+        }
+
         // Tether trump logic
         if boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_AIR_LASSO, *FIGHTER_STATUS_KIND_AIR_LASSO_REACH, *FIGHTER_STATUS_KIND_AIR_LASSO_HANG, *FIGHTER_STATUS_KIND_AIR_LASSO_REWIND])
         && [*FIGHTER_STATUS_KIND_CLIFF_CATCH, *FIGHTER_STATUS_KIND_CLIFF_CATCH_MOVE, *FIGHTER_STATUS_KIND_CLIFF_WAIT].contains(&next_status) {
@@ -300,6 +318,13 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
         && next_status == *FIGHTER_STATUS_KIND_LANDING
         && boma.motion_frame() < 1.0 {
             VarModule::on_flag(boma.object(), vars::common::instance::IS_CC_NON_TUMBLE);
+        }
+
+        // Prevents multijump characters from bypassing successive aerial jump lockout
+        // when interrupting an aerial jump with another action
+        if next_status == *FIGHTER_STATUS_KIND_FLY
+        && VarModule::get_int(boma.object(), vars::common::instance::FLY_NEXT_FRAME) > 0 {
+            return 0;
         }
 
         if boma.kind() == *FIGHTER_KIND_TRAIL {

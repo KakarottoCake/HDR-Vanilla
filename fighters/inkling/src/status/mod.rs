@@ -4,6 +4,7 @@ use globals::*;
 
 mod special_s;
 mod guard;
+mod special_hi;
 
 // Prevents sideB from being used again if it has already been used once in the current airtime
 unsafe extern "C" fn should_use_special_s_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -17,7 +18,7 @@ unsafe extern "C" fn should_use_special_s_callback(fighter: &mut L2CFighterCommo
 // Re-enables the ability to use sideB when connecting to ground or cliff
 unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.is_situation(*SITUATION_KIND_GROUND) || fighter.is_situation(*SITUATION_KIND_CLIFF)
-    || fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_REBIRTH, *FIGHTER_STATUS_KIND_DEAD, *FIGHTER_STATUS_KIND_LANDING]) {
+    || fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_REBIRTH, *FIGHTER_STATUS_KIND_DEAD, *FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_GIMMICK_SPRING_JUMP]) {
         VarModule::off_flag(fighter.battle_object, vars::inkling::instance::DISABLE_SPECIAL_S);
     }
     true.into()
@@ -34,4 +35,5 @@ pub fn install(agent: &mut Agent) {
 
     special_s::install(agent);
     guard::install(agent);
+    special_hi::install(agent);
 }

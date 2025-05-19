@@ -8,7 +8,7 @@ unsafe extern "C" fn special_s_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
         app::SituationKind(*SITUATION_KIND_NONE),
         *FIGHTER_KINETIC_TYPE_MOTION,
         *GROUND_CORRECT_KIND_KEEP as u32,
-        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
+        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP),
         false,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT,
@@ -43,6 +43,10 @@ unsafe extern "C" fn special_s_main(fighter: &mut L2CFighterCommon) -> L2CValue 
 }
 
 unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.sub_transition_group_check_air_cliff().get_bool() {
+        return 1.into();
+    }
+    
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
         || fighter.sub_air_check_fall_common().get_bool() {

@@ -148,7 +148,7 @@ unsafe extern "C" fn game_throwhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {
-        ATTACK_IGNORE_THROW(agent, 0, 0, Hash40::new("mouth"), 5.0, 90, 100, 0, 82, 7.0, 2.0, 0.0, 0.0, Some(3.5), Some(0.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_THROW);
+        ATTACK_IGNORE_THROW(agent, 0, 0, Hash40::new("mouth"), 5.0, 90, 100, 0, 82, 7.0, 2.0, 0.0, 0.0, Some(3.5), Some(0.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_THROW);
         //AttackModule::set_catch_only_all(boma, true, false);
         FT_CATCH_STOP(agent, 8, 1);
     }

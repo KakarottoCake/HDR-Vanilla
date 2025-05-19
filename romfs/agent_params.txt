@@ -48,5 +48,11 @@ wiifit: fighter/wiifit/param/hdr.xml
 inkling: fighter/inkling/param/hdr.xml
 master: fighter/master/param/hdr.xml
 pfushigisou: fighter/pfushigisou/param/hdr.xml
+plizardon: fighter/plizardon/param/hdr.xml
+pzenigame: fighter/pzenigame/param/hdr.xml
 tantan: fighter/tantan/param/hdr.xml
 zelda: fighter/zelda/param/hdr.xml
+pikachu: fighter/pikachu/param/hdr.xml
+ridley: fighter/ridley/param/hdr.xml
+robot: fighter/robot/param/hdr.xml
+shulk: fighter/shulk/param/hdr.xml

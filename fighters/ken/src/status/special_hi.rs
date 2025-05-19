@@ -1,5 +1,6 @@
 use super::*;
 
+
 // FIGHTER_STATUS_KIND_SPECIAL_HI
 
 unsafe extern "C" fn special_hi_pre(fighter: &mut L2CFighterCommon) -> L2CValue {

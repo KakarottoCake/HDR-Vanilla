@@ -275,7 +275,7 @@ bitflags! {
     #[derive(Copy, Clone)]
     pub struct CatHdr: i32 {
         const Wavedash = 0x1;
-        const ShieldDrop = 0x2;
+        // const ShieldDrop = 0x2;
         const WallJumpLeft = 0x4;
         const WallJumpRight = 0x8;
         const Parry = 0x10;
@@ -491,6 +491,7 @@ pub trait BomaExt {
     unsafe fn set_int(&mut self, value: i32, what: i32);
     unsafe fn set_float(&mut self, value: f32, what: i32);
     unsafe fn set_int64(&mut self, value: i64, what: i32);
+    unsafe fn set_flag(&mut self, value: bool, what: i32);
     unsafe fn on_flag(&mut self, what: i32);
     unsafe fn off_flag(&mut self, what: i32);
     unsafe fn get_param_int(&mut self, obj: &str, field: &str) -> i32;
@@ -987,6 +988,10 @@ impl BomaExt for BattleObjectModuleAccessor {
     ) {
         let int = WorkModule::get_param_int64(self, object.to_hash().hash, param.to_hash().hash);
         WorkModule::set_int64(self, int as i64, what);
+    }
+
+    unsafe fn set_flag(&mut self, value: bool, what: i32) {
+        WorkModule::set_flag(self, value, what)
     }
 
     unsafe fn on_flag(&mut self, what: i32) {

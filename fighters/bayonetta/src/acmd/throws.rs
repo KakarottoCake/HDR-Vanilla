@@ -89,9 +89,9 @@ unsafe extern "C" fn game_catchattack(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_throwf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    FT_MOTION_RATE_RANGE(agent, 1.0, 14.0, 15.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 14.0, 16.0);
     if is_excute(agent) {
-        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 4.0, 42, 165, 0, 50, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 4.0, 42, 165, 0, 46, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
     }
     frame(lua_state, 14.0);
@@ -102,7 +102,7 @@ unsafe extern "C" fn game_throwf(agent: &mut L2CAgentBase) {
         CHECK_FINISH_CAMERA(agent, 14, 7);
     }
     frame(lua_state, 15.0);
-    FT_MOTION_RATE_RANGE(agent, 15.0, 50.0, 28.0);
+    FT_MOTION_RATE_RANGE(agent, 15.0, 50.0, 27.0);
     if is_excute(agent) {
         let target = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
         let target_group = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
@@ -189,12 +189,12 @@ unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
         CHECK_FINISH_CAMERA(agent, 15, 0);
     }
     frame(lua_state, 21.0);
-    FT_MOTION_RATE_RANGE(agent, 21.0, 41.0, 16.0);
+    FT_MOTION_RATE_RANGE(agent, 21.0, 44.0, 18.0);//37->39
     if is_excute(agent) {
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
         AttackModule::clear_all(boma);
     }
-    frame(lua_state, 41.0);
+    frame(lua_state, 44.0);
     FT_MOTION_RATE(agent, 1.0);
 }
 

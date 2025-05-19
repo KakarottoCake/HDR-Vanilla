@@ -40,10 +40,6 @@ unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING); //28 -> 30
     }
-    frame(lua_state, 69.0);
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
-    }
     frame(lua_state, 72.0);//anim end frame
     MotionModule::set_rate(boma, 1.0);
 }
@@ -150,7 +146,7 @@ unsafe extern "C" fn effect_landingairn(agent: &mut L2CAgentBase) {
 	let boma = agent.boma();
 	if is_excute(agent) {
 		LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-        LANDING_EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.4, 0, 0, 0, 0, 0, 0, false);
+        LANDING_EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.55, 0, 0, 0, 0, 0, 0, false);
         LAST_EFFECT_SET_RATE(agent, 2.5);
     }
 }
@@ -255,7 +251,7 @@ unsafe extern "C" fn effect_attackairb(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc"), Hash40::new("top"), 0, 6.0, -0.2, 0, 155, 90, 0.95, true);
         LAST_EFFECT_SET_RATE(agent, 1.1);
-        LAST_EFFECT_SET_COLOR(agent, 1.0, 0.8, 0.1);
+        // LAST_EFFECT_SET_COLOR(agent, 1.0, 0.8, 0.1);
         EFFECT_FOLLOW(agent, Hash40::new("lucas_psi_atk"), Hash40::new("kneer"), 6.7, -2.0, 0, 0, 90, 0, 0.4, true);
         LAST_EFFECT_SET_RATE(agent, 2.0);
     }
@@ -312,7 +308,7 @@ unsafe extern "C" fn effect_attackairhi(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 1.3, 7.6, 0.0, -55, -120, -62, 0.86, true, *EF_FLIP_YZ);
         LAST_EFFECT_SET_RATE(agent, 2.4);
-        LAST_EFFECT_SET_COLOR(agent, 1.0, 0.8, 0.1);
+        // LAST_EFFECT_SET_COLOR(agent, 1.0, 0.8, 0.1);
     }
     frame(lua_state, 7.0);
     if is_excute(agent) {

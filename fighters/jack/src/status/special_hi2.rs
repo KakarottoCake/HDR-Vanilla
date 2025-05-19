@@ -1,5 +1,8 @@
 use super::*;
 
+
+// FIGHTER_JACK_STATUS_KIND_SPECIAL_HI2_END
+
 unsafe extern "C" fn special_hi2_rush_end_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     let ret = smashline::original_status(Pre, fighter, *FIGHTER_JACK_STATUS_KIND_SPECIAL_HI2_END)(fighter);
 

@@ -52,6 +52,20 @@ unsafe fn earthquake_punch(fighter: &mut L2CFighterCommon, boma: &mut BattleObje
     }
 }
 
+// TODO: create cancel animation for aerial EQF cancel
+// Prevents aerial EQF cancel from grabbing ledge for first 7f
+unsafe fn eqf_cancel_ledgegrab_lockout(fighter: &mut L2CFighterCommon) {
+    if fighter.is_prev_status(*FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_LW1_AIR)
+    && fighter.is_status(*FIGHTER_STATUS_KIND_FALL_SPECIAL) {
+        if StatusModule::is_changing(fighter.module_accessor) {
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
+        }
+        if fighter.status_frame() == 6 {
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
+        }
+    }
+}
+
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
@@ -95,29 +109,13 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     )
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
-        if fighter.is_flag(*FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE) {
-            if [*FIGHTER_KINETIC_TYPE_MOTION_AIR, *FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE].contains(&KineticModule::get_kinetic_type(fighter.module_accessor)) {
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION);
-                let speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
-
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
-                app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
-                
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-                app::sv_kinetic_energy::enable(fighter.lua_state_agent);
-
-                KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_MOTION, fighter.module_accessor);
-            }
-        }
     }
 }
 
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     feint_jump_jc(boma);
     earthquake_punch(fighter, boma);
+    eqf_cancel_ledgegrab_lockout(fighter);
     fastfall_specials(fighter);
 }
 

@@ -1,6 +1,8 @@
 use super::*;
 
 unsafe extern "C" fn special_n_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.sub_status_pre_SpecialNCommon();
+
     StatusModule::init_settings(
         fighter.module_accessor,
         app::SituationKind(*SITUATION_KIND_NONE),
@@ -13,6 +15,7 @@ unsafe extern "C" fn special_n_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT,
         0
     );
+    
     FighterStatusModuleImpl::set_fighter_status_data(
         fighter.module_accessor,
         false,
@@ -80,7 +83,7 @@ pub unsafe extern "C" fn special_n_hold_main_loop(fighter: &mut L2CFighterCommon
             notify_event_msc_cmd!(fighter, Hash40::new_raw(0x240e24407a));
         }
     }
-    if fighter.is_button_trigger(Buttons::Special) {
+    if fighter.is_button_trigger(Buttons::Special | Buttons::Attack) {
         fighter.change_status(FIGHTER_PACMAN_STATUS_KIND_SPECIAL_N_SHOOT.into(), false.into());
         return 1.into();
     }
@@ -100,7 +103,7 @@ pub unsafe extern "C" fn special_n_hold_main_loop(fighter: &mut L2CFighterCommon
                 }
             }
             if fighter.is_situation(*SITUATION_KIND_GROUND) {
-                if fighter.is_pad_flag(PadFlag::GuardTrigger) {
+                if fighter.sub_check_command_guard().get_bool() || fighter.is_pad_flag(PadFlag::GuardTrigger) {
                     WorkModule::set_int(fighter.module_accessor, *FIGHTER_STATUS_KIND_WAIT, *FIGHTER_PACMAN_STATUS_SPECIAL_N_WORK_INT_NEXT_STATUS);
                     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_PACMAN_INSTANCE_WORK_ID_FLAG_SPECIAL_N_PULL_THROW);
                     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x22baf2b632));
@@ -117,7 +120,7 @@ pub unsafe extern "C" fn special_n_hold_main_loop(fighter: &mut L2CFighterCommon
                 // roll transitions removed
             }
             else {
-                if fighter.is_pad_flag(PadFlag::GuardTrigger) {
+                if fighter.sub_check_command_guard().get_bool() || fighter.is_pad_flag(PadFlag::GuardTrigger) {
                     WorkModule::set_int(fighter.module_accessor, *FIGHTER_STATUS_KIND_NONE, *FIGHTER_PACMAN_STATUS_SPECIAL_N_WORK_INT_NEXT_STATUS);
                     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_PACMAN_INSTANCE_WORK_ID_FLAG_SPECIAL_N_PULL_THROW);
                     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x22baf2b632));

@@ -12,6 +12,9 @@ unsafe fn aerial_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObject
         if fighter.is_cat_flag(Cat1::SpecialN) {
             is_input_cancel = true;
             new_status = *FIGHTER_STATUS_KIND_SPECIAL_N;
+            VarModule::on_flag(fighter.battle_object, vars::bayonetta::instance::WAS_CANCEL);
+            StatusModule::change_status_request_from_script(boma, new_status, true);
+            return;
         } else if fighter.is_cat_flag(Cat1::SpecialHi) {
             if fighter.get_int(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SPECIAL_HI_USED_COUNT) < 2 {
                 is_input_cancel = true;
@@ -87,6 +90,13 @@ unsafe fn bat_within_air_motion(fighter: &mut L2CFighterCommon) {
     }
 }
 
+unsafe fn up_special_startup_ledgegrab(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_HI) {
+        // allows ledgegrab during upB startup
+        fighter.sub_transition_group_check_air_cliff();
+    }
+}
+
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
@@ -102,23 +112,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_WALL_END]) 
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
-        if fighter.is_flag(*FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE) {
-            if [*FIGHTER_KINETIC_TYPE_MOTION_AIR, *FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE].contains(&KineticModule::get_kinetic_type(fighter.module_accessor)) {
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION);
-                let speed_y = app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
-
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
-                app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
-                
-                fighter.clear_lua_stack();
-                lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-                app::sv_kinetic_energy::enable(fighter.lua_state_agent);
-
-                KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_MOTION, fighter.module_accessor);
-            }
-        }
     }
 }
 
@@ -127,6 +120,7 @@ pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut
     reset_flags(fighter, boma);
     forward_tilt(boma);
     bat_within_air_motion(fighter);
+    up_special_startup_ledgegrab(fighter);
     fastfall_specials(fighter);
 }
 

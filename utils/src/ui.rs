@@ -10,6 +10,7 @@ use self::power_board::PowerBoard;
 use self::robot_meter::RobotMeter;
 use self::garlic_meter::GarlicMeter;
 use self::plant_meter::PlantMeter;
+use self::ptrainer_meter::PledgeMeter;
 
 mod aura_meter;
 mod cyan_meter;
@@ -20,6 +21,7 @@ mod power_board;
 mod robot_meter;
 mod garlic_meter;
 mod plant_meter;
+mod ptrainer_meter;
 
 trait UiObject {
     fn update(&mut self);
@@ -39,6 +41,7 @@ static UI_MANAGER: Lazy<RwLock<UiManager>> = Lazy::new(|| {
         robot_meter: [RobotMeter::default(); 8],
         garlic_meter: [GarlicMeter::default(); 8],
         plant_meter: [PlantMeter::default(); 8],
+        ptrainer_meter: [PledgeMeter::default(); 8],
     })
 });
 
@@ -53,6 +56,7 @@ pub struct UiManager {
     robot_meter: [RobotMeter; 8],
     garlic_meter: [GarlicMeter; 8],
     plant_meter: [PlantMeter; 8],
+    ptrainer_meter: [PledgeMeter; 8],
 }
 
 impl UiManager {
@@ -291,6 +295,27 @@ impl UiManager {
         manager.plant_meter[Self::get_ui_index_from_entry_id(entry_id) as usize]
             .set_meter_info(element);
     }
+
+    #[export_name = "UiManager__set_ptrainer_meter_enable"]
+    pub extern "C" fn set_ptrainer_meter_enable(entry_id: u32, enable: bool) {
+        let mut manager = UI_MANAGER.write();
+        manager.ptrainer_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].set_enable(enable);
+    }
+
+    #[export_name = "UiManager__set_ptrainer_meter_info"]
+    pub extern "C" fn set_ptrainer_meter_info(
+        entry_id: u32,
+        current_pledge: f32,
+        max_pledge: f32,
+        current_swap: f32,
+        max_swap: f32,
+        pledge_state: i32,
+        disabled: bool
+    ) {
+        let mut manager = UI_MANAGER.write();
+        manager.ptrainer_meter[Self::get_ui_index_from_entry_id(entry_id) as usize]
+            .set_meter_info(current_pledge, max_pledge, current_swap, max_swap, pledge_state, disabled);
+    }
 }
 
 fn set_pane_visible(pane: u64, visible: bool) {
@@ -407,6 +432,7 @@ unsafe fn get_set_info_alpha(ctx: &skyline::hooks::InlineCtx) {
     manager.robot_meter[index] = RobotMeter::new(layout_udata);
     manager.garlic_meter[index] = GarlicMeter::new(layout_udata);
     manager.plant_meter[index] = PlantMeter::new(layout_udata);
+    manager.ptrainer_meter[index] = PledgeMeter::new(layout_udata);
 }
 
 #[skyline::hook(offset = 0x138a710, inline)]
@@ -469,6 +495,11 @@ fn hud_update(_: &skyline::hooks::InlineCtx) {
     for plant_meter in mgr.plant_meter.iter_mut() {
         if plant_meter.is_valid() && plant_meter.is_enabled() {
             plant_meter.update();
+        }
+    }
+    for ptrainer_meter in mgr.ptrainer_meter.iter_mut() {
+        if ptrainer_meter.is_valid() && ptrainer_meter.is_enabled() {
+            ptrainer_meter.update();
         }
     }
 }

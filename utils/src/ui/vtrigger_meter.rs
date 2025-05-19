@@ -100,8 +100,12 @@ impl VTriggerMeter {
         set_pane_visible(self.meter_bar_full_1, false);
         set_pane_visible(self.meter_bar_full_2, false);
 
-        self.meter_bar_progress_size = get_width_height(self.meter_bar_progress);
-        self.meter_bar_size = get_width_height(self.meter_bar);
+        if self.meter_bar_progress_size == (-1.0, -1.0) {
+            self.meter_bar_progress_size = get_width_height(self.meter_bar_progress);
+        }
+        if self.meter_bar_size == (-1.0, -1.0) {
+            self.meter_bar_size = get_width_height(self.meter_bar);
+        }
 
         self.actual_percentage = 0.0;
         self.visual_percentage = 0.0;
