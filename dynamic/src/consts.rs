@@ -1106,6 +1106,9 @@ pub mod vars {
 
             // floats
             pub const SPECIAL_LW1_CHARGE_DISTANCE: i32 = 0x1101;
+
+            // flags
+            pub const SPECIAL_LW2_CHECK_HOLD: i32 = 0x1100;
         }
     }
 
