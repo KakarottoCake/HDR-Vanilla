@@ -318,6 +318,11 @@ unsafe fn set_damage_lr(ctx: &skyline::hooks::InlineCtx) {
     let opponent_battle_object_id = *(*ctx.registers[20].x.as_ref() as *const u32).add(0x44 / 4);
     let opponent_battle_object = utils::util::get_battle_object_from_id(opponent_battle_object_id);
     let opponent_boma = (&mut *(*opponent_battle_object).module_accessor);
+
+    if !opponent_boma.is_fighter() {
+        return;
+    }
+    
     let opponent_pos_x = PostureModule::pos_x(opponent_boma);
 
     let boma = *ctx.registers[19].x.as_ref() as *mut smash::app::BattleObjectModuleAccessor;
