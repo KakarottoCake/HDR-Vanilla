@@ -312,16 +312,19 @@ pub unsafe extern "C" fn call_finishing_hit_effects(defender_boma: &mut BattleOb
 // which determines whether or not to turn the receiver around on hit
 // 
 // We override this to allow receiver turnaround to always be determined by
-// which side the attack was received from
-#[skyline::hook(offset = 0x6c5974, inline)]
+// which side the attacker was on
+#[skyline::hook(offset = 0x6c5980, inline)]
 unsafe fn set_damage_lr(ctx: &skyline::hooks::InlineCtx) {
-    let boma = *ctx.registers[19].x.as_ref() as *mut smash::app::BattleObjectModuleAccessor;
+    let opponent_battle_object_id = *(*ctx.registers[20].x.as_ref() as *const u32).add(0x44 / 4);
+    let opponent_battle_object = utils::util::get_battle_object_from_id(opponent_battle_object_id);
+    let opponent_boma = (&mut *(*opponent_battle_object).module_accessor);
+    let opponent_pos_x = PostureModule::pos_x(opponent_boma);
 
-    let last_received_attack_hit_location_x = VarModule::get_float((*boma).object(), vars::common::instance::LAST_RECEIVED_ATTACK_HIT_LOCATION_X);
+    let boma = *ctx.registers[19].x.as_ref() as *mut smash::app::BattleObjectModuleAccessor;
     let pos_x = PostureModule::pos_x(boma);
     let lr = PostureModule::lr(boma);
 
-    let dif = last_received_attack_hit_location_x - pos_x;
+    let dif = opponent_pos_x - pos_x;
     let attack_lr = dif.signum();
 
     let damage_lr: f32 = if lr * attack_lr >= 0.0 {
