@@ -4,10 +4,17 @@ use utils::ext::*;
 use std::arch::asm;
 
 pub fn install() {
+    // This stubs the AttackModule::pos_x call
+    // when determining reverse hits
+    // Must be paired with hook at 0x3ff268
+    skyline::patching::Patch::in_text(0x3ff268).nop();
+
     skyline::install_hooks!(
         process_knockback,
         calculate_knockback,
-        set_damage_lr
+        set_thrown_lr,
+        set_damage_lr,
+        set_attack_pos_for_reverse_hit
     );
 }
 
@@ -308,6 +315,36 @@ pub unsafe extern "C" fn call_finishing_hit_effects(defender_boma: &mut BattleOb
     }
 }
 
+// This runs immediately before PostureModule::set_lr is called on throw release
+// which determines the facing direction of the receiver when thrown
+// 
+// We override this to allow throw receiver direction to always be determined by
+// which side the attacker was on
+#[skyline::hook(offset = 0x6c59cc, inline)]
+unsafe fn set_thrown_lr(ctx: &skyline::hooks::InlineCtx) {
+    let opponent_battle_object_id = *(*ctx.registers[20].x.as_ref() as *const u32).add(0x44 / 4);
+    let opponent_battle_object = utils::util::get_battle_object_from_id(opponent_battle_object_id);
+    let opponent_boma = (&mut *(*opponent_battle_object).module_accessor);
+
+    if !opponent_boma.is_fighter() {
+        return;
+    }
+
+    let opponent_pos_x = PostureModule::pos_x(opponent_boma);
+
+    let boma = *ctx.registers[19].x.as_ref() as *mut smash::app::BattleObjectModuleAccessor;
+    let pos_x = PostureModule::pos_x(boma);
+    let lr = PostureModule::lr(boma);
+
+    let damage_lr: f32 = if opponent_pos_x >= pos_x {
+        1.0
+    } else {
+        -1.0
+    };
+
+    asm!("fmov s0, w8", in("w8") damage_lr)
+}
+
 // This runs immediately before FIGHTER_STATUS_WORK_ID_FLOAT_RESERVE_DAMAGE_LR is set
 // which determines whether or not to turn the receiver around on hit
 // 
@@ -329,14 +366,29 @@ unsafe fn set_damage_lr(ctx: &skyline::hooks::InlineCtx) {
     let pos_x = PostureModule::pos_x(boma);
     let lr = PostureModule::lr(boma);
 
-    let dif = opponent_pos_x - pos_x;
-    let attack_lr = dif.signum();
-
-    let damage_lr: f32 = if lr * attack_lr >= 0.0 {
-        lr
+    let damage_lr: f32 = if opponent_pos_x >= pos_x {
+        1.0
     } else {
-        -lr
+        -1.0
     };
 
     asm!("fmov s0, w8", in("w8") damage_lr)
+}
+
+// Vanilla logic checks AttackModule::pos_x (x position of the hitbox)
+// relative to the receiver's x position
+// to determine whether to reverse hit or not
+//
+// This replaces AttackModule::pos_x with PostureModule::pos_x
+// so that reverse hits are determined by the attacker's x position
+// relative to the receiver's x position,
+// as is the case in Melee
+#[skyline::hook(offset = 0x3ff268, inline)]
+unsafe fn set_attack_pos_for_reverse_hit(ctx: &skyline::hooks::InlineCtx) {
+    let attack_module = *ctx.registers[20].x.as_ref();
+    let boma = *((attack_module + 0x8) as *mut *mut smash::app::BattleObjectModuleAccessor);
+
+    let attacker_pos_x: f32 = PostureModule::pos_x(boma);
+
+    asm!("fmov s0, w8", in("w8") attacker_pos_x)
 }
