@@ -4,11 +4,6 @@ use utils::ext::*;
 use std::arch::asm;
 
 pub fn install() {
-    // This stubs the AttackModule::pos_x call
-    // when determining reverse hits
-    // Must be paired with hook at 0x3ff268
-    skyline::patching::Patch::in_text(0x3ff268).nop();
-
     skyline::install_hooks!(
         process_knockback,
         calculate_knockback,
