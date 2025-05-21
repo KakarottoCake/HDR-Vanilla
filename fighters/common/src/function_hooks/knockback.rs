@@ -324,19 +324,21 @@ unsafe fn set_thrown_lr(ctx: &skyline::hooks::InlineCtx) {
         return;
     }
 
-    let opponent_pos_x = PostureModule::pos_x(opponent_boma);
-
     let boma = *ctx.registers[19].x.as_ref() as *mut smash::app::BattleObjectModuleAccessor;
-    let pos_x = PostureModule::pos_x(boma);
-    let lr = PostureModule::lr(boma);
+    let fighter = util::get_fighter_common_from_accessor(&mut *boma);
 
-    let damage_lr: f32 = if opponent_pos_x >= pos_x {
+    fighter.clear_lua_stack();
+    lua_args!(fighter, hash40("speed_vec_x") as u64);
+    sv_information::damage_log_value(fighter.lua_state_agent);
+    let damage_speed_x = fighter.pop_lua_stack(1).get_f32();
+
+    let lr: f32 = if damage_speed_x <= 0.0 {
         1.0
     } else {
         -1.0
     };
 
-    asm!("fmov s0, w8", in("w8") damage_lr)
+    asm!("fmov s0, w8", in("w8") lr)
 }
 
 // This runs immediately before FIGHTER_STATUS_WORK_ID_FLOAT_RESERVE_DAMAGE_LR is set
