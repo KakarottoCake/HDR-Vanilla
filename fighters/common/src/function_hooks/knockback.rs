@@ -13,8 +13,7 @@ pub fn install() {
         process_knockback,
         calculate_knockback,
         set_thrown_lr,
-        set_damage_lr,
-        set_attack_pos_for_reverse_hit
+        set_damage_lr
     );
 }
 
@@ -373,22 +372,4 @@ unsafe fn set_damage_lr(ctx: &skyline::hooks::InlineCtx) {
     };
 
     asm!("fmov s0, w8", in("w8") damage_lr)
-}
-
-// Vanilla logic checks AttackModule::pos_x (x position of the hitbox)
-// relative to the receiver's x position
-// to determine whether to reverse hit or not
-//
-// This replaces AttackModule::pos_x with PostureModule::pos_x
-// so that reverse hits are determined by the attacker's x position
-// relative to the receiver's x position,
-// as is the case in Melee
-#[skyline::hook(offset = 0x3ff268, inline)]
-unsafe fn set_attack_pos_for_reverse_hit(ctx: &skyline::hooks::InlineCtx) {
-    let attack_module = *ctx.registers[20].x.as_ref();
-    let boma = *((attack_module + 0x8) as *mut *mut smash::app::BattleObjectModuleAccessor);
-
-    let attacker_pos_x: f32 = PostureModule::pos_x(boma);
-
-    asm!("fmov s0, w8", in("w8") attacker_pos_x)
 }
