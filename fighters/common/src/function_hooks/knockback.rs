@@ -332,10 +332,12 @@ unsafe fn set_thrown_lr(ctx: &skyline::hooks::InlineCtx) {
     sv_information::damage_log_value(fighter.lua_state_agent);
     let damage_speed_x = fighter.pop_lua_stack(1).get_f32();
 
-    let lr: f32 = if damage_speed_x <= 0.0 {
+    let lr: f32 = if damage_speed_x < 0.0 {
         1.0
-    } else {
+    } else if damage_speed_x > 0.0 {
         -1.0
+    } else {
+        PostureModule::lr(boma)
     };
 
     asm!("fmov s0, w8", in("w8") lr)
