@@ -296,6 +296,7 @@ unsafe fn ftstatusuniqprocessdamage_init_common(fighter: &mut L2CFighterCommon) 
     // println!("damage log value angle: {}", angle);
 
     let degrees = angle.to_degrees();
+    
     let meteor_vector_min = WorkModule::get_param_int(fighter.module_accessor, hash40("battle_object"), hash40("meteor_vector_min"));
     let meteor_vector_max = WorkModule::get_param_int(fighter.module_accessor, hash40("battle_object"), hash40("meteor_vector_max"));
 
@@ -303,10 +304,6 @@ unsafe fn ftstatusuniqprocessdamage_init_common(fighter: &mut L2CFighterCommon) 
     && degrees <= meteor_vector_max as f32 {
         VarModule::on_flag(fighter.battle_object, vars::common::status::IS_SPIKE);
     }
-    let speed_vector = sv_math::vec2_length(damage_speed_x, damage_speed_y);
-    // println!("speed vector: {}", speed_vector);
-    // fighter.FighterStatusDamage_init_damage_speed_up(reaction_frame.into(), degrees.into(), false.into());
-    fighterstatusdamage_init_damage_speed_up_by_speed(fighter, speed_vector.into(), degrees.into(), false.into());
     let damage_cliff_no_catch_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("damage_cliff_no_catch_frame"));
     WorkModule::set_int(fighter.module_accessor, damage_cliff_no_catch_frame, *FIGHTER_INSTANCE_WORK_ID_INT_CLIFF_NO_CATCH_FRAME);
     
@@ -342,74 +339,6 @@ unsafe fn ftstatusuniqprocessdamage_init_common(fighter: &mut L2CFighterCommon) 
     if FighterStopModuleImpl::is_damage_stop(fighter.module_accessor) {
         ControlModule::reset_trigger(fighter.module_accessor);
     }
-}
-
-// calculates launch angle factor
-// "compares the length of the vector to the corner of the screen, to the length of the kb vector" -JOB
-unsafe extern "C" fn get_angle_factor(angle_threshold: f32, angle: f32) -> f32 {
-    let angle_threshold = angle_threshold.to_radians();
-    let angle = (90.0 - ((angle % 180.0).abs() - 90.0).abs()).to_radians();
-    if angle <= angle_threshold { return 1.0; }
-
-    // magic JOB math
-    let angle_factor = ((angle_threshold.cos().powf(2.0) / 640.0_f32.powf(2.0)) + (angle_threshold.sin().powf(2.0) / 360.0_f32.powf(2.0))).sqrt()
-        / ((angle.cos().powf(2.0) / 640.0_f32.powf(2.0)) + (angle.sin().powf(2.0) / 360.0_f32.powf(2.0))).sqrt();
-    return angle_factor;
-}
-
-unsafe extern "C" fn fighterstatusdamage_init_damage_speed_up_by_speed(
-    fighter: &mut L2CFighterCommon,
-    factor: L2CValue, // Labeled this way because if shot out of a tornado, the game will pass in your hitstun frames instead of speed.
-    angle: L2CValue,
-    some_bool: L2CValue
-) {
-    let angle = angle.get_f32();
-    let angle_threshold = 29.358;
-    let speed_start_horizontal = 4.6; // the start of scaling at angles below the angle_threshold
-    let speed_start_vertical = 5.57; // the start of scaling at completely vertical angles
-    let speed_end = 7.2; // the end of scaling
-
-    // calculate true speed_start using angle
-    let angle_factor = get_angle_factor(angle_threshold, angle); // the actual angle factor
-    let ratio_base = get_angle_factor(angle_threshold, 90.0); // the max angle factor
-    let ratio = (1.0 - angle_factor) / (1.0 - ratio_base);
-    let speed_start = speed_start_horizontal.lerp(&speed_start_vertical, &ratio);
-
-    // exit if speed is too slow
-    let speed = factor.get_f32();
-    if check_damage_speed_up_fail(fighter) || speed <= speed_start {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGE_SPEED_UP);
-        WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DAMAGE_SPEED_UP_MAX_MAG);
-        return;
-    }
-
-    // calculate speed_up_mul
-    let min_mul = 1.15;
-    let max_mul = 1.65;
-    let power = 1.0;
-    let ratio = ((speed - speed_start) / (speed_end - speed_start));
-    let speed_up_mul = if speed <= speed_end {
-        util::nlerp(min_mul, max_mul, power, ratio)
-    } else {
-        let dif = (speed_end * max_mul) - speed_end;
-        let new_speed = speed + dif;
-        new_speed / speed
-    };
-
-    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGE_SPEED_UP);
-    WorkModule::set_float(fighter.module_accessor, speed_up_mul, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DAMAGE_SPEED_UP_MAX_MAG);
-}
-
-unsafe extern "C" fn check_damage_speed_up_fail(fighter: &mut L2CFighterCommon) -> bool {
-    let log = DamageModule::damage_log(fighter.module_accessor);
-    if log == 0 {
-        return true;
-    }
-    let log = log as *mut u8;
-    return *log.add(0x8f) != 0 
-        || *log.add(0x92) != 0
-        || *log.add(0x93) != 0 
-        || *log.add(0x98) != 0;
 }
 
 #[skyline::hook(replace = L2CFighterCommon_sub_ftStatusUniqProcessDamageFly_getMotionKind)]
