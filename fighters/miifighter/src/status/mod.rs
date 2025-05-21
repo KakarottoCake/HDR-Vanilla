@@ -46,8 +46,20 @@ unsafe extern "C" fn move_customizer(fighter: &mut L2CFighterCommon) -> L2CValue
             std::mem::transmute(special_s1::special_s1_main as *const ())
         );
     } else if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_2 {
+        // This is technically bad behavior because Waza Customize does NOT
+        // handle exec statuses for the other specials. However, this
+        // doesn't matter in this case because 1) you can't swap Mii Brawler's
+        // specials mid-match, and 2) even if you could, none of the other
+        // specials have search boxes anyway.
         fighter.sv_set_status_func(
             FIGHTER_STATUS_KIND_SPECIAL_LW.into(),
+            LUA_SCRIPT_STATUS_FUNC_EXEC_STATUS.into(),
+            std::mem::transmute(special_lw2::special_lw2_exec as *const ())
+        );
+        // This is *also* bad behavior, but for some reason Smashline isn't
+        // installing the exec status for this, so...
+        fighter.sv_set_status_func(
+            FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_LW2_START.into(),
             LUA_SCRIPT_STATUS_FUNC_EXEC_STATUS.into(),
             std::mem::transmute(special_lw2::special_lw2_exec as *const ())
         );
@@ -79,6 +91,7 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
 pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
     special_lw1::install(agent);
+    special_lw2::install(agent);
     special_lw3::install(agent);
     special_s1::install(agent);
 }
