@@ -160,6 +160,11 @@ attack_s3_lw:
     cancel_frame: 39
     no_stop_intp: false
 
+attack_lw3:
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+
 attack_step:
   extra:
     xlu_start: 0
@@ -172,6 +177,11 @@ attack_step_2s:
   extra:
     xlu_start: 0
     xlu_end: 0
+
+attack_squat_1:
+  extra:
+    xlu_start: 9
+    xlu_end: 14
 
 landing_air_lw:
   flags:

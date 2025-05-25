@@ -221,7 +221,6 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     FighterSpecializer_Demon::set_devil(boma, true, 10.0);
     if is_excute(agent) {
-        JostleModule::set_team(boma, 1);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 5.0, 70, 30, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_BODY);
     }
     frame(lua_state, 1.0);
@@ -290,7 +289,6 @@ unsafe extern "C" fn game_specialairlw(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     FighterSpecializer_Demon::set_devil(boma, true, 10.0);
     if is_excute(agent) {
-        JostleModule::set_team(boma, 1);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 5.0, 70, 30, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_BODY);
     }
     frame(lua_state, 1.0);
