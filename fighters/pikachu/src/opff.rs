@@ -24,7 +24,7 @@ unsafe fn quick_attack_cancel(fighter: &mut L2CFighterCommon, boma: &mut BattleO
     if fighter.is_status(*FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL)
     && !VarModule::is_flag(boma.object(), vars::pikachu::instance::SPECIAL_HI_DISABLE_JUMP_CANCEL) {
         GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+        fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), true.into());
         PostureModule::add_pos(boma, &Vector3f::new(0.0, 2.5, 0.0));
         VarModule::on_flag(fighter.object(), vars::pikachu::instance::SPECIAL_HI_QUICK_ATTACK_CANCEL);
     }
