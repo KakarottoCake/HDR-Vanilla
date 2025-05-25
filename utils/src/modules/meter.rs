@@ -284,6 +284,17 @@ impl MeterModule {
         }
     }
 
+    #[export_name = "MeterModule__drain_direct_clamp_to_level"]
+    pub extern "Rust" fn drain_direct_clamp_to_level(object: *mut BattleObject, amount: f32) {
+        let module = require_meter_module!(object);
+        let meter = Self::meter(module.owner);
+        let level = Self::level(module.owner) as f32;
+        let meter_cap = Self::meter_cap(module.owner) as f32;
+        let meter_per_level = Self::meter_per_level(module.owner);
+        let nearest_level = (level * meter_per_level).clamp(0.0, meter_cap * meter_per_level);
+        module.current_meter = (meter - amount).max(nearest_level);
+    }
+
     #[export_name = "MeterModule__add"]
     pub extern "Rust" fn add(object: *mut BattleObject, amount: f32) {
         let module = require_meter_module!(object);
