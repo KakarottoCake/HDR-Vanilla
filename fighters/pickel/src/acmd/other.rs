@@ -45,8 +45,16 @@ unsafe extern "C" fn effect_run(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    if is_excute(agent) {
-        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_flash"), Hash40::new("sys_flash"), Hash40::new("top"), -4.0, 14.0, 3.0, 0, 0, 0, 0.5, false, *EF_FLIP_YZ, 0.25);
+    for _ in 0..2 { // flashes signify dash special availability
+        if is_excute(agent) {
+            FLASH(agent, 1, 1, 0.753, 0.627);
+            FLASH_FRM(agent, 5, 0.502, 0, 0, 0);
+        }
+        wait(lua_state, 4.0);
+        if is_excute(agent) {
+            COL_NORMAL(agent);
+        }
+        wait(lua_state, 4.0);
     }
     loop {
         frame(lua_state, 14.0);
