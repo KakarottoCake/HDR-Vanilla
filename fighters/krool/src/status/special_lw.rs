@@ -71,7 +71,7 @@ unsafe extern "C" fn special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2C
         VarModule::off_flag(fighter.battle_object, vars::krool::status::SPECIAL_LW_GUT_CHARGED);
         MotionModule::set_frame_sync_anim_cmd(fighter.module_accessor, 30.0, true, true, false);
     }
-    if fighter.status_frame() > 8  // Allows for jump cancel on frame 10 (35 in animation) if not charged
+    if fighter.motion_frame() > 30.0  // Allows for jump cancel on frame 8 (30 in animation) if not charged
     && !VarModule::is_flag(fighter.battle_object, vars::krool::status::SPECIAL_LW_GUT_CHARGED)
     && !fighter.is_in_hitlag() {
         fighter.check_jump_cancel(false, false);
