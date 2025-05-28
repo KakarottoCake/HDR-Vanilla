@@ -2,7 +2,7 @@ use super::*;
 
 // statuses::pickel::ATTACK_DASH_SPECIAL
 
-pub unsafe extern "C" fn special_dash_pre(fighter: &mut L2CFighterCommon) -> L2CValue{
+pub unsafe extern "C" fn special_run_pre(fighter: &mut L2CFighterCommon) -> L2CValue{
     StatusModule::init_settings(
         fighter.module_accessor,
         app::SituationKind(*SITUATION_KIND_NONE),
@@ -33,10 +33,10 @@ pub unsafe extern "C" fn special_dash_pre(fighter: &mut L2CFighterCommon) -> L2C
 
 const FIGHTER_TEAM_2ND_PICKEL_TROLLEY: i32 = 0x1f;
 
-pub unsafe extern "C" fn special_dash_main(fighter: &mut L2CFighterCommon) -> L2CValue{
+pub unsafe extern "C" fn special_run_main(fighter: &mut L2CFighterCommon) -> L2CValue{
     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_RESET);
     KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
-    MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_dash"), 0.0, 1.0, false, 0.0, false, false);
+    MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_run"), 0.0, 1.0, false, 0.0, false, false);
 
     let team_id = fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) + FIGHTER_TEAM_2ND_PICKEL_TROLLEY;
     TeamModule::set_team_second(fighter.module_accessor, team_id);
@@ -51,7 +51,7 @@ pub unsafe extern "C" fn attack_dash_main_loop(fighter: &mut L2CFighterCommon) -
     return false.into();
 }
 
-pub unsafe extern "C" fn special_dash_end(fighter: &mut L2CFighterCommon) -> L2CValue{
+pub unsafe extern "C" fn special_run_end(fighter: &mut L2CFighterCommon) -> L2CValue{
     KineticModule::clear_speed_all(fighter.module_accessor);
     
     return false.into();
@@ -145,9 +145,9 @@ pub unsafe extern "C" fn special_s_failed_situation_helper(fighter: &mut L2CFigh
 }
 
 pub fn install(agent: &mut Agent) {
-    agent.status(Pre, statuses::pickel::ATTACK_DASH_SPECIAL, special_dash_pre);
-    agent.status(Main, statuses::pickel::ATTACK_DASH_SPECIAL, special_dash_main);
-    agent.status(End, statuses::pickel::ATTACK_DASH_SPECIAL, special_dash_end);
+    agent.status(Pre, statuses::pickel::ATTACK_DASH_SPECIAL, special_run_pre);
+    agent.status(Main, statuses::pickel::ATTACK_DASH_SPECIAL, special_run_main);
+    agent.status(End, statuses::pickel::ATTACK_DASH_SPECIAL, special_run_end);
 
     agent.status(Pre, *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_S_FAILED, special_s_failed_pre);
     agent.status(Main, *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_S_FAILED, special_s_failed_main);

@@ -5,7 +5,7 @@ use vars::pickel::{
     status::*
 };
 
-mod specialdash;
+mod specialrun;
 
 unsafe extern "C" fn sound_specialn1getgold(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
@@ -136,5 +136,5 @@ pub fn install(agent: &mut Agent) {
 
     agent.acmd("game_specialairhi", game_specialairhi, Priority::Low);
 
-    specialdash::install(agent);
+    specialrun::install(agent);
 }
