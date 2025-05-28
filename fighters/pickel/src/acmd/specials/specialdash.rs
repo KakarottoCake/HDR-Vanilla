@@ -33,6 +33,9 @@ unsafe extern "C" fn game_specialsfailed(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE_RANGE(agent, 36.0, 60.0, 4.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
+        if agent.is_situation(*SITUATION_KIND_GROUND) {
+            CORRECT(agent, *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP);
+        }
     }
     frame(lua_state, 60.0);
     FT_MOTION_RATE(agent, 1.0);
@@ -48,21 +51,29 @@ unsafe extern "C" fn effect_specialsfailed(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {
-        LANDING_EFFECT(agent, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 0.0, 0, -2, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
-        LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0.0, 0, 9, 0, 0, 0, 1.1, 0, 0, 0, 0, 0, 0, false);
-        QUAKE(agent, *CAMERA_QUAKE_KIND_S);
+        if agent.is_situation(*SITUATION_KIND_GROUND) {
+            LANDING_EFFECT(agent, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 0.0, 0, -2, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
+            LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0.0, 0, 9, 0, 0, 0, 1.1, 0, 0, 0, 0, 0, 0, false);
+            QUAKE(agent, *CAMERA_QUAKE_KIND_S);
+        }
     }
     frame(lua_state, 24.0);
     if is_excute(agent) {
-        LANDING_EFFECT(agent, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        if agent.is_situation(*SITUATION_KIND_GROUND) {
+            LANDING_EFFECT(agent, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
     }
     frame(lua_state, 29.0);
     if is_excute(agent) {
-        FOOT_EFFECT(agent, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        if agent.is_situation(*SITUATION_KIND_GROUND) {
+            FOOT_EFFECT(agent, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
     }
     wait(lua_state, 34.0);
     if is_excute(agent) {
-        FOOT_EFFECT(agent, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        if agent.is_situation(*SITUATION_KIND_GROUND) {
+            FOOT_EFFECT(agent, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
     }
 }
 
@@ -79,7 +90,9 @@ unsafe extern "C" fn sound_specialsfailed(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_common_down_m_01"));
+        if agent.is_situation(*SITUATION_KIND_GROUND) {
+            PLAY_SE(agent, Hash40::new("se_common_down_m_01"));
+        }
     }
 }
 
@@ -92,7 +105,9 @@ unsafe extern "C" fn expression_specialsfailed(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 18.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(boma, Hash40::new("rbkind_down"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        if agent.is_situation(*SITUATION_KIND_GROUND) {
+            ControlModule::set_rumble(boma, Hash40::new("rbkind_down"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        }
     }
 }
 

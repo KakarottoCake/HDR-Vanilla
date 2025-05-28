@@ -28,7 +28,7 @@ pub unsafe extern "C" fn special_dash_pre(fighter: &mut L2CFighterCommon) -> L2C
         0
     );
     
-    return 0.into();
+    return false.into();
 }
 
 const FIGHTER_TEAM_2ND_PICKEL_TROLLEY: i32 = 0x1f;
@@ -48,13 +48,13 @@ pub unsafe extern "C" fn special_dash_main(fighter: &mut L2CFighterCommon) -> L2
 pub unsafe extern "C" fn attack_dash_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue{
     fighter.change_status(FIGHTER_PICKEL_STATUS_KIND_SPECIAL_S_RIDE.into(), false.into());
 
-    return 0.into();
+    return false.into();
 }
 
 pub unsafe extern "C" fn special_dash_end(fighter: &mut L2CFighterCommon) -> L2CValue{
     KineticModule::clear_speed_all(fighter.module_accessor);
     
-    return 0.into();
+    return false.into();
 }
 
 // FIGHTER_PICKEL_STATUS_KIND_SPECIAL_S_FAILED
@@ -64,7 +64,7 @@ pub unsafe extern "C" fn special_s_failed_pre(fighter: &mut L2CFighterCommon) ->
         fighter.module_accessor,
         app::SituationKind(*SITUATION_KIND_NONE),
         *FIGHTER_KINETIC_TYPE_UNIQ,
-        *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP as u32,
+        *GROUND_CORRECT_KIND_GROUND as u32,
         app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
         true,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG,
@@ -85,14 +85,11 @@ pub unsafe extern "C" fn special_s_failed_pre(fighter: &mut L2CFighterCommon) ->
         0
     );
     
-    return 0.into();
+    return false.into();
 }
 
 pub unsafe extern "C" fn special_s_failed_main(fighter: &mut L2CFighterCommon) -> L2CValue{
-    if fighter.is_situation(*SITUATION_KIND_GROUND) {
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
-    }
+    special_s_failed_situation_helper(fighter);
     fighter.sub_change_motion_by_situation(
         Hash40::new("special_s_failed").into(), 
         Hash40::new("special_s_failed").into(), 
@@ -103,28 +100,48 @@ pub unsafe extern "C" fn special_s_failed_main(fighter: &mut L2CFighterCommon) -
 }
 
 pub unsafe extern "C" fn special_s_failed_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue{
+    if !StatusModule::is_changing(fighter.module_accessor) {
+        if StatusModule::is_situation_changed(fighter.module_accessor) {
+            special_s_failed_situation_helper(fighter);
+            return false.into();
+        }
+    }
+
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
-        return 1.into();
+        return true.into();
     }
 
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
         || fighter.sub_air_check_fall_common().get_bool() {
-            return 1.into();
+            return true.into();
         }
     }
 
     if MotionModule::is_end(fighter.module_accessor) {
         if fighter.is_situation(*SITUATION_KIND_GROUND) {
             fighter.change_status(FIGHTER_STATUS_KIND_DOWN_WAIT.into(), false.into());
-        } else {
+        }
+        else {
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         }
-
-        return 1.into();
+        return true.into();
     }
 
-    return 0.into();
+    return false.into();
+}
+
+pub unsafe extern "C" fn special_s_failed_situation_helper(fighter: &mut L2CFighterCommon) {
+    if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+    } else {
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+        EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_turn_smoke"), false, false);
+        EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_landing_smoke"), false, false);
+    }
 }
 
 pub fn install(agent: &mut Agent) {
