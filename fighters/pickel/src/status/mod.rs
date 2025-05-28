@@ -4,7 +4,7 @@ use globals::*;
 
 mod air_lasso;
 mod attack_air_lw;
-mod attack_dash_special;
+mod special_dash;
 mod appeal;
 mod entry;
 mod guard;
@@ -30,7 +30,7 @@ pub fn install(agent: &mut Agent) {
     
     air_lasso::install(agent);
     attack_air_lw::install(agent);
-    attack_dash_special::install(agent);
+    special_dash::install(agent);
     appeal::install(agent);
     entry::install(agent);
     guard::install(agent);

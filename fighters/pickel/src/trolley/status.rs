@@ -5,7 +5,7 @@ use vars::pickel_trolley::{
     status::*
 };
 
-// WEAPON_PICKEL_TROLLEY_STATUS_KIND_PEARL_FLY
+// statuses::pickel_trolley::PEARL_FLY
 
 unsafe extern "C" fn pearl_fly_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
     StatusModule::init_settings(
@@ -280,9 +280,9 @@ unsafe extern "C" fn start_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
 }
 
 pub fn install(agent: &mut Agent) {
-    agent.status(Pre, WEAPON_PICKEL_TROLLEY_STATUS_KIND_PEARL_FLY, pearl_fly_pre);
-    agent.status(Main, WEAPON_PICKEL_TROLLEY_STATUS_KIND_PEARL_FLY, pearl_fly_main);
-    agent.status(End, WEAPON_PICKEL_TROLLEY_STATUS_KIND_PEARL_FLY, pearl_fly_end);
+    agent.status(Pre, statuses::pickel_trolley::PEARL_FLY, pearl_fly_pre);
+    agent.status(Main, statuses::pickel_trolley::PEARL_FLY, pearl_fly_main);
+    agent.status(End, statuses::pickel_trolley::PEARL_FLY, pearl_fly_end);
 
     // agent.status(Main, *WEAPON_PICKEL_TROLLEY_STATUS_KIND_START, start_main);
 }
