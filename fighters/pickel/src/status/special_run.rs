@@ -1,6 +1,6 @@
 use super::*;
 
-// statuses::pickel::ATTACK_DASH_SPECIAL
+// statuses::pickel::SPECIAL_RUN
 
 pub unsafe extern "C" fn special_run_pre(fighter: &mut L2CFighterCommon) -> L2CValue{
     StatusModule::init_settings(
@@ -22,9 +22,9 @@ pub unsafe extern "C" fn special_run_pre(fighter: &mut L2CFighterCommon) -> L2CV
         false,
         false,
         false,
-        (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_DASH | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64,
+        (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_S | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64,
         *FIGHTER_STATUS_ATTR_DISABLE_INTERRUPT_WARP as u32,
-        *FIGHTER_POWER_UP_ATTACK_BIT_ATTACK_DASH as u32,
+        *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S as u32,
         0
     );
     
@@ -42,10 +42,10 @@ pub unsafe extern "C" fn special_run_main(fighter: &mut L2CFighterCommon) -> L2C
     TeamModule::set_team_second(fighter.module_accessor, team_id);
     TeamModule::set_hit_team_second(fighter.module_accessor, team_id);
 
-    fighter.sub_shift_status_main(L2CValue::Ptr(attack_dash_main_loop as *const () as _))
+    fighter.sub_shift_status_main(L2CValue::Ptr(special_run_main_loop as *const () as _))
 }
 
-pub unsafe extern "C" fn attack_dash_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue{
+pub unsafe extern "C" fn special_run_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue{
     fighter.change_status(FIGHTER_PICKEL_STATUS_KIND_SPECIAL_S_RIDE.into(), false.into());
 
     return false.into();
@@ -95,7 +95,7 @@ pub unsafe extern "C" fn special_s_failed_main(fighter: &mut L2CFighterCommon) -
         Hash40::new("special_s_failed").into(), 
         false.into()
     );
-    fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(L2CFighterCommon_sub_attack_dash_uniq as *const () as _));
+    // fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(L2CFighterCommon_sub_attack_dash_uniq as *const () as _));
     fighter.sub_shift_status_main(L2CValue::Ptr(special_s_failed_main_loop as *const () as _))
 }
 
@@ -145,9 +145,9 @@ pub unsafe extern "C" fn special_s_failed_situation_helper(fighter: &mut L2CFigh
 }
 
 pub fn install(agent: &mut Agent) {
-    agent.status(Pre, statuses::pickel::ATTACK_DASH_SPECIAL, special_run_pre);
-    agent.status(Main, statuses::pickel::ATTACK_DASH_SPECIAL, special_run_main);
-    agent.status(End, statuses::pickel::ATTACK_DASH_SPECIAL, special_run_end);
+    agent.status(Pre, statuses::pickel::SPECIAL_RUN, special_run_pre);
+    agent.status(Main, statuses::pickel::SPECIAL_RUN, special_run_main);
+    agent.status(End, statuses::pickel::SPECIAL_RUN, special_run_end);
 
     agent.status(Pre, *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_S_FAILED, special_s_failed_pre);
     agent.status(Main, *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_S_FAILED, special_s_failed_main);

@@ -2003,7 +2003,7 @@ pub mod statuses {
     }
 
     pub mod pickel {
-        pub const ATTACK_DASH_SPECIAL: i32 = 0x21B;
+        pub const SPECIAL_RUN: i32 = 0x21B;
     }
 
     pub mod pickel_trolley {

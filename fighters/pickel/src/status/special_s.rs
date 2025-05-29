@@ -13,7 +13,7 @@ pub unsafe extern "C" fn special_s_pre(fighter: &mut L2CFighterCommon) -> L2CVal
             || ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_PICKEL_GENERATE_ARTICLE_TROLLEY) {
                 *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_S_FAILED
             } else {
-                statuses::pickel::ATTACK_DASH_SPECIAL
+                statuses::pickel::SPECIAL_RUN
             }
         );
 
