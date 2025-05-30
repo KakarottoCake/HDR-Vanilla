@@ -17,14 +17,6 @@ unsafe fn jab_2_ftilt_cancel(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
-// shrinks the keyblade model during the active frames of nair's animation
-unsafe fn nair_sword_scale(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
-    if fighter.is_status(*FIGHTER_TRAIL_STATUS_KIND_ATTACK_AIR_N)
-    && (13.0..29.0).contains(&fighter.motion_frame()) {
-        ModelModule::set_joint_scale(fighter.module_accessor, smash::phx::Hash40::new("haver"), &Vector3f{x: 0.8, y: 0.8, z: 0.8});
-    }
-}
-
 // lets sora bounce upwards upon landing down smash
 unsafe fn attack_lw4_rebound(boma: &mut BattleObjectModuleAccessor, frame: f32) {
     if boma.is_status(*FIGHTER_STATUS_KIND_ATTACK_LW4) 
@@ -284,7 +276,6 @@ pub unsafe fn initialize_magic(fighter: &mut L2CFighterCommon) {
 
 pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
     jab_2_ftilt_cancel(boma);
-    nair_sword_scale(fighter);
     nair_fair_momentum_handling(fighter, boma);
     attack_lw4_rebound(boma, frame);
     magic_handling(fighter, boma, frame);
