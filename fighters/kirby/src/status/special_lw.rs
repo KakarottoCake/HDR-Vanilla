@@ -1,6 +1,7 @@
 use super::*;
 
 unsafe extern "C" fn special_lw_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    VarModule::set_int(fighter.battle_object, vars::kirby::instance::SPECIAL_LW_USED_JUMPS, 0);
     special_lw_off_mtrans(fighter);
     fighter.on_flag(*FIGHTER_INSTANCE_WORK_ID_FLAG_FORCE_LOUPE);
     fighter.off_flag(*FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_MOT_FRAME_INHERIT);
