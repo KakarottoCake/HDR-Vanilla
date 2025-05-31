@@ -7,7 +7,7 @@
   </list>
   <struct hash="param_private">
     <float hash="limit_gauge_damage_add">0</float>
-    <float hash="limit_gauge_attack_add">1</float>
+    <float hash="limit_gauge_attack_add">1.25</float>
   </struct>
   <list hash="param_special_n">
     <struct index="0">
