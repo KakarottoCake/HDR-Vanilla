@@ -209,7 +209,7 @@ unsafe extern "C" fn game_specialsstart(agent: &mut L2CAgentBase) {
                 CATCH(agent, 0, Hash40::new("top"), 4.0, 0.0, 4.0, 2.0, Some(0.0), Some(4.0), Some(8.0), *FIGHTER_STATUS_KIND_SWING_GAOGAEN_CATCHED, *COLLISION_SITUATION_MASK_GA);
             }
             else if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_HIGH_GRAB) {
-                CATCH(agent, 0, Hash40::new("top"), 7.0, 0.0, 15.0, 0.0, Some(0.0), Some(15.0), Some(6.0), *FIGHTER_STATUS_KIND_SWING_GAOGAEN_CATCHED, *COLLISION_SITUATION_MASK_A);
+                CATCH(agent, 0, Hash40::new("top"), 7.0, 0.0, 15.0, 0.0, Some(0.0), Some(15.0), Some(6.0), *FIGHTER_STATUS_KIND_SWING_GAOGAEN_CATCHED, *COLLISION_SITUATION_MASK_GA);
             }
         }
         // If the regular grab, then just spawn the grab box
@@ -500,7 +500,7 @@ unsafe extern "C" fn game_specialslariat(agent: &mut L2CAgentBase) {
             }
             // Anti-air grab
             else if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_HIGH_GRAB) {
-                ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 0.0, 77, 100, 0, 95, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+                ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 0.0, 80, 10, 0, 100, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
             }
         }
         // Regular grab
@@ -598,7 +598,7 @@ unsafe extern "C" fn game_specialsshoulder(agent: &mut L2CAgentBase) {
             }
             // Anti-air grab
             else if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_HIGH_GRAB) {
-                ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 0.0, 105, 280, 0, 70, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+                ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 0.0, 103, 10, 0, 90, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
             }
         }
         // Regular grab
