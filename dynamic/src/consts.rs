@@ -431,7 +431,10 @@ pub mod vars {
     }
 
     pub mod cloud {
-
+        pub mod status {
+            // flags
+            pub const SPECIAL_N_HOLD: i32 = 0x1101;
+        }
     }
 
     pub mod daisy {

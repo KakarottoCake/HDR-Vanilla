@@ -1,5 +1,7 @@
 use super::*;
 
+mod specialn;
+
 unsafe extern "C" fn game_specials1(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -659,4 +661,6 @@ pub fn install(agent: &mut Agent) {
     
     agent.acmd("game_speciallw", game_speciallw, Priority::Low);
     agent.acmd("game_specialairlw", game_specialairlw, Priority::Low);
+
+    specialn::install(agent);
 }

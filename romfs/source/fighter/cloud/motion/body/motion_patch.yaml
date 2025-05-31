@@ -153,3 +153,25 @@ throw_hi:
 throw_lw:
   extra:
     cancel_frame: 32
+run:
+  blend_frames: 5
+special_n:
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 45
+special_air_n:
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 45
+special_n_lb:
+  extra:
+    xlu_start: 12
+    xlu_end: 18
+    cancel_frame: 45
+special_air_n_lb:
+  extra:
+    xlu_start: 12
+    xlu_end: 18
+    cancel_frame: 45
