@@ -12,8 +12,8 @@ extern "C" {
 }
 
 unsafe fn set_command_for_slot(fighter: &mut BattleObject, slot: usize, id: i32) {
-    let hero_mana = fighter.get_float(0x53);
     let mana = if !VarModule::is_flag(fighter, vars::brave::instance::SPECIAL_MENU) { get_special_lw_command_sp_cost(fighter.module_accessor, id, false) } else { 0.0 };
+    let mana_req = if !VarModule::is_flag(fighter, vars::brave::instance::SPECIAL_MENU) { fighter.get_float(0x53) >= mana } else { true };
 
     FighterManager::instance().unwrap().send_event(BraveSetMenuCommand::new(
         fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32, // ENTRY_ID
@@ -24,10 +24,10 @@ unsafe fn set_command_for_slot(fighter: &mut BattleObject, slot: usize, id: i32)
     FighterManager::instance().unwrap().send_event(BraveEnableMenuCommand::new(
         fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32,
         (slot + 1) as u32,
-        hero_mana >= mana
+        mana_req
     ));
 
-    if hero_mana >= mana {
+    if mana_req {
         fighter.set_int(id, 0x10000d4 + slot as i32);
     }
     else {
