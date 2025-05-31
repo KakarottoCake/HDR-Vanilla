@@ -37,8 +37,8 @@
     </struct>
     <struct index="1">
       <int hash="critical_frame">36</int>
-	    <int hash="critical_slow_rate">8</int>
-	    <int hash="critical_zoom_in_frame">999</int>
+      <int hash="critical_slow_rate">8</int>
+      <int hash="critical_zoom_in_frame">999</int>
     </struct>
     <hash40 index="2">dummy</hash40>
     <hash40 index="3">dummy</hash40>
@@ -50,8 +50,8 @@
     </struct>
     <struct index="1">
       <int hash="critical_frame">36</int>
-	    <int hash="critical_slow_rate">8</int>
-	    <int hash="critical_zoom_in_frame">999</int>
+      <int hash="critical_slow_rate">8</int>
+      <int hash="critical_zoom_in_frame">999</int>
     </struct>
     <hash40 index="2">dummy</hash40>
     <hash40 index="3">dummy</hash40>
@@ -59,8 +59,8 @@
   <list hash="param_special_lw">
     <struct index="0">
       <int hash="critical_frame">36</int>
-	    <int hash="critical_slow_rate">8</int>
-	    <int hash="critical_zoom_in_frame">999</int>
+      <int hash="critical_slow_rate">8</int>
+      <int hash="critical_zoom_in_frame">999</int>
       <float hash="limit_gauge_add">0.23</float>
       <int hash="limit_break_clear_frame">1200</int>
       <float hash="limit_gauge_damage_dec">2</float>
@@ -68,5 +68,63 @@
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>
     <hash40 index="3">dummy</hash40>
+  </list>
+  <list hash="power_up_limit_break">
+    <struct index="0">
+      <hash40 hash="param_kind">walk_accel_mul</hash40>
+      <float hash="up_mul">1.0</float>
+    </struct>
+    <struct index="1">
+      <hash40 hash="param_kind">walk_accel_add</hash40>
+      <float hash="up_mul">1.0</float>
+    </struct>
+    <struct index="2">
+      <hash40 hash="param_kind">walk_speed_max</hash40>
+      <float hash="up_mul">1.0</float>
+    </struct>
+    <struct index="3">
+      <hash40 hash="param_kind">ground_brake</hash40>
+      <float hash="up_mul">1.0</float>
+    </struct>
+    <struct index="4">
+      <hash40 hash="param_kind">dash_speed</hash40>
+      <float hash="up_mul">1.1</float>
+    </struct>
+    <struct index="5">
+      <hash40 hash="param_kind">run_accel_mul</hash40>
+      <float hash="up_mul">1.1</float>
+    </struct>
+    <struct index="6">
+      <hash40 hash="param_kind">run_accel_add</hash40>
+      <float hash="up_mul">1.1</float>
+    </struct>
+    <struct index="7">
+      <hash40 hash="param_kind">run_speed_max</hash40>
+      <float hash="up_mul">1.1</float>
+    </struct>
+    <struct index="8">
+      <hash40 hash="param_kind">air_accel_x_mul</hash40>
+      <float hash="up_mul">1.0</float>
+    </struct>
+    <struct index="9">
+      <hash40 hash="param_kind">air_accel_x_add</hash40>
+      <float hash="up_mul">1.0</float>
+    </struct>
+    <struct index="10">
+      <hash40 hash="param_kind">air_speed_x_stable</hash40>
+      <float hash="up_mul">1.2</float>
+    </struct>
+    <struct index="11">
+      <hash40 hash="param_kind">air_brake_x</hash40>
+      <float hash="up_mul">1.0</float>
+    </struct>
+    <struct index="12">
+      <hash40 hash="param_kind">air_accel_y</hash40>
+      <float hash="up_mul">1.0</float>
+    </struct>
+    <struct index="13">
+      <hash40 hash="param_kind">air_speed_y_stable</hash40>
+      <float hash="up_mul">1.0</float>
+    </struct>
   </list>
 </struct>
