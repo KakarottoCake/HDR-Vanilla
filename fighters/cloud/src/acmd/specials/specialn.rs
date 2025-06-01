@@ -31,9 +31,9 @@ unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         agent.off_flag(*FIGHTER_CLOUD_STATUS_WORK_ID_SPECIAL_N_FLAG_SPECIAL_FALL);
         if VarModule::is_flag(agent.battle_object, vars::cloud::status::SPECIAL_N_HOLD) {
-            MotionModule::set_rate(boma, 1.4375);
+            MotionModule::set_rate(boma, 1.4375); // 16F to F45
         } else {
-            MotionModule::set_rate(boma, 0.8215);
+            MotionModule::set_rate(boma, 0.71875); // 32F to F45
         }
     }
     frame(lua_state, 45.0);
@@ -112,9 +112,9 @@ unsafe extern "C" fn game_specialn_lb(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         agent.off_flag(*FIGHTER_CLOUD_STATUS_WORK_ID_SPECIAL_N_FLAG_SPECIAL_FALL);
         if VarModule::is_flag(agent.battle_object, vars::cloud::status::SPECIAL_N_HOLD) {
-            MotionModule::set_rate(boma, 1.15);
+            MotionModule::set_rate(boma, 1.4375); // 16F to F45
         } else {
-            MotionModule::set_rate(boma, 0.65);
+            MotionModule::set_rate(boma, 0.71875); // 32F to F45
         }
     }
     frame(lua_state, 45.0);
