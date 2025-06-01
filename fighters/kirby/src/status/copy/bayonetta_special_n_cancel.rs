@@ -183,7 +183,7 @@ unsafe extern "C" fn cancel_check(fighter: &mut L2CFighterCommon) -> L2CValue {
             VarModule::set_int(fighter.battle_object, vars::bayonetta::instance::SPECIAL_N_CANCEL_TYPE, *FIGHTER_STATUS_KIND_JUMP_SQUAT);
             StatusModule::change_status_force(fighter.module_accessor, statuses::kirby::BAYONETTA_SPECIAL_N_CANCEL, false);
         }
-        if fighter.sub_check_command_guard().get_bool() {
+        if fighter.sub_check_command_guard().get_bool() || fighter.is_pad_flag(PadFlag::GuardTrigger) {
             VarModule::set_int(fighter.battle_object, vars::bayonetta::instance::SPECIAL_N_CANCEL_TYPE, *FIGHTER_STATUS_KIND_WAIT);
             StatusModule::change_status_force(fighter.module_accessor, statuses::kirby::BAYONETTA_SPECIAL_N_CANCEL, false);
         }

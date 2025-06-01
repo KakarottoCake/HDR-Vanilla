@@ -545,6 +545,8 @@ unsafe fn reflet_nspecial_cancels(fighter: &mut L2CFighterCommon) {
                 fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_REFLET_STATUS_SPECIAL_N_HOLD_INT_NEXT_STATUS);
                 ControlModule::clear_command_one(fighter.module_accessor, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_AIR_ESCAPE);
             }
+        } else if fighter.get_int(*FIGHTER_REFLET_STATUS_SPECIAL_N_HOLD_INT_NEXT_STATUS) != *FIGHTER_STATUS_KIND_JUMP_SQUAT {
+            fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_REFLET_STATUS_SPECIAL_N_HOLD_INT_NEXT_STATUS);
         }
     }
 }
