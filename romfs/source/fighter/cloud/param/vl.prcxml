@@ -33,7 +33,7 @@
   <list hash="param_special_s">
     <struct index="0">
       <float hash="start_spd_x_mul">0.5</float>
-      <float hash="start_spd_y_mul">1.0</float>
+      <float hash="start_spd_y_mul">0.5</float>
     </struct>
     <struct index="1">
       <int hash="critical_frame">36</int>
