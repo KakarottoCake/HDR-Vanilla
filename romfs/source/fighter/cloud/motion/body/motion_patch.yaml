@@ -131,13 +131,13 @@ slip_stand:
     cancel_frame: 24
 special_air_s1:
   extra:
-    cancel_frame: 35
+    cancel_frame: 31
 special_air_s3:
   extra:
     cancel_frame: 52
 special_s1:
   extra:
-    cancel_frame: 35
+    cancel_frame: 31
 step_pose_back:
   extra:
     cancel_frame: 6
