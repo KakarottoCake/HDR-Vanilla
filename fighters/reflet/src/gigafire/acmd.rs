@@ -3,7 +3,7 @@ use super::*;
 unsafe extern "C" fn game_shoot0(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    if is_excute(agent) {//angle 115 -> 90, fkb -20 (prevent random popouts from being hit on wrong side + prevent it from overriding bonfire kb), hitbox lags behind to spawn fire closer
+    if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 150, 100, 20, 0, 1.8, 0.0, 0.5, -0.5, None, None, None, 1.0, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, -1, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_MAGIC);
     }
 }
@@ -17,7 +17,7 @@ unsafe extern "C" fn game_rise(agent: &mut L2CAgentBase) {
         AREA_WIND_2ND_RAD_arg9(agent, 0, 1, 0.05, 200, 1, 0, 5, 12, 60);
         ATTACK(agent, 0, 0, Hash40::new("top"), 1.3, 120, 100, 44, 0, 3.6, 0.0, 7.0, 0.0, Some(0.0), Some(1.0), Some(0.0), 1.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, -0.5, 0.0, 4, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_MAGIC);
     }
-    wait(lua_state, 6.0);//timing adjusted so that all stages are reached (scales smoother in size/angle)
+    wait(lua_state, 6.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 1.3, 125, 100, 33, 0, 3.8, 0.0, 7.0, 0.0, Some(0.0), Some(1.0), Some(0.0), 1.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, -0.5, 0.0, 4, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_MAGIC);
     }
@@ -36,7 +36,7 @@ unsafe extern "C" fn game_burn(agent: &mut L2CAgentBase) {
     if is_excute(agent) {//this one uses param
         AREA_WIND_2ND_RAD_arg9(agent, 0, 1, 0.05, 200, 0.8, 0, 9, 15, 60);
         ATTACK(agent, 0, 0, Hash40::new("top"), 1.3, 130, 100, 33, 0, 4.0, 0.0, 8.0, 0.0, Some(0.0), Some(1.0), Some(0.0), 1.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, -0.5, 0.0, 5, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_MAGIC);
-    }//reverse angle progression bc i somehow read backwards
+    }
     wait(lua_state, 6.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 1.3, 135, 100, 33, 0, 4.2, 0.0, 9.0, 0.0, Some(0.0), Some(1.0), Some(0.0), 1.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, -0.5, 0.0, 5, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_MAGIC);
@@ -44,7 +44,7 @@ unsafe extern "C" fn game_burn(agent: &mut L2CAgentBase) {
     wait(lua_state, 6.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 1.3, 140, 100, 33, 0, 4.4, 0.0, 9.0, 0.0, Some(0.0), Some(1.0), Some(0.0), 1.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, -0.5, 0.0, 5, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_MAGIC);
-    }//38f -> 35f activity
+    }
 }
 
 pub fn install(agent: &mut Agent) {

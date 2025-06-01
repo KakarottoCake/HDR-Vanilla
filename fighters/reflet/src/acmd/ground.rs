@@ -156,7 +156,7 @@ unsafe extern "C" fn game_attack100start(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_attack100(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    loop {//end frame 31, resource frame every 60 -> 15
+    loop {
         FT_MOTION_RATE(agent, 1.0);
         game_attack100sub(agent);
         frame(lua_state, 2.0);
@@ -210,9 +210,6 @@ unsafe extern "C" fn effect_attack100(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_attack100end(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    if is_excute(agent) {
-        agent.dec_int(*FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_HI_CURRENT_POINT);
-    }
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 5.0);
     if is_excute(agent) {

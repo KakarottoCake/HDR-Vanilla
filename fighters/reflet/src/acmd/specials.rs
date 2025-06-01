@@ -255,7 +255,6 @@ unsafe extern "C" fn effect_speciallwend(agent: &mut L2CAgentBase) {
         }
         frame(lua_state, 3.0);
         if is_excute(agent) {
-            EffectModule::kill_kind(boma, Hash40::new("reflet_rizaia"), false, true);
             EFFECT_DETACH_KIND(agent, Hash40::new("reflet_rizaia"), -1);
         }
     }
