@@ -2103,7 +2103,7 @@
       <float hash="air_accel_y">0.135</float>
       <float hash="air_speed_y_stable">2.4</float>
       <float hash="dive_speed_y">3.25</float>
-      <float hash="weight">104</float>
+      <float hash="weight">101</float>
       <float hash="landing_attack_air_frame_n">10</float>
       <float hash="landing_attack_air_frame_f">12</float>
       <float hash="landing_attack_air_frame_b">10</float>
