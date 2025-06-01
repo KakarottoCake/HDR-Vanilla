@@ -59,6 +59,17 @@
     <hash40 index="2">dummy</hash40>
     <hash40 index="3">dummy</hash40>
   </list>
+  <list hash="param_special_lw">
+    <struct index="0">
+      <int hash="weapon_attack_frame">10</int>
+      <int hash="weapon_speed_disable_frame">10</int>
+      <float hash="weapon_search_radius">22</float>
+      <float hash="item_search_radius">22</float>
+    </struct>
+    <hash40 index="1">dummy</hash40>
+    <hash40 index="2">dummy</hash40>
+    <hash40 index="3">dummy</hash40>
+  </list>
   <list hash="param_tico">
     <struct index="0">
       <float hash="hp">35</float>

@@ -240,51 +240,42 @@ unsafe extern "C" fn sound_specialnend(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_freestandby(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 27.0);
-    if is_excute(agent) {
-        StatusModule::change_status_force(boma, statuses::rosetta_tico::POP, true);
-    }
+    frame(lua_state, 1.0);
+    MotionModule::set_rate(boma, (27.0-1.0)/25.0);
 }
 
 unsafe extern "C" fn game_freepop(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    frame(lua_state, 1.0);
+    MotionModule::set_rate(boma, (16.0-1.0)/18.0);
     frame(lua_state, 16.0);
+    MotionModule::set_rate(boma, (19.0-16.0)/6.0);
     if is_excute(agent) {
-        //StatusModule::change_status_force(boma, *WEAPON_ROSETTA_TICO_STATUS_KIND_SPECIAL_N_END, false);
         ControlModule::set_rumble(boma, Hash40::new("rbkind_explosionl"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-        ATTACK(agent, 0, 0, Hash40::new("waist"), 20.0, 55, 100, 0, 80, 15.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 30.0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_BOMB);
+        ATTACK(agent, 0, 0, Hash40::new("waist"), 20.0, 55, 100, 0, 50, 9.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 30.0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_BOMB);
     }
 }
 
 unsafe extern "C" fn effect_freepop(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    frame(lua_state, 1.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("rosetta_attack_flash3"), Hash40::new("top"), 15.0 * boma.lr(), 3.5, 0, 0, 0, 0, 0.51, true);
+        EFFECT_FOLLOW(agent, Hash40::new("rosetta_attack_flash3"), Hash40::new("top"), 15.0 * boma.lr(), 3.7, 0, 0, 0, 0, 0.43, true);
         LAST_EFFECT_SET_COLOR(agent, 0.7, 0.02, 0.005);
-        LAST_EFFECT_SET_RATE(agent, 0.7);
+        LAST_EFFECT_SET_RATE(agent, 0.65);
+    }
+    frame(lua_state, 12.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("rosetta_final_bomb"), Hash40::new("top"), 0.0, 6.0, 0.0, 0, 0, 0, 0.48, 0, 0, 0, 0, 0, 0, false);
+        LAST_EFFECT_SET_RATE(agent, 1.75);
+        QUAKE(agent, *CAMERA_QUAKE_KIND_L);
     }
     frame(lua_state, 13.0);
     if is_excute(agent) {
-        //vars
-        let owner_id = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
-        let rosetta: *mut BattleObject = utils::util::get_battle_object_from_id(owner_id);
-        let rosetta_boma: &mut BattleObjectModuleAccessor = &mut *(*rosetta).module_accessor;
-        let rosa_agent: &mut L2CFighterCommon = util::get_fighter_common_from_accessor(rosetta_boma);
-        let rosa_pos = *PostureModule::pos(rosa_agent.module_accessor);
-        let loma_pos = *PostureModule::pos(boma);
-        let mut rosa_lr= rosa_agent.lr();
-        let pos_diff = Vector2f::new(loma_pos.x - rosa_pos.x, loma_pos.y - rosa_pos.y);
-        //effx
-        //VisibilityModule::set_whole(boma, false);
-        //EFFECT(rosa_agent, Hash40::new("rosetta_final_smoke"), Hash40::new("top"), 0.0, pos_diff.y, pos_diff.x, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, false);
-        //EFFECT(rosa_agent, Hash40::new("rosetta_final_bomb"), Hash40::new("top"), 0.0, pos_diff.y, pos_diff.x, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, false);
-        //EFFECT(agent, Hash40::new("rosetta_final_bomb"), Hash40::new("top"), 0.0, 6.0, 0.0, 0, 0, 0, 0.4, 0, 0, 0, 0, 0, 0, false);
-        //LAST_EFFECT_SET_RATE(agent, 1.75);
-        //EFFECT(agent, Hash40::new("rosetta_final_smoke"), Hash40::new("top"), 0.0, 6.0, 0.0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, false);
-        //LAST_EFFECT_SET_RATE(agent, 1.5);
-        QUAKE(agent, *CAMERA_QUAKE_KIND_L);
+        EFFECT(agent, Hash40::new("rosetta_final_smoke"), Hash40::new("top"), 0.0, 6.0, 0.0, 0, 90, 0, 0.71, 0, 0, 0, 0, 0, 0, false);
+        LAST_EFFECT_SET_RATE(agent, 1.9);
     }
     frame(lua_state, 16.0);
     if is_excute(agent) {
@@ -299,9 +290,36 @@ unsafe extern "C" fn sound_freepop(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("vc_tico_sad"));
     }
-    frame(lua_state, 11.0);
+    frame(lua_state, 16.0);
     if is_excute(agent) {
         PLAY_SE_REMAIN(agent, Hash40::new("se_common_bomb_ll"));
+        PLAY_SE(agent, Hash40::new("se_tico_dead"));
+    }
+}
+
+unsafe extern "C" fn effect_death(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if !agent.is_prev_status(statuses::rosetta_tico::POP) {
+        if is_excute(agent) {
+            EFFECT(agent, Hash40::new("rosetta_tico_dead"), Hash40::new("hip"), 1, 0, 0, 0, 0, -90, 1.1, 0, 0, 0, 0, 0, 0, true);
+            QUAKE(agent, *CAMERA_QUAKE_KIND_S);
+        }
+    }
+    frame(lua_state, 60.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(boma, *WEAPON_ROSETTA_TICO_INSTANCE_WORK_ID_FLAG_CAMERA_OFF);
+    }
+}
+
+unsafe extern "C" fn sound_death(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 1.0);
+    if !agent.is_prev_status(statuses::rosetta_tico::POP) {
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("se_tico_dead"));
+        }
     }
 }
 
@@ -337,4 +355,7 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_freepop", game_freepop, Priority::Low);
     agent.acmd("effect_freepop", effect_freepop, Priority::Low);
     agent.acmd("sound_freepop", sound_freepop, Priority::Low);
+
+    agent.acmd("effect_death", effect_death, Priority::Low);
+    agent.acmd("sound_death", sound_death, Priority::Low);
 }

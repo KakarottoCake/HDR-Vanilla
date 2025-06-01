@@ -1575,6 +1575,7 @@ pub mod vars {
 
             // flags
             pub const SPECIAL_LW_TICO_UNAVAILABLE: i32 = 0x0100;
+            pub const TICO_SPAWN_HAS_LINKED: i32 = 0x0101;
         }
         pub mod status {
             // flags

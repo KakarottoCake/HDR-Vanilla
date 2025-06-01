@@ -76,9 +76,13 @@ unsafe extern "C" fn game_specialhiend(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    let tico = ArticleModule::get_article(boma, *FIGHTER_ROSETTA_GENERATE_ARTICLE_TICO);
+    let tico_id = smash::app::lua_bind::Article::get_battle_object_id(tico) as u32;
+    let tico_boma = sv_battle_object::module_accessor(tico_id);
     let is_teleport = (
         !VarModule::is_flag(boma.object(), SPECIAL_LW_TICO_UNAVAILABLE) 
         && VarModule::get_int(boma.object(), GIMMICK_TIMER) == 0
+        && WorkModule::is_flag(tico_boma, *WEAPON_ROSETTA_TICO_INSTANCE_WORK_ID_FLAG_FREE)
     );
     if is_teleport {
         frame(lua_state, 17.0);
@@ -92,9 +96,6 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
                 VisibilityModule::set_whole(boma, false);
                 JostleModule::set_status(boma, false);
                 if ArticleModule::is_exist(boma, *FIGHTER_ROSETTA_GENERATE_ARTICLE_TICO) {
-                    let tico = ArticleModule::get_article(boma, *FIGHTER_ROSETTA_GENERATE_ARTICLE_TICO);
-                    let tico_id = smash::app::lua_bind::Article::get_battle_object_id(tico) as u32;
-                    let tico_boma = sv_battle_object::module_accessor(tico_id);
                     HitModule::set_whole(tico_boma, HitStatus(*HIT_STATUS_XLU), 0);
                     VisibilityModule::set_whole(tico_boma, false);
                     JostleModule::set_status(tico_boma, false);
@@ -103,9 +104,6 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
             frame(lua_state, 25.0);
             if is_excute(agent) {
                 if ArticleModule::is_exist(boma, *FIGHTER_ROSETTA_GENERATE_ARTICLE_TICO) {
-                    let tico = ArticleModule::get_article(boma, *FIGHTER_ROSETTA_GENERATE_ARTICLE_TICO);
-                    let tico_id = smash::app::lua_bind::Article::get_battle_object_id(tico) as u32;
-                    let tico_boma = sv_battle_object::module_accessor(tico_id);
                     // store luma's position for rosalina to use
                     VarModule::set_int(boma.object(), TICO_X, PostureModule::pos_x(tico_boma) as i32);
 			        VarModule::set_int(boma.object(), TICO_Y, PostureModule::pos_y(tico_boma) as i32);
@@ -125,9 +123,6 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
                 PostureModule::set_pos(boma, &pos);
                 PostureModule::init_pos(boma, &pos, true, true);
                 if ArticleModule::is_exist(boma, *FIGHTER_ROSETTA_GENERATE_ARTICLE_TICO) {
-                    let tico = ArticleModule::get_article(boma, *FIGHTER_ROSETTA_GENERATE_ARTICLE_TICO);
-                    let tico_id = smash::app::lua_bind::Article::get_battle_object_id(tico) as u32;
-                    let tico_boma = sv_battle_object::module_accessor(tico_id);
                     let tico_pos = Vector3f { 
                         x: VarModule::get_int(boma.object(), ROSA_X) as f32, 
                         y: VarModule::get_int(boma.object(), ROSA_Y) as f32, 
@@ -144,9 +139,6 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
                 JostleModule::set_status(boma, true);	
                 HitModule::set_whole(boma, smash::app::HitStatus(*HIT_STATUS_NORMAL), 0);
                 if ArticleModule::is_exist(boma, *FIGHTER_ROSETTA_GENERATE_ARTICLE_TICO) {
-                    let tico = ArticleModule::get_article(boma, *FIGHTER_ROSETTA_GENERATE_ARTICLE_TICO);
-                    let tico_id = smash::app::lua_bind::Article::get_battle_object_id(tico) as u32;
-                    let tico_boma = sv_battle_object::module_accessor(tico_id);
                     JostleModule::set_status(tico_boma, true);	
                     VisibilityModule::set_whole(tico_boma, true);
                     HitModule::set_whole(tico_boma, HitStatus(*HIT_STATUS_NORMAL), 0);
@@ -162,7 +154,10 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
         }
     } else {
         // gravitational pull
-        frame(lua_state, 3.0);
+        frame(lua_state, 1.0);
+        FT_MOTION_RATE_RANGE(agent, 1.0, 5.0, 7.0);
+        frame(lua_state, 5.0);//3->8
+        FT_MOTION_RATE(agent, 1.0);
         if is_excute(agent) {
             WorkModule::on_flag(boma, *FIGHTER_ROSETTA_STATUS_SPECIAL_LW_FLAG_ENABLE_SEARCH);
         }
@@ -173,7 +168,8 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
             }
             wait(lua_state, 1.0);
         }
-        wait(lua_state, 1.0);
+        wait(lua_state, 1.0);//30?->32 mot frame
+        FT_MOTION_RATE_RANGE(agent, 32.0, 40.0, 10.0); //faf 40->45
         if is_excute(agent) {
             WorkModule::off_flag(boma, *FIGHTER_ROSETTA_STATUS_SPECIAL_LW_FLAG_ENABLE_SEARCH);
         }
@@ -183,18 +179,19 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_speciallw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    let tico = ArticleModule::get_article(boma, *FIGHTER_ROSETTA_GENERATE_ARTICLE_TICO);
+    let tico_id = smash::app::lua_bind::Article::get_battle_object_id(tico) as u32;
+    let tico_boma: *mut BattleObjectModuleAccessor = sv_battle_object::module_accessor(tico_id);
     let is_teleport = (
         !VarModule::is_flag(boma.object(), SPECIAL_LW_TICO_UNAVAILABLE) 
         && VarModule::get_int(boma.object(), GIMMICK_TIMER) == 0
+        && WorkModule::is_flag(tico_boma, *WEAPON_ROSETTA_TICO_INSTANCE_WORK_ID_FLAG_FREE)
     );
     if is_teleport {
         frame(lua_state, 13.0);
         if is_excute(agent) { 
             EFFECT(agent, Hash40::new("rosetta_escape"), Hash40::new("top"), 0, 0, -3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
             if ArticleModule::is_exist(boma, *FIGHTER_ROSETTA_GENERATE_ARTICLE_TICO) {
-                let tico = ArticleModule::get_article(boma, *FIGHTER_ROSETTA_GENERATE_ARTICLE_TICO);
-                let tico_id = smash::app::lua_bind::Article::get_battle_object_id(tico) as u32;
-                let tico_boma = sv_battle_object::module_accessor(tico_id);
                 let handle = EffectModule::req_on_joint(tico_boma, Hash40::new("rosetta_escape"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.5, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
                 EffectModule::set_alpha(tico_boma, handle as u32, 1.0);
             }
@@ -204,9 +201,6 @@ unsafe extern "C" fn effect_speciallw(agent: &mut L2CAgentBase) {
             if !VarModule::is_flag(boma.object(), SPECIAL_LW_INVALID_WARP) {
                 EFFECT(agent, Hash40::new("rosetta_escape_end"), Hash40::new("top"), 0, 0, -1.5, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
                 if ArticleModule::is_exist(boma, *FIGHTER_ROSETTA_GENERATE_ARTICLE_TICO) {
-                    let tico = ArticleModule::get_article(boma, *FIGHTER_ROSETTA_GENERATE_ARTICLE_TICO);
-                    let tico_id = smash::app::lua_bind::Article::get_battle_object_id(tico) as u32;
-                    let tico_boma = sv_battle_object::module_accessor(tico_id);
                     let handle = EffectModule::req_on_joint(tico_boma, Hash40::new("rosetta_escape_end"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.0, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
                     EffectModule::set_alpha(tico_boma, handle as u32, 1.0);
                 }

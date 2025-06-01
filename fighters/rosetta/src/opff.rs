@@ -31,7 +31,10 @@ unsafe fn teleport(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModule
 	}
 
 	// set the conditions for a successful teleport
-	let can_teleport = !VarModule::is_flag(boma.object(), SPECIAL_LW_TICO_UNAVAILABLE) && cooldown_frame == 0;
+	let tico = ArticleModule::get_article(boma, *FIGHTER_ROSETTA_GENERATE_ARTICLE_TICO);
+    let tico_id = smash::app::lua_bind::Article::get_battle_object_id(tico) as u32;
+    let tico_boma = sv_battle_object::module_accessor(tico_id);
+	let can_teleport = !VarModule::is_flag(boma.object(), SPECIAL_LW_TICO_UNAVAILABLE) && cooldown_frame == 0 && WorkModule::is_flag(tico_boma, *WEAPON_ROSETTA_TICO_INSTANCE_WORK_ID_FLAG_FREE);
 	let warp_effect = VarModule::get_int(boma.object(), SPECIAL_LW_WARP_EFFECT_HANDLE);
 
 	// makes rosalina's wand glow if teleport is available

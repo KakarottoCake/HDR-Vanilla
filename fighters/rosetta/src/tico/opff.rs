@@ -28,6 +28,20 @@ unsafe extern "C" fn tico_frame(weapon: &mut L2CWeaponCommon) {
 		statuses::rosetta_tico::POP]) {
 		VarModule::on_flag(rosetta, SPECIAL_LW_TICO_UNAVAILABLE);
 	}
+	//check if luma has reached luma after spawning
+	if weapon.is_status_one_of(&[
+		*WEAPON_ROSETTA_TICO_STATUS_KIND_DEAD,
+		*WEAPON_ROSETTA_TICO_STATUS_KIND_DOWN,
+		*WEAPON_ROSETTA_TICO_STATUS_KIND_STANDBY,
+		*WEAPON_ROSETTA_TICO_STATUS_KIND_NONE,
+		*WEAPON_ROSETTA_TICO_STATUS_KIND_REBIRTH]) {
+		VarModule::off_flag(weapon.battle_object, TICO_SPAWN_HAS_LINKED);
+	}
+	if !VarModule::is_flag(weapon.battle_object, TICO_SPAWN_HAS_LINKED)
+	&& weapon.is_status(*WEAPON_ROSETTA_TICO_STATUS_KIND_FOLLOW)
+	&& !weapon.is_flag(*WEAPON_ROSETTA_TICO_INSTANCE_WORK_ID_FLAG_FREE) {
+		VarModule::on_flag(weapon.battle_object, TICO_SPAWN_HAS_LINKED);
+	}
 }
 
 pub fn install(agent: &mut Agent) {
