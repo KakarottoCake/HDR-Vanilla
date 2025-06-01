@@ -2114,8 +2114,7 @@
       <float hash="shield_radius">12.6</float>
       <float hash="tread_jump_speed_y_mul">0.815</float>
       <float hash="tread_mini_jump_speed_y_mul">0.815</float>
-      <float hash="passive_wall_jump_x_speed">1.1</float>
-      <float hash="passive_wall_jump_y_speed">2.6</float>
+      <bool hash="wall_jump_type">false</bool>
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
