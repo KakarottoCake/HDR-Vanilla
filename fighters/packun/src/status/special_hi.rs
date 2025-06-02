@@ -72,6 +72,15 @@ pub unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) ->
     }
 }
 
+pub unsafe extern "C" fn special_hi_end_init(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let ret = smashline::original_status(Init, fighter, *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_HI_END)(fighter);
+    if fighter.is_situation(*SITUATION_KIND_GROUND) {
+        sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.75, 0.0);
+    }
+
+    ret
+}
+
 // FIGHTER_PACKUN_STATUS_KIND_SPECIAL_HI_LANDING
 
 unsafe extern "C" fn special_hi_landing_main(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -98,13 +107,13 @@ unsafe extern "C" fn special_hi_landing_main_loop(fighter: &mut L2CFighterCommon
             fighter.change_status_req(*FIGHTER_STATUS_KIND_WAIT, false);
         }
         else {
-            fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL, false);
+            fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL_SPECIAL, false);
         }
         return 1.into();
     }
     // <HDR>
     if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_AIR {
-        fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL, false);
+        fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL_SPECIAL, false);
         return 1.into();
     }
     // </HDR>
@@ -113,5 +122,8 @@ unsafe extern "C" fn special_hi_landing_main_loop(fighter: &mut L2CFighterCommon
 
 pub fn install(agent: &mut Agent) {
     agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_HI, special_hi_main);
+
+    agent.status(Init, *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_HI_END, special_hi_end_init);
+    
     agent.status(Main, *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_HI_LANDING, special_hi_landing_main);
 }
