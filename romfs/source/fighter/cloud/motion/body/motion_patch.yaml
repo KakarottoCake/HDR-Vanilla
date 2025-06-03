@@ -140,7 +140,7 @@ special_air_s3:
     cancel_frame: 70
 special_s1:
   extra:
-    cancel_frame: 31
+    cancel_frame: 35
 special_s2:
   extra:
     cancel_frame: 32
