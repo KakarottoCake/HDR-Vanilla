@@ -217,11 +217,10 @@ unsafe extern "C" fn game_speciallwend(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     if agent.is_flag(*FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_SPECIAL_FAILURE) {
-        FT_MOTION_RATE_RANGE(agent, 1.0, 38.0, 22.0);//faf 58 faf -> 35 empty
+        FT_MOTION_RATE_RANGE(agent, 1.0, 38.0, 27.0);//faf 58 faf -> 40 empty
     } else if !agent.is_flag(*FIGHTER_REFLET_STATUS_SPECIAL_LW_CAPTURE_FLAG_MISS) {
-        if is_excute(agent) {
-            ATTACK(agent, 0, 1, Hash40::new("top"), 2.0, 60, 200, 0, 40, 8.0, 0.0, 9.5, 28.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_poison"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_MAGIC);
-            AttackModule::set_poison_param(agent.module_accessor, 0, 81, 20, 0.5, false);
+        if is_excute(agent) {//idk how to code this to work with whatever capture status is used and however it decides when to mash out of the grab
+            ATTACK(agent, 0, 1, Hash40::new("top"), 2.0, 60, 200, 0, 40, 8.0, 0.0, 9.5, 28.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_MAGIC);
         }
     }
     frame(lua_state, 2.0);
@@ -257,6 +256,11 @@ unsafe extern "C" fn effect_speciallwend(agent: &mut L2CAgentBase) {
         if is_excute(agent) {
             EFFECT_DETACH_KIND(agent, Hash40::new("reflet_rizaia"), -1);
         }
+    } else {
+        if is_excute(agent) {
+            EffectModule::kill_kind(boma, Hash40::new("sys_flash"), true, true);
+        }
+
     }
 }
 
