@@ -53,7 +53,7 @@ unsafe extern "C" fn game_turndash(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 3.0);
     if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
+        agent.on_flag(*FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
     }
     frame(lua_state, 17.0);
     if is_excute(agent) {
@@ -80,7 +80,7 @@ unsafe extern "C" fn game_escapeairslide(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 29.0);
     if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
+        agent.on_flag(*FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
     }
     frame(lua_state, 39.0);
     if is_excute(agent) {

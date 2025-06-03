@@ -61,7 +61,8 @@ pub unsafe fn KILL_RESOURCE(fighter: &mut L2CAgentBase, boma: &mut BattleObjectM
                     let resource_cap = fighter.get_param_int("param_private", "grimoire_thunder_usage_count_max");
                     MAGIC_HANDLER(fighter, boma, magic, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_N_CURRENT_POINT, resource_cap);
                 } else if magic == 4 {//fire
-                    MAGIC_HANDLER(fighter, boma, magic, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CURRENT_POINT, 0);
+                    let resource_cap = fighter.get_param_int("param_private", "grimoire_giga_fire_usage_count_max");
+                    MAGIC_HANDLER(fighter, boma, magic, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CURRENT_POINT, resource_cap);
                 } else if magic == 5 {//wind
                     let resource_cap = fighter.get_param_int("param_private", "grimoire_el_window_usage_count_max");
                     MAGIC_HANDLER(fighter, boma, magic, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_HI_CURRENT_POINT, resource_cap);
@@ -88,8 +89,7 @@ pub unsafe fn MAGIC_HANDLER(fighter: &mut L2CAgentBase, boma: &mut BattleObjectM
         MotionModule::set_frame_material(item_boma, last_magic_kind as f32, MaterialAnimeKind{_address: 0});
         FighterSpecializer_Reflet::set_flag_to_table(fighter.module_accessor as *mut app::FighterModuleAccessor, last_magic_kind, false, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_THROWAWAY_TABLE);
     } else {
-        let fire_max = fighter.get_param_float("param_private", "grimoire_giga_fire_usage_count_max");
-        if last_magic_kind == 4 {boma.set_float(fire_max, resource_kind); }
+        if last_magic_kind == 4 {boma.set_float(resource_cap as f32, resource_kind); }
         else {boma.set_int(resource_cap, resource_kind); }
         FighterSpecializer_Reflet::set_flag_to_table(fighter.module_accessor as *mut app::FighterModuleAccessor, last_magic_kind, true, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_RECOVER_TABLE);
         app::FighterSpecializer_Reflet::change_grimoire(fighter.module_accessor as *mut app::FighterModuleAccessor, last_magic_kind);

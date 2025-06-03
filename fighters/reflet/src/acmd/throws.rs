@@ -19,7 +19,7 @@ unsafe extern "C" fn game_catch(agent: &mut L2CAgentBase) {
     wait(lua_state, 2.0);
     if is_excute(agent) {
         grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
-        WorkModule::on_flag(boma, *FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT);
+        agent.on_flag(*FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT);
         GrabModule::set_rebound(boma, false);
     }
 }
@@ -54,7 +54,7 @@ unsafe extern "C" fn game_catchdash(agent: &mut L2CAgentBase) {
     wait(lua_state, 2.0);
     if is_excute(agent) {
         grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
-        WorkModule::on_flag(boma, *FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT);
+        agent.on_flag(*FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT);
         GrabModule::set_rebound(boma, false);
     }
 }
@@ -94,7 +94,7 @@ unsafe extern "C" fn game_catchturn(agent: &mut L2CAgentBase) {
     wait(lua_state, 2.0);
     if is_excute(agent) {
         grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
-        WorkModule::on_flag(boma, *FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT);
+        agent.on_flag(*FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT);
         GrabModule::set_rebound(boma, false);
     }
 }
@@ -126,15 +126,15 @@ unsafe extern "C" fn game_throwb(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 24.0);
     if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_REVERSE_LR_FINISH_CAMERA_THROW_ORBIT);
+        agent.on_flag(*FIGHTER_INSTANCE_WORK_ID_FLAG_REVERSE_LR_FINISH_CAMERA_THROW_ORBIT);
         CHECK_FINISH_CAMERA(agent, 21, 9);
     }
     frame(lua_state, 25.0);
     if is_excute(agent) {
         REVERSE_LR(agent);
-        let target = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
-        let target_group = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
-        let target_no = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
+        let target = agent.get_int64(*FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
+        let target_group = agent.get_int64(*FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
+        let target_no = agent.get_int64(*FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
     }
 }
@@ -156,9 +156,9 @@ unsafe extern "C" fn game_throwhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 15.0);
     if is_excute(agent) {
-        let target = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
-        let target_group = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
-        let target_no = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
+        let target = agent.get_int64(*FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
+        let target_group = agent.get_int64(*FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
+        let target_no = agent.get_int64(*FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
     }
     frame(lua_state, 18.0);
@@ -183,9 +183,9 @@ unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 16.0);
     if is_excute(agent) {
-        let target = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
-        let target_group = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
-        let target_no = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
+        let target = agent.get_int64(*FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
+        let target_group = agent.get_int64(*FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
+        let target_no = agent.get_int64(*FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
     }
     frame(lua_state, 24.0);
