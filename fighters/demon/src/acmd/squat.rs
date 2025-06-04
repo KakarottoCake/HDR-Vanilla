@@ -5,7 +5,8 @@ use super::*;
 unsafe extern "C" fn game_attacksquat2(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    // For some reason, this animation plays at a faster rate than intended in game by default rn
+    // For some reason, this animation plays at a faster rate than intended in game by default rn,
+    // so this motion rate is required to play at the correct speed.
     FT_MOTION_RATE(agent, 1.0);
     // frame(lua_state, 5.0);
     // if is_excute(agent) {
