@@ -15,12 +15,14 @@ unsafe fn blue_eggs_land_cancels(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_N)
     && fighter.is_situation(*SITUATION_KIND_GROUND)
     && fighter.is_prev_situation(*SITUATION_KIND_AIR) {
+        // prevent land canceling before firing an egg
+        //if MotionModule::frame(fighter.module_accessor) < 13.0 { return; }
         // Current FAF in motion list is 50, frame is 0 indexed so subtract a frame
         let special_n_fire_cancel_frame_ground = 49.0;
         // 11F of landing lag plus one extra frame to subtract from the FAF to actually get that amount of lag
         let landing_lag = 12.0;
         if MotionModule::frame(fighter.module_accessor) < (special_n_fire_cancel_frame_ground - landing_lag) {
-            MotionModule::set_frame_sync_anim_cmd(fighter.module_accessor, 49.0 - landing_lag, true, true, false);
+            MotionModule::set_frame_sync_anim_cmd(fighter.module_accessor, special_n_fire_cancel_frame_ground - landing_lag, true, true, false);
         }
         LANDING_EFFECT(fighter, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
         VarModule::on_flag(fighter.battle_object, vars::buddy::instance::SPECIAL_N_LAND_CANCEL);
@@ -74,12 +76,6 @@ unsafe fn indicator_breegull_fatigue(fighter: &mut L2CFighterCommon) {
 }
 
 unsafe fn beakbomb_update(fighter: &mut L2CFighterCommon) {
-    let sideSpecial = fighter.is_status_one_of(&[
-        *FIGHTER_STATUS_KIND_SPECIAL_S,
-        *FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_DASH,
-        *FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_WALL
-    ]);
-    
     // While in Beakbomb / Wonderwing
     if VarModule::is_flag(fighter.battle_object, vars::buddy::instance::SPECIAL_S_BEAKBOMB_ACTIVE) {
         if fighter.is_status(*FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_DASH) {
@@ -93,7 +89,11 @@ unsafe fn beakbomb_update(fighter: &mut L2CFighterCommon) {
         else if fighter.is_status(*FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_WALL) {
             beakbomb_wall(fighter);
         }
-        else if !sideSpecial {
+        else if !fighter.is_status_one_of(&[
+            *FIGHTER_STATUS_KIND_SPECIAL_S,
+            *FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_DASH,
+            *FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_WALL
+        ]) {
             // If out of SideSpecial, then set BEAKBOMB_ACTIVE to false
             VarModule::off_flag(fighter.battle_object, vars::buddy::instance::SPECIAL_S_BEAKBOMB_ACTIVE);
         }
