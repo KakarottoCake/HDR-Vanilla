@@ -98,6 +98,12 @@ step_pose_back:
 cliff_wait:
   blend_frames: 2
 
+attack_dash:
+  animations:
+    - name: c06attackstand1.nuanmb
+  extra:
+    cancel_frame: 40
+
 attack_s3_hi:
   game_script: game_attackstand5
   flags:
