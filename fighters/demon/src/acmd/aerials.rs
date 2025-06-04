@@ -99,7 +99,7 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
-    FT_MOTION_RATE(agent, 3.0 / 1.5);
+    FT_MOTION_RATE(agent, 4.0 / 1.5);
     frame(lua_state, 3.5);
     FT_MOTION_RATE_RANGE(agent, 3.5, 4.0, 1.0);
     if is_excute(agent) {
