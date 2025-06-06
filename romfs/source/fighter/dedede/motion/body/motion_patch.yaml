@@ -77,7 +77,7 @@ attack_12:
   flags:
     move: false
   extra:
-    cancel_frame: 21
+    cancel_frame: 25
 guard_off:
   blend_frames: 4
   extra:
