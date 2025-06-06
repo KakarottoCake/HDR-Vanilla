@@ -90,6 +90,7 @@ unsafe extern "C" fn game_attack12(agent: &mut L2CAgentBase) {
         }
     }
     frame(lua_state, 9.0);
+    FT_MOTION_RATE_RANGE(agent, 9.0, 22.0, 11.0);//21f
     if is_excute(agent) {
         agent.off_flag(*FIGHTER_STATUS_ATTACK_FLAG_ENABLE_100);
     }
