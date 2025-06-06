@@ -88,6 +88,7 @@ pub unsafe fn MAGIC_HANDLER(fighter: &mut L2CAgentBase, boma: &mut BattleObjectM
         MotionModule::set_rate_material(item_boma, 0.0, MaterialAnimeKind{_address: 0});
         MotionModule::set_frame_material(item_boma, last_magic_kind as f32, MaterialAnimeKind{_address: 0});
         FighterSpecializer_Reflet::set_flag_to_table(fighter.module_accessor as *mut app::FighterModuleAccessor, last_magic_kind, false, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_THROWAWAY_TABLE);
+        app::FighterSpecializer_Reflet::change_grimoire(fighter.module_accessor as *mut app::FighterModuleAccessor, -1);
     } else {
         if last_magic_kind == 4 {boma.set_float(resource_cap as f32, resource_kind); }
         else {boma.set_int(resource_cap, resource_kind); }

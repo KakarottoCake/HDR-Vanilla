@@ -134,10 +134,10 @@ special_s:
   flags:
     move: false
   extra:
-    cancel_frame: 54
+    cancel_frame: 55
 special_air_s:
   extra:
-    cancel_frame: 54
+    cancel_frame: 55
 special_lw_start:
   extra:
     xlu_start: 0

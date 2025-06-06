@@ -52,7 +52,7 @@
   </list>
   <list hash="param_gigafire">
     <struct index="0">
-      <int hash="pillar_frame_life">20</int>
+      <int hash="pillar_frame_life">21</int>
       <float hash="pillar_speed_y">0.1</float>
     </struct>
     <hash40 index="1">dummy</hash40>
@@ -87,7 +87,7 @@
       <float hash="special_lw_damage_recovery">0.03</float>
       <float hash="start_y_speed_mul">0.45</float>
       <float hash="start_x_speed_mul">0.55</float>
-      <float hash="special_lw_appearance_pos_offset_x">28.5</float>
+      <float hash="special_lw_appearance_pos_offset_x">29.5</float>
       <float hash="special_lw_appearance_pos_offset_y">-0.5</float>
       <int hash="0x2855067d54">6</int>
       <float hash="special_lw_air_catch_fall_max">0.1</float>

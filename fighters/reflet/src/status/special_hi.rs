@@ -7,4 +7,5 @@ unsafe extern "C" fn special_hi_end(fighter: &mut L2CFighterCommon) -> L2CValue 
 
 pub fn install(agent: &mut Agent) {
     agent.status(End, *FIGHTER_STATUS_KIND_SPECIAL_HI, special_hi_end);
+    agent.status(End, *FIGHTER_REFLET_STATUS_KIND_SPECIAL_HI_FAIL, special_hi_end);
 }

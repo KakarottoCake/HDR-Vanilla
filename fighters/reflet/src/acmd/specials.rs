@@ -14,7 +14,13 @@ unsafe extern "C" fn game_specialnshoot(agent: &mut L2CAgentBase) {
     frame(lua_state, 11.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_REFLET_STATUS_SPECIAL_N_SHOOT_FLAG_TRY);
+        agent.on_flag(*FIGHTER_REFLET_STATUS_SPECIAL_N_SHOOT_FLAG_TRY);
+    }
+    frame(lua_state, 13.0);
+    if !agent.is_flag(*FIGHTER_REFLET_STATUS_SPECIAL_S_FLAG_SHOOT_OK) {//45 faf on failed specials
+        FT_MOTION_RATE_RANGE(agent, 13.0, 42.0, 22.0);
+    } else {
+        FT_MOTION_RATE_RANGE(agent, 13.0, 42.0, 30.0);
     }
     frame(lua_state, 39.0);
     if is_excute(agent) {
@@ -51,9 +57,13 @@ unsafe extern "C" fn game_specialairntronend(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    frame(lua_state, 5.0);
+    if !agent.is_flag(*FIGHTER_REFLET_STATUS_SPECIAL_S_FLAG_SHOOT_OK) {
+        FT_MOTION_RATE_RANGE(agent, 5.0, 54.0, 40.0);
+    }
     frame(lua_state, 17.0);
     if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_REFLET_STATUS_SPECIAL_S_FLAG_TRY);
+        agent.on_flag(*FIGHTER_REFLET_STATUS_SPECIAL_S_FLAG_TRY);
     }
     frame(lua_state, 46.0);
     if is_excute(agent) {
@@ -77,7 +87,8 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         ArticleModule::generate_article(boma, *FIGHTER_REFLET_GENERATE_ARTICLE_ELWIND, false, 0);
-        WorkModule::on_flag(boma, *FIGHTER_REFLET_STATUS_SPECIAL_HI_FLAG_JUMP);
+        agent.on_flag(*FIGHTER_REFLET_STATUS_SPECIAL_HI_FLAG_JUMP);
+        agent.on_flag(*FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_FAILURE_HOP);
     }
     frame(lua_state, 9.0);
     if is_excute(agent) {
@@ -90,7 +101,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     for _ in 0..30 {
         if is_excute(agent) {
             if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
-                WorkModule::on_flag(boma,  *FIGHTER_REFLET_STATUS_SPECIAL_HI_FLAG_TRY_2ND);
+                agent.on_flag( *FIGHTER_REFLET_STATUS_SPECIAL_HI_FLAG_TRY_2ND);
             } else if boma.motion_frame() >= 30.0 && VarModule::is_flag(agent.battle_object, vars::reflet::instance::DISCARD_SKIP_STATUS) {
                 VarModule::off_flag(agent.battle_object, vars::reflet::instance::DISCARD_SKIP_STATUS);
             }
@@ -112,7 +123,7 @@ unsafe extern "C" fn game_specialhi2(agent: &mut L2CAgentBase) {
     frame(lua_state, 17.0);
     if is_excute(agent) {
         ArticleModule::generate_article(boma, *FIGHTER_REFLET_GENERATE_ARTICLE_ELWIND, false, -1);
-        WorkModule::on_flag(boma, *FIGHTER_REFLET_STATUS_SPECIAL_HI_FLAG_JUMP);
+        agent.on_flag(*FIGHTER_REFLET_STATUS_SPECIAL_HI_FLAG_JUMP);
     }
     frame(lua_state, 27.0);
     if is_excute(agent) {
@@ -122,6 +133,21 @@ unsafe extern "C" fn game_specialhi2(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         VarModule::off_flag(agent.battle_object, vars::reflet::instance::DISCARD_SKIP_STATUS);
     }
+}
+
+unsafe extern "C" fn game_specialhifail(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 8.0);
+    if is_excute(agent) {
+        agent.on_flag(*FIGHTER_REFLET_STATUS_SPECIAL_HI_FLAG_JUMP);
+    }
+    frame(lua_state, 9.0);
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
+    }
+    frame(lua_state, 35.0);
+    FT_MOTION_RATE_RANGE(agent, 35.0, 52.0, 10.0);
 }
 
 unsafe extern "C" fn game_speciallwstart(agent: &mut L2CAgentBase) {
@@ -137,8 +163,8 @@ unsafe extern "C" fn game_speciallwstart(agent: &mut L2CAgentBase) {
     if !agent.is_flag(*FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_SPECIAL_FAILURE) {
         FT_MOTION_RATE_RANGE(agent, 20.0, 23.0, 7.0);//+5
         if is_excute(agent) {
-            CATCH(agent, 0, Hash40::new("top"), 6.0, 0.0, 9.5, 28.0, None, None, None, *FIGHTER_STATUS_KIND_CATCHED_REFLET, *COLLISION_SITUATION_MASK_G);
-            CATCH(agent, 1, Hash40::new("top"), 6.0, 0.0, 9.5, 28.0, None, None, None, *FIGHTER_STATUS_KIND_CATCHED_REFLET, *COLLISION_SITUATION_MASK_A);
+            CATCH(agent, 0, Hash40::new("top"), 5.5, 0.0, 9.5, 29.0, None, None, None, *FIGHTER_STATUS_KIND_CATCHED_REFLET, *COLLISION_SITUATION_MASK_G);
+            CATCH(agent, 1, Hash40::new("top"), 5.5, 0.0, 9.5, 29.0, None, None, None, *FIGHTER_STATUS_KIND_CATCHED_REFLET, *COLLISION_SITUATION_MASK_A);
         }
     }
     frame(lua_state, 22.5);
@@ -160,9 +186,9 @@ unsafe extern "C" fn effect_speciallwstart(agent: &mut L2CAgentBase) {
     if !agent.is_flag(*FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_SPECIAL_FAILURE) {
         frame(lua_state, 5.0);
         if is_excute(agent) {
-            EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 9.5, 28.0, 0, 0, 0, 0.53, true);
+            EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 9.5, 29.0, 0, 0, 0, 0.50, true);
 		    LAST_EFFECT_SET_COLOR(agent, 0.30, 0.0, 1.0);
-            LAST_EFFECT_SET_RATE(agent, 8.0/13.0);
+            LAST_EFFECT_SET_RATE(agent, 8.0/12.0);
         }
         frame(lua_state, 10.0);
         if is_excute(agent) {
@@ -172,10 +198,10 @@ unsafe extern "C" fn effect_speciallwstart(agent: &mut L2CAgentBase) {
         if is_excute(agent) {
             EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("sys_flash"), Hash40::new("havel"), -1, 1, 0, 0, 0, 0, 0.45, true);
         }
-        frame(lua_state, 15.0);
+        frame(lua_state, 16.5);
         if is_excute(agent) {
-            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("reflet_rizaia"), Hash40::new("top"), 0, 5, 28.0, 0, 0, 0, 0.95, true);
-            LAST_EFFECT_SET_RATE(agent, 4.0);
+            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("reflet_rizaia"), Hash40::new("top"), 0, 5, 29.0, 0, 0, 0, 0.92, true);
+            LAST_EFFECT_SET_RATE(agent, 3.9);
         }
     }
 }
@@ -188,8 +214,8 @@ unsafe extern "C" fn game_speciallwcapture(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 6.0);
     if is_excute(agent) {
-        ATTACK(agent, 1, 1, Hash40::new("top"), 2.0, 60, 100, 50, 0, 7.0, 0.0, 9.5, 28.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 8, false, false, false, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_poison"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_MAGIC);
-        ATTACK_IGNORE_THROW(agent, 2, 1, Hash40::new("top"), 2.0, 60, 100, 100, 0, 7.0, 0.0, 9.5, 28.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_poison"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_MAGIC);
+        ATTACK(agent, 1, 1, Hash40::new("top"), 2.0, 60, 100, 50, 0, 7.0, 0.0, 9.5, 29.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 8, false, false, false, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_poison"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_MAGIC);
+        ATTACK_IGNORE_THROW(agent, 2, 1, Hash40::new("top"), 2.0, 60, 100, 100, 0, 7.0, 0.0, 9.5, 29.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_poison"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_MAGIC);
         AttackModule::set_poison_param(agent.module_accessor, 1, 81, 20, 0.5, false);
         AttackModule::set_poison_param(agent.module_accessor, 2, 81, 20, 0.5, false);
         agent.set_int(1, *FIGHTER_REFLET_STATUS_SPECIAL_LW_CAPTURE_INT_ATTACK_ID);
@@ -202,7 +228,7 @@ unsafe extern "C" fn effect_speciallwcapture(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     loop {
         if is_excute(agent) {
-            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("reflet_rizaia_capture"), Hash40::new("top"), 0, 5, 28.0, 0, 0, 0, 1.02, true);
+            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("reflet_rizaia_capture"), Hash40::new("top"), 0, 5, 29.0, 0, 0, 0, 1.02, true);
             agent.clear_lua_stack();
             lua_args!(agent, *FIGHTER_REFLET_STATUS_SPECIAL_LW_CAPTURE_INT_EFFECT_HANDLE);
             smash::app::sv_animcmd::LAST_EFFECT_SET_WORK_INT(lua_state);
@@ -217,10 +243,10 @@ unsafe extern "C" fn game_speciallwend(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     if agent.is_flag(*FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_SPECIAL_FAILURE) {
-        FT_MOTION_RATE_RANGE(agent, 1.0, 38.0, 27.0);//faf 58 faf -> 40 empty
+        FT_MOTION_RATE_RANGE(agent, 1.0, 38.0, 32.0);//faf 58 faf -> 45 empty
     } else if !agent.is_flag(*FIGHTER_REFLET_STATUS_SPECIAL_LW_CAPTURE_FLAG_MISS) {
         if is_excute(agent) {//idk how to code this to work with whatever capture status is used and however it decides when to mash out of the grab
-            ATTACK(agent, 0, 1, Hash40::new("top"), 2.0, 60, 200, 0, 40, 8.0, 0.0, 9.5, 28.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_MAGIC);
+            ATTACK(agent, 0, 1, Hash40::new("top"), 2.0, 60, 200, 0, 40, 8.0, 0.0, 9.5, 29.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_MAGIC);
         }
     }
     frame(lua_state, 2.0);
@@ -249,7 +275,7 @@ unsafe extern "C" fn effect_speciallwend(agent: &mut L2CAgentBase) {
     if !agent.is_flag(*FIGHTER_REFLET_STATUS_SPECIAL_LW_CAPTURE_FLAG_MISS) 
     && !agent.is_flag(*FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_SPECIAL_FAILURE) {
         if is_excute(agent) {
-            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("reflet_rizaia"), Hash40::new("top"), 0, 5, 28.0, 0, 0, 0, 1.03, true);
+            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("reflet_rizaia"), Hash40::new("top"), 0, 5, 29.0, 0, 0, 0, 1.03, true);
             LAST_EFFECT_SET_RATE(agent, 4.5);
         }
         frame(lua_state, 3.0);
@@ -284,6 +310,8 @@ pub fn install(agent: &mut Agent) {
 
     agent.acmd("game_specialhi2", game_specialhi2, Priority::Low);
     agent.acmd("game_specialairhi2", game_specialhi2, Priority::Low);
+
+    agent.acmd("game_specialairhifail", game_specialhifail, Priority::Low);
 
     agent.acmd("game_speciallwstart", game_speciallwstart, Priority::Low);
     agent.acmd("effect_speciallwstart", effect_speciallwstart, Priority::Low);
