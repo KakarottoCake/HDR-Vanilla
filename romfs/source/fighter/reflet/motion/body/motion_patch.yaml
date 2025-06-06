@@ -90,6 +90,8 @@ attack_100_end:
   extra:
     cancel_frame: 40
 attack_lw3:
+  extra:
+    cancel_frame: 26
 attack_lw4:
   flags:
     move: false

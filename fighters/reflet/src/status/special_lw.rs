@@ -81,6 +81,19 @@ pub unsafe extern "C" fn air_start_stall(fighter: &mut L2CFighterCommon) -> L2CV
     0.into()
 }
 
+unsafe extern "C" fn special_lw_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    VarModule::on_flag(fighter.battle_object, vars::reflet::instance::SPECIAL_HI_ENABLE_FREEFALL);
+    if fighter.global_table[STATUS_KIND].get_i32() != *FIGHTER_REFLET_STATUS_KIND_SPECIAL_LW_CAPTURE {
+        if CatchModule::is_catch(fighter.module_accessor) {
+            CatchModule::catch_cut(fighter.module_accessor, false, false);
+        }
+    } else if fighter.global_table[STATUS_KIND].get_i32() != *FIGHTER_REFLET_STATUS_KIND_SPECIAL_LW_END {
+        EFFECT_DETACH_KIND(fighter, Hash40::new("reflet_rizaia"), -1);
+    }
+    0.into()
+}
+
 pub fn install(agent: &mut Agent) {
     agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_LW, special_lw_main);
+    agent.status(End, *FIGHTER_STATUS_KIND_SPECIAL_LW, special_lw_end);
 }

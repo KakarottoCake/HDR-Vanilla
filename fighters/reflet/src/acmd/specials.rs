@@ -3,7 +3,8 @@ use super::*;
 unsafe extern "C" fn game_specialnstart(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    FT_MOTION_RATE_RANGE(agent, 1.0, 8.0, 9.0);//2f more startu
+    frame(lua_state, 1.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 8.0, 8.0);//2f more startu
 }
 
 unsafe extern "C" fn game_specialnshoot(agent: &mut L2CAgentBase) {
@@ -17,10 +18,8 @@ unsafe extern "C" fn game_specialnshoot(agent: &mut L2CAgentBase) {
         agent.on_flag(*FIGHTER_REFLET_STATUS_SPECIAL_N_SHOOT_FLAG_TRY);
     }
     frame(lua_state, 13.0);
-    if !agent.is_flag(*FIGHTER_REFLET_STATUS_SPECIAL_S_FLAG_SHOOT_OK) {//45 faf on failed specials
-        FT_MOTION_RATE_RANGE(agent, 13.0, 42.0, 22.0);
-    } else {
-        FT_MOTION_RATE_RANGE(agent, 13.0, 42.0, 30.0);
+    if !agent.is_flag(*FIGHTER_REFLET_STATUS_SPECIAL_S_FLAG_SHOOT_OK) {
+        FT_MOTION_RATE_RANGE(agent, 13.0, 42.0, 26.0);//45 empty
     }
     frame(lua_state, 39.0);
     if is_excute(agent) {
