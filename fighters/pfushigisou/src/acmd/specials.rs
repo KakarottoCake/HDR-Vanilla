@@ -33,7 +33,10 @@ unsafe extern "C" fn game_specialnend(agent: &mut L2CAgentBase) {
         }
         ArticleModule::generate_article(boma, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SEED, false, -1);
     }
+    frame(lua_state, 2.0);
+    FT_MOTION_RATE_RANGE(agent, 2.0, 5.0, 5.0);
     frame(lua_state, 5.0);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         if agent.kind() == *FIGHTER_KIND_KIRBY {
             if ![*PLEDGE_STATE_NONE, *PLEDGE_STATE_GRASS].contains(&VarModule::get_int(agent.battle_object, vars::kirby::instance::SPECIAL_N_PTRAINER_PLEDGE_STATE)) {
