@@ -33,6 +33,9 @@ attack_13:
     intangible_end_frame: 0
     cancel_frame: 33
     freeze_during_hitstop: true
+attack_air_b:
+  extra:
+    cancel_frame: 38
 attack_air_f:
   extra:
     cancel_frame: 41
