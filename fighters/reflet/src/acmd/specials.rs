@@ -284,6 +284,7 @@ unsafe extern "C" fn effect_speciallwend(agent: &mut L2CAgentBase) {
     } else {
         if is_excute(agent) {
             EffectModule::kill_kind(boma, Hash40::new("sys_flash"), true, true);
+            EFFECT_DETACH_KIND(agent, Hash40::new("reflet_rizaia"), -1);
         }
 
     }
