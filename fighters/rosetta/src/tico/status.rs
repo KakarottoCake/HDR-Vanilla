@@ -58,7 +58,7 @@ pub unsafe extern "C" fn special_n_shoot_main_loop(weapon: &mut L2CFighterCommon
         let lr = weapon.lr();
         let charge_level = VarModule::get_int(weapon.battle_object, vars::rosetta::instance::TICO_CHARGE_LEVEL) as f32;
         let distance_min = 10.0; //base distance 3 big squares
-        let distance_add = 20.0; //20 units per 25f frames charged, max 9 big squares
+        let distance_add = 20.0; //20 units per 20f frames charged, max 9 big squares
         let distance = distance_min + (distance_add * charge_level); //5 charge tiers 
         let speed = distance / 6.0 * lr; //6 frames then disable movement
         sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed, 0.0);
@@ -126,8 +126,13 @@ unsafe extern "C" fn standby_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
 }
 
 unsafe extern "C" fn standby_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    
+    let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
+    let rosetta = utils::util::get_battle_object_from_id(owner_id);
+    let rosetta_boma: &mut BattleObjectModuleAccessor = &mut *(*rosetta).module_accessor;
+    let rosa_lr = rosetta_boma.lr();
     KineticModule::unable_energy_all(weapon.module_accessor);
-    MotionModule::change_motion(weapon.module_accessor, Hash40::new("free_standby"), 0.0, 1.0, false, 0.0, false, false);//21st frame starts pop status
+    MotionModule::change_motion(weapon.module_accessor, Hash40::new("free_recall"), 0.0, 1.0, false, 0.0, false, false);
     weapon.shift(L2CValue::Ptr(standby_main_loop as *const () as _))
 }//make lumi stop when recalled, waits to either die or be sent back
 
@@ -136,15 +141,21 @@ unsafe extern "C" fn standby_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue
     let rosetta = utils::util::get_battle_object_from_id(owner_id);
     let rosetta_boma: &mut BattleObjectModuleAccessor = &mut *(*rosetta).module_accessor;
     if rosetta_boma.is_button_off(Buttons::Special) && !rosetta_boma.is_button_release(Buttons::Special) 
-    || !rosetta_boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_ROSETTA_STATUS_KIND_SPECIAL_N_CHARGE, *FIGHTER_ROSETTA_STATUS_KIND_SPECIAL_N_RETURN, *FIGHTER_ROSETTA_STATUS_KIND_SPECIAL_N_SHOOT])
-    || !VarModule::is_flag(weapon.battle_object, TICO_SPAWN_HAS_LINKED)
-    {//if rosaliner is not holding special, she gets interrupted, or luma isn't ready do something
+    || StopModule::is_damage(rosetta_boma)
+    || !VarModule::is_flag(weapon.battle_object, TICO_SPAWN_HAS_SYNCED)
+    {//if rosaliner is not holding special, she gets hit, or luma isn't ready do something
+        ModelModule::set_scale(weapon.module_accessor, 1.0);
+        HitModule::set_whole(weapon.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
         weapon.change_status_req(*WEAPON_ROSETTA_TICO_STATUS_KIND_FREE_WAIT, false);
         return 1.into()
     }//hopefully the right status
-    if MotionModule::is_end(weapon.module_accessor) {
+    if HitModule::get_whole(weapon.module_accessor, 0) != *HIT_STATUS_NORMAL {
         weapon.change_status_req(statuses::rosetta_tico::POP, true);
     }
+    //size scaling
+    let frame = MotionModule::frame(weapon.module_accessor);
+    let scale = 1.0 + (0.75 / 50.0 * frame.min(50.0));
+    ModelModule::set_scale(weapon.module_accessor, scale);
     return 0.into();
 }
 
@@ -170,27 +181,17 @@ unsafe extern "C" fn pop_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
 
 unsafe extern "C" fn pop_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
     JostleModule::set_status(weapon.module_accessor, false);
-    HitModule::set_status_all(weapon.module_accessor, app::HitStatus(*HIT_STATUS_XLU), 0);
+    HitModule::set_whole(weapon.module_accessor, HitStatus(*HIT_STATUS_XLU), 0);
     KineticModule::unable_energy_all(weapon.module_accessor);
-    MotionModule::change_motion(weapon.module_accessor, Hash40::new("free_pop"), 0.0, 1.0, false, 0.0, false, false);
     weapon.shift(L2CValue::Ptr(pop_main_loop as *const () as _))
 }
 
 unsafe extern "C" fn pop_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let agent: &mut L2CFighterCommon = util::get_fighter_common_from_accessor(&mut *weapon.module_accessor);
-    let frame = weapon.status_frame() as f32 + 1.0;//MotionModule::frame(weapon.module_accessor);
-    let scale = 1.1 + (0.5 / 15.0 * frame.min(15.0));
+    let frame = MotionModule::frame(weapon.module_accessor);
+    let scale = 1.05 + (0.75 / 50.0 * frame.min(50.0));
     ModelModule::set_scale(weapon.module_accessor, scale);
-    //if frame == 15 {//acmd wont run yay
-    //    ControlModule::set_rumble(weapon.module_accessor, Hash40::new("rbkind_explosionl"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-    //    ATTACK(agent, 0, 0, Hash40::new("waist"), 20.0, 55, 100, 0, 80, 12.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 30.0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_BOMB);
-    //}
     if MotionModule::is_end(weapon.module_accessor) {
-    //if frame >= 18.0 {
-        //println!("we are not on Emulator");
-        //println!("Frame: {}", frame);
-        //ModelModule::set_scale(weapon.module_accessor, 1.0);
-        //EffectModule::kill_kind(weapon.module_accessor, Hash40::new("rosetta_final_smoke"), true, true);
         weapon.change_status_req(*WEAPON_ROSETTA_TICO_STATUS_KIND_DEAD, false);
     }
 
@@ -200,7 +201,6 @@ unsafe extern "C" fn pop_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
 unsafe extern "C" fn pop_end(weapon: &mut L2CWeaponCommon) -> L2CValue {
     ModelModule::set_scale(weapon.module_accessor, 1.0);
 	JostleModule::set_status(weapon.module_accessor, true);
-    //VisibilityModule::set_whole(weapon.module_accessor, true);
     return 0.into();
 }
 

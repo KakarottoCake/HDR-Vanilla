@@ -12,6 +12,7 @@ unsafe extern "C" fn effect_specialnchargestart(agent: &mut L2CAgentBase) {
         EFFECT_FOLLOW(agent, Hash40::new("rosetta_wand_stardust"), Hash40::new("havel"), 0, 7.5, 0, 0, 0, 0, 1, true);
         EffectModule::enable_sync_init_pos_last(boma);
         EFFECT_FOLLOW(agent, Hash40::new("rosetta_ticoshot_hold_end"), Hash40::new("havel"), 0, 7.5, 0, 0, 0, 0, 1, true);
+        LAST_EFFECT_SET_RATE(agent, 55.0 / 65.0);
     }
     frame(lua_state, 7.0);
     if is_excute(agent) {
@@ -36,13 +37,15 @@ unsafe extern "C" fn game_specialnreturn(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     FT_MOTION_RATE(agent, 0.6);
-    if ArticleModule::is_exist(boma, *FIGHTER_ROSETTA_GENERATE_ARTICLE_TICO) {
-        let tico = ArticleModule::get_article(boma, *FIGHTER_ROSETTA_GENERATE_ARTICLE_TICO);
-        let tico_id = smash::app::lua_bind::Article::get_battle_object_id(tico) as u32;
-        let tico_battle_object: *mut BattleObject = utils::util::get_battle_object_from_id(tico_id);
-        let tico_boma: &mut BattleObjectModuleAccessor = &mut *(*tico_battle_object).module_accessor;
-        if !VarModule::is_flag(agent.battle_object, vars::rosetta::instance::SPECIAL_LW_TICO_UNAVAILABLE) {//if lima is just floating around
-            StatusModule::change_status_force(tico_boma, statuses::rosetta_tico::STANDBY, true); //sit still for me deer
+    if is_excute(agent) {
+        if ArticleModule::is_exist(boma, *FIGHTER_ROSETTA_GENERATE_ARTICLE_TICO) {
+            let tico = ArticleModule::get_article(boma, *FIGHTER_ROSETTA_GENERATE_ARTICLE_TICO);
+            let tico_id = smash::app::lua_bind::Article::get_battle_object_id(tico) as u32;
+            let tico_battle_object: *mut BattleObject = utils::util::get_battle_object_from_id(tico_id);
+            let tico_boma: &mut BattleObjectModuleAccessor = &mut *(*tico_battle_object).module_accessor;
+            if !VarModule::is_flag(agent.battle_object, vars::rosetta::instance::SPECIAL_LW_TICO_UNAVAILABLE) {//if lima is just floating around
+                StatusModule::change_status_force(tico_boma, statuses::rosetta_tico::STANDBY, true); //sit still for me deer
+            }
         }
     }
     frame(lua_state, 8.0);

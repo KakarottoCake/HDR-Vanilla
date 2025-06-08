@@ -1,5 +1,5 @@
-free_standby:
-  game_script: game_freestandby
+free_recall:
+  game_script: game_freerecall
   flags:
     turn: false
     loop: false
@@ -15,36 +15,11 @@ free_standby:
     unk_800: false
     unk_1000: false
     unk_2000: false
-  blend_frames: 2
+  blend_frames: 0
   animations:
-    - name: a03freelanding.nuanmb
+    - name: d00specialnrecall.nuanmb
       unk: 0
   scripts:
-    - sound_freelanding
-    - effect_freelanding
-  extra: ~
-free_pop:
-  game_script: game_freepop
-  flags:
-    turn: false
-    loop: false
-    move: false
-    fix_trans: false
-    fix_rot: false
-    fix_scale: false
-    unk_40: false
-    unk_80: false
-    unk_100: false
-    unk_200: false
-    unk_400: false
-    unk_800: false
-    unk_1000: false
-    unk_2000: false
-  blend_frames: 5
-  animations:
-    - name: b00shield.nuanmb
-      unk: 0
-  scripts:
-    - sound_freepop
-    - effect_freepop
+    - sound_freerecall
+    - effect_freerecall
   extra: ~
