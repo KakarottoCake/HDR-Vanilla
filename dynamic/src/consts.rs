@@ -592,21 +592,6 @@ pub mod vars {
     }
 
     pub mod edge {
-        pub mod instance {
-            // flags
-            pub const FLASH_REFINE: i32 = 0x0100;
-            pub const FLASH_REFRACT: i32 = 0x0101;
-
-            // ints
-            pub const FIRE_ID: i32 = 0x0100;
-            pub const FLARE1_ID: i32 = 0x0101;
-
-            // floats
-            pub const FIRE_POS_X: i32 = 0x0100;
-            pub const FIRE_POS_Y: i32 = 0x0101;
-            pub const FLARE1_POS_X: i32 = 0x102;
-            pub const FLARE2_POS_Y: i32 = 0x0103;
-        }
         pub mod status {
             // flags
             pub const FLASH_HOLD: i32 = 0x1100;
@@ -616,7 +601,8 @@ pub mod vars {
     pub mod edge_fire {
         pub mod instance {
             //flags
-            pub const REFLECT: i32 = 0x0100;
+            pub const REFINE: i32 = 0x0100;
+            pub const REFLECT: i32 = 0x0101;
         }
         pub mod status {
             // floats
@@ -627,7 +613,7 @@ pub mod vars {
     pub mod edge_flare1 {
         pub mod status {
             // flags
-            pub const REFRACTED: i32 = 0x1100;
+            pub const REFRACT: i32 = 0x1100;
         }
     }
 
