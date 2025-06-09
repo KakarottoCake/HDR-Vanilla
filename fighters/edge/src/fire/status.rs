@@ -62,17 +62,17 @@ unsafe extern "C" fn sub_fly_main_loop(weapon: &mut L2CWeaponCommon, status: L2C
     }
     else {
         if VarModule::is_flag(weapon.battle_object, vars::edge_fire::instance::REFINE) {
-            let mut stick_x = weapon.global_table[STICK_X].get_f32();
-            if stick_x == 0.0 {
-                let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
-                let owner_object = utils::util::get_battle_object_from_id(owner_id);
-                stick_x = (&mut *(*owner_object).module_accessor).stick_x();
-            };
-            if stick_x.abs() > 0.2 && stick_x.signum() != PostureModule::lr(weapon.module_accessor).signum() {
-                EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_reflection"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.7, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
-                VarModule::on_flag(weapon.battle_object, vars::edge_fire::instance::REFLECT);
-                PostureModule::reverse_lr(weapon.module_accessor);
-            }
+            // let mut stick_x = weapon.global_table[STICK_X].get_f32();
+            // if stick_x == 0.0 {
+            //     let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
+            //     let owner_object = utils::util::get_battle_object_from_id(owner_id);
+            //     stick_x = (&mut *(*owner_object).module_accessor).stick_x();
+            // };
+            // if stick_x.abs() > 0.2 && stick_x.signum() != PostureModule::lr(weapon.module_accessor).signum() {
+            //     EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_reflection"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.7, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
+            //     VarModule::on_flag(weapon.battle_object, vars::edge_fire::instance::REFLECT);
+            //     PostureModule::reverse_lr(weapon.module_accessor);
+            // }
             EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_counteract_mark"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.7, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
             EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_just_shield_hit"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.0, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
             SoundModule::play_se(weapon.module_accessor, Hash40::new("se_item_badge_reflection"), true, false, false, false, app::enSEType(0));
@@ -117,7 +117,6 @@ unsafe extern "C" fn sub_fly_main_loop(weapon: &mut L2CWeaponCommon, status: L2C
 
 unsafe extern "C" fn fly_set_physics(weapon: &mut L2CWeaponCommon, flare_type: i32) {
     let facing = PostureModule::lr(weapon.module_accessor);
-    let is_init = !VarModule::is_flag(weapon.battle_object, vars::edge_fire::instance::REFINE);
     let mut stick_y = weapon.global_table[STICK_Y].get_f32();
     // println!("weapon stick_y: {}", stick_y);
     if stick_y == 0.0 {
