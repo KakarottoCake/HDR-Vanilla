@@ -346,8 +346,11 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
 	if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
 		WorkModule::off_flag(boma, *FIGHTER_KAMUI_STATUS_SPECIAL_HI_FLAG_TILT_BODY_ON);
-        WorkModule::on_flag(boma, *FIGHTER_KAMUI_STATUS_SPECIAL_HI_FLAG_AIR_CONTROL);
 	}
+    frame(lua_state, 40.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_KAMUI_STATUS_SPECIAL_HI_FLAG_AIR_CONTROL);
+    }
 	frame(lua_state, 49.0);
 	FT_MOTION_RATE(agent, 0.8);
 }
