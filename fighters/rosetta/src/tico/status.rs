@@ -144,8 +144,6 @@ unsafe extern "C" fn standby_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue
     || StopModule::is_damage(rosetta_boma)
     || !VarModule::is_flag(weapon.battle_object, TICO_SPAWN_HAS_SYNCED)
     {//if rosaliner is not holding special, she gets hit, or luma isn't ready do something
-        ModelModule::set_scale(weapon.module_accessor, 1.0);
-        HitModule::set_whole(weapon.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
         weapon.change_status_req(*WEAPON_ROSETTA_TICO_STATUS_KIND_FREE_WAIT, false);
         return 1.into()
     }//hopefully the right status
@@ -160,6 +158,10 @@ unsafe extern "C" fn standby_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue
 }
 
 unsafe extern "C" fn standby_end(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    if weapon.global_table[STATUS_KIND].get_i32() != statuses::rosetta_tico::POP {
+        ModelModule::set_scale(weapon.module_accessor, 1.0);
+        HitModule::set_whole(weapon.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
+    }
     return 0.into();
 }
 

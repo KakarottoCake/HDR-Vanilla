@@ -261,7 +261,7 @@ unsafe extern "C" fn game_freerecall(agent: &mut L2CAgentBase) {
     frame(lua_state, 20.0);
     frame(lua_state, 40.0);//burst
     if is_excute(agent) {
-        HitModule::set_whole(boma, HitStatus(*HIT_STATUS_XLU), 0);
+        HitModule::set_whole(boma, HitStatus(*HIT_STATUS_OFF), 0);
     }
     frame(lua_state, 50.0);
     MotionModule::set_rate(boma, 1.0);
