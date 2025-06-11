@@ -22,7 +22,7 @@ pub unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> 
         }
         if fighter.is_button_trigger(Buttons::Special) {
             VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
-        }//buffered release
+        } // buffered release
     }
     mot_handler(fighter)
 }
@@ -30,7 +30,7 @@ pub unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> 
 // FIGHTER_REFLET_STATUS_KIND_SPECIAL_N_HOLD
 
 pub unsafe extern "C" fn special_n_hold_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    //set vars
+    // set vars
     fighter.set_int64(hash40("special_n_hold") as i64, *FIGHTER_REFLET_STATUS_COMMON_INT_MOTION_KIND_GROUND);
     fighter.set_int64(hash40("special_air_n_hold") as i64, *FIGHTER_REFLET_STATUS_COMMON_INT_MOTION_KIND_AIR);
     fighter.set_int(*FIGHTER_KINETIC_TYPE_GROUND_STOP, *FIGHTER_REFLET_STATUS_COMMON_INT_KINETIC_GROUND);
@@ -38,20 +38,22 @@ pub unsafe extern "C" fn special_n_hold_main(fighter: &mut L2CFighterCommon) -> 
     fighter.set_int(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP, *FIGHTER_REFLET_STATUS_COMMON_INT_CORRECT_GROUND);
     fighter.set_int(*GROUND_CORRECT_KIND_AIR, *FIGHTER_REFLET_STATUS_COMMON_INT_CORRECT_AIR);
     fighter.set_int(0, *FIGHTER_REFLET_STATUS_SPECIAL_N_HOLD_INT_NEXT_STATUS);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_F);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_B);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL_BUTTON);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_FLY_BUTTON);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_FLY);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_FLY_NEXT);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_AIR);
+    fighter.enable_transition_term_many(&[
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_F,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_B,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL_BUTTON,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_FLY_BUTTON,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_FLY,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_FLY_NEXT,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_AIR
+    ]);
     let stage = fighter.get_int(*FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_N_THUNDER_KIND);
-    let mut init_count = 0; //set charge frame depending on last reached charge stage, fx
+    let mut init_count = 0; // set charge frame depending on last reached charge stage, fx
     if stage == *FIGHTER_REFLET_MAGIC_KIND_GIGA_THUNDER {
         init_count = fighter.get_param_float("param_special_n", "special_n_giga_thunder_shoot_time") as i32;
         charge_handler(fighter, hash40("reflet_specialn_hold3"), *FIGHTER_REFLET_STATUS_SPECIAL_N_HOLD_EFFECT_HANDLE3, *FIGHTER_REFLET_MAGIC_KIND_GIGA_THUNDER);
@@ -61,7 +63,7 @@ pub unsafe extern "C" fn special_n_hold_main(fighter: &mut L2CFighterCommon) -> 
     } else {
         charge_handler(fighter, hash40("reflet_specialn_hold"), *FIGHTER_REFLET_STATUS_SPECIAL_N_HOLD_EFFECT_HANDLE, *FIGHTER_REFLET_MAGIC_KIND_THUNDER);
     }
-    //set book and charge frame
+    // set book and charge frame
     fighter.set_int(init_count, *FIGHTER_REFLET_STATUS_SPECIAL_N_HOLD_INT_COUNT);
     app::FighterSpecializer_Reflet::change_grimoire(fighter.module_accessor as *mut app::FighterModuleAccessor, stage);
     air_charge_stall(fighter);
@@ -69,23 +71,24 @@ pub unsafe extern "C" fn special_n_hold_main(fighter: &mut L2CFighterCommon) -> 
 }
 
 pub unsafe extern "C" fn special_n_hold_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.is_button_trigger(Buttons::Special) || VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK) {//buffered fire
+    if fighter.is_button_trigger(Buttons::Special) 
+    || VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK) { // buffered fire
         VarModule::off_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
         fighter.change_status(FIGHTER_REFLET_STATUS_KIND_SPECIAL_N_SHOOT.into(), true.into())
-    } else if cancel_check(fighter) == true {//cancel
+    } else if cancel_check(fighter) {//cancel
         fighter.change_status(FIGHTER_REFLET_STATUS_KIND_SPECIAL_N_CANCEL.into(), true.into())
     }
-    //charge frame
+    // charge frame
     fighter.inc_int(*FIGHTER_REFLET_STATUS_SPECIAL_N_HOLD_INT_COUNT);
     if !CHECK_MAGIC(fighter) {
-        fighter.change_status(FIGHTER_REFLET_STATUS_KIND_SPECIAL_N_SHOOT.into(), true.into())//fail status
+        fighter.change_status(FIGHTER_REFLET_STATUS_KIND_SPECIAL_N_SHOOT.into(), true.into()) // fail status
     }
     let hold_frame = fighter.get_int(*FIGHTER_REFLET_STATUS_SPECIAL_N_HOLD_INT_COUNT) as f32;
     let stage = fighter.get_int(*FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_N_THUNDER_KIND);
     let el_frame = fighter.get_param_float("param_special_n", "special_n_el_thunder_shoot_time");
     let arc_frame = fighter.get_param_float("param_special_n", "special_n_giga_thunder_shoot_time");
     let thoron_frame = fighter.get_param_float("param_special_n", "special_n_tron_shoot_time");
-    //set vars&fx by stage
+    // set vars&fx by stage
     if stage >= *FIGHTER_REFLET_MAGIC_KIND_GIGA_THUNDER {
         if hold_frame >= thoron_frame {
             fighter.set_int(*FIGHTER_REFLET_MAGIC_KIND_TRON, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_N_THUNDER_KIND);
@@ -108,8 +111,8 @@ pub unsafe extern "C" fn special_n_hold_main_loop(fighter: &mut L2CFighterCommon
         }
     }
     if StatusModule::is_situation_changed(fighter.module_accessor) {air_charge_stall(fighter); }
-    mot_handler(fighter);//set mot/physics by var
-    //mot rate
+    mot_handler(fighter); // set mot/physics by var
+    // mot rate
     let motion_rate = fighter.get_float(*FIGHTER_REFLET_INSTANCE_WORK_ID_SPECIAL_N_CHARGE_RATE);
     MotionModule::set_rate(fighter.module_accessor, motion_rate);
     0.into()
@@ -125,7 +128,7 @@ unsafe extern "C" fn special_n_hold_end(fighter: &mut L2CFighterCommon) -> L2CVa
     eff_clear(fighter, hash40("reflet_specialn_hold3"));
     eff_clear(fighter, hash40("reflet_specialn_hold2"));
     eff_clear(fighter, hash40("reflet_specialn_hold"));
-    0.into()//kill vfx on exit
+    0.into() // kill vfx on exit
 }
 
 unsafe extern "C" fn eff_clear(fighter: &mut L2CFighterCommon, eff_hash: u64) -> L2CValue {
@@ -135,15 +138,15 @@ unsafe extern "C" fn eff_clear(fighter: &mut L2CFighterCommon, eff_hash: u64) ->
     0.into()
 }
 
-unsafe extern "C" fn charge_handler(fighter: &mut L2CFighterCommon, eff_hash: u64, eff_handle: i32, thunder_kind: i32) -> L2CValue {//1, 3, 4
+unsafe extern "C" fn charge_handler(fighter: &mut L2CFighterCommon, eff_hash: u64, eff_handle: i32, thunder_kind: i32) -> L2CValue { // 1, 3, 4
     let el_frame = fighter.get_param_float("param_special_n", "special_n_el_thunder_shoot_time");
     let arc_frame = fighter.get_param_float("param_special_n", "special_n_giga_thunder_shoot_time");
     let thoron_frame = fighter.get_param_float("param_special_n", "special_n_tron_shoot_time");
-    if fighter.kind() == *FIGHTER_KIND_KIRBY {//maybe backwards (pram5)
+    if fighter.kind() == *FIGHTER_KIND_KIRBY {
         let eff_pos = &Vector3f{x: -2.5, y: -1.2, z: -1.0};
         if fighter.lr() > 0.0 {
             let eff_pos = &Vector3f{x: -2.0, y: -1.2, z: 1.5};
-        }//bone = handr, vec = stack90
+        }
         let effect = EffectModule::req_follow(fighter.module_accessor, Hash40::new_raw(eff_hash), Hash40::new("handr"), eff_pos, &Vector3f::zero(), 1.0, false, 0, 0, -1, 0, 0, false, false) as u32;
         fighter.set_int(effect as i32, eff_handle);
     } else {
@@ -151,13 +154,13 @@ unsafe extern "C" fn charge_handler(fighter: &mut L2CFighterCommon, eff_hash: u6
         fighter.set_int(effect as i32, eff_handle);
     }
     match thunder_kind {
-        0 => fighter.set_float(el_frame/64.0, *FIGHTER_REFLET_INSTANCE_WORK_ID_SPECIAL_N_CHARGE_RATE),//t
-        1 => fighter.set_float((arc_frame - el_frame)/64.0, *FIGHTER_REFLET_INSTANCE_WORK_ID_SPECIAL_N_CHARGE_RATE),//l
-        2 => fighter.set_float((thoron_frame - arc_frame)/64.0, *FIGHTER_REFLET_INSTANCE_WORK_ID_SPECIAL_N_CHARGE_RATE),//r
-        _ => fighter.set_float(1.0, *FIGHTER_REFLET_INSTANCE_WORK_ID_SPECIAL_N_CHARGE_RATE),//thron
+        _ if thunder_kind == *FIGHTER_REFLET_MAGIC_KIND_THUNDER => fighter.set_float(el_frame/64.0, *FIGHTER_REFLET_INSTANCE_WORK_ID_SPECIAL_N_CHARGE_RATE),
+        _ if thunder_kind == *FIGHTER_REFLET_MAGIC_KIND_EL_THUNDER => fighter.set_float((arc_frame - el_frame)/64.0, *FIGHTER_REFLET_INSTANCE_WORK_ID_SPECIAL_N_CHARGE_RATE),
+        _ if thunder_kind == *FIGHTER_REFLET_MAGIC_KIND_GIGA_THUNDER => fighter.set_float((thoron_frame - arc_frame)/64.0, *FIGHTER_REFLET_INSTANCE_WORK_ID_SPECIAL_N_CHARGE_RATE),
+        _ => fighter.set_float(1.0, *FIGHTER_REFLET_INSTANCE_WORK_ID_SPECIAL_N_CHARGE_RATE),
     }
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
-        FOOT_EFFECT(fighter, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, false);//?
+        FOOT_EFFECT(fighter, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, false); // ?
     }
     0.into()
 }
@@ -173,10 +176,10 @@ unsafe extern "C" fn cancel_check(fighter: &mut L2CFighterCommon) -> bool {
             return true.into()
         }
     } else {
-        if fighter.sub_check_jump_in_charging().get_bool() {//jc
+        if fighter.sub_check_jump_in_charging().get_bool() { // jc
             let stick_y = fighter.left_stick_y();
             let squat_stick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("squat_stick_y"));
-            if !VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_FLOAT)//if inputting float do a neutral cancel
+            if !VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_FLOAT) // if inputting float do a neutral cancel
             && stick_y <= squat_stick_y {
                 fighter.set_int(0, *FIGHTER_REFLET_STATUS_SPECIAL_N_HOLD_INT_NEXT_STATUS);
             } else if fighter.get_num_used_jumps() < fighter.get_jump_count_max() { //if not inputting float do a jump cancel

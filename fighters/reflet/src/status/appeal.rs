@@ -56,17 +56,17 @@ pub unsafe fn KILL_RESOURCE(fighter: &mut L2CAgentBase, boma: &mut BattleObjectM
             VarModule::on_flag(fighter.battle_object, vars::reflet::instance::DISCARD_SKIP_STATUS);
             let magic = boma.get_int(*FIGHTER_REFLET_INSTANCE_WORK_ID_INT_LAST_USED_MAGIC_KIND);
             app::FighterSpecializer_Reflet::change_hud_kind(&mut reflet_fighter, magic);
-            if magic > -1 {
-                if magic <= 3 {//thunder
+            if magic >= *FIGHTER_REFLET_MAGIC_KIND_THUNDER {
+                if magic < *FIGHTER_REFLET_MAGIC_KIND_GIGA_FIRE { // thunder
                     let resource_cap = fighter.get_param_int("param_private", "grimoire_thunder_usage_count_max");
                     MAGIC_HANDLER(fighter, boma, magic, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_N_CURRENT_POINT, resource_cap);
-                } else if magic == 4 {//fire
+                } else if magic < *FIGHTER_REFLET_MAGIC_KIND_EL_WIND { // fire
                     let resource_cap = fighter.get_param_int("param_private", "grimoire_giga_fire_usage_count_max");
                     MAGIC_HANDLER(fighter, boma, magic, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CURRENT_POINT, resource_cap);
-                } else if magic == 5 {//wind
+                } else if magic < *FIGHTER_REFLET_MAGIC_KIND_RIZAIA { // wind
                     let resource_cap = fighter.get_param_int("param_private", "grimoire_el_window_usage_count_max");
                     MAGIC_HANDLER(fighter, boma, magic, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_HI_CURRENT_POINT, resource_cap);
-                } else if magic == 6 {//nos
+                } else if magic < *FIGHTER_REFLET_MAGIC_KIND_SWORD { // nos
                     let resource_cap = fighter.get_param_int("param_private", "grimoire_rizaia_usage_count_max");
                     MAGIC_HANDLER(fighter, boma, magic, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_LW_CURRENT_POINT, resource_cap);
                 }
@@ -77,11 +77,11 @@ pub unsafe fn KILL_RESOURCE(fighter: &mut L2CAgentBase, boma: &mut BattleObjectM
 
 pub unsafe fn MAGIC_HANDLER(fighter: &mut L2CAgentBase, boma: &mut BattleObjectModuleAccessor, last_magic_kind: i32, resource_kind: i32, resource_cap: i32) {
     if CHECK_MAGIC(fighter) {
-        if last_magic_kind == 4 {boma.set_float(0.0, resource_kind); }
+        if last_magic_kind == *FIGHTER_REFLET_MAGIC_KIND_GIGA_FIRE {boma.set_float(0.0, resource_kind); }
         else {boma.set_int(0, resource_kind); }
         if ItemModule::is_have_item(boma, 0) {
             ItemModule::throw_item(boma, 110.0, 1.62, 1.0, 0, true, fighter.get_float(*ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_POWER));
-        }//can skip van table bc resource not taken frame 0, have to bc thunder isnt working
+        }
         ItemModule::have_item(boma, app::ItemKind(*ITEM_KIND_BOOK), 0, 0, false, false);
         let item_id = ItemModule::get_have_item_id(boma, 0);
         let item_boma = sv_battle_object::module_accessor(item_id as u32);
@@ -90,7 +90,7 @@ pub unsafe fn MAGIC_HANDLER(fighter: &mut L2CAgentBase, boma: &mut BattleObjectM
         FighterSpecializer_Reflet::set_flag_to_table(fighter.module_accessor as *mut app::FighterModuleAccessor, last_magic_kind, false, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_THROWAWAY_TABLE);
         app::FighterSpecializer_Reflet::change_grimoire(fighter.module_accessor as *mut app::FighterModuleAccessor, -1);
     } else {
-        if last_magic_kind == 4 {boma.set_float(resource_cap as f32, resource_kind); }
+        if last_magic_kind == *FIGHTER_REFLET_MAGIC_KIND_GIGA_FIRE {boma.set_float(resource_cap as f32, resource_kind); }
         else {boma.set_int(resource_cap, resource_kind); }
         FighterSpecializer_Reflet::set_flag_to_table(fighter.module_accessor as *mut app::FighterModuleAccessor, last_magic_kind, true, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_RECOVER_TABLE);
         app::FighterSpecializer_Reflet::change_grimoire(fighter.module_accessor as *mut app::FighterModuleAccessor, last_magic_kind);

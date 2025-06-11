@@ -99,13 +99,12 @@ pub unsafe extern "C" fn mot_handler(fighter: &mut L2CFighterCommon) -> L2CValue
 
 pub unsafe fn CHECK_MAGIC(fighter: &mut L2CAgentBase) -> bool {
     let magic = fighter.get_int(*FIGHTER_REFLET_INSTANCE_WORK_ID_INT_LAST_USED_MAGIC_KIND);
-    let mut tome_level = 0;
-    match magic {
-        4 => tome_level = fighter.get_float(*FIGHTER_REFLET_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CURRENT_POINT).ceil() as i32,
-        5 => tome_level = fighter.get_int(*FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_HI_CURRENT_POINT),
-        6 => tome_level = fighter.get_int(*FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_LW_CURRENT_POINT),
-        _ => tome_level = fighter.get_int(*FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_N_CURRENT_POINT),
-    }
+    let tome_level = match magic {
+        _ if magic == *FIGHTER_REFLET_MAGIC_KIND_GIGA_FIRE => fighter.get_float(*FIGHTER_REFLET_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CURRENT_POINT).ceil() as i32,
+        _ if magic == *FIGHTER_REFLET_MAGIC_KIND_EL_WIND => fighter.get_int(*FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_HI_CURRENT_POINT),
+        _ if magic == *FIGHTER_REFLET_MAGIC_KIND_RIZAIA => fighter.get_int(*FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_LW_CURRENT_POINT),
+        _ => fighter.get_int(*FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_N_CURRENT_POINT),
+    };
     if tome_level > 0 {
         return true.into();
     }

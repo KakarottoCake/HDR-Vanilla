@@ -99,18 +99,20 @@ unsafe extern "C" fn special_n_h_main(fighter: &mut L2CFighterCommon) -> L2CValu
     fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP, *GROUND_CORRECT_KIND_AIR);
     fighter.change_kinetic_by_situation(*FIGHTER_KINETIC_TYPE_GROUND_STOP, *FIGHTER_KINETIC_TYPE_AIR_STOP);
     fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_n_h"), L2CValue::Hash40s("special_air_n_h"), false.into());
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_F);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_B);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL_BUTTON);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_FLY_BUTTON);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_FLY);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_FLY_NEXT);
-    fighter.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_AIR);
+    fighter.enable_transition_term_many(&[
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_F,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_B,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL_BUTTON,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_FLY_BUTTON,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_FLY,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_FLY_NEXT,
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_AIR
+    ]);
     ControlModule::set_add_jump_mini_button_life(fighter.module_accessor, 8);
 
     fighter.main_shift(special_n_h_main_loop)
