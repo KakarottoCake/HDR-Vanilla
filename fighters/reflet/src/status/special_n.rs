@@ -175,22 +175,22 @@ unsafe extern "C" fn cancel_check(fighter: &mut L2CFighterCommon) -> bool {
             fighter.set_int(0, *FIGHTER_REFLET_STATUS_SPECIAL_N_HOLD_INT_NEXT_STATUS);
             return true.into()
         }
-    } else {
-        if fighter.sub_check_jump_in_charging().get_bool() { // jc
-            let stick_y = fighter.left_stick_y();
-            let squat_stick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("squat_stick_y"));
-            if !VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_FLOAT) // if inputting float do a neutral cancel
-            && stick_y <= squat_stick_y {
-                fighter.set_int(0, *FIGHTER_REFLET_STATUS_SPECIAL_N_HOLD_INT_NEXT_STATUS);
-            } else if fighter.get_num_used_jumps() < fighter.get_jump_count_max() { //if not inputting float do a jump cancel
-                fighter.set_int(*FIGHTER_STATUS_KIND_JUMP_AERIAL, *FIGHTER_REFLET_STATUS_SPECIAL_N_HOLD_INT_NEXT_STATUS);
-            }
-            return true.into()
-        }
-        if fighter.is_cat_flag(Cat1::AirEscape) {
+        return false.into()
+    }
+    if fighter.sub_check_jump_in_charging().get_bool() { // jc
+        let stick_y = fighter.left_stick_y();
+        let squat_stick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("squat_stick_y"));
+        if !VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_FLOAT) // if inputting float do a neutral cancel
+        && stick_y <= squat_stick_y {
             fighter.set_int(0, *FIGHTER_REFLET_STATUS_SPECIAL_N_HOLD_INT_NEXT_STATUS);
-            return true.into()
+        } else if fighter.get_num_used_jumps() < fighter.get_jump_count_max() { //if not inputting float do a jump cancel
+            fighter.set_int(*FIGHTER_STATUS_KIND_JUMP_AERIAL, *FIGHTER_REFLET_STATUS_SPECIAL_N_HOLD_INT_NEXT_STATUS);
         }
+        return true.into()
+    }
+    if fighter.is_cat_flag(Cat1::AirEscape) {
+        fighter.set_int(0, *FIGHTER_REFLET_STATUS_SPECIAL_N_HOLD_INT_NEXT_STATUS);
+        return true.into()
     }
     false.into()
 }
