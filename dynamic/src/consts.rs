@@ -274,6 +274,10 @@ pub mod vars {
             pub const RUN_HIP_OFFSET_X: i32 = 0x0021;
             pub const DACUS_TRANSITION_SPEED: i32 = 0x0022;
             pub const ATTACK_S3_CSTICK_X: i32 = 0x0023;
+            pub const LAST_RECEIVED_ATTACK_HIT_LOCATION: i32 = 0x0024;
+            pub const LAST_RECEIVED_ATTACK_HIT_LOCATION_X: i32 = 0x0024;
+            pub const LAST_RECEIVED_ATTACK_HIT_LOCATION_Y: i32 = 0x0025;
+            pub const LAST_RECEIVED_ATTACK_HIT_LOCATION_Z: i32 = 0x0026;
         }
         pub mod status {
             // flags
@@ -1106,6 +1110,9 @@ pub mod vars {
 
             // floats
             pub const SPECIAL_LW1_CHARGE_DISTANCE: i32 = 0x1101;
+
+            // flags
+            pub const SPECIAL_LW2_CHECK_HOLD: i32 = 0x1100;
         }
     }
 
@@ -1997,6 +2004,10 @@ pub mod statuses {
 
     pub mod palutena_meteor {
         pub const MOVE: i32 = 0x0;
+    }
+
+    pub mod pickel {
+        pub const SPECIAL_RUN: i32 = 0x21B;
     }
 
     pub mod pickel_trolley {
