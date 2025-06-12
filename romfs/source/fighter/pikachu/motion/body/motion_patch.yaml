@@ -13,6 +13,9 @@ attack_hi4:
 attack_s4_s:
   extra:
     cancel_frame: 61
+attack_lw3:
+  extra:
+    cancel_frame: 22
 catch:
   extra:
     cancel_frame: 35

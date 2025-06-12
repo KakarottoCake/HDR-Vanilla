@@ -65,11 +65,24 @@ unsafe fn skull_bash_edge_cancel(fighter: &mut L2CFighterCommon) {
     }
 }
 
+unsafe fn dtilt_attack_cancel(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status(*FIGHTER_STATUS_KIND_ATTACK_LW3)
+    && fighter.is_flag(*FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO) {
+        if fighter.is_cat_flag(Cat1::AttackS3) && !fighter.is_cat_flag(Cat1::AttackS4) {
+            StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_ATTACK_S3,false);
+        }
+        if fighter.is_cat_flag(Cat1::AttackHi3) && !fighter.is_cat_flag(Cat1::AttackHi4) {
+            StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_ATTACK_HI3,false);
+        }
+    }
+}
+
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     quick_attack_cancel(fighter, boma);
     disable_qa_jc(boma);
     fastfall_specials(fighter);
     skull_bash_edge_cancel(fighter);
+    dtilt_attack_cancel(fighter);
 }
 
 pub extern "C" fn pikachu_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
