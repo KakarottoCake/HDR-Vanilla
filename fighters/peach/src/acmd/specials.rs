@@ -183,6 +183,8 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
             notify_event_msc_cmd!(agent, Hash40::new_raw(0x2508b59a2b), FIGHTER_ITEM_HOLD_KIND_PICKUP);
         }
     }
+    frame(lua_state, 2.0);
+    FT_MOTION_RATE_RANGE(agent, 2.0, 40.0, 35.0);
     frame(lua_state, 14.0);
     if is_excute(agent) {
         if item_kind == *ITEM_KIND_BEAMSWORD {
@@ -201,6 +203,8 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
             notify_event_msc_cmd!(agent, Hash40::new_raw(0x2508b59a2b), FIGHTER_ITEM_HOLD_KIND_PICKUP);//prevent face clipping
         }
     }
+    frame(lua_state, 40.0);
+    FT_MOTION_RATE(agent, 1.0);
 }
 
 unsafe extern "C" fn effect_speciallw(agent: &mut L2CAgentBase) {
