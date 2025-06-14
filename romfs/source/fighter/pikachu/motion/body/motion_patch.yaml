@@ -1,3 +1,9 @@
+appeal_hi_l:
+  extra:
+    cancel_frame: 69
+appeal_hi_r:
+  extra:
+    cancel_frame: 69
 attack_air_b:
   extra:
     cancel_frame: 34
