@@ -72,7 +72,7 @@ unsafe extern "C" fn game_specialhi2(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 6.0);
+    frame(lua_state, 4.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_PIKACHU_STATUS_WORK_ID_FLAG_KAMINARI_GENERATE);
     }
@@ -81,7 +81,7 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn expression_speciallw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 6.0);
+    frame(lua_state, 4.0);
     if is_excute(agent) {
         ControlModule::set_rumble(boma, Hash40::new("rbkind_attackm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
@@ -113,6 +113,8 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialairhi2", game_specialhi2, Priority::Low);
 
     agent.acmd("game_speciallw", game_speciallw, Priority::Low);
+    agent.acmd("game_specialairlw", game_speciallw, Priority::Low);
     agent.acmd("expression_speciallw", expression_speciallw, Priority::Low);
+    agent.acmd("expression_specialairlw", expression_speciallw, Priority::Low);
     agent.acmd("game_speciallwhit", game_speciallwhit, Priority::Low);
 }
