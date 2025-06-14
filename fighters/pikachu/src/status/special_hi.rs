@@ -36,7 +36,6 @@ unsafe extern "C" fn special_hi_end_main(fighter: &mut L2CFighterCommon) -> L2CV
     ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_PIKACHU_GENERATE_ARTICLE_SPECIALUPDUMMY, Hash40::new("special_air_hi_end"), false, -1.0);
     ArticleModule::set_frame(fighter.module_accessor, *FIGHTER_PIKACHU_GENERATE_ARTICLE_SPECIALUPDUMMY, 0.0);
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_hi_end"), 0.0, 1.0, false, 0.0, false, false);
-    VarModule::off_flag(fighter.battle_object, vars::pikachu::instance::SPECIAL_HI_QUICK_ATTACK_CANCEL);
     ControlModule::clear_command(fighter.module_accessor, false);
     fighter.sub_shift_status_main(L2CValue::Ptr(special_hi_end_main_loop as *const () as _))
 }
@@ -47,7 +46,7 @@ unsafe extern "C" fn special_hi_end_main_loop(fighter: &mut L2CFighterCommon) ->
     }
 
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
-        if VarModule::is_flag(fighter.battle_object, vars::pikachu::instance::SPECIAL_HI_QUICK_ATTACK_CANCEL)
+        if VarModule::is_flag(fighter.battle_object, vars::pikachu::status::SPECIAL_HI_QUICK_ATTACK_CANCEL)
         && fighter.is_cat_flag(Cat1::AirEscape) {
             // this is a hack
             fighter.change_status(FIGHTER_STATUS_KIND_ESCAPE_AIR.into(), false.into());
@@ -77,7 +76,7 @@ unsafe extern "C" fn special_hi_end_main_loop(fighter: &mut L2CFighterCommon) ->
         let status_frame = fighter.global_table[CURRENT_FRAME].get_i32();
         if status_frame < 2 && fighter.get_int(*FIGHTER_PIKACHU_STATUS_WORK_ID_INT_QUICK_ATTACK_COUNT) <= 1 {
             // allow cancelling out of the status
-            VarModule::on_flag(fighter.battle_object, vars::pikachu::instance::SPECIAL_HI_QUICK_ATTACK_CANCEL);
+            VarModule::on_flag(fighter.battle_object, vars::pikachu::status::SPECIAL_HI_QUICK_ATTACK_CANCEL);
             CancelModule::enable_cancel(fighter.module_accessor);
             // disable gravity and place pikachu in the air
             KineticModule::clear_speed_energy_id(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
