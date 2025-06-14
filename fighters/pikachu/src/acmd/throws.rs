@@ -82,14 +82,9 @@ unsafe extern "C" fn game_throwf(agent: &mut L2CAgentBase) {
             AttackModule::clear_all(boma);
         }
     }
-    frame(lua_state, 29.0);
-    if is_excute(agent) {
-        CHECK_FINISH_CAMERA(agent, 7, 20);
-        // lua_bind::FighterCutInManager::set_throw_finish_zoom_rate(singletons::FighterCutInManager(), 1.7);
-        // lua_bind::FighterCutInManager::set_throw_finish_offset(singletons::FighterCutInManager(), Vector3f{x: 0.0, y: 9.0, z: 0.0});
-    }
     frame(lua_state, 28.0);
     if is_excute(agent) {
+        CHECK_FINISH_CAMERA(agent, 7, 20);
         let target = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
         let target_group = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
         let target_no = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
