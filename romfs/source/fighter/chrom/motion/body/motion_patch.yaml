@@ -4,7 +4,6 @@ attack_11:
 attack_hi3:
   extra:
     cancel_frame: 34
-attack_lw3: null
 attack_s3_s:
   extra:
     cancel_frame: 44
