@@ -2,8 +2,10 @@ attack_11:
   extra:
     cancel_frame: 25
 attack_hi3:
+  animations:
+    - name: d01specials3hi.nuanmb # Stolen from Dancing Blade 3 High
   extra:
-    cancel_frame: 34
+    cancel_frame: 32
 attack_s3_s:
   extra:
     cancel_frame: 44
@@ -136,6 +138,33 @@ special_air_n_end3:
 special_air_n_end_max:
   extra:
     cancel_frame: 38
+special_air_s1:
+  extra:
+    cancel_frame: 30
+special_air_s2_hi: # duplicated special_air_s2_lw
+  game_script: game_specialairs2lw
+  animations:
+    - name: d01specialairs2lw.nuanmb
+  scripts:
+    - expression_specialairs2lw
+    - sound_specialairs2lw
+    - effect_specialairs2lw
+  extra:
+    cancel_frame: 41
+special_air_s2_lw:
+  extra:
+    cancel_frame: 41
+special_air_s3_hi:
+  animations:
+    - name: d01specialairs2hi.nuanmb # Stolen from Dancing Blade 2 High
+  extra:
+    cancel_frame: 47
+special_air_s4_hi:
+  extra:
+    cancel_frame: 45
+special_air_s3_s:
+  extra:
+    cancel_frame: 47
 special_hi_1:
   flags:
     move: true
@@ -184,6 +213,33 @@ special_n_end3:
 special_n_end_max:
   extra:
     cancel_frame: 38
+special_s1:
+  extra:
+    cancel_frame: 40
+special_s2_hi: # duplicated special_s2_lw
+  game_script: game_specials2lw
+  animations:
+    - name: d01specials2lw.nuanmb
+  scripts:
+    - expression_specials2lw
+    - sound_specials2lw
+    - effect_specials2lw
+  extra:
+    cancel_frame: 39
+special_s2_lw:
+  extra:
+    cancel_frame: 39
+special_s3_hi:
+  animations:
+    - name: d01specials2hi.nuanmb # Stolen from Dancing Blade 2 High
+  extra:
+    cancel_frame: 39
+special_s4_hi:
+  extra:
+    cancel_frame: 45
+special_s3_s:
+  extra:
+    cancel_frame: 44
 step_pose_back:
   extra:
     cancel_frame: 6
