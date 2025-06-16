@@ -97,6 +97,10 @@ pub fn set_gravity_delay_resume_frame(energy: *mut app::FighterKineticEnergyGrav
 }
 
 pub fn install(agent: &mut Agent) {
-    agent.status(Init, *FIGHTER_STATUS_KIND_SPECIAL_S, special_s_init);
-    agent.status(Exec, *FIGHTER_STATUS_KIND_SPECIAL_S, special_s_exec);
+    agent.status(Init, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S2, special_s_init);
+    agent.status(Exec, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S2, special_s_exec);
+    // agent.status(Init, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S3, special_s_init);
+    // agent.status(Exec, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S3, special_s_exec);
+    // agent.status(Init, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4, special_s_init);
+    // agent.status(Exec, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4, special_s_exec);
 }

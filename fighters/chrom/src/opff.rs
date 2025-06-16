@@ -4,6 +4,10 @@ utils::import_noreturn!(common::opff::fighter_common_opff);
 
 // Side Special Cancels
 unsafe fn side_special_cancels(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_S) {
+        fighter.change_status(FIGHTER_ROY_STATUS_KIND_SPECIAL_S2.into(), false.into());
+    }
+
     if !fighter.is_status_one_of(&[*FIGHTER_ROY_STATUS_KIND_SPECIAL_S3, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4])
     || !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT)
     || fighter.is_in_hitlag()

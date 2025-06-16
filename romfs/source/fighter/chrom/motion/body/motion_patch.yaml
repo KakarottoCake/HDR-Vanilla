@@ -138,9 +138,6 @@ special_air_n_end3:
 special_air_n_end_max:
   extra:
     cancel_frame: 38
-special_air_s1:
-  extra:
-    cancel_frame: 30
 special_air_s2_hi: # duplicated special_air_s2_lw
   game_script: game_specialairs2lw
   animations:
@@ -213,9 +210,6 @@ special_n_end3:
 special_n_end_max:
   extra:
     cancel_frame: 38
-special_s1:
-  extra:
-    cancel_frame: 40
 special_s2_hi: # duplicated special_s2_lw
   game_script: game_specials2lw
   animations:
