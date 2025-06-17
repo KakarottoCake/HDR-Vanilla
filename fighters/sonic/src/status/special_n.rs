@@ -87,11 +87,6 @@ unsafe extern "C" fn special_n_main_loop2(fighter: &mut L2CFighterCommon) -> L2C
             fighter.change_status(FIGHTER_SONIC_STATUS_KIND_SPECIAL_N_HOMING_START.into(), true.into());
         }
     }
-    if enable_attack_frame as f32 <= advance_counter {
-        if pad_flag & *FIGHTER_PAD_FLAG_SPECIAL_TRIGGER != 0 {
-            fighter.change_status(FIGHTER_SONIC_STATUS_KIND_SPECIAL_N_HOMING_START.into(), true.into());
-        }
-    }
     0.into()
 }
 
