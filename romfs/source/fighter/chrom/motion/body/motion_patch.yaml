@@ -138,30 +138,58 @@ special_air_n_end3:
 special_air_n_end_max:
   extra:
     cancel_frame: 38
-special_air_s2_hi: # duplicated special_air_s2_lw
+
+# Dancing Blade 1
+special_air_s2_hi: # duplicated special_s2_lw
   game_script: game_specialairs2lw
   animations:
-    - name: d01specialairs2lw.nuanmb
+    - name: d01specialairs1.nuanmb
   scripts:
     - expression_specialairs2lw
     - sound_specialairs2lw
     - effect_specialairs2lw
   extra:
-    cancel_frame: 41
+    cancel_frame: 40
 special_air_s2_lw:
+  animations:
+    - name: d01specialairs1.nuanmb
   extra:
-    cancel_frame: 41
+    cancel_frame: 40
+
+# Dancing Blade 2
 special_air_s3_hi:
   animations:
     - name: d01specialairs2hi.nuanmb # Stolen from Dancing Blade 2 High
   extra:
     cancel_frame: 47
-special_air_s4_hi:
-  extra:
-    cancel_frame: 45
-special_air_s3_s:
+special_air_s3_lw:
+  animations:
+    - name: d01specialairs3lw.nuanmb
   extra:
     cancel_frame: 47
+special_air_s3_s:
+  animations:
+    - name: d01specialairs3s.nuanmb
+  extra:
+    cancel_frame: 47
+
+# Dancing Blade 3
+special_air_s4_hi:
+  animations:
+    - name: d01specialairs4hi.nuanmb
+  extra:
+    cancel_frame: 45
+special_air_s4_lw:
+  animations:
+    - name: d01specialairs4lw.nuanmb # TODO: Replace with the command dash
+  extra:
+    cancel_frame: 66
+special_air_s4_s:
+  animations:
+    - name: d01specialairs4s.nuanmb
+  extra:
+    cancel_frame: 59
+
 special_hi_1:
   flags:
     move: true
@@ -210,30 +238,58 @@ special_n_end3:
 special_n_end_max:
   extra:
     cancel_frame: 38
+
+# Dancing Blade 1
 special_s2_hi: # duplicated special_s2_lw
   game_script: game_specials2lw
   animations:
-    - name: d01specials2lw.nuanmb
+    - name: d01specials1.nuanmb
   scripts:
     - expression_specials2lw
     - sound_specials2lw
     - effect_specials2lw
   extra:
-    cancel_frame: 39
+    cancel_frame: 40
 special_s2_lw:
+  animations:
+    - name: d01specials1.nuanmb
   extra:
-    cancel_frame: 39
+    cancel_frame: 40
+
+# Dancing Blade 2
 special_s3_hi:
   animations:
     - name: d01specials2hi.nuanmb # Stolen from Dancing Blade 2 High
   extra:
     cancel_frame: 39
-special_s4_hi:
-  extra:
-    cancel_frame: 45
-special_s3_s:
+special_s3_lw:
+  animations:
+    - name: d01specials3lw.nuanmb
   extra:
     cancel_frame: 44
+special_s3_s:
+  animations:
+    - name: d01specials3s.nuanmb
+  extra:
+    cancel_frame: 44
+
+# Dancing Blade 3
+special_s4_hi:
+  animations:
+    - name: d01specials4hi.nuanmb
+  extra:
+    cancel_frame: 45
+special_s4_lw:
+  animations:
+    - name: d01specials4lw.nuanmb # TODO: Replace with the command dash
+  extra:
+    cancel_frame: 72
+special_s4_s:
+  animations:
+    - name: d01specials4s.nuanmb
+  extra:
+    cancel_frame: 59
+
 step_pose_back:
   extra:
     cancel_frame: 6
