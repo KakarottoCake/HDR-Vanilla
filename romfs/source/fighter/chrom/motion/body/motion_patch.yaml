@@ -171,7 +171,7 @@ special_air_s3_lw:
   animations:
     - name: d01specialairs3lw.nuanmb
   extra:
-    cancel_frame: 47
+    cancel_frame: 44
 special_air_s3_s:
   animations:
     - name: d01specialairs3s.nuanmb

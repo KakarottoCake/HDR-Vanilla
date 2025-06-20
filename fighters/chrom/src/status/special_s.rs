@@ -87,8 +87,22 @@ pub fn set_gravity_delay_resume_frame(energy: *mut app::FighterKineticEnergyGrav
     }
 }
 
+unsafe extern "C" fn special_s3_check_attack(fighter: &mut L2CFighterCommon, param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
+    // force knockdown
+    if fighter.is_motion_one_of(&[Hash40::new("special_s3_lw"), Hash40::new("special_air_s3_lw")])
+    && (&param_3["object_category_"]).get_i32() == *BATTLE_OBJECT_CATEGORY_FIGHTER 
+    && (&param_3["kind_"]).get_i32() == *COLLISION_KIND_HIT {
+        let object_id = (&param_3["object_id_"]).get_u32();
+        let opponent_boma = sv_battle_object::module_accessor(object_id);
+        let opponent_object = utils::util::get_battle_object_from_accessor(opponent_boma);
+        VarModule::on_flag(opponent_object, vars::common::instance::IS_KNOCKDOWN_THROW);
+    }
+    return false.into();
+}
+
 pub fn install(agent: &mut Agent) {
     agent.status(Pre, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S2, special_s_pre);
     agent.status(Init, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S2, special_s_init);
     agent.status(Exec, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S2, special_s_exec);
+    agent.status(CheckAttack, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S3, special_s3_check_attack);
 }
