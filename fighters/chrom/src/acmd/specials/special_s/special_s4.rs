@@ -93,59 +93,34 @@ unsafe extern "C" fn expression_specials4hi(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specials4s(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let rush_speed = 8.75;
     frame(lua_state, 1.0);
-    FT_MOTION_RATE(agent, 10.0/(5.0-1.0));
+    FT_MOTION_RATE_RANGE(agent, 1.0, 5.0, 10.0);
     frame(lua_state, 5.0);
     FT_MOTION_RATE(agent, 1.0);
-    frame(lua_state, 6.0);
-    if is_excute(agent) {
-        KineticModule::add_speed(boma, &Vector3f::new(rush_speed, 0.0, 0.0));
-    }
     frame(lua_state, 7.0);
+    let rush_speed = 4.5;
+    let speed_mul = if agent.is_situation(*SITUATION_KIND_GROUND) { 1.0 } else { 0.5 };
     if is_excute(agent) {
-        KineticModule::add_speed(boma, &Vector3f::new(-(1.0/10.0) * rush_speed, 0.0, 0.0));
-        ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 361, 80, 0, 60, 5.0, 0.0, 9.0, 5.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CHROM_HIT, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 10.0, 361, 80, 0, 60, 7.0, 0.0, 9.0, 7.5, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CHROM_HIT, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 2, 0, Hash40::new("top"), 10.0, 361, 80, 0, 60, 8.0, 0.0, 9.0, 11.7, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CHROM_HIT, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 3, 0, Hash40::new("top"), 10.0, 361, 80, 0, 60, 7.0, 0.0, 9.0, 15.5, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CHROM_HIT, *ATTACK_REGION_SWORD);
+        KineticModule::add_speed(boma, &Vector3f::new(4.0 * speed_mul, 0.0, 0.0));
+        ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 361, 95, 0, 55, 5.0, 0.0, 9.0, 5.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CHROM_HIT, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 12.0, 361, 95, 0, 55, 7.0, 0.0, 9.0, 7.5, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CHROM_HIT, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 2, 0, Hash40::new("top"), 12.0, 361, 95, 0, 55, 8.0, 0.0, 9.0, 11.7, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CHROM_HIT, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 3, 0, Hash40::new("top"), 12.0, 361, 95, 0, 55, 7.0, 0.0, 9.0, 15.5, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CHROM_HIT, *ATTACK_REGION_SWORD);
     }
-    frame(lua_state, 8.0);
-    if is_excute(agent) {
-        KineticModule::add_speed(boma, &Vector3f::new(-(1.0/10.0) * rush_speed, 0.0, 0.0));
+    for _ in 0..4 {
+        wait(lua_state, 1.0);
+        if is_excute(agent) {
+            KineticModule::mul_speed(boma, &Vector3f::new(0.9, 1.0, 1.0), *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
+        }
     }
-    frame(lua_state, 9.0);
     if is_excute(agent) {
-        KineticModule::add_speed(boma, &Vector3f::new(-(1.0/10.0) * rush_speed, 0.0, 0.0));
-    }
-    frame(lua_state, 10.0);
-    if is_excute(agent) {
-        KineticModule::add_speed(boma, &Vector3f::new(-(1.0/10.0) * rush_speed, 0.0, 0.0));
-    }
-    frame(lua_state, 11.0);
-    if is_excute(agent) {
-        KineticModule::add_speed(boma, &Vector3f::new(-(1.0/10.0) * rush_speed, 0.0, 0.0));
         AttackModule::clear_all(boma);
     }
-    frame(lua_state, 12.0);
-    if is_excute(agent) {
-        KineticModule::add_speed(boma, &Vector3f::new(-(1.0/10.0) * rush_speed, 0.0, 0.0));
-    }
-    frame(lua_state, 13.0);
-    if is_excute(agent) {
-        KineticModule::add_speed(boma, &Vector3f::new(-(1.0/10.0) * rush_speed, 0.0, 0.0));
-    }
-    frame(lua_state, 14.0);
-    if is_excute(agent) {
-        KineticModule::add_speed(boma, &Vector3f::new(-(1.0/10.0) * rush_speed, 0.0, 0.0));
-    }
-    frame(lua_state, 15.0);
-    if is_excute(agent) {
-        KineticModule::add_speed(boma, &Vector3f::new(-(1.0/10.0) * rush_speed, 0.0, 0.0));
-    }
-    frame(lua_state, 16.0);
-    if is_excute(agent) {
-        KineticModule::add_speed(boma, &Vector3f::new(-(1.0/10.0) * rush_speed, 0.0, 0.0));
+    for _ in 0..6 {
+        wait(lua_state, 1.0);
+        if is_excute(agent) {
+            KineticModule::mul_speed(boma, &Vector3f::new(0.8, 1.0, 1.0), *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
+        }
     }
 }
 
