@@ -4,8 +4,8 @@ unsafe extern "C" fn game_specials4hi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    FT_MOTION_RATE(agent, 10.0/(5.0-1.0));
-    frame(lua_state, 5.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 4.0, 9.0);
+    frame(lua_state, 4.0);
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 6.0);
     if is_excute(agent) {
