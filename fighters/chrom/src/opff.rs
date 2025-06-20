@@ -4,23 +4,17 @@ utils::import_noreturn!(common::opff::fighter_common_opff);
 
 // Side Special Cancels
 unsafe fn side_special_cancels(fighter: &mut L2CFighterCommon) {
+    // skip SSpecial1, because new SSpecial is just 3 hits
     if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_S) {
         fighter.change_status(FIGHTER_ROY_STATUS_KIND_SPECIAL_S2.into(), false.into());
     }
+    // New SSpecial1 cancels into aerials on hit
     if fighter.is_status(*FIGHTER_ROY_STATUS_KIND_SPECIAL_S2)
     && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT)
-    && !fighter.is_in_hitlag() {
-        let situation_kind = StatusModule::situation_kind(fighter.module_accessor);
-        let status = match (situation_kind) {
-            _ if situation_kind == *SITUATION_KIND_AIR && fighter.get_aerial() != None => FIGHTER_STATUS_KIND_ATTACK_AIR,
-            _ if situation_kind == *SITUATION_KIND_GROUND && fighter.is_cat_flag(Cat1::AttackHi3) && !fighter.is_cat_flag(Cat1::AttackHi4) => FIGHTER_STATUS_KIND_ATTACK_HI3,
-            _ if situation_kind == *SITUATION_KIND_GROUND && fighter.is_cat_flag(Cat1::AttackS3) && !fighter.is_cat_flag(Cat1::AttackS4) => FIGHTER_STATUS_KIND_ATTACK_S3,
-            _ if situation_kind == *SITUATION_KIND_GROUND && fighter.is_cat_flag(Cat1::AttackLw3) && !fighter.is_cat_flag(Cat1::AttackLw4) => FIGHTER_STATUS_KIND_ATTACK_LW3,
-            _ => STATUS_KIND_NONE
-        };
-        if status != STATUS_KIND_NONE {
-            fighter.change_status(status.into(), false.into());
-        }
+    && !fighter.is_in_hitlag()
+    && StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_AIR 
+    && fighter.get_aerial() != None {
+        fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_AIR.into(), false.into());
     }
 }
 
@@ -73,10 +67,27 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         *FIGHTER_ROY_STATUS_KIND_SPECIAL_N_LOOP,
         *FIGHTER_ROY_STATUS_KIND_SPECIAL_N_TURN,
         *FIGHTER_ROY_STATUS_KIND_SPECIAL_N_END_MAX,
+        *FIGHTER_ROY_STATUS_KIND_SPECIAL_S2,
+        *FIGHTER_ROY_STATUS_KIND_SPECIAL_S3,
+        *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4,
         *FIGHTER_ROY_STATUS_KIND_SPECIAL_LW_HIT
         ])
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
+    }
+}
+
+unsafe fn sspecial_ledgegrab_fix(fighter: &mut L2CFighterCommon) {
+    if !fighter.is_in_hitlag()
+    && !StatusModule::is_changing(fighter.module_accessor)
+    && fighter.is_status_one_of(&[
+        *FIGHTER_STATUS_KIND_SPECIAL_S,
+        *FIGHTER_ROY_STATUS_KIND_SPECIAL_S2,
+        *FIGHTER_ROY_STATUS_KIND_SPECIAL_S3,
+        *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4,
+    ])
+    && fighter.is_situation(*SITUATION_KIND_AIR) {
+        fighter.sub_transition_group_check_air_cliff();
     }
 }
 
@@ -90,6 +101,7 @@ pub unsafe extern "C" fn chrom_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFi
     common::opff::fighter_common_opff(fighter);
     side_special_cancels(fighter);
     fastfall_specials(fighter);
+    sspecial_ledgegrab_fix(fighter);
     sword_length(&mut *(fighter.module_accessor));
 }
 

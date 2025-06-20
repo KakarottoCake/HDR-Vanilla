@@ -2,6 +2,35 @@ use super::*;
 
 // FIGHTER_STATUS_KIND_SPECIAL_S
 
+pub unsafe extern "C" fn special_s_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    StatusModule::init_settings(
+        fighter.module_accessor, 
+        app::SituationKind(*SITUATION_KIND_NONE),
+        *FIGHTER_KINETIC_TYPE_UNIQ,
+        *GROUND_CORRECT_KIND_KEEP as u32,
+        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP),
+        true,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT,
+        0
+    );
+
+    FighterStatusModuleImpl::set_fighter_status_data(
+        fighter.module_accessor,
+        false,
+        *FIGHTER_TREADED_KIND_NO_REAC,
+        false,
+        false,
+        false,
+        (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_S | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64,
+        *FIGHTER_STATUS_ATTR_START_TURN as u32,
+        *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S as u32,
+        0
+    );
+    return false.into();
+}
+
 pub unsafe extern "C" fn special_s_init(fighter: &mut L2CFighterCommon) -> L2CValue {
     let fighter_kind = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_KIND);
     let customize_special_hi_no = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_CUSTOMIZE_SPECIAL_HI_NO);
@@ -10,70 +39,32 @@ pub unsafe extern "C" fn special_s_init(fighter: &mut L2CFighterCommon) -> L2CVa
     let mut stop_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP) as *mut app::KineticEnergy;
     let mut gravity_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY) as *mut app::KineticEnergy;
     let mut motion_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_MOTION) as *mut app::KineticEnergy;
-
-    let mut aerial_y_speed = 0.0;
     let mut aerial_x_speed = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) * start_spd_x_mul;
 
     // [v] Disable motion energy
     KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_MOTION);
-
-    let sum_speed_main = KineticModule::get_sum_speed(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-
     // Check for the side B status you're currently in
-    let current_status_kind = StatusModule::status_kind(fighter.module_accessor);
-    let current_situation_kind = StatusModule::situation_kind(fighter.module_accessor);
-
-    // alStack192 = gravity energy
-    // alStack176 = stop energy
-    // alStack208 = motion energy
-    if [*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S2].contains(&current_status_kind) {
-        if current_situation_kind == *SITUATION_KIND_GROUND {
-            let reset_speed_2f = Vector2f { x: 0.0, y: 0.0 };
-            let reset_speed_3f = Vector3f { x: 0.0, y: 0.0, z: 0.0 };
-            smash::app::lua_bind::KineticEnergy::reset_energy(motion_energy, *ENERGY_MOTION_RESET_TYPE_GROUND_TRANS_IGNORE_NORMAL, &reset_speed_2f, &reset_speed_3f, fighter.module_accessor);
-            smash::app::lua_bind::KineticEnergy::enable(motion_energy);
-            smash::app::lua_bind::KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
-            smash::app::lua_bind::KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-            smash::app::lua_bind::KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
-        }
-        else if current_situation_kind == *SITUATION_KIND_AIR {
-            if !VarModule::is_flag(fighter.battle_object, vars::common::instance::SPECIAL_STALL_USED) {
-                VarModule::on_flag(fighter.battle_object, vars::common::instance::SPECIAL_STALL_USED);
-                aerial_y_speed = air_spd_y;
-            }
-            else{
-                aerial_y_speed = 0.0;
-            }
-            let reset_speed_2f = Vector2f { x: aerial_x_speed, y: 0.0 };
-            let reset_speed_gravity_2f = Vector2f { x: 0.0, y: aerial_y_speed };
-            let reset_speed_3f = Vector3f { x: 0.0, y: 0.0, z: 0.0 };
-            smash::app::lua_bind::KineticEnergy::reset_energy(stop_energy, *ENERGY_STOP_RESET_TYPE_AIR, &reset_speed_2f, &reset_speed_3f, fighter.module_accessor);
-            smash::app::lua_bind::KineticEnergy::reset_energy(gravity_energy, *ENERGY_GRAVITY_RESET_TYPE_GRAVITY, &reset_speed_gravity_2f, &reset_speed_3f, fighter.module_accessor);
-            smash::app::lua_bind::KineticEnergy::enable(stop_energy);
-            smash::app::lua_bind::KineticEnergy::enable(gravity_energy);
-            smash::app::lua_bind::KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
-        }
+    if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+        let reset_speed_2f = Vector2f { x: 0.0, y: 0.0 };
+        let reset_speed_3f = Vector3f { x: 0.0, y: 0.0, z: 0.0 };
+        smash::app::lua_bind::KineticEnergy::reset_energy(motion_energy, *ENERGY_MOTION_RESET_TYPE_GROUND_TRANS_IGNORE_NORMAL, &reset_speed_2f, &reset_speed_3f, fighter.module_accessor);
+        smash::app::lua_bind::KineticEnergy::enable(motion_energy);
+        smash::app::lua_bind::KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
+        smash::app::lua_bind::KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+        smash::app::lua_bind::KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     }
-    if [*FIGHTER_ROY_STATUS_KIND_SPECIAL_S3, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4].contains(&current_status_kind) {
-        if current_situation_kind == *SITUATION_KIND_GROUND {
-            let reset_speed_2f = Vector2f { x: 0.0, y: 0.0 };
-            let reset_speed_3f = Vector3f { x: 0.0, y: 0.0, z: 0.0 };
-            smash::app::lua_bind::KineticEnergy::reset_energy(motion_energy, *ENERGY_MOTION_RESET_TYPE_GROUND_TRANS_IGNORE_NORMAL, &reset_speed_2f, &reset_speed_3f, fighter.module_accessor);
-            smash::app::lua_bind::KineticEnergy::enable(motion_energy);
-            smash::app::lua_bind::KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
-            smash::app::lua_bind::KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-        }
-        else if current_situation_kind == *SITUATION_KIND_AIR {
-            let reset_speed_2f = Vector2f { x: 0.0, y: 0.0 };
-            let reset_speed_3f = Vector3f { x: 0.0, y: 0.0, z: 0.0 };
-            smash::app::lua_bind::KineticEnergy::reset_energy(stop_energy, *ENERGY_STOP_RESET_TYPE_AIR, &reset_speed_2f, &reset_speed_3f, fighter.module_accessor);
-            smash::app::lua_bind::KineticEnergy::reset_energy(gravity_energy, *ENERGY_GRAVITY_RESET_TYPE_GRAVITY, &reset_speed_2f, &reset_speed_3f, fighter.module_accessor);
-            smash::app::lua_bind::KineticEnergy::enable(stop_energy);
-            smash::app::lua_bind::KineticEnergy::enable(gravity_energy);
-        }
+    else {
+        let reset_speed_2f = Vector2f { x: aerial_x_speed, y: 0.0 };
+        let reset_speed_gravity_2f = Vector2f { x: 0.0, y: air_spd_y };
+        let reset_speed_3f = Vector3f { x: 0.0, y: 0.0, z: 0.0 };
+        smash::app::lua_bind::KineticEnergy::reset_energy(stop_energy, *ENERGY_STOP_RESET_TYPE_AIR, &reset_speed_2f, &reset_speed_3f, fighter.module_accessor);
+        smash::app::lua_bind::KineticEnergy::reset_energy(gravity_energy, *ENERGY_GRAVITY_RESET_TYPE_GRAVITY, &reset_speed_gravity_2f, &reset_speed_3f, fighter.module_accessor);
+        smash::app::lua_bind::KineticEnergy::enable(stop_energy);
+        smash::app::lua_bind::KineticEnergy::enable(gravity_energy);
+        smash::app::lua_bind::KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     }
     KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
-
+    VarModule::on_flag(fighter.battle_object, vars::common::instance::SIDE_SPECIAL_CANCEL_NO_HIT);
     0.into()
 }
 
@@ -97,10 +88,7 @@ pub fn set_gravity_delay_resume_frame(energy: *mut app::FighterKineticEnergyGrav
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.status(Pre, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S2, special_s_pre);
     agent.status(Init, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S2, special_s_init);
     agent.status(Exec, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S2, special_s_exec);
-    // agent.status(Init, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S3, special_s_init);
-    // agent.status(Exec, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S3, special_s_exec);
-    // agent.status(Init, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4, special_s_init);
-    // agent.status(Exec, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4, special_s_exec);
 }
