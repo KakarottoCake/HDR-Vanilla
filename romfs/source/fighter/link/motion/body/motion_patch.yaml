@@ -88,7 +88,7 @@ throw_lw:
     cancel_frame: 48
 throw_hi:
   extra:
-    cancel_frame: 56
+    cancel_frame: 54
 attack_11:
   extra:
     cancel_frame: 21
