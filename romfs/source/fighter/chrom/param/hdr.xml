@@ -17,8 +17,8 @@
         <float hash="rise_speed_x_mul">0.5</float>
         <float hash="rise_angle_base">2.5</float>
         <float hash="rise_angle_mul">5.0</float>
-        <float hash="rise_angle_min">-5.0</float>
-        <float hash="rise_angle_max">7.5</float>
+        <float hash="rise_angle_min">-6.0</float>
+        <float hash="rise_angle_max">9.0</float>
         <float hash="flip_accel_x_mul">0.375</float>
         <float hash="flip_speed_x_max_mul">0.5</float>
         <float hash="flip_accel_y_mul">1.1</float>
