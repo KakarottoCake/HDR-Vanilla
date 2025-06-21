@@ -110,9 +110,6 @@ attack_air_hi:
 attack_air_lw:
   extra:
     cancel_frame: 46
-special_s_end:
-  extra:
-    cancel_frame: 30
 special_air_hi_end2:
   game_script: game_specialairhiend2
   flags:
