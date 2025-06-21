@@ -4,6 +4,7 @@ use globals::*;
 
 mod attack_air;
 mod attack_s4;
+mod landing_fall_special;
 mod special_hi;
 mod special_lw;
 mod special_n;
@@ -76,6 +77,7 @@ pub fn install(agent: &mut Agent) {
 
     attack_air::install(agent);
     attack_s4::install(agent);
+    landing_fall_special::install(agent);
     special_hi::install(agent);
     special_lw::install(agent);
     special_n::install(agent);
