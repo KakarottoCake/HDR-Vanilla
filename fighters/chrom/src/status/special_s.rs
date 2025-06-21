@@ -104,5 +104,7 @@ pub fn install(agent: &mut Agent) {
     agent.status(Pre, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S2, special_s_pre);
     agent.status(Init, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S2, special_s_init);
     agent.status(Exec, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S2, special_s_exec);
+    agent.status(Pre, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S3, special_s_pre);
     agent.status(CheckAttack, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S3, special_s3_check_attack);
+    agent.status(Pre, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4, special_s_pre);
 }
