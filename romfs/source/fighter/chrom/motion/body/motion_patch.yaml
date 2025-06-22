@@ -1,6 +1,9 @@
 attack_11:
   extra:
     cancel_frame: 25
+attack_air_f:
+  extra:
+    cancel_frame: 32
 attack_hi3:
   animations:
     - name: d01specials3hi.nuanmb # Stolen from Dancing Blade 3 High
