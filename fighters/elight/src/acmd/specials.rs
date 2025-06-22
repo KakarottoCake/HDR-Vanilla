@@ -603,10 +603,6 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
 	if is_excute(agent) {
 		AttackModule::clear_all(agent.module_accessor);
 	}
-    frame(lua_state, 13.0);
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
-    }
     frame(lua_state, 20.0);
     if IS_EXIST_ARTICLE(agent, *FIGHTER_ELIGHT_GENERATE_ARTICLE_ESWORD) {
         if is_excute(agent) {
@@ -618,6 +614,9 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
             WorkModule::on_flag(boma, *FIGHTER_ELIGHT_INSTANCE_WORK_ID_FLAG_ADD_PARTIAL_MTION_SWORD_WHEN_CHANGEING);
         }
     }
+	if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
+	}
 }
 
 unsafe extern "C" fn effect_specialhistart(agent: &mut L2CAgentBase) {
@@ -689,7 +688,7 @@ unsafe extern "C" fn game_specialairhijump(agent: &mut L2CAgentBase) {
     frame(lua_state, 6.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
-        notify_event_msc_cmd!(agent, 0x2127e37c07u64, GROUND_CLIFF_CHECK_KIND_ALWAYS);
+        // notify_event_msc_cmd!(agent, 0x2127e37c07u64, GROUND_CLIFF_CHECK_KIND_ALWAYS);
     }
     frame(lua_state, 10.0);
     manage_sword_motion(agent, Hash40::new("to_close"));
@@ -741,7 +740,7 @@ unsafe extern "C" fn game_specialairhiend2(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 16.0);
     if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
     }
     frame(lua_state, 30.0);
     if is_excute(agent) {
