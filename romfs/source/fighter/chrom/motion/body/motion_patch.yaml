@@ -189,9 +189,9 @@ special_air_s4_hi:
     cancel_frame: 40
 special_air_s4_lw:
   animations:
-    - name: d01specialairs4lw.nuanmb # TODO: Replace with the command dash
+    - name: a02dash.nuanmb # replaced with a dash
   extra:
-    cancel_frame: 66
+    cancel_frame: 20
 special_air_s4_s:
   animations:
     - name: d01specialairs4s.nuanmb
@@ -294,9 +294,9 @@ special_s4_hi:
     cancel_frame: 40
 special_s4_lw:
   animations:
-    - name: d01specials4lw.nuanmb # TODO: Replace with the command dash
+    - name: a02dash.nuanmb # replaced with a dash
   extra:
-    cancel_frame: 72
+    cancel_frame: 20
 special_s4_s:
   animations:
     - name: d01specials4s.nuanmb
