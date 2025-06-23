@@ -51,7 +51,7 @@ unsafe extern "C" fn special_hi_exec(fighter: &mut L2CFighterCommon) -> L2CValue
             }
             if motion_frame > start_frame + 13.0 / 16.0 {
                 special_hi_guide_handler(fighter, rate);
-                MeterModule::drain_direct(fighter.battle_object, ParamModule::get_float(fighter.battle_object, ParamType::Agent, "meter.uspecial_cost") / length);
+                MeterModule::drain_direct_clamp_to_level(fighter.battle_object, ParamModule::get_float(fighter.battle_object, ParamType::Agent, "meter.uspecial_cost") / length);
             }
         } else {
             let rate = VarModule::get_float(fighter.battle_object, vars::lucario::instance::SPECIAL_HI_MOTION_RATE);

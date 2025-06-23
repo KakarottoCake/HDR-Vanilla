@@ -6,7 +6,9 @@ use std::arch::asm;
 pub fn install() {
     skyline::install_hooks!(
         process_knockback,
-        calculate_knockback
+        calculate_knockback,
+        set_thrown_lr,
+        set_damage_lr
     );
 }
 
@@ -305,4 +307,68 @@ pub unsafe extern "C" fn call_finishing_hit_effects(defender_boma: &mut BattleOb
         EffectModule::set_disable_render_offset_last(defender_boma);
         EffectModule::set_rate_last(defender_boma, 2.5);
     }
+}
+
+// This runs immediately before PostureModule::set_lr is called on throw release
+// which determines the facing direction of the receiver when thrown
+// 
+// We override this to allow throw receiver direction to always be determined by
+// which side the attacker was on
+#[skyline::hook(offset = 0x6c59cc, inline)]
+unsafe fn set_thrown_lr(ctx: &skyline::hooks::InlineCtx) {
+    let opponent_battle_object_id = *(*ctx.registers[20].x.as_ref() as *const u32).add(0x44 / 4);
+    let opponent_battle_object = utils::util::get_battle_object_from_id(opponent_battle_object_id);
+    let opponent_boma = (&mut *(*opponent_battle_object).module_accessor);
+
+    if !opponent_boma.is_fighter() {
+        return;
+    }
+
+    let boma = *ctx.registers[19].x.as_ref() as *mut smash::app::BattleObjectModuleAccessor;
+    let fighter = util::get_fighter_common_from_accessor(&mut *boma);
+
+    fighter.clear_lua_stack();
+    lua_args!(fighter, hash40("speed_vec_x") as u64);
+    sv_information::damage_log_value(fighter.lua_state_agent);
+    let damage_speed_x = fighter.pop_lua_stack(1).get_f32();
+
+    let lr: f32 = if damage_speed_x < 0.0 {
+        1.0
+    } else if damage_speed_x > 0.0 {
+        -1.0
+    } else {
+        PostureModule::lr(boma)
+    };
+
+    asm!("fmov s0, w8", in("w8") lr)
+}
+
+// This runs immediately before FIGHTER_STATUS_WORK_ID_FLOAT_RESERVE_DAMAGE_LR is set
+// which determines whether or not to turn the receiver around on hit
+// 
+// We override this to allow receiver turnaround to always be determined by
+// which side the attacker was on
+#[skyline::hook(offset = 0x6c5980, inline)]
+unsafe fn set_damage_lr(ctx: &skyline::hooks::InlineCtx) {
+    let opponent_battle_object_id = *(*ctx.registers[20].x.as_ref() as *const u32).add(0x44 / 4);
+    let opponent_battle_object = utils::util::get_battle_object_from_id(opponent_battle_object_id);
+    let opponent_boma = (&mut *(*opponent_battle_object).module_accessor);
+
+    if !opponent_boma.is_fighter() {
+        return;
+    }
+    
+    let opponent_pos_x = PostureModule::pos_x(opponent_boma);
+
+    let boma = *ctx.registers[19].x.as_ref() as *mut smash::app::BattleObjectModuleAccessor;
+    let pos_x = PostureModule::pos_x(boma);
+    let lr = PostureModule::lr(boma);
+
+    let damage_lr: f32 = if opponent_pos_x >= pos_x {
+        1.0
+    } else {
+        -1.0
+    };
+
+    asm!("fmov s0, w8", in("w8") damage_lr)
 }
