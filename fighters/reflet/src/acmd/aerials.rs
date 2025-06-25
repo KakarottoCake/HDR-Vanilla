@@ -4,7 +4,7 @@ unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK);//disable landing lag
+        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK); // disable landing lag
         VarModule::set_int(agent.battle_object, vars::reflet::instance::ATTACK_AIR_LEVIN_LENIENCY, 5);
     }
     frame(lua_state, 1.0);
@@ -129,7 +129,7 @@ unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK);//disable landing lag
+        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK); // disable landing lag
         VarModule::set_int(agent.battle_object, vars::reflet::instance::ATTACK_AIR_LEVIN_LENIENCY, 5);
     }
     frame(lua_state, 1.0);
@@ -244,7 +244,7 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK);//disable landing lag
+        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK); // disable landing lag
         VarModule::set_int(agent.battle_object, vars::reflet::instance::ATTACK_AIR_LEVIN_LENIENCY, 5);
     }
     frame(lua_state, 4.0);
@@ -343,7 +343,7 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK);//disable landing lag
+        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK); // disable landing lag
         VarModule::set_int(agent.battle_object, vars::reflet::instance::ATTACK_AIR_LEVIN_LENIENCY, 5);
     }
     frame(lua_state, 5.0);
@@ -435,7 +435,7 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK);//disable landing lag
+        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK); // disable landing lag
         VarModule::set_int(agent.battle_object, vars::reflet::instance::ATTACK_AIR_LEVIN_LENIENCY, 5);
     }
     frame(lua_state, 6.0);
@@ -445,21 +445,21 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     frame(lua_state, 13.0);
     if is_excute(agent) {
         if agent.is_flag(*FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON) {
-            //Air-Only Hitboxes match to spike pr
+            //Air-Only
             ATTACK(agent, 0, 0, Hash40::new("sword"), 15.0, 270, 46, 0, 22, 4.3, 0.0, 7.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_SWORD);
             ATTACK(agent, 1, 0, Hash40::new("sword"), 15.0, 270, 46, 0, 22, 4.0, 0.0, 1.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_SWORD);
             ATTACK(agent, 2, 0, Hash40::new("armr"), 15.0, 270, 46, 0, 22, 3.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_SWORD);
-            //Ground-Only Hitboxes
+            //Ground-Only
             ATTACK(agent, 3, 0, Hash40::new("sword"), 15.0, 70, 76, 0, 24, 4.3, 0.0, 7.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_SWORD);
             ATTACK(agent, 4, 0, Hash40::new("sword"), 15.0, 70, 76, 0, 24, 4.0, 0.0, 1.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_SWORD);
             ATTACK(agent, 5, 0, Hash40::new("armr"), 15.0, 70, 76, 0, 24, 3.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_SWORD);
         }
-        else {//maybe do something with this (really lame)
-            //Air-Only Hitboxes hits spike sweep thresh at 112 (1 kbg below 1.5% bonus dmg)
+        else {
+            //Air-Only
             ATTACK(agent, 0, 0, Hash40::new("sword"), 10.0, 270, 50, 0, 22, 3.5, 0.0, 6.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
             ATTACK(agent, 1, 0, Hash40::new("sword"), 10.0, 270, 50, 0, 22, 3.5, 0.0, 0.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
             ATTACK(agent, 2, 0, Hash40::new("armr"), 10.0, 270, 50, 0, 22, 3.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
-            //Ground-Only Hitboxes
+            //Ground-Only
             ATTACK(agent, 3, 0, Hash40::new("sword"), 10.0, 70, 85, 0, 24, 3.5, 0.0, 6.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
             ATTACK(agent, 4, 0, Hash40::new("sword"), 10.0, 70, 85, 0, 24, 3.5, 0.0, 0.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
             ATTACK(agent, 5, 0, Hash40::new("armr"), 10.0, 70, 85, 0, 24, 3.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
@@ -481,7 +481,7 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
         }
     }
     frame(lua_state, 18.0);
-    if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK) {//lev
+    if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK) { //lev
         FT_MOTION_RATE_RANGE(agent, 18.0, 48.0, 27.0);
         if is_excute(agent) {
             ATTACK(agent, 0, 0, Hash40::new("sword"), 5.0, 361, 80, 0, 40, 2.5, 0.0, 9.0, 0.0, Some(0.0), Some(2.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_SWORD);
