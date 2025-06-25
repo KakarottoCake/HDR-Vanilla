@@ -10,7 +10,8 @@ unsafe fn side_special_cancels(fighter: &mut L2CFighterCommon) {
     }
     // New SSpecial1 cancels into aerials on hit
     if fighter.is_status(*FIGHTER_ROY_STATUS_KIND_SPECIAL_S2)
-    && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT)
+    && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
+    && !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_PARRY)
     && !fighter.is_in_hitlag()
     && StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_AIR 
     && fighter.get_aerial() != None {
