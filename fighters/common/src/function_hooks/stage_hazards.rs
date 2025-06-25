@@ -8,7 +8,7 @@ extern "C" {
     fn get_current_stage_alt() -> usize;
 }
 
-#[skyline::hook(offset = 0x30F6E00)]
+#[skyline::hook(offset = 0x30f6b90)]
 unsafe fn stub(arg: u64) {
     if get_stage_id() == 0x8f && get_current_stage_alt() == 0 {
         return;
@@ -56,7 +56,7 @@ unsafe fn init_stage(ctx: &mut skyline::hooks::InlineCtx) {
 unsafe fn handle_movement_grav_update(ctx: &mut skyline::hooks::InlineCtx) {
     let battle_object_world = *(((skyline::hooks::getRegionAddress(skyline::hooks::Region::Text)
         as u64)
-        + 0x52b8558) as *const u64);
+        + 0x52b7558) as *const u64);
     *(battle_object_world as *mut u8).add(0x59) = 0x1;
 }
 
@@ -100,13 +100,13 @@ pub fn install() {
     skyline::patching::Patch::in_text(0x28440f4 + 0xc80 + 0x20).data(0x52800009u32);
     skyline::patching::Patch::in_text(0x2844500 + 0xc80 + 0x20).nop();
     skyline::patching::Patch::in_text(0x2844128 + 0xc80 + 0x20).nop();
-    skyline::patching::Patch::in_text(0x4471134)
+    skyline::patching::Patch::in_text(0x4470134)
         .data(std::f32::INFINITY)
         .unwrap(); // palu temple
-    skyline::patching::Patch::in_text(0x44723dc)
+    skyline::patching::Patch::in_text(0x44713dc)
         .data(2880.0f32)
         .unwrap(); // palu temple
-    skyline::patching::Patch::in_text(0x447142c)
+    skyline::patching::Patch::in_text(0x447042c)
         .data(-2880.0f32)
         .unwrap(); // palu temple
 
