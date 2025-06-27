@@ -8,7 +8,7 @@ extern "C" {
     fn get_current_stage_alt() -> usize;
 }
 
-#[skyline::hook(offset = 0x30f6b90)]
+#[skyline::hook(offset = 0x30F6E00)]
 unsafe fn stub(arg: u64) {
     if get_stage_id() == 0x8f && get_current_stage_alt() == 0 {
         return;
