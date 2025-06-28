@@ -94,19 +94,19 @@ unsafe fn lylat_set_form_hazards_off(ctx: &mut skyline::hooks::InlineCtx) {
 
 pub fn install() {
     // NOTE: The 0xc80 is from the 13.0.1 -> 13.0.2 port
-    // NOTE: The 0xc80 is from the 13.0.2 -> 13.0.3 port
+    // NOTE: The 0x20  is from the 13.0.2 -> 13.0.3 port
     skyline::patching::Patch::in_text(0x298236c + 0xc80 + 0x20).data(0x52800008u32);
     skyline::patching::Patch::in_text(0x28444cc + 0xc80 + 0x20).data(0x52800009u32);
     skyline::patching::Patch::in_text(0x28440f4 + 0xc80 + 0x20).data(0x52800009u32);
     skyline::patching::Patch::in_text(0x2844500 + 0xc80 + 0x20).nop();
     skyline::patching::Patch::in_text(0x2844128 + 0xc80 + 0x20).nop();
-    skyline::patching::Patch::in_text(0x4470134)
+    skyline::patching::Patch::in_text(0x4471134)
         .data(std::f32::INFINITY)
         .unwrap(); // palu temple
-    skyline::patching::Patch::in_text(0x44713dc)
+    skyline::patching::Patch::in_text(0x44723dc)
         .data(2880.0f32)
         .unwrap(); // palu temple
-    skyline::patching::Patch::in_text(0x447042c)
+    skyline::patching::Patch::in_text(0x447142c)
         .data(-2880.0f32)
         .unwrap(); // palu temple
 
