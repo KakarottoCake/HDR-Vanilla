@@ -38,11 +38,14 @@ pub unsafe extern "C" fn special_lw_main(fighter: &mut L2CFighterCommon) -> L2CV
 unsafe extern "C" fn special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     if !StatusModule::is_changing(fighter.module_accessor)
     && StatusModule::is_situation_changed(fighter.module_accessor) {
-        if fighter.is_situation(*SITUATION_KIND_AIR) {
+        if fighter.is_situation(*SITUATION_KIND_GROUND) {
+            fighter.set_float(16.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
+            fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
+            return true.into();
+        } else {
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
             return true.into();
         }
-        special_lw_set_kinetic(fighter);
         return false.into();
     }
 
@@ -81,6 +84,9 @@ unsafe extern "C" fn special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2C
 }
 
 pub unsafe extern "C" fn special_lw_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.is_situation(*SITUATION_KIND_GROUND) {
+        KineticModule::mul_speed(fighter.module_accessor, &Vector3f{x: 0.6, y: 0.6, z: 0.6}, *FIGHTER_KINETIC_ENERGY_ID_STOP);
+    }
     return false.into();
 }
 
