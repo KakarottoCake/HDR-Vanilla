@@ -11,8 +11,8 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE_RANGE(agent, 1.0, 15.0, 10.0);
     frame(lua_state, 15.0);
     FT_MOTION_RATE(agent, 1.0);
-    frame(lua_state, 24.0);
-    let rate = 10.0 / 14.0;
+    frame(lua_state, 22.0);
+    let rate = 10.0 / 16.0;
     FT_MOTION_RATE(agent, rate);
     sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, rate * 0.9);
     if is_excute(agent) {
