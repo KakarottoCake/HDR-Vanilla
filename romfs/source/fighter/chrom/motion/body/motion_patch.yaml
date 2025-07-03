@@ -126,9 +126,19 @@ special_air_hi_2:
   - sound_specialhiadd
   - effect_specialhiadd
 special_air_lw:
+  flags:
+    move: true
   extra:
     xlu_start: 0
     xlu_end: 0
+    cancel_frame: 0
+special_air_lw_hit:
+  flags:
+    move: true
+  extra:
+    xlu_start: 1
+    xlu_end: 9
+    cancel_frame: 35
 special_air_n_end:
   extra:
     cancel_frame: 38
@@ -230,10 +240,18 @@ special_hi_3_start:
     no_stop_intp: false
 special_lw:
   flags:
-    move: false
+    move: true
   extra:
     xlu_start: 0
     xlu_end: 0
+    cancel_frame: 75
+special_lw_hit:
+  flags:
+    move: true
+  extra:
+    xlu_start: 1
+    xlu_end: 9
+    cancel_frame: 35
 special_n_end:
   extra:
     cancel_frame: 28

@@ -74,13 +74,6 @@ pub unsafe extern "C" fn special_s_exec(fighter: &mut L2CFighterCommon) -> L2CVa
     ret
 }
 
-pub fn set_gravity_delay_resume_frame(energy: *mut app::FighterKineticEnergyGravity, frames: i32) {
-    unsafe {
-      *(energy as *mut i32).add(0x50 / 4) = frames;
-      *(energy as *mut bool).add(0x5C) = false;
-    }
-}
-
 unsafe extern "C" fn special_s3_check_attack(fighter: &mut L2CFighterCommon, param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
     // force knockdown
     if fighter.is_motion_one_of(&[Hash40::new("special_s3_lw"), Hash40::new("special_air_s3_lw")])
@@ -98,7 +91,13 @@ pub fn install(agent: &mut Agent) {
     agent.status(Pre, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S2, special_s_pre);
     agent.status(Init, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S2, special_s_init);
     agent.status(Exec, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S2, special_s_exec);
+
     agent.status(Pre, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S3, special_s_pre);
+    agent.status(Init, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S3, special_s_init);
+    agent.status(Exec, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S3, special_s_exec);
     agent.status(CheckAttack, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S3, special_s3_check_attack);
+
     agent.status(Pre, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4, special_s_pre);
+    agent.status(Init, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4, special_s_init);
+    agent.status(Exec, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4, special_s_exec);
 }
