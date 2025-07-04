@@ -244,7 +244,7 @@ special_lw:
   extra:
     xlu_start: 0
     xlu_end: 0
-    cancel_frame: 75
+    cancel_frame: 76
 special_lw_hit:
   flags:
     move: true
