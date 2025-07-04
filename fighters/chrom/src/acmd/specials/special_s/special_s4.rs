@@ -3,6 +3,9 @@ use super::*;
 unsafe extern "C" fn game_specials4hi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    if is_excute(agent) {
+        agent.off_flag(*FIGHTER_MARTH_STATUS_SPECIAL_S_FLAG_MOTION_CHANGE_ENABLE);
+    }
     frame(lua_state, 1.0);
     FT_MOTION_RATE_RANGE(agent, 1.0, 4.0, 9.0);
     frame(lua_state, 4.0);
@@ -96,6 +99,9 @@ unsafe extern "C" fn expression_specials4hi(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specials4s(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    if is_excute(agent) {
+        agent.off_flag(*FIGHTER_MARTH_STATUS_SPECIAL_S_FLAG_MOTION_CHANGE_ENABLE);
+    }
     frame(lua_state, 1.0);
     FT_MOTION_RATE_RANGE(agent, 1.0, 5.0, 10.0);
     frame(lua_state, 5.0);
@@ -171,8 +177,16 @@ unsafe extern "C" fn game_specials4lw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     let dash_speed = 1.5;
+    if is_excute(agent) {
+        // enables tilt cancels
+        agent.on_flag(*FIGHTER_MARTH_STATUS_SPECIAL_S_FLAG_MOTION_CHANGE_ENABLE);
+    }
     frame(lua_state, 3.0);
     FT_MOTION_RATE_RANGE(agent, 3.0, 14.0, 8.0);
+    if is_excute(agent) {
+        // disables tilt cancels
+        agent.off_flag(*FIGHTER_MARTH_STATUS_SPECIAL_S_FLAG_MOTION_CHANGE_ENABLE);
+    }
     for _ in 0..4 {
         if is_excute(agent) {
             KineticModule::add_speed(boma, &Vector3f::new(dash_speed / 4.0, 0.0, 0.0));

@@ -8,15 +8,6 @@ unsafe fn side_special_cancels(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_S) {
         fighter.change_status(FIGHTER_ROY_STATUS_KIND_SPECIAL_S2.into(), false.into());
     }
-    // New SSpecial1 cancels into aerials on hit
-    if fighter.is_status(*FIGHTER_ROY_STATUS_KIND_SPECIAL_S2)
-    && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
-    && !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_PARRY)
-    && !fighter.is_in_hitlag()
-    && StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_AIR 
-    && fighter.get_aerial() != None {
-        fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_AIR.into(), false.into());
-    }
     // Disallow SpecialAirS4Lw because we dont have an animation for it lol
     if fighter.is_status(*FIGHTER_ROY_STATUS_KIND_SPECIAL_S4)
     && fighter.is_motion(Hash40::new("special_air_s4_lw")) {
@@ -25,6 +16,24 @@ unsafe fn side_special_cancels(fighter: &mut L2CFighterCommon) {
         fighter.off_flag(*FIGHTER_ROY_STATUS_SPECIAL_S_FLAG_INPUT_HI);
         fighter.off_flag(*FIGHTER_ROY_STATUS_SPECIAL_S_FLAG_INPUT_LW);
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_s4_s"), 0.0, 1.0, false, 0.0, false, false);
+    }
+    // SSpecial's Low Dash cancels directly into tilts
+    if fighter.is_status(*FIGHTER_ROY_STATUS_KIND_SPECIAL_S4)
+    && fighter.is_motion(Hash40::new("special_s4_lw"))
+    && fighter.is_situation(*SITUATION_KIND_GROUND)
+    && fighter.is_flag(*FIGHTER_MARTH_STATUS_SPECIAL_S_FLAG_MOTION_CHANGE_ENABLE)
+    && !CancelModule::is_enable_cancel(fighter.module_accessor)
+    && !fighter.is_in_hitlag() {
+        let next_status = match () {
+            _ if fighter.is_cat_flag(Cat1::AttackS3) => *FIGHTER_STATUS_KIND_ATTACK_S3,
+            _ if fighter.is_cat_flag(Cat1::AttackHi3) => *FIGHTER_STATUS_KIND_ATTACK_HI3,
+            _ if fighter.is_cat_flag(Cat1::AttackLw3) => *FIGHTER_STATUS_KIND_ATTACK_LW3,
+            _ => *FIGHTER_STATUS_KIND_NONE
+        };
+        if next_status != *FIGHTER_STATUS_KIND_NONE {
+            KineticModule::mul_speed(fighter.module_accessor, &Vector3f::new(0.5, 1.0, 1.0), *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
+            StatusModule::change_status_request_from_script(fighter.module_accessor, next_status, false);
+        }
     }
 }
 
