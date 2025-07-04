@@ -130,6 +130,8 @@ pub unsafe extern "C" fn special_hi_main(fighter: &mut L2CFighterCommon) -> L2CV
     fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_hi_1"), L2CValue::Hash40s("special_air_hi_1"), false.into());
     fighter.sub_change_kinetic_type_by_situation(FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE.into(), FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE.into());
     fighter.sub_set_ground_correct_by_situation(false.into());
+    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    VarModule::set_int(fighter.battle_object, vars::chrom::status::SPECIAL_HI_START_SITUATION, situation_kind);
     KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_MOTION);
     KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
     MotionModule::set_trans_move_speed_no_scale(fighter.module_accessor, true);
@@ -188,6 +190,13 @@ pub unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) ->
             return 1.into();
         }
     }
+
+    // Aerial cancel check
+    // if VarModule::get_int(fighter.battle_object, vars::chrom::status::SPECIAL_HI_START_SITUATION) == *SITUATION_KIND_GROUND
+    // && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
+    // && !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_PARRY) {
+    //     VarModule::on_flag(fighter.battle_object, vars::chrom::status::SPECIAL_HI_AERIAL_CANCEL_ENABLE);
+    // }
     
     return 0.into();
 }
@@ -211,7 +220,7 @@ pub unsafe extern "C" fn special_hi_exec(fighter: &mut L2CFighterCommon) -> L2CV
                 let lr = PostureModule::lr(fighter.module_accessor);
                 let stick_x = fighter.stick_x();
                 WorkModule::set_float(fighter.module_accessor, stick_x * lr, *FIGHTER_ROY_STATUS_SPECIAL_HI_WORK_FLOAT_STICK_CONTROL_ANGLE);
-                let rise_angle_base = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.rise_angle_base");
+                let rise_angle_base = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.rise_angle_base") * lr;
                 let rise_angle_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.rise_angle_mul");
                 let rise_angle_min = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.rise_angle_min");
                 let rise_angle_max = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.rise_angle_max");
@@ -310,11 +319,22 @@ pub unsafe extern "C" fn special_hi_2_main_loop(fighter: &mut L2CFighterCommon) 
             return true.into();
         }
     }
-    if VarModule::is_flag(fighter.battle_object, vars::chrom::status::SPECIAL_HI_DIVE_ENABLE)
-    && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_3_start"), 0.0, 1.0, false, 0.0, false, false);
-        VarModule::off_flag(fighter.battle_object, vars::chrom::status::SPECIAL_HI_DIVE_ENABLE);
-        VarModule::on_flag(fighter.battle_object, vars::chrom::status::SPECIAL_HI_DIVE_START);
+    if VarModule::is_flag(fighter.battle_object, vars::chrom::status::SPECIAL_HI_DIVE_ENABLE) {
+        // Aerial cancels
+        // if VarModule::is_flag(fighter.battle_object, vars::chrom::status::SPECIAL_HI_AERIAL_CANCEL_ENABLE)
+        // && StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_AIR 
+        // && !fighter.is_in_hitlag()
+        // && fighter.get_aerial() != None {
+        //     fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_AIR.into(), false.into());
+        //     return true.into();
+        // }
+
+        // HI_DIVE check
+        if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_3_start"), 0.0, 1.0, false, 0.0, false, false);
+            VarModule::off_flag(fighter.battle_object, vars::chrom::status::SPECIAL_HI_DIVE_ENABLE);
+            VarModule::on_flag(fighter.battle_object, vars::chrom::status::SPECIAL_HI_DIVE_START);
+        }
     }
     if MotionModule::is_end(fighter.module_accessor) {
         if VarModule::is_flag(fighter.battle_object, vars::chrom::status::SPECIAL_HI_DIVE_START) {
