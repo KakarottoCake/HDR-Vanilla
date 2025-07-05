@@ -434,7 +434,15 @@ pub mod vars {
     }
 
     pub mod cloud {
-
+        pub mod instance {   
+            // flag
+            pub const SPECIAL_S_DISABLE_STALL: i32 = 0x0100;
+        }
+        pub mod status {
+            // flags
+            pub const SPECIAL_N_HOLD: i32 = 0x1101;
+            pub const SPECIAL_S_STALL: i32 = 0x1102;
+        }
     }
 
     pub mod daisy {
