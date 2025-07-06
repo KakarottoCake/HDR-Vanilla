@@ -60,7 +60,7 @@
     <struct index="8">
       <hash40 hash="fighter_kind">PIKACHU</hash40>
       <float hash="attack_dash_fall_speed_mul">-1.0</float>
-      <float hash="dacus_mul">0.9</float>
+      <float hash="dacus_mul">0.85</float>
       <float hash="ditcit_mul">1.0</float>
       <float hash="pass_air_speed_x_max_mul">1.8</float>
     </struct>
@@ -116,7 +116,7 @@
     <struct index="16">
       <hash40 hash="fighter_kind">SHEIK</hash40>
       <float hash="attack_dash_fall_speed_mul">-1.0</float>
-      <float hash="dacus_mul">0.95</float>
+      <float hash="dacus_mul">0.9</float>
       <float hash="ditcit_mul">1.0</float>
       <float hash="pass_air_speed_x_max_mul">1.8</float>
     </struct>
@@ -200,7 +200,7 @@
     <struct index="28">
       <hash40 hash="fighter_kind">GAMEWATCH</hash40>
       <float hash="attack_dash_fall_speed_mul">-1.0</float>
-      <float hash="dacus_mul">0.85</float>
+      <float hash="dacus_mul">0.8</float>
       <float hash="ditcit_mul">1.0</float>
       <float hash="pass_air_speed_x_max_mul">1.8</float>
     </struct>
@@ -256,7 +256,7 @@
     <struct index="36">
       <hash40 hash="fighter_kind">PZENIGAME</hash40>
       <float hash="attack_dash_fall_speed_mul">-1.0</float>
-      <float hash="dacus_mul">0.95</float>
+      <float hash="dacus_mul">0.9</float>
       <float hash="ditcit_mul">1.0</float>
       <float hash="pass_air_speed_x_max_mul">1.7</float>
     </struct>
@@ -375,7 +375,7 @@
     <struct index="53">
       <hash40 hash="fighter_kind">GEKKOUGA</hash40>
       <float hash="attack_dash_fall_speed_mul">-1.0</float>
-      <float hash="dacus_mul">0.95</float>
+      <float hash="dacus_mul">0.9</float>
       <float hash="ditcit_mul">1.0</float>
       <float hash="pass_air_speed_x_max_mul">1.8</float>
     </struct>
@@ -459,7 +459,7 @@
     <struct index="65">
       <hash40 hash="fighter_kind">INKLING</hash40>
       <float hash="attack_dash_fall_speed_mul">-1.0</float>
-      <float hash="dacus_mul">0.95</float>
+      <float hash="dacus_mul">0.9</float>
       <float hash="ditcit_mul">1.0</float>
       <float hash="pass_air_speed_x_max_mul">1.8</float>
     </struct>
@@ -571,7 +571,7 @@
     <struct index="81">
       <hash40 hash="fighter_kind">PACKUN</hash40>
       <float hash="attack_dash_fall_speed_mul">-1.0</float>
-      <float hash="dacus_mul">1.0</float>
+      <float hash="dacus_mul">0.95</float>
       <float hash="ditcit_mul">1.0</float>
       <float hash="pass_air_speed_x_max_mul">1.8</float>
     </struct>
