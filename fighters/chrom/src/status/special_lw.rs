@@ -4,7 +4,7 @@ pub unsafe extern "C" fn special_lw_pre(fighter: &mut L2CFighterCommon) -> L2CVa
     StatusModule::init_settings(
         fighter.module_accessor, 
         app::SituationKind(*SITUATION_KIND_NONE),
-        *FIGHTER_KINETIC_TYPE_MOTION,
+        *FIGHTER_KINETIC_TYPE_MOTION_AIR,
         *GROUND_CORRECT_KIND_KEEP as u32,
         app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
         false,
@@ -106,6 +106,8 @@ unsafe extern "C" fn special_lw_set_kinetic(fighter: &mut L2CFighterCommon) {
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
         fighter.set_situation(SITUATION_KIND_AIR.into());
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, 0.0, 0.0, 0.0, 0.0);
+        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
         if fighter.is_flag(*FIGHTER_ROY_STATUS_SPECIAL_LW_FLAG_CONTINUE_MOT) {
             MotionModule::change_motion_inherit_frame_keep_rate(
                 fighter.module_accessor,
@@ -163,7 +165,7 @@ pub unsafe extern "C" fn special_lw_hit_pre(fighter: &mut L2CFighterCommon) -> L
     StatusModule::init_settings(
         fighter.module_accessor, 
         app::SituationKind(*SITUATION_KIND_NONE),
-        *FIGHTER_KINETIC_TYPE_MOTION,
+        *FIGHTER_KINETIC_TYPE_MOTION_AIR,
         *GROUND_CORRECT_KIND_KEEP as u32,
         app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
         false,
@@ -250,6 +252,8 @@ unsafe extern "C" fn special_lw_hit_set_kinetic(fighter: &mut L2CFighterCommon) 
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
         fighter.set_situation(SITUATION_KIND_AIR.into());
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, 0.0, 0.0, 0.0, 0.0);
+        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
         if fighter.is_flag(*FIGHTER_ROY_STATUS_SPECIAL_LW_FLAG_CONTINUE_MOT) {
             MotionModule::change_motion_inherit_frame_keep_rate(
                 fighter.module_accessor,
@@ -276,7 +280,7 @@ unsafe extern "C" fn special_lw_hit_set_kinetic(fighter: &mut L2CFighterCommon) 
     }
     else {
         fighter.set_situation(SITUATION_KIND_GROUND.into());
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
         if fighter.is_flag(*FIGHTER_ROY_STATUS_SPECIAL_LW_FLAG_CONTINUE_MOT) {
             MotionModule::change_motion_inherit_frame_keep_rate(
                 fighter.module_accessor,
