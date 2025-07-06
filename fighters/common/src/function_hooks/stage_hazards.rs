@@ -56,7 +56,7 @@ unsafe fn init_stage(ctx: &mut skyline::hooks::InlineCtx) {
 unsafe fn handle_movement_grav_update(ctx: &mut skyline::hooks::InlineCtx) {
     let battle_object_world = *(((skyline::hooks::getRegionAddress(skyline::hooks::Region::Text)
         as u64)
-        + 0x52b8558) as *const u64);
+        + 0x52b7558) as *const u64);
     *(battle_object_world as *mut u8).add(0x59) = 0x1;
 }
 
@@ -94,7 +94,7 @@ unsafe fn lylat_set_form_hazards_off(ctx: &mut skyline::hooks::InlineCtx) {
 
 pub fn install() {
     // NOTE: The 0xc80 is from the 13.0.1 -> 13.0.2 port
-    // NOTE: The 0xc80 is from the 13.0.2 -> 13.0.3 port
+    // NOTE: The 0x20  is from the 13.0.2 -> 13.0.3 port
     skyline::patching::Patch::in_text(0x298236c + 0xc80 + 0x20).data(0x52800008u32);
     skyline::patching::Patch::in_text(0x28444cc + 0xc80 + 0x20).data(0x52800009u32);
     skyline::patching::Patch::in_text(0x28440f4 + 0xc80 + 0x20).data(0x52800009u32);
