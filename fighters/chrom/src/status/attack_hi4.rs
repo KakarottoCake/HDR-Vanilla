@@ -7,7 +7,7 @@ pub unsafe extern "C" fn attack_hi4_pre(fighter: &mut L2CFighterCommon) -> L2CVa
         fighter.module_accessor,
         app::SituationKind(*SITUATION_KIND_GROUND),
         *FIGHTER_KINETIC_TYPE_MOTION_AIR,
-        *GROUND_CORRECT_KIND_GROUND as u32,
+        *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP as u32,
         app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES),
         true,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_ATTACK_4_FLAG,
@@ -45,6 +45,7 @@ unsafe extern "C" fn attack_hi4_main_loop(fighter: &mut L2CFighterCommon) -> L2C
         attack_hi_set_kinetic(fighter);
     }
 
+    fighter.sub_air_check_dive();
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return true.into();
     }
@@ -82,7 +83,7 @@ unsafe extern "C" fn attack_hi_set_kinetic(fighter: &mut L2CFighterCommon) {
     }
     else {
         fighter.set_situation(SITUATION_KIND_GROUND.into());
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
     }
 }
 
