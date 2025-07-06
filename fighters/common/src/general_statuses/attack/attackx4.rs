@@ -71,6 +71,7 @@ unsafe fn status_AttackHi4Start_Main(fighter: &mut L2CFighterCommon) -> L2CValue
         if StatusModule::is_changing(fighter.module_accessor) {
             let mut speed_x = fighter.get_speed_x(*FIGHTER_KINETIC_ENERGY_ID_STOP);
             let speed_y = fighter.get_speed_y(*FIGHTER_KINETIC_ENERGY_ID_STOP);
+            println!("x {}", speed_x);
             let min_speed = ParamModule::get_float(fighter.battle_object, ParamType::Common, "dacus.min_speed");
             let max_speed = ParamModule::get_float(fighter.battle_object, ParamType::Common, "dacus.max_speed");
             let dacus_mul = ParamModule::get_float(fighter.object(), ParamType::Shared, "dacus_mul");
@@ -182,9 +183,9 @@ unsafe fn status_AttackLw4Start_Main(fighter: &mut L2CFighterCommon) -> L2CValue
             let speed_y = fighter.get_speed_y(*FIGHTER_KINETIC_ENERGY_ID_MOTION);
             let min_speed = ParamModule::get_float(fighter.battle_object, ParamType::Common, "dacus.min_speed");
             let max_speed = ParamModule::get_float(fighter.battle_object, ParamType::Common, "dacus.max_speed");
-            let dacds_mul = ParamModule::get_float(fighter.object(), ParamType::Shared, "dacds_mul");
+            let dacus_mul = ParamModule::get_float(fighter.object(), ParamType::Shared, "dacus_mul");
 
-            speed_x = speed_x * dacds_mul;
+            speed_x = speed_x * dacus_mul;
 
             if min_speed > 0.0 {
                 if speed_x == 0.0 {

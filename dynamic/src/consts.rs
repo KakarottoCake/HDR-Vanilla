@@ -197,6 +197,8 @@ pub mod vars {
 
             pub const IS_KILLING_BLOW: i32 = 0x006D;
 
+            pub const IS_DITCIT: i32 = 0x006E;
+
             // ints
 
             pub const LAST_ATTACK_RECEIVER_ENTRY_ID: i32 = 0x0000;

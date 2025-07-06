@@ -31,8 +31,8 @@ unsafe fn ItemThrowDashUniq(fighter: &mut L2CFighterCommon, arg2: L2CValue) -> L
 
     // Add one because it is 0 based
     let current_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_ITEM_THROW_WORK_INT_FRAME) + 1;
-    let start_frame = 0;
-    let end_frame = 6;
+    let start_frame = ParamModule::get_int(fighter.battle_object, ParamType::Common, "ditcit.start_frame");
+    let end_frame = ParamModule::get_int(fighter.battle_object, ParamType::Common, "ditcit.end_frame");
     if current_frame >= start_frame && current_frame < end_frame {
         WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW);
     } 
@@ -76,6 +76,10 @@ unsafe fn is_attacklw4_for_ditcit_input(fighter: &mut L2CFighterCommon) -> bool 
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_ItemThrowDash_Main)]
 unsafe fn status_ItemThrowDash_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if StatusModule::is_changing(fighter.module_accessor) {
+        VarModule::off_flag(fighter.battle_object, vars::common::instance::IS_DITCIT);
+    }
+
     if !CancelModule::is_enable_cancel(fighter.module_accessor)
     || (!fighter.sub_wait_ground_check_common(L2CValue::Bool(false)).get_bool() && !fighter.sub_air_check_fall_common().get_bool()) {
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ITEM_THROW_WORK_FLAG_KILLER) {
@@ -99,6 +103,7 @@ unsafe fn status_ItemThrowDash_Main(fighter: &mut L2CFighterCommon) -> L2CValue 
         && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
             if is_attackhi4_for_ditcit_input(fighter)
             || is_attacklw4_for_ditcit_input(fighter) {
+                VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_DITCIT);
                 fighter.change_status(FIGHTER_STATUS_KIND_ITEM_THROW.into(), false.into());
                 return 0.into();
             }
