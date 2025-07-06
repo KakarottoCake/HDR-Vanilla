@@ -139,6 +139,7 @@ pub unsafe extern "C" fn special_hi_main(fighter: &mut L2CFighterCommon) -> L2CV
     sv_kinetic_energy!(set_speed_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, jump_speed_mul);
     let landing_frame = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.flip_landing_frame");
     WorkModule::set_float(fighter.module_accessor, landing_frame, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
+    fighter.select_cliff_hangdata_from_name("special_hi");
 
     fighter.sub_shift_status_main(L2CValue::Ptr(special_hi_main_loop as *const () as _))
 }
@@ -305,6 +306,7 @@ pub unsafe extern "C" fn special_hi_2_main(fighter: &mut L2CFighterCommon) -> L2
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_2"), 0.0, 1.0, false, 0.0, false, false);
     let landing_frame = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.flip_landing_frame");
     WorkModule::set_float(fighter.module_accessor, landing_frame, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
+    fighter.select_cliff_hangdata_from_name("special_hi");
 
     fighter.sub_shift_status_main(L2CValue::Ptr(special_hi_2_main_loop as *const () as _))
 }
@@ -383,6 +385,7 @@ pub unsafe extern "C" fn special_hi_3_main(fighter: &mut L2CFighterCommon) -> L2
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_3"), 0.0, 1.0, false, 0.0, false, false);
     let landing_frame = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.dive_landing_frame");
     WorkModule::set_float(fighter.module_accessor, landing_frame, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
+    fighter.select_cliff_hangdata_from_name("special_hi");
     
     fighter.sub_shift_status_main(L2CValue::Ptr(special_hi_3_main_loop as *const () as _))
 }
