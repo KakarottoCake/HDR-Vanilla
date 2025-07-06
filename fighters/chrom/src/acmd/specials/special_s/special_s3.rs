@@ -94,7 +94,7 @@ unsafe extern "C" fn game_specials3lw(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
-    frame(lua_state, 12.0);
+    frame(lua_state, 9.0);
     if is_excute(agent) {
         if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
         && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_PARRY) {
