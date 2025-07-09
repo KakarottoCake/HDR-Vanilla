@@ -434,6 +434,7 @@ pub mod vars {
             pub const SPECIAL_HI_DIVE_ENABLE: i32 = 0x1101;
             pub const SPECIAL_HI_DIVE_START: i32 = 0x1102;
             pub const SPECIAL_HI_AERIAL_CANCEL_ENABLE: i32 = 0x1103;
+            pub const SPECIAL_LW_LEDGE_CANCEL: i32 = 0x1104;
         }
     }
 

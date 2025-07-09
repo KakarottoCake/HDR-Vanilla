@@ -21,13 +21,14 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, rate);
     sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, rate * 0.9);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 0, 0, 0, 0, 4.0, 0.0, 4.0, 5.0, Some(0.0), Some(4.0), Some(9.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, f32::NAN, 0.0, 0, false, false, true, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 0, 0, 0, 0, 4.0, 0.0, 5.0, 5.0, Some(0.0), Some(5.0), Some(9.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, f32::NAN, 0.0, 0, false, false, true, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
     }
     frame(lua_state, 38.0);
     FT_MOTION_RATE(agent, 1.0);
     sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.9);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
+        VarModule::on_flag(agent.battle_object, vars::chrom::status::SPECIAL_LW_LEDGE_CANCEL);
     }
     frame(lua_state, 44.0);
     let rate = 26.0 / 32.0;

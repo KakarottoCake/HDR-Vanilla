@@ -35,6 +35,7 @@ pub unsafe extern "C" fn special_lw_init(fighter: &mut L2CFighterCommon) -> L2CV
 
 pub unsafe extern "C" fn special_lw_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.off_flag(*FIGHTER_ROY_STATUS_SPECIAL_LW_FLAG_CONTINUE_MOT);
+    VarModule::off_flag(fighter.battle_object, vars::chrom::status::SPECIAL_LW_LEDGE_CANCEL);
     special_lw_set_kinetic(fighter);
     fighter.sub_shift_status_main(L2CValue::Ptr(special_lw_main_loop as *const () as _))
 }
@@ -42,13 +43,16 @@ pub unsafe extern "C" fn special_lw_main(fighter: &mut L2CFighterCommon) -> L2CV
 unsafe extern "C" fn special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     if !StatusModule::is_changing(fighter.module_accessor)
     && StatusModule::is_situation_changed(fighter.module_accessor) {
+        KineticModule::mul_speed(fighter.module_accessor, &Vector3f::new(0.6, 0.6, 0.6), *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
         if fighter.is_situation(*SITUATION_KIND_GROUND) {
             fighter.set_float(16.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
             fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
             return true.into();
-        } else {
+        } else if VarModule::is_flag(fighter.battle_object, vars::chrom::status::SPECIAL_LW_LEDGE_CANCEL) {
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
             return true.into();
+        } else {
+            special_lw_set_kinetic(fighter);
         }
         return false.into();
     }
@@ -92,9 +96,6 @@ pub unsafe extern "C" fn special_lw_exec(fighter: &mut L2CFighterCommon) -> L2CV
 }
 
 pub unsafe extern "C" fn special_lw_end(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.is_situation(*SITUATION_KIND_GROUND) {
-        KineticModule::mul_speed(fighter.module_accessor, &Vector3f{x: 0.6, y: 0.6, z: 0.6}, *FIGHTER_KINETIC_ENERGY_ID_STOP);
-    }
     return false.into();
 }
 
