@@ -274,6 +274,10 @@ pub mod vars {
             pub const RUN_HIP_OFFSET_X: i32 = 0x0021;
             pub const DACUS_TRANSITION_SPEED: i32 = 0x0022;
             pub const ATTACK_S3_CSTICK_X: i32 = 0x0023;
+            pub const LAST_RECEIVED_ATTACK_HIT_LOCATION: i32 = 0x0024;
+            pub const LAST_RECEIVED_ATTACK_HIT_LOCATION_X: i32 = 0x0024;
+            pub const LAST_RECEIVED_ATTACK_HIT_LOCATION_Y: i32 = 0x0025;
+            pub const LAST_RECEIVED_ATTACK_HIT_LOCATION_Z: i32 = 0x0026;
         }
         pub mod status {
             // flags
@@ -431,7 +435,15 @@ pub mod vars {
     }
 
     pub mod cloud {
-
+        pub mod instance {   
+            // flag
+            pub const SPECIAL_S_DISABLE_STALL: i32 = 0x0100;
+        }
+        pub mod status {
+            // flags
+            pub const SPECIAL_N_HOLD: i32 = 0x1101;
+            pub const SPECIAL_S_STALL: i32 = 0x1102;
+        }
     }
 
     pub mod daisy {
@@ -1292,6 +1304,7 @@ pub mod vars {
             //flags
             pub const CHARGE_STATE_ATTACK: i32 = 0x0102;
             pub const SPECIAL_LW_DISCHARGE_AIR_START: i32 = 0x0103;
+            pub const SPECIAL_HI_DISABLE_JUMP_CANCEL: i32 = 0x0104;
 
             //ints
             pub const CHARGE_STATE_ENABLED: i32 = 0x0100;
@@ -1359,9 +1372,20 @@ pub mod vars {
 
     pub mod pikachu {
         pub mod instance {
+            // ints
+            
+            // floats
+
             // flags
-            pub const SPECIAL_HI_DISABLE_JUMP_CANCEL: i32 = 0x0100;
-            pub const SPECIAL_HI_QUICK_ATTACK_CANCEL: i32 = 0x0101;
+            pub const ATTACK_AIR_LANDING_HIT: i32 = 0x0100;
+        }
+        pub mod status {
+            // ints
+            
+            // floats
+
+            // flags
+            pub const SPECIAL_HI_QUICK_ATTACK_CANCEL: i32 = 0x1100;
         }
     }
 

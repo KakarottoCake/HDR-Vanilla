@@ -183,7 +183,7 @@ unsafe fn jc_agility(boma: &mut BattleObjectModuleAccessor) {
     && boma.status_frame() > 3
     && boma.is_situation(*SITUATION_KIND_GROUND)
     && boma.is_prev_status(*FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_END)
-    && !VarModule::is_flag(boma.object(), vars::pikachu::instance::SPECIAL_HI_DISABLE_JUMP_CANCEL) {
+    && !VarModule::is_flag(boma.object(), vars::pichu::instance::SPECIAL_HI_DISABLE_JUMP_CANCEL) {
         boma.check_jump_cancel(true, false);
     }
 }
@@ -192,22 +192,22 @@ unsafe fn disable_qa_jc(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_status(*FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_WARP) {
         // only allow QAC from QA1
         if WorkModule::get_int(boma, *FIGHTER_PIKACHU_STATUS_WORK_ID_INT_QUICK_ATTACK_COUNT) > 1 {
-            VarModule::on_flag(boma.object(), vars::pikachu::instance::SPECIAL_HI_DISABLE_JUMP_CANCEL);
+            VarModule::on_flag(boma.object(), vars::pichu::instance::SPECIAL_HI_DISABLE_JUMP_CANCEL);
         }
     }
     if boma.is_status(*FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_END) {
         // only allow QAC from QA into ground
         if boma.is_situation(*SITUATION_KIND_AIR) && boma.status_frame() == 2 {
-            VarModule::on_flag(boma.object(), vars::pikachu::instance::SPECIAL_HI_DISABLE_JUMP_CANCEL);
+            VarModule::on_flag(boma.object(), vars::pichu::instance::SPECIAL_HI_DISABLE_JUMP_CANCEL);
         }
     }
 }
 
 unsafe fn reset_jc_disable_flag(boma: &mut BattleObjectModuleAccessor) {
-    if VarModule::is_flag(boma.object(), vars::pikachu::instance::SPECIAL_HI_DISABLE_JUMP_CANCEL)
+    if VarModule::is_flag(boma.object(), vars::pichu::instance::SPECIAL_HI_DISABLE_JUMP_CANCEL)
     && boma.is_situation(*SITUATION_KIND_GROUND)
     && ![*FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_WARP, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_END, *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL].contains(&boma.status()) {
-        VarModule::off_flag(boma.object(), vars::pikachu::instance::SPECIAL_HI_DISABLE_JUMP_CANCEL);
+        VarModule::off_flag(boma.object(), vars::pichu::instance::SPECIAL_HI_DISABLE_JUMP_CANCEL);
         VarModule::off_flag(boma.object(), vars::common::instance::PERFECT_WAVEDASH);
     }
 }
