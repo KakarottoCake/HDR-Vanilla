@@ -26,6 +26,7 @@ mod wait;
 mod squat_wait;
 mod walk;
 mod dash;
+mod dash_back;
 mod turn_dash;
 mod landing;
 mod landing_attack_air;
@@ -51,6 +52,7 @@ pub fn install(agent: &mut Agent) {
     squat_wait::install(agent);
     walk::install(agent);
     dash::install(agent);
+    dash_back::install(agent);
     turn_dash::install(agent);
     landing::install(agent);
     landing_attack_air::install(agent);
