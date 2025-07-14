@@ -2,7 +2,7 @@
 utils::import_noreturn!(common::opff::fighter_common_opff);
 use super::*;
 use globals::*;
- 
+
 // symbol-based call for the pikachu/pichu characters' common opff
 extern "Rust" {
     fn gimmick_flash(boma: &mut BattleObjectModuleAccessor);
@@ -73,10 +73,12 @@ unsafe fn charge_state_damage_multipliers(boma: &mut BattleObjectModuleAccessor)
     if VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED) == 0 {
         VarModule::set_float(boma.object(), vars::pichu::instance::CHARGE_STATE_DAMAGE_MUL, 1.0);
         VarModule::set_float(boma.object(), vars::pichu::instance::CHARGE_STATE_RECOIL_MUL, 1.0);
+        MeterModule::set_damage_gain_mul(boma.object(), 1.0);
     }
     else if VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED) == 1 {
         VarModule::set_float(boma.object(), vars::pichu::instance::CHARGE_STATE_DAMAGE_MUL, 1.2);
         VarModule::set_float(boma.object(), vars::pichu::instance::CHARGE_STATE_RECOIL_MUL, 1.25);
+        MeterModule::set_damage_gain_mul(boma.object(), 0.0);
     }
 }
 
@@ -141,15 +143,12 @@ unsafe fn zippy_zap_jump_cancel(boma: &mut BattleObjectModuleAccessor, status_ki
 // Full Meter Gain/Drain via shield during up/down taunt
 unsafe fn charge_training_taunt(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, status_kind: i32) {
     let mut agent_base = fighter.fighter_base.agent_base;
-    if is_training_mode() {
-        if status_kind == *FIGHTER_STATUS_KIND_APPEAL {
-            if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) {
-                if VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED) == 0 { 
-                    let meter_max = (MeterModule::meter_cap(fighter.object()) as f32 * MeterModule::meter_per_level(fighter.object()));
-                    MeterModule::add(boma.object(), meter_max);
-                }
-            }
-        }         
+    if is_training_mode()
+    && status_kind == *FIGHTER_STATUS_KIND_APPEAL
+    && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD)
+    && VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED) == 0 { 
+        let meter_max = (MeterModule::meter_cap(fighter.object()) as f32 * MeterModule::meter_per_level(fighter.object()));
+        MeterModule::add(boma.object(), meter_max);
     }
 }
 

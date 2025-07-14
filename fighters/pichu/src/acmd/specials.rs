@@ -22,11 +22,8 @@ unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
         ArticleModule::generate_article(boma, *FIGHTER_PICHU_GENERATE_ARTICLE_DENGEKIDAMA, false, -1);
         if !VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
             MeterModule::add(agent.battle_object, 2.0);
-            FT_ADD_DAMAGE(agent, 1.0);
         }
-        else {
-            FT_ADD_DAMAGE(agent, 3.0);
-        }
+        PICHU_ADD_DAMAGE(agent, 2.0);
     }
 }
 
@@ -50,17 +47,16 @@ unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         WorkModule::on_flag(boma, /*Flag*/ *FIGHTER_PIKACHU_STATUS_WORK_ID_FLAG_SKULL_BASH_ATTACK_TRIGGER);
         if !VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
-            FT_ADD_DAMAGE(agent, 1.0);
             ATTACK(agent, 0, 0, Hash40::new("top"), 8.0, 68, 55, 0, 70, 3.2, 0.0, 3.3, 4.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
             WorkModule::on_flag(boma, /*Flag*/ *FIGHTER_PIKACHU_STATUS_WORK_ID_FLAG_SKULL_BASH_CALC_ATTACK_POWER);
         }
         else {
-            FT_ADD_DAMAGE(agent, 3.0);
             FT_DESIRED_RATE(agent, 18.0, 12.0);
             ATTACK(agent, 0, 0, Hash40::new("top"), 25.0, 40, 65, 0, 60, 3.2, 0.0, 3.3, 4.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_HEAD);
             wait(lua_state, 9.0);
             ATTACK(agent, 0, 0, Hash40::new("top"), 15.0, 40, 65, 0, 60, 3.2, 0.0, 3.3, 4.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_HEAD);
         }
+        PICHU_ADD_DAMAGE(agent, 2.0);
         AttackModule::set_attack_keep_rumble(boma, 0, true);
     }
     frame(lua_state, 16.0);
@@ -158,11 +154,8 @@ unsafe extern "C" fn game_specialhi1(agent: &mut L2CAgentBase) {
         }
         if VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
             ATTACK(agent, 0, 0, Hash40::new("hip"), 2.0, 70, 50, 0, 20, 1.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
-            FT_ADD_DAMAGE(agent, 1.0);
         }
-        else {
-            FT_ADD_DAMAGE(agent, 0.5);
-        }
+        PICHU_ADD_DAMAGE(agent, 0.5);
         JostleModule::set_status(boma, false);
     }
 }
@@ -194,11 +187,8 @@ unsafe extern "C" fn game_specialhi2(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         if VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
             ATTACK(agent, 0, 0, Hash40::new("hip"), 3.0, 70, 150, 0, 20, 1.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
-            FT_ADD_DAMAGE(agent, 2.0);
         }
-        else {
-            FT_ADD_DAMAGE(agent, 1.0);
-        }
+        PICHU_ADD_DAMAGE(agent, 1.0);
         JostleModule::set_status(boma, false);
     }
 }
@@ -311,7 +301,7 @@ unsafe extern "C" fn game_speciallwhit(agent: &mut L2CAgentBase) {
         if !VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
             MeterModule::watch_damage(agent.battle_object, true);
             MeterModule::add(agent.battle_object, 2.0);
-            FT_ADD_DAMAGE(agent, 3.5);
+            PICHU_ADD_DAMAGE(agent, 4.0);
             ATTACK(agent, 0, 0, Hash40::new("top"), 14.0, 361, 71, 0, 90, 11.0, 0.0, 10.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 12, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_NONE);
         }
         else {
@@ -323,7 +313,7 @@ unsafe extern "C" fn game_speciallwhit(agent: &mut L2CAgentBase) {
                 let air_brake_x = WorkModule::get_param_float(boma, hash40("air_brake_x"), 0);
                 sv_kinetic_energy!(set_brake, agent, FIGHTER_KINETIC_ENERGY_ID_STOP, air_brake_x, 0.0);
             }
-            FT_ADD_DAMAGE(agent, 8.0 * discharge_power_mul);
+            PICHU_ADD_DAMAGE(agent, 8.0 * discharge_power_mul);
             ATTACK(agent, 0, 0, Hash40::new("top"), 20.0 * discharge_power_mul, 361, 80, 0, 70, 10.0 * discharge_size_mul, 0.0, 10.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 12, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_NONE);
             VarModule::set_int(boma.object(), vars::common::instance::GIMMICK_TIMER, 0);
         }
