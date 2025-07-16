@@ -10,73 +10,72 @@ extern "Rust" {
 
 // handles pichu's charge increase
 unsafe fn charge_state_increase(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
-    if VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED) == 0 {
-        if MeterModule::level(boma.object()) >= MeterModule::meter_cap(boma.object()) {
-            let charge_state_time = ParamModule::get_int(boma.object(), ParamType::Agent, "charge_state_time");
-            VarModule::set_int(boma.object(), vars::common::instance::GIMMICK_TIMER, charge_state_time);
-            VarModule::set_int(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED, 1);
-            //gimmick_flash(boma);
-        }
+    if !VarModule::is_flag(fighter.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED)
+    && MeterModule::level(boma.object()) >= MeterModule::meter_cap(boma.object()) {
+        let charge_state_time = ParamModule::get_int(boma.object(), ParamType::Agent, "charge_state_time");
+        VarModule::set_int(boma.object(), vars::common::instance::GIMMICK_TIMER, charge_state_time);
+        VarModule::on_flag(fighter.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED)
+        //gimmick_flash(boma);
     }
 }
 
 // handles pichu's charge decrease once at full charge
 unsafe fn charge_state_decrease(boma: &mut BattleObjectModuleAccessor) {
-    if VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED) == 1 {
-        if VarModule::get_int(boma.object(), vars::common::instance::GIMMICK_TIMER) > 0 
-        && !boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_LW]) {
-            let charge_state_time = ParamModule::get_int(boma.object(), ParamType::Agent, "charge_state_time");
-            VarModule::dec_int(boma.object(), vars::common::instance::GIMMICK_TIMER);
-            let meter_max = (MeterModule::meter_cap(boma.object()) as f32 * MeterModule::meter_per_level(boma.object()));
-            MeterModule::drain_direct(boma.object(), meter_max / (charge_state_time as f32));
-            if VarModule::get_int(boma.object(), vars::common::instance::GIMMICK_TIMER) == charge_state_time - 45 {
-                let handle = VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_EFFECT_HANDLER);
-                EffectModule::set_scale(boma, handle as u32, &Vector3f{ x: 0.8, y: 0.8, z: 0.8 });
-            }
-            if VarModule::get_int(boma.object(), vars::common::instance::GIMMICK_TIMER) == charge_state_time - 60 {
-                let handle = VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_EFFECT_HANDLER);
-                EffectModule::set_scale(boma, handle as u32, &Vector3f{ x: 0.7, y: 0.7, z: 0.7 });
-            }
-            if VarModule::get_int(boma.object(), vars::common::instance::GIMMICK_TIMER) == charge_state_time - 75 {
-                let handle = VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_EFFECT_HANDLER);
-                EffectModule::set_scale(boma, handle as u32, &Vector3f{ x: 0.6, y: 0.6, z: 0.6 });
-            }
-            if VarModule::get_int(boma.object(), vars::common::instance::GIMMICK_TIMER) == charge_state_time - 90 {
-                let handle = VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_EFFECT_HANDLER);
-                EffectModule::set_scale(boma, handle as u32, &Vector3f{ x: 0.5, y: 0.5, z: 0.5 });
-            }
-            if VarModule::get_int(boma.object(), vars::common::instance::GIMMICK_TIMER) == charge_state_time - 72 {
-                STOP_SE(get_fighter_common_from_accessor(boma), Hash40::new("vc_pichu_final01"));
-            }
+    if !VarModule::is_flag(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED) {
+        return;
+    }
+    if VarModule::get_int(boma.object(), vars::common::instance::GIMMICK_TIMER) > 0 
+    && !boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_LW]) {
+        let charge_state_time = ParamModule::get_int(boma.object(), ParamType::Agent, "charge_state_time");
+        VarModule::dec_int(boma.object(), vars::common::instance::GIMMICK_TIMER);
+        let meter_max = (MeterModule::meter_cap(boma.object()) as f32 * MeterModule::meter_per_level(boma.object()));
+        MeterModule::drain_direct(boma.object(), meter_max / (charge_state_time as f32));
+        if VarModule::get_int(boma.object(), vars::common::instance::GIMMICK_TIMER) == charge_state_time - 45 {
+            let handle = VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_EFFECT_HANDLER);
+            EffectModule::set_scale(boma, handle as u32, &Vector3f{ x: 0.8, y: 0.8, z: 0.8 });
         }
-        if VarModule::get_int(boma.object(), vars::common::instance::GIMMICK_TIMER) <= 0 {
-            VarModule::set_int(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED, 0);
-            EffectModule::req_on_joint(
-                boma,
-                Hash40::new("sys_smash_flash"),
-                Hash40::new("head"),
-                &Vector3f::zero(),
-                &Vector3f::zero(),
-                1.5,
-                &Vector3f::zero(),
-                &Vector3f::zero(),
-                false,
-                0,
-                0,
-                0
-            );
+        if VarModule::get_int(boma.object(), vars::common::instance::GIMMICK_TIMER) == charge_state_time - 60 {
+            let handle = VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_EFFECT_HANDLER);
+            EffectModule::set_scale(boma, handle as u32, &Vector3f{ x: 0.7, y: 0.7, z: 0.7 });
         }
+        if VarModule::get_int(boma.object(), vars::common::instance::GIMMICK_TIMER) == charge_state_time - 75 {
+            let handle = VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_EFFECT_HANDLER);
+            EffectModule::set_scale(boma, handle as u32, &Vector3f{ x: 0.6, y: 0.6, z: 0.6 });
+        }
+        if VarModule::get_int(boma.object(), vars::common::instance::GIMMICK_TIMER) == charge_state_time - 90 {
+            let handle = VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_EFFECT_HANDLER);
+            EffectModule::set_scale(boma, handle as u32, &Vector3f{ x: 0.5, y: 0.5, z: 0.5 });
+        }
+        if VarModule::get_int(boma.object(), vars::common::instance::GIMMICK_TIMER) == charge_state_time - 72 {
+            STOP_SE(get_fighter_common_from_accessor(boma), Hash40::new("vc_pichu_final01"));
+        }
+    }
+    if VarModule::get_int(boma.object(), vars::common::instance::GIMMICK_TIMER) <= 0 {
+        VarModule::off_flag(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED);
+        EffectModule::req_on_joint(
+            boma,
+            Hash40::new("sys_smash_flash"),
+            Hash40::new("head"),
+            &Vector3f::zero(),
+            &Vector3f::zero(),
+            1.5,
+            &Vector3f::zero(),
+            &Vector3f::zero(),
+            false,
+            0,
+            0,
+            0
+        );
     }
 }
 
 // handles the damage multipliers
 unsafe fn charge_state_damage_multipliers(boma: &mut BattleObjectModuleAccessor) {
-    if VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED) == 0 {
+    if !VarModule::is_flag(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED) {
         VarModule::set_float(boma.object(), vars::pichu::instance::CHARGE_STATE_DAMAGE_MUL, 1.0);
         VarModule::set_float(boma.object(), vars::pichu::instance::CHARGE_STATE_RECOIL_MUL, 1.0);
         MeterModule::set_damage_gain_mul(boma.object(), 1.0);
-    }
-    else if VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED) == 1 {
+    } else {
         VarModule::set_float(boma.object(), vars::pichu::instance::CHARGE_STATE_DAMAGE_MUL, 1.2);
         VarModule::set_float(boma.object(), vars::pichu::instance::CHARGE_STATE_RECOIL_MUL, 1.25);
         MeterModule::set_damage_gain_mul(boma.object(), 0.0);
@@ -85,37 +84,35 @@ unsafe fn charge_state_damage_multipliers(boma: &mut BattleObjectModuleAccessor)
 
 // charge status resets on death and game end
 unsafe fn charge_state_reset(boma: &mut BattleObjectModuleAccessor) {
-    if lua_bind::FighterManager::is_result_mode(utils::singletons::FighterManager()) {
-        VarModule::set_int(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED, 0);
-        VarModule::set_int(boma.object(), vars::common::instance::GIMMICK_TIMER, 0);
-        VarModule::set_int(boma.object(), vars::pichu::instance::CHARGE_EFFECT_HANDLER, -1);
-        MeterModule::reset(boma.object());
-    }
-    
-    if boma.is_status_one_of(&[
+    if !sv_information::is_ready_go()
+    || lua_bind::FighterManager::is_result_mode(utils::singletons::FighterManager())
+    || boma.is_status_one_of(&[
         *FIGHTER_STATUS_KIND_WIN,
         *FIGHTER_STATUS_KIND_LOSE,
-        *FIGHTER_STATUS_KIND_ENTRY,]) || !sv_information::is_ready_go() {
+        *FIGHTER_STATUS_KIND_ENTRY,
+    ]) {
         VarModule::set_int(boma.object(), vars::common::instance::GIMMICK_TIMER, 0);
-        VarModule::set_int(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED, 0);
+        VarModule::off_flag(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED);
         VarModule::set_int(boma.object(), vars::pichu::instance::CHARGE_EFFECT_HANDLER, -1);
         MeterModule::reset(boma.object());
     }
 
     if boma.is_status_one_of(&[
         *FIGHTER_STATUS_KIND_DEAD,
-        *FIGHTER_STATUS_KIND_REBIRTH]) {
-            VarModule::set_int(boma.object(), vars::common::instance::GIMMICK_TIMER, 0);
-            if VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED) == 1 {
-                VarModule::set_int(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED, 0);
-                MeterModule::drain_direct(boma.object(), (MeterModule::meter(boma.object())/3.0)*2.0);
-            }
+        *FIGHTER_STATUS_KIND_REBIRTH
+    ]) {
+        VarModule::set_int(boma.object(), vars::common::instance::GIMMICK_TIMER, 0);
+        if VarModule::is_flag(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED) {
+            VarModule::off_flag(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED);
+            let meter_lost = MeterModule::meter(boma.object()) * 2.0 / 3.0;
+            MeterModule::drain_direct(boma.object(), meter_lost);
         }
+    }
 }
 
 // handles the effects of pichu's charged state
 unsafe fn charge_state_effects(boma: &mut BattleObjectModuleAccessor) {
-    if VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED) == 1
+    if VarModule::is_flag(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED)
     && VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_EFFECT_HANDLER) == -1 {
         app::FighterUtil::flash_eye_info(boma);
         let handle = EffectModule::req_follow(boma, Hash40::new("pichu_final_hold"), Hash40::new("waist"), &Vector3f{x: 0.0, y: 0.0, z: 0.0}, &Vector3f::zero(), 0.9, true, 0, 0, 0, 0, 0, true, true) as u32;
@@ -123,7 +120,8 @@ unsafe fn charge_state_effects(boma: &mut BattleObjectModuleAccessor) {
         PLAY_SE(get_fighter_common_from_accessor(boma), Hash40::new("vc_pichu_final01"));
         PLAY_SE(get_fighter_common_from_accessor(boma), Hash40::new("se_pichu_final02"));
     }
-    else if VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED) == 0 && VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_EFFECT_HANDLER) != -1 {
+    else if !VarModule::is_flag(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED) 
+    && VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_EFFECT_HANDLER) != -1 {
         let handle = VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_EFFECT_HANDLER) as u32;
         EffectModule::kill(boma, handle, false, false);
         VarModule::set_int(boma.object(), vars::pichu::instance::CHARGE_EFFECT_HANDLER, -1);
@@ -131,12 +129,15 @@ unsafe fn charge_state_effects(boma: &mut BattleObjectModuleAccessor) {
 }
 
 unsafe fn zippy_zap_jump_cancel(boma: &mut BattleObjectModuleAccessor, status_kind: i32, situation_kind: i32, cat1: i32) {
-    if [*FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_WARP, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_END].contains(&status_kind) && VarModule::is_flag(boma.object(), vars::pichu::instance::CHARGE_STATE_ATTACK) {
-        if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
-        && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_PARRY) 
-        && !boma.is_in_hitlag() {
-            boma.check_jump_cancel(false, false);
-        }
+    if [
+        *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_WARP,
+        *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_END
+    ].contains(&status_kind) 
+    && VarModule::is_flag(boma.object(), vars::pichu::instance::CHARGE_STATE_ATTACK) 
+    && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
+    && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_PARRY) 
+    && !boma.is_in_hitlag() {
+        boma.check_jump_cancel(false, false);
     }
 }
 
@@ -147,7 +148,7 @@ unsafe fn charge_training_taunt(fighter: &mut L2CFighterCommon, boma: &mut Battl
     if is_training_mode()
     && status_kind == *FIGHTER_STATUS_KIND_APPEAL
     && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD)
-    && VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED) == 0 { 
+    && !VarModule::is_flag(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED) { 
         let meter_max = (MeterModule::meter_cap(fighter.object()) as f32 * MeterModule::meter_per_level(fighter.object()));
         MeterModule::add(boma.object(), meter_max);
     }
@@ -162,21 +163,20 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_HOLD,
         *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_END,
         *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_LW_HIT
-        ]) 
+    ]) 
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
     }
 }
 
 unsafe fn skull_bash_edge_cancel(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status(*FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_END) {
-        if fighter.global_table[PREV_SITUATION_KIND] == SITUATION_KIND_GROUND
-        && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_AIR {
-            fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL, false);
-        }
+    if fighter.is_status(*FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_END) 
+    && fighter.global_table[PREV_SITUATION_KIND] == SITUATION_KIND_GROUND
+    && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_AIR {
+        fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL, false);
     }
 }
-    
+
 // JC Agility
 unsafe fn jc_agility(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_status(*FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL)
@@ -206,29 +206,31 @@ unsafe fn disable_qa_jc(boma: &mut BattleObjectModuleAccessor) {
 unsafe fn reset_jc_disable_flag(boma: &mut BattleObjectModuleAccessor) {
     if VarModule::is_flag(boma.object(), vars::pichu::instance::SPECIAL_HI_DISABLE_JUMP_CANCEL)
     && boma.is_situation(*SITUATION_KIND_GROUND)
-    && ![*FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_WARP, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_END, *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL].contains(&boma.status()) {
+    && ![
+        *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_WARP,
+        *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_END,
+        *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL
+    ].contains(&boma.status()) {
         VarModule::off_flag(boma.object(), vars::pichu::instance::SPECIAL_HI_DISABLE_JUMP_CANCEL);
         VarModule::off_flag(boma.object(), vars::common::instance::PERFECT_WAVEDASH);
     }
 }
 
-pub extern "C" fn pichu_meter(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
-    unsafe {
-        if !sv_information::is_ready_go() && fighter.status_frame() < 1 {
-            return;
-        }
-        MeterModule::update(fighter.object(), false);
-        MeterModule::set_meter_cap(fighter.object(), 1);
-        MeterModule::set_meter_per_level(fighter.object(), 70.0);
-        utils::ui::UiManager::set_pichu_meter_enable(fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32, true);
-        utils::ui::UiManager::set_pichu_meter_info(
-            fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32,
-            MeterModule::meter(fighter.object()),
-            (MeterModule::meter_cap(fighter.object()) as f32 * MeterModule::meter_per_level(fighter.object())),
-            MeterModule::meter_per_level(fighter.object()),
-            VarModule::get_int(fighter.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED) == 1
-        );
+pub unsafe extern "C" fn pichu_meter(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
+    if !sv_information::is_ready_go() && fighter.status_frame() < 1 {
+        return;
     }
+    MeterModule::update(fighter.object(), false);
+    MeterModule::set_meter_cap(fighter.object(), 1);
+    MeterModule::set_meter_per_level(fighter.object(), 70.0);
+    utils::ui::UiManager::set_pichu_meter_enable(fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32, true);
+    utils::ui::UiManager::set_pichu_meter_info(
+        fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32,
+        MeterModule::meter(fighter.object()),
+        (MeterModule::meter_cap(fighter.object()) as f32 * MeterModule::meter_per_level(fighter.object())),
+        MeterModule::meter_per_level(fighter.object()),
+        VarModule::is_flag(fighter.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED)
+    );
 }
 
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
@@ -246,11 +248,9 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     reset_jc_disable_flag(boma);
 }
 
-pub extern "C" fn pichu_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
-    unsafe {
-        common::opff::fighter_common_opff(fighter);
-		pichu_frame(fighter);
-    }
+pub unsafe extern "C" fn pichu_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
+    common::opff::fighter_common_opff(fighter);
+	pichu_frame(fighter);
 }
 
 pub unsafe fn pichu_frame(fighter: &mut smash::lua2cpp::L2CFighterCommon) {

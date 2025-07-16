@@ -87,7 +87,7 @@ unsafe extern "C" fn game_throwf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     let damage_mul = VarModule::get_float(boma.object(), vars::pichu::instance::CHARGE_STATE_DAMAGE_MUL);
-    let charged = VarModule::get_int(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED) == 1;
+    let charged = VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED);
     let throw_damage = 6.0;
     if is_excute(agent) {
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, throw_damage * damage_mul, 45, 115, 0, 65, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
@@ -126,7 +126,7 @@ unsafe extern "C" fn game_throwb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     let damage_mul = VarModule::get_float(boma.object(), vars::pichu::instance::CHARGE_STATE_DAMAGE_MUL);
-    let charged = VarModule::get_int(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED) == 1;
+    let charged = VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED);
     if is_excute(agent) {
         if charged {
             ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 9.0 * damage_mul, 98, 52, 0, 66, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
@@ -157,7 +157,7 @@ unsafe extern "C" fn game_throwb(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_throwb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let charged = VarModule::get_int(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED) == 1;
+    let charged = VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED);
     if is_excute(agent) {
         if charged {
             EFFECT(agent, Hash40::new("sys_level_up"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.6, 0, 0, 0, 0, 0, 0, true);
@@ -202,7 +202,7 @@ unsafe extern "C" fn game_throwhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     let damage_mul = VarModule::get_float(boma.object(), vars::pichu::instance::CHARGE_STATE_DAMAGE_MUL);
-    let charged = VarModule::get_int(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED) == 1;
+    let charged = VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED);
     let throw_damage = 5.0;
     if is_excute(agent) {
         if charged {
@@ -236,7 +236,7 @@ unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     let damage_mul = VarModule::get_float(boma.object(), vars::pichu::instance::CHARGE_STATE_DAMAGE_MUL);
-    let charged = VarModule::get_int(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED) == 1;
+    let charged = VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED);
     let charge_state_time = ParamModule::get_int(boma.object(), ParamType::Agent, "charge_state_time");
     if is_excute(agent) {
         if charged {
@@ -283,7 +283,7 @@ unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_throwlw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let charged = VarModule::get_int(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED) == 1;
+    let charged = VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED);
     frame(lua_state, 7.0);
     if is_excute(agent) {
         if charged {

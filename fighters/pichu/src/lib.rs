@@ -55,8 +55,7 @@ pub unsafe fn PICHU_ADD_DAMAGE(agent: &mut L2CAgentBase, damage: f32) {
     FT_ADD_DAMAGE(agent, damage * recoil_mul);
 
     // Add meter progress
-    let charged = VarModule::get_int(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED) == 1;
-    if !charged {
+    if !VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED) {
         MeterModule::add(agent.battle_object, damage);
     }
 }

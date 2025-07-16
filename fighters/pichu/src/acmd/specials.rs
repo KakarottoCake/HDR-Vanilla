@@ -3,7 +3,7 @@ use super::*;
 unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let charged = if agent.kind() == *FIGHTER_KIND_KIRBY {false} else {VarModule::get_int(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED) == 1};
+    let charged = if agent.kind() == *FIGHTER_KIND_KIRBY {false} else {VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED)};
     let charge_state_time = if agent.kind() == *FIGHTER_KIND_KIRBY {1} else {ParamModule::get_int(boma.object(), ParamType::Agent, "charge_state_time")};
     if is_excute(agent) {
         VarModule::off_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK);
@@ -31,7 +31,7 @@ unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let charged = VarModule::get_int(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED) == 1;
+    let charged = VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED);
     let charge_state_time = ParamModule::get_int(boma.object(), ParamType::Agent, "charge_state_time");
     frame(lua_state, 1.0);
     if is_excute(agent) {
@@ -73,7 +73,7 @@ unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_specials(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let charged = VarModule::get_int(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED) == 1;
+    let charged = VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED);
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         EFFECT(agent, Hash40::new("pichu_rocket_bomb"), Hash40::new("top"), 0, 4, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
@@ -144,7 +144,7 @@ unsafe extern "C" fn game_specialairsmissend(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialhi1(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let charged = VarModule::get_int(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED) == 1;
+    let charged = VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED);
     let charge_state_time = ParamModule::get_int(boma.object(), ParamType::Agent, "charge_state_time");
     if is_excute(agent) {
         VarModule::off_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK);
@@ -164,7 +164,7 @@ unsafe extern "C" fn game_specialhi1(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn expression_specialhi1(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let charged = VarModule::get_int(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED) == 1;
+    let charged = VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED);
     frame(lua_state, 1.0);
     if is_excute(agent) {
         VisibilityModule::set_whole(boma, false);
@@ -184,7 +184,7 @@ unsafe extern "C" fn expression_specialhi1(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialhi2(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let charged = VarModule::get_int(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED) == 1;
+    let charged = VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED);
     if is_excute(agent) {
         if VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
             ATTACK(agent, 0, 0, Hash40::new("hip"), 3.0, 70, 150, 0, 20, 1.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
@@ -197,7 +197,7 @@ unsafe extern "C" fn game_specialhi2(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn expression_specialhi2(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let charged = VarModule::get_int(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED) == 1;
+    let charged = VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED);
     frame(lua_state, 1.0);
     if is_excute(agent) {
         VisibilityModule::set_whole(boma, false);
@@ -218,7 +218,7 @@ unsafe extern "C" fn expression_specialhi2(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let charged = VarModule::get_int(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED) == 1;
+    let charged = VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ENABLED);
     frame(lua_state, 1.0);
     if is_excute(agent) {
         if charged {
