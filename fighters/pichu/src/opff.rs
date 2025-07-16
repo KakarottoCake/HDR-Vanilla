@@ -11,7 +11,7 @@ extern "Rust" {
 // handles pichu's charge increase
 unsafe fn charge_state_increase(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     if VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED) == 0 {
-        if MeterModule::level(boma.object()) == 2 {
+        if MeterModule::level(boma.object()) >= MeterModule::meter_cap(boma.object()) {
             let charge_state_time = ParamModule::get_int(boma.object(), ParamType::Agent, "charge_state_time");
             VarModule::set_int(boma.object(), vars::common::instance::GIMMICK_TIMER, charge_state_time);
             VarModule::set_int(boma.object(), vars::pichu::instance::CHARGE_STATE_ENABLED, 1);
@@ -27,7 +27,8 @@ unsafe fn charge_state_decrease(boma: &mut BattleObjectModuleAccessor) {
         && !boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_LW]) {
             let charge_state_time = ParamModule::get_int(boma.object(), ParamType::Agent, "charge_state_time");
             VarModule::dec_int(boma.object(), vars::common::instance::GIMMICK_TIMER);
-            MeterModule::drain_direct(boma.object(), 50.0/(charge_state_time as f32));
+            let meter_max = (MeterModule::meter_cap(boma.object()) as f32 * MeterModule::meter_per_level(boma.object()));
+            MeterModule::drain_direct(boma.object(), meter_max / (charge_state_time as f32));
             if VarModule::get_int(boma.object(), vars::common::instance::GIMMICK_TIMER) == charge_state_time - 45 {
                 let handle = VarModule::get_int(boma.object(), vars::pichu::instance::CHARGE_EFFECT_HANDLER);
                 EffectModule::set_scale(boma, handle as u32, &Vector3f{ x: 0.8, y: 0.8, z: 0.8 });
@@ -217,8 +218,8 @@ pub extern "C" fn pichu_meter(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
             return;
         }
         MeterModule::update(fighter.object(), false);
-        MeterModule::set_meter_cap(fighter.object(), 2);
-        MeterModule::set_meter_per_level(fighter.object(), 25.0);
+        MeterModule::set_meter_cap(fighter.object(), 1);
+        MeterModule::set_meter_per_level(fighter.object(), 70.0);
         utils::ui::UiManager::set_pichu_meter_enable(fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32, true);
         utils::ui::UiManager::set_pichu_meter_info(
             fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32,

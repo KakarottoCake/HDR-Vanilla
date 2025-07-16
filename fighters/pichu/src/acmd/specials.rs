@@ -13,7 +13,8 @@ unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
         else if charged {
             VarModule::on_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK);
             VarModule::sub_int(agent.battle_object, vars::common::instance::GIMMICK_TIMER, 180);
-            MeterModule::drain_direct(boma.object(), (50.0/(charge_state_time as f32)) * 180.0);
+            let meter_max = (MeterModule::meter_cap(boma.object()) as f32 * MeterModule::meter_per_level(boma.object()));
+            MeterModule::drain_direct(boma.object(), (meter_max / (charge_state_time as f32)) * 180.0);
         }
     }
     frame(lua_state, 18.0);
