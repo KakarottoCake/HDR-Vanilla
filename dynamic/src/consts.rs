@@ -1308,8 +1308,7 @@ pub mod vars {
             //flags
             pub const CHARGE_STATE_ATTACK: i32 = 0x0102;
             pub const SPECIAL_LW_DISCHARGE_AIR_START: i32 = 0x0103;
-            pub const SPECIAL_HI_DISABLE_JUMP_CANCEL: i32 = 0x0104;
-            pub const CHARGE_STATE_ENABLED: i32 = 0x0105;
+            pub const CHARGE_STATE_ENABLED: i32 = 0x0104;
 
             //ints
             pub const CHARGE_EFFECT_HANDLER: i32 = 0x0101;
@@ -1319,6 +1318,9 @@ pub mod vars {
             pub const CHARGE_STATE_RECOIL_MUL: i32 = 0x0101;
             pub const SPECIAL_LW_DISCHARGE_DAMAGE_MUL: i32 = 0x0102;
             pub const SPECIAL_LW_DISCHARGE_SIZE_MUL: i32 = 0x0103;
+        }
+        pub mod status {
+            pub const SPECIAL_HI_QUICK_ATTACK_CANCEL: i32 = 0x1100;
         }
     }
 
