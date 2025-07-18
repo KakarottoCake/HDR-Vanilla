@@ -428,9 +428,13 @@ pub mod vars {
             pub use super::super::roy::instance::TRAIL_EFFECT;
         }
         pub mod status {
+            // ints
+            pub const SPECIAL_HI_START_SITUATION: i32 = 0x1101;
             // flags
             pub const SPECIAL_HI_DIVE_ENABLE: i32 = 0x1101;
             pub const SPECIAL_HI_DIVE_START: i32 = 0x1102;
+            pub const SPECIAL_HI_AERIAL_CANCEL_ENABLE: i32 = 0x1103;
+            pub const SPECIAL_LW_LEDGE_CANCEL: i32 = 0x1104;
         }
     }
 
@@ -1304,6 +1308,7 @@ pub mod vars {
             //flags
             pub const CHARGE_STATE_ATTACK: i32 = 0x0102;
             pub const SPECIAL_LW_DISCHARGE_AIR_START: i32 = 0x0103;
+            pub const SPECIAL_HI_DISABLE_JUMP_CANCEL: i32 = 0x0104;
 
             //ints
             pub const CHARGE_STATE_ENABLED: i32 = 0x0100;
@@ -1371,9 +1376,20 @@ pub mod vars {
 
     pub mod pikachu {
         pub mod instance {
+            // ints
+            
+            // floats
+
             // flags
-            pub const SPECIAL_HI_DISABLE_JUMP_CANCEL: i32 = 0x0100;
-            pub const SPECIAL_HI_QUICK_ATTACK_CANCEL: i32 = 0x0101;
+            pub const ATTACK_AIR_LANDING_HIT: i32 = 0x0100;
+        }
+        pub mod status {
+            // ints
+            
+            // floats
+
+            // flags
+            pub const SPECIAL_HI_QUICK_ATTACK_CANCEL: i32 = 0x1100;
         }
     }
 
