@@ -2,8 +2,6 @@ use super::*;
 use globals::*;
 // status script import
 
-const END_HEIGHT: f32 = 5.0;
-
 unsafe extern "C" fn special_hi_end_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(
         fighter.module_accessor,
@@ -52,13 +50,14 @@ unsafe extern "C" fn special_hi_end_main_loop(fighter: &mut L2CFighterCommon) ->
             // this is a hack
             fighter.change_status(FIGHTER_STATUS_KIND_ESCAPE_AIR.into(), false.into());
             VarModule::on_flag(fighter.battle_object, vars::common::instance::PERFECT_WAVEDASH);
-            PostureModule::add_pos(fighter.module_accessor, &Vector3f::new(0.0, -END_HEIGHT, 0.0));
             return true.into();
         }
 
-        fighter.sub_air_check_dive();
-        if fighter.sub_wait_ground_check_common(false.into()).get_bool()
-        || fighter.sub_air_check_fall_common().get_bool() {
+        if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+            return true.into();
+        }
+        if fighter.sub_air_check_fall_common().get_bool() {
+            PostureModule::add_pos(fighter.module_accessor, &Vector3f::new(0.0, 5.0, 0.0));
             return true.into();
         }
     }
@@ -83,7 +82,6 @@ unsafe extern "C" fn special_hi_end_main_loop(fighter: &mut L2CFighterCommon) ->
         if situation_kind == *SITUATION_KIND_GROUND {
             // disable gravity and place pichu in the air
             KineticModule::clear_speed_energy_id(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-            PostureModule::add_pos(fighter.module_accessor, &Vector3f::new(0.0, END_HEIGHT, 0.0));
             StatusModule::set_situation_kind(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_AIR), false);
             fighter.global_table[PREV_SITUATION_KIND].assign(&L2CValue::I32(situation_kind));
             fighter.global_table[SITUATION_KIND].assign(&L2CValue::I32(*SITUATION_KIND_AIR));

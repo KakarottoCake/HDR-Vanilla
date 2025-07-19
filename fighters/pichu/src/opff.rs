@@ -143,7 +143,7 @@ unsafe fn zippy_zap_attack_cancels(fighter: &mut L2CFighterCommon) {
         *FIGHTER_STATUS_KIND_SPECIAL_HI,
         *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_WARP,
     ].contains(&fighter.status())
-    && StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_GROUND
+    && StatusModule::situation_kind(fighter.module_accessor) != *SITUATION_KIND_GROUND
     && VarModule::is_flag(fighter.battle_object, vars::pichu::status::SPECIAL_HI_QUICK_ATTACK_CANCEL)
     && !fighter.is_in_hitlag()
     && fighter.get_aerial() != None { // Aerial cancels
