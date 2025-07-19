@@ -173,6 +173,7 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     let damage_mul = VarModule::get_float(boma.object(), vars::pichu::instance::CHARGE_STATE_DAMAGE_MUL);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        VarModule::on_flag(agent.battle_object, vars::pikachu::instance::ATTACK_AIR_LANDING_HIT);
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {
@@ -182,6 +183,10 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
         MeterModule::watch_damage(agent.battle_object, true);
         ATTACK(agent, 0, 0, Hash40::new("neck"), 13.0 * damage_mul,  60, 89, 0, 40, 4.5, 0.0,  0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_HEAD);
         ATTACK(agent, 1, 0, Hash40::new("neck"), 14.0 * damage_mul, 270, 47, 0, 23, 5.5, 4.5, -1.3, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_HEAD);
+    }
+    frame(lua_state, 15.0);
+    if is_excute(agent) {
+        VarModule::off_flag(agent.battle_object, vars::pikachu::instance::ATTACK_AIR_LANDING_HIT);
     }
     frame(lua_state, 18.0);
     if is_excute(agent) {
@@ -200,6 +205,58 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_landingairlw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 1.0);
+    if is_excute(agent) {
+        if VarModule::is_flag(agent.battle_object, vars::pichu::instance::ATTACK_AIR_LANDING_HIT) {
+            ATTACK(agent, 0, 0, Hash40::new("top"), 4.0, 361, 100, 0, 50, 5.0, 0.0, 4.0, -5.0, Some(0.0), Some(4.0), Some(5.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_HEAD);
+        }
+    }
+    wait(lua_state, 2.0);
+    if is_excute(agent) {
+        AttackModule::clear_all(boma);
+    }
+}
+
+unsafe extern "C" fn effect_landingairlw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        if VarModule::is_flag(agent.battle_object, vars::pichu::instance::ATTACK_AIR_LANDING_HIT) {
+            LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+            EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.6, 0, 0, 0, 0, 0, 0, false);
+            LAST_EFFECT_SET_ALPHA(agent, 0.7);
+        }
+    }
+}
+
+unsafe extern "C" fn sound_landingairlw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 1.0);
+    if is_excute(agent) {
+        if VarModule::is_flag(agent.battle_object, vars::pichu::instance::ATTACK_AIR_LANDING_HIT) {
+            STOP_SE(agent, Hash40::new("se_pichu_attackair_l01"));
+            PLAY_SE(agent, Hash40::new("se_pichu_attackair_l02"));
+        }
+    }
+}
+
+unsafe extern "C" fn expression_landingairlw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 1.0);
+    if is_excute(agent) {
+        if VarModule::is_flag(agent.battle_object, vars::pichu::instance::ATTACK_AIR_LANDING_HIT) {
+            RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
+            ControlModule::set_rumble(boma, Hash40::new("rbkind_impact"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+            QUAKE(agent, *CAMERA_QUAKE_KIND_S);
+        }
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_attackairn", game_attackairn, Priority::Low);
 
@@ -212,4 +269,8 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("effect_attackairhi", effect_attackairhi, Priority::Low);
 
     agent.acmd("game_attackairlw", game_attackairlw, Priority::Low);
+    agent.acmd("game_landingairlw", game_landingairlw, Priority::Low);
+    agent.acmd("effect_landingairlw", effect_landingairlw, Priority::Low);
+    agent.acmd("sound_landingairlw", sound_landingairlw, Priority::Low);
+    agent.acmd("expression_landingairlw", expression_landingairlw, Priority::Low);
 }
