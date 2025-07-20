@@ -94,13 +94,11 @@ unsafe extern "C" fn game_throwf(agent: &mut L2CAgentBase) {
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0 * damage_mul, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
     }
     frame(lua_state, 11.0);
-    if is_excute(agent) {
-        PICHU_ADD_DAMAGE(agent, 1.0);
-    }
     for _ in 0..4{
         if is_excute(agent) {
+            PICHU_ADD_DAMAGE(agent, 0.5);
             MeterModule::watch_damage(agent.battle_object, true);
-            ATTACK(agent, 0, 0, Hash40::new("top"), 1.5 * damage_mul, 361, 100, 0, 0, 5.5, 0.0, 8.5, 4.7, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_NONE);
+            ATTACK(agent, 0, 0, Hash40::new("top"), 2.0 * damage_mul, 361, 100, 0, 0, 5.5, 0.0, 8.5, 4.7, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_NONE);
             AttackModule::set_catch_only_all(boma, true, false);
         }
         wait(lua_state, 4.0);

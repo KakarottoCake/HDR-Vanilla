@@ -75,7 +75,7 @@ unsafe extern "C" fn special_hi_end_main_loop(fighter: &mut L2CFighterCommon) ->
     
     if fighter.global_table[CURRENT_FRAME].get_i32() < 2 {
         // allow cancelling out of the status
-        if VarModule::is_flag(fighter.battle_object, vars::pikachu::status::SPECIAL_HI_QUICK_ATTACK_CANCEL) {
+        if VarModule::is_flag(fighter.battle_object, vars::pichu::status::SPECIAL_HI_QUICK_ATTACK_CANCEL) {
             CancelModule::enable_cancel(fighter.module_accessor);
         }
 
