@@ -239,7 +239,8 @@ unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         if charged {
             VarModule::sub_int(agent.battle_object, vars::common::instance::GIMMICK_TIMER, 180);
-            MeterModule::drain_direct(boma.object(), (50.0/(charge_state_time as f32)) * 180.0);
+            let meter_max = (MeterModule::meter_cap(boma.object()) as f32 * MeterModule::meter_per_level(boma.object()));
+            MeterModule::drain_direct(boma.object(), (meter_max / (charge_state_time as f32)) * 180.0);
             ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 5.0, 60, 5, 0, 135, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_LL, *COLLISION_SOUND_ATTR_BOMB, *ATTACK_REGION_THROW);
         }
         else {

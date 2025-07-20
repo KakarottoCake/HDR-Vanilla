@@ -39,7 +39,8 @@ unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
         if charged {
             VarModule::on_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK);
             VarModule::sub_int(agent.battle_object, vars::common::instance::GIMMICK_TIMER, 120);
-            MeterModule::drain_direct(boma.object(), (50.0/(charge_state_time as f32)) * 120.0);
+            let meter_max = (MeterModule::meter_cap(boma.object()) as f32 * MeterModule::meter_per_level(boma.object()));
+            MeterModule::drain_direct(boma.object(), (meter_max / (charge_state_time as f32)) * 120.0);
         }
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), GROUND_CLIFF_CHECK_KIND_NONE);
         sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 1.3);
@@ -152,7 +153,8 @@ unsafe extern "C" fn game_specialhi1(agent: &mut L2CAgentBase) {
         if charged {
             VarModule::on_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK);
             VarModule::sub_int(agent.battle_object, vars::common::instance::GIMMICK_TIMER, 120);
-            MeterModule::drain_direct(boma.object(), (50.0/(charge_state_time as f32)) * 120.0);
+            let meter_max = (MeterModule::meter_cap(boma.object()) as f32 * MeterModule::meter_per_level(boma.object()));
+            MeterModule::drain_direct(boma.object(), (meter_max / (charge_state_time as f32)) * 120.0);
         }
         if VarModule::is_flag(agent.battle_object, vars::pichu::instance::CHARGE_STATE_ATTACK) {
             ATTACK(agent, 0, 0, Hash40::new("hip"), 2.0, 70, 50, 0, 20, 1.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
