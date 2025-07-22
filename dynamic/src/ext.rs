@@ -232,6 +232,7 @@ bitflags! {
         const ItemGetAir           = 0x8000;
         const SpecialSSmash        = 0x10000;
         const SpecialSSmashDash    = 0x20000;
+        const ItemLightThrowDash   = 0x40000;
 
         const ItemLightThrow       = 0x58;
         const ItemLightThrowAir    = 0xA80;

@@ -114,29 +114,57 @@ unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2C
 
     // handles rob's rotation during the charge
     let rot_x = VarModule::get_float(fighter.battle_object, SPECIAL_HI_ROT_X);
-    if fighter.left_stick_x().abs() > 0.1 {   
-        let rot_amount = 2.5; // how much rob rotates each frame
-        let reverse = if fighter.is_stick_backward() { -1.0 } else { 1.0 };
-        let direction = fighter.lr() * reverse; // determines the direction to rotate
-        let angle = (rot_x + (rot_amount * direction)).clamp(-60.0, 60.0);
-        PostureModule::set_rot(fighter.module_accessor, &Vector3f::new(angle * 0.3 * fighter.lr(), 0.0, 0.0), 0);
-        VarModule::set_float(fighter.battle_object, SPECIAL_HI_ROT_X, angle);
+    if fighter.is_situation(*SITUATION_KIND_AIR) {
+        if fighter.left_stick_x().abs() > 0.1 {   
+            let rot_amount = 2.5; // how much rob rotates each frame
+            let reverse = if fighter.is_stick_backward() { -1.0 } else { 1.0 };
+            let direction = fighter.lr() * reverse; // determines the direction to rotate
+            let angle = (rot_x + (rot_amount * direction)).clamp(-60.0, 60.0);
+            PostureModule::set_rot(fighter.module_accessor, &Vector3f::new(angle * 0.3 * fighter.lr(), 0.0, 0.0), 0);
+            VarModule::set_float(fighter.battle_object, SPECIAL_HI_ROT_X, angle);
 
-        // changes direction if rotation crosses center threshold
-        if rot_x == 0.0 && fighter.is_stick_backward() {
-            PostureModule::reverse_lr(fighter.module_accessor);
-            PostureModule::update_rot_y_lr(fighter.module_accessor);
+            // changes direction if rotation crosses center threshold
+            if rot_x == 0.0 && fighter.is_stick_backward() {
+                PostureModule::reverse_lr(fighter.module_accessor);
+                PostureModule::update_rot_y_lr(fighter.module_accessor);
+            }
+        }
+    } else {
+        if fighter.left_stick_x().abs() > 0.1 {   
+            let rot_amount = 3.75; // how much rob rotates each frame
+            let reverse = if fighter.is_stick_backward() { -1.0 } else { 1.0 };
+            let direction = fighter.lr() * reverse; // determines the direction to rotate
+            let angle = (rot_x + (rot_amount * direction)).clamp(-60.0, 60.0);
+            PostureModule::set_rot(fighter.module_accessor, &Vector3f::new(angle * 0.3 * fighter.lr(), 0.0, 0.0), 0);
+            VarModule::set_float(fighter.battle_object, SPECIAL_HI_ROT_X, angle);
+
+            // changes direction if rotation crosses center threshold
+            if rot_x == 0.0 && fighter.is_stick_backward() {
+                PostureModule::reverse_lr(fighter.module_accessor);
+                PostureModule::update_rot_y_lr(fighter.module_accessor);
+            }
         }
     }
+
     // summon guide effect
     if rot_x != 0.0 { special_hi_guide_handler(fighter) };
 
     // default parameters for launch speed
-    let mut launch_speed = Vector3f{
-        x: 0.09 * rot_x.abs() * ((charge_frame - 18.0).clamp(0.0, 32.0) / 32.0),
-        y: 0.5 - (0.025 * rot_x.abs()),
-        z: 0.0
-    };
+    let mut launch_speed = Vector3f{x: 0.0, y: 0.0, z: 0.0};
+
+    if fighter.is_situation(*SITUATION_KIND_AIR) {
+        launch_speed = Vector3f{
+            x: 0.09 * rot_x.abs() * ((charge_frame - 18.0).clamp(0.05, 32.0) / 32.0),
+            y: 0.5 - (0.025 * rot_x.abs()),
+            z: 0.0
+        };
+    } else {
+        launch_speed = Vector3f{
+            x: 0.09 * rot_x.abs() * (((charge_frame * 2.0) - 18.0).clamp(0.05, 32.0) / 32.0),
+            y: 0.5 - (0.025 * rot_x.abs()),
+            z: 0.0
+        };
+    }
 
     // force the full launch when the motion completes
     if MotionModule::is_end(fighter.module_accessor) {
