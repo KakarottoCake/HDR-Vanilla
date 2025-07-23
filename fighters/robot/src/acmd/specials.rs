@@ -364,7 +364,13 @@ unsafe extern "C" fn game_specialhirise(agent: &mut L2CAgentBase) {
 
     frame(lua_state, 1.0);
     if is_excute(agent) {
-        let mut damage = charge_frame / 3.0;
+        
+        if boma.is_prev_situation(*SITUATION_KIND_GROUND) { 
+            let mut damage = charge_frame / 1.5;
+        } else {
+            let mut damage = charge_frame / 3.0;
+        }
+
         if charge_frame <= 10.0 {
             MeterModule::drain_direct(agent.object(), 20.0);
         } else if boma.is_prev_situation(*SITUATION_KIND_GROUND) {
@@ -386,6 +392,7 @@ unsafe extern "C" fn game_specialhirise(agent: &mut L2CAgentBase) {
             ATTACK(agent, 5, 0, Hash40::new("knee"), damage, angle, 50, 0, 15, 5.0, 12.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BOMB);
         }
     }
+
     frame(lua_state, 4.0);
     FT_MOTION_RATE(agent, 
         if VarModule::is_flag(agent.battle_object, vars::robot::instance::SPECIAL_HI_GROUND_START) { 0.17 }
