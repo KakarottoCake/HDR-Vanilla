@@ -14,7 +14,6 @@ unsafe fn wings_of_rebellion_cancel(fighter: &mut L2CFighterCommon) {
         if fighter.check_aerial_cancel()
         || fighter.check_airdodge_cancel() {
             VarModule::on_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
-            app::FighterSpecializer_Jack::add_rebel_gauge(fighter.module_accessor, app::FighterEntryID(fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID)), -10.0);
             return;
         }
     }
