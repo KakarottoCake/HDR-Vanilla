@@ -6,6 +6,7 @@ mod duckhunt;
 mod gamewatch;
 mod ganon;
 mod gekkouga;
+mod ike;
 mod krool;
 mod littlemac;
 mod lucario;
@@ -26,6 +27,7 @@ pub fn install() {
     gamewatch::install();
     ganon::install();
     gekkouga::install();
+    ike::install();
     krool::install();
     littlemac::install();
     lucario::install();

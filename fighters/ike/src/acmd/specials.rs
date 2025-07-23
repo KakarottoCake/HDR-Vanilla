@@ -154,9 +154,13 @@ unsafe extern "C" fn game_specialsattack(agent: &mut L2CAgentBase) {
         }
         frame(lua_state, 12.0);
         if is_excute(agent) {
-            if !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT){
+            if !VarModule::is_flag(boma.object(), vars::ike::status::SPECIAL_S_INSTAKILL_HIT) {
                 FT_MOTION_RATE(agent, 2.0);
             }
+        }
+        frame(lua_state, 30.0);
+        if is_excute(agent) {
+            VarModule::on_flag(boma.object(), vars::ike::status::SPECIAL_S_INSTAKILL_CHECK_HIT);
         }
     }
     // Normal Quickdraw

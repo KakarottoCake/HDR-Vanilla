@@ -784,6 +784,8 @@ pub mod vars {
             // flags
             pub const SPECIAL_S_INSTAKILL: i32 = 0x1100;
             pub const SPECIAL_S_GROUND_START: i32 = 0x1101;
+            pub const SPECIAL_S_INSTAKILL_CHECK_HIT: i32 = 0x1102;
+            pub const SPECIAL_S_INSTAKILL_HIT: i32 = 0x1103;
         }
     }
 
