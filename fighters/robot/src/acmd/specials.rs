@@ -288,8 +288,13 @@ unsafe extern "C" fn effect_specialslw(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    frame(lua_state, 1.0);
+    if agent.is_situation(*SITUATION_KIND_GROUND) {
+        FT_MOTION_RATE(agent, 4.0/(14.0-1.0));
+    }
     frame(lua_state, 14.0);
     if is_excute(agent) {
+        FT_MOTION_RATE(agent, 1.0);
         WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
 }
@@ -299,6 +304,27 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("robot_nozzle_flare"), Hash40::new("knee1"), 1.5, 0, 0, 90, -90, 0, 1, true);
+    }
+
+    frame(lua_state, 4.0);
+    if agent.is_situation(*SITUATION_KIND_GROUND) {
+        let turbo_indicator = EffectModule::req_follow(
+            boma,
+            Hash40::new("robot_lamp_l"),
+            Hash40::new("knee"),
+            &Vector3f::new(6.0, 0.0, 0.0),
+            &Vector3f::zero(),
+            4.0,
+            true,
+            0,
+            0,
+            0,
+            0,
+            0,
+            true,
+            true
+        ) as u32;
+        LAST_EFFECT_SET_RATE(agent, 1.25);
     }
     frame(lua_state, 15.0);
     for _ in 0..20 {
@@ -310,7 +336,7 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
             }
             LAST_EFFECT_SET_RATE(agent, 0.75);
         }
-        wait(lua_state, 15.0);
+        wait(lua_state, 10.0);
     }
 }
 
@@ -341,6 +367,8 @@ unsafe extern "C" fn game_specialhirise(agent: &mut L2CAgentBase) {
         let mut damage = charge_frame / 3.0;
         if charge_frame <= 10.0 {
             MeterModule::drain_direct(agent.object(), 20.0);
+        } else if boma.is_prev_situation(*SITUATION_KIND_GROUND) {
+            MeterModule::drain_direct(agent.object(), charge_frame * 4.0);
         } else {
             MeterModule::drain_direct(agent.object(), charge_frame * 2.0);
         }
@@ -375,6 +403,7 @@ unsafe extern "C" fn effect_specialhirise(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("robot_nozzle_flare"), Hash40::new("knee1"), 1.5, 0, 0, 90, -90, 0, 1, true);
         LAST_EFFECT_SET_COLOR(agent, 0.55, 0.55, 2.25);
+        EFFECT_OFF_KIND(agent, Hash40::new("robot_lamp_l"), false, false);
     }
     if charge_frame >= 10 {
         frame(lua_state, 1.0);
