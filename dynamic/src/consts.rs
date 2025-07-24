@@ -1085,6 +1085,13 @@ pub mod vars {
             pub const SPECIAL_HI_CATCH_USED: i32 = 0x0101;
             pub const SPECIAL_LW_HOLD: i32 = 0x0102;
         }
+        pub mod status {
+            // flags
+            pub const SPECIAL_LW_JUMP: i32 = 0x1100;
+            pub const SPECIAL_LW_IS_JUMP: i32 = 0x1101;
+            pub const SPECIAL_LW_FALL: i32 = 0x1102;
+            pub const SPECIAL_LW_FALLING: i32 = 0x1103;
+        }
     }
 
     pub mod master_axe {
