@@ -90,6 +90,7 @@ unsafe fn super_special_cancels(fighter: &mut L2CFighterCommon, boma: &mut Battl
         && fighter.is_status_one_of(&[
             *FIGHTER_STATUS_KIND_SPECIAL_HI,
             *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_HI_COMMAND,
+            *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_F_ATTACK,
             *FIGHTER_STATUS_KIND_SPECIAL_LW,
             *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_LW_COMMAND,
             statuses::dolly::ATTACK_COMMAND_4
