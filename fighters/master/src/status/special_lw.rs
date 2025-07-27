@@ -57,41 +57,49 @@ unsafe extern "C" fn special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2C
     }
 
     special_lw_check_kinetics(fighter);
+
     let situation = fighter.global_table[SITUATION_KIND].get_i32();
+
+    if VarModule::is_flag(fighter.battle_object, vars::master::status::SPECIAL_LW_FALLING) {
+        if situation == *SITUATION_KIND_GROUND
+        && MotionModule::rate(fighter.module_accessor) == 0.0 {
+            MotionModule::set_rate(fighter.module_accessor, 1.0);
+            ArticleModule::set_rate(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, 1.0);
+            VarModule::off_flag(fighter.battle_object, vars::master::status::SPECIAL_LW_FALLING);
+            special_lw_motion_helper(fighter);
+        }
+    }
 
     if !StatusModule::is_changing(fighter.module_accessor)
     && StatusModule::is_situation_changed(fighter.module_accessor)
     && !VarModule::is_flag(fighter.battle_object, vars::master::status::SPECIAL_LW_IS_JUMP) {
-        if VarModule::is_flag(fighter.battle_object, vars::master::status::SPECIAL_LW_FALLING) {
-            if situation == *SITUATION_KIND_GROUND {
-                MotionModule::set_rate(fighter.module_accessor, 1.0);
-                ArticleModule::set_rate(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, 1.0);
-                VarModule::off_flag(fighter.battle_object, vars::master::status::SPECIAL_LW_FALLING);
-            }
-        }
-
-        let (kinetic, correct, motion) = if situation == *SITUATION_KIND_GROUND {
-            (*FIGHTER_KINETIC_TYPE_GROUND_STOP, *GROUND_CORRECT_KIND_GROUND, Hash40::new("special_lw"))
-        }
-        else {
-            (*FIGHTER_KINETIC_TYPE_AIR_STOP, *GROUND_CORRECT_KIND_AIR, Hash40::new("special_air_lw"))
-        };
-
-        KineticModule::change_kinetic(fighter.module_accessor, kinetic);
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(correct));
-        MotionModule::change_motion_inherit_frame(
-            fighter.module_accessor,
-            motion,
-            -1.0,
-            1.0,
-            0.0,
-            false,
-            false
-        );
-        // ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, motion, true, -1.0);
+        special_lw_motion_helper(fighter);
     }
 
     0.into()
+}
+
+unsafe extern "C" fn special_lw_motion_helper(fighter: &mut L2CFighterCommon) {
+    let situation = fighter.global_table[SITUATION_KIND].get_i32();
+    let (kinetic, correct, motion) = if situation == *SITUATION_KIND_GROUND {
+        (*FIGHTER_KINETIC_TYPE_GROUND_STOP, *GROUND_CORRECT_KIND_GROUND, Hash40::new("special_lw"))
+    }
+    else {
+        (*FIGHTER_KINETIC_TYPE_AIR_STOP, *GROUND_CORRECT_KIND_AIR, Hash40::new("special_air_lw"))
+    };
+
+    KineticModule::change_kinetic(fighter.module_accessor, kinetic);
+    GroundModule::correct(fighter.module_accessor, GroundCorrectKind(correct));
+    MotionModule::change_motion_inherit_frame(
+        fighter.module_accessor,
+        motion,
+        -1.0,
+        1.0,
+        0.0,
+        false,
+        false
+    );
+    // ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, motion, true, -1.0);
 }
 
 unsafe extern "C" fn special_lw_check_kinetics(fighter: &mut L2CFighterCommon) {
@@ -103,11 +111,11 @@ unsafe extern "C" fn special_lw_check_kinetics(fighter: &mut L2CFighterCommon) {
 
         fighter.set_situation(SITUATION_KIND_AIR.into());
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        
+
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-        
+
         KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_GRAVITY, fighter.module_accessor);
-        
+
         sv_kinetic_energy!(
             reset_energy,
             fighter,
@@ -119,7 +127,7 @@ unsafe extern "C" fn special_lw_check_kinetics(fighter: &mut L2CFighterCommon) {
             0.0,
             0.0
         );
-        
+
         sv_kinetic_energy!(
             set_limit_speed,
             fighter,
@@ -154,6 +162,8 @@ unsafe extern "C" fn special_lw_check_kinetics(fighter: &mut L2CFighterCommon) {
             0.15,
             0.175
         );
+
+        StatusModule::set_keep_situation_air(fighter.module_accessor, true);
 
         VarModule::off_flag(fighter.battle_object, vars::master::status::SPECIAL_LW_JUMP);
         VarModule::on_flag(fighter.battle_object, vars::master::status::SPECIAL_LW_IS_JUMP);
@@ -197,6 +207,7 @@ unsafe extern "C" fn special_lw_check_kinetics(fighter: &mut L2CFighterCommon) {
             -0.5
         );
         KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+
         VarModule::off_flag(fighter.battle_object, vars::master::status::SPECIAL_LW_FALL);
         VarModule::off_flag(fighter.battle_object, vars::master::status::SPECIAL_LW_IS_JUMP);
         VarModule::on_flag(fighter.battle_object, vars::master::status::SPECIAL_LW_FALLING);
