@@ -183,7 +183,12 @@ special_n:
 step_pose_back:
   extra:
     cancel_frame: 6
+throw_hi:
+  extra:
+    cancel_frame: 32
 throw_b:
-    cancel_frame: 55
+  extra:
+    cancel_frame: 54
 throw_f:
-    cancel_frame: 55
+  extra:
+    cancel_frame: 54
