@@ -16,6 +16,7 @@ mod rockman;
 
 mod miigunner_grenadelauncher;
 mod ryu_shinkuhadoken;
+mod dolly_burst;
 
 mod weapon;
 
@@ -36,6 +37,7 @@ pub fn install() {
 
     miigunner_grenadelauncher::install();
     ryu_shinkuhadoken::install();
+    dolly_burst::install();
 
     weapon::install();
 }
