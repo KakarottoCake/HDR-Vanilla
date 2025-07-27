@@ -428,9 +428,13 @@ pub mod vars {
             pub use super::super::roy::instance::TRAIL_EFFECT;
         }
         pub mod status {
+            // ints
+            pub const SPECIAL_HI_START_SITUATION: i32 = 0x1101;
             // flags
             pub const SPECIAL_HI_DIVE_ENABLE: i32 = 0x1101;
             pub const SPECIAL_HI_DIVE_START: i32 = 0x1102;
+            pub const SPECIAL_HI_AERIAL_CANCEL_ENABLE: i32 = 0x1103;
+            pub const SPECIAL_LW_LEDGE_CANCEL: i32 = 0x1104;
         }
     }
 
