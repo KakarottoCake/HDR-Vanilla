@@ -146,6 +146,37 @@ special_lw_breaking:
     cancel_frame: 25
     no_stop_intp: true
 
+super_special_triple:
+  game_script: game_superspecialtriple
+  flags:
+    turn: false
+    loop: false
+    move: false
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+    - name: d04superspecialtriple.nuanmb
+      unk: 0
+  scripts:
+    - expression_superspecialtriple
+    - sound_superspecialtriple
+    - effect_superspecialtriple
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 107
+    no_stop_intp: false
+
 catch_attack:
   extra:
     cancel_frame: 0

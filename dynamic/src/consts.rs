@@ -558,9 +558,11 @@ pub mod vars {
             pub const ATTACK_COMMAND_4_RELEASE_BUTTON: i32 = 0x1151;
 
             pub const SPECIAL_LW_BREAK : i32 = 0x1152;
+            pub const SUPER_SPECIAL_TRIPLE: i32 = 0x1153;
 
             // ints
             pub const HIT_CANCEL_TIMER: i32 = 0x1104;
+            pub const SUPER_SPECIAL_TRIPLE_COUNT: i32 = 0x1154;
         }
     }
 

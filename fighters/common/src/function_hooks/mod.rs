@@ -27,6 +27,7 @@ mod fighterspecializer;
 mod fighter_util;
 mod vtables;
 mod item;
+mod dolly_burst;
 
 #[repr(C)]
 pub struct TempModule {
@@ -828,6 +829,7 @@ pub fn install() {
     fighter_util::install();
     vtables::install();
     item::install();
+    dolly_burst::install();
 
     unsafe {
         // Handles getting rid of the kill zoom
