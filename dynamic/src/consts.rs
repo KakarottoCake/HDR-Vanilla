@@ -367,9 +367,10 @@ pub mod vars {
         pub mod instance {
             // flags
             pub const PERSIST_RNG: i32 = 0x0100;
-            pub const PSYCHE_UP_ACTIVE: i32 = 0x0101;
-            pub const MENU_TRAINING_MODE_LOCK: i32 = 0x0102;
-            pub const SPECIAL_LW_CSTICK_BUFFER: i32 = 0x0103;
+            pub const SPECIAL_MENU: i32 = 0x0101;
+            pub const PSYCHE_UP_ACTIVE: i32 = 0x0102;
+            pub const MENU_TRAINING_MODE_LOCK: i32 = 0x0103;
+            pub const SPECIAL_LW_CSTICK_BUFFER: i32 = 0x0104;
 
             // ints
             pub const SPELL_SLOT_1: i32 = 0x0100;
@@ -389,6 +390,10 @@ pub mod vars {
             
             // floats
             pub const SPECIAL_LW_CSTICK_BUFFER_DIR: i32 = 0x0100;
+        }
+        pub mod status {
+            // floats
+            pub const SPECIAL_MENU_MP: i32 = 0x1100;
         }
     }
 
