@@ -4,7 +4,19 @@ use globals::*;
 unsafe extern "C" fn special_lw_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     ItemModule::set_have_item_visibility(fighter.module_accessor, false, 0);
 
-    fighter.sub_set_special_start_common_kinetic_setting(Hash40::new("param_special_lw").into());
+    fighter.sub_set_special_start_common_kinetic_setting(hash40("param_special_lw").into());
+    fighter.clear_lua_stack();
+    lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+    let speed_y = sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
+    if speed_y < 0.0 {
+        sv_kinetic_energy!(
+            set_speed,
+            fighter,
+            FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
+            0.0
+        );
+    }
+
     fighter.sub_change_motion_by_situation(
         Hash40::new("special_lw").into(),
         Hash40::new("special_air_lw").into(),
@@ -53,6 +65,7 @@ unsafe extern "C" fn special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2C
         if VarModule::is_flag(fighter.battle_object, vars::master::status::SPECIAL_LW_FALLING) {
             if situation == *SITUATION_KIND_GROUND {
                 MotionModule::set_rate(fighter.module_accessor, 1.0);
+                ArticleModule::set_rate(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, 1.0);
                 VarModule::off_flag(fighter.battle_object, vars::master::status::SPECIAL_LW_FALLING);
             }
         }
@@ -75,7 +88,7 @@ unsafe extern "C" fn special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2C
             false,
             false
         );
-        ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, motion, true, -1.0);
+        // ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, motion, true, -1.0);
     }
 
     0.into()
@@ -124,19 +137,21 @@ unsafe extern "C" fn special_lw_check_kinetics(fighter: &mut L2CFighterCommon) {
 
         let lr = PostureModule::lr(fighter.module_accessor);
         let stick_x = fighter.global_table[STICK_X].get_f32();
-        let speed_add = stick_x * 0.8;
+        let stick_y = fighter.global_table[STICK_Y].get_f32();
+        let speed_add_x = stick_x * 0.8;
+        let speed_add_y = stick_y * 0.5;
         sv_kinetic_energy!(
             set_speed,
             fighter,
             FIGHTER_KINETIC_ENERGY_ID_STOP,
-            (2.5 * lr) + speed_add,
-            3.0
+            (2.5 * lr) + speed_add_x,
+            3.0 + speed_add_y
         );
         sv_kinetic_energy!(
             set_brake,
             fighter,
             FIGHTER_KINETIC_ENERGY_ID_STOP,
-            0.175,
+            0.15,
             0.175
         );
 

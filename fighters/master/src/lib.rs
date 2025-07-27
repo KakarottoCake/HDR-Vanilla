@@ -59,4 +59,6 @@ pub fn install() {
 
     //smashline::clone_weapon("master", "arrow1", "master", "axethrown", true);
     //axethrown::install();
+
+    let _ = skyline::patching::Patch::in_text(0x3448d20).nop();
 }

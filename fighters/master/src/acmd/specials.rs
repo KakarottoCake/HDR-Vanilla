@@ -624,13 +624,14 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
         FighterAreaModuleImpl::enable_fix_jostle_area(boma, 3.0, 3.0);
     }
     frame(lua_state, 2.0);
-    FT_MOTION_RATE_RANGE(agent, 2.0, 52.0, 17.0);
-    frame(lua_state, 52.0);
-    FT_MOTION_RATE(agent, 16.0 / 3.0);
+    FT_MOTION_RATE_RANGE(agent, 2.0, 49.0, 17.0);
+    frame(lua_state, 49.0);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         VarModule::on_flag(boma.object(), vars::master::status::SPECIAL_LW_JUMP);
-        VarModule::on_flag(boma.object(), vars::common::status::DISABLE_ECB_SHIFT);
     }
+    frame(lua_state, 52.0);
+    FT_MOTION_RATE(agent, 16.0 / 3.0);
     frame(lua_state, 55.0);
     FT_MOTION_RATE(agent, 10.0 / 7.0);
     frame(lua_state, 62.0);
@@ -643,6 +644,7 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
     frame(lua_state, 64.0);
     if is_excute(agent) {
         MotionModule::set_rate(boma, 0.0);
+        ArticleModule::set_rate(boma, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, 0.0);
         ArticleModule::set_flag(boma, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, true, *WEAPON_PIERCE_INSTANCE_WORK_ID_FLAG_PIERCE_GROUND);
     }
     frame(lua_state, 65.0);
@@ -655,15 +657,23 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn game_speciallwturn(agent: &mut L2CAgentBase) {
+unsafe extern "C" fn effect_speciallw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    frame(lua_state, 1.0);
     if is_excute(agent) {
-        FighterAreaModuleImpl::enable_fix_jostle_area(boma, 3.0, 3.0);
+        LANDING_EFFECT(agent, Hash40::new("sys_action_smoke_v"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        EFFECT_FOLLOW(agent, Hash40::new("master_axe_hold"), Hash40::new("haver"), 0, 13, 0.6, 0, 0, 0, 1, true);
     }
-    frame(lua_state, 8.0);
+    frame(lua_state, 40.0);
     if is_excute(agent) {
-        REVERSE_LR(agent);
+        EFFECT_OFF_KIND(agent, Hash40::new("master_axe_hold"), false, true);
+        EFFECT_FOLLOW(agent, Hash40::new("master_axe_hold2"), Hash40::new("haver"), 0, 13, 0.6, 0, 0, 0, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("master_axe_hold_end"), Hash40::new("haver"), 0, 13, 0.6, 0, 0, 0, 1, true);
+    }
+    frame(lua_state, 60.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("master_axe_hold2"), false, true);
     }
 }
 
@@ -673,9 +683,6 @@ unsafe extern "C" fn game_speciallwhit(agent: &mut L2CAgentBase) {
     frame(lua_state, 54.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_MASTER_STATUS_SPECIAL_LW_FLAG_PULL_AXE);
-        let motion_rate = 1.0;
-        FT_MOTION_RATE(agent, motion_rate);
-        ArticleModule::set_rate(boma, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, 1.0/motion_rate);
     }
     frame(lua_state, 56.0);
     if is_excute(agent) {
@@ -688,24 +695,7 @@ unsafe extern "C" fn game_speciallwhit(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 78.0);
     if is_excute(agent) {
-        ArticleModule::remove_exist(boma, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-    }
-}
-
-unsafe extern "C" fn effect_speciallwhit(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    if is_excute(agent) {
-        LANDING_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 0, 0, 17, 0, 0, 0, 1.3, 0, 0, 0, 0, 0, 0, true);
-        LAST_EFFECT_SET_RATE(agent, 0.9);
-    }
-    frame(lua_state, 56.0);
-    if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("master_axe_rock"), Hash40::new("haver"), 0, 15, 1, 0, 0, 0, 1, true);
-    }
-    frame(lua_state, 60.0);
-    if is_excute(agent) {
-        EFFECT_DETACH_KIND(agent, Hash40::new("master_axe_rock"), -1);
+        ArticleModule::remove_exist(boma, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     }
 }
 
@@ -734,14 +724,12 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialairhi", game_specialairhi, Priority::Low);
     agent.acmd("game_specialairhiovertake", game_specialairhiovertake, Priority::Low);
     agent.acmd("effect_specialairhiovertake", effect_specialairhiovertake, Priority::Low);
-    
-    agent.acmd("game_speciallw", game_speciallw, Priority::Low);
-    agent.acmd("game_specialairlw", game_speciallw, Priority::Low);
 
-    agent.acmd("game_speciallwturn", game_speciallwturn, Priority::Low);
-    agent.acmd("game_specialairlwturn", game_speciallwturn, Priority::Low);
+    agent.acmd("game_speciallw", game_speciallw, Priority::Low);
+    agent.acmd("effect_speciallw", effect_speciallw, Priority::Low);
+    agent.acmd("game_specialairlw", game_speciallw, Priority::Low);
+    agent.acmd("effect_specialairlw", effect_speciallw, Priority::Low);
 
     agent.acmd("game_speciallwhit", game_speciallwhit, Priority::Low);
-    agent.acmd("effect_speciallwhit", effect_speciallwhit, Priority::Low);
     agent.acmd("game_specialairlwhit", game_speciallwhit, Priority::Low);
 }
