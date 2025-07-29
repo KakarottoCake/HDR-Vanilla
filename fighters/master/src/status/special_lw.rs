@@ -33,7 +33,22 @@ unsafe extern "C" fn special_lw_main(fighter: &mut L2CFighterCommon) -> L2CValue
     };
     ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, motion, false, -1.0);
 
+    VarModule::set_int(fighter.battle_object, vars::master::status::SPECIAL_LW_FALL_COUNT, 30);
+
+    if !StopModule::is_stop(fighter.module_accessor) {
+        special_lw_substatus(fighter, false.into());
+    }
+    fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(special_lw_substatus as *const () as _));
+
     fighter.main_shift(special_lw_main_loop)
+}
+
+unsafe extern "C" fn special_lw_substatus(fighter: &mut L2CFighterCommon, param_1: L2CValue) -> L2CValue {
+    if !param_1.get_bool()
+    && VarModule::is_flag(fighter.battle_object, vars::master::status::SPECIAL_LW_FALLING) {
+        VarModule::countdown_int(fighter.battle_object, vars::master::status::SPECIAL_LW_FALL_COUNT, 0);
+    }
+    0.into()
 }
 
 unsafe extern "C" fn special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -43,7 +58,7 @@ unsafe extern "C" fn special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2C
             return 1.into();
         }
     }
-    
+
     let situation = fighter.global_table[SITUATION_KIND].get_i32();
     if MotionModule::is_end(fighter.module_accessor) {
         let status = if situation == *SITUATION_KIND_GROUND {
@@ -61,11 +76,22 @@ unsafe extern "C" fn special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2C
     let situation = fighter.global_table[SITUATION_KIND].get_i32();
 
     if VarModule::is_flag(fighter.battle_object, vars::master::status::SPECIAL_LW_FALLING) {
-        if situation == *SITUATION_KIND_GROUND
+        if (
+            situation == *SITUATION_KIND_GROUND ||
+            VarModule::get_int(fighter.battle_object, vars::master::status::SPECIAL_LW_FALL_COUNT) == 0
+        )
         && MotionModule::rate(fighter.module_accessor) == 0.0 {
             MotionModule::set_rate(fighter.module_accessor, 1.0);
             ArticleModule::set_rate(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_AXE, 1.0);
             VarModule::off_flag(fighter.battle_object, vars::master::status::SPECIAL_LW_FALLING);
+
+            sv_kinetic_energy!(
+                set_speed,
+                fighter,
+                FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
+                0.0
+            );
+
             special_lw_motion_helper(fighter);
         }
     }

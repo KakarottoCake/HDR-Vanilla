@@ -43,10 +43,45 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     }
 }
 
+unsafe fn special_lw_cancel(fighter: &mut L2CFighterCommon) {
+    if fighter.is_in_hitlag()
+    || StatusModule::is_changing(fighter.module_accessor)
+    || !fighter.is_status_one_of(&[
+        *FIGHTER_STATUS_KIND_SPECIAL_LW,
+        *FIGHTER_MASTER_STATUS_KIND_SPECIAL_LW_HIT,
+    ]) {
+        return;
+    }
+
+    if !CancelModule::is_enable_cancel(fighter.module_accessor)
+    && VarModule::is_flag(fighter.battle_object, vars::master::status::SPECIAL_LW_ENABLE_CANCEL) {
+        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW);
+        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT);
+        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON);
+        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL);
+        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL_BUTTON);
+        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_DASH);
+        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_DASH);
+        let ret = fighter.sub_transition_group_check_air_special().get_bool()
+            || fighter.sub_transition_group_check_ground_special().get_bool()
+            || fighter.sub_transition_group_check_air_jump_aerial().get_bool()
+            || fighter.sub_transition_group_check_ground_jump().get_bool()
+            || fighter.sub_transition_group_check_ground(false.into()).get_bool();
+        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW);
+        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT);
+        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON);
+        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL);
+        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL_BUTTON);
+        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_DASH);
+        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_DASH);
+    }
+}
+
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     specialhi_reset(fighter);
     up_special_whiff_ledgegrab(fighter);
     fastfall_specials(fighter);
+    special_lw_cancel(fighter);
 }
 
 pub extern "C" fn master_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {

@@ -8,15 +8,12 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
     frame(lua_state, 49.0);
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 52.0);
-    FT_MOTION_RATE(agent, 16.0 / 3.0);
+    FT_MOTION_RATE(agent, 13.0 / 3.0);
     frame(lua_state, 55.0);
-    FT_MOTION_RATE(agent, 10.0 / 7.0);
-    frame(lua_state, 62.0);
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 63.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("haver"), 10.0, 368, 100, 50, 0, 5.7, 0.0, 14.0, 1.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MASTER_AXE, *ATTACK_REGION_OBJECT);
-        AttackModule::set_vec_target_pos(boma, 0, Hash40::new("top"), &Vector2f{x: 11.0, y: -60.0}, 15, false);
+        ATTACK(agent, 0, 0, Hash40::new("haver"), 15.0, 70, 85, 0, 75, 5.7, 0.0, 14.0, 1.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MASTER_AXE, *ATTACK_REGION_OBJECT);
     }
     frame(lua_state, 65.0);
     if is_excute(agent) {
@@ -251,11 +248,11 @@ unsafe extern "C" fn game_speciallwhit(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     if is_excute(agent) {
-        AttackModule::clear_all(boma);
         ATTACK(agent, 1, 0, Hash40::new("haver"), 15.0, 70, 85, 0, 75, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 25, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MASTER_AXE, *ATTACK_REGION_OBJECT);
         ATTACK(agent, 2, 0, Hash40::new("haver"), 15.0, 70, 85, 0, 75, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 25, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MASTER_AXE, *ATTACK_REGION_OBJECT);
         ATTACK(agent, 3, 0, Hash40::new("haver"), 15.0, 70, 85, 0, 75, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 25, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MASTER_AXE, *ATTACK_REGION_OBJECT);
         ATTACK(agent, 4, 0, Hash40::new("haver"), 15.0, 70, 85, 0, 75, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 25, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MASTER_AXE, *ATTACK_REGION_OBJECT);
+        AttackModule::clear(boma, 0, false);
         WorkModule::on_flag(boma, *WEAPON_MASTER_AXE_INSTANCE_WORK_ID_FLAG_MOVE_ATTACK);
     }
     frame(lua_state, 2.0);

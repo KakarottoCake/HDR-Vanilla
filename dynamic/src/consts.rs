@@ -1091,6 +1091,10 @@ pub mod vars {
             pub const SPECIAL_LW_IS_JUMP: i32 = 0x1101;
             pub const SPECIAL_LW_FALL: i32 = 0x1102;
             pub const SPECIAL_LW_FALLING: i32 = 0x1103;
+            pub const SPECIAL_LW_ENABLE_CANCEL: i32 = 0x1104;
+
+            // ints
+            pub const SPECIAL_LW_FALL_COUNT: i32 = 0x1100;
         }
     }
 

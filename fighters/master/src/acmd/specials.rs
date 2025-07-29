@@ -631,10 +631,8 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
         VarModule::on_flag(boma.object(), vars::master::status::SPECIAL_LW_JUMP);
     }
     frame(lua_state, 52.0);
-    FT_MOTION_RATE(agent, 16.0 / 3.0);
+    FT_MOTION_RATE(agent, 13.0 / 3.0);
     frame(lua_state, 55.0);
-    FT_MOTION_RATE(agent, 10.0 / 7.0);
-    frame(lua_state, 62.0);
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 63.0);
     if is_excute(agent) {
