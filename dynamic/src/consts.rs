@@ -1311,12 +1311,12 @@ pub mod vars {
     pub mod pichu {
         pub mod instance {
             //flags
+            pub const ATTACK_AIR_LANDING_HIT: i32 = 0x0100;
             pub const CHARGE_STATE_ATTACK: i32 = 0x0102;
             pub const SPECIAL_LW_DISCHARGE_AIR_START: i32 = 0x0103;
-            pub const SPECIAL_HI_DISABLE_JUMP_CANCEL: i32 = 0x0104;
+            pub const CHARGE_STATE_ENABLED: i32 = 0x0104;
 
             //ints
-            pub const CHARGE_STATE_ENABLED: i32 = 0x0100;
             pub const CHARGE_EFFECT_HANDLER: i32 = 0x0101;
 
             // floats
@@ -1324,6 +1324,9 @@ pub mod vars {
             pub const CHARGE_STATE_RECOIL_MUL: i32 = 0x0101;
             pub const SPECIAL_LW_DISCHARGE_DAMAGE_MUL: i32 = 0x0102;
             pub const SPECIAL_LW_DISCHARGE_SIZE_MUL: i32 = 0x0103;
+        }
+        pub mod status {
+            pub const SPECIAL_HI_QUICK_ATTACK_CANCEL: i32 = 0x1100;
         }
     }
 
