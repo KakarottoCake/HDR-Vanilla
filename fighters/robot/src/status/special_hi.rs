@@ -257,6 +257,8 @@ unsafe extern "C" fn special_hi_end(fighter: &mut L2CFighterCommon) -> L2CValue 
     KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     KineticModule::resume_energy_all(fighter.module_accessor);
 
+    EffectModule::kill_kind(fighter.module_accessor, Hash40::new("robot_lamp_l"), true, true);
+
     let eff_handle = VarModule::get_int(fighter.battle_object, SPECIAL_HI_MARKER_EFFECT_HANDLE) as u32;
     if EffectModule::is_exist_effect(fighter.module_accessor, eff_handle) {
         EffectModule::kill(fighter.module_accessor, eff_handle, true, true);
