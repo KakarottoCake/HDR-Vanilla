@@ -1042,7 +1042,7 @@ pub unsafe fn kirby_copy_handler(fighter: &mut L2CFighterCommon) {
         // Sheik
         0x10 => sheik_nspecial_cancels(fighter),
         // Mewtwo
-        0x19 => mewtwo_nspecial_cancels(fighter),
+    //  0x19 => mewtwo_nspecial_cancels(fighter),
         // Mr. Game & Watch
         0x1C => chef_drift_land_cancel(fighter),
         // Dark Pit
