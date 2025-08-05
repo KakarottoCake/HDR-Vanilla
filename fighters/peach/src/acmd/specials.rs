@@ -1,26 +1,58 @@
 use super::*;
 
+unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        agent.on_flag(*FIGHTER_PEACH_STATUS_SPECIAL_N_FLAG_GENERATE_ARTICLE);
+    }
+    frame(lua_state, 1.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 10.0, 7.0);
+    frame(lua_state, 10.0);
+    FT_MOTION_RATE_RANGE(agent, 10.0, 32.0, 19.0);
+    if is_excute(agent) {
+        VarModule::off_flag(agent.battle_object, vars::peach::instance::SPECIAL_N_AUTOFIRE);
+        shield!(agent, *MA_MSC_CMD_SHIELD_ON, *COLLISION_KIND_SHIELD, *FIGHTER_PEACH_SHIELD_KIND_KINOPIO_GUARD, *FIGHTER_PEACH_SHIELD_GROUP_KIND_KINOPIO_GUARD);
+    }
+    frame(lua_state, 32.0);
+    FT_MOTION_RATE(agent, 1.0);
+    if is_excute(agent) {
+        shield!(agent, *MA_MSC_CMD_SHIELD_OFF, *COLLISION_KIND_SHIELD, *FIGHTER_PEACH_SHIELD_KIND_KINOPIO_GUARD, *FIGHTER_PEACH_SHIELD_GROUP_KIND_KINOPIO_GUARD);
+    }
+    frame(lua_state, 35.0);
+    if is_excute(agent) {
+        agent.set_float(boma.lr(), *FIGHTER_PEACH_STATUS_SPECIAL_N_WORK_FLOAT_SHIELD_LR);
+        VarModule::on_flag(agent.battle_object, vars::peach::instance::SPECIAL_N_AUTOFIRE);
+        agent.change_status_req(*FIGHTER_PEACH_STATUS_KIND_SPECIAL_N_HIT, true);
+    }
+    frame(lua_state, 44.0);
+    if is_excute(agent) {
+        ArticleModule::remove_exist(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIO, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+    }
+}
+
 unsafe extern "C" fn game_specialnhit(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        if !agent.is_situation(*SITUATION_KIND_GROUND) {
-            let special_n_attack_speed_y = agent.get_param_float("param_special_n", "special_n_attack_speed_y");
-            sv_kinetic_energy!(set_speed, agent, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, special_n_attack_speed_y);
-            let special_n_attack_stable_y = agent.get_param_float("param_special_n", "special_n_attack_stable_y");
-            sv_kinetic_energy!(set_stable_speed, agent, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -special_n_attack_stable_y);
-            let special_n_attack_accel_y = agent.get_param_float("param_special_n", "special_n_attack_accel_y");
-            sv_kinetic_energy!(set_accel, agent, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -special_n_attack_accel_y);
-        } //force activation to use the same momentum handling 
-        ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 0, 100, 20, 0, 6.0, 0.0, 7.5, 1.5, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 2, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 0.0, 361, 100, 15, 0, 7.0, 0.0, 7.5, 2.0, Some(0.0), Some(7.5), Some(5.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 2, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
+        if !VarModule::is_flag(agent.battle_object, vars::peach::instance::SPECIAL_N_AUTOFIRE) {
+            WHOLE_HIT(agent, *HIT_STATUS_INVINCIBLE);
+        }
+    }
+    frame(lua_state, 1.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 3.0, 4.0);
+    if is_excute(agent) {
+        ArticleModule::set_rate(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIO, (3.0-1.0)/4.0);
     }
     frame(lua_state, 3.0);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
+        ArticleModule::set_rate(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIO, 1.0);
         ArticleModule::generate_article(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIOSPORE, false, -1);
     }
     frame(lua_state, 6.0);
     if is_excute(agent) {
+        WHOLE_HIT(agent, *HIT_STATUS_NORMAL);
         ArticleModule::generate_article(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIOSPORE, false, -1);
     }
     frame(lua_state, 9.0);
@@ -31,21 +63,55 @@ unsafe extern "C" fn game_specialnhit(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         ArticleModule::generate_article(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIOSPORE, false, -1);
     }
-    frame(lua_state, 15.0);
-    if is_excute(agent) {
-        ArticleModule::generate_article(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIOSPORE, false, -1);
-    }
-    frame(lua_state, 18.0);
-    if is_excute(agent) {
-        AttackModule::clear_all(boma);
-        ArticleModule::generate_article(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIOSPORE, false, -1);
-    }
-    frame(lua_state, 40.0);
-    if is_excute(agent) {
-        ArticleModule::remove_exist(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIO, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+    if !VarModule::is_flag(agent.battle_object, vars::peach::instance::SPECIAL_N_AUTOFIRE) {
+        frame(lua_state, 15.0);
+        if is_excute(agent) {
+            ArticleModule::generate_article(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIOSPORE, false, -1);
+        }
+        frame(lua_state, 18.0);
+        if is_excute(agent) {
+            ArticleModule::generate_article(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIOSPORE, false, -1);
+        }
+        frame(lua_state, 21.0);
+        if is_excute(agent) {
+            ArticleModule::generate_article(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIOSPORE, false, -1);
+        }
+        frame(lua_state, 40.0);
+        if is_excute(agent) {
+            ArticleModule::remove_exist(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIO, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        }
+    } else {
+        frame(lua_state, 40.0);
+        if is_excute(agent) {
+            ArticleModule::remove_exist(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIO, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        }
     }
 }
 
+unsafe extern "C" fn effect_specialnhit(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        FLASH(agent, 1, 1, 1, 0);
+    }
+    frame(lua_state, 3.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("peach_kinopio_hit"), Hash40::new("top"), 0, 7.5, 11.8, 0, 0, 0, 1.02, true);
+    }
+    frame(lua_state, 25.0);
+    if is_excute(agent) {
+        if VarModule::is_flag(agent.battle_object, vars::peach::instance::SPECIAL_N_AUTOFIRE) {
+            EffectModule::kill_kind(boma, Hash40::new("peach_kinopio_hit"), true, true);
+            COL_NORMAL(agent);
+        }
+    }
+    frame(lua_state, 38.0);
+    if is_excute(agent) {
+        EffectModule::kill_kind(boma, Hash40::new("peach_kinopio_hit"), true, true);
+        COL_NORMAL(agent);
+        EFFECT(agent, Hash40::new("sys_erace_smoke"), Hash40::new("top"), 10, 3, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
+    }
+}
 
 unsafe extern "C" fn game_specialsjump(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
@@ -256,9 +322,15 @@ unsafe extern "C" fn sound_speciallw(agent: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.acmd("game_specialn", game_specialn, Priority::Low);
+    agent.acmd("game_specialairn", game_specialn, Priority::Low);
+
     agent.acmd("game_specialnhit", game_specialnhit, Priority::Low);
     agent.acmd("game_specialairnhit", game_specialnhit, Priority::Low);
 
+
+    agent.acmd("effect_specialnhit", effect_specialnhit, Priority::Low);
+    agent.acmd("effect_specialairnhit", effect_specialnhit, Priority::Low);
 
     agent.acmd("game_specialsjump", game_specialsjump, Priority::Low);
     agent.acmd("game_specialairsend", game_specialairsend, Priority::Low);
