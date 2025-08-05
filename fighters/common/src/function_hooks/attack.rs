@@ -118,7 +118,7 @@ unsafe fn get_hitstop_frame_add(ctx: &mut skyline::hooks::InlineCtx) {
     }
 }
 
-// Only applies 0.67 crouch cancel hitlag multiplier to defender
+// Only applies 0.67 crouch cancel hitlag multiplier to receiver
 #[skyline::hook(offset = 0x46b648, inline)]
 unsafe fn get_hitstop_mul(ctx: &mut skyline::hooks::InlineCtx) {
     if *ctx.registers[1].w.as_ref() == 0x2 {
@@ -145,25 +145,57 @@ unsafe extern "C" fn calc_hitlag_mul(boma: &mut BattleObjectModuleAccessor, kb: 
 // This runs directly after knockback is calculated
 #[skyline::hook(offset = 0x402f04, inline)]
 unsafe fn post_calc_reaction(ctx: &mut skyline::hooks::InlineCtx) {
-    let id = *ctx.registers[27].w.as_ref();
-    let boma = &mut *(sv_battle_object::module_accessor(id));
-    if boma.is_fighter() {
-        let fighter = get_fighter_common_from_accessor(boma);
-        let object = sv_system::battle_object(fighter.lua_state_agent);
-        let fighta : *mut Fighter = std::mem::transmute(object);
+    let damage_module = *ctx.registers[19].x.as_ref();
+    let receiver_boma = &mut **((damage_module + 0x8) as *mut *mut smash::app::BattleObjectModuleAccessor);
+
+    // Handles application of knockback multiplier on grounded spikes
+    if receiver_boma.is_fighter() {
+        let mut kb: f32;
+        asm!("fmov w8, s0", out("w8") kb);
+
+        let attack_data = (*ctx.registers[22].x.as_ref() as *mut smash_rs::app::AttackData);
+        let angle = (*attack_data).vector;
+        let meteor_vector_min = WorkModule::get_param_int(receiver_boma, hash40("battle_object"), hash40("meteor_vector_min"));
+        let meteor_vector_max = WorkModule::get_param_int(receiver_boma, hash40("battle_object"), hash40("meteor_vector_max"));
+        let spike_tumble_threshold = ParamModule::get_float(receiver_boma.object(), ParamType::Common, "spike_tumble_threshold");
+        let damage_frame_mul = WorkModule::get_param_float(receiver_boma, hash40("battle_object"), hash40("damage_frame_mul"));
+        let grounded_spike_knockback_mul = ParamModule::get_float(receiver_boma.object(), ParamType::Common, "grounded_spike_knockback_mul");
+
+        let spike_tumble_threshold_kb = spike_tumble_threshold / damage_frame_mul;
+
+        if receiver_boma.is_situation(*SITUATION_KIND_GROUND)
+        && angle >= meteor_vector_min
+        && angle <= meteor_vector_max
+        && kb >= spike_tumble_threshold_kb {
+            kb *= grounded_spike_knockback_mul;
+        }
+
+        asm!("fmov s0, w8", in("w8") kb)
+    }
+
+    let attacker_id = *ctx.registers[27].w.as_ref();
+    let attacker_boma = &mut *(sv_battle_object::module_accessor(attacker_id));
+
+    // Handles hitlag scaling for attacker
+    if attacker_boma.is_fighter() {
+        let attacker_fighter = get_fighter_common_from_accessor(attacker_boma);
+        let attacker_object = sv_system::battle_object(attacker_fighter.lua_state_agent);
+        let attacker_fighta : *mut Fighter = std::mem::transmute(attacker_object);
     
         let mut kb: f32;
         asm!("fmov w8, s0", out("w8") kb);
         IS_KB_CALC_EARLY = true;
         KB = kb;
-        let hitlag = *(((fighta as u64) + 0xf70c) as *mut i32);
-        let max_hitlag = WorkModule::get_param_float(boma, hash40("battle_object"), hash40("hitstop_frame_max"));
+        let hitlag = *(((attacker_fighta as u64) + 0xf70c) as *mut i32);
+        let max_hitlag = WorkModule::get_param_float(attacker_boma, hash40("battle_object"), hash40("hitstop_frame_max"));
         let attack_data = (*ctx.registers[22].x.as_ref() as *mut smash_rs::app::AttackData);
         let attr: smashline::Hash40 = std::mem::transmute((*attack_data).attr);
+
         if ![Hash40::new("collision_attr_paralyze"), Hash40::new("collision_attr_saving")].contains(&attr) {
             // Set hitlag for attacker
-            *(((fighta as u64) + 0xf70c) as *mut i32) = (hitlag as f32 * calc_hitlag_mul(boma, kb)).round().min(max_hitlag) as i32;
+            *(((attacker_fighta as u64) + 0xf70c) as *mut i32) = (hitlag as f32 * calc_hitlag_mul(attacker_boma, kb)).round().min(max_hitlag) as i32;
         }
+
         asm!("fmov s0, w8", in("w8") kb)
     }
 }
@@ -178,6 +210,7 @@ unsafe fn handle_on_attack_event(ctx: &mut skyline::hooks::InlineCtx) {
         let max_hitlag = WorkModule::get_param_float(boma, hash40("battle_object"), hash40("hitstop_frame_max"));
         let attack_data = (*ctx.registers[24].x.as_ref() as *mut smash_rs::app::AttackData);
         let attr: smashline::Hash40 = std::mem::transmute((*attack_data).attr);
+
         if ![Hash40::new("collision_attr_paralyze"), Hash40::new("collision_attr_saving")].contains(&attr) {
             // Set hitlag for attacker
             *ctx.registers[0].w.as_mut() = (hitlag as f32 * calc_hitlag_mul(boma, kb)).round().min(max_hitlag) as u32;
@@ -186,7 +219,7 @@ unsafe fn handle_on_attack_event(ctx: &mut skyline::hooks::InlineCtx) {
 }
 
 // This runs immediately before hitlag is set for attacking articles
-#[skyline::hook(offset = 0x33a9db0, inline)]
+#[skyline::hook(offset = 0x33a9b40, inline)]
 unsafe fn set_weapon_hitlag(ctx: &mut skyline::hooks::InlineCtx) {
     let opponent_boma = &mut *(*ctx.registers[24].x.as_ref() as *mut BattleObjectModuleAccessor);
     if !opponent_boma.is_item() {
@@ -197,6 +230,7 @@ unsafe fn set_weapon_hitlag(ctx: &mut skyline::hooks::InlineCtx) {
         let max_hitlag = WorkModule::get_param_float(opponent_boma, hash40("battle_object"), hash40("hitstop_frame_max"));
         let attack_data = (*ctx.registers[20].x.as_ref() as *mut smash_rs::app::AttackData);
         let attr: smashline::Hash40 = std::mem::transmute((*attack_data).attr);
+
         if ![Hash40::new("collision_attr_paralyze"), Hash40::new("collision_attr_saving")].contains(&attr) {
             // Set hitlag for attacking article
             *ctx.registers[21].w.as_mut() = (hitlag as f32 * calc_hitlag_mul(opponent_boma, kb)).round().min(max_hitlag) as u32;
@@ -204,7 +238,7 @@ unsafe fn set_weapon_hitlag(ctx: &mut skyline::hooks::InlineCtx) {
     }
 }
 
-// This runs immediately before hitlag is set for the defender
+// This runs immediately before hitlag is set for the receiver
 #[skyline::hook(offset = 0x404658, inline)]
 unsafe fn set_fighter_hitlag(ctx: &mut skyline::hooks::InlineCtx) {
     let boma = &mut *(*ctx.registers[19].x.as_ref() as *mut BattleObjectModuleAccessor);
@@ -217,8 +251,9 @@ unsafe fn set_fighter_hitlag(ctx: &mut skyline::hooks::InlineCtx) {
         if [hash40("collision_attr_elec"),].contains(&attr) {
             max_hitlag *= WorkModule::get_param_float(boma, hash40("battle_object"), hash40("hitstop_elec_mul"));
         }
+
         if ![hash40("collision_attr_paralyze"), hash40("collision_attr_saving")].contains(&attr) {
-            // Set hitlag for defender
+            // Set hitlag for receiver
             *ctx.registers[0].w.as_mut() = (hitlag as f32 * calc_hitlag_mul(boma, kb)).round().min(max_hitlag) as u32;
         }
     }
@@ -238,12 +273,14 @@ unsafe fn x03df93c(ctx: &mut skyline::hooks::InlineCtx) {
     let opponent_battle_object_id = *(*ctx.registers[22].x.as_ref() as *const u32).add(0x24 / 4);
     let opponent_battle_object = utils::util::get_battle_object_from_id(opponent_battle_object_id);
     let opponent_boma = (&mut *(*opponent_battle_object).module_accessor);
+
     if opponent_boma.is_status(*FIGHTER_STATUS_KIND_GUARD_OFF)
     && VarModule::is_flag(opponent_battle_object, vars::common::instance::IS_PARRY_FOR_GUARD_OFF)
     && opponent_boma.get_int(*FIGHTER_STATUS_GUARD_ON_WORK_INT_JUST_FRAME) > 0 {
         *ctx.registers[8].w.as_mut() = *ctx.registers[8].w.as_ref() | *COLLISION_KIND_MASK_PARRY as u32;
         let attack_module = *ctx.registers[19].x.as_mut();
         let attacker_boma = &mut *(*(attack_module as *mut *mut BattleObjectModuleAccessor).add(1));
+
         if attacker_boma.is_fighter() {
             // clear ledge and respawn iframes
             VarModule::set_int(attacker_boma.object(), vars::common::instance::CLIFF_XLU_FRAME, 0);
@@ -253,17 +290,19 @@ unsafe fn x03df93c(ctx: &mut skyline::hooks::InlineCtx) {
     }
 }
 
-//Runs on general hits, used for Jigglypuff's Disarming Voice item removal
+// Runs on general hits, used for Jigglypuff's Disarming Voice item removal
 #[skyline::hook(offset=0x67a7b0)]
-unsafe fn notify_log_event_collision_hit(fighter_manager: u64, attacker_object_id: u32, defender_object_id: u32, move_type: u64, arg5: u64, move_type_again: u64) -> u64 {
+unsafe fn notify_log_event_collision_hit(fighter_manager: u64, attacker_object_id: u32, receiver_object_id: u32, move_type: u64, arg5: u64, move_type_again: u64) -> u64 {
 	let attacker_boma = &mut *smash::app::sv_battle_object::module_accessor(attacker_object_id);
-	let defender_boma = &mut *smash::app::sv_battle_object::module_accessor(defender_object_id);
+	let receiver_boma = &mut *smash::app::sv_battle_object::module_accessor(receiver_object_id);
+
     if VarModule::has_var_module(attacker_boma.object())
     && VarModule::is_flag(attacker_boma.object(), vars::common::status::HIT_EFFECT_DROP_ITEM)
-    && ItemModule::is_have_item(defender_boma, 0) {
-        ItemModule::drop_item(defender_boma, 90.0, 0.0, 0);
+    && ItemModule::is_have_item(receiver_boma, 0) {
+        ItemModule::drop_item(receiver_boma, 90.0, 0.0, 0);
     }
-	original!()(fighter_manager, attacker_object_id, defender_object_id, move_type, arg5, move_type_again)
+
+	original!()(fighter_manager, attacker_object_id, receiver_object_id, move_type, arg5, move_type_again)
 }
 
 // Disables pushback when your attack is parried
@@ -289,6 +328,7 @@ unsafe fn post_spike_check(ctx: &mut skyline::hooks::InlineCtx) {
 
     // Lowers the tumble threshold for spikes
     let is_spike = *ctx.registers[0].w.as_ref() != 0;
+
     if is_spike {
         let mut kb: f32;
         asm!("fmov w8, s11", out("w8") kb);
