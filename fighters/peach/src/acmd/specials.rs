@@ -9,12 +9,12 @@ unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     FT_MOTION_RATE_RANGE(agent, 1.0, 10.0, 7.0);
     frame(lua_state, 10.0);
-    FT_MOTION_RATE_RANGE(agent, 10.0, 32.0, 19.0);
+    FT_MOTION_RATE_RANGE(agent, 10.0, 31.0, 19.0);
     if is_excute(agent) {
         VarModule::off_flag(agent.battle_object, vars::peach::instance::SPECIAL_N_AUTOFIRE);
         shield!(agent, *MA_MSC_CMD_SHIELD_ON, *COLLISION_KIND_SHIELD, *FIGHTER_PEACH_SHIELD_KIND_KINOPIO_GUARD, *FIGHTER_PEACH_SHIELD_GROUP_KIND_KINOPIO_GUARD);
     }
-    frame(lua_state, 32.0);
+    frame(lua_state, 31.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         shield!(agent, *MA_MSC_CMD_SHIELD_OFF, *COLLISION_KIND_SHIELD, *FIGHTER_PEACH_SHIELD_KIND_KINOPIO_GUARD, *FIGHTER_PEACH_SHIELD_GROUP_KIND_KINOPIO_GUARD);
@@ -40,9 +40,9 @@ unsafe extern "C" fn game_specialnhit(agent: &mut L2CAgentBase) {
         }
     }
     frame(lua_state, 1.0);
-    FT_MOTION_RATE_RANGE(agent, 1.0, 3.0, 4.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 3.0, 5.0);
     if is_excute(agent) {
-        ArticleModule::set_rate(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIO, (3.0-1.0)/4.0);
+        ArticleModule::set_rate(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIO, (3.0-1.0)/5.0);
     }
     frame(lua_state, 3.0);
     FT_MOTION_RATE(agent, 1.0);
@@ -76,16 +76,14 @@ unsafe extern "C" fn game_specialnhit(agent: &mut L2CAgentBase) {
         if is_excute(agent) {
             ArticleModule::generate_article(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIOSPORE, false, -1);
         }
-        frame(lua_state, 40.0);
-        if is_excute(agent) {
-            ArticleModule::remove_exist(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIO, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-        }
-    } else {
-        frame(lua_state, 40.0);
-        if is_excute(agent) {
-            ArticleModule::remove_exist(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIO, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-        }
     }
+    frame(lua_state, 40.0);
+    FT_MOTION_RATE_RANGE(agent, 40.0, 55.0, 14.0);
+    if is_excute(agent) {
+        ArticleModule::remove_exist(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIO, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+    }
+    frame(lua_state, 55.0);
+    FT_MOTION_RATE(agent, 1.0);
 }
 
 unsafe extern "C" fn effect_specialnhit(agent: &mut L2CAgentBase) {
