@@ -314,10 +314,10 @@ pub struct TourneyConfig {
     useOfficial: bool,
     /// the ordered list of starters stages which should be enabled,
     /// or `None` if there are no starters
-    starters: Option<Vec<String>>,
+    starters: Option<Vec<Vec<String>>>,
     /// the ordered list of counterpick stages which should be enabled,
     /// or `None` if there are no counterpicks
-    counterpicks: Option<Vec<String>>,
+    counterpicks: Option<Vec<Vec<String>>>,
 }
 
 impl Default for TourneyConfig {
@@ -345,11 +345,33 @@ impl TourneyConfig {
             return false;
         }
 
-        // if there are too many stages for the allowed number per row, this is invalid.
-        if self.starters.as_ref().unwrap().len() > DEFAULT_ROW_LENGTH
-            || self.counterpicks.as_ref().unwrap().len() > DEFAULT_ROW_LENGTH
-        {
-            println!("Too many starters or counterpicks were enabled! Invalid stage config!")
+        let starter_pages = self.starters.as_ref().unwrap();
+        let counterpick_pages = self.counterpicks.as_ref().unwrap();
+
+        // make sure the number of pages match
+        if (starter_pages.len() != counterpick_pages.len()) {
+            println!("number of pages of starters does not match number of pages of counterpicks!");
+            return false;
+        }
+
+        // iterate though each page of stages
+        for starter_page in starter_pages.iter(){
+            // if there are too many stages for the allowed number per row, this is invalid.
+            if starter_page.len() > DEFAULT_ROW_LENGTH
+            {
+                println!("Too many starters were enabled! Invalid stage config!");
+                return false;
+            }
+        }
+
+        // iterate though each page of stages
+        for counterpick_page in counterpick_pages.iter(){
+            // if there are too many stages for the allowed number per row, this is invalid.
+            if counterpick_page.len() > DEFAULT_ROW_LENGTH
+            {
+                println!("Too many counterpicks were enabled! Invalid stage config!");
+                return false;
+            }
         }
 
         // otherwise, we are configured
@@ -440,72 +462,75 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
     let list = &mut param_list.0;
     let mut out_list: Vec<ParamKind> = vec![];
 
-    let starters = config.starters.unwrap();
-    let counterpicks = config.counterpicks.unwrap();
+    let starter_pages = config.starters.unwrap();
+    let counterpick_pages = config.counterpicks.unwrap();
 
-    // disable and enable the appropriate stages in the original structure
     for entry in list.iter_mut() {
-        let stage_entry = &mut (entry
-            .try_into_mut::<ParamStruct>()
-            .expect("failed to get struct from ui_stage_db.prc entry!")
-            .0);
-
-        // the name_id of the stage: BattleField, Yoshi_Story, Kirby_Pupupu64, etc
-        let name_id = stage_entry
-            .iter()
-            .find(|param| param.0 == prc::hash40::Hash40(hash40("name_id")))
-            .unwrap()
-            .1
-            .try_into_ref::<String>()
-            .expect("Could not get name_id as String for a stage entry in tourney mode!")
-            .clone();
-
-        // the display order for the stage
-        let disp_order = stage_entry
-            .iter_mut()
-            .find(|param| param.0 == prc::hash40::Hash40(hash40("disp_order")))
-            .unwrap()
-            .1
-            .try_into_mut::<i8>()
-            .expect("Could not get disp_order as an i8 for a stage entry in tourney mode");
-
-        *disp_order = -1;
-
-        // set the disp_order if this is a starter to 1 (see fn docs)
-        match starters.contains(&name_id) {
-            true => {
-                *disp_order = 1;
-                out_list.push(entry.clone());
-                continue;
-            }
-            false => {}
+        // To avoid holding any borrows on `entry`, we get the name_id by cloning the string.
+        // This is a "read" phase that completes fully before any "write" phase.
+        let name_id = {
+            let stage_struct = entry.try_into_ref::<ParamStruct>()
+                .expect("failed to get struct from ui_stage_db.prc entry!");
+            
+            stage_struct.0.iter()
+                .find(|param| param.0 == prc::hash40::Hash40(hash40("name_id")))
+                .unwrap()
+                .1
+                .try_into_ref::<String>()
+                .expect("Could not get name_id as String for a stage entry in tourney mode!")
+                .clone()
         };
 
-        // set Random to 2 (see fn docs)
-        if name_id == "Training" {
-            *disp_order = 2;
-            // pad with a bunch of Training stages, which will be hidden
-            let len = starters.len();
-            for _ in 0..(DEFAULT_ROW_LENGTH - len) {
-                out_list.push(entry.clone());
+        // This helper function gets a mutable reference to the disp_order,
+        // does the modification, and immediately drops the borrow.
+        let mut modify_and_push = |new_order: i8, list: &mut Vec<ParamKind>, count: usize| {
+            // The mutable borrow of `entry` is created and dropped entirely within this expression.
+            *entry
+                .try_into_mut::<ParamStruct>().unwrap().0
+                .iter_mut()
+                .find(|p| p.0 == prc::hash40::Hash40(hash40("disp_order"))).unwrap()
+                .1.try_into_mut::<i8>().unwrap() = new_order;
+
+            // Now that the mutable borrow is gone, we can safely create immutable
+            // borrows for cloning.
+            for _ in 0..count {
+                list.push(entry.clone());
             }
+        };
+
+        if name_id == "Training" {
+            for n in 0..starter_pages.len() {
+                let len = starter_pages[n].len();
+                if DEFAULT_ROW_LENGTH > len {
+                    modify_and_push(2 + (4 * n) as i8, &mut out_list, DEFAULT_ROW_LENGTH - len);
+                }
+            }
+
+            for n in 0..counterpick_pages.len() {
+                let len = counterpick_pages[n].len();
+                if DEFAULT_ROW_LENGTH > len {
+                    modify_and_push(4 + (4 * n) as i8, &mut out_list, DEFAULT_ROW_LENGTH - len);
+                }
+            }
+
+            continue;
+        } else {
+            // Handle regular stages.
+            for n in 0..starter_pages.len() {
+                if starter_pages[n].contains(&name_id) {
+                    modify_and_push(1 + (4 * n) as i8, &mut out_list, 1);
+                }
+            }
+            for n in 0..counterpick_pages.len() {
+                if counterpick_pages[n].contains(&name_id) {
+                    modify_and_push(3 + (4 * n) as i8, &mut out_list, 1);
+                }
+            }
+
             continue;
         }
 
-        // set the disp_order if this is a counterpick to 3 (see fn docs)
-        match counterpicks.contains(&name_id) {
-            true => {
-                *disp_order = 3;
-                out_list.push(entry.clone());
-                continue;
-            }
-            false => {}
-        };
-
-        // otherwise, push this as hidden
-        *disp_order = -1;
-        out_list.push(entry.clone());
-        continue;
+        modify_and_push(-1, &mut out_list, 1);
     }
 
     *list = out_list;
