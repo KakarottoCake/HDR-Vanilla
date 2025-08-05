@@ -338,6 +338,10 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
         }
         wait(lua_state, 10.0);
     }
+    frame(lua_state, 27.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("robot_lamp_l"), false, false);
+    }
 }
 
 unsafe extern "C" fn sound_specialhi(agent: &mut L2CAgentBase) {
@@ -365,11 +369,11 @@ unsafe extern "C" fn game_specialhirise(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     if is_excute(agent) {
         
-        if boma.is_prev_situation(*SITUATION_KIND_GROUND) { 
-            let mut damage = charge_frame / 1.5;
+        let damage = if boma.is_prev_situation(*SITUATION_KIND_GROUND) { 
+            charge_frame / 1.5
         } else {
-            let mut damage = charge_frame / 3.0;
-        }
+            charge_frame / 3.0
+        };
 
         if charge_frame <= 10.0 {
             MeterModule::drain_direct(agent.object(), 20.0);

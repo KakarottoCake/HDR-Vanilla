@@ -107,42 +107,25 @@ unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2C
     // defines fuel consumption throughout the move
     let start_fuel = fighter.get_float(*FIGHTER_ROBOT_INSTANCE_WORK_ID_FLOAT_BURNER_ENERGY_VALUE);
     let max_fuel = fighter.get_param_float("param_special_hi", "energy_max_frame");
-    let fuel_increment = 2.0; // how much fuel is consumed by the charge per frame
+    let fuel_increment = if fighter.is_situation(*SITUATION_KIND_AIR) {2.0} else {4.0}; // how much fuel is consumed by the charge per frame
     let min_cost = 20.0; // minimum amount of fuel consumed on use
-    let required_fuel = if fighter.is_situation(*SITUATION_KIND_AIR) { (fuel_increment * charge_frame).clamp(min_cost, max_fuel) } else { ((fuel_increment * 2.0) * charge_frame).clamp(min_cost, max_fuel)};
+    let required_fuel = (fuel_increment * charge_frame).clamp(min_cost, max_fuel);
     let remaining_fuel = (start_fuel - required_fuel).clamp(0.0, max_fuel);
 
     // handles rob's rotation during the charge
     let rot_x = VarModule::get_float(fighter.battle_object, SPECIAL_HI_ROT_X);
-    if fighter.is_situation(*SITUATION_KIND_AIR) {
-        if fighter.left_stick_x().abs() > 0.1 {   
-            let rot_amount = 2.5; // how much rob rotates each frame
-            let reverse = if fighter.is_stick_backward() { -1.0 } else { 1.0 };
-            let direction = fighter.lr() * reverse; // determines the direction to rotate
-            let angle = (rot_x + (rot_amount * direction)).clamp(-60.0, 60.0);
-            PostureModule::set_rot(fighter.module_accessor, &Vector3f::new(angle * 0.3 * fighter.lr(), 0.0, 0.0), 0);
-            VarModule::set_float(fighter.battle_object, SPECIAL_HI_ROT_X, angle);
+    let rot_amount = if fighter.is_situation(*SITUATION_KIND_AIR) { 2.5 } else {3.75}; // how much rob rotates each frame
+    if fighter.left_stick_x().abs() > 0.1 {   
+        let reverse = if fighter.is_stick_backward() { -1.0 } else { 1.0 };
+        let direction = fighter.lr() * reverse; // determines the direction to rotate
+        let angle = (rot_x + (rot_amount * direction)).clamp(-60.0, 60.0);
+        PostureModule::set_rot(fighter.module_accessor, &Vector3f::new(angle * 0.3 * fighter.lr(), 0.0, 0.0), 0);
+        VarModule::set_float(fighter.battle_object, SPECIAL_HI_ROT_X, angle);
 
-            // changes direction if rotation crosses center threshold
-            if rot_x == 0.0 && fighter.is_stick_backward() {
-                PostureModule::reverse_lr(fighter.module_accessor);
-                PostureModule::update_rot_y_lr(fighter.module_accessor);
-            }
-        }
-    } else {
-        if fighter.left_stick_x().abs() > 0.1 {   
-            let rot_amount = 3.75; // how much rob rotates each frame
-            let reverse = if fighter.is_stick_backward() { -1.0 } else { 1.0 };
-            let direction = fighter.lr() * reverse; // determines the direction to rotate
-            let angle = (rot_x + (rot_amount * direction)).clamp(-60.0, 60.0);
-            PostureModule::set_rot(fighter.module_accessor, &Vector3f::new(angle * 0.3 * fighter.lr(), 0.0, 0.0), 0);
-            VarModule::set_float(fighter.battle_object, SPECIAL_HI_ROT_X, angle);
-
-            // changes direction if rotation crosses center threshold
-            if rot_x == 0.0 && fighter.is_stick_backward() {
-                PostureModule::reverse_lr(fighter.module_accessor);
-                PostureModule::update_rot_y_lr(fighter.module_accessor);
-            }
+        // changes direction if rotation crosses center threshold
+        if rot_x == 0.0 && fighter.is_stick_backward() {
+            PostureModule::reverse_lr(fighter.module_accessor);
+            PostureModule::update_rot_y_lr(fighter.module_accessor);
         }
     }
 
@@ -152,19 +135,10 @@ unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2C
     // default parameters for launch speed
     let mut launch_speed = Vector3f{x: 0.0, y: 0.0, z: 0.0};
 
-    if fighter.is_situation(*SITUATION_KIND_AIR) {
-        launch_speed = Vector3f{
-            x: 0.15 * rot_x.abs() * ((charge_frame - 18.0).clamp(0.0, 32.0) / 32.0),
-            y: 0.5,
-            z: 0.0
-        };
-    } else {
-        launch_speed = Vector3f{
-            x: 0.30 * rot_x.abs() * (((charge_frame * 2.0) - 18.0).clamp(0.0, 32.0) / 32.0),
-            y: 0.5,
-            z: 0.0
-        };
-    }
+    let airX = 0.15 * rot_x.abs() * (((charge_frame) - 18.0).clamp(0.0, 32.0) / 32.0);
+    let airY = ((1.65 + (0.05 * charge_frame)) - (0.025 * rot_x.abs())).min(3.75);
+    let groundX = 0.30 * rot_x.abs() * (((charge_frame * 2.0) - 18.0).clamp(0.0, 32.0) / 32.0);
+    let groundY = ((1.65 + (0.10 * charge_frame)) - (0.035 * rot_x.abs())).min(3.75);
 
     // force the full launch ahead of time for grounded since it charges 2x fast
     if fighter.is_situation(*SITUATION_KIND_GROUND) && charge_frame > 28.0 {
@@ -176,8 +150,8 @@ unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2C
 
         PLAY_SE(fighter, Hash40::new("se_common_bomb_l"));
 
-        launch_speed.x = 0.30 * rot_x.abs() * (((charge_frame * 2.0) - 18.0).clamp(0.0, 32.0) / 32.0);
-        launch_speed.y = ((1.65 + (0.10 * charge_frame)) - (0.035 * rot_x.abs())).min(3.75);
+        launch_speed.x = groundX;
+        launch_speed.y = groundY;
 
         KineticModule::add_speed(fighter.module_accessor, &launch_speed);
         fighter.set_float(remaining_fuel, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLOAT_BURNER_ENERGY_VALUE);
@@ -199,11 +173,11 @@ unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2C
         PLAY_SE(fighter, Hash40::new("se_common_bomb_ll"));
 
         if fighter.is_situation(*SITUATION_KIND_GROUND) {
-            launch_speed.x = 0.30 * rot_x.abs() * (((charge_frame * 2.0) - 18.0).clamp(0.0, 32.0) / 32.0);
-            launch_speed.y = ((1.65 + (0.10 * charge_frame)) - (0.035 * rot_x.abs())).min(3.75);
+            launch_speed.x = groundX;
+            launch_speed.y = groundY;
         } else {
-            launch_speed.x = 0.15 * rot_x.abs() * (((charge_frame) - 18.0).clamp(0.0, 32.0) / 32.0);
-            launch_speed.y = ((1.65 + (0.05 * charge_frame)) - (0.025 * rot_x.abs())).min(3.75);
+            launch_speed.x = airX;
+            launch_speed.y = airY;
         }
 
         KineticModule::add_speed(fighter.module_accessor, &launch_speed);
@@ -236,11 +210,11 @@ unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2C
 
     if charge_frame >= 10.0 {
         if fighter.is_situation(*SITUATION_KIND_GROUND) {
-            launch_speed.x = 0.30 * rot_x.abs() * (((charge_frame * 2.0) - 18.0).clamp(0.0, 32.0) / 32.0);
-            launch_speed.y = ((1.65 + (0.10 * charge_frame)) - (0.035 * rot_x.abs())).min(3.75);
+            launch_speed.x = groundX;
+            launch_speed.y = groundY;
         } else {
-            launch_speed.x = 0.15 * rot_x.abs() * (((charge_frame) - 18.0).clamp(0.0, 32.0) / 32.0);
-            launch_speed.y = ((1.65 + (0.05 * charge_frame)) - (0.025 * rot_x.abs())).min(3.75);
+            launch_speed.x = airX;
+            launch_speed.y = airY;
         }
     }
 
