@@ -290,11 +290,11 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     if agent.is_situation(*SITUATION_KIND_GROUND) {
-        FT_MOTION_RATE(agent, 4.0/(14.0-1.0));
+        FT_MOTION_RATE_RANGE(agent, 1.0, 14.0, 4.0);
     }
     frame(lua_state, 14.0);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
-        FT_MOTION_RATE(agent, 1.0);
         WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
 }
@@ -337,10 +337,6 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
             LAST_EFFECT_SET_RATE(agent, 0.75);
         }
         wait(lua_state, 10.0);
-    }
-    frame(lua_state, 27.0);
-    if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("robot_lamp_l"), false, false);
     }
 }
 
@@ -414,7 +410,6 @@ unsafe extern "C" fn effect_specialhirise(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("robot_nozzle_flare"), Hash40::new("knee1"), 1.5, 0, 0, 90, -90, 0, 1, true);
         LAST_EFFECT_SET_COLOR(agent, 0.55, 0.55, 2.25);
-        EFFECT_OFF_KIND(agent, Hash40::new("robot_lamp_l"), false, false);
     }
     if charge_frame >= 10 {
         frame(lua_state, 1.0);
