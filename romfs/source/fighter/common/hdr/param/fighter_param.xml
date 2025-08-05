@@ -19,7 +19,7 @@
       <hash40 hash="fighter_kind">LINK</hash40>
       <float hash="attack_dash_fall_speed_mul">-1.0</float>
       <float hash="dacus_mul">0.85</float>
-      <float hash="ditcit_mul">0.85</float>
+      <float hash="ditcit_mul">1.0</float>
       <float hash="pass_air_speed_x_max_mul">1.8</float>
     </struct>
     <struct index="3">
