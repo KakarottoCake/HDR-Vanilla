@@ -6,10 +6,8 @@ unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue 
     let ret = smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_SPECIAL_N)(fighter);
     // air stall wasnt working
     if !fighter.is_situation(*SITUATION_KIND_GROUND) {
-        let gravity_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY) as *mut app::KineticEnergy;
-        let gravity = lua_bind::KineticEnergy::get_speed_y(gravity_energy);
         let special_n_attack_speed_y = fighter.get_param_float("param_special_n", "special_n_attack_speed_y");
-        if gravity < special_n_attack_speed_y {
+        if KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) < special_n_attack_speed_y {
             sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, special_n_attack_speed_y);
         }
         let special_n_attack_stable_y = fighter.get_param_float("param_special_n", "special_n_attack_stable_y");
