@@ -466,8 +466,6 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
     let counterpick_pages = config.counterpicks.unwrap();
 
     for entry in list.iter_mut() {
-        // To avoid holding any borrows on `entry`, we get the name_id by cloning the string.
-        // This is a "read" phase that completes fully before any "write" phase.
         let name_id = {
             let stage_struct = entry.try_into_ref::<ParamStruct>()
                 .expect("failed to get struct from ui_stage_db.prc entry!");
@@ -481,23 +479,20 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
                 .clone()
         };
 
-        // This helper function gets a mutable reference to the disp_order,
-        // does the modification, and immediately drops the borrow.
+        // doing the push this way keeps rust from freaking out.
         let mut modify_and_push = |new_order: i8, list: &mut Vec<ParamKind>, count: usize| {
-            // The mutable borrow of `entry` is created and dropped entirely within this expression.
             *entry
                 .try_into_mut::<ParamStruct>().unwrap().0
                 .iter_mut()
                 .find(|p| p.0 == prc::hash40::Hash40(hash40("disp_order"))).unwrap()
                 .1.try_into_mut::<i8>().unwrap() = new_order;
 
-            // Now that the mutable borrow is gone, we can safely create immutable
-            // borrows for cloning.
             for _ in 0..count {
                 list.push(entry.clone());
             }
         };
 
+        // add training buffers as necessary
         if name_id == "Training" {
             for n in 0..starter_pages.len() {
                 let len = starter_pages[n].len();
@@ -530,6 +525,7 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
             continue;
         }
 
+        // otherwise, hide the stage
         modify_and_push(-1, &mut out_list, 1);
     }
 
