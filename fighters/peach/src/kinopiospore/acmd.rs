@@ -8,9 +8,9 @@ unsafe extern "C" fn game_shot(agent: &mut L2CAgentBase) {
         let peach = utils::util::get_battle_object_from_id(owner_id);
         let peach_boma: &mut BattleObjectModuleAccessor = &mut *(*peach).module_accessor;
         if peach_boma.kind() != *FIGHTER_KIND_PEACH || VarModule::is_flag(peach_boma.object(), vars::peach::instance::SPECIAL_N_AUTOFIRE) {
-            ATTACK(agent, 0, 0, Hash40::new("top"), 2.75, 361, 210, 0, 25, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.75, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_SPEED, false, 2, 0.0, 0, true, true, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_NONE);
+            ATTACK(agent, 0, 0, Hash40::new("top"), 2.5, 47, 151, 0, 40, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_SPEED, false, 2, 0.0, 0, true, true, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_NONE);
         } else {
-            ATTACK(agent, 0, 0, Hash40::new("top"), 2.75, 361, 210, 0, 40, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.75, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_SPEED, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_NONE);
+            ATTACK(agent, 0, 0, Hash40::new("top"), 3.0, 47, 202, 0, 40, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_SPEED, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_NONE);
             AttackModule::set_force_reaction(boma, 0, true, false);
         }
     }
