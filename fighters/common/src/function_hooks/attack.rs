@@ -1,7 +1,6 @@
 use super::*;
 use smash_rs::app::CollisionSoundAttr;
 use utils::ext::*;
-use std::arch::asm;
 use utils::game_modes::CustomMode;
 
 #[skyline::hook(offset = 0x3dc180)]
@@ -96,7 +95,7 @@ unsafe fn get_damage_frame_mul(ctx: &mut skyline::hooks::InlineCtx) {
             else {
                 0.42
             };
-            asm!("fmov s0, w8", in("w8") damage_frame_mul)
+            ctx.registers_f[0].set_s(damage_frame_mul)
         },
         _ => {}
     }
@@ -112,7 +111,7 @@ unsafe fn get_hitstop_frame_add(ctx: &mut skyline::hooks::InlineCtx) {
             else {
                 4.0
             };
-            asm!("fmov s0, w8", in("w8") hitstop_frame_add)
+            ctx.registers_f[0].set_s(hitstop_frame_add)
         },
         _ => {}
     }
@@ -123,7 +122,7 @@ unsafe fn get_hitstop_frame_add(ctx: &mut skyline::hooks::InlineCtx) {
 unsafe fn get_hitstop_mul(ctx: &mut skyline::hooks::InlineCtx) {
     if *ctx.registers[1].w.as_ref() == 0x2 {
         let hitstop_mul: f32 = 1.0;
-        asm!("fmov s0, w8", in("w8") hitstop_mul)
+        ctx.registers_f[0].set_s(hitstop_mul)
     }
 }
 
@@ -150,8 +149,7 @@ unsafe fn post_calc_reaction(ctx: &mut skyline::hooks::InlineCtx) {
 
     // Handles application of knockback multiplier on grounded spikes
     if receiver_boma.is_fighter() {
-        let mut kb: f32;
-        asm!("fmov w8, s0", out("w8") kb);
+        let mut kb = ctx.registers_f[0].s();
 
         let attack_data = (*ctx.registers[22].x.as_ref() as *mut smash_rs::app::AttackData);
         let angle = (*attack_data).vector;
@@ -170,7 +168,7 @@ unsafe fn post_calc_reaction(ctx: &mut skyline::hooks::InlineCtx) {
             kb *= grounded_spike_knockback_mul;
         }
 
-        asm!("fmov s0, w8", in("w8") kb)
+        ctx.registers_f[0].set_s(kb)
     }
 
     let attacker_id = *ctx.registers[27].w.as_ref();
@@ -182,8 +180,7 @@ unsafe fn post_calc_reaction(ctx: &mut skyline::hooks::InlineCtx) {
         let attacker_object = sv_system::battle_object(attacker_fighter.lua_state_agent);
         let attacker_fighta : *mut Fighter = std::mem::transmute(attacker_object);
     
-        let mut kb: f32;
-        asm!("fmov w8, s0", out("w8") kb);
+        let mut kb = ctx.registers_f[0].s();
         IS_KB_CALC_EARLY = true;
         KB = kb;
         let hitlag = *(((attacker_fighta as u64) + 0xf70c) as *mut i32);
@@ -196,7 +193,7 @@ unsafe fn post_calc_reaction(ctx: &mut skyline::hooks::InlineCtx) {
             *(((attacker_fighta as u64) + 0xf70c) as *mut i32) = (hitlag as f32 * calc_hitlag_mul(attacker_boma, kb)).round().min(max_hitlag) as i32;
         }
 
-        asm!("fmov s0, w8", in("w8") kb)
+        ctx.registers_f[0].set_s(kb)
     }
 }
 
@@ -312,7 +309,7 @@ unsafe fn disable_attacker_parry_pushback(ctx: &mut skyline::hooks::InlineCtx) {
     let object = (*fighter).battle_object;
     
     if AttackModule::is_infliction(object.module_accessor, *COLLISION_KIND_MASK_PARRY) {
-        asm!("fmov s0, wzr")
+        ctx.registers_f[0].set_s(0.0);
     }
 }
 
@@ -330,8 +327,7 @@ unsafe fn post_spike_check(ctx: &mut skyline::hooks::InlineCtx) {
     let is_spike = *ctx.registers[0].w.as_ref() != 0;
 
     if is_spike {
-        let mut kb: f32;
-        asm!("fmov w8, s11", out("w8") kb);
+        let mut kb = ctx.registers_f[11].s();
 
         let spike_tumble_threshold = ParamModule::get_float((*boma).object(), ParamType::Common, "spike_tumble_threshold");
 
@@ -340,7 +336,7 @@ unsafe fn post_spike_check(ctx: &mut skyline::hooks::InlineCtx) {
             *ctx.registers[24].w.as_mut() = 3;
         }
     
-        asm!("fmov s11, w8", in("w8") kb)
+        ctx.registers_f[11].set_s(kb)
     }
 
     // Forces tumble for knockdown throws

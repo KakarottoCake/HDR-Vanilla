@@ -71,14 +71,14 @@ unsafe fn steve_parry_stuff_fix(ctx: &mut skyline::hooks::InlineCtx) {
 //                 } else {
 //                     mul
 //                 };
-//                 std::arch::asm!("fmov s0, w8", in("w8") mul);
+//                 ctx.registers_f[0].set_s(mul);
 //                 return;
 //             }
 
 //             current = *(current as *const u64);
 //         }
 //     }
-//     std::arch::asm!("fmov s0, w8", in("w8") mul);
+//     ctx.registers_f[0].set_s(mul);
 // }
 
 pub fn install() {
