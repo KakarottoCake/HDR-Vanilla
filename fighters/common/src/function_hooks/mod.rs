@@ -1,6 +1,6 @@
 use super::*;
 use crate::globals::*;
-use std::arch::asm;
+
 pub mod energy;
 pub mod effect;
 pub mod finals;
@@ -116,7 +116,6 @@ unsafe fn skip_early_main_status(boma: *mut BattleObjectModuleAccessor, status_k
         *FIGHTER_STATUS_KIND_AIR_LASSO_HANG,
         *FIGHTER_STATUS_KIND_AIR_LASSO_REWIND,
         *FIGHTER_STATUS_KIND_ITEM_THROW,
-        *FIGHTER_STATUS_KIND_ITEM_THROW_DASH,
         *FIGHTER_STATUS_KIND_ITEM_THROW_HEAVY,
         *FIGHTER_STATUS_KIND_FINAL].contains(&status_kind)
 
@@ -786,8 +785,7 @@ unsafe fn phantom_hit_check(ctx: &mut skyline::hooks::InlineCtx) {
     let opponent_battle_object_id = *(*ctx.registers[20].x.as_ref() as *const u32).add(0x28 / 4);
     let opponent_boma = &mut *(sv_battle_object::module_accessor(opponent_battle_object_id));
 
-    let mut phantom_threshold: f32;
-    asm!("fmov w8, s9", out("w8") phantom_threshold);
+    let mut phantom_threshold = ctx.registers_f[9].s();
 
     if opponent_boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_DAMAGE]) {
         // threshold while shielding
@@ -799,7 +797,7 @@ unsafe fn phantom_hit_check(ctx: &mut skyline::hooks::InlineCtx) {
         phantom_threshold = 0.0;
     }
 
-    asm!("fmov s9, w8", in("w8") phantom_threshold)
+    ctx.registers_f[9].set_s(phantom_threshold)
 }
 
 pub fn install() {
