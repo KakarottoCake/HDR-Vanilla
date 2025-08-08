@@ -2,6 +2,7 @@
 use std::io::Seek;
 use std::sync::Arc;
 use std::{/*borrow::BorrowMut, */collections::HashMap};
+use std::cmp;
 
 use arcropolis_api::{arc_callback, load_original_file};
 use parking_lot::RwLock;
@@ -311,22 +312,40 @@ use serde::{Deserialize, Serialize};
 pub struct TourneyConfig {
     /// whether the tourney mode is enabled
     pub enabled: bool,
+    pages: Option<Vec<StagePage>>
+}
+
+#[allow(non_snake_case)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(default)]
+#[repr(C)]
+pub struct StagePage {
+    name: String,
     useOfficial: bool,
     /// the ordered list of starters stages which should be enabled,
     /// or `None` if there are no starters
-    starters: Option<Vec<Vec<String>>>,
+    starters: Option<Vec<String>>,
     /// the ordered list of counterpick stages which should be enabled,
     /// or `None` if there are no counterpicks
-    counterpicks: Option<Vec<Vec<String>>>,
+    counterpicks: Option<Vec<String>>
 }
 
 impl Default for TourneyConfig {
     fn default() -> Self {
         TourneyConfig {
             enabled: false,
+            pages: None
+        }
+    }
+}
+
+impl Default for StagePage {
+    fn default() -> Self {
+        StagePage { 
+            name: String::new(), 
             useOfficial: false,
-            starters: None,
-            counterpicks: None
+            starters: None, 
+            counterpicks: None 
         }
     }
 }
@@ -340,33 +359,25 @@ impl TourneyConfig {
         }
 
         // if the stages are not defined, we are not configured
-        if self.starters.is_none() && self.starters.is_none() {
+        if self.pages.is_none() {
             println!("tourney mode stages are enabled, but the stages are missing!");
             return false;
         }
 
-        let starter_pages = self.starters.as_ref().unwrap();
-        let counterpick_pages = self.counterpicks.as_ref().unwrap();
-
-        // make sure the number of pages match
-        if (starter_pages.len() != counterpick_pages.len()) {
-            println!("number of pages of starters does not match number of pages of counterpicks!");
-            return false;
-        }
+        let pages = self.pages.as_ref().unwrap();
 
         // iterate though each page of stages
-        for starter_page in starter_pages.iter(){
+        for page in pages.iter() {
+            let starter_page = page.starters.as_ref().unwrap();
+            let counterpick_page = page.counterpicks.as_ref().unwrap();
+
             // if there are too many stages for the allowed number per row, this is invalid.
             if starter_page.len() > DEFAULT_ROW_LENGTH
             {
                 println!("Too many starters were enabled! Invalid stage config!");
                 return false;
             }
-        }
 
-        // iterate though each page of stages
-        for counterpick_page in counterpick_pages.iter(){
-            // if there are too many stages for the allowed number per row, this is invalid.
             if counterpick_page.len() > DEFAULT_ROW_LENGTH
             {
                 println!("Too many counterpicks were enabled! Invalid stage config!");
@@ -392,20 +403,31 @@ impl TourneyConfig {
                 }
             };
         // if we should be using the official list, load that directly instead (because it could be updated)
-        let unwrapped_config = config.clone().unwrap();
-        if unwrapped_config.enabled && unwrapped_config.useOfficial {
-            config = match std::fs::read_to_string("sd:/ultimate/mods/hdr-stages/tourney_mode_official.json") {
-                Ok(json) => serde_json::from_str(&json)
-                    .expect("A tourney_mode.json was found, but its contents were invalid!"),
-                Err(_) => {
-                    println!(
-                        "No tourney mode config was found. Assuming tourney mode is disabled."
-                    );
-                    None
+        let mut config_clone = config.clone();
+        let unwrapped_config = config_clone.as_mut().unwrap();
+        if unwrapped_config.enabled && unwrapped_config.pages.is_some() {
+            let pages: &mut Vec<StagePage> = unwrapped_config.pages.as_mut().unwrap();
+            let num_pages = cmp::min(8, pages.len());
+
+            for n in 0..num_pages {
+                if pages[n].useOfficial {
+                    pages[n] = match std::fs::read_to_string("sd:/ultimate/mods/hdr-stages/tourney_mode_official.json") {
+                        Ok(json) => serde_json::from_str(&json)
+                            .expect("A tourney_mode.json was found, but its contents were invalid!"),
+                        Err(_) => {
+                            println!(
+                                "No tourney mode config was found. Assuming tourney mode is disabled."
+                            );
+                            StagePage::default()
+                        }
+                    };
+
+                    pages[n].useOfficial = true;
+                    pages[n].name = String::from("Official");
                 }
-            };
+            }
         }
-        return config;
+        return Some(unwrapped_config.clone());
     }
 }
 
@@ -462,8 +484,10 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
     let list = &mut param_list.0;
     let mut out_list: Vec<ParamKind> = vec![];
 
-    let starter_pages = config.starters.unwrap();
-    let counterpick_pages = config.counterpicks.unwrap();
+    let stage_pages = config.pages.as_ref().unwrap();
+
+    // limit number of pages to 8
+    let num_pages = cmp::min(8, stage_pages.len());
 
     for entry in list.iter_mut() {
         let name_id = {
@@ -494,30 +518,31 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
 
         // add training buffers as necessary
         if name_id == "Training" {
-            for n in 0..starter_pages.len() {
-                let len = starter_pages[n].len();
-                if DEFAULT_ROW_LENGTH > len {
-                    modify_and_push(2 + (4 * n) as i8, &mut out_list, DEFAULT_ROW_LENGTH - len);
-                }
-            }
+            for n in 0..num_pages {
+                let starter_len = stage_pages[n].starters.as_ref().unwrap().len();
+                let counterpick_len = stage_pages[n].counterpicks.as_ref().unwrap().len();
 
-            for n in 0..counterpick_pages.len() {
-                let len = counterpick_pages[n].len();
-                if DEFAULT_ROW_LENGTH > len {
-                    modify_and_push(4 + (4 * n) as i8, &mut out_list, DEFAULT_ROW_LENGTH - len);
+                if DEFAULT_ROW_LENGTH > starter_len {
+                    modify_and_push(2 + (4 * n) as i8, &mut out_list, DEFAULT_ROW_LENGTH - starter_len);
+                }
+                
+                if DEFAULT_ROW_LENGTH > counterpick_len {
+                    modify_and_push(4 + (4 * n) as i8, &mut out_list, DEFAULT_ROW_LENGTH - counterpick_len);
                 }
             }
 
             continue;
         } else {
             // Handle regular stages.
-            for n in 0..starter_pages.len() {
-                if starter_pages[n].contains(&name_id) {
+            for n in 0..num_pages {
+                let starter_page = stage_pages[n].starters.as_ref().unwrap();
+                let counter_page = stage_pages[n].counterpicks.as_ref().unwrap();
+                
+                if starter_page.contains(&name_id) {
                     modify_and_push(1 + (4 * n) as i8, &mut out_list, 1);
                 }
-            }
-            for n in 0..counterpick_pages.len() {
-                if counterpick_pages[n].contains(&name_id) {
+
+                if counter_page.contains(&name_id) {
                     modify_and_push(3 + (4 * n) as i8, &mut out_list, 1);
                 }
             }
