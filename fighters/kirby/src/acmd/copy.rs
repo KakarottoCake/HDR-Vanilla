@@ -12,6 +12,7 @@ mod koopajr;
 mod krool;
 mod littlemac;
 mod lucas;
+mod lucario;
 mod luigi;
 mod mario;
 mod mariod;
@@ -44,6 +45,7 @@ pub fn install(agent: &mut Agent) {
     krool::install(agent);
     littlemac::install(agent);
     lucas::install(agent);
+    lucario::install(agent);
     luigi::install(agent);
     mario::install(agent);
     mariod::install(agent);

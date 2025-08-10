@@ -1,23 +1,18 @@
 use super::*;
 
-// FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_SHOOT
-
-pub unsafe extern "C" fn special_n_shoot_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
-    VarModule::off_flag(fighter.battle_object, vars::lucario::instance::IS_POWERED_UP);
-    smashline::original_status(Pre, fighter, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_SHOOT)(fighter)
-}
+// FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_SHOOT
 
 unsafe extern "C" fn special_n_shoot_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     special_n_save_charge_status(fighter);
     0.into()
 }
 
-// FIGHTER_STATUS_KIND_SPECIAL_N
+// FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N
 
 unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_MOT_INHERIT);
-    WorkModule::set_int64(fighter.module_accessor, hash40("special_n_start") as i64, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_GROUND_MOT);
-    WorkModule::set_int64(fighter.module_accessor, hash40("special_air_n_start") as i64, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AIR_MOT);
+    WorkModule::set_int64(fighter.module_accessor, hash40("lucario_special_n_start") as i64, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_GROUND_MOT);
+    WorkModule::set_int64(fighter.module_accessor, hash40("lucario_special_air_n_start") as i64, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AIR_MOT);
     special_n_set_kinetic(fighter);
     let max_charge_frame = fighter.get_param_float("param_special_n", "max_charge_frame");
     let curr_charge_frame = fighter.get_int(*FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURABALL_CHARGE_FRAME) as f32;
@@ -29,15 +24,13 @@ unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue 
     }
     special_n_joint_translate(fighter);
     ControlModule::set_add_jump_mini_button_life(fighter.module_accessor, 8);
-    ControlModule::clear_command(fighter.module_accessor, true);
     fighter.sub_shift_status_main(L2CValue::Ptr(special_n_main_loop as *const () as _))
 }
 
 unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     if !StatusModule::is_changing(fighter.module_accessor) {
         if !StopModule::is_stop(fighter.module_accessor)
-        && fighter.is_button_trigger(Buttons::Special)
-        && ArticleModule::get_active_num(fighter.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_AURABALL) < 2 {
+        && fighter.is_button_trigger(Buttons::Special) {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_LUCARIO_AURABALL_TRANSITION_TERM_ID_START_SHOOT);
             WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_LUCARIO_AURABALL_TRANSITION_TERM_ID_START_HOLD);
         }
@@ -49,11 +42,12 @@ unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
     if MotionModule::is_end(fighter.module_accessor) {
         // ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_AURABALL, false, -1);
         if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_LUCARIO_AURABALL_TRANSITION_TERM_ID_START_SHOOT) {
-            fighter.change_status(FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_SHOOT.into(), false.into());
+            fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_SHOOT.into(), false.into());
             return 0.into();
         }
+        ControlModule::clear_command(fighter.module_accessor, true);
         if fighter.is_flag(*FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_FLAG_CHARGE_MAX) {
-            fighter.change_status(FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_MAX.into(), false.into());
+            fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_MAX.into(), false.into());
             ArticleModule::change_status(
                 fighter.module_accessor,
                 *FIGHTER_LUCARIO_GENERATE_ARTICLE_AURABALL,
@@ -63,7 +57,7 @@ unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
             return 0.into();
         }
         if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_LUCARIO_AURABALL_TRANSITION_TERM_ID_START_HOLD) {
-            fighter.change_status(FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_HOLD.into(), false.into());
+            fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_HOLD.into(), false.into());
             return 0.into();
         }
         return 0.into();
@@ -102,12 +96,12 @@ pub unsafe extern "C" fn special_n_joint_translate(fighter: &mut L2CFighterCommo
     );
 }
 
-// FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_HOLD
+// FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_HOLD
 
 unsafe extern "C" fn special_n_hold_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_MOT_INHERIT);
-    WorkModule::set_int64(fighter.module_accessor, hash40("special_n_hold") as i64, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_GROUND_MOT);
-    WorkModule::set_int64(fighter.module_accessor, hash40("special_air_n_hold") as i64, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AIR_MOT);
+    WorkModule::set_int64(fighter.module_accessor, hash40("lucario_special_n_hold") as i64, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_GROUND_MOT);
+    WorkModule::set_int64(fighter.module_accessor, hash40("lucario_special_air_n_hold") as i64, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AIR_MOT);
     ArticleModule::change_status(
         fighter.module_accessor,
         *FIGHTER_LUCARIO_GENERATE_ARTICLE_AURABALL,
@@ -138,35 +132,26 @@ unsafe extern "C" fn special_n_hold_main_loop(fighter: &mut L2CFighterCommon) ->
         return 0.into();
     }
     
-    if fighter.is_button_trigger(Buttons::Special)
-    && ArticleModule::get_active_num(fighter.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_AURABALL) < 2 {
-        fighter.change_status(FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_SHOOT.into(), false.into());
+    if fighter.is_button_trigger(Buttons::Special) {
+        fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_SHOOT.into(), false.into());
         return 0.into();
     }
 
-    // if fighter.check_jump_cancel(true, false) {
+    // if fighter.check_jump_cancel(false) {
     //     return 0.into();
     // }
 
     if special_n_check_cancel(fighter).get_bool() {
-        fighter.change_status(FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_CANCEL.into(), true.into());
+        fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_CANCEL.into(), true.into());
         return 0.into();
     }
 
     if MotionModule::is_end(fighter.module_accessor) {
-        fighter.change_status(FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_MAX.into(), false.into());
+        fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_MAX.into(), false.into());
         return 0.into();
     }
 
     0.into()
-}
-
-unsafe extern "C" fn special_n_hold_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let nspecial_cost = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "meter.nspecial_cost");
-    let max_charge_frame = fighter.get_param_float("param_special_n", "max_charge_frame");
-    MeterModule::drain_direct(fighter.battle_object, nspecial_cost / max_charge_frame);
-    opff::pause_meter_regen(fighter, 30);
-    smashline::original_status(Exec, fighter, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_HOLD)(fighter)
 }
 
 unsafe extern "C" fn special_n_hold_end(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -174,12 +159,12 @@ unsafe extern "C" fn special_n_hold_end(fighter: &mut L2CFighterCommon) -> L2CVa
     0.into()
 }
 
-// FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_MAX
+// FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_MAX
 
 unsafe extern "C" fn special_n_max_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_MOT_INHERIT);
-    WorkModule::set_int64(fighter.module_accessor, hash40("special_n_max") as i64, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_GROUND_MOT);
-    WorkModule::set_int64(fighter.module_accessor, hash40("special_air_n_max") as i64, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AIR_MOT);
+    WorkModule::set_int64(fighter.module_accessor, hash40("lucario_special_n_max") as i64, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_GROUND_MOT);
+    WorkModule::set_int64(fighter.module_accessor, hash40("lucario_special_air_n_max") as i64, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AIR_MOT);
     special_n_set_kinetic(fighter);
     ControlModule::set_add_jump_mini_button_life(fighter.module_accessor, 8);
     fighter.sub_shift_status_main(L2CValue::Ptr(special_n_max_main_loop as *const () as _))
@@ -192,26 +177,21 @@ unsafe extern "C" fn special_n_max_main_loop(fighter: &mut L2CFighterCommon) -> 
         return 0.into();
     }
     
-    if fighter.is_button_trigger(Buttons::Special)
-    && ArticleModule::get_active_num(fighter.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_AURABALL) < 2 {
-        fighter.change_status(FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_SHOOT.into(), false.into());
+    if fighter.is_button_trigger(Buttons::Special) {
+        fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_SHOOT.into(), false.into());
         return 0.into();
     }
 
-    // if fighter.check_jump_cancel(true, false) {
+    // if fighter.check_jump_cancel(false) {
     //     return 0.into();
     // }
 
     if special_n_check_cancel(fighter).get_bool() {
-        fighter.change_status(FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_CANCEL.into(), true.into());
+        fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_CANCEL.into(), true.into());
         return 0.into();
     }
 
     0.into()
-}
-
-unsafe extern "C" fn special_n_max_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
-    smashline::original_status(Exec, fighter, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_MAX)(fighter)
 }
 
 unsafe extern "C" fn special_n_max_end(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -221,7 +201,7 @@ unsafe extern "C" fn special_n_max_end(fighter: &mut L2CFighterCommon) -> L2CVal
 
 unsafe extern "C" fn special_n_check_cancel(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.is_situation(*SITUATION_KIND_AIR) {
-        if fighter.sub_check_command_guard().get_bool() || fighter.is_pad_flag(PadFlag::GuardTrigger) {
+        if fighter.sub_check_command_guard().get_bool() || fighter.is_pad_flag(PadFlag::GuardTrigger)  {
             fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
             return true.into();
         }
@@ -259,9 +239,6 @@ unsafe extern "C" fn special_n_check_cancel(fighter: &mut L2CFighterCommon) -> L
         if fighter.sub_check_command_guard().get_bool() || fighter.is_pad_flag(PadFlag::GuardTrigger) {
             fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
             return true.into();
-        }
-        if fighter.is_cat_flag(Cat1::AttackHi4) {
-            fighter.set_int(*FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
         }
         if fighter.sub_check_jump_in_charging_for_cancel_status((*FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS).into()).get_bool() {
             return true.into();
@@ -342,11 +319,11 @@ unsafe extern "C" fn special_n_set_kinetic(fighter: &mut L2CFighterCommon) {
 pub unsafe extern "C" fn special_n_save_charge_status(fighter: &mut L2CFighterCommon) {
     let curr_status = StatusModule::status_kind(fighter.module_accessor);
     let next_status = fighter.global_table[STATUS_KIND].get_i32();
-    let special_n =         {*FIGHTER_STATUS_KIND_SPECIAL_N};
-    let special_n_hold =    {*FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_HOLD};
-    let special_n_max =     {*FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_MAX};
-    let special_n_shoot =   {*FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_SHOOT};
-    let special_n_cancel =  {*FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_CANCEL};
+    let special_n =         {*FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N};
+    let special_n_hold =    {*FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_HOLD};
+    let special_n_max =     {*FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_MAX};
+    let special_n_shoot =   {*FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_SHOOT};
+    let special_n_cancel =  {*FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_CANCEL};
 
     // handle charge storage
     // store charge if in cancel status or if moving between valid statuses
@@ -357,10 +334,10 @@ pub unsafe extern "C" fn special_n_save_charge_status(fighter: &mut L2CFighterCo
             let article_object_id = app::lua_bind::Article::get_battle_object_id(article) as u32;
             let article_module_accessor = app::sv_battle_object::module_accessor(article_object_id);
             let charge_frame = WorkModule::get_int(article_module_accessor, *WEAPON_LUCARIO_AURABALL_INSTANCE_WORK_ID_INT_CHARGE_FRAME);
-            app::FighterSpecializer_Lucario::save_aura_ball_status(fighter.module_accessor, true, charge_frame);
+            FighterSpecializer_Mewtwo::save_shadowball_status(fighter.module_accessor as *mut FighterModuleAccessor, true, charge_frame);
         }
     } else {
-        app::FighterSpecializer_Lucario::save_aura_ball_status(fighter.module_accessor, false, 0);
+        FighterSpecializer_Mewtwo::save_shadowball_status(fighter.module_accessor as *mut FighterModuleAccessor, false, 0);
     }
 
     // handle article removal
@@ -381,14 +358,11 @@ pub unsafe extern "C" fn special_n_save_charge_status(fighter: &mut L2CFighterCo
 }
 
 pub fn install(agent: &mut Agent) {
-    agent.status(Pre, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_SHOOT, special_n_shoot_pre);
-    agent.status(End, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_SHOOT, special_n_shoot_end);
-    agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_N, special_n_main);
-    agent.status(End, *FIGHTER_STATUS_KIND_SPECIAL_N, special_n_end);
-    agent.status(Main, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_HOLD, special_n_hold_main);
-    agent.status(Exec, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_HOLD, special_n_hold_exec);
-    agent.status(End, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_HOLD, special_n_hold_end);
-    agent.status(Main, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_MAX, special_n_max_main);
-    agent.status(Exec, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_MAX, special_n_max_exec);
-    agent.status(End, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_MAX, special_n_max_end);
+    agent.status(End, *FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_SHOOT, special_n_shoot_end);
+    agent.status(Main, *FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N, special_n_main);
+    agent.status(End, *FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N, special_n_end);
+    agent.status(Main, *FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_HOLD, special_n_hold_main);
+    agent.status(End, *FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_HOLD, special_n_hold_end);
+    agent.status(Main, *FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_MAX, special_n_max_main);
+    agent.status(End, *FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_MAX, special_n_max_end);
 }

@@ -1,0 +1,16 @@
+use super::*;
+
+unsafe extern "C" fn game_lucariospecialnstart(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        FighterAreaModuleImpl::enable_fix_jostle_area(boma, 3.0, 2.0);
+        ArticleModule::generate_article(boma, *FIGHTER_LUCARIO_GENERATE_ARTICLE_AURABALL, false, -1);
+    }
+}
+
+pub fn install(agent: &mut Agent) {
+    agent.acmd("game_lucariospecialnstart", game_lucariospecialnstart, Priority::Low);
+    agent.acmd("game_lucariospecialairnstart", game_lucariospecialnstart, Priority::Low);
+
+}

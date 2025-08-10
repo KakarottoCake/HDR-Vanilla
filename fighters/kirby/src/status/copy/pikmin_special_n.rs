@@ -10,14 +10,11 @@ use super::*;
 pub unsafe extern "C" fn special_n_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_status_pre_SpecialNCommon();
     
-    // Fails to pluck another Pikmin if there are 2 in play or in the air.
-    if ArticleModule::get_active_num(fighter.module_accessor, *FIGHTER_PIKMIN_GENERATE_ARTICLE_PIKMIN) >= 1
+    // Fails to pluck another Pikmin if there are 3 in play or in the air.
+    if ArticleModule::get_active_num(fighter.module_accessor, *FIGHTER_PIKMIN_GENERATE_ARTICLE_PIKMIN) >= 3
     || fighter.global_table[SITUATION_KIND] == SITUATION_KIND_AIR {
-        // println!("there is 1 or more or is in the air so wheeeeeee");
+        // println!("there are 3 or more or is in the air so welp");
         fighter.change_status(statuses::kirby::PIKMIN_SPECIAL_N_FAILURE.into(), true.into());
-    }
-    if ArticleModule::get_active_num(fighter.module_accessor, *FIGHTER_PIKMIN_GENERATE_ARTICLE_PIKMIN) < 1 {
-        // println!("there is less than 1 so we can pluck");
     }
 
     StatusModule::init_settings(fighter.module_accessor,
