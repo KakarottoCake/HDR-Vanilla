@@ -359,7 +359,7 @@ unsafe fn up_special_freefall(fighter: &mut L2CFighterCommon) {
 }
 
 unsafe fn up_special_startup_ledgegrab(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_BUDDY_STATUS_KIND_SPECIAL_HI_JUMP]) {
+    if fighter.is_status(*FIGHTER_BUDDY_STATUS_KIND_SPECIAL_HI_JUMP) {
         // allows ledgegrab during upB startup
         if fighter.sub_transition_group_check_air_cliff().get_bool()
         && ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_BUDDY_GENERATE_ARTICLE_PAD) {
