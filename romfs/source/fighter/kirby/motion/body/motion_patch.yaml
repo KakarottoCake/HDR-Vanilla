@@ -1090,7 +1090,7 @@ pikmin_special_n_failure:
     unk_400: false
   blend_frames: 0
   animations:
-    - name: pikmind00specialairn.nuanmb
+    - name: pikmind00specialnfailure.nuanmb
       unk: 0
   scripts:
     - expression_pikminspecialnfailure
