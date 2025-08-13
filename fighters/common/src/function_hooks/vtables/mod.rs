@@ -3,6 +3,7 @@ use super::*;
 mod brave;
 mod donkey;
 mod duckhunt;
+mod edge;
 mod gamewatch;
 mod ganon;
 mod gekkouga;
@@ -24,6 +25,7 @@ pub fn install() {
     brave::install();
     donkey::install();
     duckhunt::install();
+    edge::install();
     gamewatch::install();
     ganon::install();
     gekkouga::install();

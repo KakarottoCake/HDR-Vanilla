@@ -1,7 +1,6 @@
 use super::*;
 use super::knockback_util::*;
 use utils::ext::*;
-use std::arch::asm;
 
 pub fn install() {
     skyline::install_hooks!(
@@ -315,7 +314,7 @@ pub unsafe extern "C" fn call_finishing_hit_effects(defender_boma: &mut BattleOb
 // We override this to allow throw receiver direction to always be determined by
 // which side the attacker was on
 #[skyline::hook(offset = 0x6c59cc, inline)]
-unsafe fn set_thrown_lr(ctx: &skyline::hooks::InlineCtx) {
+unsafe fn set_thrown_lr(ctx: &mut skyline::hooks::InlineCtx) {
     let opponent_battle_object_id = *(*ctx.registers[20].x.as_ref() as *const u32).add(0x44 / 4);
     let opponent_battle_object = utils::util::get_battle_object_from_id(opponent_battle_object_id);
     let opponent_boma = (&mut *(*opponent_battle_object).module_accessor);
@@ -340,7 +339,7 @@ unsafe fn set_thrown_lr(ctx: &skyline::hooks::InlineCtx) {
         PostureModule::lr(boma)
     };
 
-    asm!("fmov s0, w8", in("w8") lr)
+    ctx.registers_f[0].set_s(lr)
 }
 
 // This runs immediately before FIGHTER_STATUS_WORK_ID_FLOAT_RESERVE_DAMAGE_LR is set
@@ -349,7 +348,7 @@ unsafe fn set_thrown_lr(ctx: &skyline::hooks::InlineCtx) {
 // We override this to allow receiver turnaround to always be determined by
 // which side the attacker was on
 #[skyline::hook(offset = 0x6c5980, inline)]
-unsafe fn set_damage_lr(ctx: &skyline::hooks::InlineCtx) {
+unsafe fn set_damage_lr(ctx: &mut skyline::hooks::InlineCtx) {
     let opponent_battle_object_id = *(*ctx.registers[20].x.as_ref() as *const u32).add(0x44 / 4);
     let opponent_battle_object = utils::util::get_battle_object_from_id(opponent_battle_object_id);
     let opponent_boma = (&mut *(*opponent_battle_object).module_accessor);
@@ -370,5 +369,5 @@ unsafe fn set_damage_lr(ctx: &skyline::hooks::InlineCtx) {
         -1.0
     };
 
-    asm!("fmov s0, w8", in("w8") damage_lr)
+    ctx.registers_f[0].set_s(damage_lr)
 }
