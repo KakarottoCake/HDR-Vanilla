@@ -6,7 +6,6 @@ use globals::*;
 #[no_mangle]
 pub unsafe extern "Rust" fn pits_common(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, status_kind: i32) {
     upperdash_arm_whiff_freefall(fighter);
-    up_special_startup_ledgegrab(fighter);
     fastfall_specials(fighter);
 }
 
@@ -41,13 +40,6 @@ unsafe fn upperdash_arm_whiff_freefall(fighter: &mut L2CFighterCommon) {
     && MotionModule::frame(fighter.module_accessor) >= MotionModule::end_frame(fighter.module_accessor) - 1.0
     && !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_PIT_STATUS_SPECIAL_S_WORK_ID_FLAG_HIT) {
         fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL_SPECIAL, true);
-    }
-}
-
-unsafe fn up_special_startup_ledgegrab(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_HI) {
-        // allows ledgegrab during upB startup
-        fighter.sub_transition_group_check_air_cliff();
     }
 }
 
