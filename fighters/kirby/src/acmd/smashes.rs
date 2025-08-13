@@ -167,7 +167,7 @@ unsafe extern "C" fn game_attackhi4(agent: &mut L2CAgentBase) {
         ATTACK(agent, 1, 0, Hash40::new("footr"), damage_foot, 72, 125, 0, 30, 5.2, 1.5, -2.6, 0.0, None, None, None, hitlag, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, collision_attr, *ATTACK_SOUND_LEVEL_L, collision_sfx, *ATTACK_REGION_KICK);
         ATTACK(agent, 2, 0, Hash40::new("footr"), damage_body, 72, 125, 0, 30, 5.2, 1.5, -6.2, 0.0, None, None, None, hitlag, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, collision_attr, *ATTACK_SOUND_LEVEL_L, collision_sfx, *ATTACK_REGION_KICK);
     }
-    wait(lua_state, 3.0);
+    wait(lua_state, 2.0);
     if is_excute(agent) {
         let damage_foot = if copy_lucas { 16.0 } else { 14.0 };
         let damage_body = if copy_lucas { 16.0 } else { 13.0 };
@@ -178,7 +178,7 @@ unsafe extern "C" fn game_attackhi4(agent: &mut L2CAgentBase) {
         ATTACK(agent, 1, 0, Hash40::new("footr"), damage_foot, 88, 102, 0, 20, 6.3, 0.0, -2.5, 0.0, None, None, None, hitlag, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, collision_attr, *ATTACK_SOUND_LEVEL_M, collision_sfx, *ATTACK_REGION_KICK);
         ATTACK(agent, 2, 0, Hash40::new("footr"), damage_body, 88, 102, 0, 20, 6.3, 0.0, -5.2, 0.0, None, None, None, hitlag, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, collision_attr, *ATTACK_SOUND_LEVEL_M, collision_sfx, *ATTACK_REGION_KICK);
     }
-    wait(lua_state, 2.0);
+    wait(lua_state, 3.0);
     if is_excute(agent) {
         let damage_foot = if copy_lucas { 15.0 } else { 13.0 };
         let damage_body = if copy_lucas { 15.0 } else { 12.0 };
