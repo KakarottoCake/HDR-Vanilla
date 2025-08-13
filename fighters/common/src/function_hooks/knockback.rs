@@ -29,9 +29,9 @@ static mut IS_CALCULATING: Option<(u32, u32)> = None;
 
 #[skyline::hook(offset = 0x402f00, inline)]
 unsafe fn calculate_knockback(ctx: &skyline::hooks::InlineCtx) {
-    let damage_module = *ctx.registers[19].x.as_ref();
+    let damage_module = ctx.registers[19].x();
     let our_boma = *((damage_module + 0x8) as *mut *mut smash::app::BattleObjectModuleAccessor);
-    let ptr = *ctx.registers[20].x.as_ref() as *mut u8;
+    let ptr = ctx.registers[20].x() as *mut u8;
     let id = *(ptr.add(0x24) as *const u32);
     IS_CALCULATING = Some(((*our_boma).battle_object_id, id));
 
@@ -45,10 +45,10 @@ unsafe fn calculate_knockback(ctx: &skyline::hooks::InlineCtx) {
 #[skyline::hook(offset = 0x403950, inline)]
 unsafe fn process_knockback(ctx: &skyline::hooks::InlineCtx) {
     if let Some((defender, attacker)) = IS_CALCULATING {
-        let boma = *ctx.registers[20].x.as_ref() as *mut smash::app::BattleObjectModuleAccessor;
+        let boma = ctx.registers[20].x() as *mut smash::app::BattleObjectModuleAccessor;
         if (*boma).battle_object_id == defender {
             process_item_on_collision(defender, attacker);
-            calculate_finishing_hit(defender, attacker, *ctx.registers[19].x.as_ref() as *const f32);
+            calculate_finishing_hit(defender, attacker, ctx.registers[19].x() as *const f32);
         }
     }
 }
@@ -315,7 +315,7 @@ pub unsafe extern "C" fn call_finishing_hit_effects(defender_boma: &mut BattleOb
 // which side the attacker was on
 #[skyline::hook(offset = 0x6c59cc, inline)]
 unsafe fn set_thrown_lr(ctx: &mut skyline::hooks::InlineCtx) {
-    let opponent_battle_object_id = *(*ctx.registers[20].x.as_ref() as *const u32).add(0x44 / 4);
+    let opponent_battle_object_id = *(ctx.registers[20].x() as *const u32).add(0x44 / 4);
     let opponent_battle_object = utils::util::get_battle_object_from_id(opponent_battle_object_id);
     let opponent_boma = (&mut *(*opponent_battle_object).module_accessor);
 
@@ -323,7 +323,7 @@ unsafe fn set_thrown_lr(ctx: &mut skyline::hooks::InlineCtx) {
         return;
     }
 
-    let boma = *ctx.registers[19].x.as_ref() as *mut smash::app::BattleObjectModuleAccessor;
+    let boma = ctx.registers[19].x() as *mut smash::app::BattleObjectModuleAccessor;
     let fighter = util::get_fighter_common_from_accessor(&mut *boma);
 
     fighter.clear_lua_stack();
@@ -349,7 +349,7 @@ unsafe fn set_thrown_lr(ctx: &mut skyline::hooks::InlineCtx) {
 // which side the attacker was on
 #[skyline::hook(offset = 0x6c5980, inline)]
 unsafe fn set_damage_lr(ctx: &mut skyline::hooks::InlineCtx) {
-    let opponent_battle_object_id = *(*ctx.registers[20].x.as_ref() as *const u32).add(0x44 / 4);
+    let opponent_battle_object_id = *(ctx.registers[20].x() as *const u32).add(0x44 / 4);
     let opponent_battle_object = utils::util::get_battle_object_from_id(opponent_battle_object_id);
     let opponent_boma = (&mut *(*opponent_battle_object).module_accessor);
 
@@ -359,7 +359,7 @@ unsafe fn set_damage_lr(ctx: &mut skyline::hooks::InlineCtx) {
     
     let opponent_pos_x = PostureModule::pos_x(opponent_boma);
 
-    let boma = *ctx.registers[19].x.as_ref() as *mut smash::app::BattleObjectModuleAccessor;
+    let boma = ctx.registers[19].x() as *mut smash::app::BattleObjectModuleAccessor;
     let pos_x = PostureModule::pos_x(boma);
     let lr = PostureModule::lr(boma);
 
