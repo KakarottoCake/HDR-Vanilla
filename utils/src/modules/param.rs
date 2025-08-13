@@ -431,6 +431,52 @@ impl TourneyConfig {
     }
 }
 
+// Custom iter struct
+pub struct AltMidIter<'a, T> {
+    slice: &'a [T],
+    len: usize,
+    mid: usize,
+    step: usize,
+}
+
+// Custom iterator that goes from the middle out, going right first
+impl<'a, T> Iterator for AltMidIter<'a, T> {
+    type Item = &'a T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.step >= self.len {
+            return None;
+        }
+        let index = if self.step == 0 {
+            self.mid
+        } else if self.step % 2 != 0 {
+            let distance = (self.step + 1) / 2;
+            self.mid + distance
+        } else {
+            let distance = self.step / 2;
+            self.mid - distance
+        };
+        self.step += 1;
+        self.slice.get(index)
+    }
+}
+
+// Extension traits
+pub trait MiddleOutExt<T> {
+    fn iter_middle_out(&self) -> AltMidIter<'_, T>;
+}
+
+impl<T> MiddleOutExt<T> for [T] {
+    fn iter_middle_out(&self) -> AltMidIter<'_, T> {
+        AltMidIter {
+            slice: self,
+            len: self.len(),
+            mid: (self.len().saturating_sub(1)) / 2,
+            step: 0,
+        }
+    }
+}
+
 /// This is used for tournament mode. Modifies on-the-fly whether individual stages will
 /// be shown or not on the stage select screen.
 ///
@@ -488,70 +534,111 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
 
     // limit number of pages to 8
     let num_pages = cmp::min(8, stage_pages.len());
+    let mut stage_order: i8 = 1;
 
-    for entry in list.iter_mut() {
-        let name_id = {
-            let stage_struct = entry.try_into_ref::<ParamStruct>()
-                .expect("failed to get struct from ui_stage_db.prc entry!");
-            
-            stage_struct.0.iter()
-                .find(|param| param.0 == prc::hash40::Hash40(hash40("name_id")))
-                .unwrap()
-                .1
-                .try_into_ref::<String>()
-                .expect("Could not get name_id as String for a stage entry in tourney mode!")
-                .clone()
-        };
+    let mut stage_map: HashMap<String, ParamKind> = HashMap::new();
+    for entry in list.iter() {
+        let stage_struct = entry
+            .try_into_ref::<ParamStruct>()
+            .expect("Failed to get struct from PRC entry");
+        
+        // Find the name_id for the key
+        let name_id = stage_struct.0
+            .iter()
+            .find(|param| param.0 == prc::hash40::Hash40(hash40("name_id")))
+            .unwrap()
+            .1
+            .try_into_ref::<String>()
+            .unwrap()
+            .clone();
+        
+        stage_map.insert(name_id, entry.clone());
+    }
 
-        // doing the push this way keeps rust from freaking out.
-        let mut modify_and_push = |new_order: i8, list: &mut Vec<ParamKind>, count: usize| {
-            *entry
-                .try_into_mut::<ParamStruct>().unwrap().0
-                .iter_mut()
-                .find(|p| p.0 == prc::hash40::Hash40(hash40("disp_order"))).unwrap()
-                .1.try_into_mut::<i8>().unwrap() = new_order;
+    for n in 0..num_pages {
+        let starters = stage_pages[n].starters.as_ref().unwrap();
+        let counterpicks = stage_pages[n].counterpicks.as_ref().unwrap();
 
-            for _ in 0..count {
-                list.push(entry.clone());
-            }
-        };
-
-        // add training buffers as necessary
-        if name_id == "Training" {
-            for n in 0..num_pages {
-                let starter_len = stage_pages[n].starters.as_ref().unwrap().len();
-                let counterpick_len = stage_pages[n].counterpicks.as_ref().unwrap().len();
-
-                if DEFAULT_ROW_LENGTH > starter_len {
-                    modify_and_push(2 + (4 * n) as i8, &mut out_list, DEFAULT_ROW_LENGTH - starter_len);
-                }
+        for starter_name in starters.iter_middle_out() {
+            if let Some(entry) = stage_map.get(starter_name) {
+                let mut new_entry = entry.clone();
+                let stage_struct = new_entry.try_into_mut::<ParamStruct>().unwrap();
+                let disp_order = stage_struct.0
+                    .iter_mut()
+                    .find(|param| param.0 == prc::hash40::Hash40(hash40("disp_order")))
+                    .unwrap()
+                    .1
+                    .try_into_mut::<i8>()
+                    .unwrap();
                 
-                if DEFAULT_ROW_LENGTH > counterpick_len {
-                    modify_and_push(4 + (4 * n) as i8, &mut out_list, DEFAULT_ROW_LENGTH - counterpick_len);
-                }
+                *disp_order = stage_order; // Set starter display order
+                stage_order += 1;
+                out_list.push(new_entry);
             }
-
-            continue;
-        } else {
-            // Handle regular stages.
-            for n in 0..num_pages {
-                let starter_page = stage_pages[n].starters.as_ref().unwrap();
-                let counter_page = stage_pages[n].counterpicks.as_ref().unwrap();
-                
-                if starter_page.contains(&name_id) {
-                    modify_and_push(1 + (4 * n) as i8, &mut out_list, 1);
-                }
-
-                if counter_page.contains(&name_id) {
-                    modify_and_push(3 + (4 * n) as i8, &mut out_list, 1);
-                }
-            }
-
-            continue;
         }
 
-        // otherwise, hide the stage
-        modify_and_push(-1, &mut out_list, 1);
+        // Add the Training stage buffer
+        if let Some(entry) = stage_map.get("Training") {
+            let mut buffer_entry = entry.clone();
+            let stage_struct = buffer_entry.try_into_mut::<ParamStruct>().unwrap();
+            let disp_order = stage_struct.0
+                .iter_mut()
+                .find(|param| param.0 == prc::hash40::Hash40(hash40("disp_order")))
+                .unwrap()
+                .1
+                .try_into_mut::<i8>()
+                .unwrap();
+
+            *disp_order = stage_order; // Set buffer display order
+            stage_order += 1;
+
+            // Pad with the required number of hidden Training stages
+            let len = starters.len();
+            for _ in 0..(DEFAULT_ROW_LENGTH - len) {
+                out_list.push(buffer_entry.clone());
+            }
+        }
+
+        // Add counterpick stages
+        for counterpick_name in counterpicks.iter_middle_out() {
+            if let Some(entry) = stage_map.get(counterpick_name) {
+                let mut new_entry = entry.clone();
+                let stage_struct = new_entry.try_into_mut::<ParamStruct>().unwrap();
+                let disp_order = stage_struct.0
+                    .iter_mut()
+                    .find(|param| param.0 == prc::hash40::Hash40(hash40("disp_order")))
+                    .unwrap()
+                    .1
+                    .try_into_mut::<i8>()
+                    .unwrap();
+                
+                *disp_order = stage_order; // Set counterpick display order
+                stage_order += 1;
+                out_list.push(new_entry);
+            }
+        }
+
+        // Add the Training stage buffer
+        if let Some(entry) = stage_map.get("Training") {
+            let mut buffer_entry = entry.clone();
+            let stage_struct = buffer_entry.try_into_mut::<ParamStruct>().unwrap();
+            let disp_order = stage_struct.0
+                .iter_mut()
+                .find(|param| param.0 == prc::hash40::Hash40(hash40("disp_order")))
+                .unwrap()
+                .1
+                .try_into_mut::<i8>()
+                .unwrap();
+
+            *disp_order = stage_order; // Set buffer display order
+            stage_order += 1;
+
+            // Pad with the required number of hidden Training stages
+            let len = counterpicks.len();
+            for _ in 0..(DEFAULT_ROW_LENGTH - len) {
+                out_list.push(buffer_entry.clone());
+            }
+        }
     }
 
     *list = out_list;
