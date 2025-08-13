@@ -16,7 +16,7 @@ unsafe extern "C" fn game_attacks4(agent: &mut L2CAgentBase) {
         let bkb = if copy_lucas { 4 } else { 0 };
         let collision_attr = if copy_lucas { Hash40::new("collision_attr_elec") } else { Hash40::new("collision_attr_normal") };
         let collision_sfx = if copy_lucas { *COLLISION_SOUND_ATTR_ELEC } else { *COLLISION_SOUND_ATTR_KICK };
-        ATTACK(agent, 0, 0, Hash40::new("footl"), 15.0 + damage, 361, 106, 0, 36 + bkb, 4.2, 0.0, -7.5, 0.0, Some(0.0), Some(0.0), Some(0.0), 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, collision_attr, *ATTACK_SOUND_LEVEL_L, collision_sfx, *ATTACK_REGION_KICK);
+        ATTACK(agent, 0, 0, Hash40::new("footl"), 15.0 + damage, 41, 100, 0, 40 + bkb, 4.2, 0.0, -7.5, 0.0, Some(0.0), Some(0.0), Some(0.0), 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, collision_attr, *ATTACK_SOUND_LEVEL_L, collision_sfx, *ATTACK_REGION_KICK);
     }
     frame(lua_state, 16.0);
     if is_excute(agent) {
