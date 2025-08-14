@@ -51,6 +51,15 @@ unsafe extern "C" fn game_specialnbite(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_specialhistart(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 4.0);
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
+    }
+}
+
 unsafe extern "C" fn game_specialhijump(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -189,6 +198,8 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialnbite", game_specialnbite, Priority::Low);
     agent.acmd("game_specialairnbite", game_specialnbite, Priority::Low);
 
+    agent.acmd("game_specialhistart", game_specialhistart, Priority::Low);
+    agent.acmd("game_specialairhistart", game_specialhistart, Priority::Low);
     agent.acmd("game_specialhijump", game_specialhijump, Priority::Low);
     agent.acmd("expression_specialhijump", expression_specialhijump, Priority::Low);
     

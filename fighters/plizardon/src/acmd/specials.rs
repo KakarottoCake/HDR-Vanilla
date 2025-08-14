@@ -449,6 +449,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 4.0);
     if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
         if agent.is_situation(*SITUATION_KIND_GROUND) {
             damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_ALWAYS, 0);
         }
