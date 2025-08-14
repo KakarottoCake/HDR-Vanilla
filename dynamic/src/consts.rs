@@ -405,7 +405,6 @@ pub mod vars {
             pub const SPECIAL_N_BAYONET_ACTIVE: i32 = 0x0101;
             pub const SPECIAL_S_FAIL_ENABLE: i32 = 0x0102;
             pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0103;
-            pub const SPECIAL_N_LAND_CANCEL: i32 = 0x0104;
 
             // int
             pub const HUD_DISPLAY_TIME: i32 = 0x0100;
@@ -1727,7 +1726,6 @@ pub mod vars {
         }
         pub mod status {
             //flags
-            pub const SPECIAL_S_LAND_CANCEL: i32 = 0x1100;
         }
     }
 
@@ -1818,10 +1816,9 @@ pub mod vars {
         }
         pub mod status {
             // flags
-            pub const SPECIAL_N_THUNDER_LAND_CANCEL: i32 = 0x1100;
-            pub const SPECIAL_S_HIT: i32 = 0x1101;
-            pub const SPECIAL_S_INPUT_CHECK: i32 = 0x1102;
-            pub const SPECIAL_S_STOP: i32 = 0x1103;
+            pub const SPECIAL_S_HIT: i32 = 0x1100;
+            pub const SPECIAL_S_INPUT_CHECK: i32 = 0x1101;
+            pub const SPECIAL_S_STOP: i32 = 0x1102;
 
             // ints
             pub const ATTACK_LW4_TIMER: i32 = 0x1100;

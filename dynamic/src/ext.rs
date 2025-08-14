@@ -543,6 +543,8 @@ pub trait BomaExt {
     unsafe fn check_wall_jump_cancel(&mut self) -> bool;
     // Checks for parry
     unsafe fn sub_check_command_parry(&mut self) -> L2CValue;
+    // Checks for situation kind and transitions to heavy landing
+    unsafe fn check_land_cancel(&mut self, landing_lag: Option<f32>) -> bool;
 
     /// check for hitfall (should be called once per frame)
     unsafe fn check_hitfall(&mut self) -> bool;
@@ -1243,6 +1245,28 @@ impl BomaExt for BattleObjectModuleAccessor {
             return true.into();
         }
         return false.into();
+    }
+
+    // Uses an optional landing_lag parameter
+    // If landing_lag is None, we enter a true land cancel
+    // AKA incurred landing lag is equivalent to the character's specific heavy landing lag value
+    // (landing_frame in fighter_param PRC)
+    unsafe fn check_land_cancel(&mut self, landing_lag: Option<f32>) -> bool {
+        if self.is_prev_situation(*SITUATION_KIND_AIR)
+        && self.is_situation(*SITUATION_KIND_GROUND) {
+            match landing_lag {
+                Some(landing_lag) => {
+                    self.set_float(landing_lag, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
+                },
+                None => {}
+            }
+
+            StatusModule::change_status_request_from_script(self, *FIGHTER_STATUS_KIND_LANDING,false);
+
+            return true;
+        }
+
+        false
     }
 
     /// Sets the position of the front/red ledge-grab box (see [`set_center_cliff_hangdata`](BomaExt::set_center_cliff_hangdata) for more information)
