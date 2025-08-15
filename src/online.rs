@@ -115,10 +115,10 @@ unsafe fn update_room_hook(_: &skyline::hooks::InlineCtx) {
 
 #[skyline::hook(offset = 0x1887b1c, inline)]
 unsafe fn set_room_id(ctx: &skyline::hooks::InlineCtx) {
-    let panel = *((*((*ctx.registers[0].x.as_ref() + 8) as *const u64) + 0x10) as *const u64);
+    let panel = *((*((ctx.registers[0].x() + 8) as *const u64) + 0x10) as *const u64);
     CURRENT_PANE_HANDLE = panel as usize;
     CURRENT_ARENA_ID = dbg!(String::from_utf16(std::slice::from_raw_parts(
-        *ctx.registers[3].x.as_ref() as *const u16,
+        ctx.registers[3].x() as *const u16,
         5
     ))
     .unwrap());
@@ -157,10 +157,10 @@ unsafe fn update_css2(arg: u64) {
 
 #[skyline::hook(offset = 0x16ccc58, inline)]
 unsafe fn set_online_latency(ctx: &InlineCtx) {
-    let auto = *(*ctx.registers[19].x.as_ref() as *mut u8);
+    let auto = *(ctx.registers[19].x() as *mut u8);
     MOST_RECENT_AUTO = auto as isize;
     if CURRENT_INPUT_BUFFER != -1 {
-        *(*ctx.registers[19].x.as_ref() as *mut u8) = CURRENT_INPUT_BUFFER as u8;
+        *(ctx.registers[19].x() as *mut u8) = CURRENT_INPUT_BUFFER as u8;
     }
 }
 
