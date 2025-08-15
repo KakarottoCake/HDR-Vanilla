@@ -34,7 +34,7 @@
   <list hash="param_special_n">
     <struct index="0">
       <int hash="special_n_hit_stop_frame">8</int>
-      <float hash="special_n_attack_speed_y">0.8</float>
+      <float hash="special_n_attack_speed_y">0.75</float>
       <float hash="special_n_attack_accel_y">0.035</float>
       <float hash="special_n_attack_stable_y">0.65</float>
       <float hash="special_n_spore_offset_x">-6.0</float>
@@ -46,7 +46,7 @@
   </list>
   <list hash="param_kinopiospore">
     <struct index="0">
-      <float hash="updown_degree">30</float>
+      <float hash="updown_degree">25</float>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>
