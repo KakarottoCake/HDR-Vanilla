@@ -35,13 +35,17 @@ unsafe extern "C" fn game_superspecialtriple(agent: &mut L2CAgentBase) {
     frame(lua_state, 6.0);
     if is_excute(agent) {
         MeterModule::drain(agent.battle_object, 2);
-        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 24);
+        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 16);
     }
     frame(lua_state, 20.0);
     // FT_MOTION_RATE_RANGE(agent, 20.0, 40.0, 16.0);
     if is_excute(agent) {
         VarModule::set_int(agent.battle_object, vars::dolly::status::SUPER_SPECIAL_TRIPLE_COUNT, 1);
         ArticleModule::generate_article(boma, *FIGHTER_DOLLY_GENERATE_ARTICLE_BURST, false, -1);
+    }
+    frame(lua_state, 30.0);
+    if is_excute(agent) {
+        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
     }
     frame(lua_state, 40.0);
     // FT_MOTION_RATE_RANGE(agent, 40.0, 70.0, 24.0);
@@ -55,7 +59,6 @@ unsafe extern "C" fn game_superspecialtriple(agent: &mut L2CAgentBase) {
         VarModule::set_int(agent.battle_object, vars::dolly::status::SUPER_SPECIAL_TRIPLE_COUNT, 3);
         ArticleModule::generate_article(boma, *FIGHTER_DOLLY_GENERATE_ARTICLE_BURST, false, -1);
         MotionModule::set_rate(boma, 1.0);
-        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
     }
 }
 
