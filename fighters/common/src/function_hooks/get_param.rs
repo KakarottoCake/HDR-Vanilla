@@ -541,7 +541,7 @@ pub unsafe fn get_param_float_hook(x0 /*boma*/: u64, x1 /*param_type*/: u64, x2 
 
 // #[skyline::hook(replace=EXPLOSIONBOMB_ADDRESS, inline)]
 // pub unsafe fn get_explosionbomb_hook(ctx: &InlineCtx) {
-//     let agent = (*ctx.registers[21].x.as_ref()) as *mut L2CAgentBase;
+//     let agent = (ctx.registers[21].x()) as *mut L2CAgentBase;
 //     //println!("Agent: {}", (*agent).kind());
 //     let lua_state = (*agent).lua_state_agent;
 //     let item_boma = sv_system::battle_object_module_accessor(lua_state);

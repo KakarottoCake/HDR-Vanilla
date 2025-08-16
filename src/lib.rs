@@ -147,20 +147,20 @@ unsafe fn music_function2(arg: u64, arg2: u64);
 #[skyline::hook(offset = 0x14f99cc, inline)]
 unsafe fn training_reset_music2(ctx: &skyline::hooks::InlineCtx) {
     if !smash::app::smashball::is_training_mode() {
-        music_function2(*ctx.registers[0].x.as_ref(), *ctx.registers[1].x.as_ref());
+        music_function2(ctx.registers[0].x(), ctx.registers[1].x());
     }
 }
 
 #[skyline::hook(offset = 0x1509fd4, inline)]
 unsafe fn training_reset_music1(ctx: &skyline::hooks::InlineCtx) {
     if !smash::app::smashball::is_training_mode() {
-        music_function1(*ctx.registers[0].x.as_ref());
+        music_function1(ctx.registers[0].x());
     }
 }
 
 #[skyline::hook(offset = 0x235cad0, inline)]
 unsafe fn main_menu_quick(ctx: &skyline::hooks::InlineCtx) {
-    let sp = (ctx as *const skyline::hooks::InlineCtx as *mut u8).add(0x100);
+    let sp = (ctx as *const skyline::hooks::InlineCtx as *mut u8).add(0x300);
     *(sp.add(0x60) as *mut u64) = 0x1100000000;
     let mut slice = std::slice::from_raw_parts_mut(sp.add(0x68), 18);
     slice.copy_from_slice(b"MenuSequenceScene\0");
@@ -293,13 +293,13 @@ impl FuckingAssStringStructureShit {
 
 #[skyline::hook(offset = 0x23357f8, inline)]
 unsafe fn sss_to_css(ctx: &InlineCtx) {
-    let thing = *ctx.registers[1].x.as_ref() as *mut FuckingAssStringStructureShit;
+    let thing = ctx.registers[1].x() as *mut FuckingAssStringStructureShit;
     (*thing).set("CharaSelectScene");
 }
 
 #[skyline::hook(offset = 0x2335184, inline)]
 unsafe fn css_to_sss(ctx: &InlineCtx) {
-    let thing = *ctx.registers[1].x.as_ref() as *mut FuckingAssStringStructureShit;
+    let thing = ctx.registers[1].x() as *mut FuckingAssStringStructureShit;
     (*thing).set("StageSelectScene");
 }
 
