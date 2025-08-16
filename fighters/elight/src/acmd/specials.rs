@@ -686,14 +686,13 @@ unsafe extern "C" fn game_specialairhijump(agent: &mut L2CAgentBase) {
         //AttackModule::set_add_reaction_frame(fighter.module_accessor, 1, 5.0, false);
     }
     frame(lua_state, 6.0);
+    FT_MOTION_RATE(agent, 0.5);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
         // notify_event_msc_cmd!(agent, 0x2127e37c07u64, GROUND_CLIFF_CHECK_KIND_ALWAYS);
     }
     frame(lua_state, 10.0);
     manage_sword_motion(agent, Hash40::new("to_close"));
-    frame(lua_state, 6.0);
-    FT_MOTION_RATE(agent, 0.5);
     frame(lua_state, 12.0);
     FT_MOTION_RATE(agent, 1.0);
 }
