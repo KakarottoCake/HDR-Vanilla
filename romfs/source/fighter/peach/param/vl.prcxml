@@ -35,6 +35,7 @@
     <struct index="0">
       <int hash="special_n_hit_stop_frame">8</int>
       <float hash="special_n_attack_speed_y">0.7</float>
+      <float hash="special_n_attack_accel_y">0.035</float>
       <float hash="special_n_attack_stable_y">0.7</float>
       <float hash="special_n_spore_offset_x">-6.0</float>
       <float hash="special_n_spore_offset_y">3.2</float>
