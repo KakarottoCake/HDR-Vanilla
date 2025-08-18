@@ -86,6 +86,9 @@ unsafe extern "C" fn game_specialairsstart(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialhistart(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    if is_excute(agent) {
+        boma.select_cliff_hangdata_from_name("special_hi_start");
+    }
     frame(lua_state, 12.0);
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);

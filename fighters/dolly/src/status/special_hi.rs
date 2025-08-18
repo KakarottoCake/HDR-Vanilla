@@ -194,6 +194,8 @@ unsafe extern "C" fn special_hi_main(fighter: &mut L2CFighterCommon) -> L2CValue
 
     special_hi_set_kinetic(fighter, true.into());
 
+    fighter.select_cliff_hangdata_from_name("special_hi");
+
     fighter.sub_shift_status_main(L2CValue::Ptr(special_hi_main_loop as *const () as _))
 }
 

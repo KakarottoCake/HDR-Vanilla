@@ -5,6 +5,13 @@
       <float hash="p1_y">23</float>
       <float hash="p2_y">11</float>
     </struct>
+    <!-- UP SPECIAL STARTUP -->
+    <struct index="1">
+      <float hash="p1_x">17</float>
+      <float hash="p1_y">18</float>
+      <float hash="p2_x">-9</float>
+      <float hash="p2_y">11</float>
+    </struct>
   </list>
   <list hash="param_special_s">
     <struct index="0">
