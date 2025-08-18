@@ -87,7 +87,10 @@ unsafe extern "C" fn special_lw_end(fighter: &mut L2CFighterCommon) -> L2CValue 
         if CatchModule::is_catch(fighter.module_accessor) {
             CatchModule::catch_cut(fighter.module_accessor, false, false);
         }
-    } else if fighter.global_table[STATUS_KIND].get_i32() != *FIGHTER_REFLET_STATUS_KIND_SPECIAL_LW_END {
+        EFFECT_DETACH_KIND(fighter, Hash40::new("reflet_rizaia"), -1);
+        EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_flash"), true, true);
+    }
+    if fighter.global_table[STATUS_KIND].get_i32() != *FIGHTER_REFLET_STATUS_KIND_SPECIAL_LW_END {
         EFFECT_DETACH_KIND(fighter, Hash40::new("reflet_rizaia"), -1);
         EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_flash"), true, true);
     }
