@@ -532,6 +532,10 @@ pub trait BomaExt {
     unsafe fn set_back_cliff_hangdata(&mut self, x: f32, y: f32);
     unsafe fn set_center_cliff_hangdata(&mut self, x: f32, y: f32);
     unsafe fn select_cliff_hangdata_from_name(&mut self, cliff_hangdata_type: &str);
+    unsafe fn get_front_cliff_hangdata(&mut self) -> Vector2f;
+    unsafe fn get_back_cliff_hangdata(&mut self) -> Vector2f;
+    unsafe fn get_center_cliff_hangdata(&mut self) -> Vector2f;
+
 
     // Checks for status and enables transition to jump
     unsafe fn check_jump_cancel(&mut self, update_lr: bool, skip_other_checks: bool) -> bool;
@@ -1326,6 +1330,30 @@ impl BomaExt for BattleObjectModuleAccessor {
         self.set_front_cliff_hangdata(p1_x, p1_y - p2_y);
         self.set_back_cliff_hangdata(p2_x * -1.0, p1_y - p2_y);
         self.set_center_cliff_hangdata(0.0, p2_y);
+    }
+
+    unsafe fn get_front_cliff_hangdata(&mut self) -> Vector2f {
+        let ground_module = *(self as *mut BattleObjectModuleAccessor as *const u64).add(0x58 / 8);
+        let ground_data = *((ground_module + 0x28) as *mut *mut f32);
+        let x = *ground_data.add(0x530 / 4);
+        let y = *ground_data.add(0x534 / 4);
+        Vector2f::new(x, y)
+    }
+
+    unsafe fn get_back_cliff_hangdata(&mut self) -> Vector2f {
+        let ground_module = *(self as *mut BattleObjectModuleAccessor as *const u64).add(0x58 / 8);
+        let ground_data = *((ground_module + 0x28) as *mut *mut f32);
+        let x = *ground_data.add(0x540 / 4);
+        let y = *ground_data.add(0x544 / 4);
+        Vector2f::new(x, y)
+    }
+
+    unsafe fn get_center_cliff_hangdata(&mut self) -> Vector2f {
+        let ground_module = *(self as *mut BattleObjectModuleAccessor as *const u64).add(0x58 / 8);
+        let ground_data = *((ground_module + 0x28) as *mut *mut f32);
+        let x = *ground_data.add(0x520 / 4);
+        let y = *ground_data.add(0x524 / 4);
+        Vector2f::new(x, y)
     }
 
     /// checks whether you should hitfall (call this once per frame)
