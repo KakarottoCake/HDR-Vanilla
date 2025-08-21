@@ -1,5 +1,17 @@
 use super::*;
 
+unsafe extern "C" fn special_hi_init(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let ret = smashline::original_status(Init, fighter, *FIGHTER_STATUS_KIND_SPECIAL_HI)(fighter);
+
+    KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_CONTROL, fighter.module_accessor);
+
+    ret
+}
+
+unsafe extern "C" fn special_hi2_check_attack(fighter: &mut L2CFighterCommon, param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
+    return 0.into();
+}
+
 // statuses::kirby::SPECIAL_HI_H
 
 unsafe extern "C" fn special_hi_h_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -28,13 +40,14 @@ unsafe extern "C" fn special_hi_h_pre(fighter: &mut L2CFighterCommon) -> L2CValu
         0
     );
 
-    0.into()
+    return 0.into();
 }
 
 unsafe extern "C" fn special_hi_h_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.is_situation(*SITUATION_KIND_GROUND) {
         CORRECT(fighter, *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP);
-        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_h"), 0.0, 1.0, false, 0.0, false, false);
+        // starts on F15 to make the transition from grounded upb look smooth
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_h"), 15.0, 1.0, false, 0.0, false, false);
     }
     else {
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_hi_h"), 0.0, 1.0, false, 0.0, false, false);
@@ -64,15 +77,20 @@ unsafe extern "C" fn special_hi_h_main_loop(fighter: &mut L2CFighterCommon) -> L
             StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_FALL_SPECIAL, false);
         }
     }
-    return 0.into()
+
+    return 0.into();
 }
 
 unsafe extern "C" fn special_hi_h_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_KIRBY_GENERATE_ARTICLE_FINALCUTTER, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-    return 0.into()
+    return 0.into();
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.status(Init, *FIGHTER_STATUS_KIND_SPECIAL_HI, special_hi_init);
+
+    agent.status(CheckAttack, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_HI2, special_hi2_check_attack);
+
     agent.status(Pre, statuses::kirby::SPECIAL_HI_H, special_hi_h_pre);
     agent.status(Main, statuses::kirby::SPECIAL_HI_H, special_hi_h_main);
     agent.status(End, statuses::kirby::SPECIAL_HI_H, special_hi_h_end);
