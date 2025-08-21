@@ -12,7 +12,7 @@ unsafe extern "C" fn weapon_attack_callback(weapon: *mut BattleObject, arg: u64)
 // Resets projectile lifetime on parry
 #[skyline::hook(offset = 0x33bdd88, inline)]
 unsafe extern "C" fn force_reflect_full_lifetime(ctx: &mut skyline::hooks::InlineCtx) {
-    *ctx.registers[8].x.as_mut() = 0;
+    ctx.registers[8].set_x(0);
 }
 
 pub fn install() {

@@ -563,9 +563,11 @@ pub mod vars {
             pub const ATTACK_COMMAND_4_RELEASE_BUTTON: i32 = 0x1151;
 
             pub const SPECIAL_LW_BREAK : i32 = 0x1152;
+            pub const SUPER_SPECIAL_TRIPLE: i32 = 0x1153;
 
             // ints
             pub const HIT_CANCEL_TIMER: i32 = 0x1104;
+            pub const SUPER_SPECIAL_TRIPLE_COUNT: i32 = 0x1154;
         }
     }
 
@@ -804,6 +806,7 @@ pub mod vars {
             // flags
             //pub const DISABLE_SPECIAL_HI: i32 = 0x01FF; //Weird value to avoid conflicts with copy ability values
             pub const SPECIAL_N_PICKEL_CYCLE_MATERIAL: i32 = 0x01F4;
+            pub const SPECIAL_LW_USED_JUMPS: i32 = 0x01F5;
             pub use super::super::ridley::instance::SPECIAL_N_EXPLODE;
 
             // ints
