@@ -1256,12 +1256,12 @@ impl BomaExt for BattleObjectModuleAccessor {
         && self.is_situation(*SITUATION_KIND_GROUND) {
             match landing_lag {
                 Some(landing_lag) => {
-                    self.set_float(landing_lag, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
+                    VarModule::set_float(self.object(), vars::common::instance::LAND_CANCEL_LAG, landing_lag);
                 },
                 None => {}
             }
 
-            StatusModule::change_status_request_from_script(self, *FIGHTER_STATUS_KIND_LANDING,false);
+            StatusModule::change_status_request_from_script(self, *FIGHTER_STATUS_KIND_LANDING, false);
 
             return true;
         }

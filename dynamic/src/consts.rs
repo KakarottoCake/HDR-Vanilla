@@ -279,6 +279,7 @@ pub mod vars {
             pub const LAST_RECEIVED_ATTACK_HIT_LOCATION_X: i32 = 0x0023;
             pub const LAST_RECEIVED_ATTACK_HIT_LOCATION_Y: i32 = 0x0024;
             pub const LAST_RECEIVED_ATTACK_HIT_LOCATION_Z: i32 = 0x0025;
+            pub const LAND_CANCEL_LAG: i32 = 0x0026;
         }
         pub mod status {
             // flags

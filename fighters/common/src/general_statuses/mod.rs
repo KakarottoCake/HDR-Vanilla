@@ -97,6 +97,7 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
             status_pre_DamageAir,
             status_Landing_MainSub,
             status_LandingStiffness,
+            FL_get_LandingStiffness,
             status_pre_LandingLight,
             status_LandingAttackAirSub,
             status_pre_landing_fall_special,
@@ -139,6 +140,32 @@ pub unsafe fn status_LandingStiffness(fighter: &mut L2CFighterCommon) -> L2CValu
         let hitstun = WorkModule::get_float(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DAMAGE_REACTION_FRAME);
         WorkModule::set_float(fighter.module_accessor, hitstun * 0.5, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DAMAGE_REACTION_FRAME);
     }
+    original!()(fighter)
+}
+
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_FL_get_LandingStiffness)]
+pub unsafe fn FL_get_LandingStiffness(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let land_cancel_lag = VarModule::get_float(fighter.battle_object, vars::common::instance::LAND_CANCEL_LAG);
+    if land_cancel_lag != 0.0 {
+        VarModule::set_float(fighter.battle_object, vars::common::instance::LAND_CANCEL_LAG, 0.0);
+        
+        // "landing stiffness" logic does not support values greater than your landing_heavy animation length
+        // so we must manually extend your landing animation
+        // if our defined landing lag value > landing_heavy animation length
+        let landing_heavy_end_frame = MotionModule::end_frame_from_hash(fighter.module_accessor, "landing_heavy".to_hash());
+        if land_cancel_lag > landing_heavy_end_frame {
+            let motion_rate = fighter.sub_calc_landing_motion_rate(landing_heavy_end_frame.into(), land_cancel_lag.into());
+
+            MotionModule::set_rate(fighter.module_accessor, motion_rate.get_f32());
+        }
+
+        // Coupled with "landing_heavy" change in change_motion hook
+        // Because we start heavy landing anims on f3 rather than f1, we need to increase this value by 2 frames so it is accurate to the defined landing lag value
+        let landing_lag = land_cancel_lag + 2.0;
+        
+        return landing_lag.into();
+    }
+
     original!()(fighter)
 }
 
