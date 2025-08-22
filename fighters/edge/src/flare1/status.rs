@@ -30,11 +30,8 @@ unsafe extern "C" fn fly_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
     if weapon.sub_ground_module_is_touch_all_consider_speed().get_bool() {
         weapon.change_status(WEAPON_EDGE_FLARE1_STATUS_KIND_END.into(), false.into())
     }
-    let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
-    let edge = utils::util::get_battle_object_from_id(owner_id);
-    VarModule::set_float(edge, vars::edge::instance::FLARE1_POS_X, PostureModule::pos_x(weapon.module_accessor));
-    VarModule::set_float(edge, vars::edge::instance::FLARE2_POS_Y, PostureModule::pos_y(weapon.module_accessor));
-    if VarModule::is_flag(edge, vars::edge::instance::FLASH_REFRACT) {
+    if VarModule::is_flag(weapon.battle_object, vars::edge_flare1::status::REFRACT) {
+        VarModule::off_flag(weapon.battle_object, vars::edge_flare1::status::REFRACT);
         EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_counteract_mark"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.7, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
         EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_muzzleflash"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.0, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
         let sfx1 = SoundModule::play_se(weapon.module_accessor, Hash40::new("se_item_badge_reflection"), true, false, false, false, app::enSEType(0));
@@ -42,7 +39,6 @@ unsafe extern "C" fn fly_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
         let sfx2 = SoundModule::play_se(weapon.module_accessor, Hash40::new("se_roulette_stick_fire"), true, false, false, false, app::enSEType(0));
         SoundModule::set_se_vol(weapon.module_accessor, sfx2 as i32, 1.25, 0);
         weapon.change_status(WEAPON_EDGE_FLARE1_STATUS_KIND_FLY.into(), false.into());
-        VarModule::off_flag(edge, vars::edge::instance::FLASH_REFRACT);
     }
 
     return 0.into()
@@ -51,17 +47,14 @@ unsafe extern "C" fn fly_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
 unsafe extern "C" fn fly_exec(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
     let edge = utils::util::get_battle_object_from_id(owner_id);
-    if !VarModule::is_flag(edge, vars::edge::instance::FLASH_REFRACT) {
+    if !VarModule::is_flag(weapon.battle_object, vars::edge_flare1::status::REFRACT) {
         WorkModule::dec_int(weapon.module_accessor, *WEAPON_EDGE_FLARE1_INSTANCE_WORK_ID_INT_LIFE);
     }
     return 0.into()
 }
 
 unsafe extern "C" fn fly_end(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
-    let edge = utils::util::get_battle_object_from_id(owner_id);
-    VarModule::set_int(edge, vars::edge::instance::FLARE1_ID, -1);
-    VarModule::off_flag(edge, vars::edge::instance::FLASH_REFRACT);
+    VarModule::off_flag(weapon.battle_object, vars::edge_flare1::status::REFRACT);
     return 0.into()
 }
 
