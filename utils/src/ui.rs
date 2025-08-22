@@ -400,7 +400,7 @@ fn get_pane_from_layout(layout_data: u64, name: &str) -> Option<u64> {
 
 #[skyline::hook(offset = 0x1b6cc08, inline)]
 unsafe fn get_set_info_alpha(ctx: &skyline::hooks::InlineCtx) {
-    let layout_udata = *ctx.registers[0].x.as_ref();
+    let layout_udata = ctx.registers[0].x();
     let layout_view = *(layout_udata as *const u64).add(1);
     let layout_pane = *(layout_view as *const u64).add(3);
     let ui2d_pane = *(layout_pane as *const u64);
