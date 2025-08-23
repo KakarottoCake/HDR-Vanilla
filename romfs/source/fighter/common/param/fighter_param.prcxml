@@ -1200,7 +1200,7 @@
     <!-- SQUIRTLE -->
     <struct index="33">
       <float hash="walk_speed_max">1.25</float>
-      <float hash="ground_brake">0.0605</float>
+      <float hash="ground_brake">0.055</float>
       <float hash="dash_speed">1.75</float>
       <float hash="run_accel_mul">0.15</float>
       <float hash="run_accel_add">0.01</float>
