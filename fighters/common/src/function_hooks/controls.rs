@@ -5,12 +5,12 @@ use utils::ext::*;
 
 #[skyline::hook(offset = 0x16d85dc, inline)]
 unsafe fn packed_packet_creation(ctx: &mut skyline::hooks::InlineCtx) {
-    *ctx.registers[22].x.as_mut() = 0x2;
+    ctx.registers[22].set_x(0x2);
 }
 
 #[skyline::hook(offset = 0x16d8610, inline)]
 unsafe fn write_packet(ctx: &mut skyline::hooks::InlineCtx) {
-    let raw = *ctx.registers[19].x.as_ref();
+    let raw = ctx.registers[19].x();
 
     let mapped_inputs = *((raw + 0x49508) as *const MappedInputs);
     let mut packet = 0u64;
@@ -24,7 +24,7 @@ unsafe fn write_packet(ctx: &mut skyline::hooks::InlineCtx) {
     *(&mut packet as *mut u64 as *mut i8).add(6) = mapped_inputs.rstick_x;
     *(&mut packet as *mut u64 as *mut i8).add(7) = mapped_inputs.rstick_y;
 
-    *ctx.registers[8].x.as_mut() = packet;
+    ctx.registers[8].set_x(packet);
 }
 
 #[repr(C)]
@@ -972,7 +972,7 @@ unsafe fn parse_inputs(this: &mut ControlModuleInternal) {
 
 #[skyline::hook(offset = 0x6b9c7c, inline)]
 unsafe fn after_exec(ctx: &skyline::hooks::InlineCtx) {
-    let module = *ctx.registers[19].x.as_ref();
+    let module = ctx.registers[19].x();
     let internal_class = *(module as *const u64).add(0x110 / 0x8);
     *(internal_class as *mut f32).add(0x40 / 0x4) = LAST_ALT_STICK[0];
     *(internal_class as *mut f32).add(0x44 / 0x4) = LAST_ALT_STICK[1];
@@ -981,7 +981,7 @@ unsafe fn after_exec(ctx: &skyline::hooks::InlineCtx) {
 
 #[skyline::hook(offset = 0x16d7034, inline)]
 unsafe fn handle_incoming_packet(ctx: &mut skyline::hooks::InlineCtx) {
-    let packet = *ctx.registers[15].x.as_ref();
+    let packet = ctx.registers[15].x();
 
     let mut inputs = MappedInputs {
         buttons: Buttons::empty(),
@@ -1003,7 +1003,7 @@ unsafe fn handle_incoming_packet(ctx: &mut skyline::hooks::InlineCtx) {
     inputs.rstick_x = rstick_x;
     inputs.rstick_y = rstick_y;
 
-    *ctx.registers[13].x.as_mut() = std::mem::transmute(inputs);
+    ctx.registers[13].set_x(std::mem::transmute(inputs));
 }
 
 /// fix throws not respecting the cstick, especially dk cargo throw
@@ -1062,7 +1062,7 @@ static mut GC_TRIGGERS: [f32; 2] = [0.0, 0.0];
 unsafe fn post_gamecube_process(ctx: &skyline::hooks::InlineCtx) {
     let state: *mut skyline::nn::hid::NpadGcState =
         (ctx as *const _ as *mut u8).add(0x100) as *mut _;
-    let controller: *mut Controller = *ctx.registers[19].x.as_ref() as _;
+    let controller: *mut Controller = ctx.registers[19].x() as _;
 
     GC_TRIGGERS[0] = (*state).LTrigger as f32 / i16::MAX as f32;
     GC_TRIGGERS[1] = (*state).RTrigger as f32 / i16::MAX as f32;
@@ -1070,7 +1070,7 @@ unsafe fn post_gamecube_process(ctx: &skyline::hooks::InlineCtx) {
 
 #[skyline::hook(offset = 0x3666d0c, inline)]
 unsafe fn apply_triggers(ctx: &skyline::hooks::InlineCtx) {
-    let controller: *mut Controller = *ctx.registers[19].x.as_ref() as _;
+    let controller: *mut Controller = ctx.registers[19].x() as _;
     (*controller).left_trigger = GC_TRIGGERS[0];
     (*controller).right_trigger = GC_TRIGGERS[1];
     GC_TRIGGERS = [0.0, 0.0];
@@ -1078,22 +1078,22 @@ unsafe fn apply_triggers(ctx: &skyline::hooks::InlineCtx) {
 
 #[skyline::hook(offset = offsets::analog_trigger_l(), inline)]
 unsafe fn analog_trigger_l(ctx: &mut skyline::hooks::InlineCtx) {
-    if *ctx.registers[9].x.as_ref() & 0x40 != 0 {
-        let controller: *mut Controller = *ctx.registers[19].x.as_ref() as _;
+    if ctx.registers[9].x() & 0x40 != 0 {
+        let controller: *mut Controller = ctx.registers[19].x() as _;
         (*controller).current_buttons.set_real_digital_l(true);
-        *ctx.registers[11].x.as_mut() = 0;
+        ctx.registers[11].set_x(0);
     } else {
-        *ctx.registers[11].w.as_mut() = 0x27FF;
+        ctx.registers[11].set_w(0x27FF);
     }
 }
 
 #[skyline::hook(offset = offsets::analog_trigger_r(), inline)]
 unsafe fn analog_trigger_r(ctx: &mut skyline::hooks::InlineCtx) {
-    if *ctx.registers[8].x.as_ref() & 0x80 != 0 {
-        let controller: *mut Controller = *ctx.registers[19].x.as_ref() as _;
+    if ctx.registers[8].x() & 0x80 != 0 {
+        let controller: *mut Controller = ctx.registers[19].x() as _;
         (*controller).current_buttons.set_real_digital_r(true);
     } else {
-        *ctx.registers[11].w.as_mut() = 0x27FF;
+        ctx.registers[11].set_w(0x27FF);
     }
 }
 
@@ -1113,7 +1113,7 @@ unsafe fn set_attack_air_stick_hook(control_module: u64, arg: u32) {
 }
 #[skyline::hook(offset = 0x6bd6c4, inline)]
 unsafe fn exec_command_reset_attack_air_kind_hook(ctx: &mut skyline::hooks::InlineCtx) {
-    let control_module = *ctx.registers[21].x.as_ref();
+    let control_module = ctx.registers[21].x();
     let boma = *(control_module as *mut *mut BattleObjectModuleAccessor).add(1);
     // For some reason, the game resets your attack_air_kind value every frame
     // even though it resets as soon as you perform an aerial attack
