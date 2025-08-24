@@ -155,14 +155,6 @@ unsafe fn sheik_nspecial_cancels(fighter: &mut L2CFighterCommon) {
     }
 }
 
-// Mewtwo
-unsafe fn mewtwo_nspecial_cancels(fighter: &mut L2CFighterCommon) {
-    if fighter.is_motion(Hash40::new("mewtwo_special_air_n_cancel")) 
-    && fighter.get_int(*FIGHTER_MEWTWO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS) == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
-        fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_MEWTWO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
-    }
-}
-
 // Mr. Game and Watch
 unsafe fn chef_drift_land_cancel(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_GAMEWATCH_SPECIAL_N) {
@@ -472,12 +464,24 @@ unsafe fn magic_series_lucario(fighter: &mut L2CFighterCommon) {
     }
 }
 
-unsafe fn lucario_nspecial_cancels(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_CANCEL) {
-        if fighter.is_situation(*SITUATION_KIND_AIR) {
-            if fighter.get_int(*FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS) == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
-                fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_LUCARIO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
-            }
+// Lucario
+unsafe fn lucario_correct_jump_cancel_kind(fighter: &mut L2CFighterCommon) {
+    if fighter.is_prev_status(*FIGHTER_KIRBY_STATUS_KIND_LUCARIO_SPECIAL_N_CANCEL) {
+        if fighter.is_situation(*SITUATION_KIND_AIR)
+        && fighter.is_status(*FIGHTER_STATUS_KIND_JUMP_AERIAL) {
+            WorkModule::dec_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
+            StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_FLY, false);
+        }
+    }
+}
+
+// Mewtwo
+unsafe fn mewtwo_correct_jump_cancel_kind(fighter: &mut L2CFighterCommon) {
+    if fighter.is_prev_status(*FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N_CANCEL) {
+        if fighter.is_situation(*SITUATION_KIND_AIR)
+        && fighter.is_status(*FIGHTER_STATUS_KIND_JUMP_AERIAL) {
+            WorkModule::dec_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
+            StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_FLY, false);
         }
     }
 }
@@ -1042,7 +1046,7 @@ pub unsafe fn kirby_copy_handler(fighter: &mut L2CFighterCommon) {
         // Sheik
         0x10 => sheik_nspecial_cancels(fighter),
         // Mewtwo
-        0x19 => mewtwo_nspecial_cancels(fighter),
+        0x19 => mewtwo_correct_jump_cancel_kind(fighter),
         // Mr. Game & Watch
         0x1C => chef_drift_land_cancel(fighter),
         // Dark Pit
@@ -1074,7 +1078,7 @@ pub unsafe fn kirby_copy_handler(fighter: &mut L2CFighterCommon) {
         // Lucario
         0x2C => {
             magic_series_lucario(fighter);
-            lucario_nspecial_cancels(fighter);
+            lucario_correct_jump_cancel_kind(fighter);
         },
         // Toon Link
         0x2E => heros_bow_drift(fighter),
@@ -1088,6 +1092,8 @@ pub unsafe fn kirby_copy_handler(fighter: &mut L2CFighterCommon) {
         0x35 => max_water_shuriken_dc(fighter),
         // Robin
         0x38 => reflet_nspecial_cancels(fighter),
+        // Shulk
+    //  0x39 => None
         // Bowser Jr.
         0x3A => clown_cannon_shield_cancel(fighter),
         // Ryu
