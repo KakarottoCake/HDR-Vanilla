@@ -786,6 +786,8 @@ pub mod vars {
             // flags
             pub const SPECIAL_S_INSTAKILL: i32 = 0x1100;
             pub const SPECIAL_S_GROUND_START: i32 = 0x1101;
+            pub const SPECIAL_S_INSTAKILL_CHECK_HIT: i32 = 0x1102;
+            pub const SPECIAL_S_INSTAKILL_HIT: i32 = 0x1103;
         }
     }
 
@@ -1085,6 +1087,17 @@ pub mod vars {
             pub const ATTACK_S4_SPECIAL: i32 = 0x0100;
             pub const SPECIAL_HI_CATCH_USED: i32 = 0x0101;
             pub const SPECIAL_LW_HOLD: i32 = 0x0102;
+        }
+        pub mod status {
+            // flags
+            pub const SPECIAL_LW_JUMP: i32 = 0x1100;
+            pub const SPECIAL_LW_IS_JUMP: i32 = 0x1101;
+            pub const SPECIAL_LW_FALL: i32 = 0x1102;
+            pub const SPECIAL_LW_FALLING: i32 = 0x1103;
+            pub const SPECIAL_LW_ENABLE_CANCEL: i32 = 0x1104;
+
+            // ints
+            pub const SPECIAL_LW_FALL_COUNT: i32 = 0x1100;
         }
     }
 
