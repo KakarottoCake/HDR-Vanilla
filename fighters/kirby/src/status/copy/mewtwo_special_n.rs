@@ -2,19 +2,19 @@ use std::convert::TryInto;
 
 use super::*;
 
-// FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_N_SHOOT
+// FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N_SHOOT
 
 unsafe extern "C" fn special_n_shoot_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     special_n_save_charge_status(fighter);
     0.into()
 }
 
-// FIGHTER_STATUS_KIND_SPECIAL_N
+// FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N
 
 unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MEWTWO_INSTANCE_WORK_ID_FLAG_MOT_INHERIT);
-    WorkModule::set_int64(fighter.module_accessor, hash40("special_n_start") as i64, *FIGHTER_MEWTWO_INSTANCE_WORK_ID_INT_GROUND_MOT);
-    WorkModule::set_int64(fighter.module_accessor, hash40("special_air_n_start") as i64, *FIGHTER_MEWTWO_INSTANCE_WORK_ID_INT_AIR_MOT);
+    WorkModule::set_int64(fighter.module_accessor, hash40("mewtwo_special_n_start") as i64, *FIGHTER_MEWTWO_INSTANCE_WORK_ID_INT_GROUND_MOT);
+    WorkModule::set_int64(fighter.module_accessor, hash40("mewtwo_special_air_n_start") as i64, *FIGHTER_MEWTWO_INSTANCE_WORK_ID_INT_AIR_MOT);
     special_n_set_kinetic(fighter);
     let max_charge_frame = fighter.get_param_float("param_special_n", "max_charge_frame");
     let curr_charge_frame = fighter.get_int(*FIGHTER_MEWTWO_INSTANCE_WORK_ID_INT_SHADOWBALL_CHARGE_FRAME) as f32;
@@ -44,12 +44,12 @@ unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
     if MotionModule::is_end(fighter.module_accessor) {
         // ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_MEWTWO_GENERATE_ARTICLE_SHADOWBALL, false, -1);
         if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_MEWTWO_SHADOWBALL_TRANSITION_TERM_ID_START_SHOOT) {
-            fighter.change_status(FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_N_SHOOT.into(), false.into());
+            fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N_SHOOT.into(), false.into());
             return 0.into();
         }
         ControlModule::clear_command(fighter.module_accessor, true);
         if fighter.is_flag(*FIGHTER_MEWTWO_SPECIAL_N_STATUS_WORK_ID_FLAG_CHARGE_MAX) {
-            fighter.change_status(FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_N_MAX.into(), false.into());
+            fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N_MAX.into(), false.into());
             ArticleModule::change_status(
                 fighter.module_accessor,
                 *FIGHTER_MEWTWO_GENERATE_ARTICLE_SHADOWBALL,
@@ -59,7 +59,7 @@ unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
             return 0.into();
         }
         if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_MEWTWO_SHADOWBALL_TRANSITION_TERM_ID_START_HOLD) {
-            fighter.change_status(FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_N_HOLD.into(), false.into());
+            fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N_HOLD.into(), false.into());
             return 0.into();
         }
         return 0.into();
@@ -98,12 +98,12 @@ pub unsafe extern "C" fn special_n_joint_translate(fighter: &mut L2CFighterCommo
     );
 }
 
-// FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_N_HOLD
+// FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N_HOLD
 
 unsafe extern "C" fn special_n_hold_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MEWTWO_INSTANCE_WORK_ID_FLAG_MOT_INHERIT);
-    WorkModule::set_int64(fighter.module_accessor, hash40("special_n_hold") as i64, *FIGHTER_MEWTWO_INSTANCE_WORK_ID_INT_GROUND_MOT);
-    WorkModule::set_int64(fighter.module_accessor, hash40("special_air_n_hold") as i64, *FIGHTER_MEWTWO_INSTANCE_WORK_ID_INT_AIR_MOT);
+    WorkModule::set_int64(fighter.module_accessor, hash40("mewtwo_special_n_hold") as i64, *FIGHTER_MEWTWO_INSTANCE_WORK_ID_INT_GROUND_MOT);
+    WorkModule::set_int64(fighter.module_accessor, hash40("mewtwo_special_air_n_hold") as i64, *FIGHTER_MEWTWO_INSTANCE_WORK_ID_INT_AIR_MOT);
     ArticleModule::change_status(
         fighter.module_accessor,
         *FIGHTER_MEWTWO_GENERATE_ARTICLE_SHADOWBALL,
@@ -135,7 +135,7 @@ unsafe extern "C" fn special_n_hold_main_loop(fighter: &mut L2CFighterCommon) ->
     }
     
     if fighter.is_button_trigger(Buttons::Special) {
-        fighter.change_status(FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_N_SHOOT.into(), false.into());
+        fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N_SHOOT.into(), false.into());
         return 0.into();
     }
 
@@ -144,12 +144,12 @@ unsafe extern "C" fn special_n_hold_main_loop(fighter: &mut L2CFighterCommon) ->
     // }
 
     if special_n_check_cancel(fighter).get_bool() {
-        fighter.change_status(FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_N_CANCEL.into(), true.into());
+        fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N_CANCEL.into(), true.into());
         return 0.into();
     }
 
     if MotionModule::is_end(fighter.module_accessor) {
-        fighter.change_status(FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_N_MAX.into(), false.into());
+        fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N_MAX.into(), false.into());
         return 0.into();
     }
 
@@ -161,12 +161,12 @@ unsafe extern "C" fn special_n_hold_end(fighter: &mut L2CFighterCommon) -> L2CVa
     0.into()
 }
 
-// FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_N_MAX
+// FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N_MAX
 
 unsafe extern "C" fn special_n_max_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MEWTWO_INSTANCE_WORK_ID_FLAG_MOT_INHERIT);
-    WorkModule::set_int64(fighter.module_accessor, hash40("special_n_max") as i64, *FIGHTER_MEWTWO_INSTANCE_WORK_ID_INT_GROUND_MOT);
-    WorkModule::set_int64(fighter.module_accessor, hash40("special_air_n_max") as i64, *FIGHTER_MEWTWO_INSTANCE_WORK_ID_INT_AIR_MOT);
+    WorkModule::set_int64(fighter.module_accessor, hash40("mewtwo_special_n_max") as i64, *FIGHTER_MEWTWO_INSTANCE_WORK_ID_INT_GROUND_MOT);
+    WorkModule::set_int64(fighter.module_accessor, hash40("mewtwo_special_air_n_max") as i64, *FIGHTER_MEWTWO_INSTANCE_WORK_ID_INT_AIR_MOT);
     special_n_set_kinetic(fighter);
     ControlModule::set_add_jump_mini_button_life(fighter.module_accessor, 8);
     fighter.sub_shift_status_main(L2CValue::Ptr(special_n_max_main_loop as *const () as _))
@@ -180,7 +180,7 @@ unsafe extern "C" fn special_n_max_main_loop(fighter: &mut L2CFighterCommon) -> 
     }
     
     if fighter.is_button_trigger(Buttons::Special) {
-        fighter.change_status(FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_N_SHOOT.into(), false.into());
+        fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N_SHOOT.into(), false.into());
         return 0.into();
     }
 
@@ -189,7 +189,7 @@ unsafe extern "C" fn special_n_max_main_loop(fighter: &mut L2CFighterCommon) -> 
     // }
 
     if special_n_check_cancel(fighter).get_bool() {
-        fighter.change_status(FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_N_CANCEL.into(), true.into());
+        fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N_CANCEL.into(), true.into());
         return 0.into();
     }
 
@@ -321,11 +321,11 @@ unsafe extern "C" fn special_n_set_kinetic(fighter: &mut L2CFighterCommon) {
 pub unsafe extern "C" fn special_n_save_charge_status(fighter: &mut L2CFighterCommon) {
     let curr_status = StatusModule::status_kind(fighter.module_accessor);
     let next_status = fighter.global_table[STATUS_KIND].get_i32();
-    let special_n =         {*FIGHTER_STATUS_KIND_SPECIAL_N};
-    let special_n_hold =    {*FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_N_HOLD};
-    let special_n_max =     {*FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_N_MAX};
-    let special_n_shoot =   {*FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_N_SHOOT};
-    let special_n_cancel =  {*FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_N_CANCEL};
+    let special_n =         {*FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N};
+    let special_n_hold =    {*FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N_HOLD};
+    let special_n_max =     {*FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N_MAX};
+    let special_n_shoot =   {*FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N_SHOOT};
+    let special_n_cancel =  {*FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N_CANCEL};
 
     // handle charge storage
     // store charge if in cancel status or if moving between valid statuses
@@ -360,11 +360,11 @@ pub unsafe extern "C" fn special_n_save_charge_status(fighter: &mut L2CFighterCo
 }
 
 pub fn install(agent: &mut Agent) {
-    agent.status(End, *FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_N_SHOOT, special_n_shoot_end);
-    agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_N, special_n_main);
-    agent.status(End, *FIGHTER_STATUS_KIND_SPECIAL_N, special_n_end);
-    agent.status(Main, *FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_N_HOLD, special_n_hold_main);
-    agent.status(End, *FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_N_HOLD, special_n_hold_end);
-    agent.status(Main, *FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_N_MAX, special_n_max_main);
-    agent.status(End, *FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_N_MAX, special_n_max_end);
+    agent.status(End, *FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N_SHOOT, special_n_shoot_end);
+    agent.status(Main, *FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N, special_n_main);
+    agent.status(End, *FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N, special_n_end);
+    agent.status(Main, *FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N_HOLD, special_n_hold_main);
+    agent.status(End, *FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N_HOLD, special_n_hold_end);
+    agent.status(Main, *FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N_MAX, special_n_max_main);
+    agent.status(End, *FIGHTER_KIRBY_STATUS_KIND_MEWTWO_SPECIAL_N_MAX, special_n_max_end);
 }
