@@ -4,7 +4,7 @@ unsafe extern "C" fn game_specialnstart(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    FT_MOTION_RATE_RANGE(agent, 1.0, 10.0, 7.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 10.0, 6.0);
     frame(lua_state, 10.0);
     FT_MOTION_RATE_RANGE(agent, 10.0, 19.0, 2.0);
     frame(lua_state, 19.0);
@@ -76,7 +76,7 @@ unsafe extern "C" fn effect_specialnshot(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_specialnshot(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 5.0);
+    frame(lua_state, 6.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_pzenigame_special_n03"));
         let rand = sv_math::rand(hash40("fighter"), 2);

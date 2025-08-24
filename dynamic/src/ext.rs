@@ -541,6 +541,7 @@ pub trait BomaExt {
     unsafe fn check_jump_cancel(&mut self, update_lr: bool, skip_other_checks: bool) -> bool;
     // Checks for status and enables transition to airdodge
     unsafe fn check_airdodge_cancel(&mut self) -> bool;
+    unsafe fn check_aerial_cancel(&mut self) -> bool;
     // Checks for status and enables transition to dash
     unsafe fn check_dash_cancel(&mut self) -> bool;
     // Checks for status and enables transition to wall jump
@@ -1209,6 +1210,16 @@ impl BomaExt for BattleObjectModuleAccessor {
             return true;
         }
         false
+    }
+
+    unsafe fn check_aerial_cancel(&mut self) -> bool {
+        let fighter = crate::util::get_fighter_common_from_accessor(self);
+        if fighter.is_situation(*SITUATION_KIND_AIR)
+        && fighter.get_aerial() != None {
+            fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_AIR.into(), false.into());
+            return true;
+        }
+        return false;
     }
 
     unsafe fn check_dash_cancel(&mut self) -> bool {

@@ -37,6 +37,7 @@ unsafe extern "C" fn game_specialnend(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE_RANGE(agent, 2.0, 5.0, 5.0);
     frame(lua_state, 5.0);
     FT_MOTION_RATE(agent, 1.0);
+    frame(lua_state, 7.0);
     if is_excute(agent) {
         if agent.kind() == *FIGHTER_KIND_KIRBY {
             if ![*PLEDGE_STATE_NONE, *PLEDGE_STATE_GRASS].contains(&VarModule::get_int(agent.battle_object, vars::kirby::instance::SPECIAL_N_PTRAINER_PLEDGE_STATE)) {
@@ -102,7 +103,7 @@ unsafe extern "C" fn sound_specialnend(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_pfushigisou_special_n03"));
     }
-    frame(lua_state, 5.0);
+    frame(lua_state, 7.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_pfushigisou_special_n03"));
     }
