@@ -1992,6 +1992,7 @@ pub mod statuses {
         pub const DIDDY_SPECIAL_N_CANCEL_JUMP: i32 = 0x3EB;
         pub const BAYONETTA_SPECIAL_N_CANCEL: i32 = 0x3EC;
         pub const BUDDY_SPECIAL_N_BAYONET_END: i32 = 0x3ED;
+        pub const PIKMIN_SPECIAL_N_FAILURE: i32 = 0x3EE;
     }
 
     pub mod krool {
