@@ -19,12 +19,12 @@ unsafe fn final_cutter_landing_bugfix(fighter: &mut L2CFighterCommon) {
 
 unsafe fn hammer_swing_drift_landcancel(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK) {
-        if fighter.is_situation(*SITUATION_KIND_GROUND) && fighter.is_prev_situation(*SITUATION_KIND_AIR) {
+        let landing_lag = 19.0;
+        if fighter.check_land_cancel(Some(landing_lag)) {
             AttackModule::clear_all(fighter.module_accessor);
-            MotionModule::change_motion_force_inherit_frame(fighter.module_accessor, Hash40::new("special_s"), 33.0, 1.0, 1.0);
-            MotionModule::set_rate(fighter.module_accessor, (55.0 - 33.0)/27.0);    // equates to 19F landing lag
         }
     }
+
     if fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK]) {
         if fighter.is_situation(*SITUATION_KIND_AIR) {
             if KineticModule::get_kinetic_type(fighter.module_accessor) != *FIGHTER_KINETIC_TYPE_FALL {
