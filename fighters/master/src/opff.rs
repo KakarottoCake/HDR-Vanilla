@@ -48,32 +48,22 @@ unsafe fn special_lw_cancel(fighter: &mut L2CFighterCommon) {
     || StatusModule::is_changing(fighter.module_accessor)
     || !fighter.is_status_one_of(&[
         *FIGHTER_STATUS_KIND_SPECIAL_LW,
-        *FIGHTER_MASTER_STATUS_KIND_SPECIAL_LW_HIT,
     ]) {
         return;
     }
 
     if !CancelModule::is_enable_cancel(fighter.module_accessor)
     && VarModule::is_flag(fighter.battle_object, vars::master::status::SPECIAL_LW_ENABLE_CANCEL) {
-        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW);
-        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT);
-        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON);
-        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL);
-        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL_BUTTON);
-        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_DASH);
-        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_DASH);
+        let terms = [
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL_BUTTON,
+        ];
+        fighter.enable_transition_term_many(&terms);
         let ret = fighter.sub_transition_group_check_air_special().get_bool()
             || fighter.sub_transition_group_check_ground_special().get_bool()
-            || fighter.sub_transition_group_check_air_jump_aerial().get_bool()
-            || fighter.sub_transition_group_check_ground_jump().get_bool()
-            || fighter.sub_transition_group_check_ground(false.into()).get_bool();
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW);
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT);
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON);
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL);
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL_BUTTON);
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_DASH);
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_DASH);
+            || fighter.sub_transition_group_check_air_jump_aerial().get_bool();
+        fighter.unable_transition_term_many(&terms);
     }
 }
 

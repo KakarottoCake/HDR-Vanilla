@@ -678,6 +678,9 @@ unsafe extern "C" fn effect_speciallw(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_speciallwhit(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    if is_excute(agent) {
+        VarModule::off_flag(agent.battle_object, vars::master::status::SPECIAL_LW_ENABLE_CANCEL)
+    }
     frame(lua_state, 54.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_MASTER_STATUS_SPECIAL_LW_FLAG_PULL_AXE);
