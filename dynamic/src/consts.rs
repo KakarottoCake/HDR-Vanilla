@@ -1738,6 +1738,7 @@ pub mod vars {
         }
         pub mod status {
             //flags
+            pub const SPECIAL_S_LAND_CANCEL: i32 = 0x1100;
         }
     }
 

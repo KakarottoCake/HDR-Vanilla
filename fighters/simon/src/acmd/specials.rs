@@ -30,6 +30,12 @@ unsafe extern "C" fn game_specials1(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         ArticleModule::shoot(boma, *FIGHTER_SIMON_GENERATE_ARTICLE_CROSS, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
     }
+    frame(lua_state, 19.0);
+    if is_excute(agent) {
+        if agent.is_situation(*SITUATION_KIND_AIR) {
+           VarModule::on_flag(agent.battle_object, vars::simon::status::SPECIAL_S_LAND_CANCEL);
+        }
+    }
     frame(lua_state, 26.0);
     if is_excute(agent) {
         WorkModule::off_flag(boma, *FIGHTER_SIMON_STATUS_SPECIAL_S_FLAG_FALL);

@@ -635,7 +635,7 @@ unsafe fn ken_air_hado_distinguish(fighter: &mut L2CFighterCommon) {
     ]))
     {
         let landing_lag: Option<f32> = if fighter.motion_frame() < 70.0 { // the autocancel frame
-            Some(11.0)
+            Some(14.0)
         } else {
             None
         };

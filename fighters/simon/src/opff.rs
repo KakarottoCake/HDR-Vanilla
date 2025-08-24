@@ -33,8 +33,14 @@ unsafe fn cross_land_cancel(fighter: &mut L2CFighterCommon, boma: &mut BattleObj
             }
         }
 
-        let landing_lag = 11.0;
-        fighter.check_land_cancel(Some(landing_lag));
+        if fighter.is_situation(*SITUATION_KIND_GROUND) && VarModule::is_flag(fighter.battle_object, vars::simon::status::SPECIAL_S_LAND_CANCEL) {
+            VarModule::off_flag(fighter.battle_object, vars::simon::status::SPECIAL_S_LAND_CANCEL);
+            
+            let landing_lag = 11.0;
+            VarModule::set_float(fighter.battle_object, vars::common::instance::LAND_CANCEL_LAG, landing_lag);
+
+            StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_LANDING, false);
+        }
     }
 }
 
