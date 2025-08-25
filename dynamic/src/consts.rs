@@ -279,6 +279,7 @@ pub mod vars {
             pub const LAST_RECEIVED_ATTACK_HIT_LOCATION_X: i32 = 0x0023;
             pub const LAST_RECEIVED_ATTACK_HIT_LOCATION_Y: i32 = 0x0024;
             pub const LAST_RECEIVED_ATTACK_HIT_LOCATION_Z: i32 = 0x0025;
+            pub const LAND_CANCEL_LAG: i32 = 0x0026;
         }
         pub mod status {
             // flags
@@ -405,7 +406,6 @@ pub mod vars {
             pub const SPECIAL_N_BAYONET_ACTIVE: i32 = 0x0101;
             pub const SPECIAL_S_FAIL_ENABLE: i32 = 0x0102;
             pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0103;
-            pub const SPECIAL_N_LAND_CANCEL: i32 = 0x0104;
 
             // int
             pub const HUD_DISPLAY_TIME: i32 = 0x0100;
@@ -564,9 +564,11 @@ pub mod vars {
             pub const ATTACK_COMMAND_4_RELEASE_BUTTON: i32 = 0x1151;
 
             pub const SPECIAL_LW_BREAK : i32 = 0x1152;
+            pub const SUPER_SPECIAL_TRIPLE: i32 = 0x1153;
 
             // ints
             pub const HIT_CANCEL_TIMER: i32 = 0x1104;
+            pub const SUPER_SPECIAL_TRIPLE_COUNT: i32 = 0x1154;
         }
     }
 
@@ -663,12 +665,20 @@ pub mod vars {
             pub const HIT_CANCEL: i32 = 0x0104;
         }
         pub mod status {
-            // ints
-            /// This is used to determine how to end the SpecialHiJump status script
-            pub const SPECIAL_HI_JUMP_RESERVE_ACTION: i32 = 0x1100;
+            // flag
+            pub const SPECIAL_HI_FREEFALL: i32 = 0x1100;
+
+            // float
+            pub const SPECIAL_S_ANGLE: i32 = 0x1100;
         }
 
         // not IDs but symbolic consts
+        // These consts match the direction of the
+        // animation that Mythra's clones use.
+        pub const SPECIAL_S_ANGLE_NONE: i32 = 2;
+        pub const SPECIAL_S_ANGLE_LW: i32 = 3;
+        pub const SPECIAL_S_ANGLE_HI: i32 = 4;
+
         pub const SPECIAL_HI_JUMP_RESERVE_ACTION_ATTACK1: i32 = 0x0;
         pub const SPECIAL_HI_JUMP_RESERVE_ACTION_ATTACK2: i32 = 0x1;
         pub const SPECIAL_HI_JUMP_RESERVE_ACTION_FALL: i32 = 0x2;
@@ -776,6 +786,8 @@ pub mod vars {
             // flags
             pub const SPECIAL_S_INSTAKILL: i32 = 0x1100;
             pub const SPECIAL_S_GROUND_START: i32 = 0x1101;
+            pub const SPECIAL_S_INSTAKILL_CHECK_HIT: i32 = 0x1102;
+            pub const SPECIAL_S_INSTAKILL_HIT: i32 = 0x1103;
         }
     }
 
@@ -805,6 +817,7 @@ pub mod vars {
             // flags
             //pub const DISABLE_SPECIAL_HI: i32 = 0x01FF; //Weird value to avoid conflicts with copy ability values
             pub const SPECIAL_N_PICKEL_CYCLE_MATERIAL: i32 = 0x01F4;
+            pub const SPECIAL_LW_USED_JUMPS: i32 = 0x01F5;
             pub use super::super::ridley::instance::SPECIAL_N_EXPLODE;
 
             // ints
@@ -1074,6 +1087,17 @@ pub mod vars {
             pub const ATTACK_S4_SPECIAL: i32 = 0x0100;
             pub const SPECIAL_HI_CATCH_USED: i32 = 0x0101;
             pub const SPECIAL_LW_HOLD: i32 = 0x0102;
+        }
+        pub mod status {
+            // flags
+            pub const SPECIAL_LW_JUMP: i32 = 0x1100;
+            pub const SPECIAL_LW_IS_JUMP: i32 = 0x1101;
+            pub const SPECIAL_LW_FALL: i32 = 0x1102;
+            pub const SPECIAL_LW_FALLING: i32 = 0x1103;
+            pub const SPECIAL_LW_ENABLE_CANCEL: i32 = 0x1104;
+
+            // ints
+            pub const SPECIAL_LW_FALL_COUNT: i32 = 0x1100;
         }
     }
 
@@ -1818,10 +1842,9 @@ pub mod vars {
         }
         pub mod status {
             // flags
-            pub const SPECIAL_N_THUNDER_LAND_CANCEL: i32 = 0x1100;
-            pub const SPECIAL_S_HIT: i32 = 0x1101;
-            pub const SPECIAL_S_INPUT_CHECK: i32 = 0x1102;
-            pub const SPECIAL_S_STOP: i32 = 0x1103;
+            pub const SPECIAL_S_HIT: i32 = 0x1100;
+            pub const SPECIAL_S_INPUT_CHECK: i32 = 0x1101;
+            pub const SPECIAL_S_STOP: i32 = 0x1102;
 
             // ints
             pub const ATTACK_LW4_TIMER: i32 = 0x1100;
@@ -1981,6 +2004,7 @@ pub mod statuses {
         pub const DIDDY_SPECIAL_N_CANCEL_JUMP: i32 = 0x3EB;
         pub const BAYONETTA_SPECIAL_N_CANCEL: i32 = 0x3EC;
         pub const BUDDY_SPECIAL_N_BAYONET_END: i32 = 0x3ED;
+        pub const PIKMIN_SPECIAL_N_FAILURE: i32 = 0x3EE;
     }
 
     pub mod krool {

@@ -4,6 +4,7 @@ use globals::*;
 
 mod special_lw;
 mod special_s;
+mod special_hi;
 
 
 unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -23,4 +24,5 @@ pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
     special_lw::install(agent);
     special_s::install(agent);
+    special_hi::install(agent);
 }
