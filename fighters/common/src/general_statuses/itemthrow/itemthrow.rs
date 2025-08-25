@@ -29,9 +29,7 @@ unsafe fn status_ItemThrow_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
             speed_x = speed_x * ditcit_mul;
 
             if min_speed > 0.0 {
-                println!("ok");
                 if speed_x == 0.0 {
-                    println!("none");
                     speed_x = min_speed * PostureModule::lr(fighter.module_accessor);
                 }
                 else {
@@ -42,8 +40,6 @@ unsafe fn status_ItemThrow_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
             if max_speed > 0.0 {
                 speed_x = speed_x.abs().min(max_speed) * speed_x.signum();
             }
-
-            println!("{}", speed_x);
 
             sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, speed_x, speed_y);
         }
