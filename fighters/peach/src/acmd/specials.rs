@@ -174,6 +174,10 @@ unsafe extern "C" fn game_specialhistart(agent: &mut L2CAgentBase) {
         ArticleModule::generate_article(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KASSAR, false, 0);
         ArticleModule::change_motion(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KASSAR, Hash40::new("special_hi_start"), false, 1.0);
     }
+    frame(lua_state, 3.0);
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
+    }
     frame(lua_state, 6.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
@@ -187,6 +191,7 @@ unsafe extern "C" fn game_specialhistart(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         AttackModule::set_vector(boma, 0, 90, false);
         AttackModule::set_offset(boma, 0, &Vector3f{ x: 0.0, y: 0.0, z: 0.0});
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {
@@ -215,6 +220,7 @@ unsafe extern "C" fn game_specialhistart(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         AttackModule::clear_all(boma);
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
     }
     frame(lua_state, 30.0);
     if is_excute(agent) {

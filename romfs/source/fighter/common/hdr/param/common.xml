@@ -60,4 +60,5 @@
         <float hash="min_speed">0.0</float>
         <float hash="max_speed">3.5</float>
     </struct>
+    <float hash="fall_special_cliff_hangdata_p1x_reduction_dist">4.0</float>
 </struct>

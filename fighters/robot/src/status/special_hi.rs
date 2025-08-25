@@ -13,7 +13,7 @@ unsafe extern "C" fn special_hi_pre(fighter: &mut L2CFighterCommon) -> L2CValue 
         SituationKind(*SITUATION_KIND_NONE),
         *FIGHTER_KINETIC_TYPE_UNIQ,
         *GROUND_CORRECT_KIND_KEEP as u32,
-        GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES), // changed from ALWAYS_BOTH_SIDES
+        GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
         true, 
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT,
@@ -86,10 +86,6 @@ unsafe extern "C" fn special_hi_main(fighter: &mut L2CFighterCommon) -> L2CValue
 }
 
 unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.sub_transition_group_check_air_cliff().get_bool() {
-        return 1.into();
-    }
-    
     let charge_frame = VarModule::get_int(fighter.battle_object, SPECIAL_HI_CHARGE_FRAME) as f32;
     VarModule::inc_int(fighter.battle_object, SPECIAL_HI_CHARGE_FRAME);
 

@@ -279,6 +279,7 @@ pub mod vars {
             pub const LAST_RECEIVED_ATTACK_HIT_LOCATION_X: i32 = 0x0023;
             pub const LAST_RECEIVED_ATTACK_HIT_LOCATION_Y: i32 = 0x0024;
             pub const LAST_RECEIVED_ATTACK_HIT_LOCATION_Z: i32 = 0x0025;
+            pub const LAND_CANCEL_LAG: i32 = 0x0026;
         }
         pub mod status {
             // flags
@@ -405,7 +406,6 @@ pub mod vars {
             pub const SPECIAL_N_BAYONET_ACTIVE: i32 = 0x0101;
             pub const SPECIAL_S_FAIL_ENABLE: i32 = 0x0102;
             pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0103;
-            pub const SPECIAL_N_LAND_CANCEL: i32 = 0x0104;
 
             // int
             pub const HUD_DISPLAY_TIME: i32 = 0x0100;
@@ -786,6 +786,8 @@ pub mod vars {
             // flags
             pub const SPECIAL_S_INSTAKILL: i32 = 0x1100;
             pub const SPECIAL_S_GROUND_START: i32 = 0x1101;
+            pub const SPECIAL_S_INSTAKILL_CHECK_HIT: i32 = 0x1102;
+            pub const SPECIAL_S_INSTAKILL_HIT: i32 = 0x1103;
         }
     }
 
@@ -1085,6 +1087,17 @@ pub mod vars {
             pub const ATTACK_S4_SPECIAL: i32 = 0x0100;
             pub const SPECIAL_HI_CATCH_USED: i32 = 0x0101;
             pub const SPECIAL_LW_HOLD: i32 = 0x0102;
+        }
+        pub mod status {
+            // flags
+            pub const SPECIAL_LW_JUMP: i32 = 0x1100;
+            pub const SPECIAL_LW_IS_JUMP: i32 = 0x1101;
+            pub const SPECIAL_LW_FALL: i32 = 0x1102;
+            pub const SPECIAL_LW_FALLING: i32 = 0x1103;
+            pub const SPECIAL_LW_ENABLE_CANCEL: i32 = 0x1104;
+
+            // ints
+            pub const SPECIAL_LW_FALL_COUNT: i32 = 0x1100;
         }
     }
 
@@ -1830,10 +1843,9 @@ pub mod vars {
         }
         pub mod status {
             // flags
-            pub const SPECIAL_N_THUNDER_LAND_CANCEL: i32 = 0x1100;
-            pub const SPECIAL_S_HIT: i32 = 0x1101;
-            pub const SPECIAL_S_INPUT_CHECK: i32 = 0x1102;
-            pub const SPECIAL_S_STOP: i32 = 0x1103;
+            pub const SPECIAL_S_HIT: i32 = 0x1100;
+            pub const SPECIAL_S_INPUT_CHECK: i32 = 0x1101;
+            pub const SPECIAL_S_STOP: i32 = 0x1102;
 
             // ints
             pub const ATTACK_LW4_TIMER: i32 = 0x1100;

@@ -155,9 +155,25 @@ unsafe extern "C" fn ike_special_s_dash_main_loop(fighter: &mut L2CFighterCommon
     0.into()
 }
 
+unsafe extern "C" fn ike_special_s_attack_init(fighter: &mut L2CFighterCommon) -> L2CValue {
+    original_status(Init, fighter, *FIGHTER_IKE_STATUS_KIND_SPECIAL_S_ATTACK)(fighter);
+    if fighter.global_table[globals::SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
+        let air_accel_y = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_y"), 0);
+        sv_kinetic_energy!(
+            set_accel,
+            fighter,
+            FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
+            -air_accel_y * 0.6
+        );
+    }
+    0.into()
+}
+
 pub fn install(agent: &mut Agent) {
     agent.status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_S, special_s_pre);
 
     agent.status(Pre, *FIGHTER_IKE_STATUS_KIND_SPECIAL_S_DASH, special_s_dash_pre);
     agent.status(Main, *FIGHTER_IKE_STATUS_KIND_SPECIAL_S_DASH, special_s_dash_main);
+
+    agent.status(Init, *FIGHTER_IKE_STATUS_KIND_SPECIAL_S_ATTACK, ike_special_s_attack_init);
 }

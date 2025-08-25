@@ -95,15 +95,9 @@ unsafe fn magic_handling(fighter: &mut L2CFighterCommon, boma: &mut BattleObject
         boma.check_airdodge_cancel();
     }
     // thundaga land cancel
-    if boma.is_status(*FIGHTER_TRAIL_STATUS_KIND_SPECIAL_N3)
-    && boma.is_situation(*SITUATION_KIND_GROUND)
-    && boma.is_prev_situation(*SITUATION_KIND_AIR) {
-        let special_n_fire_cancel_frame_ground = 69.0; // Current FAF in motion list is 70, frame is 0 indexed so subtract a frame
+    if boma.is_status(*FIGHTER_TRAIL_STATUS_KIND_SPECIAL_N3) {
         let landing_lag = 12.0; // 11F of landing lag plus one extra frame to subtract from the FAF to actually get that amount of lag
-        if boma.motion_frame() < (special_n_fire_cancel_frame_ground - landing_lag) {
-            VarModule::on_flag(boma.object(), vars::trail::status::SPECIAL_N_THUNDER_LAND_CANCEL);
-            MotionModule::set_frame_sync_anim_cmd(boma, special_n_fire_cancel_frame_ground - landing_lag, true, true, true);
-        }
+        fighter.check_land_cancel(Some(landing_lag));
     }
     // blizzaga jump cancel
     if (boma.is_status(*FIGHTER_TRAIL_STATUS_KIND_SPECIAL_N2)
