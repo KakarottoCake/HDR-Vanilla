@@ -57,7 +57,7 @@
     <struct hash="ditcit">
         <int hash="start_frame">0</int>
         <int hash="end_frame">6</int>
-        <float hash="min_speed">0.0</float>
-        <float hash="max_speed">3.5</float>
+        <float hash="min_speed">3.0</float>
+        <float hash="max_speed">6.0</float>
     </struct>
 </struct>
