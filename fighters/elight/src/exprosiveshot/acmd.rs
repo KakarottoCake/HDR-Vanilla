@@ -16,7 +16,7 @@ unsafe extern "C" fn game_fly(agent: &mut L2CAgentBase) {
                     boma,
                     0,
                     Hash40::new("top"),
-                    &Vector2f{x: speed * life as f32 * cos, y: speed * life as f32 * sin},
+                    &Vector2f{x: speed * life as f32 * cos, y: speed * life as f32 * sin + 3.0},
                     life as u32,
                     false
                 );
