@@ -11,15 +11,15 @@ unsafe extern "C" fn game_specials2lw(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, 1.0);
     let speed_mul = if agent.is_situation(*SITUATION_KIND_GROUND) { 1.0 } else { 0.75 };
     if is_excute(agent) {
-        ADD_SPEED_NO_LIMIT(agent, 0.5 * speed_mul, 0);
+        ADD_SPEED_NO_LIMIT(agent, 0.45 * speed_mul, 0);
     }
     frame(lua_state, 6.0);
     if is_excute(agent) {
-        ADD_SPEED_NO_LIMIT(agent, 0.8 * speed_mul, 0);
+        ADD_SPEED_NO_LIMIT(agent, 0.75 * speed_mul, 0);
     }
     frame(lua_state, 7.0);
     if is_excute(agent) {
-        ADD_SPEED_NO_LIMIT(agent, 0.3 * speed_mul, 0);
+        ADD_SPEED_NO_LIMIT(agent, 0.25 * speed_mul, 0);
     }
     frame(lua_state, 8.0);
     FT_MOTION_RATE_RANGE(agent, 8.0, 20.0, 8.0);
@@ -51,13 +51,10 @@ unsafe extern "C" fn game_specials2lw(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 20.0);
     FT_MOTION_RATE(agent, 1.0);
-    frame(lua_state, 22.0);
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
-    }
     frame(lua_state, 27.0);
     if is_excute(agent) {
         WorkModule::off_flag(boma, *FIGHTER_MARTH_STATUS_SPECIAL_S_FLAG_INPUT_CHECK);
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
     }
 }
 
