@@ -9,19 +9,17 @@ unsafe extern "C" fn game_specials2lw(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 5.0);
     FT_MOTION_RATE(agent, 1.0);
+    let speed_mul = if agent.is_situation(*SITUATION_KIND_GROUND) { 1.0 } else { 0.75 };
     if is_excute(agent) {
-        // delayed horizontal momentum cancel
-        sv_kinetic_energy!(clear_speed, agent, FIGHTER_KINETIC_ENERGY_ID_STOP);
-        sv_kinetic_energy!(clear_speed, agent, FIGHTER_KINETIC_ENERGY_ID_DAMAGE);
-        KineticModule::add_speed(boma, &Vector3f::new(0.5, 0.0, 0.0));
+        ADD_SPEED_NO_LIMIT(agent, 0.5 * speed_mul, 0);
     }
     frame(lua_state, 6.0);
     if is_excute(agent) {
-        KineticModule::add_speed(boma, &Vector3f::new(0.8, 0.0, 0.0));
+        ADD_SPEED_NO_LIMIT(agent, 0.8 * speed_mul, 0);
     }
     frame(lua_state, 7.0);
     if is_excute(agent) {
-        KineticModule::add_speed(boma, &Vector3f::new(0.3, 0.0, 0.0));
+        ADD_SPEED_NO_LIMIT(agent, 0.3 * speed_mul, 0);
     }
     frame(lua_state, 8.0);
     FT_MOTION_RATE_RANGE(agent, 8.0, 20.0, 8.0);
