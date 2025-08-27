@@ -76,7 +76,7 @@ unsafe extern "C" fn sub_fly_main_loop(weapon: &mut L2CWeaponCommon, status: L2C
         if VarModule::is_flag(weapon.battle_object, vars::edge_fire::instance::REFINE) {
             VarModule::off_flag(weapon.battle_object, vars::edge_fire::instance::REFINE);
             if VarModule::get_int(weapon.battle_object, vars::edge_fire::instance::REFINE_COOLDOWN) == 0 {
-                VarModule::set_int(weapon.battle_object, vars::edge_fire::instance::REFINE_COOLDOWN, 30);
+                VarModule::set_int(weapon.battle_object, vars::edge_fire::instance::REFINE_COOLDOWN, 40);
                 // let mut stick_x = weapon.global_table[STICK_X].get_f32();
                 // if stick_x == 0.0 {
                 //     let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
