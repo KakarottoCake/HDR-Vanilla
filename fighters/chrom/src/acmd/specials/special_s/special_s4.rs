@@ -194,23 +194,32 @@ unsafe extern "C" fn sound_specials4s(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specials4lw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let dash_speed = 1.5;
+    let dash_speed = Vector3f::new(1.5 / 4.0, 0.0, 0.0);
     if is_excute(agent) {
         // enables tilt cancels
         agent.on_flag(*FIGHTER_MARTH_STATUS_SPECIAL_S_FLAG_MOTION_CHANGE_ENABLE);
+        ControlModule::clear_command(boma, false);
     }
     frame(lua_state, 3.0);
     FT_MOTION_RATE_RANGE(agent, 3.0, 14.0, 8.0);
     if is_excute(agent) {
+        KineticModule::add_speed(boma, &dash_speed);
+    }
+    wait(lua_state, 1.0);
+    if is_excute(agent) {
         // disables tilt cancels
         agent.off_flag(*FIGHTER_MARTH_STATUS_SPECIAL_S_FLAG_MOTION_CHANGE_ENABLE);
+        KineticModule::add_speed(boma, &dash_speed);
     }
-    for _ in 0..4 {
-        if is_excute(agent) {
-            KineticModule::add_speed(boma, &Vector3f::new(dash_speed / 4.0, 0.0, 0.0));
-        }
-        wait(lua_state, 1.0);
+    wait(lua_state, 1.0);
+    if is_excute(agent) {
+        KineticModule::add_speed(boma, &dash_speed);
     }
+    wait(lua_state, 1.0);
+    if is_excute(agent) {
+        KineticModule::add_speed(boma, &dash_speed);
+    }
+    wait(lua_state, 1.0);
     frame(lua_state, 14.0);
     FT_MOTION_RATE(agent, 1.0);
     for _ in 0..6 {
@@ -224,9 +233,10 @@ unsafe extern "C" fn game_specials4lw(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_specials4lw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 3.0);
     if is_excute(agent) {
         FLASH(agent, 0, 0.93, 0.03, 0.7);
+        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 8, 14, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, true);
+        LAST_EFFECT_SET_RATE(agent, 2.0);
     }
     frame(lua_state, 4.0);
     if is_excute(agent) {
