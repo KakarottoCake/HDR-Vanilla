@@ -678,12 +678,12 @@ unsafe extern "C" fn game_specialairhijump(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 4.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("sword2"), 7.0, 72, 10, 0, 55, 4.0, 2.0, 0.0, -1.2, None, None, None, 1.1, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 1, 0, Hash40::new("sword2"), 7.0, 68, 10, 0, 55, 4.0, 9.0, 0.0, -1.2, None, None, None, 1.1, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 0, 0, Hash40::new("sword2"), 7.0, 72, 10, 0, 50, 4.0, 2.0, 0.0, -1.2, None, None, None, 1.1, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 1, 0, Hash40::new("sword2"), 7.0, 68, 10, 0, 50, 4.0, 9.0, 0.0, -1.2, None, None, None, 1.1, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         AttackModule::clear(boma, 2, false);
         AttackModule::clear(boma, 3, false);
-        //AttackModule::set_add_reaction_frame(fighter.module_accessor, 0, 5.0, false);
-        //AttackModule::set_add_reaction_frame(fighter.module_accessor, 1, 5.0, false);
+        AttackModule::set_add_reaction_frame(boma, 0, 2.0, false);
+        AttackModule::set_add_reaction_frame(boma, 1, 2.0, false);
     }
     frame(lua_state, 6.0);
     // FT_MOTION_RATE(agent, 0.5);
@@ -726,6 +726,38 @@ unsafe extern "C" fn effect_specialairhijump(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn effect_specialairhi1(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, -0.5, 10.5, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, true);
+        LAST_EFFECT_SET_RATE(agent, 1.2);
+    }
+    frame(lua_state, 1.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("elight_sword_open"), Hash40::new("sword1"), 0, 0, 0, 0, 90, 0, 1, true);
+        LAST_EFFECT_SET_OFFSET_TO_CAMERA_FLAT(agent, -0.3);
+    }
+    frame(lua_state, 11.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("elight_sword_open"), true, true);
+        EFFECT_FOLLOW(agent, Hash40::new("elight_sword_beam_m"), Hash40::new("sword1"), 0, 0, 0, 0, 90, 0, 1, true);
+        LAST_EFFECT_SET_OFFSET_TO_CAMERA_FLAT(agent, -0.3);
+    }
+    frame(lua_state, 12.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("elight_sword_beam_m"), true, true);
+        EFFECT_FOLLOW(agent, Hash40::new("elight_sword_close_m"), Hash40::new("sword1"), 0, 0, 0, 0, 90, 0, 1, true);
+        LAST_EFFECT_SET_OFFSET_TO_CAMERA_FLAT(agent, -0.3);
+		EFFECT_FOLLOW(agent, Hash40::new("elight_lay_shot"), Hash40::new("sword1"), 4.5, 0, 0, 0, 0, 0, 1.25, true);
+		LAST_EFFECT_SET_RATE(agent, 1.1);
+    }            
+	frame(lua_state, 14.0);
+    if is_excute(agent) {
+        EFFECT_DETACH_KIND(agent, Hash40::new("elight_lay_shot"), -1);
+    }
+}
+
 unsafe extern "C" fn game_specialairhiend2(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -733,7 +765,7 @@ unsafe extern "C" fn game_specialairhiend2(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
     }
-    frame(lua_state, 5.0);
+    frame(lua_state, 4.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_ELIGHT_STATUS_SPECIAL_HI_FLAG_ENABLE_CONTROL);
     }
@@ -812,6 +844,8 @@ pub fn install(agent: &mut Agent) {
 	agent.acmd("effect_specialairhistart", effect_specialhistart, Priority::Low);
     agent.acmd("game_specialairhijump", game_specialairhijump, Priority::Low);
     agent.acmd("effect_specialairhijump", effect_specialairhijump, Priority::Low);
+
+	agent.acmd("effect_specialairhi1", effect_specialairhi1, Priority::Low);
 
 	agent.acmd("game_specialairhiend2", game_specialairhiend2, Priority::Low);
 	agent.acmd("effect_specialairhiend2", effect_specialairhiend2, Priority::Low);
