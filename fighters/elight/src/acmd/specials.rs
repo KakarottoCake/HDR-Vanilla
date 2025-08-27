@@ -656,14 +656,14 @@ unsafe extern "C" fn game_specialairhijump(agent: &mut L2CAgentBase) {
         if angle < 0.0 {
             angle += 360.0;
         }
-        ATTACK(agent, 0, 0, Hash40::new("sword2"), 7.0, angle as u64, 100, 95, 0, 4.0, 2.0, 0.0, -1.2, None, None, None, 1.1, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 1, 0, Hash40::new("sword2"), 7.0, angle as u64, 100, 95, 0, 4.0, 10.0, 0.0, -1.2, None, None, None, 1.1, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 2, 0, Hash40::new("top"), 7.0, angle as u64, 100, 95, 0, 4.0, 0.0, 17.0, 6.0, Some(0.0), Some(4.0), Some(6.0), 1.1, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 3, 0, Hash40::new("top"), 7.0, angle as u64, 100, 95, 0, 4.0, 0.0, 17.0, 13.0, Some(0.0), Some(4.0), Some(13.0), 1.1, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
-        //AttackModule::set_add_reaction_frame(fighter.module_accessor, 0, 5.0, false);
-        //AttackModule::set_add_reaction_frame(fighter.module_accessor, 1, 5.0, false);
-        //AttackModule::set_add_reaction_frame(fighter.module_accessor, 2, 5.0, false);
-        //AttackModule::set_add_reaction_frame(fighter.module_accessor, 3, 5.0, false);
+        ATTACK(agent, 0, 0, Hash40::new("sword2"), 7.0, angle as u64, 100, 100, 0, 4.0, 2.0, 0.0, -1.2, None, None, None, 1.1, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 1, 0, Hash40::new("sword2"), 7.0, angle as u64, 100, 100, 0, 4.0, 10.0, 0.0, -1.2, None, None, None, 1.1, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 2, 0, Hash40::new("top"),    7.0, angle as u64, 100, 100, 0, 4.0, 0.0, 17.0, 6.0, Some(0.0), Some(4.0), Some(6.0), 1.1, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 3, 0, Hash40::new("top"),    7.0, angle as u64, 100, 100, 0, 4.0, 0.0, 17.0, 13.0, Some(0.0), Some(4.0), Some(13.0), 1.1, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        AttackModule::set_add_reaction_frame(boma, 0, 4.0, false);
+        AttackModule::set_add_reaction_frame(boma, 1, 4.0, false);
+        AttackModule::set_add_reaction_frame(boma, 2, 4.0, false);
+        AttackModule::set_add_reaction_frame(boma, 3, 4.0, false);
     }
     frame(lua_state, 3.0);
     if is_excute(agent) {
