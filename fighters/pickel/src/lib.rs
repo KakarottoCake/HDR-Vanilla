@@ -48,8 +48,6 @@ use utils::{
 use smashline::*;
 #[macro_use] extern crate smash_script;
 
-pub const WEAPON_PICKEL_TROLLEY_STATUS_KIND_PEARL_FLY: i32 = statuses::pickel_trolley::PEARL_FLY;
-
 pub fn install() {
     let agent = &mut Agent::new("pickel");
     acmd::install(agent);
