@@ -623,6 +623,9 @@ pub mod vars {
             //flags
             pub const REFINE: i32 = 0x0100;
             pub const REFLECT: i32 = 0x0101;
+
+            // ints
+            pub const REFINE_COOLDOWN: i32 = 0x0100;
         }
         pub mod status {
             // floats
@@ -631,6 +634,10 @@ pub mod vars {
     }
 
     pub mod edge_flare1 {
+        pub mod instance {
+            // ints
+            pub const REFRACT_COOLDOWN: i32 = 0x0100;
+        }
         pub mod status {
             // flags
             pub const REFRACT: i32 = 0x1100;
@@ -640,10 +647,8 @@ pub mod vars {
     pub mod edge_flash {
         pub mod status {
             // ints
-            pub const REFINE_COOLDOWN: i32 = 0x1100;
-            pub const REFRACT_COOLDOWN: i32 = 0x1101;
-            pub const LIFE: i32 = 0x1102;
-            pub const EFFECT_HANDLE: i32 = 0x1103;
+            pub const LIFE: i32 = 0x1100;
+            pub const EFFECT_HANDLE: i32 = 0x1101;
         }
     }
 

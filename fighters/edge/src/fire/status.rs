@@ -51,6 +51,18 @@ unsafe extern "C" fn sub_fly_main(weapon: &mut L2CWeaponCommon, flare_type: i32)
     fly_set_physics(weapon, flare_type);
     VarModule::off_flag(weapon.battle_object, vars::edge_fire::instance::REFINE);
     VarModule::off_flag(weapon.battle_object, vars::edge_fire::instance::REFLECT);
+
+    if !StopModule::is_stop(weapon.module_accessor) {
+        sub_fly_substatus(weapon, false.into());
+    }
+    weapon.global_table[globals::SUB_STATUS].assign(&L2CValue::Ptr(sub_fly_substatus as *const () as _));
+}
+
+unsafe extern "C" fn sub_fly_substatus(weapon: &mut L2CWeaponCommon, param_1: L2CValue) -> L2CValue {
+    if !param_1.get_bool() {
+        VarModule::countdown_int(weapon.battle_object, vars::edge_fire::instance::REFINE_COOLDOWN, 0);
+    }
+    0.into()
 }
 
 unsafe extern "C" fn sub_fly_main_loop(weapon: &mut L2CWeaponCommon, status: L2CValue) -> L2CValue {
@@ -62,30 +74,34 @@ unsafe extern "C" fn sub_fly_main_loop(weapon: &mut L2CWeaponCommon, status: L2C
     }
     else {
         if VarModule::is_flag(weapon.battle_object, vars::edge_fire::instance::REFINE) {
-            // let mut stick_x = weapon.global_table[STICK_X].get_f32();
-            // if stick_x == 0.0 {
-            //     let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
-            //     let owner_object = utils::util::get_battle_object_from_id(owner_id);
-            //     stick_x = (&mut *(*owner_object).module_accessor).stick_x();
-            // };
-            // if stick_x.abs() > 0.2 && stick_x.signum() != PostureModule::lr(weapon.module_accessor).signum() {
-            //     EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_reflection"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.7, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
-            //     VarModule::on_flag(weapon.battle_object, vars::edge_fire::instance::REFLECT);
-            //     PostureModule::reverse_lr(weapon.module_accessor);
-            // }
-            EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_counteract_mark"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.7, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
-            EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_just_shield_hit"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.0, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
-            SoundModule::play_se(weapon.module_accessor, Hash40::new("se_item_badge_reflection"), true, false, false, false, app::enSEType(0));
-            WorkModule::off_flag(weapon.module_accessor, *WEAPON_EDGE_FIRE_INSTANCE_WORK_ID_FLAG_ATTACK);
-            if weapon.is_status(*WEAPON_EDGE_FIRE_STATUS_KIND_FLY_S) {
-                SoundModule::play_se(weapon.module_accessor, Hash40::new("se_item_crossbomb_blink"), true, false, false, false, app::enSEType(0));
-                weapon.change_status(WEAPON_EDGE_FIRE_STATUS_KIND_FLY_M.into(), false.into());
-                return 1.into()
-            }
-            else if weapon.is_status(*WEAPON_EDGE_FIRE_STATUS_KIND_FLY_M) || weapon.is_status(*WEAPON_EDGE_FIRE_STATUS_KIND_FLY_L) {
-                SoundModule::play_se(weapon.module_accessor, Hash40::new("se_gohoubi_bounus_add"), true, false, false, false, app::enSEType(0));
-                weapon.change_status(WEAPON_EDGE_FIRE_STATUS_KIND_FLY_L.into(), false.into());
-                return 1.into()
+            VarModule::off_flag(weapon.battle_object, vars::edge_fire::instance::REFINE);
+            if VarModule::get_int(weapon.battle_object, vars::edge_fire::instance::REFINE_COOLDOWN) == 0 {
+                VarModule::set_int(weapon.battle_object, vars::edge_fire::instance::REFINE_COOLDOWN, 40);
+                // let mut stick_x = weapon.global_table[STICK_X].get_f32();
+                // if stick_x == 0.0 {
+                //     let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
+                //     let owner_object = utils::util::get_battle_object_from_id(owner_id);
+                //     stick_x = (&mut *(*owner_object).module_accessor).stick_x();
+                // };
+                // if stick_x.abs() > 0.2 && stick_x.signum() != PostureModule::lr(weapon.module_accessor).signum() {
+                //     EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_reflection"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.7, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
+                //     VarModule::on_flag(weapon.battle_object, vars::edge_fire::instance::REFLECT);
+                //     PostureModule::reverse_lr(weapon.module_accessor);
+                // }
+                EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_counteract_mark"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.7, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
+                EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_just_shield_hit"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.0, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
+                SoundModule::play_se(weapon.module_accessor, Hash40::new("se_item_badge_reflection"), true, false, false, false, app::enSEType(0));
+                WorkModule::off_flag(weapon.module_accessor, *WEAPON_EDGE_FIRE_INSTANCE_WORK_ID_FLAG_ATTACK);
+                if weapon.is_status(*WEAPON_EDGE_FIRE_STATUS_KIND_FLY_S) {
+                    SoundModule::play_se(weapon.module_accessor, Hash40::new("se_item_crossbomb_blink"), true, false, false, false, app::enSEType(0));
+                    weapon.change_status(WEAPON_EDGE_FIRE_STATUS_KIND_FLY_M.into(), false.into());
+                    return 1.into()
+                }
+                else if weapon.is_status(*WEAPON_EDGE_FIRE_STATUS_KIND_FLY_M) || weapon.is_status(*WEAPON_EDGE_FIRE_STATUS_KIND_FLY_L) {
+                    SoundModule::play_se(weapon.module_accessor, Hash40::new("se_gohoubi_bounus_add"), true, false, false, false, app::enSEType(0));
+                    weapon.change_status(WEAPON_EDGE_FIRE_STATUS_KIND_FLY_L.into(), false.into());
+                    return 1.into()
+                }
             }
         }
         if L2CWeaponCommon::sub_ground_module_is_touch_all_consider_speed(weapon).get_bool() {

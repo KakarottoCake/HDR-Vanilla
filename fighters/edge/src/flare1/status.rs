@@ -32,13 +32,16 @@ unsafe extern "C" fn fly_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
     }
     if VarModule::is_flag(weapon.battle_object, vars::edge_flare1::status::REFRACT) {
         VarModule::off_flag(weapon.battle_object, vars::edge_flare1::status::REFRACT);
-        EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_counteract_mark"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.7, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
-        EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_muzzleflash"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.0, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
-        let sfx1 = SoundModule::play_se(weapon.module_accessor, Hash40::new("se_item_badge_reflection"), true, false, false, false, app::enSEType(0));
-        SoundModule::set_se_vol(weapon.module_accessor, sfx1 as i32, 0.75, 0);
-        let sfx2 = SoundModule::play_se(weapon.module_accessor, Hash40::new("se_roulette_stick_fire"), true, false, false, false, app::enSEType(0));
-        SoundModule::set_se_vol(weapon.module_accessor, sfx2 as i32, 1.25, 0);
-        weapon.change_status(WEAPON_EDGE_FLARE1_STATUS_KIND_FLY.into(), false.into());
+        if VarModule::get_int(weapon.battle_object, vars::edge_flare1::instance::REFRACT_COOLDOWN) == 0 {
+            VarModule::set_int(weapon.battle_object, vars::edge_flare1::instance::REFRACT_COOLDOWN, 2);
+            EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_counteract_mark"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.7, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
+            EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_muzzleflash"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.0, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
+            let sfx1 = SoundModule::play_se(weapon.module_accessor, Hash40::new("se_item_badge_reflection"), true, false, false, false, app::enSEType(0));
+            SoundModule::set_se_vol(weapon.module_accessor, sfx1 as i32, 0.75, 0);
+            let sfx2 = SoundModule::play_se(weapon.module_accessor, Hash40::new("se_roulette_stick_fire"), true, false, false, false, app::enSEType(0));
+            SoundModule::set_se_vol(weapon.module_accessor, sfx2 as i32, 1.25, 0);
+            weapon.change_status(WEAPON_EDGE_FLARE1_STATUS_KIND_FLY.into(), false.into());
+        }
     }
 
     return 0.into()
