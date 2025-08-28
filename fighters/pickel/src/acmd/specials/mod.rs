@@ -47,6 +47,8 @@ unsafe extern "C" fn game_specialsstart(agent: &mut L2CAgentBase) {
             ArticleModule::change_status(boma, *FIGHTER_PICKEL_GENERATE_ARTICLE_TROLLEY, statuses::pickel_trolley::PEARL_FLY, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_LAST));
             // re-imburse steve the 1 iron it costs to generate the trolley article
             FighterSpecializer_Pickel::add_material_num(boma, *FIGHTER_PICKEL_MATERIAL_KIND_IRON, 1);
+            // same but gold
+            FighterSpecializer_Pickel::add_material_num(boma, *FIGHTER_PICKEL_MATERIAL_KIND_GOLD, 1);
             // set cooldown
             VarModule::set_int(boma.object(), PEARL_COOLDOWN, 90);
         }

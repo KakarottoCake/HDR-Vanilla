@@ -74,6 +74,17 @@ unsafe fn is_attacklw4_for_ditcit_input(fighter: &mut L2CFighterCommon) -> bool 
     return (stick_y <= -0.7 && is_catch) || is_tilt_input || cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4 != 0
 }
 
+unsafe fn is_attacks4_for_ditcit_input(fighter: &mut L2CFighterCommon) -> bool {
+    let cat1 = fighter.global_table[CMD_CAT1].get_i32();
+    let pad_flag = fighter.global_table[PAD_FLAG].get_i32();
+
+    let is_tilt_input = !StatusModule::is_changing(fighter.module_accessor)
+                            && cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S3 != 0
+                            && pad_flag & *FIGHTER_PAD_FLAG_ATTACK_TRIGGER != 0;
+
+    return is_tilt_input || cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S4 != 0
+}
+
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_ItemThrowDash_Main)]
 unsafe fn status_ItemThrowDash_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
     if StatusModule::is_changing(fighter.module_accessor) {
@@ -99,10 +110,12 @@ unsafe fn status_ItemThrowDash_Main(fighter: &mut L2CFighterCommon) -> L2CValue 
         }
 
         // DITCIT
-        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW)
+        if !StatusModule::is_changing(fighter.module_accessor)
+        && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW)
         && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
             if is_attackhi4_for_ditcit_input(fighter)
-            || is_attacklw4_for_ditcit_input(fighter) {
+            || is_attacklw4_for_ditcit_input(fighter)
+            || is_attacks4_for_ditcit_input(fighter) {
                 VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_DITCIT);
                 fighter.change_status(FIGHTER_STATUS_KIND_ITEM_THROW.into(), false.into());
                 return 0.into();
