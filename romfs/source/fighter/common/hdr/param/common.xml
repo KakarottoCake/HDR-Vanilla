@@ -55,7 +55,7 @@
     <float hash="spike_tumble_threshold">26.88</float>
     <float hash="grounded_spike_knockback_mul">1.25</float>
     <struct hash="ditcit">
-        <int hash="start_frame">1</int>
+        <int hash="start_frame">3</int>
         <int hash="end_frame">6</int>
         <float hash="min_speed">2.0</float>
         <float hash="max_speed">4.5</float>
