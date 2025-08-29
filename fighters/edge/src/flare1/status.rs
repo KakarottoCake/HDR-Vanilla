@@ -20,7 +20,20 @@ unsafe extern "C" fn fly_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
     sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, vec.x, 0.0);
     sv_kinetic_energy!(set_limit_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, vec.x, 0.0);
     AttackModule::set_base_offset(weapon.module_accessor, &Vector2f::new(-vec.x, 0.0));
+
+    if !StopModule::is_stop(weapon.module_accessor) {
+        fly_substatus(weapon, false.into());
+    }
+    weapon.global_table[globals::SUB_STATUS].assign(&L2CValue::Ptr(fly_substatus as *const () as _));
+
     weapon.fastshift(L2CValue::Ptr(fly_main_loop as *const () as _))
+}
+
+unsafe extern "C" fn fly_substatus(weapon: &mut L2CWeaponCommon, param_1: L2CValue) -> L2CValue {
+    if !param_1.get_bool() {
+        VarModule::countdown_int(weapon.battle_object, vars::edge_flare1::instance::REFRACT_COOLDOWN, 0);
+    }
+    0.into()
 }
 
 unsafe extern "C" fn fly_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
