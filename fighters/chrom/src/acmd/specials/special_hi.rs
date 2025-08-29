@@ -28,7 +28,6 @@ pub unsafe extern "C" fn game_specialhi1(agent: &mut L2CAgentBase) {
         AttackModule::set_vec_target_pos(boma, 2, Hash40::new("top"), &Vector2f::new(10.0, 55.0), 15, false);
         AttackModule::set_vec_target_pos(boma, 3, Hash40::new("top"), &Vector2f::new(10.0, 55.0), 15, false);
         AttackModule::set_no_damage_fly_smoke_all(boma, true, false);
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
     }
     frame(lua_state, 18.0);
     if is_excute(agent) {
@@ -133,7 +132,6 @@ pub unsafe extern "C" fn effect_specialhi3start(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {
-        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_chrom_sword1"), Hash40::new("tex_chrom_sword2"), 8, Hash40::new("sword1"), 0.0, 0.0, 1.65, Hash40::new("sword1"), -0.0, -0.0, 12.4, false, Hash40::new("chrom_sword"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.2, 0.2);
         EFFECT_FOLLOW(agent, Hash40::new("chrom_sword"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, true);
     }
 }
@@ -168,6 +166,7 @@ pub unsafe extern "C" fn effect_specialhi3(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("chrom_sword"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, true);
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_chrom_sword1"), Hash40::new("tex_chrom_sword2"), 8, Hash40::new("sword1"), 0.0, 0.0, 1.65, Hash40::new("sword1"), -0.0, -0.0, 12.4, true, Hash40::new("chrom_sword"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.2, 0.2);
     }
     for i in 0..i32::MAX {
         if is_excute(agent) {
@@ -232,7 +231,7 @@ pub unsafe extern "C" fn effect_specialhi3_attack(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("sys_spin_wind_s"), false, false);
         EFFECT_FOLLOW(agent, Hash40::new("chrom_sword"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, true);
-        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_chrom_sword1"), Hash40::new("tex_chrom_sword2"), 4, Hash40::new("sword1"), 0.0, 0.0, 1.65, Hash40::new("sword1"), -0.0, -0.0, 12.4, false, Hash40::new("chrom_sword"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.2, 0.2);
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_chrom_sword1"), Hash40::new("tex_chrom_sword2"), 4, Hash40::new("sword1"), 0.0, 0.0, 1.65, Hash40::new("sword1"), -0.0, -0.0, 12.4, true, Hash40::new("chrom_sword"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.2, 0.2);
     }
     frame(lua_state, 2.0);
     if is_excute(agent) {

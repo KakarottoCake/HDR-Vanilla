@@ -37,12 +37,6 @@ unsafe extern "C" fn wait_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
 
 unsafe extern "C" fn wait_exec(weapon: &mut L2CWeaponCommon) -> L2CValue {
     VarModule::dec_int(weapon.battle_object, vars::edge_flash::status::LIFE);
-    if VarModule::get_int(weapon.battle_object, vars::edge_flash::status::REFINE_COOLDOWN) > 0 {
-        VarModule::dec_int(weapon.battle_object, vars::edge_flash::status::REFINE_COOLDOWN);
-    }
-    if VarModule::get_int(weapon.battle_object, vars::edge_flash::status::REFRACT_COOLDOWN) > 0 {
-        VarModule::dec_int(weapon.battle_object, vars::edge_flash::status::REFRACT_COOLDOWN);
-    }
 
     return 0.into();
 }
