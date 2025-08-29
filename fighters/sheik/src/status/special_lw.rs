@@ -77,6 +77,12 @@ unsafe extern "C" fn special_lw_attack_main_loop(fighter: &mut L2CFighterCommon)
         if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
             VarModule::on_flag(fighter.object(), vars::sheik::instance::SPECIAL_LW_HIT);
         }
+        // slow on shield
+        if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
+            let control_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL) as *mut smash::app::KineticEnergy;
+            let attack_guard_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lw.attack_guard_mul");
+            smash::app::lua_bind::KineticEnergy::mul_speed(control_energy, &Vector3f::new(attack_guard_mul, 1.0, 1.0)); 
+        }
         // bounce
         if VarModule::is_flag(fighter.object(), vars::sheik::instance::SPECIAL_LW_HIT)
         && !StopModule::is_stop(fighter.module_accessor) {
