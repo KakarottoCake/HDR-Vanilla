@@ -117,6 +117,15 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_specialairhiend(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 14.0);
+    if is_excute(agent) {
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+    }
+}
+
 unsafe extern "C" fn game_speciallwstart(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -199,6 +208,7 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialhistart", game_specialhistart, Priority::Low);
     agent.acmd("game_specialairhistart", game_specialhistart, Priority::Low);
     agent.acmd("game_specialhi", game_specialhi, Priority::Low);
+    agent.acmd("game_specialairhiend", game_specialairhiend, Priority::Low);
     
     agent.acmd("game_speciallwstartl", game_speciallwstart, Priority::Low);
     agent.acmd("game_speciallwstartr", game_speciallwstart, Priority::Low);
