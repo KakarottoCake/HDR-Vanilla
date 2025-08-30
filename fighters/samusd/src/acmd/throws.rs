@@ -4,7 +4,7 @@ unsafe extern "C" fn game_catch(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    FT_MOTION_RATE(agent, 3.0);
+    FT_MOTION_RATE(agent, 2.0);
     frame(lua_state, 2.0);
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 12.0);
@@ -33,7 +33,10 @@ unsafe extern "C" fn game_catch(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_catchdash(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    frame(lua_state, 1.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 14.0, 13.0);
     frame(lua_state, 14.0);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         GrabModule::set_rebound(boma, true);
     }
@@ -64,7 +67,7 @@ unsafe extern "C" fn game_catchturn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    FT_MOTION_RATE(agent, 3.0);
+    FT_MOTION_RATE(agent, 2.0);
     frame(lua_state, 2.0);
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 15.0);

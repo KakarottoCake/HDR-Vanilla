@@ -376,10 +376,10 @@ impl MeterModule {
 
 #[skyline::hook(offset = 0x46ae84, inline)]
 unsafe fn hit_module_handle_attack_event(ctx: &InlineCtx)  {
-    let module = *ctx.registers[0].x.as_ref();
+    let module = ctx.registers[0].x();
     let receiver_boma = &mut *(*(module as *mut *mut BattleObjectModuleAccessor).add(1));
 
-    let data = *ctx.registers[1].x.as_ref() as *mut u32;
+    let data = ctx.registers[1].x() as *mut u32;
     let attacker_id = *data;
 
     let collision_id = *data.add(1);
@@ -388,7 +388,7 @@ unsafe fn hit_module_handle_attack_event(ctx: &InlineCtx)  {
         return;
     }
 
-    let collision_data = *ctx.registers[27].x.as_ref() as *mut f32;
+    let collision_data = ctx.registers[27].x() as *mut f32;
     let loc_x = *collision_data.add(4);
     let loc_y = *collision_data.add(5);
     let loc_z = *collision_data.add(6);
