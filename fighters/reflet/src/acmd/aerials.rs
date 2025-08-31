@@ -114,17 +114,6 @@ unsafe extern "C" fn effect_attackairn(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn game_landingairn(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    let landing_frame_bronze = WorkModule::get_param_float(boma, hash40("landing_attack_air_frame_n"), 0);
-    let landing_frame_levin = landing_frame_bronze + 2.0;
-    if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK) {
-        FT_MOTION_RATE(agent, landing_frame_levin/landing_frame_bronze);
-        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
-    }
-}
-
 unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -229,17 +218,6 @@ unsafe extern "C" fn effect_attackairf(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn game_landingairf(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    let landing_frame_bronze = WorkModule::get_param_float(boma, hash40("landing_attack_air_frame_f"), 0);
-    let landing_frame_levin = landing_frame_bronze + 2.0;
-    if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK) {
-        FT_MOTION_RATE(agent, landing_frame_levin/landing_frame_bronze);
-        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
-    }
-}
-
 unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -327,18 +305,6 @@ unsafe extern "C" fn effect_attackairb(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn game_landingairb(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    let landing_frame_bronze = WorkModule::get_param_float(boma, hash40("landing_attack_air_frame_b"), 0);
-    let landing_frame_levin = landing_frame_bronze + 2.0;
-    if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK) {
-        FT_MOTION_RATE(agent, landing_frame_levin/landing_frame_bronze);
-        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
-        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
-    }
-}
-
 unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -417,17 +383,6 @@ unsafe extern "C" fn effect_attackairhi(agent: &mut L2CAgentBase) {
     if agent.is_flag(*FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON) {
         EffectModule::kill_kind(boma, Hash40::new("reflet_thunderswoed"), true, true);
         EffectModule::kill_kind(boma, Hash40::new("reflet_thunderswoed_flare"), true, true);
-    }
-}
-
-unsafe extern "C" fn game_landingairhi(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    let landing_frame_bronze = WorkModule::get_param_float(boma, hash40("landing_attack_air_frame_hi"), 0);
-    let landing_frame_levin = landing_frame_bronze + 2.0;
-    if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK) {
-        FT_MOTION_RATE(agent, landing_frame_levin/landing_frame_bronze);
-        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
     }
 }
 
@@ -549,36 +504,20 @@ unsafe extern "C" fn effect_attackairlw(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn game_landingairlw(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    let landing_frame_bronze = WorkModule::get_param_float(boma, hash40("landing_attack_air_frame_lw"), 0);
-    let landing_frame_levin = landing_frame_bronze + 2.0;
-    if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK) {
-        FT_MOTION_RATE(agent, landing_frame_levin/landing_frame_bronze);
-        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
-    }
-}
-
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_attackairn", game_attackairn, Priority::Low);
     agent.acmd("effect_attackairn", effect_attackairn, Priority::Low);
-    agent.acmd("game_landingairn", game_landingairn, Priority::Low);
 
     agent.acmd("game_attackairf", game_attackairf, Priority::Low);
     agent.acmd("expression_attackairf", expression_attackairf, Priority::Low);
     agent.acmd("effect_attackairf", effect_attackairf, Priority::Low);
-    agent.acmd("game_landingairf", game_landingairf, Priority::Low);
 
     agent.acmd("game_attackairb", game_attackairb, Priority::Low);
     agent.acmd("effect_attackairb", effect_attackairb, Priority::Low);
-    agent.acmd("game_landingairb", game_landingairb, Priority::Low);
 
     agent.acmd("game_attackairhi", game_attackairhi, Priority::Low);
     agent.acmd("effect_attackairhi", effect_attackairhi, Priority::Low);
-    agent.acmd("game_landingairhi", game_landingairhi, Priority::Low);
     
     agent.acmd("game_attackairlw", game_attackairlw, Priority::Low);
     agent.acmd("effect_attackairlw", effect_attackairlw, Priority::Low);
-    agent.acmd("game_landingairlw", game_landingairlw, Priority::Low);
 }
