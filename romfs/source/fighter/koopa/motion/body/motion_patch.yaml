@@ -93,7 +93,7 @@ attack_hi3:
     cancel_frame: 54
 attack_lw3:
   extra:
-    cancel_frame: 31
+    cancel_frame: 30
 attack_lw3_2:
   game_script: game_attacklw32
   flags:
