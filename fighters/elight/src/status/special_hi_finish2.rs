@@ -37,12 +37,13 @@ unsafe extern "C" fn special_hi_finish2_main(fighter: &mut L2CFighterCommon) -> 
     KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     
     // [v] reset the control energy after we've enabled it to ensure that we don't have any left over drift impacting us
+    let lr = fighter.lr();
     sv_kinetic_energy!(
         reset_energy,
         fighter,
         FIGHTER_KINETIC_ENERGY_ID_CONTROL,
         ENERGY_CONTROLLER_RESET_TYPE_FALL_ADJUST,
-        0.0,
+        -0.5 * lr,
         0.0,
         0.0,
         0.0,

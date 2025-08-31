@@ -535,8 +535,9 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
     // limit number of pages to 8
     let num_pages = cmp::min(8, stage_pages.len());
     let mut stage_order: i8 = 1;
-
     let mut stage_map: HashMap<String, ParamKind> = HashMap::new();
+    let mut used_stages: HashMap<String, bool> = HashMap::new();
+
     for entry in list.iter() {
         let stage_struct = entry
             .try_into_ref::<ParamStruct>()
@@ -552,7 +553,8 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
             .unwrap()
             .clone();
         
-        stage_map.insert(name_id, entry.clone());
+        stage_map.insert(name_id.clone(), entry.clone());
+        used_stages.insert(name_id.clone(), false);
     }
 
     for n in 0..num_pages {
@@ -574,6 +576,7 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
                 *disp_order = stage_order; // Set starter display order
                 stage_order += 1;
                 out_list.push(new_entry);
+                used_stages.insert(starter_name.clone(), true);
             }
         }
 
@@ -597,6 +600,7 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
             for _ in 0..(DEFAULT_ROW_LENGTH - len) {
                 out_list.push(buffer_entry.clone());
             }
+            used_stages.insert("Training".to_string(), true);
         }
 
         // Add counterpick stages
@@ -615,6 +619,7 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
                 *disp_order = stage_order; // Set counterpick display order
                 stage_order += 1;
                 out_list.push(new_entry);
+                used_stages.insert(counterpick_name.clone(), true);                
             }
         }
 
@@ -637,6 +642,27 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
             let len = counterpicks.len();
             for _ in 0..(DEFAULT_ROW_LENGTH - len) {
                 out_list.push(buffer_entry.clone());
+            }
+        }
+    }
+
+    // Add all the unused stages back into the prc with a disp_order of -1
+    // This is important so that main menu music and random stage selection work
+    for used_stage in used_stages.iter() {
+        if !used_stage.1 {
+            if let Some(entry) = stage_map.get(used_stage.0) {
+                let mut new_entry = entry.clone();
+                let stage_struct = new_entry.try_into_mut::<ParamStruct>().unwrap();
+                let disp_order = stage_struct.0
+                    .iter_mut()
+                    .find(|param| param.0 == prc::hash40::Hash40(hash40("disp_order")))
+                    .unwrap()
+                    .1
+                    .try_into_mut::<i8>()
+                    .unwrap();
+                
+                *disp_order = -1; 
+                out_list.push(new_entry); 
             }
         }
     }

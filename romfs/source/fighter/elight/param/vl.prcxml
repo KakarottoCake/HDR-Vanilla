@@ -22,10 +22,13 @@
   </list>
   <list hash="param_special_hi">
     <struct index="0">
-      <float hash="jump_speed_mul_ground">1.0</float>
-      <float hash="jump_speed_mul_air">1.0</float>
+      <float hash="jump_speed_mul_ground">1.2</float>
+      <float hash="jump_speed_mul_air">1.2</float>
       <float hash="fall_special_accel_x_mul">0.05</float>
       <float hash="fall_special_speed_x_max_mul">0.6</float>
+      <float hash="exprosiveshot_offset_x">7.0</float>
+      <float hash="exprosiveshot_offset_y">6.5</float>
+      <float hash="finish_accel_x_mul">0.25</float>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>
@@ -35,6 +38,7 @@
     <struct index="0">
       <float hash="speed">5.0</float>
       <int hash="life">10</int>
+      <int hash="life_burst">3</int>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>
