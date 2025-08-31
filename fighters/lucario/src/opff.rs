@@ -78,7 +78,8 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_MAX,
         *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_HI_RUSH_END,
         *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_HI_BOUND,
-        *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_LW_END
+        *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_LW_END,
+        *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_THROW,
         ]) 
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
