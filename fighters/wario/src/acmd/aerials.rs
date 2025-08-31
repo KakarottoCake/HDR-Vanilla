@@ -304,8 +304,6 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 55.0);
     if is_excute(agent) {
-        KineticModule::resume_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
-        sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 1.0);
         WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
     frame(lua_state, 58.0);
