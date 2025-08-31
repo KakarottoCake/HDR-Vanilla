@@ -1,7 +1,6 @@
 use super::*;
 use interpolation::Lerp;
 use utils::ext::*;
-use std::arch::asm;
 
 #[skyline::hook(offset = 0xc5c010)]
 pub unsafe extern "C" fn lucario_check_aura(module_accessor: *mut BattleObjectModuleAccessor) -> f32 {

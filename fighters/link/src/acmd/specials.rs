@@ -88,13 +88,13 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 1.0);
+    frame(lua_state, 3.25);
     if is_excute(agent) {
         AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_link_sword1"), Hash40::new("tex_link_sword2"), 4, Hash40::new("sword1"), 1.0, 0.0, 0.0, Hash40::new("sword1"), 14.6, 0.2, -0.2, true, Hash40::new("null"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.6, 0.2);
         EFFECT_FOLLOW(agent, Hash40::new("link_sword_flare"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 0.75, true);
         FLASH(agent, 1, 0.6, 0, 0.1);
     }
-    frame(lua_state, 2.0);
+    frame(lua_state, 4.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("link_kaiten"), Hash40::new("top"), 0, 11, 0, -10, -120, 0, 0.75, true);
         LAST_EFFECT_SET_ALPHA(agent, 0.5);
@@ -102,7 +102,7 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
         LAST_EFFECT_SET_ALPHA(agent, 0.5);
         LAST_EFFECT_SET_RATE(agent, 1.3);
     }
-    frame(lua_state, 9.0);
+    frame(lua_state, 11.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("link_kaiten"), Hash40::new("top"), 0, 10, 0, 10, 180, 0, 0.75, true);
         LAST_EFFECT_SET_ALPHA(agent, 0.5);
@@ -110,7 +110,7 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
         LAST_EFFECT_SET_ALPHA(agent, 0.5);
         LAST_EFFECT_SET_RATE(agent, 1.3);
     }
-    frame(lua_state, 18.0);
+    frame(lua_state, 20.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("link_kaiten"), Hash40::new("top"), 0, 10, 0, -10, -250, 5, 0.75, true);
         LAST_EFFECT_SET_ALPHA(agent, 0.5);
@@ -118,7 +118,7 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
         LAST_EFFECT_SET_ALPHA(agent, 0.5);
         LAST_EFFECT_SET_RATE(agent, 1.3);
     }
-    frame(lua_state, 26.0);
+    frame(lua_state, 28.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("link_kaiten"), Hash40::new("top"), 0, 10, 0, -10, 0, 5, 0.75, true);
         LAST_EFFECT_SET_ALPHA(agent, 0.5);
@@ -126,7 +126,7 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
         LAST_EFFECT_SET_ALPHA(agent, 0.5);
         LAST_EFFECT_SET_RATE(agent, 1.3);
     }
-    frame(lua_state, 36.0);
+    frame(lua_state, 38.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("link_kaiten"), Hash40::new("top"), 0, 10, 0, 0, -100, 10, 0.75, true);
         LAST_EFFECT_SET_ALPHA(agent, 0.5);
@@ -134,14 +134,14 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
         LAST_EFFECT_SET_ALPHA(agent, 0.5);
         LAST_EFFECT_SET_RATE(agent, 1.3);
     }
-    frame(lua_state, 44.0);
+    frame(lua_state, 46.0);
     if is_excute(agent) {
         FLASH_FRM(agent, 5, 0, 0, 0, 0);
         AFTER_IMAGE_OFF(agent, 6);
         EFFECT_OFF_KIND(agent, Hash40::new("link_kaiten"), false, false);
         LANDING_EFFECT(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.3, 0, 0, 0, 0, 0, 0, false);
     }
-    frame(lua_state, 47.0);
+    frame(lua_state, 49.0);
     if is_excute(agent) {
         COL_NORMAL(agent);
     }
