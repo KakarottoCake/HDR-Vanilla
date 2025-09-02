@@ -143,10 +143,6 @@ unsafe extern "C" fn special_lw_return_main_loop(fighter: &mut L2CFighterCommon)
         fighter.check_jump_cancel(false, false);
         fighter.check_airdodge_cancel();
     }
-    // cancel bounce after x frames
-    if frame >= somersault_wall_cancel_frame {
-        CancelModule::enable_cancel(fighter.module_accessor);
-    }
     if CancelModule::is_enable_cancel(fighter.module_accessor)
     && fighter.sub_air_check_fall_common().get_bool() {
         return 1.into();
