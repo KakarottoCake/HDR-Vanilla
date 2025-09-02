@@ -14,9 +14,9 @@ unsafe extern "C" fn special_hi_init(fighter: &mut L2CFighterCommon) -> L2CValue
         lua_bind::KineticEnergy::enable(gravity_energy);
         // should make startup naturally decel?
         let air_brake_x = fighter.get_param_float("air_brake_x", "");
-        let air_speed_x_limit = fighter.get_param_float("air_speed_x_limit", "");
+        let air_speed_x_stable = fighter.get_param_float("air_speed_x_stable", "");
         sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, air_brake_x, 0.0);
-        sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, air_speed_x_limit, 0.0);
+        sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, air_speed_x_stable, 0.0);
         sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
     }
     0.into()
