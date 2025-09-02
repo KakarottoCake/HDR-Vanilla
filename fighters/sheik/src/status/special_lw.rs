@@ -135,18 +135,21 @@ unsafe extern "C" fn special_lw_return_main_loop(fighter: &mut L2CFighterCommon)
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
-    if CancelModule::is_enable_cancel(fighter.module_accessor)
-    && fighter.sub_air_check_fall_common().get_bool() {
-        return 1.into();
-    }
     let frame = fighter.status_frame() + 1;
     let somersault_cancel_frame = ParamModule::get_int(fighter.battle_object, ParamType::Agent, "param_special_lw.somersault_cancel_frame");
     let somersault_wall_cancel_frame = ParamModule::get_int(fighter.battle_object, ParamType::Agent, "param_special_lw.somersault_wall_cancel_frame");
-    // cancel _ frame of bounce
-    if frame >= somersault_wall_cancel_frame
-    || (frame >= somersault_cancel_frame && VarModule::is_flag(fighter.object(), vars::sheik::instance::SPECIAL_LW_HIT)) {
+    // cancel _ frame of bounce into jump/ad
+    if frame >= somersault_cancel_frame && VarModule::is_flag(fighter.object(), vars::sheik::instance::SPECIAL_LW_HIT) {
         fighter.check_jump_cancel(false, false);
         fighter.check_airdodge_cancel();
+    }
+    // cancel bounce after x frames
+    if frame >= somersault_wall_cancel_frame {
+        CancelModule::enable_cancel(fighter.module_accessor);
+    }
+    if CancelModule::is_enable_cancel(fighter.module_accessor)
+    && fighter.sub_air_check_fall_common().get_bool() {
+        return 1.into();
     }
     if !StatusModule::is_changing(fighter.module_accessor) {
         // return-to-idle frame LC
@@ -173,8 +176,7 @@ unsafe extern "C" fn special_lw_return_main_loop(fighter: &mut L2CFighterCommon)
         let pad_flag = fighter.global_table[PAD_FLAG].get_i32();
         if frame >= somersault_attack_frame
         && fighter.get_int(*FIGHTER_SHEIK_STATUS_SPECIAL_LW_WORK_INT_RETURN_TO_ATTACK_NUM) < max_count 
-        && (pad_flag & *FIGHTER_PAD_FLAG_SPECIAL_TRIGGER != 0
-        || pad_flag & *FIGHTER_PAD_FLAG_ATTACK_TRIGGER != 0) {
+        && fighter.is_cat_flag(Cat1::SpecialLw | Cat1::AttackAirLw | Cat1::AttackLw4 | Cat1::AttackLw3) {
             fighter.inc_int(*FIGHTER_SHEIK_STATUS_SPECIAL_LW_WORK_INT_RETURN_TO_ATTACK_NUM);
             fighter.change_status(FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_ATTACK.into(), true.into())
         }
