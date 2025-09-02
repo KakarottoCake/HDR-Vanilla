@@ -7,7 +7,7 @@
   </list>
   <struct hash="param_private">
     <float hash="limit_gauge_damage_add">0</float>
-    <float hash="limit_gauge_attack_add">1.25</float>
+    <float hash="limit_gauge_attack_add">1.0</float>
   </struct>
   <list hash="param_special_n">
     <struct index="0">
@@ -83,6 +83,7 @@
     <struct index="0">
       <int hash="critical_frame">36</int>
       <int hash="critical_slow_rate">8</int>
+      <int hash="limit_gauge_frame">90</int>
       <int hash="critical_zoom_in_frame">999</int>
       <float hash="limit_gauge_add">0.23</float>
       <int hash="limit_break_clear_frame">1200</int>

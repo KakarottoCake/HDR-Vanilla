@@ -68,7 +68,7 @@ unsafe extern "C" fn game_specialsdash(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     if is_excute(agent) {
         if VarModule::is_flag(boma.object(), vars::ike::status::SPECIAL_S_INSTAKILL){
-            ATTACK(agent, 0, 0, Hash40::new("top"), 4.0, 361, 0, 0, 0, 4.0, 0.0, 4.1, -1.0, Some(0.0), Some(4.1), Some(-15.0), 0.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 10, true, true, false, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_SWORD);
+            ATTACK(agent, 0, 0, Hash40::new("top"), 4.0, 361, 0, 0, 0, 4.0, 0.0, 4.1, -1.0, Some(0.0), Some(4.1), Some(-15.0), 0.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 10, false, false, false, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_SWORD);
         }
     }
 }
@@ -154,9 +154,13 @@ unsafe extern "C" fn game_specialsattack(agent: &mut L2CAgentBase) {
         }
         frame(lua_state, 12.0);
         if is_excute(agent) {
-            if !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT){
+            if !VarModule::is_flag(boma.object(), vars::ike::status::SPECIAL_S_INSTAKILL_HIT) {
                 FT_MOTION_RATE(agent, 2.0);
             }
+        }
+        frame(lua_state, 30.0);
+        if is_excute(agent) {
+            VarModule::on_flag(boma.object(), vars::ike::status::SPECIAL_S_INSTAKILL_CHECK_HIT);
         }
     }
     // Normal Quickdraw
