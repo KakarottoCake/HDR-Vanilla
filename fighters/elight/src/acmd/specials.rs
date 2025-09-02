@@ -693,10 +693,10 @@ unsafe extern "C" fn game_specialairhijump(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 10.0);
     manage_sword_motion(agent, Hash40::new("to_close"));
+    frame(lua_state, 12.0);
 	if is_excute(agent) {
         notify_event_msc_cmd!(agent, 0x2127e37c07u64, GROUND_CLIFF_CHECK_KIND_ALWAYS);
 	}
-    frame(lua_state, 12.0);
     // FT_MOTION_RATE(agent, 1.0);
 }
 
