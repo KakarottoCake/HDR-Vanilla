@@ -368,10 +368,9 @@ unsafe extern "C" fn expression_specialairhi(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialhidrop(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 1.0);
+    frame(lua_state, 14.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0.0, 0.0, 0.0, 0, 0, 0, 1.0, true);
-        // KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
     }
 }
 
