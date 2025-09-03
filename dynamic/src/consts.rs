@@ -1304,10 +1304,8 @@ pub mod vars {
     pub mod peach {
         pub mod instance {
             // flag
-            // Used to check if sideb wall bounce happens
-            pub const SPECIAL_S_WALL_BOUNCE: i32 = 0x0100;
-            pub const DISABLE_SPECIAL_S: i32 = 0x0101;
-            pub const SPECIAL_N_AUTOFIRE: i32 = 0x0102;
+            pub const DISABLE_SPECIAL_S: i32 = 0x0100;
+            pub const SPECIAL_N_AUTOFIRE: i32 = 0x0101;
         }
     }
 
