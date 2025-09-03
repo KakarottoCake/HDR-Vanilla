@@ -87,7 +87,7 @@ unsafe extern "C" fn game_specials3lw(agent: &mut L2CAgentBase) {
     frame(lua_state, 4.5);
     if is_excute(agent) {
         // knockdown is forced in CheckAttack status script
-        ATTACK(agent, 0, 0, Hash40::new("top"), 8.0, 10, 100, 50, 0, 5.0, 0.0, 7.5, 7.5, Some(0.0), Some(7.5), Some(17.5), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CHROM_HIT, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 9.0, 10, 100, 50, 0, 5.0, 0.0, 7.5, 7.5, Some(0.0), Some(7.5), Some(17.5), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CHROM_HIT, *ATTACK_REGION_SWORD);
     }
     frame(lua_state, 5.0);
     FT_MOTION_RATE(agent, 1.0);
