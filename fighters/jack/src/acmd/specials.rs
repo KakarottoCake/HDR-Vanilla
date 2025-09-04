@@ -242,6 +242,7 @@ unsafe extern "C" fn game_specialairhiendf(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("hip"), 6.0, 75, 10, 0, 80, 8.0, 0.0, 0.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
+        KineticModule::suspend_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     }
     wait(lua_state, 2.0);
     if is_excute(agent) {
@@ -251,6 +252,10 @@ unsafe extern "C" fn game_specialairhiendf(agent: &mut L2CAgentBase) {
     wait(lua_state, 6.0);
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
+    }
+    frame(lua_state, 14.0);
+    if is_excute(agent) {
+        KineticModule::resume_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     }
 }
 
