@@ -55,13 +55,33 @@ unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2C
 
     // [v] check if you are doing the input for spreadbullet, and if the animation is over (this is the initial swipe)
     //      transition into the jump
-    // special_hi_common_check_spreadbullet(fighter);
+    special_hi_common_check_spreadbullet(fighter);
 
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status(FIGHTER_ELIGHT_STATUS_KIND_SPECIAL_HI_JUMP.into(), false.into());
     }
 
     0.into()
+}
+
+pub unsafe fn special_hi_common_check_spreadbullet(fighter: &mut L2CFighterCommon) {
+    // [v] this is likely a leniency check so that if you accidentally double tap
+    //      the special button you aren't forced into spreadbullet. it should be
+    //      noted how here it requires the `trigger` instead of holding it, so if you
+    //      hold the button it also doesn't trigger until right before the move would come out
+    let frame = fighter.get_int(*FIGHTER_ELIGHT_STATUS_SPECIAL_HI_INT_FRAME_FROM_START);
+
+    if frame <= 0 {
+        return;
+    }
+
+    if fighter.get_param_int("param_special_hi", "attack_input_frame") <= frame {
+        return;
+    }
+
+    if fighter.is_button_trigger(Buttons::Special) {
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_ELIGHT_STATUS_SPECIAL_HI_FLAG_SPREADBULLET);
+    }
 }
 
 pub fn install(agent: &mut Agent) {

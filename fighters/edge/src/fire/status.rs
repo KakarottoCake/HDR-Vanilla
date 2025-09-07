@@ -205,10 +205,25 @@ unsafe extern "C" fn fly_set_physics(weapon: &mut L2CWeaponCommon, flare_type: i
     }
 }
 
+unsafe extern "C" fn fly_end(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    let status = weapon.global_table[STATUS_KIND].get_i32();
+    if ![
+        *WEAPON_EDGE_FIRE_STATUS_KIND_FLY_S,
+        *WEAPON_EDGE_FIRE_STATUS_KIND_FLY_M,
+        *WEAPON_EDGE_FIRE_STATUS_KIND_FLY_L,
+    ].contains(&status) {
+        VarModule::set_int(weapon.battle_object, vars::edge_fire::instance::REFINE_COOLDOWN, 0);
+    }
+    0.into()
+}
+
 pub fn install(agent: &mut Agent) {
     agent.status(Main, *WEAPON_EDGE_FIRE_STATUS_KIND_FLY_S, fly_s_main);
+    agent.status(End, *WEAPON_EDGE_FIRE_STATUS_KIND_FLY_S, fly_end);
 
     agent.status(Main, *WEAPON_EDGE_FIRE_STATUS_KIND_FLY_M, fly_m_main);
+    agent.status(End, *WEAPON_EDGE_FIRE_STATUS_KIND_FLY_M, fly_end);
 
     agent.status(Main, *WEAPON_EDGE_FIRE_STATUS_KIND_FLY_L, fly_l_main);
+    agent.status(End, *WEAPON_EDGE_FIRE_STATUS_KIND_FLY_L, fly_end);
 }
