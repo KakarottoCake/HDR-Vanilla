@@ -1,11 +1,36 @@
 use super::*;
 
 unsafe extern "C" fn special_hi_init(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let ret = smashline::original_status(Init, fighter, *FIGHTER_STATUS_KIND_SPECIAL_HI)(fighter);
+    // start situation
+    let situation = fighter.global_table[SITUATION_KIND].get_i32();
+    fighter.set_int(situation, *FIGHTER_KIRBY_STATUS_WORK_ID_INT_FINALCUTTER_START_SITUATION);
+    // collect momentum
+    let mut stop_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP) as *mut app::KineticEnergy;
+    let reset = *ENERGY_STOP_RESET_TYPE_AIR;
+    let x_speed = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let mut y_speed = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    KineticModule::unable_energy_all(fighter.module_accessor);
+    if situation == *SITUATION_KIND_GROUND {
+        let reset = *ENERGY_STOP_RESET_TYPE_GROUND;
+        y_speed = 0.0;
+    }
+    // momentum to stop energy conversion
+    let special_hi_speed_brake = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.special_hi_speed_brake");
+    let special_hi_speed_y_max = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.special_hi_speed_y_max");
+    let special_hi_limit_speed = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.special_hi_limit_speed");
+    lua_bind::KineticEnergy::reset_energy(stop_energy, reset, &Vector2f{x: x_speed, y: y_speed.clamp(-special_hi_speed_y_max, special_hi_speed_y_max)}, &Vector3f::zero(), fighter.module_accessor);
+    lua_bind::KineticEnergy::enable(stop_energy);
+    sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, special_hi_speed_brake, special_hi_speed_brake);
+    sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, special_hi_limit_speed, special_hi_limit_speed);
+    sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
+    0.into()
+}
 
-    KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_CONTROL, fighter.module_accessor);
-
-    ret
+unsafe extern "C" fn special_hi2_init(fighter: &mut L2CFighterCommon) -> L2CValue {
+    // reset prev momentum to prevent weird height changes
+    KineticModule::clear_speed_all(fighter.module_accessor);
+    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_UNIQ);
+    smashline::original_status(Init, fighter, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_HI2)(fighter)
 }
 
 unsafe extern "C" fn special_hi2_check_attack(fighter: &mut L2CFighterCommon, param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
@@ -18,7 +43,7 @@ unsafe extern "C" fn special_hi_h_pre(fighter: &mut L2CFighterCommon) -> L2CValu
     StatusModule::init_settings(
         fighter.module_accessor,
         app::SituationKind(*SITUATION_KIND_NONE),
-        *FIGHTER_KINETIC_TYPE_MOTION,
+        *FIGHTER_KINETIC_TYPE_UNIQ,
         *GROUND_CORRECT_KIND_KEEP as u32,
         app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
         true,
@@ -41,6 +66,25 @@ unsafe extern "C" fn special_hi_h_pre(fighter: &mut L2CFighterCommon) -> L2CValu
     );
 
     return 0.into();
+}
+
+unsafe extern "C" fn special_hi_h_init(fighter: &mut L2CFighterCommon) -> L2CValue {
+    // collect momentum
+    let mut stop_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP) as *mut app::KineticEnergy;
+    let mut speed = Vector2f{x: lua_bind::KineticEnergy::get_speed_x(stop_energy), y: lua_bind::KineticEnergy::get_speed_y(stop_energy)};
+    let reset = *ENERGY_STOP_RESET_TYPE_AIR;
+    if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+        let reset = *ENERGY_STOP_RESET_TYPE_GROUND;
+        speed.y = 0.0;
+    }
+    // same motion but transfer remaining speed
+    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
+    let special_hi_speed_brake = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.special_hi_speed_brake");
+    lua_bind::KineticEnergy::reset_energy(stop_energy, reset, &Vector2f{x: speed.x, y: speed.y}, &Vector3f::zero(), fighter.module_accessor);
+    lua_bind::KineticEnergy::enable(stop_energy);
+    sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, special_hi_speed_brake, special_hi_speed_brake);
+    sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
+    0.into()
 }
 
 unsafe extern "C" fn special_hi_h_main(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -89,9 +133,11 @@ unsafe extern "C" fn special_hi_h_end(fighter: &mut L2CFighterCommon) -> L2CValu
 pub fn install(agent: &mut Agent) {
     agent.status(Init, *FIGHTER_STATUS_KIND_SPECIAL_HI, special_hi_init);
 
+    agent.status(Init, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_HI2, special_hi2_init);
     agent.status(CheckAttack, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_HI2, special_hi2_check_attack);
 
     agent.status(Pre, statuses::kirby::SPECIAL_HI_H, special_hi_h_pre);
+    agent.status(Init, statuses::kirby::SPECIAL_HI_H, special_hi_h_init);
     agent.status(Main, statuses::kirby::SPECIAL_HI_H, special_hi_h_main);
     agent.status(End, statuses::kirby::SPECIAL_HI_H, special_hi_h_end);
 }

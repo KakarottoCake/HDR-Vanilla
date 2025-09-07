@@ -15,14 +15,14 @@ extern "Rust" {
  
 unsafe fn bowser_bomb(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_LW_G]) {
-        if boma.status_frame() > 14 && boma.status_frame() < 31 {
+        if boma.status_frame() >= 14 && boma.status_frame() < 30 {
             let stick_x = boma.stick_x();
             if stick_x != 0.0 {
                 let motion_vec = x_motion_vec(1.0, stick_x);
                 KineticModule::add_speed_outside(boma, *KINETIC_OUTSIDE_ENERGY_TYPE_WIND_NO_ADDITION, &motion_vec);
             }
         }
-        if boma.status_frame() > 20 && boma.status_frame() < 31 {
+        if boma.status_frame() >= 20 && boma.status_frame() < 30 {
             if boma.is_situation(*SITUATION_KIND_AIR) {
                 boma.check_jump_cancel(false, false);
             }
@@ -32,11 +32,12 @@ unsafe fn bowser_bomb(boma: &mut BattleObjectModuleAccessor) {
 
 // Bowser Flame Cancel
 unsafe fn flame_cancel(boma: &mut BattleObjectModuleAccessor) {
+unsafe fn flame_cancel(boma: &mut BattleObjectModuleAccessor) {
     if StatusModule::is_changing(boma) {
         return;
     }
     if boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_N) {
-        if boma.status_frame() < 23 && !boma.is_motion_one_of(&[Hash40::new("special_n_max"), Hash40::new("special_air_n_max")]) {
+        if boma.motion_frame() < 22.0 && !boma.is_motion_one_of(&[Hash40::new("special_n_max"), Hash40::new("special_air_n_max")]) {
             if boma.is_situation(*SITUATION_KIND_GROUND) && StatusModule::prev_situation_kind(boma) == *SITUATION_KIND_AIR {
                 MotionModule::set_frame(boma, 22.0, true);
             }
@@ -44,6 +45,7 @@ unsafe fn flame_cancel(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
+unsafe fn fireball_cooldown(boma: &mut BattleObjectModuleAccessor) {
 unsafe fn fireball_cooldown(boma: &mut BattleObjectModuleAccessor) {
     //Ignore cooldown during respawn,death,entry and nspecial
     if boma.is_status_one_of(&[
@@ -123,11 +125,16 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         *FIGHTER_STATUS_KIND_SPECIAL_N,
         *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A,
         ])
+        ])
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
     }
 }
 
+pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
+    bowser_bomb(boma);
+    flame_cancel(boma);
+    fireball_cooldown(boma);
 pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     bowser_bomb(boma);
     flame_cancel(boma);
@@ -146,6 +153,7 @@ pub extern "C" fn koopa_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCo
 
 pub unsafe fn koopa_frame(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
     if let Some(info) = FrameInfo::update_and_get(fighter) {
+        moveset(fighter, &mut *info.boma);
         moveset(fighter, &mut *info.boma);
     }
 }
