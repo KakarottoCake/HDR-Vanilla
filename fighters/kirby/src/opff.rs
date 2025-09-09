@@ -19,12 +19,12 @@ unsafe fn final_cutter_landing_bugfix(fighter: &mut L2CFighterCommon) {
 
 unsafe fn hammer_swing_drift_landcancel(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK) {
-        if fighter.is_situation(*SITUATION_KIND_GROUND) && fighter.is_prev_situation(*SITUATION_KIND_AIR) {
+        let landing_lag = 19.0;
+        if fighter.check_land_cancel(Some(landing_lag)) {
             AttackModule::clear_all(fighter.module_accessor);
-            MotionModule::change_motion_force_inherit_frame(fighter.module_accessor, Hash40::new("special_s"), 33.0, 1.0, 1.0);
-            MotionModule::set_rate(fighter.module_accessor, (55.0 - 33.0)/25.0);    // equates to 17F landing lag
         }
     }
+
     if fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK]) {
         if fighter.is_situation(*SITUATION_KIND_AIR) {
             if KineticModule::get_kinetic_type(fighter.module_accessor) != *FIGHTER_KINETIC_TYPE_FALL {
@@ -39,19 +39,35 @@ unsafe fn inhale_forced_end(fighter: &mut L2CFighterCommon) {
         if fighter.is_prev_status(*FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_SWALLOW) {
             // inhaled in midair
             if fighter.status_frame() >= 20 {
-                fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_SPIT.into(), false.into());
+                fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_DRINK.into(), false.into());
             }
         }
         else {
             // inhaled then walked offstage
             if fighter.status_frame() >= 40 {
-                fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_SPIT.into(), false.into());
+                fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_DRINK.into(), false.into());
             }
         }
     }
     if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_EAT_JUMP2) && fighter.status_frame() >= 80 {
         // inhaled then jumped offstage
-        fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_SPIT.into(), false.into());
+        fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_DRINK.into(), false.into());
+    }
+}
+
+unsafe fn stone_jumps(fighter: &mut L2CFighterCommon) {
+    // preserve jumps used when landing
+    if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_STONE_STONE)
+    && StatusModule::is_changing(fighter.module_accessor)
+    && fighter.is_situation(*SITUATION_KIND_AIR) {
+        let jumps = fighter.get_num_used_jumps();
+        VarModule::set_int(fighter.battle_object, vars::kirby::instance::SPECIAL_LW_USED_JUMPS, jumps);
+    }
+    if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_STONE_END)
+    && StatusModule::is_changing(fighter.module_accessor) {
+        let jumps = VarModule::get_int(fighter.battle_object, vars::kirby::instance::SPECIAL_LW_USED_JUMPS);
+        fighter.set_int(jumps, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
+        ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_KIRBY_GENERATE_ARTICLE_STONE, Hash40::new("special_lw2"), false, -1.0);
     }
 }
 
@@ -89,6 +105,7 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon) {
     final_cutter_landing_bugfix(fighter);
     hammer_swing_drift_landcancel(fighter);
     inhale_forced_end(fighter);
+    stone_jumps(fighter);
     fastfall_specials(fighter);
 
     copy::kirby_copy_handler(fighter);
