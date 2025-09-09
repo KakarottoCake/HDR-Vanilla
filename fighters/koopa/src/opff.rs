@@ -32,7 +32,6 @@ unsafe fn bowser_bomb(boma: &mut BattleObjectModuleAccessor) {
 
 // Bowser Flame Cancel
 unsafe fn flame_cancel(boma: &mut BattleObjectModuleAccessor) {
-unsafe fn flame_cancel(boma: &mut BattleObjectModuleAccessor) {
     if StatusModule::is_changing(boma) {
         return;
     }
@@ -45,7 +44,6 @@ unsafe fn flame_cancel(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
-unsafe fn fireball_cooldown(boma: &mut BattleObjectModuleAccessor) {
 unsafe fn fireball_cooldown(boma: &mut BattleObjectModuleAccessor) {
     //Ignore cooldown during respawn,death,entry and nspecial
     if boma.is_status_one_of(&[
@@ -125,16 +123,11 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         *FIGHTER_STATUS_KIND_SPECIAL_N,
         *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A,
         ])
-        ])
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
     }
 }
 
-pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
-    bowser_bomb(boma);
-    flame_cancel(boma);
-    fireball_cooldown(boma);
 pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     bowser_bomb(boma);
     flame_cancel(boma);
@@ -153,7 +146,6 @@ pub extern "C" fn koopa_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCo
 
 pub unsafe fn koopa_frame(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
     if let Some(info) = FrameInfo::update_and_get(fighter) {
-        moveset(fighter, &mut *info.boma);
         moveset(fighter, &mut *info.boma);
     }
 }
