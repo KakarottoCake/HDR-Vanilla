@@ -327,7 +327,6 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("handl"), 1.2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("mariod_smash_aura"), Hash40::new("mariod_smash_aura"), Hash40::new("havel"), -1.5, 0, 0, 0, 0, 0, 0.5, true, *EF_FLIP_YZ);
     }
     frame(lua_state, 4.0);
@@ -345,6 +344,7 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 6.0);
     if is_excute(agent) {
+        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("handl"), 0, -0.4, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         EFFECT_DETACH_KIND(agent, Hash40::new("mariod_smash_impact"), -1);
         EFFECT_DETACH_KIND(agent, Hash40::new("mariod_superjump_fnish_plasma"), -1);
         EFFECT_DETACH_KIND(agent, Hash40::new("mariod_smash_aura"), -1);
@@ -404,7 +404,6 @@ unsafe extern "C" fn effect_specialairhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("handl"), 1.2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("mariod_smash_aura"), Hash40::new("mariod_smash_aura"), Hash40::new("havel"), -1.5, 0, 0, 0, 0, 0, 0.5, true, *EF_FLIP_YZ);
     }
     frame(lua_state, 4.0);
@@ -422,6 +421,7 @@ unsafe extern "C" fn effect_specialairhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 6.0);
     if is_excute(agent) {
+        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("handl"), 0, -0.4, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         EFFECT_DETACH_KIND(agent, Hash40::new("mariod_smash_impact"), -1);
         EFFECT_DETACH_KIND(agent, Hash40::new("mariod_superjump_fnish_plasma"), -1);
         EFFECT_DETACH_KIND(agent, Hash40::new("mariod_smash_aura"), -1);
