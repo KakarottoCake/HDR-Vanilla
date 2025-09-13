@@ -28,7 +28,8 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
             status_end_CliffJump2,
             status_end_CliffJump3,
             sub_cliff_uniq_process_exit_Common,
-            get_cliff_wait_hit_xlu_frame
+            get_cliff_wait_hit_xlu_frame,
+            sub_transition_group_check_air_cliff
         );
     }
 }
@@ -365,5 +366,21 @@ unsafe fn sub_cliff_uniq_process_exit_Common(fighter: &mut L2CFighterCommon, is_
 unsafe fn get_cliff_wait_hit_xlu_frame(fighter: &mut L2CFighterCommon) -> L2CValue {
     let cliff_xlu_frame = call_original!(fighter).get_i32();
     VarModule::set_int(fighter.battle_object, vars::common::instance::CLIFF_XLU_FRAME, cliff_xlu_frame);
+    call_original!(fighter)
+}
+
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_transition_group_check_air_cliff)]
+unsafe fn sub_transition_group_check_air_cliff(fighter: &mut L2CFighterCommon) -> L2CValue {
+    match utils::game_modes::get_custom_mode() {
+        Some(modes) => {
+            if modes.contains(&game_modes::CustomMode::RivalsOfAetherMode) {
+                // in rivals mode, players can wall jump in all ledge-grabbable statuses
+                VarModule::on_flag(fighter.battle_object, vars::common::status::ENABLE_SPECIAL_WALLJUMP);
+                fighter.sub_transition_group_check_air_wall_jump();
+                return false.into(); // they also cannot grab ledge
+            }
+        },
+        _ => {}
+    }
     call_original!(fighter)
 }

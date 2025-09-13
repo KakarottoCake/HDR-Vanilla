@@ -64,6 +64,48 @@ unsafe fn waveland_plat_drop(boma: &mut BattleObjectModuleAccessor, cat2: i32, s
     }
 }
 
+// immediately actionable waveland in rivals mode
+unsafe fn rivals_waveland(boma: &mut BattleObjectModuleAccessor) {
+    match utils::game_modes::get_custom_mode() {
+        Some(modes) => {
+            if modes.contains(&game_modes::CustomMode::RivalsOfAetherMode)
+            && boma.is_status(*FIGHTER_STATUS_KIND_LANDING)
+            && boma.is_prev_status_one_of(&[
+                *FIGHTER_STATUS_KIND_ESCAPE_AIR,
+                *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE
+            ]) {
+                CancelModule::enable_cancel(boma);
+                return;
+            }
+        },
+        _ => {}
+    }
+}
+
+// cancel jabs directly into tilts
+unsafe fn rivals_jab_tilt(boma: &mut BattleObjectModuleAccessor) {
+    match utils::game_modes::get_custom_mode() {
+        Some(modes) => {
+            if modes.contains(&game_modes::CustomMode::RivalsOfAetherMode)
+            && !CancelModule::is_enable_cancel(boma)
+            && !boma.is_in_hitlag() 
+            && StatusModule::status_kind(boma) == *FIGHTER_STATUS_KIND_ATTACK 
+            && boma.is_flag(*FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO) {
+                if boma.is_cat_flag(Cat1::AttackS3) && !boma.is_cat_flag(Cat1::AttackS4) {
+                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_S3, false);
+                }
+                if boma.is_cat_flag(Cat1::AttackHi3) && !boma.is_cat_flag(Cat1::AttackHi4) {
+                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_HI3, false);
+                }
+                if boma.is_cat_flag(Cat1::AttackLw3) && !boma.is_cat_flag(Cat1::AttackLw4) {
+                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_LW3, false);
+                }
+            }
+        },
+        _ => {}
+    }
+}
+
 //=================================================================
 //== DASH DROP
 //=================================================================
@@ -125,80 +167,86 @@ unsafe fn drift_di(
     status_kind: i32,
     situation_kind: i32,
 ) {
-    if boma.is_situation(*SITUATION_KIND_AIR)
-        && !StopModule::is_stop(boma)
-        && boma.is_status_one_of(&[
-            *FIGHTER_STATUS_KIND_DAMAGE_FLY,
-            *FIGHTER_STATUS_KIND_DAMAGE_AIR,
-            *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR,
-            *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL,
-            *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_D,
-            *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR,
-            *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_U,
-        ])
-    {
-        let damage_speed_x = fighter.get_speed_x(*FIGHTER_KINETIC_ENERGY_ID_DAMAGE);
-        let damage_speed_y = fighter.get_speed_y(*FIGHTER_KINETIC_ENERGY_ID_DAMAGE);
-
-        let mut initial_speed_x = VarModule::get_float(
-            fighter.battle_object,
-            vars::common::status::INITIAL_KNOCKBACK_VEL_X,
-        );
-        let mut initial_speed_y = VarModule::get_float(
-            fighter.battle_object,
-            vars::common::status::INITIAL_KNOCKBACK_VEL_Y,
-        );
-
-        // if these floats are both exactly zero, its because
-        // status change reset them to zero. Thus, we should set them.
-        if initial_speed_x == 0.0 && initial_speed_y == 0.0 {
-            VarModule::set_float(
-                fighter.battle_object,
-                vars::common::status::INITIAL_KNOCKBACK_VEL_X,
-                damage_speed_x,
-            );
-            VarModule::set_float(
-                fighter.battle_object,
-                vars::common::status::INITIAL_KNOCKBACK_VEL_Y,
-                damage_speed_y,
-            );
-
-            initial_speed_x = VarModule::get_float(
-                fighter.battle_object,
-                vars::common::status::INITIAL_KNOCKBACK_VEL_X,
-            );
-            initial_speed_y = VarModule::get_float(
-                fighter.battle_object,
-                vars::common::status::INITIAL_KNOCKBACK_VEL_Y,
-            );
-        }
-
-        let mut speed_mul = ParamModule::get_float(
-            fighter.battle_object,
-            ParamType::Common,
-            "drift_di.speed_mul_base",
-        );
-        let speed_mul_add_max = ParamModule::get_float(
-            fighter.battle_object,
-            ParamType::Common,
-            "drift_di.speed_mul_add_max",
-        );
-
-        let lerp_max_speed = ParamModule::get_float(
-            fighter.battle_object,
-            ParamType::Common,
-            "drift_di.speed_lerp_max",
-        );
-
-        let ratio = 1.0 - (initial_speed_x.abs() / lerp_max_speed).clamp(0.0, 1.0);
-        speed_mul = (speed_mul + speed_mul_add_max) * ratio;
-
-        let drift_value = boma.left_stick_x() * speed_mul;
-
-        fighter.set_speed(
-            Vector2f::new(damage_speed_x + drift_value, damage_speed_y),
-            *FIGHTER_KINETIC_ENERGY_ID_DAMAGE,
-        );
+    // oh yea baby drift di is BACK (for rivals of aether mode only)
+    match utils::game_modes::get_custom_mode() {
+        Some(modes) => {
+            if modes.contains(&game_modes::CustomMode::RivalsOfAetherMode)
+            && boma.is_situation(*SITUATION_KIND_AIR)
+            && !StopModule::is_stop(boma)
+            && boma.is_status_one_of(&[
+                *FIGHTER_STATUS_KIND_DAMAGE_FLY,
+                *FIGHTER_STATUS_KIND_DAMAGE_AIR,
+                *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR,
+                *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL,
+                *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_D,
+                *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR,
+                *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_U,
+            ]) {
+                let damage_speed_x = fighter.get_speed_x(*FIGHTER_KINETIC_ENERGY_ID_DAMAGE);
+                let damage_speed_y = fighter.get_speed_y(*FIGHTER_KINETIC_ENERGY_ID_DAMAGE);
+        
+                let mut initial_speed_x = VarModule::get_float(
+                    fighter.battle_object,
+                    vars::common::status::INITIAL_KNOCKBACK_VEL_X,
+                );
+                let mut initial_speed_y = VarModule::get_float(
+                    fighter.battle_object,
+                    vars::common::status::INITIAL_KNOCKBACK_VEL_Y,
+                );
+        
+                // if these floats are both exactly zero, its because
+                // status change reset them to zero. Thus, we should set them.
+                if initial_speed_x == 0.0 && initial_speed_y == 0.0 {
+                    VarModule::set_float(
+                        fighter.battle_object,
+                        vars::common::status::INITIAL_KNOCKBACK_VEL_X,
+                        damage_speed_x,
+                    );
+                    VarModule::set_float(
+                        fighter.battle_object,
+                        vars::common::status::INITIAL_KNOCKBACK_VEL_Y,
+                        damage_speed_y,
+                    );
+        
+                    initial_speed_x = VarModule::get_float(
+                        fighter.battle_object,
+                        vars::common::status::INITIAL_KNOCKBACK_VEL_X,
+                    );
+                    initial_speed_y = VarModule::get_float(
+                        fighter.battle_object,
+                        vars::common::status::INITIAL_KNOCKBACK_VEL_Y,
+                    );
+                }
+        
+                let mut speed_mul = ParamModule::get_float(
+                    fighter.battle_object,
+                    ParamType::Common,
+                    "drift_di.speed_mul_base",
+                );
+                let speed_mul_add_max = ParamModule::get_float(
+                    fighter.battle_object,
+                    ParamType::Common,
+                    "drift_di.speed_mul_add_max",
+                );
+        
+                let lerp_max_speed = ParamModule::get_float(
+                    fighter.battle_object,
+                    ParamType::Common,
+                    "drift_di.speed_lerp_max",
+                );
+        
+                let ratio = 1.0 - (initial_speed_x.abs() / lerp_max_speed).clamp(0.0, 1.0);
+                speed_mul = (speed_mul + speed_mul_add_max) * ratio;
+        
+                let drift_value = boma.left_stick_x() * speed_mul;
+        
+                fighter.set_speed(
+                    Vector2f::new(damage_speed_x + drift_value, damage_speed_y),
+                    *FIGHTER_KINETIC_ENERGY_ID_DAMAGE,
+                );
+            }
+        },
+        _ => {}
     }
 }
 
@@ -299,8 +347,10 @@ pub unsafe fn run(
     dash_drop(boma, status_kind);
     run_squat(boma, status_kind, stick_y); // Must be done after dash_drop()
     double_shield_button_airdodge(boma, status_kind, situation_kind, cat[0]);
-    //drift_di(fighter, boma, status_kind, situation_kind);
+    drift_di(fighter, boma, status_kind, situation_kind);
     waveland_plat_drop(boma, cat[1], status_kind);
+    rivals_waveland(boma);
+    rivals_jab_tilt(boma);
     respawn_taunt(boma, status_kind);
     teeter_cancel(fighter, boma);
 }
