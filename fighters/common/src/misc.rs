@@ -266,7 +266,7 @@ pub extern "C" fn rivals_mode(fighter: &mut L2CFighterCommon) {
     unsafe {
         match utils::game_modes::get_custom_mode() {
             Some(modes) => {
-                if modes.contains(&CustomMode::MagicSeriesMode) {
+                if modes.contains(&CustomMode::RivalsOfAetherMode) {
                     rivals_drift_di(fighter);
                     rivals_waveland(fighter);
                     rivals_jab_tilt(fighter);
