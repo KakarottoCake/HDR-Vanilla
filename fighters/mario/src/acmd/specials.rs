@@ -440,7 +440,7 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_action_smoke_h"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
-    frame(lua_state, 7.0);
+    frame(lua_state, 6.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("handl"), 0, -0.4, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
@@ -465,7 +465,7 @@ unsafe extern "C" fn effect_specialairhi(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("mario_superjump_power"), Hash40::new("handl"), 0, 0, 0, 0, 0, 0, 1, true);
     }
-    frame(lua_state, 7.0);
+    frame(lua_state, 6.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("handl"), 0, -0.4, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
