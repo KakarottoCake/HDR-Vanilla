@@ -5,17 +5,6 @@ unsafe extern "C" fn fly_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
     weapon.set_int(life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
     weapon.set_int(life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
 
-    MotionModule::change_motion(
-        weapon.module_accessor,
-        Hash40::new("fly"),
-        0.0,
-        1.0,
-        false,
-        0.0,
-        false,
-        false
-    );
-
     let speed = weapon.get_param_float("param_exprosiveshot", "speed");
     let angle = weapon.get_param_float("param_exprosiveshot", "angle");
 
@@ -31,6 +20,17 @@ unsafe extern "C" fn fly_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
         WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL,
         speed * cos * lr,
         speed * sin
+    );
+
+    MotionModule::change_motion(
+        weapon.module_accessor,
+        Hash40::new("fly"),
+        0.0,
+        1.0,
+        false,
+        0.0,
+        false,
+        false
     );
 
     weapon.fastshift(L2CValue::Ptr(fly_fastshift as *const () as _))

@@ -392,6 +392,8 @@ unsafe extern "C" fn game_speciallwhit(agent: &mut L2CAgentBase) {
         ArticleModule::remove_exist(boma, *FIGHTER_KAMUI_GENERATE_ARTICLE_WATERDRAGON, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
         VisibilityModule::set_whole(boma, true);
     }
+    // not in is_excute because I want this flag to reset if we happen to edge cancel this or something
+    VarModule::on_flag(agent.battle_object, vars::kamui::status::SPECIAL_LW_ENABLE_FALL);
 }
 
 unsafe extern "C" fn effect_speciallwhit(agent: &mut L2CAgentBase) {
