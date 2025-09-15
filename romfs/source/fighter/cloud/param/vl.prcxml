@@ -83,7 +83,7 @@
     <struct index="0">
       <int hash="critical_frame">36</int>
       <int hash="critical_slow_rate">8</int>
-      <int hash="limit_gauge_frame">90</int>
+      <int hash="limit_gauge_frame">45</int>
       <int hash="critical_zoom_in_frame">999</int>
       <float hash="limit_gauge_add">0.23</float>
       <int hash="limit_break_clear_frame">1200</int>

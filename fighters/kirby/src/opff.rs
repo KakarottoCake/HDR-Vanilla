@@ -36,7 +36,7 @@ unsafe fn hammer_swing_drift_landcancel(fighter: &mut smash::lua2cpp::L2CFighter
 
 unsafe fn inhale_forced_end(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_EAT_FALL) {
-        if fighter.is_prev_status(*FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_DRINK) {
+        if fighter.is_prev_status(*FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_SWALLOW) {
             // inhaled in midair
             if fighter.status_frame() >= 20 {
                 fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_DRINK.into(), false.into());
