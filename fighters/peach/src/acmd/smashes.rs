@@ -134,38 +134,38 @@ unsafe extern "C" fn effect_attacklw4(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 3, 6.0 * boma.lr(), 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, true);
+        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 3, 6.0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, true);
         LAST_EFFECT_SET_COLOR(agent, 1.3, 1.3, 1.3);
     }
     frame(lua_state, 4.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("peach_smash_arc"), Hash40::new("top"), 0, 1.8, 0.0, 90.0 + 90.0*boma.lr(), -55, 0, 1.0, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.125, 0.5, 2.0);
-        LAST_EFFECT_SET_SCALE_W(agent, 0.94, 1.55, 0.94);
+        LAST_EFFECT_SET_COLOR(agent, 0.2, 1.0, 2.0);
+        LAST_EFFECT_SET_SCALE_W(agent, 0.95, 1.55, 0.95);
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("peach_smash_arc"), Hash40::new("top"), 0, 1.8, 0.0, 90.0 + 90.0*boma.lr(), 100, 0, 1.0, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.125, 0.5, 2.0);
-        LAST_EFFECT_SET_SCALE_W(agent, 0.94, 1.55, 0.94);
+        EFFECT_FOLLOW(agent, Hash40::new("peach_smash_arc"), Hash40::new("top"), 0, 1.8, 0, 90.0 + 90.0*boma.lr(), 100, 0, 1.0, true);
+        LAST_EFFECT_SET_COLOR(agent, 0.2, 1.2, 2.0);
+        LAST_EFFECT_SET_SCALE_W(agent, 0.95, 1.55, 0.95);
     }
     frame(lua_state, 12.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("peach_smash_arc"), Hash40::new("top"), 0, 1.8, -0.25*boma.lr(), 90.0 + 90.0*boma.lr(), -100, 0, 1.0, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.125, 0.5, 2.0);
-        LAST_EFFECT_SET_SCALE_W(agent, 0.97, 1.55, 0.97);
+        EFFECT_FOLLOW(agent, Hash40::new("peach_smash_arc"), Hash40::new("top"), 0, 1.8, 0, 90.0 + 90.0*boma.lr(), -110, 0, 1.0, true);
+        LAST_EFFECT_SET_COLOR(agent, 0.2, 1.2, 2.0);
+        LAST_EFFECT_SET_SCALE_W(agent, 0.95, 1.55, 0.95);
     }
     frame(lua_state, 15.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("peach_smash_arc"), Hash40::new("top"), 0, 1.8, -0.25*boma.lr(), 90.0 + 90.0*boma.lr(), 115, 0, 1.0, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.125, 0.5, 2.0);
-        LAST_EFFECT_SET_SCALE_W(agent, 0.97, 1.55, 0.97);
+        EFFECT_FOLLOW(agent, Hash40::new("peach_smash_arc"), Hash40::new("top"), 0, 1.8, 0.0, 90.0 + 90.0*boma.lr(), 120, 0, 1.0, true);
+        LAST_EFFECT_SET_COLOR(agent, 0.2, 1.2, 2.0);
+        LAST_EFFECT_SET_SCALE_W(agent, 0.95, 1.55, 0.95);
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("peach_smash_arc"), Hash40::new("top"), 0, 1.8, -0.25*boma.lr(), 90.0 + 90.0*boma.lr(), -95, 0, 1.0, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.125, 0.5, 2.0);
-        LAST_EFFECT_SET_SCALE_W(agent, 1.02, 1.55, 1.02);
+        EFFECT_FOLLOW(agent, Hash40::new("peach_smash_arc"), Hash40::new("top"), 0, 1.8, 0, 90.0 + 90.0*boma.lr(), -110, 0, 1.0, true);
+        LAST_EFFECT_SET_COLOR(agent, 0.2, 1.2, 2.0);
+        LAST_EFFECT_SET_SCALE_W(agent, 0.95, 1.55, 0.95);
     }
     frame(lua_state, 24.0);
     if is_excute(agent) {
@@ -175,9 +175,9 @@ unsafe extern "C" fn effect_attacklw4(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 25.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("peach_smash_arc"), Hash40::new("top"), 0, 1.8, -1.1 * boma.lr(), 90.0 + 90.0*boma.lr(), 115, 0, 1.0, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.125, 0.5, 2.0);
-        LAST_EFFECT_SET_SCALE_W(agent, 1.07, 1.55, 1.07);
+        EFFECT_FOLLOW(agent, Hash40::new("peach_smash_arc"), Hash40::new("top"), 0, 1.8, 0, 90.0 + 90.0*boma.lr(), 115, 0, 1.0, true);
+        LAST_EFFECT_SET_COLOR(agent, 0.2, 1.2, 2.0);
+        LAST_EFFECT_SET_SCALE_W(agent, 0.98, 1.55, 0.98);
         LAST_EFFECT_SET_RATE(agent, 0.75);
     }
 }
