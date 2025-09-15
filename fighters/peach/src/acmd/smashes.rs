@@ -99,27 +99,29 @@ unsafe extern "C" fn game_attacklw4(agent: &mut L2CAgentBase) {
         agent.on_flag(*FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
     }
     frame(lua_state, 6.0);
+    if is_excute(agent) {
+        // GROUND - FKB pop-up to punish CC
+        ATTACK(agent, 0, 0, Hash40::new("top"), 7.0, 142, 100, 50, 0, 3.5, 0.0, 2.25, 8.3, Some(0.0), Some(2.25), Some(-8.3), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 2, 0.0, 4, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BODY);
+        // AIR - launcher
+        ATTACK(agent, 1, 1, Hash40::new("top"), 14.0, 137, 80, 0, 40, 3.5, 0.0, 2.25, 8.3, Some(0.0), Some(2.25), Some(-8.3), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 2, 0.0, 10, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BODY);
+        AttackModule::set_attack_height_all(boma, app::AttackHeight(*ATTACK_HEIGHT_LOW), false);
+    }
     for round in 0..5 {
         if is_excute(agent) {
-            let dmg_ground = 7.0 - 0.5 * round.to_f32();
-            let dmg_air = 14.0 - round.to_f32();
-            let kbg = 80 + (7.4 * round.to_f32().round()) as i32;
-            let bkb = 40 - (1.4 * round.to_f32().round()) as i32;
-            // GROUND - FKB pop-up to punish CC
-            ATTACK(agent, 0, 0, Hash40::new("top"), dmg_ground, 136, 100, 50, 0, 3.5, 0.0, 2.25, 8.3, Some(0.0), Some(2.25), Some(-8.3), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 2, 0.0, 4, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BODY);
-            // AIR - launcher
-            ATTACK(agent, 1, 1, Hash40::new("top"), dmg_air, 141, kbg, 0, bkb, 3.5, 0.0, 2.25, 8.3, Some(0.0), Some(2.25), Some(-8.3), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 2, 0.0, 8, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BODY);
-            AttackModule::set_attack_height_all(boma, app::AttackHeight(*ATTACK_HEIGHT_LOW), false);
+            let power_mul = 1.0 - round.to_f32()/14.0;
+            AttackModule::set_power_mul_5th(boma, power_mul);
         }
-        wait(lua_state, 4.0);
+        wait(lua_state, 4.0);  
     }
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
     wait(lua_state, 2.0); 
     if is_excute(agent) {
-        ATTACK(agent, 0, 1, Hash40::new("top"), 9.0, 141, 117, 0, 33, 4.25, 0.0, 2.5, 8.2, Some(0.0), Some(2.5), Some(-8.2), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BODY);
+        let power_mul = 1.0 - 5.0/14.0;
+        ATTACK(agent, 0, 1, Hash40::new("top"), 14.0, 137, 80, 0, 40, 4.25, 0.0, 2.5, 8.2, Some(0.0), Some(2.5), Some(-8.2), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BODY);
         AttackModule::set_attack_height_all(boma, app::AttackHeight(*ATTACK_HEIGHT_LOW), false);
+        AttackModule::set_power_mul_5th(boma, power_mul);
     }
     wait(lua_state, 4.0);
     if is_excute(agent) {
@@ -138,31 +140,31 @@ unsafe extern "C" fn effect_attacklw4(agent: &mut L2CAgentBase) {
     frame(lua_state, 4.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("peach_smash_arc"), Hash40::new("top"), 0, 1.8, 0.0, 90.0 + 90.0*boma.lr(), -55, 0, 1.0, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.25, 0.5, 2.0);
+        LAST_EFFECT_SET_COLOR(agent, 0.125, 0.5, 2.0);
         LAST_EFFECT_SET_SCALE_W(agent, 0.94, 1.55, 0.94);
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("peach_smash_arc"), Hash40::new("top"), 0, 1.8, 0.0, 90.0 + 90.0*boma.lr(), 100, 0, 1.0, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.25, 0.5, 2.0);
+        LAST_EFFECT_SET_COLOR(agent, 0.125, 0.5, 2.0);
         LAST_EFFECT_SET_SCALE_W(agent, 0.94, 1.55, 0.94);
     }
     frame(lua_state, 12.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("peach_smash_arc"), Hash40::new("top"), 0, 1.8, -0.25*boma.lr(), 90.0 + 90.0*boma.lr(), -100, 0, 1.0, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.25, 0.5, 2.0);
+        LAST_EFFECT_SET_COLOR(agent, 0.125, 0.5, 2.0);
         LAST_EFFECT_SET_SCALE_W(agent, 0.97, 1.55, 0.97);
     }
     frame(lua_state, 15.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("peach_smash_arc"), Hash40::new("top"), 0, 1.8, -0.25*boma.lr(), 90.0 + 90.0*boma.lr(), 115, 0, 1.0, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.25, 0.5, 2.0);
+        LAST_EFFECT_SET_COLOR(agent, 0.125, 0.5, 2.0);
         LAST_EFFECT_SET_SCALE_W(agent, 0.97, 1.55, 0.97);
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("peach_smash_arc"), Hash40::new("top"), 0, 1.8, -0.25*boma.lr(), 90.0 + 90.0*boma.lr(), -95, 0, 1.0, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.25, 0.5, 2.0);
+        LAST_EFFECT_SET_COLOR(agent, 0.125, 0.5, 2.0);
         LAST_EFFECT_SET_SCALE_W(agent, 1.02, 1.55, 1.02);
     }
     frame(lua_state, 24.0);
@@ -174,7 +176,7 @@ unsafe extern "C" fn effect_attacklw4(agent: &mut L2CAgentBase) {
     frame(lua_state, 25.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("peach_smash_arc"), Hash40::new("top"), 0, 1.8, -1.1 * boma.lr(), 90.0 + 90.0*boma.lr(), 115, 0, 1.0, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.25, 0.5, 2.0);
+        LAST_EFFECT_SET_COLOR(agent, 0.125, 0.5, 2.0);
         LAST_EFFECT_SET_SCALE_W(agent, 1.07, 1.55, 1.07);
         LAST_EFFECT_SET_RATE(agent, 0.75);
     }
