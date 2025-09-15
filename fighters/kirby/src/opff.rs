@@ -55,6 +55,24 @@ unsafe fn inhale_forced_end(fighter: &mut L2CFighterCommon) {
     }
 }
 
+unsafe fn stone_escape_handler(fighter: &mut L2CFighterCommon) {
+    // disables stone if broken out of for any reason
+    if fighter.is_prev_status(*FIGHTER_KIRBY_STATUS_KIND_STONE_STONE)
+    && !VarModule::is_flag(fighter.battle_object, vars::kirby::instance::DISABLE_STONE) {
+        VarModule::on_flag(fighter.battle_object, vars::kirby::instance::DISABLE_STONE);
+    }
+
+    // enables movement on frame 14
+    if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_STONE_END)
+    && MotionModule::frame(fighter.module_accessor) >= 14.0 {
+        if fighter.is_situation(*SITUATION_KIND_AIR) {
+            if KineticModule::get_kinetic_type(fighter.module_accessor) != *FIGHTER_KINETIC_TYPE_FALL {
+                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+            }
+        }
+    }
+}
+
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     let copystatus = StatusModule::status_kind(fighter.module_accessor);
     if !fighter.is_in_hitlag()
@@ -89,6 +107,7 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon) {
     final_cutter_landing_bugfix(fighter);
     hammer_swing_drift_landcancel(fighter);
     inhale_forced_end(fighter);
+    stone_escape_handler(fighter);
     fastfall_specials(fighter);
 
     copy::kirby_copy_handler(fighter);
