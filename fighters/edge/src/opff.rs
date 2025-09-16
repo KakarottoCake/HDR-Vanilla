@@ -26,7 +26,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         *FIGHTER_EDGE_STATUS_KIND_SPECIAL_N_SHOOT,
         *FIGHTER_EDGE_STATUS_KIND_SPECIAL_S_CHARGE,
         *FIGHTER_EDGE_STATUS_KIND_SPECIAL_S_SHOOT,
-        *FIGHTER_EDGE_STATUS_KIND_SPECIAL_HI_END,
         *FIGHTER_EDGE_STATUS_KIND_SPECIAL_LW_END
         ]) 
     && fighter.is_situation(*SITUATION_KIND_AIR) {
