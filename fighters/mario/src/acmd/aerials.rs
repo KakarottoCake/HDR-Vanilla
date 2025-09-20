@@ -63,16 +63,16 @@ unsafe extern "C" fn effect_attackairf(agent: &mut L2CAgentBase) {
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("mario_fb_shoot"), Hash40::new("mario_fb_shoot"), Hash40::new("havel"), 0.75, -1, 0, 0, -45, 0, 0.5, true, *EF_FLIP_YZ);
     }
     frame(lua_state, 14.0);
-    if is_excute(agent){
+    if is_excute(agent) {
 	    EFFECT_FOLLOW_FLIP(agent, Hash40::new("mario_fb_bullet_r"), Hash40::new("mario_fb_bullet_l"), Hash40::new("handl"), 0.75, -1, 0, 0, 0, 0, 0.4, true, *EF_FLIP_YZ);
     }
     frame(lua_state, 17.0);
-    if is_excute(agent){
+    if is_excute(agent) {
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_b"), Hash40::new("sys_attack_arc_b"), Hash40::new("top"), 0, 7, -1, -3, -11, -113, 1.1, true, *EF_FLIP_YZ);
         LAST_EFFECT_SET_RATE(agent, 0.5);
     }
     frame(lua_state, 20.0);
-    if is_excute(agent){
+    if is_excute(agent) {
         LAST_EFFECT_SET_RATE(agent, 1.0);
     }
     frame(lua_state, 23.0);
