@@ -84,7 +84,7 @@ unsafe extern "C" fn sound_jumpfront(agent: &mut L2CAgentBase) {
         let rng = app::sv_math::rand(hash40("fighter"), 2);
         if rng == 0 {
             let handle = SoundModule::play_se(agent.module_accessor, Hash40::new("vc_mario_jump01"), false, false, false, false, enSEType(0)); //hooh
-            SoundModule::set_se_vol(agent.module_accessor, handle as i32, 0.35, 0);
+            SoundModule::set_se_vol(agent.module_accessor, handle as i32, 0.75, 0);
         }
     }
     wait(lua_state, 1.0);
