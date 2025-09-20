@@ -96,12 +96,12 @@ unsafe extern "C" fn effect_mariospecialnfire(agent: &mut L2CAgentBase) {
     frame(lua_state, 13.0);
     if is_excute(agent) {
         if PostureModule::lr(boma) > 0.0 {
-            EFFECT_FOLLOW(agent, Hash40::new("mario_fb_shoot"), Hash40::new("havel"), 0, 0, 0, 0, 45, 0, 0.7, true);
-            EFFECT_FOLLOW(agent, Hash40::new("mario_fb_shoot"), Hash40::new("haver"), 0, 0, 0, 0, 45, 0, 0.7, true);
+            EFFECT_FOLLOW(agent, Hash40::new("mario_fb_shoot"), Hash40::new("havel"), 0, 0, 0, 0, 45, 0, 0.55, true);
+            EFFECT_FOLLOW(agent, Hash40::new("mario_fb_shoot"), Hash40::new("haver"), 0, 0, 0, 0, 45, 0, 0.55, true);
         }
         else {
-            EFFECT_FOLLOW(agent, Hash40::new("mario_fb_shoot"), Hash40::new("havel"), 0, 0, 0, 0, -45, 0, 0.7, true);
-            EFFECT_FOLLOW(agent, Hash40::new("mario_fb_shoot"), Hash40::new("haver"), 0, 0, 0, 0, -45, 0, 0.7, true);
+            EFFECT_FOLLOW(agent, Hash40::new("mario_fb_shoot"), Hash40::new("havel"), 0, 0, 0, 0, -45, 0, 0.55, true);
+            EFFECT_FOLLOW(agent, Hash40::new("mario_fb_shoot"), Hash40::new("haver"), 0, 0, 0, 0, -45, 0, 0.55, true);
         }
         if agent.is_situation(*SITUATION_KIND_GROUND) {
             EFFECT_FOLLOW(agent, Hash40::new("sys_h_smoke_b"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.5, true);
@@ -111,8 +111,10 @@ unsafe extern "C" fn effect_mariospecialnfire(agent: &mut L2CAgentBase) {
     frame(lua_state, 14.0);
     if is_excute(agent) {
         FLASH(agent, 1, 0, 0, 0.35);
-        EFFECT_FOLLOW(agent, Hash40::new("sys_flame"), Hash40::new("handl"), 0.0, 0, 0, 0, 0, 0, 0.2, true);
-        EFFECT_FOLLOW(agent, Hash40::new("sys_flame"), Hash40::new("handr"), 0.0, 0, 0, 0, 0, 0, 0.2, true);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("top"), 0, 6.0, 10.5, 0, 0, 0, 0.9, true);
+        LAST_EFFECT_SET_RATE(agent, 0.55);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("top"), 0, 5.0, 10.5, 0, 0, 0, 0.9, true);
+        LAST_EFFECT_SET_RATE(agent, 0.55);
         EFFECT_FOLLOW(agent, Hash40::new("sys_bomb_a"), Hash40::new("top"), 0, 6.5, 11.5, 0, 0, 0, 0.26, true);
         LAST_EFFECT_SET_COLOR(agent, 0.65, 0.2, 0.08);
         LAST_EFFECT_SET_RATE(agent, 1.2);
@@ -166,7 +168,7 @@ unsafe extern "C" fn expression_mariospecialnfire(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(boma, Hash40::new("rbkind_55_smash"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_55_explosion"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
 }
 
