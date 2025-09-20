@@ -76,6 +76,23 @@ unsafe extern "C" fn game_turndash(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn sound_jumpfront(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 2.0);
+    if is_excute(agent) {
+        let rng = app::sv_math::rand(hash40("fighter"), 2);
+        if rng == 0 {
+            let handle = SoundModule::play_se(agent.module_accessor, Hash40::new("vc_mario_jump01"), false, false, false, false, enSEType(0));
+            SoundModule::set_se_vol(agent.module_accessor, handle as i32, 0.30, 0);
+        }
+    }
+    wait(lua_state, 1.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_mario_jump01"));
+    }
+}
+
 unsafe extern "C" fn game_escapeair(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -171,6 +188,9 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("sound_damageflyn", sound_damagefly, Priority::Low);
     agent.acmd("sound_damageflytop", sound_damagefly, Priority::Low);
     agent.acmd("sound_damageflyroll", sound_damageflyroll, Priority::Low);
+
+    agent.acmd("sound_jumpfront", sound_jumpfront, Priority::Low);
+    agent.acmd("sound_jumpback", sound_jumpfront, Priority::Low);
 
     agent.acmd("game_dash", game_dash, Priority::Low);
     agent.acmd("sound_dash", sound_dash, Priority::Low);

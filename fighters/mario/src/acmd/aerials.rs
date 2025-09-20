@@ -33,13 +33,13 @@ unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 17.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("shoulderl"), 15.0, 280, 35, 0, 30, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 1, 0, Hash40::new("arml"),      15.0, 280, 35, 0, 30, 4.0, 3.2, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("shoulderl"), 15.0, 280, 35, 0, 30, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 1, 0, Hash40::new("arml"),      15.0, 280, 35, 0, 30, 4.0, 3.2, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
     }
     frame(lua_state, 18.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("shoulderl"), 15.0, 280, 35, 0, 30, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 1, 0, Hash40::new("arml"),      15.0, 280, 35, 0, 30, 4.6, 3.4, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("shoulderl"), 15.0, 280, 35, 0, 30, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 1, 0, Hash40::new("arml"),      15.0, 280, 35, 0, 30, 4.6, 3.4, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
     }
     frame(lua_state, 22.0);
     if is_excute(agent) {
@@ -56,15 +56,18 @@ unsafe extern "C" fn effect_attackairf(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 4.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("sys_smash_flash"), Hash40::new("havel"), 1, 0, 0, 0, 0, 0, 0.5, true);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_smash_flash"), Hash40::new("havel"), 1, 0, 0, 0, 0, 0, 0.7, true);
     }
     frame(lua_state, 7.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("mario_fb_shoot"), Hash40::new("mario_fb_shoot"), Hash40::new("havel"), 0.75, -1, 0, 0, -45, 0, 0.5, true, *EF_FLIP_YZ);
     }
-    frame(lua_state, 17.0);
+    frame(lua_state, 14.0);
     if is_excute(agent){
 	    EFFECT_FOLLOW_FLIP(agent, Hash40::new("mario_fb_bullet_r"), Hash40::new("mario_fb_bullet_l"), Hash40::new("handl"), 0.75, -1, 0, 0, 0, 0, 0.4, true, *EF_FLIP_YZ);
+    }
+    frame(lua_state, 17.0);
+    if is_excute(agent){
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_b"), Hash40::new("sys_attack_arc_b"), Hash40::new("top"), 0, 7, -1, -3, -11, -113, 1.1, true, *EF_FLIP_YZ);
         LAST_EFFECT_SET_RATE(agent, 0.5);
     }
@@ -72,12 +75,9 @@ unsafe extern "C" fn effect_attackairf(agent: &mut L2CAgentBase) {
     if is_excute(agent){
         LAST_EFFECT_SET_RATE(agent, 1.0);
     }
-    frame(lua_state, 24.0);
+    frame(lua_state, 23.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("mario_fb_shoot"), false, false);
-    }
-    frame(lua_state, 25.0);
-    if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("mario_fb_bullet_r"), false, false);
         EFFECT_OFF_KIND(agent, Hash40::new("mario_fb_bullet_l"), false, false);
     }

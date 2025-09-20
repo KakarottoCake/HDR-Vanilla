@@ -21,7 +21,7 @@ unsafe extern "C" fn game_attacks4(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_attacks4charge(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    EFFECT_FOLLOW_FLIP(agent, Hash40::new("mario_fb_shoot"), Hash40::new("mario_fb_shoot"), Hash40::new("havel"), 1.5, 0, 0, 0, 0, 0, 0.3, true, *EF_FLIP_YZ);
+    EFFECT_FOLLOW_FLIP(agent, Hash40::new("mario_fb_shoot"), Hash40::new("mario_fb_shoot"), Hash40::new("havel"), 1.5, 0, 0, 0, 0, 0, 0.5, true, *EF_FLIP_YZ);
     frame(lua_state, 5.0);
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), -2, 0, 0, 0, 0, 0, 1, 10, 0, 4, 0, 0, 0, false);
