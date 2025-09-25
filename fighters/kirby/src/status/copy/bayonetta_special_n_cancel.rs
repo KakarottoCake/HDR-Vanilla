@@ -6,10 +6,12 @@ unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue 
     VarModule::set_int(fighter.battle_object, vars::bayonetta::instance::SPECIAL_N_CANCEL_TYPE, 0);
     if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
         fighter.on_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SPECIAL_N_FOOT);
+        fighter.on_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_FLAG_SPECIAL_N_FOOT);
         fighter.set_int64(hash40("special_n_start_f") as i64, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_MOTION_KIND_G);
         fighter.set_int64(hash40("special_air_n_start_f") as i64, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_MOTION_KIND_A);
     } else {
         fighter.off_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SPECIAL_N_FOOT);
+        fighter.off_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_FLAG_SPECIAL_N_FOOT);
         fighter.set_int64(hash40("special_n_start_h") as i64, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_MOTION_KIND_G);
         fighter.set_int64(hash40("special_air_n_start_h") as i64, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_MOTION_KIND_A);
     }
@@ -30,7 +32,7 @@ unsafe extern "C" fn special_n_charge_init(fighter: &mut L2CFighterCommon) -> L2
 }
 
 unsafe extern "C" fn special_n_charge_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SPECIAL_N_FOOT) {
+    if fighter.is_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_FLAG_SPECIAL_N_FOOT) {
         fighter.set_int64(hash40("special_n_charge_f") as i64, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_MOTION_KIND_G);
         fighter.set_int64(hash40("special_air_n_charge_f") as i64, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_MOTION_KIND_A);
     } else {
@@ -51,7 +53,7 @@ unsafe extern "C" fn special_n_charge_main_loop(fighter: &mut L2CFighterCommon) 
     }
     if fighter.get_int(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_STEP) == 0 {
         if MotionModule::is_end(fighter.module_accessor) {
-            if fighter.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SPECIAL_N_FOOT) {
+            if fighter.is_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_FLAG_SPECIAL_N_FOOT) {
                 fighter.set_int64(hash40("special_n_loop_f") as i64, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_MOTION_KIND_G);
                 fighter.set_int64(hash40("special_air_n_loop_f") as i64, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_MOTION_KIND_A);
                 fighter.sub_change_motion_by_situation_kirby_copy(Hash40::new("special_n_loop_f").into(), Hash40::new("special_air_n_loop_f").into(), false.into());
@@ -98,7 +100,7 @@ unsafe extern "C" fn special_n_cancel_pre(fighter: &mut L2CFighterCommon) -> L2C
 }
 
 unsafe extern "C" fn special_n_cancel_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SPECIAL_N_FOOT) {
+    if fighter.is_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_FLAG_SPECIAL_N_FOOT) {
         fighter.set_int64(hash40("special_n_end_f") as i64, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_MOTION_KIND_G);
         fighter.set_int64(hash40("special_air_n_end_f") as i64, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_MOTION_KIND_A);
     } else {
