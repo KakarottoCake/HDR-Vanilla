@@ -155,7 +155,7 @@ unsafe extern "C" fn game_specialsboostend(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
     }
     frame(lua_state, 8.0);
-    FT_MOTION_RATE(agent, 1.6);
+    FT_MOTION_RATE(agent, 2.0);
 }
 
 unsafe extern "C" fn effect_specialsboostend(agent: &mut L2CAgentBase) {
@@ -247,7 +247,7 @@ unsafe extern "C" fn game_speciallwhold(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_speciallwstart(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 11.0);
+    frame(lua_state, 5.0);
     if is_excute(agent) {
         StatusModule::change_status_request_from_script(boma, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_LW_HOLD, false);
     }
@@ -256,7 +256,7 @@ unsafe extern "C" fn game_speciallwstart(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialairlwstart(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 11.0);
+    frame(lua_state, 5.0);
     if is_excute(agent) {
         StatusModule::change_status_request_from_script(boma, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_LW_HOLD, false);
     }
