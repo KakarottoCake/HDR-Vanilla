@@ -1310,6 +1310,10 @@ pub mod vars {
     }
 
     pub mod peach {
+        pub mod status {
+            // ints
+            pub const EFFECT_HANDLER: i32 = 0x1100;
+        }
         pub mod instance {
             // flag
             pub const DISABLE_SPECIAL_S: i32 = 0x0100;
