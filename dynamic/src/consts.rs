@@ -1229,10 +1229,14 @@ pub mod vars {
         pub mod instance {
             //flags
             pub const DISABLE_SPECIAL_HI: i32 = 0x0100;
+            pub const SPECIAL_LW_DISABLE_STALL: i32 = 0x0101;
         }
         pub mod status {
             // flags
             pub const SPECIAL_HI_THUNDER_LOOSE: i32 = 0x1100;
+
+            // ints
+            pub const SPECIAL_LW_STOP_Y_FRAME: i32 = 0x1100;
         }
     }
 
