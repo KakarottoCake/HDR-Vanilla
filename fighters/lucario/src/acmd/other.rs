@@ -141,9 +141,6 @@ unsafe extern "C" fn game_catchattack(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_slipattack(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_FORCE_AURAPOWER_ATTACK_POWER_MUL);
-    }
     frame(lua_state, 19.0);
     if is_excute(agent) {
         MeterModule::watch_damage(agent.battle_object, true);
@@ -169,9 +166,6 @@ unsafe extern "C" fn game_slipattack(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_downattackd(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_FORCE_AURAPOWER_ATTACK_POWER_MUL);
-    }
     frame(lua_state, 16.0);
     if is_excute(agent) {
         MeterModule::watch_damage(agent.battle_object, true);
@@ -197,9 +191,6 @@ unsafe extern "C" fn game_downattackd(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_downattacku(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_FORCE_AURAPOWER_ATTACK_POWER_MUL);
-    }
     frame(lua_state, 16.0);
     if is_excute(agent) {
         MeterModule::watch_damage(agent.battle_object, true);
