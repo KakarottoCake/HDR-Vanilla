@@ -587,9 +587,6 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
         ArticleModule::change_motion(boma, *FIGHTER_KIRBY_GENERATE_ARTICLE_STONE, Hash40::new("special_lw"), false, -1.0);
     }
 
-    // allows 5 double jumps if started on the ground
-    VarModule::set_int(agent.battle_object, vars::kirby::instance::SPECIAL_LW_USED_JUMPS, 1);
-
     frame(lua_state, 1.0);
     FT_MOTION_RATE_RANGE(agent, 1.0, 13.0, 8.0);
     frame(lua_state, 5.0);
@@ -618,10 +615,6 @@ unsafe extern "C" fn game_specialairlw(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         ArticleModule::change_motion(boma, *FIGHTER_KIRBY_GENERATE_ARTICLE_STONE, Hash40::new("special_air_lw"), false, -1.0);
     }
-
-    // store remaining jumps
-    let jumps = agent.get_num_used_jumps();
-    VarModule::set_int(agent.battle_object, vars::kirby::instance::SPECIAL_LW_USED_JUMPS, jumps);
 
     frame(lua_state, 10.0);
     if is_excute(agent) {
