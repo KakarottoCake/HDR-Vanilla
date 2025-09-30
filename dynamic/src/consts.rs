@@ -975,6 +975,7 @@ pub mod vars {
             // floats
             pub const SPECIAL_N_ANGLE: i32 = 0x1100;
             pub const AURA_OVERRIDE: i32 = 0x1101;
+            pub const SPECIAL_HI_START_LR: i32 = 0x1102;
         }
     }
 
