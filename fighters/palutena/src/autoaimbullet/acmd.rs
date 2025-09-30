@@ -23,9 +23,16 @@ unsafe extern "C" fn effect_shot(agent: &mut L2CAgentBase) {
     let owner_module_accessor = boma.get_owner_boma();
     let palutena = owner_module_accessor.kind() == *FIGHTER_KIND_PALUTENA;
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("palutena_bullet_shot"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         if palutena {
-            LAST_EFFECT_SET_COLOR(agent, 0.85, 0.40, 0.001);
+            EFFECT_FOLLOW(agent, Hash40::new("palutena_bullet_grey"), Hash40::new("top"), 0, 0, 0.0, 0, 0, 0, 1.0, false);
+            LAST_EFFECT_SET_COLOR(agent, 1.25, 1.00, 0.025);
+            LAST_EFFECT_SET_SCALE_W(agent, 1.05, 0.85, 1.05);
+            EFFECT(agent, Hash40::new("palutena_bullet_shot_grey"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, true);
+            LAST_EFFECT_SET_COLOR(agent, 1.25, 1.00, 0.025);
+            LAST_EFFECT_SET_RATE(agent, 1.5);
+            LAST_EFFECT_SET_ALPHA(agent, 0.75);
+        } else {
+            EFFECT(agent, Hash40::new("palutena_bullet_shot"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         }
     }
     if palutena {

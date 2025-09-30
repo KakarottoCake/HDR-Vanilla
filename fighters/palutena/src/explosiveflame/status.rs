@@ -24,6 +24,47 @@ unsafe extern "C" fn check_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
     return 0.into();
 }
 
+unsafe extern "C" fn check_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    weapon.set_int(29, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    MotionModule::change_motion(weapon.module_accessor, Hash40::new("check"), 0.0, 1.0, false, 0.0, false, false);
+
+    let pos: *const Vector3f = PostureModule::pos(weapon.get_owner_boma());
+    PostureModule::set_pos(weapon.module_accessor, pos);
+    weapon.shift(L2CValue::Ptr(check_main_loop as *const () as _))
+}
+
+unsafe extern "C" fn check_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    weapon.dec_int(*WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    let life = weapon.get_int(*WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    if life == 20 {
+        // use f0 pos, effective 8f to release special
+        let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
+        let palutena = utils::util::get_battle_object_from_id(owner_id);
+        let palutena_boma = &mut *(*palutena).module_accessor;
+        let palu_lr = palutena_boma.lr();
+        //let pos = VarModule::get_vec2(palutena_boma.object(), vars::palutena::status::SPECIAL_S_INIT_POS);
+        let base_range = palutena_boma.get_param_float("param_special_s", "special_s_generate_range");
+        let held_range = palutena_boma.get_param_float("param_special_s", "special_s_flick_generate_range");
+        let offset_x = if palutena_boma.is_button_on(Buttons::SpecialAll) {held_range} else {base_range};
+        let pos = *PostureModule::pos(weapon.module_accessor);
+        let new_pos = Vector3f::new(pos.x + (offset_x * palu_lr), pos.y + 11.0, pos.z);
+        PostureModule::set_pos(weapon.module_accessor, &new_pos);
+        EFFECT_FOLLOW(weapon, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, true);
+        if GroundModule::is_touch(weapon.module_accessor, (*GROUND_TOUCH_FLAG_LEFT | *GROUND_TOUCH_FLAG_UP | *GROUND_TOUCH_FLAG_RIGHT | *GROUND_TOUCH_FLAG_UP_LEFT
+        | *GROUND_TOUCH_FLAG_UP_RIGHT) as u32) {
+            weapon.on_flag(*WEAPON_PALUTENA_EXPLOSIVEFLAME_INSTANCE_WORK_ID_FLAG_RESERVE_MISS);
+        }
+    }
+    if weapon.is_flag(*WEAPON_PALUTENA_EXPLOSIVEFLAME_INSTANCE_WORK_ID_FLAG_RESERVE_MISS) {
+        weapon.change_status(WEAPON_PALUTENA_EXPLOSIVEFLAME_STATUS_KIND_MISS.into(), false.into());
+    }
+    if life <= 0 {
+        weapon.change_status(statuses::palutena_explosiveflame::EXPLODE_KIRBY.into(), false.into());
+    }
+
+    return 0.into();
+}
+
 unsafe extern "C" fn check_kirby_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
     StatusModule::init_settings(
         weapon.module_accessor,
@@ -125,6 +166,7 @@ unsafe extern "C" fn explode_kirby_end(weapon: &mut L2CWeaponCommon) -> L2CValue
 
 pub fn install(agent: &mut Agent) {
     agent.status(Pre, *WEAPON_PALUTENA_EXPLOSIVEFLAME_STATUS_KIND_CHECK, check_pre);
+    agent.status(Main, *WEAPON_PALUTENA_EXPLOSIVEFLAME_STATUS_KIND_CHECK, check_main);
 
     agent.status(Pre, statuses::palutena_explosiveflame::CHECK_KIRBY, check_kirby_pre);
     agent.status(Main, statuses::palutena_explosiveflame::CHECK_KIRBY, check_kirby_main);

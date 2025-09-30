@@ -44,8 +44,8 @@ unsafe extern "C" fn effect_specialnb(agent: &mut L2CAgentBase) {
     let y_pos = if powered {25} else {16};
     frame(lua_state, 14.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light2"), Hash40::new("stick"), 0, 8.65, 0, 0, 0, 0, 1, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.05, 0.05, 0.90);
+        EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light2_grey"), Hash40::new("stick"), 0, 8.65, 0, 0, 0, 0, 1, true);
+        LAST_EFFECT_SET_COLOR(agent, 0.025, 0.15, 0.95);
         EFFECT_FOLLOW(agent, Hash40::new("sys_freezer"), Hash40::new("top"), 0, 3, 10, 0, 0, 0, 0.75, true);
         EFFECT_FOLLOW(agent, Hash40::new("palutena_pressure"), Hash40::new("top"), 0, 0, 10, 0, 0, 0, length2, true);
         LAST_EFFECT_SET_ALPHA(agent, 0.3);
@@ -53,9 +53,9 @@ unsafe extern "C" fn effect_specialnb(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 16.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW_ALPHA(agent, Hash40::new("palutena_backlight"), Hash40::new("top"), 4, 21.5, 2, 0, -60, 0, 1, true, 0.7);
+        EFFECT_FOLLOW_ALPHA(agent, Hash40::new("palutena_backlight_grey"), Hash40::new("top"), 4, 21.5, 2, 0, -60, 0, 1, true, 0.7);
         LAST_EFFECT_SET_RATE(agent, 1.1);
-        LAST_EFFECT_SET_COLOR(agent, 0.35, 0.35, 0.90);
+        LAST_EFFECT_SET_COLOR(agent, 0.025, 0.15, 0.95);
         EFFECT_FOLLOW(agent, Hash40::new("sys_ice"), Hash40::new("top"), 0, y_pos, 10, 0, 250, 0, 1, true);
         LAST_EFFECT_SET_COLOR(agent, 0.35, 0.35, 0.90);
         EffectModule::set_scale_last(boma, &Vector3f::new(0.5, length, 0.5));
@@ -75,7 +75,7 @@ unsafe extern "C" fn effect_specialnb(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 50.0);
     if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("palutena_wand_light2"), false, false);
+        EFFECT_OFF_KIND(agent, Hash40::new("palutena_wand_light2_grey"), false, false);
     }
 }
 

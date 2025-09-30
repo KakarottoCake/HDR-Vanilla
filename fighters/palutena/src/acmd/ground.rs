@@ -94,7 +94,8 @@ unsafe extern "C" fn effect_attackdash(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("palutena_shield_flash"), Hash40::new("shield"), 0, 0, 0, 0, 0, 0, 1, true);
         LAST_EFFECT_SET_RATE(agent, 0.5);
-        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 11, 16, 0, 0, 0, 1, true);
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 11, 15.0, 0, 0, 0, 0.5, true);
+        LAST_EFFECT_SET_RATE(agent, 1.1);
     }
     frame(lua_state, 4.0);
     if is_excute(agent) {
