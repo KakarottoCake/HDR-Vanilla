@@ -46,7 +46,7 @@ unsafe extern "C" fn special_hi_exec(fighter: &mut L2CFighterCommon) -> L2CValue
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LUCARIO_MACH_STATUS_WORK_ID_FLAG_RUSH_DIR_ROT);
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LUCARIO_MACH_STATUS_WORK_ID_FLAG_RUSH_DIR);
             let rate = (0.6).lerp(&1.0, &((motion_frame - start_frame) / (end_frame - start_frame)));
-            if !fighter.is_button_on(Buttons::SpecialRaw) {
+            if !fighter.is_button_on(Buttons::SpecialAll) {
                 VarModule::set_float(fighter.battle_object, vars::lucario::instance::SPECIAL_HI_MOTION_RATE, rate);
                 MotionModule::set_frame_sync_anim_cmd(fighter.module_accessor, end_frame, true, true, false);
             }
