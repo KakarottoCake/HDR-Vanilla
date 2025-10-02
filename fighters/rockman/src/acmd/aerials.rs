@@ -222,6 +222,7 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     if is_excute(agent) {
+        VarModule::on_flag(agent.battle_object, vars::common::status::DISABLE_ECB_SHIFT);
         FT_MOTION_RATE(agent, 17.0/(23.0-1.0));
     }
     frame(lua_state, 6.0);
@@ -234,6 +235,7 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
         FT_MOTION_RATE(agent, 1.000);
         ArticleModule::generate_article(boma, *FIGHTER_ROCKMAN_GENERATE_ARTICLE_HARDKNUCKLE, false, 0);
         WorkModule::off_flag(boma, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_GRAVITY_STABLE_UNABLE);
+        VarModule::off_flag(agent.battle_object, vars::common::status::DISABLE_ECB_SHIFT);
     }
     frame(lua_state, 55.0);
     if is_excute(agent) {
