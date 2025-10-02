@@ -143,6 +143,7 @@ unsafe extern "C" fn effect_attack100end(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("pitb_sword"), true, true);
+        EFFECT_OFF_KIND(agent, Hash40::new("pitb_atk100_hdr"), true, true);
     }
     frame(lua_state, 4.0);
     if is_excute(agent) {
