@@ -193,6 +193,7 @@ unsafe extern "C" fn motion_handling(fighter: &mut L2CFighterCommon, drift: bool
     let mot_gr = fighter.get_int64(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_MOTION_KIND_G);
     let mot_air = fighter.get_int64(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_MOTION_KIND_A);
     let air = if drift {*FIGHTER_KINETIC_TYPE_MOTION_FALL} else {*FIGHTER_KINETIC_TYPE_AIR_STOP};
+    fighter.sub_air_check_dive();
     if StatusModule::is_changing(fighter.module_accessor) {
         fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND, *GROUND_CORRECT_KIND_AIR);
         fighter.change_kinetic_by_situation(*FIGHTER_KINETIC_TYPE_GROUND_STOP, air);

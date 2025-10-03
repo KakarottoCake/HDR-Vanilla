@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <struct>
     <struct hash="param_special_lag">
-        <float hash="base_lag">8.0</float>
+        <float hash="base_lag">10.0</float>
         <float hash="whiff_lag">6.0</float>
-        <float hash="dive_side_special">3.0</float>
-        <float hash="side_special">6.0</float>
-        <float hash="up_special">6.0</float>
+        <float hash="bullet_arts_lag">4.0</float>
+        <float hash="dive_side_special">4.0</float>
+        <float hash="side_special">4.0</float>
+        <float hash="up_special">4.0</float>
     </struct>
     <struct hash="param_special_n">
         <float hash="startup_frame">15.0</float>

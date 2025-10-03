@@ -26,24 +26,30 @@ unsafe extern "C" fn ground_checks(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
         if fighter.is_in_hitlag() {special_s_slow_hit(fighter); }
         else if fighter.is_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_S_FLAG_HIT) {
-            if fighter.is_cat_flag(Cat1::SpecialS | Cat1::AttackS3) 
-            && !fighter.is_button_trigger(Buttons::CStickOn)
-            && frame >= 20 && frame <= 35 {
+            // manual heelslide kick on jab/ftilt or nb/sb input, buffered heel slide legacy input on last frame if input is held
+            if check_input(fighter)
+            && ((fighter.is_cat_flag(Cat1::SpecialAny | Cat1::AttackN | Cat1::AttackS3)
+            && frame >= 20 && frame <= 35)
+            || (hold_check(fighter) && VarModule::is_flag(fighter.battle_object, vars::bayonetta::status::SPECIAL_1F_CHECK)))
+            {
+                EFFECT(fighter, Hash40::new("sys_smash_flash_s"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1.35, 4, 4, 4, 0, 0, 0, false); // flash on manual activation to match dabk
+                LAST_EFFECT_SET_RATE(fighter, 0.8);
                 GroundModule::set_correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
-                fighter.change_status(statuses::bayonetta::SPECIAL_S_KICK.into(), true.into());
-            }//heelslide kick
+                fighter.change_status(statuses::bayonetta::SPECIAL_S_KICK.into(), true.into())
+            } 
+            VarModule::off_flag(fighter.battle_object, vars::bayonetta::status::SPECIAL_1F_CHECK);
         }
         if frame == 35 {EFFECT_OFF_KIND(fighter, Hash40::new("bayonetta_heelslide_burst"), false, false); } //fx
         if MotionModule::is_end(fighter.module_accessor) {fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());} //end transition
     } else {
-        if frame >= 45 {fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into()); }
+        if frame >= 44 {fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into()) }
         else if StatusModule::is_situation_changed(fighter.module_accessor) {
             let slide_frame = (frame - 15).clamp(1, 24) as f32;
-            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s_edge"), 0.0, 1.0, false, 0.0, false, false); //1x speed -> 1.5x
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s_edge"), 0.0, 1.0, false, 0.0, false, false); // 1x-1.5x speed
             fighter.set_situation(SITUATION_KIND_AIR.into());
             GroundModule::set_correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
-            sv_kinetic_energy!(set_speed_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, 1.045 - 0.043*slide_frame); //1.006x -> 0.015x dist
+            sv_kinetic_energy!(set_speed_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, 1.045 - 0.043 * slide_frame); // 1.006x-0.015x dist
         }
     }
     0.into()
@@ -147,6 +153,43 @@ unsafe extern "C" fn var_reset(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.off_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_DISABLE_AIR_SPECIAL_HI);
     fighter.off_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_AFTER_ACTION);
     return 0.into();
+}
+
+unsafe extern "C" fn check_input(fighter: &mut L2CFighterCommon) -> bool {
+    let turn_x = fighter.get_param_float("common", "turn_stick_x");
+    let special_stick_y = fighter.get_param_float("common", "special_stick_y");
+    let lr = fighter.lr();
+    let stick_x = VarModule::get_float(fighter.battle_object, vars::common::instance::ATTACK_S3_CSTICK_X);
+    let mut valid_direc = true;
+    // filter turnaround on 5f buffer check
+    if fighter.is_cat_flag(Cat1::AttackS3) 
+    && (stick_x  + lr).abs() < 1.0
+    {
+        return false.into()
+    }
+    // filter on bufferable on-hit input 
+    if ((fighter.stick_x() * lr < turn_x && fighter.is_button_off(Buttons::CStickOn))
+    || (fighter.right_stick_x() * lr < turn_x) && fighter.is_button_on(Buttons::CStickOn))
+    {
+        return false.into()
+    }
+    // filter up/down tilt
+    if ((fighter.stick_y().abs() > special_stick_y && fighter.is_button_off(Buttons::CStickOn))
+    || (fighter.right_stick_y().abs() > special_stick_y) && fighter.is_button_on(Buttons::CStickOn))
+    {
+        return false.into()
+    }
+    // again but also filter grab
+    if !ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CATCH)
+    && fighter.global_table[CMD_CAT1].get_i32() & (
+        *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW | *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI |
+        *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3 |
+        *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4 |
+        *FIGHTER_PAD_CMD_CAT1_FLAG_CATCH
+    ) == 0 {
+        return true.into()
+    }
+    false.into()
 }
 
 pub fn install(agent: &mut Agent) {

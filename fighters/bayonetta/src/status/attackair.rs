@@ -4,6 +4,9 @@ use super::*;
 
 unsafe extern "C" fn attack_air_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_NO_LIMIT_ONCE);
+    if fighter.global_table[CURRENT_FRAME].get_i32() as f32 <= fighter.get_param_float("param_special_hi", "jump_count_reset_frame") {
+        EffectModule::req_follow(fighter.module_accessor, Hash40::new("bayonetta_feather_twinkle"), Hash40::new("waist"), &Vector3f{x: 0.0, y: 0.0, z: 0.0}, &Vector3f::zero(), 0.8, true, 0, 0, 0, 0, 0, false, false);
+    }
     smashline::original_status(Pre, fighter, *FIGHTER_STATUS_KIND_ATTACK_AIR)(fighter)
 }
 
@@ -50,18 +53,29 @@ unsafe extern "C" fn bayonetta_attack_air_f_loop(fighter: &mut L2CFighterCommon)
         fighter.change_status(FIGHTER_BAYONETTA_STATUS_KIND_ATTACK_AIR_F.into(), false.into());
     }
     if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) 
-    && !fighter.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_ACTION) {
+    && !fighter.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_ACTION)
+    && !fighter.is_motion(Hash40::new("attack_air_f3")) {
         let control_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL) as *mut smash::app::KineticEnergy;
-        sv_kinetic_energy!(controller_set_accel_x_mul, fighter, 0.055);
+        // set speed muls
+        let mut x_speed = 0.58;
+        let mut x_center = 0.0;
+        let mut y_speed = 0.0;
         if fighter.is_motion(Hash40::new("attack_air_f")) {
-            let y_speed = fighter.get_param_float("param_private", "attack_air_f_hit_speed_y");
-            smash::app::lua_bind::KineticEnergy::mul_speed(control_energy, &Vector3f::new(0.55, 1.0, 1.0)); 
-            sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, y_speed);
-        } else if fighter.is_motion(Hash40::new("attack_air_f2")) {
-            let y_speed = fighter.get_param_float("param_private", "attack_air_f2_hit_speed_y");
-            smash::app::lua_bind::KineticEnergy::mul_speed(control_energy, &Vector3f::new(0.60, 1.0, 1.0)); 
-            sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, y_speed);
+            x_center = 8.0; // 8.0 farthest from center
+            y_speed = fighter.get_param_float("param_private", "attack_air_f_hit_speed_y");
+        } else {
+            x_center = 12.5; // 7.5 farthest from center
+            y_speed = fighter.get_param_float("param_private", "attack_air_f2_hit_speed_y");
         }
+        // calc pos dependent speed
+        let hit_pos = VarModule::get_vec3(fighter.battle_object, vars::common::instance::LAST_ATTACK_HIT_LOCATION);
+        let center_pos = AttackModule::center_pos(fighter.module_accessor, 3, false);
+        let x_add = (hit_pos.x - (PostureModule::pos_x(fighter.module_accessor) + x_center)) / 60.0 * fighter.lr();
+        let y_add = (hit_pos.y - (PostureModule::pos_y(fighter.module_accessor) + 12.0)) / 19.0;
+        // cut x speed and set y speed
+        sv_kinetic_energy!(controller_set_accel_x_mul, fighter, 0.055);
+        smash::app::lua_bind::KineticEnergy::mul_speed(control_energy, &Vector3f::new(x_speed + x_add, 1.0, 1.0)); 
+        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, y_speed + y_add);
     }
     if !fighter.status_AttackAir_Main_common().get_bool() {
         fighter.sub_air_check_superleaf_fall_slowly();
@@ -74,6 +88,10 @@ unsafe extern "C" fn bayonetta_attack_air_f_loop(fighter: &mut L2CFighterCommon)
 }
 
 unsafe extern "C" fn fair_motion(fighter: &mut L2CFighterCommon) -> L2CValue {
+    // doesn't autocancel during startup if fair was combo'd
+    if fighter.is_prev_status(*FIGHTER_BAYONETTA_STATUS_KIND_ATTACK_AIR_F) {
+        fighter.on_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+    }
     let fair = VarModule::get_int(fighter.battle_object, vars::bayonetta::instance::ATTACK_AIR_F_COUNT);
     if fair == 1 {
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_air_f2"), 0.0, 1.0, false, 0.0, false, false);
