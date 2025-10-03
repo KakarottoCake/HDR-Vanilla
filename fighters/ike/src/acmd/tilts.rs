@@ -189,10 +189,10 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_attacks3", game_attacks3, Priority::Low);
     agent.acmd("effect_attacks3", effect_attacks3, Priority::Low);
     agent.acmd("game_attacks3hi", game_attacks3, Priority::Low);
-     agent.acmd("effect_attacks3hi", effect_attacks3, Priority::Low);
+    agent.acmd("effect_attacks3hi", effect_attacks3, Priority::Low);
     agent.acmd("expression_attacks3", expression_attacks3, Priority::Low);
     agent.acmd("game_attacks3lw", game_attacks3, Priority::Low);
-     agent.acmd("effect_attacks3lw", effect_attacks3, Priority::Low);
+    agent.acmd("effect_attacks3lw", effect_attacks3, Priority::Low);
     agent.acmd("expression_attacks3hi", expression_attacks3, Priority::Low);
     agent.acmd("expression_attacks3lw", expression_attacks3, Priority::Low);
 
