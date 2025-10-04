@@ -10,13 +10,13 @@ unsafe extern "C" fn game_attacks3(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         VarModule::on_flag(boma.object(), vars::palutena::status::ENABLE_COLOR_INCREMENT);
         HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_XLU);
-        ATTACK(agent, 1, 0, Hash40::new("stick"), 10.0, 50, 100, 0, 50, 4.3, 0.0, 4.9, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
-        ATTACK(agent, 0, 0, Hash40::new("stick"), 10.0, 50, 100, 0, 50, 3.5, 0.0, -6.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
+        ATTACK(agent, 1, 0, Hash40::new("stick"), 10.0, 50, 105, 0, 50, 4.3, 0.0, 4.9, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
+        ATTACK(agent, 0, 0, Hash40::new("stick"), 10.0, 50, 105, 0, 50, 3.5, 0.0, -6.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
     }
     frame(lua_state, 29.0);
     if is_excute(agent) {
-        ATTACK(agent, 1, 1, Hash40::new("stick"), 6.0, 40, 111, 0, 40, 4.3, 0.0, 4.9, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
-        ATTACK(agent, 0, 1, Hash40::new("stick"), 6.0, 40, 111, 0, 40, 3.5, 0.0, -6.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
+        ATTACK(agent, 1, 1, Hash40::new("stick"), 6.0, 40, 120, 0, 40, 4.3, 0.0, 4.9, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
+        ATTACK(agent, 0, 1, Hash40::new("stick"), 6.0, 40, 120, 0, 40, 3.5, 0.0, -6.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
     }
     frame(lua_state, 41.0);
     FT_MOTION_RATE(agent, 1.0);
@@ -34,10 +34,14 @@ unsafe extern "C" fn effect_attacks3(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
-    frame(lua_state, 13.0);
+    frame(lua_state, 12.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light4_grey"), Hash40::new("stick"), 0, 8.65, 0, 0, 0, 0, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light_trace_grey"), Hash40::new("stick"), 0, 8.65, 0, 0, 0, 0, 1, true);
         LAST_EFFECT_SET_COLOR(agent, 1.0, 0.87, 0.0125);
+        LAST_EFFECT_SET_RATE(agent, 1.25);
+        EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light4_grey"), Hash40::new("stick"), 0, 8.65, 0, 0, 0, 0, 1.0, true);
+        LAST_EFFECT_SET_COLOR(agent, 1.0, 0.87, 0.0125);
+        LAST_EFFECT_SET_RATE(agent, 6.0/9.0);
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {
@@ -54,6 +58,12 @@ unsafe extern "C" fn effect_attacks3(agent: &mut L2CAgentBase) {
         };
         EFFECT_FOLLOW(agent, hash, Hash40::new("stick"), 0, 0, 0, 0, 0, 0, 1, true);
     }
+    frame(lua_state, 26.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light4_grey"), Hash40::new("stick"), 0, 8.65, 0, 0, 0, 0, 1.0, true);
+        LAST_EFFECT_SET_COLOR(agent, 1.0, 0.87, 0.0125);
+        LAST_EFFECT_SET_RATE(agent, 6.0/11.0);
+    }
     frame(lua_state, 40.0);
     if is_excute(agent) {
         match WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) {
@@ -68,8 +78,9 @@ unsafe extern "C" fn effect_attacks3(agent: &mut L2CAgentBase) {
             _ => EFFECT_OFF_KIND(agent, Hash40::new("palutena_wand_trace_08"), false, false),
         };
     }
-    frame(lua_state, 42.0);
+    frame(lua_state, 43.0);
     if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("palutena_wand_light_trace_grey"), false, false);
         EFFECT_OFF_KIND(agent, Hash40::new("palutena_wand_light4_grey"), false, false);
     }
 }
@@ -81,10 +92,11 @@ unsafe extern "C" fn game_attackhi3(agent: &mut L2CAgentBase) {
         VarModule::on_flag(boma.object(), vars::palutena::status::ENABLE_COLOR_INCREMENT);
     }
     frame(lua_state, 1.0);
-    FT_MOTION_RATE(agent, 0.778);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 9.0, 7.0);
     frame(lua_state, 9.0);
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 10.0);
+    FT_MOTION_RATE_RANGE(agent, 10.0, 30.0, 11.0);
     FT_MOTION_RATE(agent, 0.571);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 1.4, 367, 100, 20, 0, 3.0, 0.0, 18.0, 4.0, None, None, None, 0.75, 0.3, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
@@ -114,6 +126,13 @@ unsafe extern "C" fn effect_attackhi3(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
     }
+    frame(lua_state, 9.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light_trace_grey"), Hash40::new("stick"), 0, 8.65, 0, 0, 0, 0, 1, true);
+        LAST_EFFECT_SET_COLOR(agent, 0.05, 0.2, 0.95);
+        EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light4_grey"), Hash40::new("stick"), 0, 8.65, 0, 0, 0, 0, 1, true);
+        LAST_EFFECT_SET_COLOR(agent, 0.05, 0.2, 0.95);
+    }
     frame(lua_state, 10.0);
     if is_excute(agent) {
         let hash = match WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) {
@@ -129,10 +148,11 @@ unsafe extern "C" fn effect_attackhi3(agent: &mut L2CAgentBase) {
         };
         EFFECT_FOLLOW(agent, hash, Hash40::new("stick"), 0, 0, 0, 0, 0, 0, 1, true);
     }
-    frame(lua_state, 10.0);
+    frame(lua_state, 18.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light4_grey"), Hash40::new("stick"), 0, 8.65, 0, 0, 0, 0, 1, true);
         LAST_EFFECT_SET_COLOR(agent, 0.05, 0.2, 0.95);
+        LAST_EFFECT_SET_RATE(agent, 6.0/8.0);
     }
     frame(lua_state, 32.0);
     if is_excute(agent) {
@@ -148,8 +168,9 @@ unsafe extern "C" fn effect_attackhi3(agent: &mut L2CAgentBase) {
             _ => EFFECT_OFF_KIND(agent, Hash40::new("palutena_wand_trace_08"), false, false),
         };
     }
-    frame(lua_state, 35.0);
+    frame(lua_state, 36.0);
     if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("palutena_wand_light_trace_grey"), false, false);
         EFFECT_OFF_KIND(agent, Hash40::new("palutena_wand_light4_grey"), false, false);
     }
 }
@@ -189,6 +210,14 @@ unsafe extern "C" fn effect_attacklw3(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
+    frame(lua_state, 11.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light_trace_grey"), Hash40::new("stick"), 0, 8.65, 0, 0, 0, 0, 1, true);
+        LAST_EFFECT_SET_COLOR(agent, 1.0, 0.0, 0.05);
+        EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light4_grey"), Hash40::new("stick"), 0, 8.65, 0, 0, 180, 0, 1, true);
+        LAST_EFFECT_SET_COLOR(agent, 1.0, 0.0, 0.05);
+        LAST_EFFECT_SET_RATE(agent, 6.0/9.0);
+    }
     frame(lua_state, 13.0);
     if is_excute(agent) {
         let hash = match WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) {
@@ -203,8 +232,6 @@ unsafe extern "C" fn effect_attacklw3(agent: &mut L2CAgentBase) {
             _ => Hash40::new("palutena_wand_trace_08"),
         };
         EFFECT_FOLLOW(agent, hash, Hash40::new("stick"), 0, 0, 0, 0, 0, 0, 1, true);
-        EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light4_grey"), Hash40::new("stick"), 0, 8.65, 0, 0, 180, 0, 1, true);
-        LAST_EFFECT_SET_COLOR(agent, 1.0, 0.0, 0.05);
     }
     frame(lua_state, 29.0);
     if is_excute(agent) {
@@ -222,6 +249,7 @@ unsafe extern "C" fn effect_attacklw3(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 32.0);
     if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("palutena_wand_light_trace_grey"), false, false);
         EFFECT_OFF_KIND(agent, Hash40::new("palutena_wand_light4_grey"), false, false);
     }
 }

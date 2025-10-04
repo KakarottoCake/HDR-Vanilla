@@ -81,7 +81,8 @@ unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue 
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         FighterMotionModuleImpl::change_motion_kirby_copy(fighter.module_accessor, Hash40::new("special_air_n"), 0.0, 1.0, false, 0.0, false, false);
     }
-    notify_event_msc_cmd!(fighter, Hash40::new_raw(0x37b6ecdcec));
+    //notify_event_msc_cmd!(fighter, Hash40::new_raw(0x37b6ecdcec));
+    ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_PALUTENA_GENERATE_ARTICLE_EXPLOSIVEFLAME, false, -1);
 
     fighter.main_shift(special_n_main_loop)
 }

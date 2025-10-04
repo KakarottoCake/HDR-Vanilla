@@ -161,10 +161,7 @@ unsafe extern "C" fn special_s_main(fighter: &mut L2CFighterCommon) -> L2CValue 
     }
 
     //notify_event_msc_cmd!(fighter, Hash40::new_raw(0x37b6ecdcec));
-    //let pos = PostureModule::pos_2d(fighter.module_accessor);
-    //VarModule::set_vec2(fighter.battle_object, vars::palutena::status::SPECIAL_S_INIT_POS, Vector2f{x: pos.x, y: pos.y});
     ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_PALUTENA_GENERATE_ARTICLE_EXPLOSIVEFLAME, false, -1);
-
 
     fighter.main_shift(special_s_main_loop)
 }

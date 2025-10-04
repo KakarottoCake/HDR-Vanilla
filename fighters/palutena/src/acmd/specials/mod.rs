@@ -11,27 +11,32 @@ unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if agent.kind() == *FIGHTER_KIND_PALUTENA {
-        frame(lua_state, 7.0);
-        if is_excute(agent) {
-            ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 72, 40, 0, 70, 8.0, 0.0, 12.0, 10.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
-        }
-        wait(lua_state, 2.0);
-        if is_excute(agent) {
-            AttackModule::clear(boma, 0, false);
-        }
-        frame(lua_state, 22.0);
+        FT_MOTION_RATE_RANGE(agent, 1.0, 12.0, 6.0);
         if is_excute(agent) {
             search!(agent, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR_ALL);
         }
+        frame(lua_state, 12.0);
+        FT_MOTION_RATE_RANGE(agent, 12.0, 38.0, 3.0);
+        if is_excute(agent) {
+            ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 72, 40, 0, 70, 8.0, 0.0, 12.0, 10.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
+        }
+        frame(lua_state, 38.0);
+        FT_MOTION_RATE(agent, 1.0);
+        //FT_MOTION_RATE_RANGE(agent, 38.0, 51.0, 11.0);
+        if is_excute(agent) {
+            AttackModule::clear(boma, 0, false);
+        }
+        //frame(lua_state, 51.0); // 27 faf
+        //FT_MOTION_RATE(agent, 1.0);
     }
     else {
         FT_MOTION_RATE(agent, 1.2);
-        frame(lua_state, 5.0);
+        //frame(lua_state, 5.0);
         if is_excute(agent) {
-            if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
-                VarModule::on_flag(agent.battle_object, vars::kirby::status::PALUTENA_SPECIAL_N_HOLD);
-            }
-            ArticleModule::generate_article(boma, *FIGHTER_PALUTENA_GENERATE_ARTICLE_EXPLOSIVEFLAME, false, -1);
+            //if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
+            //    VarModule::on_flag(agent.battle_object, vars::kirby::status::PALUTENA_SPECIAL_N_HOLD);
+            //}
+            //ArticleModule::generate_article(boma, *FIGHTER_PALUTENA_GENERATE_ARTICLE_EXPLOSIVEFLAME, false, -1);
         }
     }
 }
@@ -39,18 +44,22 @@ unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_specialn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 6.0);
+    frame(lua_state, 9.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("palutena_backlight_grey"), Hash40::new("top"), -0.2, 22, -1, 10, 90, 0, 1, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.95, 0.95, 0.95);
+        LAST_EFFECT_SET_COLOR(agent, 0.9, 0.9, 0.9);
         EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light_trace_grey"), Hash40::new("stick"), 0, 8.65, 0, 0, 0, 0, 1, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.95, 0.95, 0.95);
+        LAST_EFFECT_SET_COLOR(agent, 0.9, 0.9, 0.9);
         EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light2_grey"), Hash40::new("stick"), 0, 8.65, 0, 0, 0, 0, 1, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.95, 0.95, 0.95);
-        EFFECT(agent, Hash40::new("palutena_wand_finish_grey"), Hash40::new("top"), 0.0, 12.0, 10.0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.95, 0.95, 0.95);
+        LAST_EFFECT_SET_COLOR(agent, 0.9, 0.9, 0.9);
     }
-    frame(lua_state, 30.0);
+    frame(lua_state, 11.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("palutena_wand_finish_grey"), Hash40::new("top"), 0.0, 12.0, 10.0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, true);
+        LAST_EFFECT_SET_COLOR(agent, 0.9, 0.9, 0.9);
+        LAST_EFFECT_SET_RATE(agent, 1.1);
+    }
+    frame(lua_state, 51.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("palutena_wand_light_trace_grey"), false, false);
         EFFECT_OFF_KIND(agent, Hash40::new("palutena_wand_light2_grey"), false, false);
@@ -64,7 +73,7 @@ unsafe extern "C" fn sound_specialn(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         PLAY_STATUS(agent, Hash40::new("se_palutena_special_n01"));
     }
-    wait(lua_state, 22.0);
+    frame(lua_state, 48.0);
     if is_excute(agent) {
         sound!(agent, *MA_MSC_CMD_SOUND_STOP_SE_STATUS);
     }

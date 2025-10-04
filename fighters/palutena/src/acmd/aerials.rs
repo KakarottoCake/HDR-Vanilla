@@ -92,11 +92,11 @@ unsafe extern "C" fn effect_attackairf(agent: &mut L2CAgentBase) {
         EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light2_grey"), Hash40::new("stick"), 0, 8.65, 0, 0, 0, 0, 1, true);
         LAST_EFFECT_SET_COLOR(agent, 1.0, 0.87, 0.0125);
     }
-    frame(lua_state, 9.0);
+    frame(lua_state, 8.0);
     if is_excute(agent) {
         let facing = PostureModule::lr(boma);
-        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("sys_flash"), Hash40::new("kneel"), 5.5, 0.0, 0, 0, 0, 0, 0.5, true);
-        LAST_EFFECT_SET_RATE(agent, 1.5);
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("palutena_guard_yellow"), Hash40::new("kneel"), 5.5, 0.0, 0, 0, 0, 0, 0.55, true);
+        LAST_EFFECT_SET_RATE(agent, 8.0/9.0);
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 8, 4, 0, 0, 0, 0.9, true);
     }
     frame(lua_state, 20.0);
@@ -148,11 +148,11 @@ unsafe extern "C" fn effect_attackairb(agent: &mut L2CAgentBase) {
     frame(lua_state, 7.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("palutena_shield_flash"), Hash40::new("shield"), 0, 0, 0, 0, 0, 0, 1.0, true);
-        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("palutena_guard"), Hash40::new("top"), -4, 11, -14, 0, 0, 0, 0.85, true);
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("palutena_guard_yellow"), Hash40::new("top"), -4, 11, -14, 0, 0, 0, 0.85, true);
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {
-        EFFECT_DETACH_KIND(agent, Hash40::new("palutena_guard"), -1);
+        EFFECT_DETACH_KIND(agent, Hash40::new("palutena_guard_yellow"), -1);
     }
     frame(lua_state, 33.0);
     if is_excute(agent) {
@@ -284,11 +284,11 @@ unsafe extern "C" fn effect_attackairlw(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("palutena_atk_lw_arc"), Hash40::new("top"), -2, 6, 0, -60, 40, -120, 0.95, true);
+        EFFECT_FOLLOW(agent, Hash40::new("palutena_atk_lw_arc_red"), Hash40::new("top"), -2, 6, 0, -60, 40, -120, 0.95, true);
     }
     frame(lua_state, 9.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("palutena_twinkle"), Hash40::new("footl"), 1, -1, 0, 0, 0, 0, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("palutena_twinkle_red"), Hash40::new("footl"), 1, -1, 0, 0, 0, 0, 1, true);
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {
