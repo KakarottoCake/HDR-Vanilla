@@ -28,8 +28,10 @@ unsafe extern "C" fn check_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
     weapon.set_int(29, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     MotionModule::change_motion(weapon.module_accessor, Hash40::new("check"), 0.0, 1.0, false, 0.0, false, false);
 
-    let pos: *const Vector3f = PostureModule::pos(weapon.get_owner_boma());
-    PostureModule::set_pos(weapon.module_accessor, pos);
+    let mut pos = *PostureModule::pos(weapon.get_owner_boma());
+    pos.y += 11.0; // set height
+    PostureModule::set_pos(weapon.module_accessor, &pos);
+    PostureModule::init_pos(weapon.module_accessor, &pos, true, true);
     weapon.shift(L2CValue::Ptr(check_main_loop as *const () as _))
 }
 
@@ -49,19 +51,32 @@ unsafe extern "C" fn check_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
         let buffer = ControlModule::get_command_life_count_max(palutena_boma) as usize;
         let hold_frames = InputModule::get_trigger_count(palutena, Buttons::Special);
         let offset_x = if palutena_boma.is_button_on(Buttons::Special) && hold_frames >= buffer {held_range} else {base_range};
-        let offset_y = 11.0;
+        // check where to put it
         let pos = *PostureModule::pos(weapon.module_accessor);
-        let new_pos = Vector3f::new(pos.x + (offset_x * palu_lr), pos.y + offset_y, pos.z);
+        let mut new_pos = Vector3f::new(pos.x + (offset_x * palu_lr), pos.y, pos.z);
+        let ground_pos_stage = &mut Vector2f::zero();
+        // forces it to not clip as much thru stage (nerf)
+        // sideways clip
+        let start_pos_x = &Vector2f::new(pos.x, new_pos.y);
+        let end_pos_x = &Vector2f::new(new_pos.x+(palu_lr+5.25), new_pos.y);
+        let is_touch_side = GroundModule::line_segment_check(weapon.module_accessor, start_pos_x, end_pos_x, &Vector2f::zero(), ground_pos_stage, false);
+        if is_touch_side != 0 as *const *const u64 {new_pos.x = ground_pos_stage.x-(5.25*palu_lr)};
+        // floor clip
+        let center_y = &Vector2f::new(new_pos.x, new_pos.y);
+        let bottom_y = &Vector2f::new(new_pos.x, new_pos.y - 10.5);
+        let is_touch_down = GroundModule::line_segment_check(weapon.module_accessor, center_y, bottom_y, &Vector2f::zero(), ground_pos_stage, false);
+        if is_touch_down != 0 as *const *const u64 {new_pos.y = ground_pos_stage.y+10.5};
         PostureModule::set_pos(weapon.module_accessor, &new_pos);
+        PostureModule::init_pos(weapon.module_accessor, &new_pos, true, true);
         // if somehow spawns inside ground
-        if GroundModule::is_touch(weapon.module_accessor, (*GROUND_TOUCH_FLAG_LEFT | *GROUND_TOUCH_FLAG_UP | *GROUND_TOUCH_FLAG_RIGHT | *GROUND_TOUCH_FLAG_UP_LEFT
-        | *GROUND_TOUCH_FLAG_UP_RIGHT) as u32) {
-            weapon.on_flag(*WEAPON_PALUTENA_EXPLOSIVEFLAME_INSTANCE_WORK_ID_FLAG_RESERVE_MISS);
-        }
-        if !weapon.is_flag(*WEAPON_PALUTENA_EXPLOSIVEFLAME_INSTANCE_WORK_ID_FLAG_RESERVE_MISS)
-        && WeaponSpecializer_PalutenaExplosiveflame::is_touch_down(weapon.battle_object as *mut smash::app::Weapon) {
-            weapon.on_flag(*WEAPON_PALUTENA_EXPLOSIVEFLAME_INSTANCE_WORK_ID_FLAG_RESERVE_MISS);
-        }
+        //if GroundModule::is_touch(weapon.module_accessor, (*GROUND_TOUCH_FLAG_LEFT | *GROUND_TOUCH_FLAG_UP | *GROUND_TOUCH_FLAG_RIGHT | *GROUND_TOUCH_FLAG_UP_LEFT
+        //| *GROUND_TOUCH_FLAG_UP_RIGHT) as u32) {
+        //    weapon.on_flag(*WEAPON_PALUTENA_EXPLOSIVEFLAME_INSTANCE_WORK_ID_FLAG_RESERVE_MISS);
+        //}
+        //if !weapon.is_flag(*WEAPON_PALUTENA_EXPLOSIVEFLAME_INSTANCE_WORK_ID_FLAG_RESERVE_MISS)
+        //&& WeaponSpecializer_PalutenaExplosiveflame::is_touch_down(weapon.battle_object as *mut smash::app::Weapon) {
+        //    weapon.on_flag(*WEAPON_PALUTENA_EXPLOSIVEFLAME_INSTANCE_WORK_ID_FLAG_RESERVE_MISS);
+        //}
     }
     if weapon.is_flag(*WEAPON_PALUTENA_EXPLOSIVEFLAME_INSTANCE_WORK_ID_FLAG_RESERVE_MISS) {
         weapon.change_status(WEAPON_PALUTENA_EXPLOSIVEFLAME_STATUS_KIND_MISS.into(), false.into());
