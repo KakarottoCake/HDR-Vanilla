@@ -269,7 +269,7 @@ unsafe extern "C" fn special_hi_rush_end_init(fighter: &mut L2CFighterCommon) ->
         sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, end_brake_x, end_brake_x);
     }
     // always face the direction you were traveling
-    let angle = dbg!(fighter.get_float(*FIGHTER_LUCARIO_MACH_STATUS_WORK_ID_FLOAT_RUSH_DIR_ROT).to_degrees());
+    let angle = fighter.get_float(*FIGHTER_LUCARIO_MACH_STATUS_WORK_ID_FLOAT_RUSH_DIR_ROT).to_degrees();
     if angle.abs() > 95.0 {
         PostureModule::set_lr(fighter.module_accessor, -1.0);
         PostureModule::update_rot_y_lr(fighter.module_accessor);
@@ -277,11 +277,11 @@ unsafe extern "C" fn special_hi_rush_end_init(fighter: &mut L2CFighterCommon) ->
         PostureModule::set_lr(fighter.module_accessor, 1.0);
         PostureModule::update_rot_y_lr(fighter.module_accessor);
     } else if fighter.left_stick_x() != 0.0 {
-        let lr = dbg!(fighter.left_stick_x().signum());
+        let lr = fighter.left_stick_x().signum();
         PostureModule::set_lr(fighter.module_accessor, lr);
         PostureModule::update_rot_y_lr(fighter.module_accessor);
     } else if VarModule::get_float(fighter.battle_object, vars::lucario::status::SPECIAL_HI_START_LR) != 0.0 {
-        let lr = dbg!(VarModule::get_float(fighter.battle_object, vars::lucario::status::SPECIAL_HI_START_LR));
+        let lr = VarModule::get_float(fighter.battle_object, vars::lucario::status::SPECIAL_HI_START_LR);
         PostureModule::set_lr(fighter.module_accessor, lr);
         PostureModule::update_rot_y_lr(fighter.module_accessor);
     }
@@ -376,7 +376,7 @@ unsafe extern "C" fn special_hi_rush_end_end(fighter: &mut L2CFighterCommon) -> 
     }
 
     // always face the direction you were traveling
-    let angle = dbg!(fighter.get_float(*FIGHTER_LUCARIO_MACH_STATUS_WORK_ID_FLOAT_RUSH_DIR_ROT).to_degrees());
+    let angle = fighter.get_float(*FIGHTER_LUCARIO_MACH_STATUS_WORK_ID_FLOAT_RUSH_DIR_ROT).to_degrees();
     if angle.abs() > 95.0 {
         PostureModule::set_lr(fighter.module_accessor, -1.0);
         PostureModule::update_rot_y_lr(fighter.module_accessor);
@@ -384,11 +384,11 @@ unsafe extern "C" fn special_hi_rush_end_end(fighter: &mut L2CFighterCommon) -> 
         PostureModule::set_lr(fighter.module_accessor, 1.0);
         PostureModule::update_rot_y_lr(fighter.module_accessor);
     } else if fighter.left_stick_x() != 0.0 {
-        let lr = dbg!(fighter.left_stick_x().signum());
+        let lr = fighter.left_stick_x().signum();
         PostureModule::set_lr(fighter.module_accessor, lr);
         PostureModule::update_rot_y_lr(fighter.module_accessor);
     } else if VarModule::get_float(fighter.battle_object, vars::lucario::status::SPECIAL_HI_START_LR) != 0.0 {
-        let lr = dbg!(VarModule::get_float(fighter.battle_object, vars::lucario::status::SPECIAL_HI_START_LR));
+        let lr = VarModule::get_float(fighter.battle_object, vars::lucario::status::SPECIAL_HI_START_LR);
         PostureModule::set_lr(fighter.module_accessor, lr);
         PostureModule::update_rot_y_lr(fighter.module_accessor);
     }
