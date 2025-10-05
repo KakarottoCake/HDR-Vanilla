@@ -115,12 +115,22 @@ unsafe extern "C" fn game_throwb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 8.0, 45, 60, 0, 65, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 8.0, 315, 20, 0, 37, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
     }
     frame(lua_state, 28.0);
     if is_excute(agent) {
-
+        let pos = *PostureModule::pos(boma);
+        let lr = PostureModule::lr(boma);
+        if GroundModule::ray_check(
+            boma, 
+            &Vector2f{ x: pos.x - (15.0 * lr), y: pos.y}, 
+            &Vector2f{ x: -5.0 * lr, y: -5.0},
+            true
+        ) == 1 {
+            // different hitbox for ground bounce
+            ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 8.0, 45, 60, 0, 65, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        }
     }
     frame(lua_state, 29.0);
     if is_excute(agent) {
@@ -129,7 +139,32 @@ unsafe extern "C" fn game_throwb(agent: &mut L2CAgentBase) {
         let target_group = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
         let target_no = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
+        let opponent_boma = agent.get_grabbed_opponent_boma();
+        VarModule::on_flag(opponent_boma.object(), vars::common::instance::IS_KNOCKDOWN_THROW);
         AttackModule::clear_all(boma);
+    }
+}
+
+unsafe extern "C" fn effect_throwb(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 19.0);
+    if is_excute(agent) {
+        LANDING_EFFECT(agent, Hash40::new("sys_action_smoke_h"), Hash40::new("top"), 0, 0, 0, 0, 180, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(lua_state, 28.0);
+    if is_excute(agent) {
+        let pos = *PostureModule::pos(boma);
+        let lr = PostureModule::lr(boma);
+        if GroundModule::ray_check(
+            boma, 
+            &Vector2f{ x: pos.x - (15.0 * lr), y: pos.y}, 
+            &Vector2f{ x: -5.0 * lr, y: -5.0},
+            true
+        ) == 1 {
+            EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), -15, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
+            LANDING_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), -15, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
     }
 }
 
@@ -144,6 +179,32 @@ unsafe extern "C" fn sound_throwb(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         PLAY_SEQUENCE(agent, Hash40::new("seq_pitb_rnd_attack"));
         PLAY_SE(agent, Hash40::new("se_common_throw_02"));
+    }
+}
+
+unsafe extern "C" fn expression_throwb(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
+    }
+    frame(lua_state, 12.0);
+    if is_excute(agent) {
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohits"), 6, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(lua_state, 28.0);
+    if is_excute(agent) {
+        let pos = *PostureModule::pos(boma);
+        let lr = PostureModule::lr(boma);
+        if GroundModule::ray_check(
+            boma, 
+            &Vector2f{ x: pos.x - (15.0 * lr), y: pos.y}, 
+            &Vector2f{ x: -5.0 * lr, y: -5.0},
+            true
+        ) == 1 {
+            QUAKE(agent, *CAMERA_QUAKE_KIND_M);
+        }
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_attackm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
 }
 
@@ -177,6 +238,8 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_throwhi", game_throwhi, Priority::Low);
     agent.acmd("game_throwf", game_throwf, Priority::Low);
     agent.acmd("game_throwb", game_throwb, Priority::Low);
+    agent.acmd("effect_throwb", effect_throwb, Priority::Low);
     agent.acmd("sound_throwb", sound_throwb, Priority::Low);
+    agent.acmd("expression_throwb", expression_throwb, Priority::Low);
     agent.acmd("effect_throwlw", effect_throwlw, Priority::Low);
 }
