@@ -24,12 +24,15 @@ unsafe extern "C" fn effect_shot(agent: &mut L2CAgentBase) {
     let palutena = owner_module_accessor.kind() == *FIGHTER_KIND_PALUTENA;
     if is_excute(agent) {
         if palutena {
-            let red = if VarModule::is_flag(owner_module_accessor.object(), vars::palutena::status::SPECIAL_N_PRIMARY_POWERED) {1.25} else {1.0};
-            let green = if VarModule::is_flag(owner_module_accessor.object(), vars::palutena::status::SPECIAL_N_PRIMARY_POWERED) {0.7} else {0.85};
-            EFFECT_FOLLOW(agent, Hash40::new("palutena_bullet_grey"), Hash40::new("top"), 0, 0, 0.0, 0, 0, 0, 1.0, false);
+            let eff_name = if VarModule::is_flag(owner_module_accessor.object(), vars::palutena::status::SPECIAL_N_PRIMARY_POWERED) {"palutena_bullet_grey_super"} else {"palutena_bullet_grey"};
+            let scale_x = if VarModule::is_flag(owner_module_accessor.object(), vars::palutena::status::SPECIAL_N_PRIMARY_POWERED) {1.1} else {1.0};
+            let scale_y = if VarModule::is_flag(owner_module_accessor.object(), vars::palutena::status::SPECIAL_N_PRIMARY_POWERED) {0.9} else {0.6};
+            let red = if VarModule::is_flag(owner_module_accessor.object(), vars::palutena::status::SPECIAL_N_PRIMARY_POWERED) {1.25} else {1.05};
+            let green = if VarModule::is_flag(owner_module_accessor.object(), vars::palutena::status::SPECIAL_N_PRIMARY_POWERED) {0.7} else {0.75};
+            EFFECT_FOLLOW(agent, Hash40::new(eff_name), Hash40::new("top"), 0, 0, 0.0, 0, 0, 0, 1.0, false);
             LAST_EFFECT_SET_COLOR(agent, red, green, 0.025);
-            LAST_EFFECT_SET_SCALE_W(agent, 1.05, 0.85, 1.05);
-            EFFECT(agent, Hash40::new("palutena_bullet_shot_grey"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, true);
+            LAST_EFFECT_SET_SCALE_W(agent, scale_x, 0.85, scale_x);
+            EFFECT(agent, Hash40::new("palutena_bullet_shot_grey"), Hash40::new("top"), 0, 0, 0.25, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, true);
             LAST_EFFECT_SET_COLOR(agent, 1.25, 1.00, 0.025);
             LAST_EFFECT_SET_RATE(agent, 1.5);
             LAST_EFFECT_SET_ALPHA(agent, 0.75);
@@ -40,12 +43,15 @@ unsafe extern "C" fn effect_shot(agent: &mut L2CAgentBase) {
     if palutena {
         wait(lua_state, 2.0);
         if is_excute(agent) {
-            if VarModule::is_flag(owner_module_accessor.object(), vars::palutena::status::SPECIAL_N_PRIMARY_POWERED) {
-                EFFECT_FOLLOW(agent, Hash40::new("palutena_elec"), Hash40::new("top"), 0.0, 0.0, -1.0, 0, 0, 0, 0.35, true);
-                LAST_EFFECT_SET_SCALE_W(agent, 0.75, 0.4, 0.45);
-                LAST_EFFECT_SET_COLOR(agent, 1.25, 0.45, 0.025);
-                LAST_EFFECT_SET_ALPHA(agent, 0.25);
-            }
+            EFFECT_FOLLOW(agent, Hash40::new("palutena_elec"), Hash40::new("top"), 0.0, 0.0, -1.0, 0, 0, 0, 0.35, true);
+            LAST_EFFECT_SET_SCALE_W(agent, 0.55, 0.4, 0.4);
+            LAST_EFFECT_SET_COLOR(agent, 1.25, 0.65, 0.025);
+            LAST_EFFECT_SET_ALPHA(agent, 0.2);
+            let yellow = if VarModule::is_flag(owner_module_accessor.object(), vars::palutena::status::SPECIAL_N_PRIMARY_POWERED) {0.45} else {0.85};
+            EFFECT_FOLLOW(agent, Hash40::new("palutena_elec"), Hash40::new("top"), 0.0, 0.0, -1.0, 0, 0, 0, 0.35, true);
+            LAST_EFFECT_SET_SCALE_W(agent, 0.75, 0.45, 0.45);
+            LAST_EFFECT_SET_COLOR(agent, 1.25, yellow, 0.025);
+            LAST_EFFECT_SET_ALPHA(agent, 0.25);
         }
     }
 }
