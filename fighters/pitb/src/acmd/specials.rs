@@ -147,9 +147,9 @@ unsafe extern "C" fn effect_speciallwstart(agent: &mut L2CAgentBase) {
         let facing = PostureModule::lr(boma);
         let rot1 = if facing > 0.0 { 240 } else { 300 };
         let rot2 = if facing > 0.0 { 120 } else { 60 };
-        EFFECT_FOLLOW(agent, Hash40::new("pitb_guardian_shield"), Hash40::new("virtualguardianf"), 2.0 * facing, 3, -2, 0, rot1, 0, 1.3, true);
+        EFFECT_FOLLOW(agent, Hash40::new("pitb_guardian_shield"), Hash40::new("virtualguardianf"), 2.0 * facing, 3, -2, 0, rot1, 0, 1.0, true);
         LAST_EFFECT_SET_COLOR(agent, 5.0, 1.0, 1.0);
-        EFFECT_FOLLOW(agent, Hash40::new("pitb_guardian_shield"), Hash40::new("virtualguardianb"), 2.0 * facing, 3, 2, 0, rot2, 0, 1.3, true);
+        EFFECT_FOLLOW(agent, Hash40::new("pitb_guardian_shield"), Hash40::new("virtualguardianb"), 2.0 * facing, 3, 2, 0, rot2, 0, 1.0, true);
         LAST_EFFECT_SET_COLOR(agent, 5.0, 1.0, 1.0);
         if agent.is_situation(*SITUATION_KIND_GROUND) {
             LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.85, 0, 0, 0, 0, 0, 0, false);

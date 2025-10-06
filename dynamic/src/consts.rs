@@ -966,6 +966,7 @@ pub mod vars {
         pub mod status {
             // flags
             pub const HIT_CANCEL: i32 = 0x1102;
+            pub const SUPER_SPECIAL_A_PLUS_B: i32 = 0x1103;
 
             // ints
             pub const SPECIAL_S_ROT_ANGLE: i32 = 0x1100;
@@ -975,6 +976,7 @@ pub mod vars {
             // floats
             pub const SPECIAL_N_ANGLE: i32 = 0x1100;
             pub const AURA_OVERRIDE: i32 = 0x1101;
+            pub const SPECIAL_HI_START_LR: i32 = 0x1102;
         }
     }
 
@@ -1230,10 +1232,14 @@ pub mod vars {
         pub mod instance {
             //flags
             pub const DISABLE_SPECIAL_HI: i32 = 0x0100;
+            pub const SPECIAL_LW_DISABLE_STALL: i32 = 0x0101;
         }
         pub mod status {
             // flags
             pub const SPECIAL_HI_THUNDER_LOOSE: i32 = 0x1100;
+
+            // ints
+            pub const SPECIAL_LW_STOP_Y_FRAME: i32 = 0x1100;
         }
     }
 
