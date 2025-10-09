@@ -85,10 +85,29 @@
       <div class="flex-container">
         <div class="row">
           <div class="column">
+            <button
+              id="gamemode-cycle-button"
+              onclick="cycleGameMode('gamemode-cycle-icon')"
+              onfocus="textFocus('Click to toggle various alternate system mechanics!')"
+              class="flex-item"
+              style="width: 100%"
+            >
+              <div class="icon-background">
+                <img
+                  id="gamemode-cycle-icon"
+                  class="abstract-icon is-appear"
+                  style="display: none"
+                  src="check.svg"
+                />
+              </div>
+              <div class="item-container">
+                <h2>Select Game Mode</h2>
+              </div>
+            </button>
 
             <button
               onclick="toggle('tag', this, 'tag')"
-              onfocus="textFocus('A random player starts with the final smash aura! Hit other players to pass it on. Once time runs out, you die!')"
+              onfocus="textFocus('A random player starts with the final smash aura! Hit other players to pass it on.\nOnce time runs out, you die!')"
               class="flex-item"
               style="width: 100%"
             >
@@ -126,7 +145,7 @@
 
             <button
               onclick="toggle('magicseries', this, 'magicseries')"
-              onfocus="textFocus('Cancel your attacks in order of rising strength! Jabs & Dash Attack --> Tilt Attacks --> Smash Attacks & Aerials --> Specials!')"
+              onfocus="textFocus('Cancel your attacks in order of rising strength!\nJabs & Dash Attack --> Tilts --> Smashes & Aerials --> Specials!')"
               class="flex-item"
               style="width: 100%"
             >
@@ -145,7 +164,7 @@
 
             <button
               onclick="toggle('hitfall', this, 'hitfall')"
-              onfocus="textFocus('Players can immediately fastfall during hitlag, even while rising. Use this tech to land quickly and chain aerial attacks!')"
+              onfocus="textFocus('Players can immediately fastfall during hitlag, even while rising.\nUse this tech to land quickly and chain aerial attacks!')"
               class="flex-item"
               style="width: 100%"
             >
@@ -161,10 +180,8 @@
                 <h2>Hitfall Mode</h2>
               </div>
             </button>
-          
           </div>
           <div class="column">
-
             <button
               onclick="toggle('airdash', this, 'airdash')"
               onfocus="textFocus('Replaces your airdodge with an omnidirectional airdash!')"
@@ -186,7 +203,7 @@
 
             <button
               onclick="toggle('element', this, 'element')"
-              onfocus="textFocus('Every attack has a chance for a random effect! Will it be a simple visual change? Maybe something crazier? Who knows? Embrace pure chaos!')"
+              onfocus="textFocus('Every attack has a chance for a random effect! Will it be a simple visual change?\nMaybe something crazier? Who knows? Embrace pure chaos!')"
               class="flex-item"
               style="width: 100%"
             >
@@ -202,45 +219,6 @@
                 <h2>Element Mode</h2>
               </div>
             </button>
-
-            <button
-              onclick="toggle('smash64', this, 'smash64')"
-              onfocus="textFocus('Clash in classic fashion! Removes DI, airdodges, walltechs, and landing lag. Also raises hitstun and shieldstun, and alters character physics.')"
-              class="flex-item"
-              style="width: 100%"
-            >
-              <div class="icon-background">
-                <img
-                  id="smash64"
-                  class="abstract-icon is-appear"
-                  style="display: none"
-                  src="check.svg"
-                />
-              </div>
-              <div class="item-container">
-                <h2>Smash 64 Mode</h2>
-              </div>
-            </button>
-
-            <button
-              onclick="toggle('rivalsofaether', this, 'rivalsofaether')"
-              onfocus="textFocus('Removes shields, grabs, ledges, & spotdodges, and walljump from specials, hitfalling, and improved movement!')"
-              class="flex-item"
-              style="width: 100%"
-            >
-              <div class="icon-background">
-                <img
-                  id="rivalsofaether"
-                  class="abstract-icon is-appear"
-                  style="display: none"
-                  src="check.svg"
-                />
-              </div>
-              <div class="item-container">
-                <h2>Rivals of Aether Mode</h2>
-              </div>
-            </button>
-
           </div>
         </div>
         <button
