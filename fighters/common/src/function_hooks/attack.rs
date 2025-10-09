@@ -339,8 +339,27 @@ unsafe fn post_spike_check(ctx: &mut skyline::hooks::InlineCtx) {
         ctx.registers_f[11].set_s(kb)
     }
 
-    // Forces tumble for knockdown throws
-    if VarModule::is_flag((*boma).object(), vars::common::instance::IS_KNOCKDOWN_THROW) {
+    // Forces tumble for throws
+    let fighter = util::get_fighter_common_from_accessor(&mut (*boma));
+    if VarModule::is_flag((*boma).object(), vars::common::instance::FORCE_TECHABLE_KNOCKDOWN)
+    || [ // THROWN statuses
+        *FIGHTER_STATUS_KIND_BITTEN_WARIO_END,
+        *FIGHTER_STATUS_KIND_CATCHED_AIR_END_GANON,
+        *FIGHTER_STATUS_KIND_CLUNG_THROWN_BLANK_DIDDY,
+        *FIGHTER_STATUS_KIND_CLUNG_THROWN_DIDDY,
+        *FIGHTER_STATUS_KIND_DEMON_DIVED,
+        *FIGHTER_STATUS_KIND_DRAGGED_RIDLEY,
+        *FIGHTER_STATUS_KIND_MEWTWO_THROWN,
+        *FIGHTER_STATUS_KIND_MIIFIGHTER_COUNTER_THROWN,
+        *FIGHTER_STATUS_KIND_MIIFIGHTER_SUPLEX_THROWN,
+        *FIGHTER_STATUS_KIND_SHOULDERED_DONKEY_THROWN,
+        *FIGHTER_STATUS_KIND_SWALLOWED_THROWN,
+        *FIGHTER_STATUS_KIND_SWALLOWED_THROWN_STAR,
+        // *FIGHTER_STATUS_KIND_SWING_GAOGAEN_FAILURE,
+        *FIGHTER_STATUS_KIND_SWING_GAOGAEN_LARIAT,
+        *FIGHTER_STATUS_KIND_SWING_GAOGAEN_SHOULDER,
+        *FIGHTER_STATUS_KIND_THROWN,
+    ].contains(&(fighter.global_table[STATUS_KIND].get_i32())) {
         // Set damage level to 3 (tumble)
         ctx.registers[24].set_w(3);
     }
