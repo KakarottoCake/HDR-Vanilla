@@ -131,7 +131,7 @@ unsafe extern "C" fn effect_specials(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("shulk_monad_circle_red"), Hash40::new("swordr"), 0, 0, 0, 0, 0, 0, 1, true);
         EFFECT_FOLLOW(agent, Hash40::new("shulk_monad_sword3_red"), Hash40::new("haver"), 0, 2.5, 0.3, 0, 0, 0, 0.4, true);
-        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_rush"), Hash40::new("tex_shulk_swordred2"), 6, Hash40::new("haver"), 0.0, 3.0, 0.65, Hash40::new("haver"), 0.0, 15.0, 0.65, true, Hash40::new("null"), Hash40::new("haver"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.2);
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_rush"), Hash40::new("tex_shulk_swordred2"), 15, Hash40::new("haver"), 0.0, 4.0, 0.65, Hash40::new("haver"), 0.0, 20.0, 1.1, true, Hash40::new("null"), Hash40::new("haver"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.2);
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {
