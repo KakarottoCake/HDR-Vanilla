@@ -7,16 +7,12 @@ use std::str::FromStr;
 pub mod tag;
 
 lazy_static! {
-    static ref GAME_MODE_HTML: Vec<u8> = std::fs::read("mods:/ui/docs/gamemodes.html").unwrap();
-    static ref GAME_MODE_JS: Vec<u8> = std::fs::read("mods:/ui/docs/gamemodes.js").unwrap();
-    static ref TAG_WEBP: Vec<u8> = std::fs::read("mods:/ui/docs/tag.webp").unwrap();
-    static ref TURBO_WEBP: Vec<u8> = std::fs::read("mods:/ui/docs/turbo.webp").unwrap();
-    static ref HITFALL_WEBP: Vec<u8> = std::fs::read("mods:/ui/docs/hitfall.webp").unwrap();
-    static ref AIRDASH_WEBP: Vec<u8> = std::fs::read("mods:/ui/docs/airdash.webp").unwrap();
-    static ref SMASH64_WEBP: Vec<u8> = std::fs::read("mods:/ui/docs/smash64.webp").unwrap();
-    static ref MAGICSERIES_WEBP: Vec<u8> = std::fs::read("mods:/ui/docs/magicseries.webp").unwrap();
-    static ref ELEMENT_WEBP: Vec<u8> = std::fs::read("mods:/ui/docs/element.webp").unwrap();
-    static ref RIVALS_WEBP: Vec<u8> = std::fs::read("mods:/ui/docs/rivals.webp").unwrap();
+    static ref COMMON_CSS: Vec<u8> = std::fs::read("mods:/ui/docs/common.css").unwrap();
+    static ref COMMON_JS: Vec<u8> = std::fs::read("mods:/ui/docs/common.js").unwrap();
+    static ref GAMEMODES_HTML: Vec<u8> = std::fs::read("mods:/ui/docs/gamemodes.html").unwrap();
+    static ref GRIDMENU_JS: Vec<u8> = std::fs::read("mods:/ui/docs/gridmenu.js").unwrap();
+    static ref MENU_CSS: Vec<u8> = std::fs::read("mods:/ui/docs/menu.css").unwrap();
+    static ref TOGGLES_JS: Vec<u8> = std::fs::read("mods:/ui/docs/toggles.js").unwrap();
 }
 
 static mut CURRENT_CUSTOM_MODES: Option<HashSet<CustomMode>> = None;
@@ -83,19 +79,15 @@ unsafe fn on_rule_select_hook(_: &skyline::hooks::InlineCtx) {
 }
 
 pub unsafe fn open_modes_session() {
-    let response = Webpage::new()
+    let response = skyline_web::Webpage::new()
         .htdocs_dir("contents")
-        .file("help/html/USen/gamemodes.html", GAME_MODE_HTML.as_slice())
-        .file("hdr/gamemodes.js", GAME_MODE_JS.as_slice())
-        .file("hdr/tag.webp", TAG_WEBP.as_slice())
-        .file("hdr/turbo.webp", TURBO_WEBP.as_slice())
-        .file("hdr/hitfall.webp", HITFALL_WEBP.as_slice())
-        .file("hdr/airdash.webp", AIRDASH_WEBP.as_slice())
-        .file("hdr/smash64.webp", SMASH64_WEBP.as_slice())
-        .file("hdr/magicseries.webp", MAGICSERIES_WEBP.as_slice())
-        .file("hdr/element.webp", ELEMENT_WEBP.as_slice())
-        .file("hdr/rivals.webp", RIVALS_WEBP.as_slice())
-        .start_page("help/html/USen/gamemodes.html")
+        .file("index.html", GAMEMODES_HTML.as_slice())
+        .file("menu.css", MENU_CSS.as_slice())
+        .file("gridmenu.js", GRIDMENU_JS.as_slice())
+        .file("common.js", COMMON_JS.as_slice())
+        .file("toggles.js", TOGGLES_JS.as_slice())
+        .background(skyline_web::Background::Default)
+        .boot_display(skyline_web::BootDisplay::Default)
         .open()
         .unwrap();
 
