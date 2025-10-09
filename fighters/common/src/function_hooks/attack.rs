@@ -341,7 +341,7 @@ unsafe fn post_spike_check(ctx: &mut skyline::hooks::InlineCtx) {
 
     // Forces tumble for throws
     let fighter = util::get_fighter_common_from_accessor(&mut (*boma));
-    if VarModule::is_flag((*boma).object(), vars::common::instance::FORCE_TECHABLE_KNOCKDOWN)
+    if VarModule::is_flag((*boma).object(), vars::common::instance::FORCE_TUMBLE_NO_BOUNCE)
     || [ // THROWN statuses
         *FIGHTER_STATUS_KIND_BITTEN_WARIO_END,
         *FIGHTER_STATUS_KIND_CATCHED_AIR_END_GANON,
