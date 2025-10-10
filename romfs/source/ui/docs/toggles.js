@@ -22,11 +22,18 @@ function textFocus(text) {
   document.getElementById("focus-text").innerHTML = text;
 }
 
+function updatePreview(imageSrc) {
+  const preview = document.getElementById("gamemode-preview");
+  if (preview) {
+    preview.src = imageSrc;
+  }
+}
+
 var currentModeIndex = 0;
 var gameModes = [
-  { id: '', name: 'Select a Game Mode', desc: 'Click to toggle various alternate system mechanics!' },
-  { id: 'smash64', name: 'Smash 64 Mode', desc: 'Clash in classic fashion! Removes DI, airdodges, walltechs, and landing lag. Also raises hitstun and shieldstun, and alters character physics.' },
-  { id: 'rivalsofaether', name: 'Rivals of Aether Mode', desc: 'Removes shields, grabs, ledges, & spotdodges, and walljump from specials, hitfalling, and improved movement!' }
+  { id: '', name: 'Select a Game Mode', desc: 'Click to toggle various alternate system mechanics!', image: 'placeholder.png' },
+  { id: 'smash64', name: 'Smash 64 Mode', desc: 'Clash in classic fashion! Removes DI, airdodges, walltechs, and landing lag. Also raises hitstun and shieldstun, and alters character physics.', image: 'placeholder.png' },
+  { id: 'rivalsofaether', name: 'Rivals of Aether Mode', desc: 'Removes shields, grabs, ledges, & spotdodges, and walljump from specials, hitfalling, and improved movement!', image: 'placeholder.png' }
 ];
 
 function cycleGameMode(elementID) {
@@ -42,6 +49,9 @@ function cycleGameMode(elementID) {
 
   // Update focus text
   textFocus(currentMode.desc);
+
+  // Update preview image
+  updatePreview(currentMode.image);
 
   // Remove all game modes from enabled array
   gameModes.forEach(mode => {

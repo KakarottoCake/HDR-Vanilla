@@ -13,6 +13,8 @@ lazy_static! {
     static ref GRIDMENU_JS: Vec<u8> = std::fs::read("mods:/ui/docs/gridmenu.js").unwrap();
     static ref MENU_CSS: Vec<u8> = std::fs::read("mods:/ui/docs/menu.css").unwrap();
     static ref TOGGLES_JS: Vec<u8> = std::fs::read("mods:/ui/docs/toggles.js").unwrap();
+    // Images
+    static ref PLACEHOLDER_PNG: Vec<u8> = std::fs::read("mods:/ui/docs/placeholder.png").unwrap();
 }
 
 static mut CURRENT_CUSTOM_MODES: Option<HashSet<CustomMode>> = None;
@@ -86,6 +88,7 @@ pub unsafe fn open_modes_session() {
         .file("gridmenu.js", GRIDMENU_JS.as_slice())
         .file("common.js", COMMON_JS.as_slice())
         .file("toggles.js", TOGGLES_JS.as_slice())
+        .file("placeholder.png", PLACEHOLDER_PNG.as_slice())
         .background(skyline_web::Background::Default)
         .boot_display(skyline_web::BootDisplay::Default)
         .open()
