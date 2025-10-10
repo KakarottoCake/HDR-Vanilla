@@ -80,6 +80,62 @@ function cycleGameMode(elementID) {
   str = enabled.join("-");
 }
 
+var startColumnIndex = 0;
+var columnsPerPage = 2;
+
+function updateColumnVisibility() {
+  // Get all columns (excluding column-left)
+  var allColumns = [];
+  var i = 1;
+  while (document.getElementById('column-' + i)) {
+    allColumns.push(document.getElementById('column-' + i));
+    i++;
+  }
+
+  // Calculate which columns should be visible
+  var endIndex = startColumnIndex + columnsPerPage;
+
+  // Hide all columns, then show only the current page
+  allColumns.forEach(function(col, index) {
+    if (index >= startColumnIndex && index < endIndex) {
+      col.style.display = 'block';
+    } else {
+      col.style.display = 'none';
+    }
+  });
+}
+
+function nextPage() {
+  var allColumns = [];
+  var i = 1;
+  while (document.getElementById('column-' + i)) {
+    allColumns.push(document.getElementById('column-' + i));
+    i++;
+  }
+
+  var maxStartIndex = allColumns.length - columnsPerPage;
+  startColumnIndex++;
+  if (startColumnIndex > maxStartIndex) {
+    startColumnIndex = 0;
+  }
+  updateColumnVisibility();
+}
+
+function previousPage() {
+  var allColumns = [];
+  var i = 1;
+  while (document.getElementById('column-' + i)) {
+    allColumns.push(document.getElementById('column-' + i));
+    i++;
+  }
+
+  startColumnIndex--;
+  if (startColumnIndex < 0) {
+    startColumnIndex = allColumns.length - columnsPerPage;
+  }
+  updateColumnVisibility();
+}
+
 function saveAndExit() {
   if (enabled === undefined || enabled.length == 0) {
     location.href = "http://localhost/";

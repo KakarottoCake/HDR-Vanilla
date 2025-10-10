@@ -101,7 +101,7 @@
     <div class="main" id="list">
       <div class="flex-container">
         <div class="row">
-          <div class="column-left">
+          <div class="column-left" id="column-left">
             <button
               onclick="saveAndExit()"
               onfocus="updatePreview('placeholder.png'); textFocus('')"
@@ -136,8 +136,30 @@
 
             <img id="gamemode-preview" src="placeholder.png" alt="Game Mode Preview" />
 
+            <div style="display: flex; margin-top: 10px;">
+              <button
+                id="prev-page"
+                onclick="previousPage()"
+                onfocus="textFocus('Scroll left')"
+                class="flex-item"
+                style="height: 54px; width: 50%; margin-top: 1%; margin-right: 10px; position: relative;"
+              >
+                <span style="font-size: 4em; font-weight: bold; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">←</span>
+              </button>
+              <button
+                id="next-page"
+                onclick="nextPage()"
+                onfocus="textFocus('Scroll right')"
+                class="flex-item"
+                style="height: 54px; width: 50%; margin-top: 1%; position: relative;"
+              >
+                <span style="font-size: 4em; font-weight: bold; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">→</span>
+              </button>
+            </div>
+
+
           </div>
-          <div class="column">
+          <div class="column" id="column-1">
 
             <button
               onclick="toggle('turbo', this, 'turbo')"
@@ -255,121 +277,355 @@
             
 
           </div>
-          <div class="column">
+          <div class="column" id="column-2">
 
-            <!-- <button
-              onclick="toggle('todo', this, 'todo')"
+            <button
+              onclick="toggle('todo0', this, 'todo0')"
               onfocus="updatePreview('placeholder.png'); textFocus('TODO')"
               class="flex-item"
               style="width: 100%"
             >
               <div class="icon-background">
                 <img
-                  id="todo"
+                  id="todo0"
                   class="abstract-icon is-appear"
                   style="display: none"
                   src="check.svg"
                 />
               </div>
               <div class="item-container">
-                <h2>TODO</h2>
+                <h2>TODO 0</h2>
               </div>
             </button>
 
             <button
-              onclick="toggle('todo', this, 'todo')"
+              onclick="toggle('todo1', this, 'todo1')"
               onfocus="updatePreview('placeholder.png'); textFocus('TODO')"
               class="flex-item"
               style="width: 100%"
             >
               <div class="icon-background">
                 <img
-                  id="todo"
+                  id="todo1"
                   class="abstract-icon is-appear"
                   style="display: none"
                   src="check.svg"
                 />
               </div>
               <div class="item-container">
-                <h2>TODO</h2>
+                <h2>TODO 1</h2>
               </div>
             </button>
 
             <button
-              onclick="toggle('todo', this, 'todo')"
+              onclick="toggle('todo2', this, 'todo2')"
               onfocus="updatePreview('placeholder.png'); textFocus('TODO')"
               class="flex-item"
               style="width: 100%"
             >
               <div class="icon-background">
                 <img
-                  id="todo"
+                  id="todo2"
                   class="abstract-icon is-appear"
                   style="display: none"
                   src="check.svg"
                 />
               </div>
               <div class="item-container">
-                <h2>TODO</h2>
+                <h2>TODO 2</h2>
               </div>
             </button>
 
             <button
-              onclick="toggle('todo', this, 'todo')"
+              onclick="toggle('todo3', this, 'todo3')"
               onfocus="updatePreview('placeholder.png'); textFocus('TODO')"
               class="flex-item"
               style="width: 100%"
             >
               <div class="icon-background">
                 <img
-                  id="todo"
+                  id="todo3"
                   class="abstract-icon is-appear"
                   style="display: none"
                   src="check.svg"
                 />
               </div>
               <div class="item-container">
-                <h2>TODO</h2>
+                <h2>TODO 3</h2>
               </div>
             </button>
 
             <button
-              onclick="toggle('todo', this, 'todo')"
+              onclick="toggle('todo4', this, 'todo4')"
               onfocus="updatePreview('placeholder.png'); textFocus('TODO')"
               class="flex-item"
               style="width: 100%"
             >
               <div class="icon-background">
                 <img
-                  id="todo"
+                  id="todo4"
                   class="abstract-icon is-appear"
                   style="display: none"
                   src="check.svg"
                 />
               </div>
               <div class="item-container">
-                <h2>TODO</h2>
+                <h2>TODO 4</h2>
               </div>
             </button>
 
             <button
-              onclick="toggle('todo', this, 'todo')"
+              onclick="toggle('todo5', this, 'todo5')"
               onfocus="updatePreview('placeholder.png'); textFocus('TODO')"
               class="flex-item"
               style="width: 100%"
             >
               <div class="icon-background">
                 <img
-                  id="todo"
+                  id="todo5"
                   class="abstract-icon is-appear"
                   style="display: none"
                   src="check.svg"
                 />
               </div>
               <div class="item-container">
-                <h2>TODO</h2>
+                <h2>TODO 5</h2>
               </div>
-            </button> -->
+            </button>
+
+          </div>
+          <div class="column" id="column-3">
+
+            <button
+              onclick="toggle('todo6', this, 'todo6')"
+              onfocus="updatePreview('placeholder.png'); textFocus('TODO')"
+              class="flex-item"
+              style="width: 100%"
+            >
+              <div class="icon-background">
+                <img
+                  id="todo6"
+                  class="abstract-icon is-appear"
+                  style="display: none"
+                  src="check.svg"
+                />
+              </div>
+              <div class="item-container">
+                <h2>TODO 6</h2>
+              </div>
+            </button>
+
+            <button
+              onclick="toggle('todo7', this, 'todo7')"
+              onfocus="updatePreview('placeholder.png'); textFocus('TODO')"
+              class="flex-item"
+              style="width: 100%"
+            >
+              <div class="icon-background">
+                <img
+                  id="todo7"
+                  class="abstract-icon is-appear"
+                  style="display: none"
+                  src="check.svg"
+                />
+              </div>
+              <div class="item-container">
+                <h2>TODO 7</h2>
+              </div>
+            </button>
+
+            <button
+              onclick="toggle('todo8', this, 'todo8')"
+              onfocus="updatePreview('placeholder.png'); textFocus('TODO')"
+              class="flex-item"
+              style="width: 100%"
+            >
+              <div class="icon-background">
+                <img
+                  id="todo8"
+                  class="abstract-icon is-appear"
+                  style="display: none"
+                  src="check.svg"
+                />
+              </div>
+              <div class="item-container">
+                <h2>TODO 8</h2>
+              </div>
+            </button>
+
+            <button
+              onclick="toggle('todo9', this, 'todo9')"
+              onfocus="updatePreview('placeholder.png'); textFocus('TODO')"
+              class="flex-item"
+              style="width: 100%"
+            >
+              <div class="icon-background">
+                <img
+                  id="todo9"
+                  class="abstract-icon is-appear"
+                  style="display: none"
+                  src="check.svg"
+                />
+              </div>
+              <div class="item-container">
+                <h2>TODO 9</h2>
+              </div>
+            </button>
+
+            <button
+              onclick="toggle('todo10', this, 'todo10')"
+              onfocus="updatePreview('placeholder.png'); textFocus('TODO')"
+              class="flex-item"
+              style="width: 100%"
+            >
+              <div class="icon-background">
+                <img
+                  id="todo10"
+                  class="abstract-icon is-appear"
+                  style="display: none"
+                  src="check.svg"
+                />
+              </div>
+              <div class="item-container">
+                <h2>TODO 10</h2>
+              </div>
+            </button>
+
+            <button
+              onclick="toggle('todo11', this, 'todo11')"
+              onfocus="updatePreview('placeholder.png'); textFocus('TODO')"
+              class="flex-item"
+              style="width: 100%"
+            >
+              <div class="icon-background">
+                <img
+                  id="todo11"
+                  class="abstract-icon is-appear"
+                  style="display: none"
+                  src="check.svg"
+                />
+              </div>
+              <div class="item-container">
+                <h2>TODO 11</h2>
+              </div>
+            </button>
+
+          </div>
+          <div class="column" id="column-4">
+
+            <button
+              onclick="toggle('todo12', this, 'todo12')"
+              onfocus="updatePreview('placeholder.png'); textFocus('TODO')"
+              class="flex-item"
+              style="width: 100%"
+            >
+              <div class="icon-background">
+                <img
+                  id="todo12"
+                  class="abstract-icon is-appear"
+                  style="display: none"
+                  src="check.svg"
+                />
+              </div>
+              <div class="item-container">
+                <h2>TODO 12</h2>
+              </div>
+            </button>
+
+            <button
+              onclick="toggle('todo13', this, 'todo13')"
+              onfocus="updatePreview('placeholder.png'); textFocus('TODO')"
+              class="flex-item"
+              style="width: 100%"
+            >
+              <div class="icon-background">
+                <img
+                  id="todo13"
+                  class="abstract-icon is-appear"
+                  style="display: none"
+                  src="check.svg"
+                />
+              </div>
+              <div class="item-container">
+                <h2>TODO 13</h2>
+              </div>
+            </button>
+
+            <button
+              onclick="toggle('todo14', this, 'todo14')"
+              onfocus="updatePreview('placeholder.png'); textFocus('TODO')"
+              class="flex-item"
+              style="width: 100%"
+            >
+              <div class="icon-background">
+                <img
+                  id="todo14"
+                  class="abstract-icon is-appear"
+                  style="display: none"
+                  src="check.svg"
+                />
+              </div>
+              <div class="item-container">
+                <h2>TODO 14</h2>
+              </div>
+            </button>
+
+            <button
+              onclick="toggle('todo15', this, 'todo15')"
+              onfocus="updatePreview('placeholder.png'); textFocus('TODO')"
+              class="flex-item"
+              style="width: 100%"
+            >
+              <div class="icon-background">
+                <img
+                  id="todo15"
+                  class="abstract-icon is-appear"
+                  style="display: none"
+                  src="check.svg"
+                />
+              </div>
+              <div class="item-container">
+                <h2>TODO 15</h2>
+              </div>
+            </button>
+
+            <button
+              onclick="toggle('todo16', this, 'todo16')"
+              onfocus="updatePreview('placeholder.png'); textFocus('TODO')"
+              class="flex-item"
+              style="width: 100%"
+            >
+              <div class="icon-background">
+                <img
+                  id="todo16"
+                  class="abstract-icon is-appear"
+                  style="display: none"
+                  src="check.svg"
+                />
+              </div>
+              <div class="item-container">
+                <h2>TODO 16</h2>
+              </div>
+            </button>
+
+            <button
+              onclick="toggle('todo17', this, 'todo17')"
+              onfocus="updatePreview('placeholder.png'); textFocus('TODO')"
+              class="flex-item"
+              style="width: 100%"
+            >
+              <div class="icon-background">
+                <img
+                  id="todo17"
+                  class="abstract-icon is-appear"
+                  style="display: none"
+                  src="check.svg"
+                />
+              </div>
+              <div class="item-container">
+                <h2>TODO 17</h2>
+              </div>
+            </button>
 
           </div>
         </div>
@@ -379,5 +635,11 @@
         <h2 id="focus-text"></h2>
       </div>
     </div>
+    <script>
+      // Initialize column visibility on page load
+      window.addEventListener('DOMContentLoaded', function() {
+        updateColumnVisibility();
+      });
+    </script>
   </body>
 </html>
