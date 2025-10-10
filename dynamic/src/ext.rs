@@ -1536,6 +1536,13 @@ impl BomaExt for BattleObjectModuleAccessor {
                 StatusModule::change_status_request_from_script(self, *FIGHTER_STATUS_KIND_SPECIAL_LW,false);
             }
         }
+
+        // Airdodhe cancels
+        if [
+            *FIGHTER_STATUS_KIND_ATTACK_AIR
+        ].contains(&status_kind) {
+            self.check_airdodge_cancel();
+        }
     }
 
     unsafe fn try_pickup_item(&mut self, range: f32, bone: Option<Hash40>, offset: Option<&Vector2f>) -> Option<&mut BattleObjectModuleAccessor> {
