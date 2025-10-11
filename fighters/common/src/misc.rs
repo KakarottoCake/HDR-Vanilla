@@ -361,9 +361,45 @@ unsafe fn rivals_waveland(fighter: &mut L2CFighterCommon) {
         *FIGHTER_STATUS_KIND_ESCAPE_AIR,
         *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE
     ]) {
-        CancelModule::enable_cancel(fighter.module_accessor);
-        ControlModule::clear_command(fighter.module_accessor, true);
-        return;
+        let terms = [
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_DASH,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_AIR,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_B,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_F,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT_B,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT_F,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT_RV,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT_WAIT,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_DASH,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_RUN,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_WALK,
+        ];
+        let mut enableds = [true; 14];
+        for x in 0..terms.len() {
+            enableds[x] = WorkModule::is_enable_transition_term(fighter.module_accessor, terms[x]);
+        }
+        fighter.unable_transition_term_many(&terms);
+
+        // fighter.check_turn_attack_s4_pad_rev();
+        if fighter.sub_transition_group_check_ground_jump_mini_attack().get_bool()
+        || fighter.sub_transition_group_check_ground_item().get_bool()
+        || fighter.sub_transition_group_check_ground_catch().get_bool() 
+        || fighter.sub_transition_group_check_ground_escape().get_bool()
+        || fighter.sub_transition_group_check_ground_guard().get_bool()
+        || fighter.sub_transition_group_check_ground_special().get_bool()
+        || fighter.sub_transition_group_check_ground_attack().get_bool()
+        || fighter.sub_transition_group_check_ground_jump().get_bool()
+        || fighter.sub_transition_group_check_ground(L2CValue::Bool(false)).get_bool() {
+            // do nothing extra, these are only in an if block to exit early if one of them is true
+        }
+        for x in 0..terms.len() {
+            if enableds[x] {
+                WorkModule::enable_transition_term(fighter.module_accessor, terms[x]);
+            }
+        }
     }
 }
 
