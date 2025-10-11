@@ -176,10 +176,11 @@ unsafe extern "C" fn game_attackairf2(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 10.0); // 11
     FT_MOTION_RATE_RANGE(agent, 10.0, 30.0, 13.0); // 24
+    frame(lua_state, 11.0); // 12
     if is_excute(agent) {
         agent.on_flag(*FIGHTER_BAYONETTA_STATUS_ATTACK_AIR_F_FLAG_ENABLE_COMBO);
     }
-    frame(lua_state, 12.0);
+    frame(lua_state, 12.0); // 13
     if is_excute(agent) {
         CHECK_BA(agent, true);
         agent.on_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_MOTION_STOP);
@@ -300,7 +301,7 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    FT_MOTION_RATE_RANGE(agent, 1.0, 10.0, 6.45);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 10.5, 7.0);
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2d51fcdb09), *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, false, false, true, 20, 20, 15, 0, false);
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2b7cb92b79), *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, false, false, true, 20);
@@ -308,17 +309,23 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2b7cb92b79), *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, true, 20);
         agent.on_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
-    frame(lua_state, 10.0); // 8
-    FT_MOTION_RATE_RANGE(agent, 10.0, 19.2, 5.25);
+    frame(lua_state, 10.5); // 8
+    FT_MOTION_RATE_RANGE(agent, 10.5, 18.0, 5.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("kneer"), 8.0, 75, 115, 0, 40, 4.2, 6.3, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        ATTACK(agent, 1, 0, Hash40::new("kneer"), 8.0, 75, 115, 0, 40, 3.6, 2.1, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        ATTACK(agent, 2, 0, Hash40::new("kneer"), 8.0, 75, 115, 0, 40, 3.2, -2.0, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        ATTACK(agent, 0, 0, Hash40::new("kneer"), 8.0, 70, 115, 0, 40, 4.1, 6.3, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        ATTACK(agent, 1, 0, Hash40::new("kneer"), 8.0, 70, 115, 0, 40, 3.6, 2.1, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        ATTACK(agent, 2, 0, Hash40::new("kneer"), 8.0, 70, 115, 0, 40, 3.2, -2.0, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
     }
-    frame(lua_state, 19.2); // 14
-    FT_MOTION_RATE_RANGE(agent, 19.2, 29.0, 4.0);
+    frame(lua_state, 10.75); // 9
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("kneer"), 7.0, 55, 84, 0, 40, 4.2, 6.3, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        AttackModule::set_vector(boma, 0, 77, false);
+        AttackModule::set_vector(boma, 1, 77, false);
+        AttackModule::set_vector(boma, 2, 77, false);
+    }
+    frame(lua_state, 18.0); // 14
+    FT_MOTION_RATE_RANGE(agent, 18.0, 29.0, 4.0);
+    if is_excute(agent) {
+        ATTACK(agent, 0, 0, Hash40::new("kneer"), 7.0, 55, 84, 0, 40, 4.1, 6.3, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
         ATTACK(agent, 1, 0, Hash40::new("kneer"), 7.0, 55, 84, 0, 40, 3.6, 2.1, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
         ATTACK(agent, 2, 0, Hash40::new("kneer"), 7.0, 55, 84, 0, 40, 3.2, -2.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
     }
@@ -347,20 +354,20 @@ unsafe extern "C" fn effect_attackairhi(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 10.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW_WORK(agent, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_EFFECT_KIND_BAYONETTA_ATTACK_ARC1, Hash40::new("top"), 0, 14.6, -0.1, 0, -46, -90, 1.14, true);
+        EFFECT_FOLLOW_WORK(agent, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_EFFECT_KIND_BAYONETTA_ATTACK_ARC1, Hash40::new("top"), 0, 14.6, -0.1, 0, -46, -90, 1.15, true);
         let effect = EffectModule::get_last_handle(boma) as u64;
         VarModule::set_int64(agent.battle_object, vars::bayonetta::status::EFFECT_HANDLE, effect);
-        EffectModule::set_rate(boma, effect as u32, 1.15);
+        EffectModule::set_rate(boma, effect as u32, 0.95);
     }
-    frame(lua_state, 11.0);
+    frame(lua_state, 12.0);
     if is_excute(agent) {
         let effect = VarModule::get_int64(agent.battle_object, vars::bayonetta::status::EFFECT_HANDLE);
-        EffectModule::set_rot(boma, effect as u32, &Vector3f{x: 0.0, y: -59.0, z: -90.0});
+        EffectModule::set_rot(boma, effect as u32, &Vector3f{x: 0.0, y: -60.0, z: -90.0});
     }
-    frame(lua_state, 13.0);
+    frame(lua_state, 14.0);
     if is_excute(agent) {
         let effect = VarModule::get_int64(agent.battle_object, vars::bayonetta::status::EFFECT_HANDLE);
-        EffectModule::set_rot(boma, effect as u32, &Vector3f{x: 0.0, y: -61.0, z: -90.0});
+        EffectModule::set_rot(boma, effect as u32, &Vector3f{x: 0.0, y: -63.0, z: -90.0});
     }
     frame(lua_state, 16.0);
     if is_excute(agent) {
@@ -370,18 +377,18 @@ unsafe extern "C" fn effect_attackairhi(agent: &mut L2CAgentBase) {
     frame(lua_state, 18.0);
     if is_excute(agent) {
         let effect = VarModule::get_int64(agent.battle_object, vars::bayonetta::status::EFFECT_HANDLE);
-        EffectModule::set_rate(boma, effect as u32, 1.5);
+        EffectModule::set_rate(boma, effect as u32, 1.65);
         EffectModule::set_rot(boma, effect as u32, &Vector3f{x: 0.0, y: -75.0, z: -90.0});
     } //quick fadeout effect instead of instantly deleted
     frame(lua_state, 20.0);
     if is_excute(agent) {
         let effect = VarModule::get_int64(agent.battle_object, vars::bayonetta::status::EFFECT_HANDLE);
-        EffectModule::set_rot(boma, effect as u32, &Vector3f{x: 0.0, y: -77.0, z: -90.0});
+        EffectModule::set_rot(boma, effect as u32, &Vector3f{x: 0.0, y: -79.0, z: -90.0});
     }
     frame(lua_state, 22.0);
     if is_excute(agent) {
         let effect = VarModule::get_int64(agent.battle_object, vars::bayonetta::status::EFFECT_HANDLE);
-        EffectModule::set_rot(boma, effect as u32, &Vector3f{x: 0.0, y: -75.0, z: -90.0});
+        EffectModule::set_rot(boma, effect as u32, &Vector3f{x: 0.0, y: -77.0, z: -90.0});
     }
     frame(lua_state, 26.0);
     if is_excute(agent) {
@@ -397,7 +404,7 @@ unsafe extern "C" fn expression_attackairhi(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(lua_state, 10.0);
+    frame(lua_state, 9.0);
     if is_excute(agent) {
         RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
     }

@@ -152,11 +152,11 @@ unsafe extern "C" fn angling(fighter: &mut L2CFighterCommon, dive: bool) -> L2CV
     let facing = fighter.lr();
     let stick = VarModule::get_float(fighter.battle_object, vars::bayonetta::status::SPECIAL_S_ABK_ANGLE);
     if dive {
-        joint_rotator(fighter, frame, Hash40::new("rot"), Vector3f{x: -9.0*stick, y:0.0, z:0.0}, 1.0, 7.0, 25.0, 32.0);
+        joint_rotator(fighter, frame, Hash40::new("rot"), Vector3f{x: -8.5*stick, y:0.0, z:0.0}, 1.0, 7.0, 25.0, 32.0);
         if frame > 7.0 && !VarModule::is_flag(fighter.battle_object, vars::bayonetta::status::SPECIAL_1F_CHECK) {
             let base = fighter.get_param_float("param_special_s", "ab_d_rotate");
             let speed = fighter.get_param_float("param_special_s", "ab_d_motion_speed_mul");
-            let maxrot = 8.0;
+            let maxrot = 7.5;
             let angle = if facing < 0.0 {
                 -base - stick *maxrot //l
             } else {

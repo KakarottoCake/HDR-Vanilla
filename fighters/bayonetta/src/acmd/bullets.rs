@@ -41,9 +41,9 @@ unsafe extern "C" fn BA_SHOOTING_ON(agent: &mut L2CAgentBase, hand: bool, joint:
     let bkb = if angle_deg > 180.0 {5} else {10}; // half power spike bullets
     if is_excute(agent) {
         if !agent.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_DISABLE_ROOT_ATTACK) {
-            ATTACK(agent, hitbox_id as u64 + 1, 1, Hash40::new("top"), 0.6, angle_deg as u64, 100, 0, bkb, 3.25, 0.0, gun_offset.y, gun_offset.x * lr, Some(0.0), Some(gun_offset.y + push_y), Some(gun_offset.x * lr + push_x), 0.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
+            ATTACK(agent, hitbox_id as u64, 1, Hash40::new("top"), 0.6, angle_deg as u64, 100, 0, bkb, 3.25, 0.0, gun_offset.y, gun_offset.x * lr, Some(0.0), Some(gun_offset.y + push_y), Some(gun_offset.x * lr + push_x), 0.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
         }
-        ATTACK(agent, hitbox_id as u64, 1, Hash40::new("top"), 0.4, angle_deg as u64, 0, 0, 0, 2.75, 0.0, gun_offset.y, gun_offset.x * lr, Some(0.0), Some(gun_offset.y + offset_y), Some(gun_offset.x * lr + offset_x), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
+        ATTACK(agent, hitbox_id as u64 + 1, 1, Hash40::new("top"), 0.4, angle_deg as u64, 0, 0, 0, 2.75, 0.0, gun_offset.y, gun_offset.x * lr, Some(0.0), Some(gun_offset.y + offset_y), Some(gun_offset.x * lr + offset_x), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
         ControlModule::set_rumble(boma, Hash40::new("rbkind_63_bullet"), 4, true, *BATTLE_OBJECT_ID_INVALID as u32);
         if msc_arg_1 > -1.0 && !ground_bounce {
             notify_event_msc_cmd!(agent, Hash40::new_raw(0x36db1a34c9), smash::lib::LuaConst::new(hitbox_id as u32), msc_arg_1, msc_arg_2);
@@ -54,13 +54,15 @@ unsafe extern "C" fn BA_SHOOTING_ON(agent: &mut L2CAgentBase, hand: bool, joint:
 unsafe extern "C" fn BA_SHOOTING_OFF(agent: &mut L2CAgentBase, hitbox_1_id: i32, hitbox_2_id: i32) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    //if !agent.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_DISABLE_ROOT_ATTACK) {
+    if !agent.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_DISABLE_ROOT_ATTACK) {
         if is_excute(agent) {
             AttackModule::clear(boma, hitbox_1_id, false);
-    //    }
-    //}
-    //if is_excute(agent) {
-        AttackModule::clear(boma, hitbox_2_id, false);
+            AttackModule::clear(boma, hitbox_2_id, false);
+        }
+    }
+    if is_excute(agent) {
+        AttackModule::clear(boma, hitbox_1_id + 1, false);
+        AttackModule::clear(boma, hitbox_2_id + 1, false);
     }
 }
 

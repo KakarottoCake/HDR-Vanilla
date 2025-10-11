@@ -242,7 +242,6 @@ unsafe extern "C" fn game_attack100end(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_attackdash(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.9);
     frame(lua_state, 1.0);
     FT_MOTION_RATE_RANGE(agent, 1.0, 16.5, 10.5);
     if is_excute(agent) {
@@ -250,6 +249,7 @@ unsafe extern "C" fn game_attackdash(agent: &mut L2CAgentBase) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2d51fcdb09), *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, true, true, false, 10, 2, 15, 5, true);
     }
     frame(lua_state, 16.5);
+    sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.9);
     FT_MOTION_RATE_RANGE(agent, 16.5, 27.0, 10.5);
     frame(lua_state, 17.5);
     if is_excute(agent) {
