@@ -314,7 +314,7 @@ pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
     
     agent.status(Pre, *FIGHTER_STATUS_KIND_JUMP, jump_pre);
-    agent.status(MapCorrection, *FIGHTER_STATUS_KIND_THROW_KIRBY, throw_kirby_map_correction);
+    //agent.status(MapCorrection, *FIGHTER_STATUS_KIND_THROW_KIRBY, throw_kirby_map_correction);
     agent.status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_N, special_n_pre);
 
     agent.status(Main, *FIGHTER_STATUS_KIND_ENTRY, entry_main);
