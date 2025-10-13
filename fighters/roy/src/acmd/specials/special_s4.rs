@@ -22,7 +22,8 @@ unsafe extern "C" fn effect_specials4hi(agent: &mut L2CAgentBase) {
     frame(lua_state, 12.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("roy_fire"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 0.6, true);
-        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_roy_sword_blue"), Hash40::new("tex_roy_sword2"), 20, Hash40::new("sword1"), 0.0, 0.0, -0.8, Hash40::new("sword1"), -0.0, -0.0, 14.5, true, Hash40::new("roy_sword_blue"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.5, 0.2);
+        EFFECT_FOLLOW(agent, Hash40::new("roy_attack_fire"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 0.9, true);
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_roy_sword_blue"), Hash40::new("tex_roy_sword2"), 7, Hash40::new("sword1"), 0.0, 0.0, -0.8, Hash40::new("sword1"), -0.0, -0.0, 14.5, true, Hash40::new("roy_sword_blue"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.5, 0.2);
         EFFECT_FOLLOW(agent, Hash40::new("roy_sword_blue"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, true);
     }
     frame(lua_state, 15.0);
@@ -32,6 +33,7 @@ unsafe extern "C" fn effect_specials4hi(agent: &mut L2CAgentBase) {
     frame(lua_state, 22.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("roy_fire"), false, false);
+        EFFECT_OFF_KIND(agent, Hash40::new("roy_attack_fire"), false, false);
         EFFECT_OFF_KIND(agent, Hash40::new("roy_sword_blue"), false, true);
         AFTER_IMAGE_OFF(agent, 2);
     }
@@ -103,7 +105,8 @@ unsafe extern "C" fn effect_specials4s(agent: &mut L2CAgentBase) {
     frame(lua_state, 17.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("roy_fire"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 0.6, true);
-        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_roy_sword_red"), Hash40::new("tex_roy_sword2"), 20, Hash40::new("sword1"), 0.0, 0.0, -0.8, Hash40::new("sword1"), -0.0, -0.0, 14.5, true, Hash40::new("roy_sword_red"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.5, 0.2);
+        EFFECT_FOLLOW(agent, Hash40::new("roy_attack_fire"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 0.9, true);
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_roy_sword_red"), Hash40::new("tex_roy_sword2"), 7, Hash40::new("sword1"), 0.0, 0.0, -0.8, Hash40::new("sword1"), -0.0, -0.0, 14.5, true, Hash40::new("roy_sword_red"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.5, 0.2);
         EFFECT_FOLLOW(agent, Hash40::new("roy_sword_red"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, true);
     }
     frame(lua_state, 20.0);
@@ -113,6 +116,7 @@ unsafe extern "C" fn effect_specials4s(agent: &mut L2CAgentBase) {
     frame(lua_state, 27.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("roy_fire"), false, false);
+        EFFECT_OFF_KIND(agent, Hash40::new("roy_attack_fire"), false, false);
         EFFECT_OFF_KIND(agent, Hash40::new("roy_sword_red"), false, true);
         AFTER_IMAGE_OFF(agent, 2);
     }
@@ -181,7 +185,8 @@ unsafe extern "C" fn effect_specials4lw(agent: &mut L2CAgentBase) {
     frame(lua_state, 7.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("roy_fire"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 0.6, true);
-        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_roy_sword_green"), Hash40::new("tex_roy_sword2"), 20, Hash40::new("sword1"), 0.0, 0.0, -0.8, Hash40::new("sword1"), -0.0, -0.0, 14.5, true, Hash40::new("roy_sword_green"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.5, 0.2);
+        EFFECT_FOLLOW(agent, Hash40::new("roy_attack_fire"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 0.9, true);
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_roy_sword_green"), Hash40::new("tex_roy_sword2"), 7, Hash40::new("sword1"), 0.0, 0.0, -0.8, Hash40::new("sword1"), -0.0, -0.0, 14.5, true, Hash40::new("roy_sword_green"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.5, 0.2);
         EFFECT_FOLLOW(agent, Hash40::new("roy_sword_green"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, true);
     }
     frame(lua_state, 13.0);
@@ -194,6 +199,7 @@ unsafe extern "C" fn effect_specials4lw(agent: &mut L2CAgentBase) {
     frame(lua_state, 37.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("roy_fire"), false, false);
+        EFFECT_OFF_KIND(agent, Hash40::new("roy_attack_fire"), false, false);
         EFFECT_OFF_KIND(agent, Hash40::new("roy_sword_green"), false, true);
         AFTER_IMAGE_OFF(agent, 2);
         EFFECT(agent, Hash40::new("roy_smash_bomb"), Hash40::new("sword1"), 0, 0, 7, 90, 0, 0, 0.48, 0, 0, 0, 0, 0, 0, true);
@@ -248,7 +254,8 @@ unsafe extern "C" fn effect_specials4back(agent: &mut L2CAgentBase) {
     frame(lua_state, 15.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("roy_fire"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 0.6, true);
-        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_roy_sword_red"), Hash40::new("tex_roy_sword2"), 20, Hash40::new("sword1"), 0.0, 0.0, -0.8, Hash40::new("sword1"), -0.0, -0.0, 14.5, true, Hash40::new("roy_sword_red"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.5, 0.2);
+        EFFECT_FOLLOW(agent, Hash40::new("roy_attack_fire"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 0.9, true);
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_roy_sword_red"), Hash40::new("tex_roy_sword2"), 7, Hash40::new("sword1"), 0.0, 0.0, -0.8, Hash40::new("sword1"), -0.0, -0.0, 14.5, true, Hash40::new("roy_sword_red"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.5, 0.2);
         EFFECT_FOLLOW(agent, Hash40::new("roy_sword_red"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, true);
     }
     frame(lua_state, 18.0);
@@ -258,6 +265,7 @@ unsafe extern "C" fn effect_specials4back(agent: &mut L2CAgentBase) {
     frame(lua_state, 32.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("roy_fire"), false, false);
+        EFFECT_OFF_KIND(agent, Hash40::new("roy_attack_fire"), false, false);
         EFFECT_OFF_KIND(agent, Hash40::new("roy_sword_red"), false, true);
         AFTER_IMAGE_OFF(agent, 2);
     }
