@@ -153,7 +153,7 @@ pub mod vars {
 
             pub const ENABLE_AIR_ESCAPE_JUMPSQUAT: i32 = 0x0051;
 
-            pub const IS_KNOCKDOWN_THROW: i32 = 0x0052;
+            pub const FORCE_TUMBLE_NO_BOUNCE: i32 = 0x0052;
 
             pub const IS_HEAVY_ATTACK: i32 = 0x0053;
 
@@ -831,6 +831,7 @@ pub mod vars {
             //pub const DISABLE_SPECIAL_HI: i32 = 0x01FF; //Weird value to avoid conflicts with copy ability values
             pub const SPECIAL_N_PICKEL_CYCLE_MATERIAL: i32 = 0x01F4;
             pub const SPECIAL_LW_USED_JUMPS: i32 = 0x01F5;
+            pub use super::super::bayonetta::instance::WAS_CANCEL;
             pub use super::super::ridley::instance::SPECIAL_N_EXPLODE;
 
             // ints
@@ -965,6 +966,7 @@ pub mod vars {
         pub mod status {
             // flags
             pub const HIT_CANCEL: i32 = 0x1102;
+            pub const SUPER_SPECIAL_A_PLUS_B: i32 = 0x1103;
 
             // ints
             pub const SPECIAL_S_ROT_ANGLE: i32 = 0x1100;
@@ -974,6 +976,7 @@ pub mod vars {
             // floats
             pub const SPECIAL_N_ANGLE: i32 = 0x1100;
             pub const AURA_OVERRIDE: i32 = 0x1101;
+            pub const SPECIAL_HI_START_LR: i32 = 0x1102;
         }
     }
 
@@ -1229,10 +1232,14 @@ pub mod vars {
         pub mod instance {
             //flags
             pub const DISABLE_SPECIAL_HI: i32 = 0x0100;
+            pub const SPECIAL_LW_DISABLE_STALL: i32 = 0x0101;
         }
         pub mod status {
             // flags
             pub const SPECIAL_HI_THUNDER_LOOSE: i32 = 0x1100;
+
+            // ints
+            pub const SPECIAL_LW_STOP_Y_FRAME: i32 = 0x1100;
         }
     }
 
