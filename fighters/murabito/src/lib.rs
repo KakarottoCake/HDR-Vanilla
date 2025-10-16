@@ -15,6 +15,7 @@ mod clayrocket;
 mod firework;
 mod flowerpot;
 mod slingshot;
+mod sprout;
 
 use smash::{
     lib::{
@@ -61,4 +62,5 @@ pub fn install() {
     firework::install();
     flowerpot::install();
     slingshot::install();
+    sprout::install();
 }
