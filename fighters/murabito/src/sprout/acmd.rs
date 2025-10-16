@@ -11,6 +11,10 @@ unsafe extern "C" fn game_appear(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
+    frame(lua_state, 14.0);
+    FT_MOTION_RATE_RANGE(agent, 14.0, 34.0, 10.0);
+    frame(lua_state, 34.0);
+    FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 36.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 90, 20, 0, 80, 3.5, 0.0, 2.0, -1.0, Some(0.0), Some(2.0), Some(1.0), 1.25, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.3, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_NONE);
