@@ -10,7 +10,7 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 6.0);
     if is_excute(agent) {
-        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_ALWAYS, 0);
+        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 15.0);
     }
     frame(lua_state, 18.0);
     if is_excute(agent) {
@@ -159,6 +159,67 @@ unsafe extern "C" fn game_speciallwhit(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn effect_speciallwhit(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("sys_guard_mark"), true, true);
+        LANDING_EFFECT(agent, Hash40::new("sys_h_smoke_b"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.25, 0, 0, 0, 0, 0, 0, false);
+        EFFECT(agent, Hash40::new("chrom_counter_success"), Hash40::new("top"), 0, 14.8, -1, 0, 90, 0, 1.1, 0, 0, 0, 0, 0, 0, true);
+    }
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROY_STATUS_SPECIAL_LW_FLAG_SPECIAL_EFFECT) {
+        if is_excute(agent) {
+            EFFECT(agent, Hash40::new("sys_counter_flash"), Hash40::new("top"), 0, 14.8, -1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    }
+    frame(agent.lua_state_agent, 2.0);
+    if is_excute(agent) {
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_chrom_stormsword1"), Hash40::new("tex_chrom_stormsword2"), 9, Hash40::new("sword1"), 0, 0, 1.7, Hash40::new("sword1"), -0.0, -0.0, 12.6, true, Hash40::new("chrom_sword_purple"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.2, 0.2);
+    }
+    frame(agent.lua_state_agent, 3.0);
+    if is_excute(agent) {
+        LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(agent.lua_state_agent, 4.0);
+    if is_excute(agent) {
+        FLASH(agent, 1, 1, 1, 0);
+    }
+    frame(agent.lua_state_agent, 8.0);
+    if is_excute(agent) {
+        COL_NORMAL(agent);
+    }
+    frame(agent.lua_state_agent, 10.0);
+    if is_excute(agent) {
+        AFTER_IMAGE_OFF(agent, 4);
+    }
+}
+
+unsafe extern "C" fn effect_specialairlwhit(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("sys_guard_mark"), true, true);
+        EFFECT(agent, Hash40::new("chrom_counter_success"), Hash40::new("top"), 0, 14.8, -1, 0, 90, 0, 1.1, 0, 0, 0, 0, 0, 0, true);
+    }
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROY_STATUS_SPECIAL_LW_FLAG_SPECIAL_EFFECT) {
+        if is_excute(agent) {
+            EFFECT(agent, Hash40::new("sys_counter_flash"), Hash40::new("top"), 0, 14.8, -1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    }
+    frame(agent.lua_state_agent, 2.0);
+    if is_excute(agent) {
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_chrom_stormsword1"), Hash40::new("tex_chrom_stormsword2"), 9, Hash40::new("sword1"), 0, 0, 1.7, Hash40::new("sword1"), -0.0, -0.0, 12.6, true, Hash40::new("chrom_sword_purple"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.2, 0.2);
+    }
+    frame(agent.lua_state_agent, 4.0);
+    if is_excute(agent) {
+        FLASH(agent, 1, 1, 1, 0);
+    }
+    frame(agent.lua_state_agent, 8.0);
+    if is_excute(agent) {
+        COL_NORMAL(agent);
+    }
+    frame(agent.lua_state_agent, 10.0);
+    if is_excute(agent) {
+        AFTER_IMAGE_OFF(agent, 4);
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_speciallw", game_speciallw, Priority::Low);
     agent.acmd("game_specialairlw", game_specialairlw, Priority::Low);
@@ -169,4 +230,6 @@ pub fn install(agent: &mut Agent) {
     
     agent.acmd("game_speciallwhit", game_speciallwhit, Priority::Low);
     agent.acmd("game_specialairlwhit", game_speciallwhit, Priority::Low);
+    agent.acmd("effect_speciallwhit", effect_speciallwhit, Priority::Low);
+    agent.acmd("effect_specialairlwhit", effect_specialairlwhit, Priority::Low);
 }

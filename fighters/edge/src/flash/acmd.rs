@@ -3,7 +3,7 @@ use super::*;
 unsafe extern "C" fn game_wait(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         TeamModule::set_team(agent.module_accessor, -1, false);
-        SEARCH(agent, 0, 0, Hash40::new("top"), 0.5, 0.0, 8.5, 0.0, Some(0.0), Some(-8.5), Some(0.0), *COLLISION_KIND_MASK_ATTACK, *HIT_STATUS_MASK_ALL, 30, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_ALL, false);
+        SEARCH(agent, 0, 0, Hash40::new("top"), 3.0, 0.0, 6.5, 0.0, Some(0.0), Some(-6.5), Some(0.0), *COLLISION_KIND_MASK_AH, *HIT_STATUS_MASK_ALL, 1, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_ALL, false);
     }
 }
 
