@@ -249,46 +249,46 @@ unsafe extern "C" fn effect_specials32(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         COL_NORMAL(agent);
     }
-}
-frame(lua_state, 21.0);
-if is_excute(agent) {
-    EFFECT_FOLLOW(agent, Hash40::new("brave_lightning3_swordspark"), Hash40::new("sword1"), 0, 0, 0, 0, 0, -90, 1, true);
-}
-frame(lua_state, 22.0);
-if is_excute(agent) {
-    AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_brave_zapsword"), Hash40::new("tex_brave_sword2"), 16, Hash40::new("sword1"), 3, 0, 0, Hash40::new("sword1"), 14, 0, 0, true, Hash40::new("null"), Hash40::new("sword1"), 0, 0, 0, 0, 0, -90, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.1);
-}
-frame(lua_state, 26.0);
-if is_excute(agent) {
-    LANDING_EFFECT(agent, Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-    LAST_EFFECT_SET_RATE(agent, 0.8);
-}
-frame(lua_state, 28.0);
-if PostureModule::lr(agent.module_accessor) < 0.0 {
+    }
+    frame(lua_state, 21.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("brave_lightning3_swordspark"), Hash40::new("sword1"), 0, 0, 0, 0, 0, -90, 1, true);
+    }
+    frame(lua_state, 22.0);
+    if is_excute(agent) {
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_brave_zapsword"), Hash40::new("tex_brave_sword2"), 16, Hash40::new("sword1"), 3, 0, 0, Hash40::new("sword1"), 14, 0, 0, true, Hash40::new("null"), Hash40::new("sword1"), 0, 0, 0, 0, 0, -90, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.1);
+    }
+    frame(lua_state, 26.0);
+    if is_excute(agent) {
+        LANDING_EFFECT(agent, Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        LAST_EFFECT_SET_RATE(agent, 0.8);
+    }
+    frame(lua_state, 28.0);
+    if PostureModule::lr(agent.module_accessor) < 0.0 {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("brave_lightning3_rolllightning"), Hash40::new("top"), 0, 10, 0, 0, 0, -5, 1, true);
         EFFECT_OFF_KIND(agent, Hash40::new("brave_lightning3_swordspark"), false, true);
     }
-}
-frame(lua_state, 30.0);
-if is_excute(agent) {
-    EFFECT_FOLLOW(agent, Hash40::new("brave_lightning3_swordspark"), Hash40::new("sword1"), 0, 0, 0, 0, 0, -90, 1, true);
-}
-else {
-if is_excute(agent) {
-    EFFECT_FOLLOW(agent, Hash40::new("brave_lightning3_rolllightning"), Hash40::new("top"), 0, 10, 0, 0, 0, 4, 1, true);
-}
-}
-frame(lua_state, 34.0);
-if is_excute(agent) {
-EFFECT_OFF_KIND(agent, Hash40::new("brave_lightning3_swordspark"), false, true);
-}
-frame(lua_state, 40.0);
-if is_excute(agent) {
-AFTER_IMAGE_OFF(agent, 10);
-EFFECT_OFF_KIND_WORK(agent, *FIGHTER_BRAVE_INSTANCE_WORK_ID_INT_EFFECT_KIND_LIGHTNING_SWORD_FLARE, false, true);
-EFFECT_OFF_KIND(agent, Hash40::new("brave_lightning3_sword"), false, true);
-}
+    }
+    frame(lua_state, 30.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("brave_lightning3_swordspark"), Hash40::new("sword1"), 0, 0, 0, 0, 0, -90, 1, true);
+    }
+    else {
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("brave_lightning3_rolllightning"), Hash40::new("top"), 0, 10, 0, 0, 0, 4, 1, true);
+    }
+    }
+    frame(lua_state, 34.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("brave_lightning3_swordspark"), false, true);
+    }
+    frame(lua_state, 40.0);
+    if is_excute(agent) {
+        AFTER_IMAGE_OFF(agent, 10);
+        EFFECT_OFF_KIND_WORK(agent, *FIGHTER_BRAVE_INSTANCE_WORK_ID_INT_EFFECT_KIND_LIGHTNING_SWORD_FLARE, false, true);
+        EFFECT_OFF_KIND(agent, Hash40::new("brave_lightning3_sword"), false, true);
+    }
 }
 
 unsafe extern "C" fn effect_specialairs32(agent: &mut L2CAgentBase) {
@@ -313,41 +313,41 @@ unsafe extern "C" fn effect_specialairs32(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         COL_NORMAL(agent);
     }
-}
-frame(lua_state, 21.0);
-if is_excute(agent) {
-    EFFECT_FOLLOW(agent, Hash40::new("brave_lightning3_swordspark"), Hash40::new("sword1"), 0, 0, 0, 0, 0, -90, 1, true);
-}
-frame(lua_state, 22.0);
-if is_excute(agent) {
-    AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_brave_zapsword"), Hash40::new("tex_brave_sword2"), 16, Hash40::new("sword1"), 3, 0, 0, Hash40::new("sword1"), 14, 0, 0, true, Hash40::new("null"), Hash40::new("sword1"), 0, 0, 0, 0, 0, -90, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.1);
-}
-frame(lua_state, 28.0);
-if PostureModule::lr(agent.module_accessor) < 0.0 {
+    }
+    frame(lua_state, 21.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("brave_lightning3_swordspark"), Hash40::new("sword1"), 0, 0, 0, 0, 0, -90, 1, true);
+    }
+    frame(lua_state, 22.0);
+    if is_excute(agent) {
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_brave_zapsword"), Hash40::new("tex_brave_sword2"), 16, Hash40::new("sword1"), 3, 0, 0, Hash40::new("sword1"), 14, 0, 0, true, Hash40::new("null"), Hash40::new("sword1"), 0, 0, 0, 0, 0, -90, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.1);
+    }
+    frame(lua_state, 28.0);
+    if PostureModule::lr(agent.module_accessor) < 0.0 {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("brave_lightning3_rolllightning"), Hash40::new("top"), 0, 10, 0, 0, 0, -5, 1, true);
         EFFECT_OFF_KIND(agent, Hash40::new("brave_lightning3_swordspark"), false, true);
     }
-}
-frame(lua_state, 30.0);
-if is_excute(agent) {
-    EFFECT_FOLLOW(agent, Hash40::new("brave_lightning3_swordspark"), Hash40::new("sword1"), 0, 0, 0, 0, 0, -90, 1, true);
-}
-else {
-if is_excute(agent) {
+    }
+    frame(lua_state, 30.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("brave_lightning3_swordspark"), Hash40::new("sword1"), 0, 0, 0, 0, 0, -90, 1, true);
+    }
+    else {
+    if is_excute(agent) {
     EFFECT_FOLLOW(agent, Hash40::new("brave_lightning3_rolllightning"), Hash40::new("top"), 0, 10, 0, 0, 0, 4, 1, true);
-}
-}
-frame(lua_state, 34.0);
-if is_excute(agent) {
-EFFECT_OFF_KIND(agent, Hash40::new("brave_lightning3_swordspark"), false, true);
-}
-frame(lua_state, 40.0);
-if is_excute(agent) {
-AFTER_IMAGE_OFF(agent, 10);
-EFFECT_OFF_KIND_WORK(agent, *FIGHTER_BRAVE_INSTANCE_WORK_ID_INT_EFFECT_KIND_LIGHTNING_SWORD_FLARE, false, true);
-EFFECT_OFF_KIND(agent, Hash40::new("brave_lightning3_sword"), false, true);
-}
+    }
+    }
+    frame(lua_state, 34.0);
+    if is_excute(agent) {
+    EFFECT_OFF_KIND(agent, Hash40::new("brave_lightning3_swordspark"), false, true);
+    }
+    frame(lua_state, 40.0);
+    if is_excute(agent) {
+    AFTER_IMAGE_OFF(agent, 10);
+    EFFECT_OFF_KIND_WORK(agent, *FIGHTER_BRAVE_INSTANCE_WORK_ID_INT_EFFECT_KIND_LIGHTNING_SWORD_FLARE, false, true);
+    EFFECT_OFF_KIND(agent, Hash40::new("brave_lightning3_sword"), false, true);
+    }
 }
 
 unsafe extern "C" fn game_specialhiempty(agent: &mut L2CAgentBase) {
@@ -464,7 +464,7 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_specials32", game_specials32, Priority::Low);
     agent.acmd("effect_specials32", effect_specials32, Priority::Low);
     agent.acmd("game_specialairs32", game_specials32, Priority::Low);
-    agent.acmd("effect_specialairs32", effect_specials32, Priority::Low);
+    agent.acmd("effect_specialairs32", effect_specialairs32, Priority::Low);
 
     agent.acmd("game_specialhi1", game_specialhi1, Priority::Low);
     agent.acmd("game_specialairhi1", game_specialhi1, Priority::Low);
