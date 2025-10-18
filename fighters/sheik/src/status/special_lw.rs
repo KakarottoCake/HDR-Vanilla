@@ -196,7 +196,7 @@ unsafe extern "C" fn wall_bounce(fighter: &mut L2CFighterCommon) {
 }
 
 pub fn install(agent: &mut Agent) {
-    //agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_LW, special_lw_main);
+    agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_LW, special_lw_main);
 
     agent.status(Pre, *FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_ATTACK, special_lw_attack_pre);
     agent.status(Main, *FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_ATTACK, special_lw_attack_main);
