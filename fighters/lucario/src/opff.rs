@@ -78,7 +78,8 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_MAX,
         *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_HI_RUSH_END,
         *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_HI_BOUND,
-        *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_LW_END
+        *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_LW_END,
+        *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_THROW,
         ]) 
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
@@ -111,10 +112,19 @@ unsafe fn training_mode_max_meter(fighter: &mut L2CFighterCommon, boma: &mut Bat
 }
 
 unsafe fn nspecial(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, status_kind: i32, situation_kind: i32, cat2: i32, frame: f32) {
+    // A plus B check
+    if status_kind == *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_SHOOT
+    && fighter.motion_frame() < 8.0 
+    && fighter.is_button_on(Buttons::AttackAll | Buttons::Catch | Buttons::AppealAll)
+    && fighter.is_button_on(Buttons::SpecialAll) {
+        VarModule::on_flag(fighter.battle_object, vars::lucario::status::SUPER_SPECIAL_A_PLUS_B)
+    }
+
     // button hold check
     if status_kind == *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_SHOOT
     && fighter.motion_frame() < 8.0 
-    && !fighter.is_button_on(Buttons::SpecialRaw){
+    && !fighter.is_button_on(Buttons::SpecialAll)
+    && !VarModule::is_flag(fighter.battle_object, vars::lucario::status::SUPER_SPECIAL_A_PLUS_B) {
         VarModule::set_float(fighter.battle_object, vars::lucario::status::AURA_OVERRIDE, 0.0);
         VarModule::off_flag(fighter.battle_object, vars::lucario::instance::IS_POWERED_UP);
     }
@@ -141,9 +151,18 @@ unsafe fn nspecial(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModule
 }
 
 unsafe fn sspecial(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, status_kind: i32, situation_kind: i32, cat2: i32, frame: f32) {
+    // A plus B check
     if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S
     && fighter.motion_frame() < 9.0 
-    && !fighter.is_button_on(Buttons::SpecialRaw){
+    && fighter.is_button_on(Buttons::AttackAll | Buttons::Catch | Buttons::AppealAll)
+    && fighter.is_button_on(Buttons::SpecialAll) {
+        VarModule::on_flag(fighter.battle_object, vars::lucario::status::SUPER_SPECIAL_A_PLUS_B)
+    }
+
+    if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S
+    && fighter.motion_frame() < 9.0 
+    && !fighter.is_button_on(Buttons::SpecialRaw)
+    && !VarModule::is_flag(fighter.battle_object, vars::lucario::status::SUPER_SPECIAL_A_PLUS_B) {
         VarModule::set_float(fighter.battle_object, vars::lucario::status::AURA_OVERRIDE, 0.0);
     }
 }

@@ -142,6 +142,10 @@ unsafe extern "C" fn effect_specialsdrill(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    frame(lua_state, 3.0);
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
+    }
     frame(lua_state, 6.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_MOVE_TRANS);
@@ -266,12 +270,12 @@ unsafe extern "C" fn effect_specialhiloop(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 2.0);
     if is_excute(agent){
-        EFFECT_FOLLOW(agent, Hash40::new("metaknight_shuttleloop1"), Hash40::new("top"), 0, 0, -2.5, 4, 0, 0, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("metaknight_shuttleloop1_hdr"), Hash40::new("top"), 0, 0, -2.5, 4, 0, 0, 1, true);
         EffectModule::set_disable_render_offset_last(agent.boma());
     }
     frame(lua_state, 14.0);
     if is_excute(agent){
-        EFFECT_FOLLOW(agent, Hash40::new("metaknight_shuttleloop2"), Hash40::new("top"), 0, -25, -4, 1, 0, 0, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("metaknight_shuttleloop2_hdr"), Hash40::new("top"), 0, -25, -4, 1, 0, 0, 1, true);
         EffectModule::set_disable_render_offset_last(agent.boma());
     }
     frame(lua_state, 23.0);
@@ -289,12 +293,12 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 8.0);
     if is_excute(agent){
-        EFFECT_FOLLOW(agent, Hash40::new("metaknight_shuttleloop1"), Hash40::new("top"), 0, 0, -2.5, 4, 0, 0, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("metaknight_shuttleloop1_hdr"), Hash40::new("top"), 0, 0, -2.5, 4, 0, 0, 1, true);
         EffectModule::set_disable_render_offset_last(agent.boma());
     }
     frame(lua_state, 22.0);
     if is_excute(agent){
-        EFFECT_FOLLOW(agent, Hash40::new("metaknight_shuttleloop2"), Hash40::new("top"), 0, -25, -4, 1, 0, 0, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("metaknight_shuttleloop2_hdr"), Hash40::new("top"), 0, -25, -4, 1, 0, 0, 1, true);
         EffectModule::set_disable_render_offset_last(agent.boma());
     }
     frame(lua_state, 30.0);
