@@ -103,7 +103,7 @@ unsafe extern "C" fn special_s_check_attack(fighter: &mut L2CFighterCommon, para
                 let opponent_boma = sv_battle_object::module_accessor(object_id);
                 if StatusModule::situation_kind(opponent_boma) == *SITUATION_KIND_AIR {
                     let opponent_object = utils::util::get_battle_object_from_accessor(opponent_boma);
-                    VarModule::on_flag(opponent_object, vars::common::instance::IS_KNOCKDOWN_THROW);
+                    VarModule::on_flag(opponent_object, vars::common::instance::FORCE_TUMBLE_NO_BOUNCE);
                     StatusModule::set_status_kind_interrupt(opponent_boma, *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR);
                 }
             }
