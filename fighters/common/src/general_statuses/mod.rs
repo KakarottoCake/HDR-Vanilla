@@ -36,6 +36,7 @@ mod slip;
 mod lasso;
 mod itemthrow;
 mod fallspecial;
+mod squat;
 
 // [LUA-REPLACE-REBASE]
 // [SHOULD-CHANGE]
@@ -1245,6 +1246,7 @@ pub fn install() {
     lasso::install();
     itemthrow::install();
     fallspecial::install();
+    squat::install();
 
     skyline::nro::add_hook(nro_hook);
 }
