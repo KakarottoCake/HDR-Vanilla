@@ -84,6 +84,71 @@ unsafe extern "C" fn expression_attackairn(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn effect_attackairn(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_KAMUI_INSTANCE_WORK_ID_FLAG_REQ_EFEECT_TRANSFORM_WIND);
+        EFFECT_FLW_POS(agent, Hash40::new("kamui_transform_splash_start"), Hash40::new("neck"), 2, 0, 0, 0, 0, 0, 1, true);
+    }
+    frame(lua_state, 5.0);
+    if is_excute(agent) {
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_kamui_sword_hdr"), Hash40::new("tex_kamui_sword2"), 5, Hash40::new("haver"), 0, 0.1, 0, Hash40::new("haver"), -0.0, 15, 0, true, Hash40::new("kamui_sword_flare"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
+    }
+    if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) == 0 {
+        if is_excute(agent) {
+            AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_kamui_spear_01"), Hash40::new("tex_kamui_spear"), 7, Hash40::new("arml"), 2, 0, 0, Hash40::new("arml"), 13, 0, 0, true, Hash40::new("null"), Hash40::new("arml"), 6, 0, 0, 0, 90, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.1, 0.2);
+        }
+    }
+    if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) == 1 {
+        if is_excute(agent) {
+            AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_kamui_spear_01"), Hash40::new("tex_kamui_spear"), 7, Hash40::new("arml"), 2, 0, 0, Hash40::new("arml"), 13, 0, 0, true, Hash40::new("null"), Hash40::new("arml"), 6, 0, 0, 0, 90, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.1, 0.2);
+        }
+    }
+    if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) == 2 {
+        if is_excute(agent) {
+            AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_kamui_spear_03"), Hash40::new("tex_kamui_spear"), 7, Hash40::new("arml"), 2, 0, 0, Hash40::new("arml"), 13, 0, 0, true, Hash40::new("null"), Hash40::new("arml"), 6, 0, 0, 0, 90, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.1, 0.2);
+        }
+    }
+    if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) == 3 {
+        if is_excute(agent) {
+            AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_kamui_spear_04"), Hash40::new("tex_kamui_spear"), 7, Hash40::new("arml"), 2, 0, 0, Hash40::new("arml"), 13, 0, 0, true, Hash40::new("null"), Hash40::new("arml"), 6, 0, 0, 0, 90, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.1, 0.2);
+        }
+    }
+    if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) == 4 {
+        if is_excute(agent) {
+            AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_kamui_spear_05"), Hash40::new("tex_kamui_spear"), 7, Hash40::new("arml"), 2, 0, 0, Hash40::new("arml"), 13, 0, 0, true, Hash40::new("null"), Hash40::new("arml"), 6, 0, 0, 0, 90, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.1, 0.2);
+        }
+    }
+    if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) == 5 {
+        if is_excute(agent) {
+            AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_kamui_spear_06"), Hash40::new("tex_kamui_spear"), 7, Hash40::new("arml"), 2, 0, 0, Hash40::new("arml"), 13, 0, 0, true, Hash40::new("null"), Hash40::new("arml"), 6, 0, 0, 0, 90, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.1, 0.2);
+        }
+    }
+    if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) == 6 {
+        if is_excute(agent) {
+            AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_kamui_spear_07"), Hash40::new("tex_kamui_spear"), 7, Hash40::new("arml"), 2, 0, 0, Hash40::new("arml"), 13, 0, 0, true, Hash40::new("null"), Hash40::new("arml"), 6, 0, 0, 0, 90, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.1, 0.2);
+        }
+    }
+    if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) == 7 {
+        if is_excute(agent) {
+            AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_kamui_spear_08"), Hash40::new("tex_kamui_spear"), 7, Hash40::new("arml"), 2, 0, 0, Hash40::new("arml"), 13, 0, 0, true, Hash40::new("null"), Hash40::new("arml"), 6, 0, 0, 0, 90, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.1, 0.2);
+        }
+    }
+    frame(lua_state, 20.0);
+    if is_excute(agent) {
+        AFTER_IMAGE_OFF(agent, 5);
+    }
+    frame(lua_state, 34.0);
+    if is_excute(agent) {
+        EFFECT_FLW_POS(agent, Hash40::new("kamui_transform_splash_end"), Hash40::new("neck"), 2, 0, 0, 0, 0, 0, 1, true);
+    }
+    frame(lua_state, 39.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_KAMUI_INSTANCE_WORK_ID_FLAG_OFF_EFEECT_TRANSFORM_WIND);
+    }
+}
+
 unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -118,7 +183,7 @@ unsafe extern "C" fn effect_attackairf(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 8.0);
     if is_excute(agent) {
-        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_kamui_sword1"), Hash40::new("tex_kamui_sword2"), 5, Hash40::new("haver"), 0.0, 0.1, 0.0, Hash40::new("haver"), -0.0, 15.0, 0.0, true, Hash40::new("kamui_sword_flare"), Hash40::new("haver"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_kamui_sword_hdr"), Hash40::new("tex_kamui_sword2"), 5, Hash40::new("haver"), 0.0, 0.1, 0.0, Hash40::new("haver"), -0.0, 15.0, 0.0, true, Hash40::new("kamui_sword_flare"), Hash40::new("haver"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
     }
     frame(lua_state, 13.0);
     if is_excute(agent) {
@@ -247,7 +312,7 @@ unsafe extern "C" fn effect_attackairhi(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 6.0);
     if is_excute(agent) {
-	    AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_kamui_sword1"), Hash40::new("tex_kamui_sword2"), 7, Hash40::new("haver"), 0.0, 0.1, 0.0, Hash40::new("haver"), -0.0, 15.0, 0.0, true, Hash40::new("kamui_sword_flare"), Hash40::new("haver"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
+	    AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_kamui_sword_hdr"), Hash40::new("tex_kamui_sword2"), 7, Hash40::new("haver"), 0.0, 0.1, 0.0, Hash40::new("haver"), -0.0, 15.0, 0.0, true, Hash40::new("kamui_sword_flare"), Hash40::new("haver"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
     }
     frame(lua_state, 10.0);
     if is_excute(agent){
@@ -279,20 +344,18 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, 0.769);
     if is_excute(agent) {
         /* Ground-only */
-        ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 270, 49, 0, 33, 5.5, 0.0, 2.0, 0.0, None, None, None, 0.8, 1.1, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_OBJECT);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 2.0, 270, 49, 0, 33, 4.0, 0.0, -7.5, 0.0, None, None, None, 0.8, 1.1, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_OBJECT);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 270, 49, 0, 33, 5.5, 0.0, 4.0, 0.0, None, None, None, 0.8, 1.1, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_OBJECT);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 2.0, 270, 49, 0, 33, 4.0, 0.0, -5.5, 0.0, None, None, None, 0.8, 1.1, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_OBJECT);
         /* Air-only */
-        ATTACK(agent, 2, 0, Hash40::new("top"), 2.0, 367, 100, 40, 0, 5.5, 0.0, 2.0, 0.0, None, None, None, 0.8, 1.1, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_OBJECT);
-        ATTACK(agent, 3, 0, Hash40::new("top"), 2.0, 367, 100, 40, 0, 4.0, 0.0, -7.5, 0.0, None, None, None, 0.8, 1.1, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_OBJECT);
-        AttackModule::set_add_reaction_frame(boma, 0, 1.0, false);
-        AttackModule::set_add_reaction_frame(boma, 1, 1.0, false);
+        ATTACK(agent, 2, 0, Hash40::new("top"), 2.0, 367, 100, 40, 0, 5.5, 0.0, 4.0, 0.0, None, None, None, 0.8, 1.1, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_OBJECT);
+        ATTACK(agent, 3, 0, Hash40::new("top"), 2.0, 367, 100, 40, 0, 4.0, 0.0, -5.5, 0.0, None, None, None, 0.8, 1.1, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_OBJECT);
     }
     frame(lua_state, 26.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
-        ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 78, 115, 0, 50, 6.0, 0.0, 2.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_WATER, *ATTACK_REGION_OBJECT);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 5.0, 78, 115, 0, 50, 4.5, 0.0, -7.5, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_WATER, *ATTACK_REGION_OBJECT);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 50, 150, 0, 2, 6.0, 0.0, 4.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_WATER, *ATTACK_REGION_OBJECT);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 5.0, 50, 150, 0, 2, 4.5, 0.0, -5.5, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_WATER, *ATTACK_REGION_OBJECT);
     }
     frame(lua_state, 29.0);
     if is_excute(agent) {
@@ -317,7 +380,7 @@ unsafe extern "C" fn effect_attackairlw(agent: &mut L2CAgentBase) {
         EFFECT_FOLLOW(agent, Hash40::new("kamui_ryusensya_shot"), Hash40::new("top"), 0, -5.0, 0, 0, 0, 0, 1.0, true);
         EFFECT(agent, Hash40::new("kamui_counter_splash"), Hash40::new("top"), 0.0, -7.0, 0.0, 0, 0, 0, 0.55, 0, 0, 0, 0, 0, 0, true);
         LAST_EFFECT_SET_RATE(agent, 1.25);
-        EFFECT(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0.0, -8.0, 0.0, 0, 0, 0, 1.25, 0, 0, 0, 0, 0, 0, true);
+        EFFECT(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0.0, -6.0, 0.0, 0, 0, 0, 1.25, 0, 0, 0, 0, 0, 0, true);
     }
 }
 
@@ -337,6 +400,7 @@ unsafe extern "C" fn effect_landingairlw(agent: &mut L2CAgentBase) {
 
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_attackairn", game_attackairn, Priority::Low);
+    agent.acmd("effect_attackairn", effect_attackairn, Priority::Low);
     agent.acmd("expression_attackairn", expression_attackairn, Priority::Low);
 
     agent.acmd("game_attackairf", game_attackairf, Priority::Low);

@@ -30,7 +30,7 @@ unsafe extern "C" fn fly_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
 }
 
 unsafe extern "C" fn fly_substatus(weapon: &mut L2CWeaponCommon, param_1: L2CValue) -> L2CValue {
-    if !param_1.get_bool() {
+    if param_1.get_bool() {
         VarModule::countdown_int(weapon.battle_object, vars::edge_flare1::instance::REFRACT_COOLDOWN, 0);
     }
     0.into()
@@ -46,7 +46,7 @@ unsafe extern "C" fn fly_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
     if VarModule::is_flag(weapon.battle_object, vars::edge_flare1::status::REFRACT) {
         VarModule::off_flag(weapon.battle_object, vars::edge_flare1::status::REFRACT);
         if VarModule::get_int(weapon.battle_object, vars::edge_flare1::instance::REFRACT_COOLDOWN) == 0 {
-            VarModule::set_int(weapon.battle_object, vars::edge_flare1::instance::REFRACT_COOLDOWN, 2);
+            VarModule::set_int(weapon.battle_object, vars::edge_flare1::instance::REFRACT_COOLDOWN, 3);
             EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_counteract_mark"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.7, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
             EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_muzzleflash"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.0, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
             let sfx1 = SoundModule::play_se(weapon.module_accessor, Hash40::new("se_item_badge_reflection"), true, false, false, false, app::enSEType(0));
@@ -71,6 +71,9 @@ unsafe extern "C" fn fly_exec(weapon: &mut L2CWeaponCommon) -> L2CValue {
 
 unsafe extern "C" fn fly_end(weapon: &mut L2CWeaponCommon) -> L2CValue {
     VarModule::off_flag(weapon.battle_object, vars::edge_flare1::status::REFRACT);
+    if weapon.global_table[STATUS_KIND].get_i32() != *WEAPON_EDGE_FLARE1_STATUS_KIND_FLY {
+        VarModule::set_int(weapon.battle_object, vars::edge_flare1::instance::REFRACT_COOLDOWN, 0);
+    }
     return 0.into()
 }
 

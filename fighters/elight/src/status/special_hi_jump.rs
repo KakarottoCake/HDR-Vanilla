@@ -65,8 +65,17 @@ unsafe extern "C" fn special_hi_jump_main_loop(fighter: &mut L2CFighterCommon) -
         return 1.into();
     }
 
+    special_hi::special_hi_common_check_spreadbullet(fighter);
+
     if MotionModule::is_end(fighter.module_accessor) {
-        fighter.change_status(FIGHTER_ELIGHT_STATUS_KIND_SPECIAL_HI_ATTACK1.into(), false.into());
+        let status = if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ELIGHT_STATUS_SPECIAL_HI_FLAG_SPREADBULLET) {
+            VarModule::on_flag(fighter.battle_object, vars::elight::instance::SPECIAL_HI_ENABLE_FREEFALL);
+            FIGHTER_ELIGHT_STATUS_KIND_SPECIAL_HI_ATTACK2
+        }
+        else {
+            FIGHTER_ELIGHT_STATUS_KIND_SPECIAL_HI_ATTACK1
+        };
+        fighter.change_status(status.into(), false.into());
     }
 
     0.into()
