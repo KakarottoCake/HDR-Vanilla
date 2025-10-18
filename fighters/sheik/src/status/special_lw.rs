@@ -89,8 +89,8 @@ unsafe extern "C" fn special_lw_attack_main_loop(fighter: &mut L2CFighterCommon)
             fighter.change_status(FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_RETURN.into(), false.into())
         }
         // ending
-        if MotionModule::is_end(fighter.module_accessor) { // ADD CHECK for above flag IF KEEPING SPECIAL FALL
-            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into())
+        if MotionModule::is_end(fighter.module_accessor) {
+            fighter.change_status(FIGHTER_STATUS_KIND_FALL_SPECIAL.into(), false.into())
         }
     }
     0.into()
