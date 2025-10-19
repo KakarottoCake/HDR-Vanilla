@@ -419,6 +419,13 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
             util::get_fighter_common_from_accessor(boma).global_table[CURRENT_FRAME].get_i32()
         );
 
+        let inflict_status = AttackModule::get_inflict_status(boma);
+        VarModule::set_int(
+            boma.object(),
+            vars::common::instance::PREV_STATUS_INFLICT_STATUS,
+            inflict_status
+        );
+
         VarModule::set_flag(
             boma.object(),
             vars::common::instance::WAS_PREV_STATUS_CANCELABLE,

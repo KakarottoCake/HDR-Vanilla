@@ -187,6 +187,24 @@ pub unsafe fn get_param_float_hook(x0 /*boma*/: u64, x1 /*param_type*/: u64, x2 
                         return 4.0;
                     }
                 }
+                else if modes.contains(&CustomMode::RivalsOfAetherMode) {
+                    // RoA whifflag on aerials
+                    if [
+                        hash40("landing_attack_air_frame_n"),
+                        hash40("landing_attack_air_frame_f"),
+                        hash40("landing_attack_air_frame_b"),
+                        hash40("landing_attack_air_frame_hi"),
+                        hash40("landing_attack_air_frame_lw"),
+                    ].contains(&x1) {
+                        let mut landing_lag = 2.0 + original!()(x0, x1, x2); // base landing lag is original landing lag + 2
+                        let prev_inflict_status = VarModule::get_int(boma_reference.object(), vars::common::instance::PREV_STATUS_INFLICT_STATUS);
+                        if prev_inflict_status & *COLLISION_KIND_MASK_HIT != 0 {
+                            let reduced_landing_lag = (landing_lag * 0.6667).floor(); // on hit, landing lag is reduced by one third
+                            return reduced_landing_lag.max(4.0); // can go no lower than 4F
+                        }
+                        return landing_lag;
+                    }
+                }
             },
             _ => {}
         }

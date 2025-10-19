@@ -238,6 +238,8 @@ pub mod vars {
 
             pub const PREV_STATUS_TRANSITION_FRAME: i32 = 0x0013;
 
+            pub const PREV_STATUS_INFLICT_STATUS: i32 = 0x0014;
+
             // floats
 
             pub const LAST_ATTACK_DAMAGE_DEALT: i32 = 0x0000;
