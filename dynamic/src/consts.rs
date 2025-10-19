@@ -36,7 +36,7 @@ pub mod globals {
     pub const CMD_CAT4: i32 = 0x23;
     // 0x24
     // 0x25
-    // 0x26
+    // 0x26 transition handler, e.g. special resources and vegetable pull
     // 0x27
     // 0x28 some substatus
     pub const DASH_CALLBACK: i32 = 0x29;
@@ -1317,11 +1317,14 @@ pub mod vars {
     }
 
     pub mod peach {
+        pub mod status {
+            // ints
+            pub const EFFECT_HANDLER: i32 = 0x1100;
+        }
         pub mod instance {
             // flag
-            // Used to check if sideb wall bounce happens
-            pub const SPECIAL_S_WALL_BOUNCE: i32 = 0x0100;
-            pub const DISABLE_SPECIAL_S: i32 = 0x0101;
+            pub const DISABLE_SPECIAL_S: i32 = 0x0100;
+            pub const SPECIAL_N_AUTOFIRE: i32 = 0x0101;
         }
     }
 
