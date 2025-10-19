@@ -270,6 +270,7 @@ pub extern "C" fn rivals_mode(fighter: &mut L2CFighterCommon) {
                     rivals_drift_di(fighter);
                     rivals_waveland(fighter);
                     rivals_jab_tilt(fighter);
+                    rivals_landing_lag_jc(fighter);
                 }
             },
             _ => {}
@@ -402,6 +403,21 @@ unsafe fn rivals_jab_tilt(fighter: &mut L2CFighterCommon) {
         }
         if fighter.is_cat_flag(Cat1::AttackLw3) && !fighter.is_cat_flag(Cat1::AttackLw4) {
             StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_ATTACK_LW3, false);
+        }
+    }
+}
+
+// cancel last few frames of landing animation into jumpsquat
+unsafe fn rivals_landing_lag_jc(fighter: &mut L2CFighterCommon) {
+    let prev_inflict_status = VarModule::get_int(fighter.battle_object, vars::common::instance::PREV_STATUS_INFLICT_STATUS);
+    if fighter.is_status(*FIGHTER_STATUS_KIND_LANDING)
+    || (fighter.is_status(*FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR) && prev_inflict_status & *COLLISION_KIND_MASK_HIT != 0) {
+        let landing_lag = VarModule::get_float(fighter.battle_object, vars::common::instance::LANDING_LAG_FOR_RIVALS_MODE);
+        let jump_squat = fighter.get_param_int("jump_squat_frame", "") as f32;
+        let status_frame = fighter.status_frame() as f32;
+        if status_frame + jump_squat > landing_lag {
+            WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_JUMP);
+            fighter.check_jump_cancel(false, false);
         }
     }
 }
