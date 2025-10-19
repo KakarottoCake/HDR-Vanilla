@@ -326,6 +326,7 @@ unsafe fn rivals_drift_di(fighter: &mut L2CFighterCommon) {
             );
         }
     
+        // TODO: just hard code these values 
         let mut speed_mul = ParamModule::get_float(
             fighter.object(),
             ParamType::Common,
