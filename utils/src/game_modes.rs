@@ -122,12 +122,13 @@ pub unsafe fn open_modes_session() {
 unsafe fn once_per_game_frame(game_state_ptr: u64) {
 
     // check the current match mode
-    let match_mode = utils_dyn::util::get_match_mode().0;
-
-    // 1 is regular smash, 45 is online arena match, 58 is local wireless
-    if match_mode != 1 
-    && match_mode != 45
-    && match_mode != 58 {
+    let match_mode: u32 = utils_dyn::util::get_match_mode().0;
+    if ![
+        1,  // regular smash
+        18, // training mode
+        45, // online arena smash
+        58  // local wireless smash
+    ].contains(&match_mode) {
         //println!("mode is {}, so not running custom game modes.", utils_dyn::util::get_match_mode().0);
         CURRENT_CUSTOM_MODES = None;
     }
