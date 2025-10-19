@@ -376,7 +376,10 @@ unsafe fn sub_transition_group_check_air_cliff(fighter: &mut L2CFighterCommon) -
             if modes.contains(&game_modes::CustomMode::RivalsOfAetherMode) {
                 // in rivals mode, players can wall jump in all ledge-grabbable statuses
                 VarModule::on_flag(fighter.battle_object, vars::common::status::ENABLE_SPECIAL_WALLJUMP);
-                fighter.sub_transition_group_check_air_wall_jump();
+                let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+                if speed_y < 0.0 {
+                    fighter.sub_transition_group_check_air_wall_jump();
+                }
                 return false.into(); // they also cannot grab ledge
             }
         },
