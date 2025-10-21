@@ -488,15 +488,14 @@ unsafe fn sub_transition_group_check_ground_guard(fighter: &mut L2CFighterCommon
     match utils::game_modes::get_custom_mode() {
         Some(modes) => {
             if modes.contains(&game_modes::CustomMode::RivalsOfAetherMode) {
-                if fighter.sub_check_command_parry().get_bool() {
-                    VarModule::on_flag(fighter.object(), vars::common::instance::IS_PARRY_FOR_GUARD_OFF);
-                    fighter.change_status(FIGHTER_STATUS_KIND_GUARD_OFF.into(), false.into());
-                    return true.into();
+                if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON) {
+                    if fighter.sub_check_command_parry().get_bool()
+                    || fighter.is_cat_flag(Cat2::CommonGuard) {
+                        fighter.change_status(FIGHTER_STATUS_KIND_GUARD_ON.into(), true.into());
+                        return true.into();
+                    }
                 }
-                if fighter.is_cat_flag(Cat2::CommonGuard) {
-                    fighter.change_status(FIGHTER_STATUS_KIND_GUARD_ON.into(), true.into());
-                    return true.into();
-                }
+                return false.into();
             }
         },
         _ => {}
