@@ -55,6 +55,11 @@ pub unsafe fn get_param_int_hook(x0: u64, x1: u64, x2 :u64) -> i32 {
                     if x1 == hash40("common") && x2 == hash40("hit_stop_delay_flick_max_count") {
                         return 0;
                     }
+
+                    // universal 5F jumpsquat
+                    if x1 == hash40("jump_squat_frame") {
+                        return 5;
+                    }
                 }
             },
             _ => {}
@@ -197,10 +202,6 @@ pub unsafe fn get_param_float_hook(x0 /*boma*/: u64, x1 /*param_type*/: u64, x2 
 
                     if x1 == hash40("common") && x2 == hash40("hit_stop_delay_flick_max_count") {
                         return 0.0;
-                    }
-
-                    if x1 == hash40("jump_squat_frame") {
-                        return 5.0;
                     }
 
                     if x1 == hash40("landing_frame") {
