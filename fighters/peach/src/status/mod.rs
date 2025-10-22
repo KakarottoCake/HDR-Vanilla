@@ -5,6 +5,7 @@ use globals::*;
 mod attack_air;
 mod item_throw;
 mod jump_aerial;
+mod special_n;
 mod special_hi;
 mod special_s;
 mod special_lw;
@@ -79,6 +80,7 @@ pub fn install(agent: &mut Agent) {
     attack_air::install(agent);
     item_throw::install(agent);
     jump_aerial::install(agent);
+    special_n::install(agent);
     special_hi::install(agent);
     special_s::install(agent);
     special_lw::install(agent);

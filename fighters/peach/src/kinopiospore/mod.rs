@@ -1,11 +1,9 @@
 use super::*;
 
 mod acmd;
-mod opff;
 
 pub fn install() {
-    let agent = &mut Agent::new("buddy_bullet");
+    let agent = &mut Agent::new("peach_kinopiospore");
     acmd::install(agent);
-    opff::install(agent);
     agent.install();
 }
