@@ -153,7 +153,7 @@
       <hash40 hash="shield_kind">item_shield_kind_hop</hash40>
     </struct>
     <struct index="122">
-      <float hash="pickup_range_sizew">2.75</float>
+      <float hash="pickup_range_sizew">2.5</float>
     </struct>
     <hash40 index="123">dummy</hash40>
     <hash40 index="124">dummy</hash40>

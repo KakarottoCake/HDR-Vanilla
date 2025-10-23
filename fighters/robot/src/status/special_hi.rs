@@ -1,11 +1,25 @@
 use super::*;
 
-use vars::robot::{instance::*, status::*};
+use vars::robot::{
+    instance::*,
+    status::*
+};
 
 // FIGHTER_STATUS_KIND_SPECIAL_HI
 
 unsafe extern "C" fn special_hi_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
-    StatusModule::init_settings(fighter.module_accessor, SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
+    StatusModule::init_settings(
+        fighter.module_accessor,
+        SituationKind(*SITUATION_KIND_NONE),
+        *FIGHTER_KINETIC_TYPE_UNIQ,
+        *GROUND_CORRECT_KIND_KEEP as u32,
+        GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
+        true, 
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 
+        0
+    );
     FighterStatusModuleImpl::set_fighter_status_data(
         fighter.module_accessor,
         false,
@@ -16,7 +30,7 @@ unsafe extern "C" fn special_hi_pre(fighter: &mut L2CFighterCommon) -> L2CValue 
         0,
         (*FIGHTER_STATUS_ATTR_INTO_DOOR | *FIGHTER_STATUS_ATTR_START_TURN) as u32,
         *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_HI as u32,
-        0,
+        0
     );
 
     return 0.into();
@@ -34,9 +48,19 @@ unsafe extern "C" fn special_hi_main(fighter: &mut L2CFighterCommon) -> L2CValue
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi"), 0.0, 1.0, false, 0.0, false, false);
     }
 
-    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
+    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
 
-    let prev_damage = fighter.is_prev_status_one_of(&[*FIGHTER_STATUS_KIND_DAMAGE, *FIGHTER_STATUS_KIND_DAMAGE_AIR, *FIGHTER_STATUS_KIND_DAMAGE_FLY, *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL, *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_U, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_D, *FIGHTER_STATUS_KIND_DAMAGE_FALL]);
+    let prev_damage = fighter.is_prev_status_one_of(&[
+        *FIGHTER_STATUS_KIND_DAMAGE,
+        *FIGHTER_STATUS_KIND_DAMAGE_AIR,
+        *FIGHTER_STATUS_KIND_DAMAGE_FLY,
+        *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL,
+        *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR,
+        *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR,
+        *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_U,
+        *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_D,
+        *FIGHTER_STATUS_KIND_DAMAGE_FALL
+    ]);
 
     if !prev_damage {
         KineticModule::suspend_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
