@@ -135,7 +135,7 @@ unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2C
 
     // launch if full charge, or past minimum change and ineligible to continue charging
     let fuel_depleted = required_fuel >= start_fuel;
-    if charge_frame >= 58.0 // (mot end frame / gr half mot frame)
+    if charge_frame >= 60.0 // (mot end frame / gr half mot frame)
     || ((fighter.status_frame() + 1) >= 9 // -1
     && (fuel_depleted || fighter.is_button_off(Buttons::Special)))
     {
@@ -249,11 +249,11 @@ unsafe extern "C" fn special_hi_keep_main(fighter: &mut L2CFighterCommon) -> L2C
     fighter.set_situation_keep(L2CValue::I32(*SITUATION_KIND_AIR), 1.into());
 
     // sfx
-    let sfx = if charge_frame >= 40 {
+    let sfx = if charge_frame >= 39 {
         "se_common_bomb_ll"
-    } else if charge_frame >= 25 {
+    } else if charge_frame >= 24 {
         "se_common_bomb_l"
-    } else if charge_frame >= 10 {
+    } else if charge_frame >= 9 {
         "se_common_bomb_m"
     } else {
         "se_common_bomb_s"
@@ -306,7 +306,7 @@ unsafe extern "C" fn special_hi_keep_movement_handling(fighter: &mut L2CFighterC
     if frame == 4 {
         if charge_frame > 0.0 {
             // launch speed
-            let speed = 1.2 + 0.06 * charge_frame;
+            let speed = 1.2 + (charge_frame / 15.0);
             let stick_x = (rot * -1.0 + 90.0).to_radians().cos();
             let stick_y = (rot * -1.0 + 90.0).to_radians().sin();
             let speed_x = speed * stick_x * fighter.lr();
@@ -327,7 +327,7 @@ unsafe extern "C" fn special_hi_keep_movement_handling(fighter: &mut L2CFighterC
     }
     // slowly decel before converting to drift/gravity (could try stable speed so it decels by a flat value every frame?)
     if charge_frame > 0.0 {
-        if frame >= 10 && frame < 18 {
+        if frame >= 8 && frame <= 15 {
             let stop_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP) as *mut app::KineticEnergy;
             let speed = Vector2f {
                 x: lua_bind::KineticEnergy::get_speed_x(stop_energy),
@@ -335,8 +335,8 @@ unsafe extern "C" fn special_hi_keep_movement_handling(fighter: &mut L2CFighterC
             };
             sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, speed.x * 0.9, speed.y * 0.9);
         }
-        // end movement frame 18
-        if frame == 18 {
+        // end movement frame 15
+        if frame == 15 {
             let x_speed = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
             let y_speed = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
@@ -350,9 +350,9 @@ unsafe extern "C" fn special_hi_keep_movement_handling(fighter: &mut L2CFighterC
 
     // interpolate back to upright position
     let current_rot = PostureModule::rot_x(fighter.module_accessor, 0);
-    if (fighter.motion_frame() >= 42.0) && current_rot != 0.0 {
+    if (fighter.motion_frame() >= 40.0) && current_rot != 0.0 {
         let rot_mul = 1.0;
-        let rot_amount = 0.1 * rot_mul; // percent of remaining distance rotated each frame. will decrease exponentially
+        let rot_amount = 0.075 * rot_mul; // percent of remaining distance rotated each frame. will decrease exponentially
         let mut new_rot = current_rot - (current_rot * rot_amount);
         if (-1.0..1.0).contains(&new_rot) {
             new_rot = 0.0
