@@ -238,22 +238,7 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
 
     frame(lua_state, 4.0);
     if agent.is_situation(*SITUATION_KIND_GROUND) {
-        let turbo_indicator = EffectModule::req_follow(
-            boma,
-            Hash40::new("robot_lamp_l"),
-            Hash40::new("knee"),
-            &Vector3f::new(6.0, 0.0, 0.0),
-            &Vector3f::zero(),
-            4.0,
-            true,
-            0,
-            0,
-            0,
-            0,
-            0,
-            true,
-            true
-        ) as u32;
+        EffectModule::req_time_follow(boma, Hash40::new("robot_lamp_l"), Hash40::new("knee"), 30, &Vector3f::new(6.0, 0.0, 0.0), &Vector3f::zero(), 4.0, true, 0);
         LAST_EFFECT_SET_RATE(agent, 1.25);
     }
     frame(lua_state, 15.0);
