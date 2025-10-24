@@ -86,75 +86,26 @@ unsafe extern "C" fn effect_specialhistart(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_speciallwattack(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 1.0);
-    FT_MOTION_RATE_RANGE(agent, 1.0, 2.5, 2.0);
-    frame(lua_state, 2.5);
-    FT_MOTION_RATE_RANGE(agent, 2.5, 13.0, 10.0);
+    frame(lua_state, 3.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("kneer"), 13.0, 49, 99, 0, 24, 3.5, 5.5, 0.0, 0.0, None, None, None, 1.25, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        ATTACK(agent, 1, 0, Hash40::new("hip"), 11.0, 49, 99, 0, 24, 3.0, -3.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        ATTACK(agent, 0, 0, Hash40::new("kneer"), 13.0, 361, 92, 0, 26, 3.5, 5.5, 0.0, 0.0, None, None, None, 1.25, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        ATTACK(agent, 1, 0, Hash40::new("hip"), 11.0, 361, 92, 0, 26, 3.0, -3.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
         AttackModule::set_attack_keep_rumble(boma, 0, true);
         AttackModule::set_attack_keep_rumble(boma, 1, true);
     }
-    frame(lua_state, 8.0);
+    frame(lua_state, 9.0);
     if is_excute(agent) {
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
     }
-    frame(lua_state, 13.0);
-    FT_MOTION_RATE_RANGE(agent, 13.0, 18.0, 8.0); 
+    frame(lua_state, 14.0);
+    FT_MOTION_RATE(agent, 1.75);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
-    frame(lua_state, 16.75); // 6f later
+    frame(lua_state, 20.0);
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
     }
-    frame(lua_state, 18.0); // return to air idle frames
-    FT_MOTION_RATE_RANGE(agent, 18.0, 28.0, 45.0);
-    frame(lua_state, 28.0); // idle frames
-    FT_MOTION_RATE(agent, 1.0); // 2 + 45 + 8 == 55
-}
-
-unsafe extern "C" fn effect_speciallwattack(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    frame(lua_state, 2.5);
-    if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("sheik_chougyo_arc"), Hash40::new("top"), 0, 0, 0, 180, -48, 90, 1.1, true);
-        LAST_EFFECT_SET_RATE(agent, 9.0/11.0); // match to activity
-    }
-}
-
-unsafe extern "C" fn game_speciallwattackreturn(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    frame(lua_state, 1.0);
-    FT_MOTION_RATE_RANGE(agent, 1.0, 2.5, 2.0);
-    frame(lua_state, 2.5);
-    FT_MOTION_RATE_RANGE(agent, 2.5, 13.0, 10.0);
-    if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("kneer"), 13.0, 49, 99, 0, 24, 3.5, 5.5, 0.0, 0.0, None, None, None, 1.25, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        ATTACK(agent, 1, 0, Hash40::new("hip"), 11.0, 49, 99, 0, 24, 3.0, -3.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        AttackModule::set_attack_keep_rumble(boma, 0, true);
-        AttackModule::set_attack_keep_rumble(boma, 1, true);
-    }
-    frame(lua_state, 8.0);
-    if is_excute(agent) {
-        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
-    }
-    frame(lua_state, 13.0);
-    FT_MOTION_RATE_RANGE(agent, 13.0, 18.0, 8.0); 
-    if is_excute(agent) {
-        AttackModule::clear_all(boma);
-    }
-    frame(lua_state, 16.75); // 6f later
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
-    }
-    frame(lua_state, 18.0); // return to air idle frames
-    FT_MOTION_RATE_RANGE(agent, 18.0, 28.0, 28.0);
-    frame(lua_state, 28.0); // idle frames
-    FT_MOTION_RATE(agent, 1.0); // 2 + 28 + 8 == 38
 }
 
 unsafe extern "C" fn game_speciallwreturn(agent: &mut L2CAgentBase) {
@@ -176,10 +127,6 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("effect_specialairhistart", effect_specialhistart, Priority::Low);
 
     agent.acmd("game_speciallwattack", game_speciallwattack, Priority::Low);
-    agent.acmd("effect_speciallwattack", effect_speciallwattack, Priority::Low);
-
-    agent.acmd("game_speciallwattackreturn", game_speciallwattackreturn, Priority::Low);
-    agent.acmd("effect_speciallwattackreturn", effect_speciallwattack, Priority::Low);
 
     agent.acmd("game_speciallwreturn", game_speciallwreturn, Priority::Low);
 }

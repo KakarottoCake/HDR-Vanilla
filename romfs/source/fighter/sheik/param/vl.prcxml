@@ -58,13 +58,12 @@
       <float hash="jump_speed_y">2.8</float>
       <float hash="jump_air_speed_x">0.8</float>
       <float hash="jump_air_speed_y">2.8</float>
-      <float hash="jump_accel_front">0.325</float>
-      <float hash="jump_accel_back">-0.175</float>
+      <float hash="jump_accel_front">0.35</float>
+      <float hash="jump_accel_back">-0.2</float>
       <float hash="jump_speed_max">1.95</float>
-      <float hash="somersault_speed_y">2.5</float>
-      <float hash="wall_somersault_speed_y">2.5</float>
-      <float hash="somersault_wall_check_end_frame">32</float>
-      <int hash="attack_frame">11</int>
+      <int hash="attack_frame">10</int>
+      <int hash="somersault_attack_frame">10</int>
+      <float hash="wall_somersault_speed_y">2.4</float>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>

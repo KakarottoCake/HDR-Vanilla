@@ -3,11 +3,4 @@
     <struct hash="param_special_hi">
         <float hash="fall_max_x_mul">0.8</float>
     </struct>
-    <struct hash="param_special_lw">
-        <float hash="attack_guard_mul">0.67</float>
-        <int hash="attack_wall_check_end_frame">22</int>
-        <int hash="somersault_cancel_frame">28</int>
-        <int hash="somersault_wall_cancel_frame">39</int>
-        <float hash="land_cancel_frame">20.0</float>
-    </struct>
 </struct>
