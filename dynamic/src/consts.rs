@@ -967,6 +967,7 @@ pub mod vars {
             // flags
             pub const HIT_CANCEL: i32 = 0x1102;
             pub const SUPER_SPECIAL_A_PLUS_B: i32 = 0x1103;
+            pub const SUPER_SPECIAL_DECIDE: i32 = 0x1104;
 
             // ints
             pub const SPECIAL_S_ROT_ANGLE: i32 = 0x1100;
