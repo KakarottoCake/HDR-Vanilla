@@ -180,7 +180,7 @@ attack_s3_s:
   flags:
     move: false
   extra:
-    cancel_frame: 30
+    cancel_frame: 33
 attack_squat_s3:
   game_script: game_attacksquats3
   flags:
@@ -269,6 +269,15 @@ special_air_lw:
 attack_air_n:
   extra:
     cancel_frame: 36
+attack_air_f:
+  extra:
+    cancel_frame: 40
+attack_air_f_hi:
+  extra:
+    cancel_frame: 40
+attack_air_f_lw:
+  extra:
+    cancel_frame: 40
 attack_air_hi:
   extra:
     cancel_frame: 28
@@ -278,7 +287,7 @@ attack_air_lw2:
     cancel_frame: 25
 throw_hi:
   extra:
-    cancel_frame: 35
+    cancel_frame: 33
 special_hi:
   flags:
     move: true
