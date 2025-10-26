@@ -15,7 +15,7 @@ unsafe extern "C" fn game_attack11(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
         HitModule::set_status_all(boma, app::HitStatus(*HIT_STATUS_NORMAL), 0);
     }
-    frame(lua_state, 11.0);
+    frame(lua_state, 10.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
     }
@@ -145,6 +145,7 @@ unsafe extern "C" fn sound_attackdash(agent: &mut L2CAgentBase) {
     frame(lua_state, 16.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_koopa_smash_l02"));
+        PLAY_SE(agent, Hash40::new("se_koopa_nailswing02"));
     }
 }
 

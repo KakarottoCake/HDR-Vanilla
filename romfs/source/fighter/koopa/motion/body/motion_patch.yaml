@@ -126,6 +126,15 @@ attack_lw3_2:
 attack_dash:
   extra:
     cancel_frame: 44
+attack_s3_hi:
+  extra:
+    cancel_frame: 35
+attack_s3_s:
+  extra:
+    cancel_frame: 35
+attack_s3_lw:
+  extra:
+    cancel_frame: 35
 attack_s4_s:
   extra:
     cancel_frame: 85
@@ -202,9 +211,13 @@ special_air_n_max:
     cancel_frame: 65
     no_stop_intp: false
 special_s_catch:
+  flags:
+    move: true
   extra:
     cancel_frame: 50
 special_s_air_catch:
+  flags:
+    move: true
   extra:
     cancel_frame: 50
 special_s_landing:
