@@ -10,13 +10,12 @@ unsafe extern "C" fn game_specialscatch(agent: &mut L2CAgentBase) {
     frame(lua_state, 13.0);
     if is_excute(agent) {
         if agent.is_situation(*SITUATION_KIND_GROUND) {
-            SET_SPEED_EX(agent, 1.75, 0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION);
             JostleModule::set_overlap_rate_mul(boma, 2.0);
         }
         else {
-            let mut speed_y = KineticModule::get_sum_speed_y(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-            if speed_y <= 0.0 { speed_y = 0.0; }
-            SET_SPEED_EX(agent, 1.0, speed_y, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
+            sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.5);
         }
     }
     frame(lua_state, 15.0);
@@ -26,7 +25,7 @@ unsafe extern "C" fn game_specialscatch(agent: &mut L2CAgentBase) {
     frame(lua_state, 16.0);
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
-        CATCH(agent, 0, Hash40::new("top"), 4.5, 0.0, 7.0, 13.5, None, None, None, *FIGHTER_STATUS_KIND_KOOPA_DIVED, *COLLISION_SITUATION_MASK_GA);
+        CATCH(agent, 0, Hash40::new("top"), 4.5, 0.0, 7.0, 12.5, None, None, None, *FIGHTER_STATUS_KIND_KOOPA_DIVED, *COLLISION_SITUATION_MASK_GA);
         CATCH(agent, 1, Hash40::new("top"), 5.5, 0.0, 7.0, 8.5, None, None, None, *FIGHTER_STATUS_KIND_KOOPA_DIVED, *COLLISION_SITUATION_MASK_GA);
     }
     frame(lua_state, 17.0);
@@ -36,12 +35,25 @@ unsafe extern "C" fn game_specialscatch(agent: &mut L2CAgentBase) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 65, 90, 0, 55, 5.5, 0.0, 7.5, 22.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_THROW);
         ATTACK(agent, 1, 0, Hash40::new("top"), 12.0, 65, 90, 0, 55, 6.5, 0.0, 7.5, 12.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_THROW);
     }
+    frame(lua_state, 18.0);
+    if is_excute(agent) {
+        if agent.is_situation(*SITUATION_KIND_AIR) {
+            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+        }
+    }
     frame(lua_state, 19.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
     frame(lua_state, 25.0);
-    FT_MOTION_RATE_RANGE(agent, 25.0, 60.0, 25.0);
+    FT_MOTION_RATE_RANGE(agent, 25.0, 60.0, 21.0);
+    frame(lua_state, 32.0); // f30
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
+        if agent.is_situation(*SITUATION_KIND_AIR) {
+            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+        }
+    }
     frame(lua_state, 60.0);
     FT_MOTION_RATE(agent, 1.0);
 }

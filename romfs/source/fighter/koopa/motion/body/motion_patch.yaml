@@ -150,6 +150,9 @@ attack_air_n:
 attack_air_f:
   extra:
     cancel_frame: 38
+attack_air_b:
+  extra:
+    cancel_frame: 42
 attack_air_hi:
   extra:
     cancel_frame: 44
@@ -214,12 +217,12 @@ special_s_catch:
   flags:
     move: true
   extra:
-    cancel_frame: 50
+    cancel_frame: 60
 special_s_air_catch:
   flags:
     move: true
   extra:
-    cancel_frame: 50
+    cancel_frame: 60
 special_s_landing:
   extra:
     cancel_frame: 25
