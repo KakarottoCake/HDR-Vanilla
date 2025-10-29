@@ -42,7 +42,7 @@ unsafe extern "C" fn effect_attackairn(agent: &mut L2CAgentBase) {
     frame(lua_state, 8.0);
     for _ in 0..2 {
         if is_excute(agent) {
-            EFFECT_FOLLOW_FLIP(agent, Hash40::new("koopa_shell_b"), Hash40::new("koopa_shell_a"), Hash40::new("rot"), 0, 03, 0, 0, 0, 0, 1.45, true, *EF_FLIP_NONE);
+            EFFECT_FOLLOW_FLIP(agent, Hash40::new("koopa_shell_b"), Hash40::new("koopa_shell_a"), Hash40::new("rot"), 0, 3, 0, 0, 0, 0, 1.45, true, *EF_FLIP_NONE);
         }
         wait(lua_state, 5.0);
         if is_excute(agent) {

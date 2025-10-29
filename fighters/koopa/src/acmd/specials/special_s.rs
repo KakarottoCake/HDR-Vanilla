@@ -14,7 +14,13 @@ unsafe extern "C" fn game_specialscatch(agent: &mut L2CAgentBase) {
             JostleModule::set_overlap_rate_mul(boma, 2.0);
         }
         else {
-            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
+            if VarModule::is_flag(boma.object(), vars::koopa::instance::SPECIAL_S_DISABLE_STALL) {
+                KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+            }
+            else {
+                VarModule::on_flag(boma.object(), vars::koopa::instance::SPECIAL_S_DISABLE_STALL);
+                KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
+            }
             sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.5);
         }
     }
