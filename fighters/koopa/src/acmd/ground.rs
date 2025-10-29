@@ -96,16 +96,12 @@ unsafe extern "C" fn game_attackdash(agent: &mut L2CAgentBase) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 45, 55, 0, 50, 6.5, 0.0, 11.5, 8.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
     }
     frame(lua_state, 28.0);
-    sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.6);
+    sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.7);
     frame(lua_state, 29.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
         JostleModule::set_status(boma, true);
     }
-    frame(lua_state, 40.0);
-    FT_MOTION_RATE(agent, 0.5);
-    frame(lua_state, 42.0);
-    FT_MOTION_RATE(agent, 1.0);
 }
 
 unsafe extern "C" fn effect_attackdash(agent: &mut L2CAgentBase) {
