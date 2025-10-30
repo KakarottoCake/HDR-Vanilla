@@ -2,11 +2,13 @@ use super::*;
 use globals::*;
 // status script import
 
+mod attack_lw3;
 mod special_n;
 mod special_s;
 mod special_hi;
 mod attack_s4;
 mod fall_special;
+mod squat;
  
 // AGENT INIT AND CALLBACKS
 unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -27,9 +29,11 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
 pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
 
+    attack_lw3::install(agent);
     special_n::install(agent);
     special_s::install(agent);
     special_hi::install(agent);
     attack_s4::install(agent);
     fall_special::install(agent);
+    squat::install(agent);
 }
