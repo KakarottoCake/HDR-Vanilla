@@ -61,11 +61,13 @@ unsafe extern "C" fn effect_specials1(agent: &mut L2CAgentBase) {
     if PostureModule::lr(agent.module_accessor) < 0.0 {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke1_l"), Hash40::new("top"), 0, 10, 17, 0, 100, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
         }
     }
     else {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke1_r"), Hash40::new("top"), 0, 10, 17, 0, -100, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
         }
     }
     frame(lua_state, 13.0);
@@ -97,11 +99,13 @@ unsafe extern "C" fn effect_specialairs1(agent: &mut L2CAgentBase) {
     if PostureModule::lr(agent.module_accessor) < 0.0 {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke1_l"), Hash40::new("top"), 0, 10, 17, 0, 100, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
         }
     }
     else {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke1_r"), Hash40::new("top"), 0, 10, 17, 0, -100, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
         }
     }
     frame(lua_state, 13.0);
@@ -163,11 +167,13 @@ unsafe extern "C" fn effect_specials2(agent: &mut L2CAgentBase) {
     if PostureModule::lr(agent.module_accessor) < 0.0 {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke2_l"), Hash40::new("top"), 0, 10, 17, 0, 100, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
         }
     }
     else {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke2_r"), Hash40::new("top"), 0, 10, 17, 0, -100, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
         }
     }
     frame(lua_state, 4.0);
@@ -197,11 +203,13 @@ unsafe extern "C" fn effect_specialairs2(agent: &mut L2CAgentBase) {
     if PostureModule::lr(agent.module_accessor) < 0.0 {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke2_l"), Hash40::new("top"), 0, 10, 17, 0, 100, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
         }
     }
     else {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke2_r"), Hash40::new("top"), 0, 10, 17, 0, -100, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
         }
     }
     frame(lua_state, 4.0);
@@ -279,13 +287,17 @@ unsafe extern "C" fn effect_specials3(agent: &mut L2CAgentBase) {
     if PostureModule::lr(agent.module_accessor) < 0.0 {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke3_l"), Hash40::new("top"), 0, 10, 17, 0, 100, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke4_l"), Hash40::new("top"), 0, 10, 17, 0, 100, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT2);
         }
     }
         else {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke3_r"), Hash40::new("top"), 0, 10, 17, 0, -100, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke4_r"), Hash40::new("top"), 0, 10, 17, 0, -100, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT2);
         }
     }
     frame(lua_state, 13.0);
@@ -338,14 +350,18 @@ unsafe extern "C" fn effect_specialairs3(agent: &mut L2CAgentBase) {
     if PostureModule::lr(agent.module_accessor) < 0.0 {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke3_l"), Hash40::new("top"), 0, 10, 17, 0, 100, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke4_l"), Hash40::new("top"), 0, 10, 17, 0, 100, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT2);
             
         }
     }
     else {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke3_r"), Hash40::new("top"), 0, 10, 17, 0, -100, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke4_r"), Hash40::new("top"), 0, 10, 17, 0, -100, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT2);
             
         }
     }
@@ -416,11 +432,13 @@ unsafe extern "C" fn effect_specials1_lb(agent: &mut L2CAgentBase) {
     if PostureModule::lr(agent.module_accessor) < 0.0 {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke1_l_lb"), Hash40::new("top"), 0, 11, 17, 0, 100, 0, 1.15, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
         }
     }
     else {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke1_r_lb"), Hash40::new("top"), 0, 11, 17, 0, -100, 0, 1.15, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
         }
     }
     frame(lua_state, 13.0);
@@ -455,11 +473,13 @@ unsafe extern "C" fn effect_specialairs1_lb(agent: &mut L2CAgentBase) {
     if PostureModule::lr(agent.module_accessor) < 0.0 {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke1_l_lb"), Hash40::new("top"), 0, 11, 17, 0, 100, 0, 1.15, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
         }
     }
     else {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke1_r_lb"), Hash40::new("top"), 0, 11, 17, 0, -100, 0, 1.15, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
         }
     }
     frame(lua_state, 13.0);
@@ -514,11 +534,13 @@ unsafe extern "C" fn effect_specials2_lb(agent: &mut L2CAgentBase) {
     if PostureModule::lr(agent.module_accessor) < 0.0 {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke2_l_lb"), Hash40::new("top"), 0, 11, 17, 0, 100, 0, 1.15, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
         }
     }
     else {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke2_r_lb"), Hash40::new("top"), 0, 11, 17, 0, -100, 0, 1.15, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
         }
     }
     frame(lua_state, 4.0);
@@ -553,11 +575,13 @@ unsafe extern "C" fn effect_specialairs2_lb(agent: &mut L2CAgentBase) {
     if PostureModule::lr(agent.module_accessor) < 0.0 {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke2_l_lb"), Hash40::new("top"), 0, 11, 17, 0, 100, 0, 1.15, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
         }
     }
     else {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke2_r_lb"), Hash40::new("top"), 0, 11, 17, 0, -100, 0, 1.15, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
         }
     }
     frame(lua_state, 5.0);
@@ -636,14 +660,17 @@ unsafe extern "C" fn effect_specials3_lb(agent: &mut L2CAgentBase) {
     if PostureModule::lr(agent.module_accessor) < 0.0 {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke3_l_lb"), Hash40::new("top"), 0, 11, 17, 0, 100, 0, 1.15, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke4_l_lb"), Hash40::new("top"), 0, 11, 17, 0, 100, 0, 1.15, 0, 0, 0, 0, 0, 0, true);
-            
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT2);
         }
     }
     else {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke3_r_lb"), Hash40::new("top"), 0, 11, 17, 0, -100, 0, 1.15, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke4_r_lb"), Hash40::new("top"), 0, 11, 17, 0, -100, 0, 1.15, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT2);
         }
     }
     frame(lua_state, 13.0);
@@ -697,13 +724,17 @@ unsafe extern "C" fn effect_specialairs3_lb(agent: &mut L2CAgentBase) {
     if PostureModule::lr(agent.module_accessor) < 0.0 {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke3_l_lb"), Hash40::new("top"), 0, 11, 17, 0, 100, 0, 1.15, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke4_l_lb"), Hash40::new("top"), 0, 11, 17, 0, 100, 0, 1.15, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT2);
         }
     }
     else {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke3_r_lb"), Hash40::new("top"), 0, 11, 17, 0, -100, 0, 1.15, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT);
             EFFECT(agent, Hash40::new("cloud_kyogiri_stroke4_r_lb"), Hash40::new("top"), 0, 11, 17, 0, -100, 0, 1.15, 0, 0, 0, 0, 0, 0, true);
+            // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_KYOU_EFFECT2);
         }
     }
     frame(lua_state, 14.0);

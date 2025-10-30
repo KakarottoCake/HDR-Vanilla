@@ -364,6 +364,40 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn effect_specialairhi(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 3.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("lucina_dolphin_swing"), Hash40::new("top"), 0, 12, -1, 14, -30, 37, 1, true);
+    }
+    frame(agent.lua_state_agent, 4.0);
+    if is_excute(agent) {
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_lucina_dolphin1"), Hash40::new("tex_lucina_dolphin2"), 6, Hash40::new("sword1"), 0, 0, 0.5, Hash40::new("sword1"), -0.0, -0.0, 12.6, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
+        EFFECT_FOLLOW(agent, Hash40::new("lucina_dolphin_jump"), Hash40::new("top"), -0.0, 0, -5, 0, 0, 0, 1, true);
+    }
+    frame(agent.lua_state_agent, 5.0);
+    if is_excute(agent) {
+        EFFECT_DETACH_KIND(agent, Hash40::new("lucina_dolphin_jump"), -1);
+        EFFECT_DETACH_KIND(agent, Hash40::new("lucina_dolphin_swing"), -1);
+        EFFECT_FOLLOW(agent, Hash40::new("lucina_dolphin_shadow"), Hash40::new("top"), -0.0, 0, 0, 0, 0, 0, 1, true);
+        LAST_EFFECT_SET_COLOR(agent, 1.0, 5.0, 3.0);
+        EffectModule::enable_sync_init_pos_last(agent.module_accessor);
+        EFFECT_FOLLOW(agent, Hash40::new("lucina_sword_purple"), Hash40::new("haver"), -0.0, 0, 0, 0, 0, 0, 1, true);
+        LAST_EFFECT_SET_COLOR(agent, 1.0, 5.0, 2.0);
+    }
+    frame(agent.lua_state_agent, 7.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), -2, -10, 15, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+    }
+    frame(agent.lua_state_agent, 12.0);
+    if is_excute(agent) {
+        AFTER_IMAGE_OFF(agent, 5);
+    }
+    frame(agent.lua_state_agent, 13.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("lucina_sword_purple"), false, true);
+    }
+}
+
 unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -446,7 +480,7 @@ pub fn install(agent: &mut Agent) {
 
     agent.acmd("game_specialhi", game_specialhi, Priority::Low);
     agent.acmd("game_specialairhi", game_specialhi, Priority::Low);
-    agent.acmd("effect_specialairhi", effect_specialhi, Priority::Low);
+    agent.acmd("effect_specialairhi", effect_specialairhi, Priority::Low);
     agent.acmd("effect_specialhi", effect_specialhi, Priority::Low);
 
     agent.acmd("game_speciallw", game_speciallw, Priority::Low);
