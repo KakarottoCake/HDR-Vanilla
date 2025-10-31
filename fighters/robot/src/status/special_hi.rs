@@ -93,17 +93,18 @@ unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2C
         VarModule::inc_int(fighter.battle_object, SPECIAL_HI_CHARGE_FRAME);
     }
     let charge_frame = VarModule::get_int(fighter.battle_object, SPECIAL_HI_CHARGE_FRAME) as f32;
+    let charge_frame_max = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.charge_frame_max");
 
     // defines fuel consumption throughout the move
     let start_fuel = fighter.get_float(*FIGHTER_ROBOT_INSTANCE_WORK_ID_FLOAT_BURNER_ENERGY_VALUE);
     let max_fuel = fighter.get_param_float("param_special_hi", "energy_max_frame");
-    let fuel_increment = 2.0; // how much fuel is consumed by the charge per frame
-    let min_cost = 20.0; // minimum amount of fuel consumed on use
-    let required_fuel = (fuel_increment * charge_frame).clamp(min_cost, max_fuel);
+    let launch_fuel_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.launch_fuel_mul"); // fuel per frame of charge
+    let launch_fuel_min = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.launch_fuel_min"); // min fuel to launch
+    let required_fuel = (launch_fuel_mul * charge_frame).clamp(launch_fuel_min, max_fuel);
     let remaining_fuel = (start_fuel - required_fuel).clamp(0.0, max_fuel);
 
-    // no charge at 0 fuel
-    if min_cost > start_fuel {
+    // no charge launchless variant if fuel below min thresh
+    if launch_fuel_min > start_fuel {
         VarModule::set_int(fighter.battle_object, SPECIAL_HI_CHARGE_FRAME, 0);
     }
 
@@ -120,7 +121,10 @@ unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2C
 
     // calculates angle of move
     let mut rot = VarModule::get_float(fighter.battle_object, SPECIAL_HI_ROT_X);
-    let rot_amount = if fighter.is_situation(*SITUATION_KIND_AIR) {2.5} else {3.75}; // how much rob rotates each frame
+    let charge_angle_air = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.charge_angle_air");
+    let charge_angle_ground = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.charge_angle_ground");
+    let max_launch_angle = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.max_launch_angle");
+    let rot_amount = if fighter.is_situation(*SITUATION_KIND_AIR) {charge_angle_air} else {charge_angle_ground}; // how much rob rotates each frame
     let mut stick_x = fighter.left_stick_x();
     let mut stick_y = fighter.left_stick_y();
     let mut length = sv_math::vec2_length(stick_x, stick_y);
@@ -133,7 +137,7 @@ unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2C
             stick_x = (stick_x * 100.0).clamp(-1.0, 1.0);
             stick_y = 0.0;
         }
-        angle = stick_y.atan2(stick_x).to_degrees().clamp(30.0, 150.0);
+        angle = stick_y.atan2(stick_x).to_degrees().clamp(90.0 - max_launch_angle, 90.0 + max_launch_angle);
     }
     // calc new rot based on old rot and new angle
     let new_rot = (angle - 90.0) * -1.0; // convert to offset from 90 deg
@@ -159,7 +163,7 @@ unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2C
 
     // launch if full charge, or past minimum change and ineligible to continue charging
     let fuel_depleted = required_fuel >= start_fuel;
-    if charge_frame >= 60.0 // (mot end frame / gr half mot frame)
+    if charge_frame >= charge_frame_max
     || ((fighter.status_frame() + 1) >= 9 // -1
     && (fuel_depleted || fighter.is_button_off(Buttons::Special)))
     {
@@ -262,7 +266,6 @@ unsafe extern "C" fn special_hi_keep_main(fighter: &mut L2CFighterCommon) -> L2C
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_rise"), 0.0, 1.0, false, 0.0, false, false);
 
     // set rot f0
-    let charge_frame = VarModule::get_int(fighter.battle_object, SPECIAL_HI_CHARGE_FRAME);
     let rot_x = VarModule::get_float(fighter.battle_object, SPECIAL_HI_ROT_X) * fighter.lr() * 0.8;
     PostureModule::set_rot(fighter.module_accessor, &Vector3f::new(rot_x, 0.0, 0.0), 0);
 
@@ -273,11 +276,15 @@ unsafe extern "C" fn special_hi_keep_main(fighter: &mut L2CFighterCommon) -> L2C
     fighter.set_situation_keep(L2CValue::I32(*SITUATION_KIND_AIR), 1.into());
 
     // sfx
-    let sfx = if charge_frame >= 39 {
+    let charge_frame = VarModule::get_int(fighter.battle_object, SPECIAL_HI_CHARGE_FRAME) as f32;
+    let charge_frame_stage_1 = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.charge_frame_stage_1");
+    let charge_frame_stage_2 = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.charge_frame_stage_2");
+    let charge_frame_stage_3 = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.charge_frame_stage_3");
+    let sfx = if charge_frame >= charge_frame_stage_1 {
         "se_common_bomb_ll"
-    } else if charge_frame >= 24 {
+    } else if charge_frame >= charge_frame_stage_2 {
         "se_common_bomb_l"
-    } else if charge_frame >= 9 {
+    } else if charge_frame >= charge_frame_stage_1 {
         "se_common_bomb_m"
     } else {
         "se_common_bomb_s"
@@ -330,7 +337,9 @@ unsafe extern "C" fn special_hi_keep_movement_handling(fighter: &mut L2CFighterC
     if frame == 4 {
         if charge_frame > 0.0 {
             // launch speed
-            let speed = 1.2 + (charge_frame / 15.0);
+            let launch_speed = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.launch_speed");
+            let launch_speed_div = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.launch_speed_div");
+            let speed = launch_speed + (charge_frame / launch_speed_div);
             let stick_x = (rot * -1.0 + 90.0).to_radians().cos();
             let stick_y = (rot * -1.0 + 90.0).to_radians().sin();
             let speed_x = speed * stick_x * fighter.lr();
@@ -374,7 +383,7 @@ unsafe extern "C" fn special_hi_keep_movement_handling(fighter: &mut L2CFighterC
 
     // interpolate back to upright position
     let current_rot = PostureModule::rot_x(fighter.module_accessor, 0);
-    if (fighter.motion_frame() >= 40.0) && current_rot != 0.0 {
+    if (fighter.motion_frame() >= 39.0) && current_rot != 0.0 {
         let rot_mul = 1.0;
         let rot_amount = 0.075 * rot_mul; // percent of remaining distance rotated each frame. will decrease exponentially
         let mut new_rot = current_rot - (current_rot * rot_amount);
