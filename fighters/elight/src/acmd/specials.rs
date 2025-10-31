@@ -203,7 +203,11 @@ unsafe extern "C" fn effect_specialn(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("elight_buster_sword"), true, true);
         EFFECT_FOLLOW(agent, Hash40::new("elight_buster_sword_linear"), Hash40::new("sword1"), 0, 0, 0, 0, 90, 0, 1, true);
-        // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_ELIGHT_STATUS_SPECIAL_N_INT_EFFECT_ID);
+        
+        agent.clear_lua_stack();
+        lua_args!(agent, *FIGHTER_ELIGHT_STATUS_SPECIAL_N_INT_EFFECT_ID);
+        sv_animcmd::LAST_EFFECT_SET_WORK_INT(agent.lua_state_agent);
+
         LAST_EFFECT_SET_OFFSET_TO_CAMERA_FLAT(agent, -0.3);
     }
     frame(lua_state, 13.0);
@@ -298,7 +302,11 @@ unsafe extern "C" fn effect_specialairn(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("elight_buster_sword"), true, true);
         EFFECT_FOLLOW(agent, Hash40::new("elight_buster_sword_linear"), Hash40::new("sword1"), 0, 0, 0, 0, 90, 0, 1, true);
-        // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_ELIGHT_STATUS_SPECIAL_N_INT_EFFECT_ID);
+        
+        agent.clear_lua_stack();
+        lua_args!(agent, *FIGHTER_ELIGHT_STATUS_SPECIAL_N_INT_EFFECT_ID);
+        sv_animcmd::LAST_EFFECT_SET_WORK_INT(agent.lua_state_agent);
+        
         LAST_EFFECT_SET_OFFSET_TO_CAMERA_FLAT(agent, -0.3);
     }
     frame(lua_state, 13.0);
@@ -589,7 +597,11 @@ unsafe extern "C" fn effect_specialn2(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("elight_buster_sword_max"), true, true);
         EFFECT_FOLLOW(agent, Hash40::new("elight_buster_sword_linear"), Hash40::new("sword1"), 0, 0, 0, 0, 90, 0, 1, true);
-        // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_ELIGHT_STATUS_SPECIAL_N_INT_EFFECT_ID);
+        
+        agent.clear_lua_stack();
+        lua_args!(agent, *FIGHTER_ELIGHT_STATUS_SPECIAL_N_INT_EFFECT_ID);
+        sv_animcmd::LAST_EFFECT_SET_WORK_INT(agent.lua_state_agent);
+
         LAST_EFFECT_SET_OFFSET_TO_CAMERA_FLAT(agent, -0.3);
     }
     frame(lua_state, 15.0);
@@ -916,7 +928,11 @@ unsafe extern "C" fn effect_specialairn2(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("elight_buster_sword_max"), true, true);
         EFFECT_FOLLOW(agent, Hash40::new("elight_buster_sword_linear"), Hash40::new("sword1"), 0, 0, 0, 0, 90, 0, 1, true);
-        // LAST_EFFECT_SET_WORK_INT(agent, *FIGHTER_ELIGHT_STATUS_SPECIAL_N_INT_EFFECT_ID);
+        
+        agent.clear_lua_stack();
+        lua_args!(agent, *FIGHTER_ELIGHT_STATUS_SPECIAL_N_INT_EFFECT_ID);
+        sv_animcmd::LAST_EFFECT_SET_WORK_INT(agent.lua_state_agent);
+
         LAST_EFFECT_SET_OFFSET_TO_CAMERA_FLAT(agent, -0.3);
     }
     frame(lua_state, 15.0);
