@@ -1590,10 +1590,10 @@ pub mod vars {
             pub const ATTACK_AIR_B_USED: i32 = 0x0100;
             pub const SPECIAL_S_AIR_USED: i32 = 0x0101;
             pub const SPECIAL_HI_GROUND_START: i32 = 0x0103;
-            pub const SPECIAL_HI_MARKER_EFFECT_HANDLE: i32 = 0x0104;
 
             // ints
             pub const SPECIAL_HI_CHARGE_FRAME: i32 = 0x0100;
+            pub const SPECIAL_HI_MARKER_EFFECT_HANDLE: i32 = 0x0101;
 
             // floats
             pub const SPECIAL_HI_ROT_X: i32 = 0x0100;
