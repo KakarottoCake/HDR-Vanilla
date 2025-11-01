@@ -6,13 +6,6 @@ use globals::*;
 
 // upB freefalls after one use per airtime
 unsafe fn up_special_freefall(fighter: &mut L2CFighterCommon) {
-    if StatusModule::is_changing(fighter.module_accessor)
-    && (fighter.is_situation(*SITUATION_KIND_GROUND)
-        || fighter.is_situation(*SITUATION_KIND_CLIFF)
-        || fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_REBIRTH, *FIGHTER_STATUS_KIND_DEAD, *FIGHTER_STATUS_KIND_LANDING]))
-    {
-        VarModule::off_flag(fighter.battle_object, vars::rockman::instance::SPECIAL_HI_ENABLE_FREEFALL);
-    }
     if fighter.is_prev_status(*FIGHTER_ROCKMAN_STATUS_KIND_SPECIAL_HI_JUMP) {
         if StatusModule::is_changing(fighter.module_accessor) {
             VarModule::on_flag(fighter.battle_object, vars::rockman::instance::SPECIAL_HI_ENABLE_FREEFALL);
