@@ -16,6 +16,7 @@ mod rockbuster;
 
 mod special_s;
 mod special_lw;
+mod special_hi;
 
 unsafe extern "C" fn check_special_uniq(fighter: &mut L2CFighterCommon) -> L2CValue {
     if VarModule::is_flag(fighter.battle_object, vars::rockman::instance::SPECIAL_N_CHARGE_SHOT_RELEASE)
@@ -76,4 +77,5 @@ pub fn install(agent: &mut Agent) {
     rockbuster::install(agent);
     special_s::install(agent);
     special_lw::install(agent);
+    special_hi::install(agent);
 }
