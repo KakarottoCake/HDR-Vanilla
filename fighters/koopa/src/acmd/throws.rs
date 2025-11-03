@@ -66,6 +66,32 @@ unsafe extern "C" fn game_catchturn(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn sound_throwf(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 6.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_common_throw_01"));
+    }
+    frame(lua_state, 30.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_common_throw_02"));
+    }
+}
+
+unsafe extern "C" fn sound_throwb(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 4.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_common_throw_01"));
+    }
+    frame(lua_state, 15.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_common_throw_02"));
+    }
+}
+
 unsafe extern "C" fn game_throwhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -160,6 +186,10 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_catch", game_catch, Priority::Low);
     agent.acmd("game_catchdash", game_catchdash, Priority::Low);
     agent.acmd("game_catchturn", game_catchturn, Priority::Low);
+
+    agent.acmd("sound_throwf", sound_throwf, Priority::Low);
+
+    agent.acmd("sound_throwb", sound_throwb, Priority::Low);
 
     agent.acmd("game_throwhi", game_throwhi, Priority::Low);
     
