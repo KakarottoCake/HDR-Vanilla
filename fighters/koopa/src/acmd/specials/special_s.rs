@@ -55,7 +55,6 @@ unsafe extern "C" fn game_specialscatch(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE_RANGE(agent, 25.0, 60.0, 25.0);
     frame(lua_state, 38.0); // f35
     if is_excute(agent) {
-        DamageModule::add_damage(boma, 1.0, 0);
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
         if agent.is_situation(*SITUATION_KIND_AIR) {
             KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
