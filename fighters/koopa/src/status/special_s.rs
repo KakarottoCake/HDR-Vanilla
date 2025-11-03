@@ -371,6 +371,23 @@ unsafe extern "C" fn special_s_jump_main(fighter: &mut L2CFighterCommon) -> L2CV
     // }
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s_jump"), 0.0, 1.0, false, 0.0, false, false);
     GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+    CameraModule::set_enable_camera(fighter.module_accessor, true, -1);
+
+    let capture_id = LinkModule::get_node_object_id(fighter.module_accessor, *LINK_NO_CAPTURE);
+    if capture_id != 0x50000000 {
+        let capture_boma = &mut *(sv_battle_object::module_accessor(capture_id as u32));
+        let capture_fighter = utils::util::get_fighter_common_from_accessor(capture_boma);
+        let entry_id = capture_fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
+        let facing = capture_fighter.lr();
+        capture_fighter.clear_lua_stack();
+        capture_fighter.push_lua_stack(&mut L2CValue::I32(*MA_MSC_CMD_CAMERA_SET_TEMPORARY_CAMERA));
+        capture_fighter.push_lua_stack(&mut L2CValue::I32(entry_id));
+        capture_fighter.push_lua_stack(&mut L2CValue::F32(facing));
+        capture_fighter.push_lua_stack(&mut L2CValue::I32(100));
+        sv_module_access::camera(capture_fighter.lua_state_agent);
+        capture_fighter.pop_lua_stack(1);
+    }
+
     fighter.main_shift(special_s_jump_main_loop)
 }
 
@@ -588,11 +605,10 @@ unsafe extern "C" fn special_s_landing_exec(fighter: &mut L2CFighterCommon) -> L
             let capture_id = LinkModule::get_node_object_id(fighter.module_accessor, *LINK_NO_CAPTURE);
             notify_event_msc_cmd!(fighter, Hash40::new_raw(0x31dbed6513), Hash40::new("throw"), Hash40::new("invalid"));
             if capture_id != 0x50000000 {
-                AttackModule::hit_absolute_joint(fighter.module_accessor, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW,capture_id as u32,Hash40::new("throw"), 0, 0);
+                AttackModule::hit_absolute_joint(fighter.module_accessor, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, capture_id as u32,Hash40::new("throw"), 0, 0);
             }
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KOOPA_STATUS_SPECIAL_S_FLAG_HIT);
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KOOPA_STATUS_SPECIAL_S_FLAG_CAPTURE);
-            CameraModule::reset_all(fighter.module_accessor);
             
             //unable energies, then do hop energy
             KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
