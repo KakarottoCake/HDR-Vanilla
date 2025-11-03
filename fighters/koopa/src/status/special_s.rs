@@ -7,6 +7,9 @@ pub const SPECIAL_S_KIND_LW: i32 = 4;
 
 unsafe extern "C" fn special_s_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     special_s_situation_change_helper(fighter, true);
+    let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
+    let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
+    sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, speed_x * 0.6, speed_y); // parameterize
 
     fighter.main_shift(special_s_main_loop)
 }
@@ -249,6 +252,10 @@ unsafe extern "C" fn special_s_squat_main(fighter: &mut L2CFighterCommon) -> L2C
     WorkModule::set_float(fighter.module_accessor, PostureModule::pos_y(fighter.module_accessor), *FIGHTER_KOOPA_STATUS_SPECIAL_S_WORK_FLOAT_START_Y);
     ControlModule::reset_trigger(fighter.module_accessor);
     special_s_situation_helper(fighter, true);
+    let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
+    let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
+    sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, speed_x * 0.6, speed_y); // parameterize
+    
     fighter.sub_shift_status_main(L2CValue::Ptr(special_s_squat_main_loop as *const () as _))
 }
 

@@ -69,18 +69,27 @@ unsafe extern "C" fn effect_specialscatch(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 8.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_smash_flash"), Hash40::new("sys_smash_flash"), Hash40::new("top"), 5, 15, -14, 0, 0, 0, 0.8, false, *EF_FLIP_YZ);
+        if agent.is_situation(*SITUATION_KIND_GROUND) {
+            EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_sp_flash"), Hash40::new("sys_sp_flash"), Hash40::new("top"), 5, 17, -15, 0, 0, 0, 0.8, false, *EF_FLIP_YZ);
+        }
+        else {
+            EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_sp_flash"), Hash40::new("sys_sp_flash"), Hash40::new("top"), 5, 15, -14, 0, 0, 0, 0.8, false, *EF_FLIP_YZ);
+        }
     }
     frame(lua_state, 12.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("koopa_scratch"), Hash40::new("koopa_scratch"), Hash40::new("top"), 0, 13.5, 5, 24, -70, 2, 2, true, *EF_FLIP_YZ);
         LAST_EFFECT_SET_COLOR(agent, 0.6, 0.6, 2.0);
     }
-    frame(lua_state, 18.0);
+    frame(lua_state, 13.0);
     if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("sys_sp_flash"), true, true);
         if agent.is_situation(*SITUATION_KIND_GROUND) {
             LANDING_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         }
+    }
+    frame(lua_state, 18.0);
+    if is_excute(agent) {
         FLASH(agent, 1, 1, 0.753, 0.627);
         FLASH_FRM(agent, 5, 0.502, 0, 0, 0);
     }
@@ -122,6 +131,18 @@ unsafe extern "C" fn expression_specialscatch(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_specialssquat(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 5.0, 70, 30, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_BODY);
+    }
+    frame(lua_state, 1.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 16.0, 12.0);
+    frame(lua_state, 16.0);
+    FT_MOTION_RATE(agent, 1.0);
+}
+
 unsafe extern "C" fn effect_specialssquat(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_catch"), Hash40::new("haver"), 0, 1, 2, 0, 0, 0, 0.8, false);
@@ -132,11 +153,11 @@ unsafe extern "C" fn game_specialsthrowf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 12.0, 65, 49, 0, 88, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 12.0, 71, 49, 0, 89, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 40, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
     }
     frame(lua_state, 4.0);
-    FT_MOTION_RATE_RANGE(agent, 4.0, 14.0, 7.0);
+    FT_MOTION_RATE_RANGE(agent, 4.0, 14.0, 8.0);
     frame(lua_state, 14.0);
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 19.0);
@@ -190,7 +211,7 @@ unsafe extern "C" fn game_specialsthrowb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 12.0, 45, 81, 0, 57, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 15.0, 47, 70, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 40, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
     }
     frame(lua_state, 1.0);
@@ -390,6 +411,8 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("expression_specialscatch", expression_specialscatch, Priority::Low);
     agent.acmd("expression_specialsaircatch", expression_specialscatch, Priority::Low);
 
+    agent.acmd("game_specialssquat", game_specialssquat, Priority::Low);
+    agent.acmd("game_specialairssquat", game_specialssquat, Priority::Low);
     agent.acmd("effect_specialssquat", effect_specialssquat, Priority::Low);
     agent.acmd("effect_specialairssquat", effect_specialssquat, Priority::Low);
 
