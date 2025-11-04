@@ -38,9 +38,18 @@ unsafe extern "C" fn set_lag(fighter: &mut L2CFighterCommon) {
 
 unsafe extern "C" fn hold_check(fighter: &mut L2CFighterCommon) -> bool {
     let buffer = ControlModule::get_command_life_count_max(fighter.module_accessor) as usize;
-    if fighter.is_button_on(Buttons::Special | Buttons::Attack)
-    && (InputModule::get_trigger_count(fighter.battle_object, Buttons::Special) >= buffer // check if held longer than buffer
-    || InputModule::get_trigger_count(fighter.battle_object, Buttons::Attack) >= buffer) {
+    if fighter.is_button_on(Buttons::Special) {
+        if fighter.is_button_trigger(Buttons::Special)
+        || InputModule::get_trigger_count(fighter.battle_object, Buttons::Special) < buffer {
+            return false.into()
+        }
+        return true.into()
+    }
+    if fighter.is_button_on(Buttons::Attack) {
+        if fighter.is_button_trigger(Buttons::Attack)
+        || InputModule::get_trigger_count(fighter.battle_object, Buttons::Attack) < buffer {
+            return false.into()
+        }
         return true.into()
     }
     false.into()

@@ -77,84 +77,44 @@ guard_off:
   blend_frames: 4
   extra:
     cancel_frame: 12
-throw_b:
+attack_11:
   extra:
-    cancel_frame: 45
-throw_lw:
-  extra:
-    cancel_frame: 51
-throw_hi:
-  extra:
-    cancel_frame: 37
+    cancel_frame: 27
 attack_12:
   extra:
     cancel_frame: 27
 attack_13:
   extra:
-    cancel_frame: 29
-attack_11:
+    cancel_frame: 28
+attack_100_end:
   extra:
-    cancel_frame: 27
+    cancel_frame: 41
+attack_dash:
+  extra:
+    cancel_frame: 43
+attack_s3_s:
+  extra:
+    cancel_frame: 45
+attack_s3_s2:
+  extra:
+    cancel_frame: 47
+attack_s3_s3:
+  extra:
+    cancel_frame: 50
+attack_hi3:
+  extra:
+    cancel_frame: 26
 attack_lw3:
   flags:
     move: false
   extra:
     cancel_frame: 32
-special_hi:
-  extra:
-    cancel_frame: 38
-special_lw:
-  extra:
-    xlu_start: 0
-    xlu_end: 0
-    cancel_frame: 66
-attack_hi3:
-  extra:
-    cancel_frame: 26
-appeal_lw_r:
-  blend_frames: 10
-  animations:
-  - name: j02win1.nuanmb
-  scripts:
-  - expression_win1
-  - sound_appeallwr
-  - effect_win1
-appeal_hi_l:
-  extra:
-    cancel_frame: 26
-attack_s4_s:
-attack_s3_s:
-  extra:
-    cancel_frame: 45
-appeal_hi_r:
-  extra:
-    cancel_frame: 26
-appeal_lw_l:
-  blend_frames: 10
-  animations:
-  - name: j02win2.nuanmb
-  scripts:
-  - expression_win2b
-  - sound_appeallwl
-  - effect_win2
-attack_air_f:
-  extra:
-    cancel_frame: 30
-attack_s3_s3:
-  blend_frames: 1
-  extra:
-    cancel_frame: 50
-attack_s4_lw:
-attack_s3_s2:
-  blend_frames: 1
-  extra:
-    cancel_frame: 47
-attack_dash:
-  extra:
-    cancel_frame: 44
 attack_air_n:
   extra:
     cancel_frame: 52
+attack_air_f:
+  extra:
+    cancel_frame: 30
 attack_air_f2:
   blend_frames: 2
   extra:
@@ -166,23 +126,18 @@ attack_air_f3:
 attack_air_hi:
   extra:
     cancel_frame: 39
-special_air_lw:
+special_air_n_end_h:
   extra:
-    intangible_start_frame: 0
-    intangible_end_frame: 0
-    cancel_frame: 66
-attack_100_end:
+    cancel_frame: 58
+special_n_end_h:
   extra:
-    cancel_frame: 41
-special_hi:
+    cancel_frame: 58
+special_air_n_end_f:
   extra:
-    cancel_frame: 42
-special_air_hi:
+    cancel_frame: 48
+special_n_end_f:
   extra:
-    cancel_frame: 34
-special_air_s_u:
-  extra:
-    cancel_frame: 44
+    cancel_frame: 48
 special_s:
   extra:
     cancel_frame: 62
@@ -218,11 +173,30 @@ special_s_edge:
 special_s_hold_end:
   extra:
     cancel_frame: 61
+special_air_s_u:
+  extra:
+    cancel_frame: 44
 special_air_s_d:
   blend_frames: 2
 special_air_s_d_hit:
   extra:
     cancel_frame: 32
+special_hi:
+  extra:
+    cancel_frame: 37
+special_air_hi:
+  extra:
+    cancel_frame: 31
+special_lw:
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 66
+special_air_lw:
+  extra:
+    intangible_start_frame: 0
+    intangible_end_frame: 0
+    cancel_frame: 66
 catch_dash:
   extra:
     cancel_frame: 44
@@ -232,21 +206,40 @@ catch_turn:
 catch_attack:
   extra:
     cancel_frame: 0
+throw_b:
+  extra:
+    cancel_frame: 45
+throw_lw:
+  extra:
+    cancel_frame: 51
+throw_hi:
+  extra:
+    cancel_frame: 37
+appeal_lw_r:
+  blend_frames: 10
+  animations:
+  - name: j02win1.nuanmb
+  scripts:
+  - expression_win1
+  - sound_appeallwr
+  - effect_win1
+appeal_hi_l:
+  extra:
+    cancel_frame: 26
+appeal_hi_r:
+  extra:
+    cancel_frame: 26
+appeal_lw_l:
+  blend_frames: 10
+  animations:
+  - name: j02win2.nuanmb
+  scripts:
+  - expression_win2b
+  - sound_appeallwl
+  - effect_win2
 furafura_end:
   extra:
     cancel_frame: 34
-special_air_n_end_h:
-  extra:
-    cancel_frame: 58
-special_n_end_h:
-  extra:
-    cancel_frame: 58
-special_air_n_end_f:
-  extra:
-    cancel_frame: 48
-special_n_end_f:
-  extra:
-    cancel_frame: 48
 shield_break_fly:
   animations:
     - name: f04downspotd.nuanmb

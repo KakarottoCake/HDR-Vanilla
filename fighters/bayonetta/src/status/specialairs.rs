@@ -210,7 +210,7 @@ unsafe extern "C" fn bullet_movement(fighter: &mut L2CFighterCommon) -> L2CValue
                 lua_bind::KineticEnergyNormal::set_limit_speed(stop_energy as *mut app::KineticEnergyNormal, &Vector2f { x: -1.0, y: -1.0 });
                 KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
                 //motion to gravity
-                lua_bind::KineticEnergy::reset_energy(gravity_energy as _, *ENERGY_GRAVITY_RESET_TYPE_GRAVITY, &Vector2f { x: 0.0, y: y_reset * initial_y + 0.1 }, &Vector3f::zero(), fighter.module_accessor);
+                lua_bind::KineticEnergy::reset_energy(gravity_energy as _, *ENERGY_GRAVITY_RESET_TYPE_GRAVITY, &Vector2f { x: 0.0, y: y_reset * initial_y + 0.15 }, &Vector3f::zero(), fighter.module_accessor);
                 lua_bind::FighterKineticEnergyGravity::set_accel(gravity_energy as *mut app::FighterKineticEnergyGravity, -fighter.get_param_float("param_special_s", "ab_u_shooting_accel_y"));
                 lua_bind::FighterKineticEnergyGravity::set_stable_speed(gravity_energy as *mut app::FighterKineticEnergyGravity, fighter.get_param_float("param_special_s", "ab_u_shooting_max_speed_y"));
                 KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
