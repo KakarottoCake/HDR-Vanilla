@@ -23,9 +23,19 @@ unsafe extern "C" fn game_specialnshoot(agent: &mut L2CAgentBase) {
             VarModule::on_flag(agent.battle_object, vars::lucario::instance::IS_POWERED_UP);
         }
     }
+    frame(lua_state, 1.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 8.0, 8.0);
+    frame(lua_state, 8.0);
+    FT_MOTION_RATE(agent, 1.0);
+    if is_excute(agent) {
+        VarModule::on_flag(agent.battle_object, vars::lucario::status::SUPER_SPECIAL_DECIDE);
+    }
     frame(lua_state, 9.0);
     if is_excute(agent) {
         ArticleModule::shoot(boma, *FIGHTER_LUCARIO_GENERATE_ARTICLE_AURABALL, smash::app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_LAST), false);
+        // prevents double aura sphere
+        VarModule::set_float(agent.battle_object, vars::lucario::status::AURA_OVERRIDE, 0.0);
+        VarModule::off_flag(agent.battle_object, vars::lucario::instance::IS_POWERED_UP);
     }
 }
 
@@ -122,6 +132,7 @@ unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 9.0);
     if is_excute(agent) {
+        VarModule::on_flag(agent.battle_object, vars::lucario::status::SUPER_SPECIAL_DECIDE);
         if VarModule::get_float(agent.battle_object, vars::lucario::status::AURA_OVERRIDE) > 0.0 {
             MeterModule::drain_direct(agent.battle_object, MeterModule::meter_per_level(agent.battle_object));
             opff::check_burnout(agent);
@@ -167,6 +178,7 @@ unsafe extern "C" fn game_specialairs(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 9.0);
     if is_excute(agent) {
+        VarModule::on_flag(agent.battle_object, vars::lucario::status::SUPER_SPECIAL_DECIDE);
         if VarModule::get_float(agent.battle_object, vars::lucario::status::AURA_OVERRIDE) > 0.0 {
             MeterModule::drain_direct(agent.battle_object, MeterModule::meter_per_level(agent.battle_object));
             opff::check_burnout(agent);

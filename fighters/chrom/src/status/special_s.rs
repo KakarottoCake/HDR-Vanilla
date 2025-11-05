@@ -67,7 +67,7 @@ unsafe extern "C" fn special_s3_check_attack(fighter: &mut L2CFighterCommon, par
         let object_id = (&param_3["object_id_"]).get_u32();
         let opponent_boma = sv_battle_object::module_accessor(object_id);
         let opponent_object = utils::util::get_battle_object_from_accessor(opponent_boma);
-        VarModule::on_flag(opponent_object, vars::common::instance::FORCE_TUMBLE_NO_BOUNCE);
+        VarModule::on_flag(opponent_object, vars::common::instance::IS_KNOCKDOWN_THROW);
     }
     return false.into();
 }

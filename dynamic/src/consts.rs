@@ -153,7 +153,7 @@ pub mod vars {
 
             pub const ENABLE_AIR_ESCAPE_JUMPSQUAT: i32 = 0x0051;
 
-            pub const FORCE_TUMBLE_NO_BOUNCE: i32 = 0x0052;
+            pub const IS_KNOCKDOWN_THROW: i32 = 0x0052;
 
             pub const IS_HEAVY_ATTACK: i32 = 0x0053;
 
@@ -967,6 +967,7 @@ pub mod vars {
             // flags
             pub const HIT_CANCEL: i32 = 0x1102;
             pub const SUPER_SPECIAL_A_PLUS_B: i32 = 0x1103;
+            pub const SUPER_SPECIAL_DECIDE: i32 = 0x1104;
 
             // ints
             pub const SPECIAL_S_ROT_ANGLE: i32 = 0x1100;
@@ -1855,10 +1856,10 @@ pub mod vars {
             // flags
             pub const ATTACK_12_ENABLE_S3_COMBO: i32 = 0x0100;
             pub const ATTACK_LW4_REBOUND: i32 = 0x0101;
-            pub const DISABLE_SPECIAL_N: i32 = 0x102;
+            pub const DISABLE_SPECIAL_N: i32 = 0x0102;
 
             // ints
-            pub const SPECIAL_N_MAGIC_TIMER: i32 = 0x100;
+            pub const SPECIAL_N_MAGIC_TIMER: i32 = 0x0100;
 
             // floats
             pub const SPECIAL_S_JUMP_SPEED_X: i32 = 0x0100;
