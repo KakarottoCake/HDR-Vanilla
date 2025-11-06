@@ -266,6 +266,8 @@ unsafe extern "C" fn effect_specialhiloop(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     if is_excute(agent){
         EFFECT_FOLLOW(agent, Hash40::new("metaknight_sword"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
+        LAST_EFFECT_SET_COLOR(agent, 5.0, 0.0, 5.0);
+        LAST_EFFECT_SET_ALPHA(agent, 0.5);
         EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("top"), 0, 3, 10, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true);
     }
     frame(lua_state, 2.0);
@@ -289,6 +291,8 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
     frame(lua_state, 5.0);
     if is_excute(agent){
         EFFECT_FOLLOW(agent, Hash40::new("metaknight_sword"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
+        LAST_EFFECT_SET_COLOR(agent, 5.0, 0.0, 5.0);
+        LAST_EFFECT_SET_ALPHA(agent, 0.5);
         EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("top"), 0, 3, 10, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true);
     }
     frame(lua_state, 8.0);
