@@ -38,7 +38,8 @@ unsafe fn samus_nspecial_cancels(fighter: &mut L2CFighterCommon) {
 // Fox
 unsafe fn fox_drift_laser_landcancel(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_FOX_SPECIAL_N) {
-        fighter.check_land_cancel(None);
+        let landing_lag = 6.0;
+        fighter.check_land_cancel(Some(landing_lag));
 
         if fighter.is_situation(*SITUATION_KIND_AIR) {
             if KineticModule::get_kinetic_type(fighter.module_accessor) != *FIGHTER_KINETIC_TYPE_FALL {
@@ -121,7 +122,8 @@ unsafe fn nayru_drift_land_cancel(fighter: &mut L2CFighterCommon) {
 // Falco
 unsafe fn falco_drift_laser_landcancel(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_FALCO_SPECIAL_N) {
-        fighter.check_land_cancel(None);
+        let landing_lag = 6.0;
+        fighter.check_land_cancel(Some(landing_lag));
 
         if fighter.is_situation(*SITUATION_KIND_AIR) {
             if KineticModule::get_kinetic_type(fighter.module_accessor) != *FIGHTER_KINETIC_TYPE_FALL {
@@ -197,7 +199,8 @@ unsafe fn pitb_bow_lc(fighter: &mut L2CFighterCommon) {
             *FIGHTER_KIRBY_STATUS_KIND_PIT_SPECIAL_N_TURN
         ]) {
             if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_PIT_SPECIAL_N_SHOOT) {
-                fighter.check_land_cancel(None);
+                let landing_lag = 7.0;
+                fighter.check_land_cancel(Some(landing_lag));
             }
         }
     }

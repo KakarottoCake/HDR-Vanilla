@@ -97,13 +97,15 @@ unsafe fn missile_land_cancel(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_status_one_of(&[
         *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_1_AIR,
         *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_2_AIR ]) {
-        boma.check_land_cancel(None);
+        let landing_lag = 6.0;
+        boma.check_land_cancel(Some(landing_lag));
     }
 }
 
 unsafe fn stealth_burst_land_cancel(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S2_END) {
-        boma.check_land_cancel(None);
+        let landing_lag = 6.0;
+        boma.check_land_cancel(Some(landing_lag));
     }
 }
 

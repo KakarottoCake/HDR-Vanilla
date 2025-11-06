@@ -4,9 +4,10 @@ use super::*;
 use globals::*;
 
  
-unsafe fn laser_land_cancel(boma: &mut BattleObjectModuleAccessor, status_kind: i32, situation_kind: i32, cat2: i32, stick_y: f32) {
-    if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N {
-        boma.check_land_cancel(None);
+unsafe fn laser_land_cancel(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_N) {
+        let landing_lag = 6.0;
+        fighter.check_land_cancel(Some(landing_lag));
     }
 }
 
@@ -56,9 +57,9 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     }
 }
 
-pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
+pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
 
-    laser_land_cancel(boma, status_kind, situation_kind, cat[1], stick_y);
+    laser_land_cancel(fighter);
     firebird_startup_ledgegrab(fighter);
     aim_throw_lasers(boma);
     check_special_lw_hit(fighter);
@@ -74,7 +75,7 @@ pub extern "C" fn falco_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCo
 
 pub unsafe fn falco_frame(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
     if let Some(info) = FrameInfo::update_and_get(fighter) {
-        moveset(fighter, &mut *info.boma, info.id, info.cat, info.status_kind, info.situation_kind, info.motion_kind.hash, info.stick_x, info.stick_y, info.facing, info.frame);
+        moveset(fighter, &mut *info.boma);
     }
 }
 
