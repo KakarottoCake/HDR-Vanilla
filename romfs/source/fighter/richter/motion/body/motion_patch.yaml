@@ -180,7 +180,7 @@ attack_s3_s:
   flags:
     move: false
   extra:
-    cancel_frame: 33
+    cancel_frame: 35
 attack_squat_s3:
   game_script: game_attacksquats3
   flags:
@@ -208,7 +208,7 @@ attack_squat_s3:
   extra:
     intangible_start_frame: 0
     intangible_end_frame: 0
-    cancel_frame: 30
+    cancel_frame: 35
     freeze_during_hitstop: false
 fall_leaning_c:
   extra:
