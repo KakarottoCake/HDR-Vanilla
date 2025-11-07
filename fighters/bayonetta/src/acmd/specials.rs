@@ -110,7 +110,13 @@ unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
     frame(lua_state, 46.5); // 48
     if is_excute(agent) {
         if agent.is_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_S_FLAG_HIT_BEFORE_GUARD) {
-            CancelModule::enable_cancel(boma);
+            WorkModule::enable_transition_term_group(boma, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_ATTACK);
+            WorkModule::enable_transition_term_group(boma, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_CATCH);
+            WorkModule::enable_transition_term_group(boma, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_JUMP);
+            WorkModule::enable_transition_term_group(boma, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_ITEM);
+            agent.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI);
+            agent.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW);
+            agent.enable_transition_term(*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N);
         }
     }
 }
@@ -654,7 +660,7 @@ unsafe extern "C" fn expression_specialairhi(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
 	let lua_state = agent.lua_state_agent;
 	let boma = agent.boma();
-    sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 1.8);
+    sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 2.0);
 	frame(lua_state, 1.0);
     FT_MOTION_RATE_RANGE(agent, 1.0, 8.0, 3.0);
 	if is_excute(agent) {
@@ -672,11 +678,11 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
 	if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2ea0f68425), true);
     }
-	frame(lua_state, 15.6); // 11
+	frame(lua_state, 18.0); // 11
 	if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2ea0f68425), false);
     }
-	frame(lua_state, 23.2); // 17
+	frame(lua_state, 26.7); // 17
 	if is_excute(agent) {
 		agent.off_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_LW_FLAG_WITCH_TIME);
         search!(agent, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR_ALL);
@@ -705,7 +711,7 @@ unsafe extern "C" fn effect_speciallw(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         COL_NORMAL(agent);
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("bayonetta_witchtime_flash"), Hash40::new("top"), -2.0, 10.0, 0.0, 0, 0, 0, 1, true);
-        LAST_EFFECT_SET_RATE(agent, 10.0/12.0);
+        LAST_EFFECT_SET_RATE(agent, 10.0/14.0);
     }
     frame(lua_state, 40.0);
     if is_excute(agent) {

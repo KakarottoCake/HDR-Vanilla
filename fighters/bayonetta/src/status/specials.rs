@@ -24,6 +24,10 @@ unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
 unsafe extern "C" fn ground_checks(fighter: &mut L2CFighterCommon) -> L2CValue {
     let frame = fighter.global_table[CURRENT_FRAME].get_i32() + 1;
     if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
+        // hit cancel check
+        if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+            return 1.into()
+        }
         if fighter.is_in_hitlag() {special_s_slow_hit(fighter); }
         else if fighter.is_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_S_FLAG_HIT) {
             // manual heelslide kick on jab/ftilt or nb/sb input, buffered heel slide legacy input on last frame if input is held
