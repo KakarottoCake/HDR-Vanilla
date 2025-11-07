@@ -34,19 +34,19 @@ unsafe extern "C" fn BA_SHOOTING_ON(agent: &mut L2CAgentBase, hand: bool, joint:
     let gun_offset = Vector3f{ x: gun_pos.x - top_pos.x, y: gun_pos.y - top_pos.y, z: gun_pos.z - top_pos.z};
     let offset_y = 100.0 * angle.sin();
     let offset_x = 100.0 * angle.cos();
-    let push_y = 7.0 * angle.sin();
-    let push_x = 7.0 * angle.cos();
+    let push_y = 25.0 * angle.sin();
+    let push_x = 25.0 * angle.cos();
     // hitbox properties
     let hitbox_id = if first_fire {*FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_00} else {*FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_02};
-    let bkb = if angle_deg > 180.0 {5} else {10}; // half power spike bullets
     if is_excute(agent) {
         if !agent.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_DISABLE_ROOT_ATTACK) {
-            ATTACK(agent, hitbox_id as u64, 1, Hash40::new("top"), 0.6, angle_deg as u64, 100, 0, bkb, 3.25, 0.0, gun_offset.y, gun_offset.x * lr, Some(0.0), Some(gun_offset.y + push_y), Some(gun_offset.x * lr + push_x), 0.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
+            ATTACK(agent, hitbox_id as u64, 1, Hash40::new("top"), 0.6, angle_deg as u64, 0, 0, 0, 3.25, 0.0, gun_offset.y, gun_offset.x * lr, Some(0.0), Some(gun_offset.y + push_y), Some(gun_offset.x * lr + push_x), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
         }
         ATTACK(agent, hitbox_id as u64 + 1, 1, Hash40::new("top"), 0.4, angle_deg as u64, 0, 0, 0, 2.75, 0.0, gun_offset.y, gun_offset.x * lr, Some(0.0), Some(gun_offset.y + offset_y), Some(gun_offset.x * lr + offset_x), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
         ControlModule::set_rumble(boma, Hash40::new("rbkind_63_bullet"), 4, true, *BATTLE_OBJECT_ID_INVALID as u32);
         if msc_arg_1 > -1.0 && !ground_bounce {
             notify_event_msc_cmd!(agent, Hash40::new_raw(0x36db1a34c9), smash::lib::LuaConst::new(hitbox_id as u32), msc_arg_1, msc_arg_2);
+            notify_event_msc_cmd!(agent, Hash40::new_raw(0x36db1a34c9), smash::lib::LuaConst::new(hitbox_id as u32 + 1), msc_arg_1, msc_arg_2);
         } // something to do with disabling floor clipping?
     }
 }

@@ -10,11 +10,11 @@ unsafe extern "C" fn attack_s3_main(fighter: &mut L2CFighterCommon) -> L2CValue 
 unsafe extern "C" fn attack_s3_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     if StatusModule::is_changing(fighter.module_accessor) {
         fighter.attack_s3_mtrans();
-        // select which kick (bypass combomodule, enable held kick, prevent buggy BA nonsense, allow staling)
         check_stage(fighter);
     }
     if CancelModule::is_enable_cancel(fighter.module_accessor)
     && fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+        VarModule::set_int(fighter.battle_object, vars::bayonetta::instance::ATTACK_S3_COUNT, 0);
         return 1.into();
     }
     if fighter.global_table[globals::SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
@@ -62,58 +62,29 @@ unsafe extern "C" fn attack_s3_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
     0.into()
 }
 
-unsafe extern "C" fn attack_s3_end(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let ret = smashline::original_status(End, fighter, *FIGHTER_STATUS_KIND_ATTACK_S3)(fighter);
-    if fighter.global_table[globals::STATUS_KIND].get_i32() != *FIGHTER_STATUS_KIND_ATTACK_S3 {
-        VarModule::set_int(fighter.battle_object, vars::bayonetta::instance::ATTACK_S3_COUNT, 0);
-    } else {
-        check_turn(fighter);
-    }
-    ret
-}
-
-unsafe extern "C" fn check_turn(fighter: &mut L2CFighterCommon) {
-    let turn_x = fighter.get_param_float("common", "turn_stick_x");
-    let lr = fighter.lr();
-    let stick_x = VarModule::get_float(fighter.battle_object, vars::common::instance::ATTACK_S3_CSTICK_X);
-    // turnaround handling
-    if ((fighter.stick_x() * lr < turn_x && fighter.is_button_off(Buttons::CStickOn))
-    || (fighter.right_stick_x() * lr < turn_x) && fighter.is_button_on(Buttons::CStickOn))
-    || (VarModule::get_float(fighter.battle_object, vars::common::instance::ATTACK_S3_CSTICK_X) + lr).abs() < 1.0 //if input dir and facing dir are diff
-    { // reset ftilt stage if backtilt input
-        VarModule::set_int(fighter.battle_object, vars::bayonetta::instance::ATTACK_S3_COUNT, 0);
-    }
-}
-
 unsafe extern "C" fn check_input(fighter: &mut L2CFighterCommon) -> bool {
-    let turn_x = fighter.get_param_float("common", "turn_stick_x");
     let special_stick_y = fighter.get_param_float("common", "special_stick_y");
     let lr = fighter.lr();
     let stick_x = VarModule::get_float(fighter.battle_object, vars::common::instance::ATTACK_S3_CSTICK_X);
-    // filter turnaround on 5f buffer check
-    if fighter.is_cat_flag(Cat1::AttackS3)//| Cat1::AttackS4)
-    && (stick_x  + lr).abs() < 1.0 {
-        fighter.clear_commands(Cat1::AttackN); 
-        fighter.clear_commands(Cat1::AttackS3); 
-        return false.into()
-    }
-    // filter on bufferable on-hit input 
-    if (fighter.stick_x() * lr < turn_x 
-    && fighter.is_button_off(Buttons::CStickOn) 
-    && !fighter.is_button_release(Buttons::CStickOverride)
-    || fighter.right_stick_x() * lr < turn_x)
-    {
-        return false.into();
-    }
-    // filter up/down tilt
-    if ((fighter.stick_y().abs() > special_stick_y && fighter.is_button_off(Buttons::CStickOn))
-    || (fighter.right_stick_y().abs() > special_stick_y) && fighter.is_button_on(Buttons::CStickOn))
-    {
-        return false.into();
+    // filter non forwards inputs
+    if fighter.is_button_on(Buttons::CStickOn) {
+        if fighter.right_stick_y().abs() >= special_stick_y 
+        || fighter.right_stick_x() * lr <= 0.0 {
+            fighter.clear_commands(Cat1::AttackN); 
+            fighter.clear_commands(Cat1::AttackS3); 
+            return false.into();
+        }
+    } else {
+        if fighter.left_stick_y().abs() >= special_stick_y
+        || fighter.left_stick_x() * lr <= 0.0 {
+            fighter.clear_commands(Cat1::AttackN); 
+            fighter.clear_commands(Cat1::AttackS3); 
+            return false.into();
+        }
     }
     // again but also filter grab
-    if !ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CATCH)
-    && fighter.global_table[CMD_CAT1].get_i32() & (
+    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CATCH)
+    || fighter.global_table[CMD_CAT1].get_i32() & (
         *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3 |
         *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4 |
         *FIGHTER_PAD_CMD_CAT1_FLAG_CATCH
@@ -145,5 +116,4 @@ unsafe extern "C" fn check_stage(fighter: &mut L2CFighterCommon) {
 
 pub fn install(agent: &mut Agent) {
     agent.status(Main, *FIGHTER_STATUS_KIND_ATTACK_S3, attack_s3_main);
-    agent.status(End, *FIGHTER_STATUS_KIND_ATTACK_S3, attack_s3_end);
 }

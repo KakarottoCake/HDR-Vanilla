@@ -238,6 +238,8 @@ pub mod vars {
 
             pub const PREV_STATUS_TRANSITION_FRAME: i32 = 0x0013;
 
+            pub const PREV_STATUS_INFLICT_STATUS: i32 = 0x0014;
+
             // floats
 
             pub const LAST_ATTACK_DAMAGE_DEALT: i32 = 0x0000;
@@ -363,10 +365,11 @@ pub mod vars {
         }
         pub mod status {
             // flags
-            pub const RECOVERY_RESOURCE_INVALID_INPUT: i32 = 0x1100;
-            pub const SPECIAL_1F_CHECK: i32 = 0x1101;
-            pub const BULLET_WAS_FIRE: i32 = 0x1102;
-            pub const BULLET_FIRST_FIRE: i32 = 0x1103;
+            pub const RECOVERY_RESOURCE_BYPASS_CHECK: i32 = 0x1100;
+            pub const RECOVERY_RESOURCE_INVALID_INPUT: i32 = 0x1101;
+            pub const SPECIAL_1F_CHECK: i32 = 0x1102;
+            pub const BULLET_WAS_FIRE: i32 = 0x1103;
+            pub const BULLET_FIRST_FIRE: i32 = 0x1104;
             // ints
             pub const EFFECT_HANDLE: i32 = 0x1100;
             pub const SPECIAL_S_BULLET_STAGE: i32 = 0x1101; // used for weird vanilla movement calc

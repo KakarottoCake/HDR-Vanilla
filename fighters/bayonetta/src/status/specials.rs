@@ -96,8 +96,10 @@ unsafe extern "C" fn special_s_kick_main(fighter: &mut L2CFighterCommon) -> L2CV
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s_hold_end"), 0.0, 1.0, false, 0.0, false, false);
     let frame = fighter.global_table[PREV_STATUS_FRAME].get_i32() - 20;
     let mut speed = 1.15 - (0.017 * frame as f32); //instant kick = 1.15, last second kick ~ 0.89
-    if VarModule::is_flag(fighter.battle_object, vars::bayonetta::instance::WAS_CANCEL) {speed=speed*shield_x;}
-    VarModule::off_flag(fighter.battle_object, vars::bayonetta::instance::WAS_CANCEL); //shield-kick starts with cut speed
+    let prev_inflict_status = VarModule::get_int(fighter.battle_object, vars::common::instance::PREV_STATUS_INFLICT_STATUS);
+    if prev_inflict_status & *COLLISION_KIND_MASK_SHIELD != 0 {
+        speed=speed*shield_x;
+    } // shield-kick starts with cut speed
     sv_kinetic_energy!(set_speed_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, speed);
     fighter.sub_shift_status_main(L2CValue::Ptr(special_s_kick_main_loop as *const () as _))
 }

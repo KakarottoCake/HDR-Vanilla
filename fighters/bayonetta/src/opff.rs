@@ -3,39 +3,23 @@ use globals::*;
 utils::import_noreturn!(common::opff::fighter_common_opff);
 
 unsafe fn aerial_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
-    if fighter.is_motion_one_of(&[Hash40::new("attack_air_n"), Hash40::new("attack_air_f3"), Hash40::new("attack_air_b"), Hash40::new("attack_air_hi"), Hash40::new("attack_air_lw"), Hash40::new("landing_air_lw")])  // dont cancel with fair 1/2
-    && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT)  // dont cancel on shield
-    && !fighter.is_in_hitlag()  // dont cancel during hitstop
-    && !fighter.is_flag(*FIGHTER_BAYONETTA_STATUS_ATTACK_AIR_FLAG_SHOOTING) {  // don't cancel DURING bullet arts
-        let mut new_status = 0;
-        let mut is_resource_gated = false;
-        if fighter.is_cat_flag(Cat1::SpecialN) {
-            new_status = *FIGHTER_STATUS_KIND_SPECIAL_N;
-            VarModule::on_flag(fighter.battle_object, vars::bayonetta::instance::WAS_CANCEL);  // charge faster on cancel
-        }
-        if fighter.is_cat_flag(Cat1::SpecialS) {
-            if fighter.get_int(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SPECIAL_AIR_S_USED_COUNT) < 2 {
-                is_resource_gated = true;
-                new_status = *FIGHTER_STATUS_KIND_SPECIAL_S;
+    if fighter.is_motion_one_of(&[Hash40::new("attack_air_n"), Hash40::new("attack_air_f3"), Hash40::new("attack_air_b"), Hash40::new("attack_air_hi"), Hash40::new("attack_air_lw"), Hash40::new("landing_air_lw")]) { // dont cancel with fair 1/2
+        if AttackModule::is_infliction(boma, *COLLISION_KIND_MASK_HIT) { // dont cancel on shield
+            WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_SPECIAL);
+            WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_ESCAPE);
+            // cancel into second wtw/abk without prereq
+            if VarModule::get_int(fighter.battle_object, vars::bayonetta::instance::RECOVERY_RESOURCE_COUNT) < 2 {
+                VarModule::on_flag(fighter.battle_object, vars::bayonetta::status::RECOVERY_RESOURCE_BYPASS_CHECK);
             }
         }
-        else if fighter.is_cat_flag(Cat1::SpecialHi) {
-            if fighter.get_int(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SPECIAL_HI_USED_COUNT) < 2 {
-                is_resource_gated = true;
-                new_status = *FIGHTER_STATUS_KIND_SPECIAL_HI;
-            }
+        if fighter.is_motion(Hash40::new("landing_air_lw"))
+        && VarModule::get_int(fighter.battle_object, vars::common::instance::PREV_STATUS_INFLICT_STATUS) & *COLLISION_KIND_MASK_HIT != 0 {
+            WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_SPECIAL);
         }
-        else if fighter.is_cat_flag(Cat1::SpecialLw) {
-            new_status = *FIGHTER_STATUS_KIND_SPECIAL_LW;
-        }
-        if fighter.is_situation(*SITUATION_KIND_AIR) {fighter.check_airdodge_cancel(); }
-        // exit resourceless gated cancels
-        if is_resource_gated && VarModule::get_int(fighter.battle_object, vars::bayonetta::instance::RECOVERY_RESOURCE_COUNT) >= 2 {
-            return;
-        }
-        // special cancel
-        if new_status != 0 {
-            StatusModule::change_status_force(boma, new_status, true);
+        if !fighter.is_in_hitlag()  // dont cancel during hitstop
+        && !fighter.is_flag(*FIGHTER_BAYONETTA_STATUS_ATTACK_AIR_FLAG_SHOOTING) {  // don't cancel DURING bullet arts
+            fighter.sub_transition_group_check_air_special(); // see if it works with cancel caps
+            fighter.sub_transition_group_check_air_escape();
         }
     }
 }

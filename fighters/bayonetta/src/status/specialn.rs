@@ -2,6 +2,14 @@ use super::*;
 
 // FIGHTER_STATUS_KIND_SPECIAL_N
 
+unsafe extern "C" fn special_n_init(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
+        return smashline::original_status(Init, fighter, *FIGHTER_STATUS_KIND_SPECIAL_N)(fighter);
+    }
+    air_stall(fighter);
+    0.into()
+}
+
 unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     VarModule::set_int(fighter.battle_object, vars::bayonetta::instance::SPECIAL_N_CANCEL_TYPE, 0);
     if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
@@ -121,9 +129,7 @@ unsafe extern "C" fn special_n_cancel_main(fighter: &mut L2CFighterCommon) -> L2
             fighter.set_int(special_lag, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_CANCEL_FRAME);
         }
     } else {
-        let gravity = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY) as *mut smash::app::KineticEnergy;
-        let start_y = fighter.get_param_float("param_special_n", "air_start_speed_mul_y");
-        smash::app::lua_bind::KineticEnergy::mul_speed(gravity, &Vector3f::new(1.0, start_y, 1.0)); 
+        air_stall(fighter);
     }
     fighter.set_float(1.0, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_FLOAT_MOTION_RATE);
     motion_handling(fighter, false);
@@ -186,6 +192,18 @@ unsafe extern "C" fn special_n_cancel_main_loop(fighter: &mut L2CFighterCommon) 
 
 unsafe extern "C" fn special_n_cancel_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.is_situation(*SITUATION_KIND_GROUND) {var_reset(fighter); }
+    0.into()
+}
+
+unsafe extern "C" fn air_stall(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let x_speed = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let y_speed = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let air_start_speed_mul_x = fighter.get_param_float("param_special_n", "air_start_speed_mul_x");
+    let air_start_speed_mul_y = fighter.get_param_float("param_special_n", "air_start_speed_mul_y");
+    let stall_min_y = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_n.stall_min_y");
+    sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
+    sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, x_speed * air_start_speed_mul_x, 0.0);
+    sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, (y_speed * air_start_speed_mul_y).max(stall_min_y));
     0.into()
 }
 
@@ -271,6 +289,7 @@ unsafe extern "C" fn special_n_fire_end(fighter: &mut L2CFighterCommon) -> L2CVa
 }
 
 pub fn install(agent: &mut Agent) {
+        agent.status(Init, *FIGHTER_STATUS_KIND_SPECIAL_N, special_n_init);
         agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_N, special_n_main);
         
         agent.status(Init, *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_N_CHARGE, special_n_charge_init);

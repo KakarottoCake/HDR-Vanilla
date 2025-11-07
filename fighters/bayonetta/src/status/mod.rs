@@ -77,9 +77,11 @@ unsafe extern "C" fn jump_refresh(fighter: &mut L2CFighterCommon) -> L2CValue {
 }
 
 unsafe extern "C" fn should_use_special_s_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_DISABLE_AIR_SPECIAL_S)
-    || (fighter.get_int(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SPECIAL_AIR_S_REUSE_FRAME) <= 0
-    && fighter.get_int(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SPECIAL_AIR_S_USED_COUNT) > 0) {
+    if fighter.get_int(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SPECIAL_AIR_S_USED_COUNT) > 1 // no abks
+    || (fighter.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_DISABLE_AIR_SPECIAL_S) // no resource
+    || (fighter.get_int(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SPECIAL_AIR_S_REUSE_FRAME) <= 0 // frame limit ran out
+    && fighter.get_int(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SPECIAL_AIR_S_USED_COUNT) > 0)
+    && !VarModule::is_flag(fighter.battle_object, vars::bayonetta::status::RECOVERY_RESOURCE_BYPASS_CHECK)) {
         special_buzzer(fighter);
         return false.into();
     }
@@ -88,7 +90,9 @@ unsafe extern "C" fn should_use_special_s_callback(fighter: &mut L2CFighterCommo
 }
 
 unsafe extern "C" fn should_use_special_hi_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_DISABLE_AIR_SPECIAL_HI) {
+    if fighter.get_int(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SPECIAL_HI_USED_COUNT) > 1
+    || (fighter.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_DISABLE_AIR_SPECIAL_HI)
+    && !VarModule::is_flag(fighter.battle_object, vars::bayonetta::status::RECOVERY_RESOURCE_BYPASS_CHECK)) {
         special_buzzer(fighter);
         return false.into();
     }
@@ -96,9 +100,17 @@ unsafe extern "C" fn should_use_special_hi_callback(fighter: &mut L2CFighterComm
     true.into()
 }
 
+unsafe extern "C" fn should_use_special_lw_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SPECIAL_AIR_LW) {
+        return false.into();
+    }
+    true.into()
+}
+
 unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     fighter.global_table[globals::USE_SPECIAL_S_CALLBACK].assign(&L2CValue::Ptr(should_use_special_s_callback as *const () as _));
-    fighter.global_table[globals::USE_SPECIAL_HI_CALLBACK].assign(&L2CValue::Ptr(should_use_special_hi_callback as *const () as _));   
+    fighter.global_table[globals::USE_SPECIAL_HI_CALLBACK].assign(&L2CValue::Ptr(should_use_special_hi_callback as *const () as _));
+    fighter.global_table[globals::USE_SPECIAL_LW_CALLBACK].assign(&L2CValue::Ptr(should_use_special_lw_callback as *const () as _));
 }
 
 pub fn install(agent: &mut Agent) {

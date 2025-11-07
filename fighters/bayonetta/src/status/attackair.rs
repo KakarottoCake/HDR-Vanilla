@@ -57,7 +57,7 @@ unsafe extern "C" fn bayonetta_attack_air_f_loop(fighter: &mut L2CFighterCommon)
     && !fighter.is_motion(Hash40::new("attack_air_f3")) {
         let control_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL) as *mut smash::app::KineticEnergy;
         // set speed muls
-        let mut x_speed = 0.58;
+        let mut x_speed = 0.6;
         let mut x_center = 0.0;
         let mut y_speed = 0.0;
         if fighter.is_motion(Hash40::new("attack_air_f")) {
