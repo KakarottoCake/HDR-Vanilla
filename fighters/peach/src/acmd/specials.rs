@@ -155,7 +155,7 @@ unsafe extern "C" fn game_specialshitend(agent: &mut L2CAgentBase) {
     frame(lua_state, 5.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
-        if !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_ATTACK) {
+        if !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
             KineticModule::unable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
             KineticModule::mul_speed(boma, &Vector3f::new(1.0, 0.67, 1.0), *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
         }
