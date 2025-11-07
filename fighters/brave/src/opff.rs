@@ -29,13 +29,10 @@ unsafe fn persist_rng(fighter: &mut L2CFighterCommon) {
 
 unsafe fn psych_up_crit(fighter: &mut L2CFighterCommon) {
     if VarModule::is_flag(fighter.battle_object, vars::brave::instance::PSYCHE_UP_ACTIVE) {
-        if VarModule::get_int(fighter.battle_object, vars::common::instance::GIMMICK_TIMER) <= 0 {
+        if VarModule::countdown_int(fighter.battle_object, vars::common::instance::GIMMICK_TIMER, 0) {
             EFFECT_OFF_KIND(fighter, Hash40::new("brave_charge_hold"), false, false);
             EFFECT(fighter, Hash40::new("sys_flash"), Hash40::new("top"), 0, 18, -4, 0, 0, 0, 0.6, 0, 0, 0, 0, 0, 0, false);
             VarModule::off_flag(fighter.battle_object, vars::brave::instance::PSYCHE_UP_ACTIVE);
-        }
-        else {
-            VarModule::dec_int(fighter.battle_object, vars::common::instance::GIMMICK_TIMER);
         }
         // turn off crits after landing an attack
         if (fighter.is_motion_one_of(&[
