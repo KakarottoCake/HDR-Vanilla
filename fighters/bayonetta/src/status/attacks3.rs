@@ -63,22 +63,28 @@ unsafe extern "C" fn attack_s3_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
 }
 
 unsafe extern "C" fn check_input(fighter: &mut L2CFighterCommon) -> bool {
+    let turn_x = fighter.get_param_float("common", "turn_stick_x");
     let special_stick_y = fighter.get_param_float("common", "special_stick_y");
     let lr = fighter.lr();
     let stick_x = VarModule::get_float(fighter.battle_object, vars::common::instance::ATTACK_S3_CSTICK_X);
+    //let thresh_x = if fighter.is_button_trigger(Buttons::Attack | Buttons::CStickOn) {turn_x} else {0.0}; // see if fixes c stick jank
     // filter non forwards inputs
+    if fighter.is_button_trigger(Buttons::Attack | Buttons::CStickOn) {
+        if fighter.stick_y().abs() >= special_stick_y 
+        || fighter.stick_x() * lr <= turn_x {
+            fighter.clear_commands(Cat1::AttackN); 
+            fighter.clear_commands(Cat1::AttackS3);
+            return false.into();
+        }
+    }
     if fighter.is_button_on(Buttons::CStickOn) {
         if fighter.right_stick_y().abs() >= special_stick_y 
-        || fighter.right_stick_x() * lr <= 0.0 {
-            fighter.clear_commands(Cat1::AttackN); 
-            fighter.clear_commands(Cat1::AttackS3); 
+        || fighter.right_stick_x() * lr <= 0.0 { 
             return false.into();
         }
     } else {
-        if fighter.left_stick_y().abs() >= special_stick_y
+        if fighter.left_stick_y().abs() >= special_stick_y 
         || fighter.left_stick_x() * lr <= 0.0 {
-            fighter.clear_commands(Cat1::AttackN); 
-            fighter.clear_commands(Cat1::AttackS3); 
             return false.into();
         }
     }

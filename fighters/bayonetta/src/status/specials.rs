@@ -23,32 +23,29 @@ unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
 
 unsafe extern "C" fn ground_checks(fighter: &mut L2CFighterCommon) -> L2CValue {
     let frame = fighter.global_table[CURRENT_FRAME].get_i32() + 1;
+    let motion_frame = fighter.motion_frame().round() as i32; // see if fixes fcked up multiplication?
     if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
-        // hit cancel check
-        if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
-            return 1.into()
-        }
         if fighter.is_in_hitlag() {special_s_slow_hit(fighter); }
         else if fighter.is_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_S_FLAG_HIT) {
             // manual heelslide kick on jab/ftilt or nb/sb input, buffered heel slide legacy input on last frame if input is held
             if check_input(fighter)
             && ((fighter.is_cat_flag(Cat1::SpecialAny | Cat1::AttackN | Cat1::AttackS3)
-            && frame >= 20 && frame <= 35)
+            && motion_frame > 19 && motion_frame < 36)
             || (hold_check(fighter) && VarModule::is_flag(fighter.battle_object, vars::bayonetta::status::SPECIAL_1F_CHECK)))
             {
-                EFFECT(fighter, Hash40::new("sys_smash_flash_s"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1.35, 4, 4, 4, 0, 0, 0, false); // flash on manual activation to match dabk
-                LAST_EFFECT_SET_RATE(fighter, 0.8);
+                EFFECT(fighter, Hash40::new("sys_smash_flash_s"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1.75, 4, 4, 4, 0, 0, 0, false); // flash on manual activation to match dabk
+                LAST_EFFECT_SET_RATE(fighter, 0.5);
                 GroundModule::set_correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
                 fighter.change_status(statuses::bayonetta::SPECIAL_S_KICK.into(), true.into())
             } 
             VarModule::off_flag(fighter.battle_object, vars::bayonetta::status::SPECIAL_1F_CHECK);
         }
-        if frame == 35 {EFFECT_OFF_KIND(fighter, Hash40::new("bayonetta_heelslide_burst"), false, false); } //fx
+        if motion_frame > 35 {EFFECT_OFF_KIND(fighter, Hash40::new("bayonetta_heelslide_burst"), false, false); } //fx
         if MotionModule::is_end(fighter.module_accessor) {fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());} //end transition
     } else {
-        if frame >= 44 {fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into()) }
+        if motion_frame >= 44 {fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into()) }
         else if StatusModule::is_situation_changed(fighter.module_accessor) {
-            let slide_frame = (frame - 15).clamp(1, 24) as f32;
+            let slide_frame = (motion_frame - 15).clamp(1, 24) as f32;
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s_edge"), 0.0, 1.0, false, 0.0, false, false); // 1x-1.5x speed
             fighter.set_situation(SITUATION_KIND_AIR.into());
             GroundModule::set_correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));

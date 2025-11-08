@@ -33,6 +33,8 @@ unsafe extern "C" fn special_hi_main(fighter: &mut L2CFighterCommon) -> L2CValue
     if fighter.global_table[SITUATION_KIND] != SITUATION_KIND_GROUND {
         fighter.set_situation_keep(L2CValue::I32(*SITUATION_KIND_AIR), 1.into());
         fighter.off_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_HI_FLAG_SITUATION_KEEP);
+    } else {
+        fighter.on_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_HI_FLAG_GROUND_START);
     }
     ItemModule::set_change_status_event(fighter.module_accessor, true);
     fighter.sub_shift_status_main(L2CValue::Ptr(special_hi_main_loop as *const () as _))
@@ -65,8 +67,8 @@ unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2C
 
 unsafe extern "C" fn special_hi_heavy_check(fighter: &mut L2CFighterCommon) -> L2CValue {
     if hold_check(fighter) {
-        EFFECT(fighter, Hash40::new("sys_smash_flash_s"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1.35, 4, 4, 4, 0, 0, 0, false);
-        LAST_EFFECT_SET_RATE(fighter, 0.8);
+        EFFECT(fighter, Hash40::new("sys_smash_flash_s"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1.75, 4, 4, 4, 0, 0, 0, false);
+        LAST_EFFECT_SET_RATE(fighter, 0.5);
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_hi"), 0.0, 1.0, false, 0.0, false, false);
         VarModule::inc_int(fighter.battle_object, vars::bayonetta::instance::SPECIAL_BULLET_ARTS_COUNT);
     }

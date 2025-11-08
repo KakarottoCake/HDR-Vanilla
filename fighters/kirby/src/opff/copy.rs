@@ -964,12 +964,14 @@ unsafe extern "C" fn plant_meter(fighter: &mut L2CFighterCommon) {
 
 
 unsafe fn bayo_air_special_cancels(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status(*FIGHTER_STATUS_KIND_ATTACK_AIR) {
+    if fighter.is_status(*FIGHTER_STATUS_KIND_ATTACK_AIR)
+    && !StatusModule::is_changing(fighter.module_accessor) {
         if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
             WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_SPECIAL);
             WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_ESCAPE);
         }
-        if !fighter.is_in_hitlag() {
+        if !fighter.is_in_hitlag() 
+        && !StopModule::is_stop(fighter.module_accessor) {
             fighter.sub_transition_group_check_air_special();
             fighter.sub_transition_group_check_air_escape();
         }

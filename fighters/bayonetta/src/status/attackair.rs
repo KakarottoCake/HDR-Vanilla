@@ -53,29 +53,8 @@ unsafe extern "C" fn bayonetta_attack_air_f_loop(fighter: &mut L2CFighterCommon)
         fighter.change_status(FIGHTER_BAYONETTA_STATUS_KIND_ATTACK_AIR_F.into(), false.into());
     }
     if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) 
-    && !fighter.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_ACTION)
-    && !fighter.is_motion(Hash40::new("attack_air_f3")) {
-        let control_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL) as *mut smash::app::KineticEnergy;
-        // set speed muls
-        let mut x_speed = 0.6;
-        let mut x_center = 0.0;
-        let mut y_speed = 0.0;
-        if fighter.is_motion(Hash40::new("attack_air_f")) {
-            x_center = 8.0; // 8.0 farthest from center
-            y_speed = fighter.get_param_float("param_private", "attack_air_f_hit_speed_y");
-        } else {
-            x_center = 12.5; // 7.5 farthest from center
-            y_speed = fighter.get_param_float("param_private", "attack_air_f2_hit_speed_y");
-        }
-        // calc pos dependent speed
-        let hit_pos = VarModule::get_vec3(fighter.battle_object, vars::common::instance::LAST_ATTACK_HIT_LOCATION);
-        let center_pos = AttackModule::center_pos(fighter.module_accessor, 3, false);
-        let x_add = (hit_pos.x - (PostureModule::pos_x(fighter.module_accessor) + x_center)) / 60.0 * fighter.lr();
-        let y_add = (hit_pos.y - (PostureModule::pos_y(fighter.module_accessor) + 12.0)) / 19.0;
-        // cut x speed and set y speed
-        sv_kinetic_energy!(controller_set_accel_x_mul, fighter, 0.055);
-        smash::app::lua_bind::KineticEnergy::mul_speed(control_energy, &Vector3f::new(x_speed + x_add, 1.0, 1.0)); 
-        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, y_speed + y_add);
+    && !fighter.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_ACTION) {
+        cut_speed(fighter);
     }
     if !fighter.status_AttackAir_Main_common().get_bool() {
         fighter.sub_air_check_superleaf_fall_slowly();
@@ -94,13 +73,13 @@ unsafe extern "C" fn fair_motion(fighter: &mut L2CFighterCommon) -> L2CValue {
     }
     let fair = VarModule::get_int(fighter.battle_object, vars::bayonetta::instance::ATTACK_AIR_F_COUNT);
     if fair == 1 {
-        MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_air_f2"), 0.0, 1.0, false, 0.0, false, false);
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_air_f2"), 2.0, 1.0, false, 0.0, false, false);
         //notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2b94de0d96), FIGHTER_LOG_ACTION_CATEGORY_ATTACK, FIGHTER_LOG_ATTACK_KIND_ATTACK_AIR_F2); makes each fair stale separately
     } else if fair == 2 {
-        MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_air_f3"), 0.0, 1.0, false, 0.0, false, false);
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_air_f3"), 3.0, 1.0, false, 0.0, false, false);
         //notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2b94de0d96), FIGHTER_LOG_ACTION_CATEGORY_ATTACK, FIGHTER_LOG_ATTACK_KIND_ATTACK_AIR_F3);
     } else {
-        MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_air_f"), 0.0, 1.0, false, 0.0, false, false);
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_air_f"), 1.0, 1.0, false, 0.0, false, false);
         //notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2b94de0d96), FIGHTER_LOG_ACTION_CATEGORY_ATTACK, FIGHTER_LOG_ATTACK_KIND_ATTACK_AIR_F);
     }
     if ItemModule::is_have_item(fighter.module_accessor, 0) {
@@ -108,6 +87,31 @@ unsafe extern "C" fn fair_motion(fighter: &mut L2CFighterCommon) -> L2CValue {
         ItemModule::set_have_item_visibility(fighter.module_accessor, false, 0);
     }
     false.into()
+}
+
+unsafe extern "C" fn cut_speed(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let control_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL) as *mut app::KineticEnergy;
+    let x_speed = lua_bind::KineticEnergy::get_speed_x(control_energy);
+    let hitbox_id = VarModule::get_int(fighter.battle_object, vars::common::instance::LAST_ATTACK_HITBOX_ID);
+    let mut hit_x = match hitbox_id {
+        0 => 0.45, // fair 1 knee hitbox
+        1 => 0.5, // inner hit
+        2 => 0.55, // middle hit
+        3 => 0.65, // outer hit
+        _ => 0.6 // gr hit
+    };
+    let mut hit_y = 0.0;
+    if fighter.is_motion(Hash40::new("attack_air_f")) {
+        hit_y = fighter.get_param_float("param_private", "attack_air_f_hit_speed_y");
+    } else if fighter.is_motion(Hash40::new("attack_air_f2")) {
+        hit_y = fighter.get_param_float("param_private", "attack_air_f2_hit_speed_y");
+    } else {
+        return 1.into();
+    }
+    sv_kinetic_energy!(controller_set_accel_x_mul, fighter, 0.055);
+    sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, x_speed * hit_x, 0.0);
+    sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, hit_y);
+    0.into()
 }
 
 pub fn install(agent: &mut Agent) {
