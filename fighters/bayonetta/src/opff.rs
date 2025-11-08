@@ -3,11 +3,10 @@ use globals::*;
 utils::import_noreturn!(common::opff::fighter_common_opff);
 
 unsafe fn aerial_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
-    if fighter.is_motion_one_of(&[Hash40::new("attack_air_n"), Hash40::new("attack_air_f3"), Hash40::new("attack_air_b"), Hash40::new("attack_air_hi"), Hash40::new("attack_air_lw"), Hash40::new("landing_air_lw")])
-    && !StatusModule::is_changing(boma) { // dont cancel with fair 1/2
+    if fighter.is_motion_one_of(&[Hash40::new("attack_air_n"), Hash40::new("attack_air_f3"), Hash40::new("attack_air_b"), Hash40::new("attack_air_hi"), Hash40::new("attack_air_lw"), Hash40::new("landing_air_lw")]) { // dont cancel with fair 1/2
         if AttackModule::is_infliction(boma, *COLLISION_KIND_MASK_HIT) { // dont cancel on shield
-            WorkModule::enable_transition_term_group(boma, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_SPECIAL);
-            WorkModule::enable_transition_term_group(boma, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_ESCAPE);
+            WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_SPECIAL);
+            WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_ESCAPE);
             // cancel into second wtw/abk without prereq
             if VarModule::get_int(fighter.battle_object, vars::bayonetta::instance::RECOVERY_RESOURCE_COUNT) < 2 {
                 VarModule::on_flag(fighter.battle_object, vars::bayonetta::status::RECOVERY_RESOURCE_BYPASS_CHECK);
@@ -18,8 +17,7 @@ unsafe fn aerial_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObject
             WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_SPECIAL);
         }
         if !fighter.is_in_hitlag()  // dont cancel during hitstop
-        && !StopModule::is_stop(boma)
-        && !fighter.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_ACTION) {  // don't cancel DURING bullet arts
+        && !fighter.is_flag(*FIGHTER_BAYONETTA_STATUS_ATTACK_AIR_FLAG_SHOOTING) {  // don't cancel DURING bullet arts
             fighter.sub_transition_group_check_air_special(); // see if it works with cancel caps
             fighter.sub_transition_group_check_air_escape();
         }

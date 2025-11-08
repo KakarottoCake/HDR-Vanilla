@@ -38,8 +38,7 @@
     <struct index="0">
       <float hash="shoot_angle_f">3</float>
       <float hash="shoot_angle_h">6</float>
-      <float hash="speed">14.0</float>
-      <int hash="life">11</int>
+      <float hash="speed">16.0</float>
       <float hash="attack_scale_mul">1.25</float>
     </struct>
     <hash40 index="1">dummy</hash40>
@@ -51,7 +50,7 @@
       <float hash="hs_shooting_speed_mul_x">0.8</float>
       <float hash="guard_speed_mul_x">0.5</float>
       <float hash="ab_u_shooting_speed_x_mul">0.6</float>
-      <float hash="ab_u_shooting_stable_speed_x">0.35</float>
+      <float hash="ab_u_shooting_stable_speed_x">0.3</float>
       <float hash="ab_u_shooting_speed_y_mul">0.9</float>
       <float hash="ab_u_shooting_accel_y">0.08</float>
       <float hash="ab_u_shooting_max_speed_y">-1.0</float>
@@ -62,14 +61,12 @@
       <int hash="ab_d_enable_frame">-1</int>
       <int hash="ab_d_change_frame">-1</int>
       <float hash="ab_d_motion_speed_mul">0.9</float>
-      <float hash="ab_d_hit_after_speed_x">0.4</float>
-      <float hash="ab_d_hit_after_speed_y">2.675</float>
+      <float hash="ab_d_hit_after_speed_x">0.25</float>
+      <float hash="ab_d_hit_after_speed_y">2.475</float>
       <float hash="ab_d_hit_after_accel_y">0.132</float>
-      <float hash="ab_d_hit_after_max_speed_y">2.375</float>
-      <int hash="ab_d_hit_after_stick_control_start_frame">3</int>
       <float hash="ab_d_hit_after_max_accel_x">0.08</float>
       <float hash="ab_d_hit_after_front_max_speed_x">1.03</float>
-      <float hash="ab_d_hit_after_back_max_speed_x">1.03</float>
+      <float hash="ab_d_hit_after_front_back_speed_x">1.03</float>
       <int hash="ab_d_hit_after_landing_frame">15</int>
       <int hash="ab_d_hit_after_landing_frame_2nd">30</int>
       <int hash="ab_d_landing_frame">30</int>
@@ -85,9 +82,9 @@
   </list>
   <list hash="param_special_hi">
     <struct index="0">
-      <float hash="speed_mul_y">1.275</float>
-      <float hash="air_speed_mul_y">1.275</float>
-      <float hash="speed_mul_y_2nd">1.125</float>
+      <float hash="speed_mul_y">1.3</float>
+      <float hash="air_speed_mul_y">1.3</float>
+      <float hash="speed_mul_y_2nd">1.175</float>
       <float hash="air_start_speed_mul_y">0.2</float>
       <float hash="air_start_speed_mul_x">0.4</float>
       <float hash="air_accel_y">0.132</float>

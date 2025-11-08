@@ -94,7 +94,7 @@ attack_dash:
     cancel_frame: 43
 attack_s3_s:
   extra:
-    cancel_frame: 46
+    cancel_frame: 45
 attack_s3_s2:
   extra:
     cancel_frame: 47
@@ -103,7 +103,7 @@ attack_s3_s3:
     cancel_frame: 50
 attack_hi3:
   extra:
-    cancel_frame: 28
+    cancel_frame: 26
 attack_lw3:
   flags:
     move: false
@@ -116,13 +116,13 @@ attack_air_f:
   extra:
     cancel_frame: 30
 attack_air_f2:
-  blend_frames: 0
+  blend_frames: 2
   extra:
     cancel_frame: 30
 attack_air_f3:
-  blend_frames: 0
+  blend_frames: 2
   extra:
-    cancel_frame: 42
+    cancel_frame: 45
 attack_air_hi:
   extra:
     cancel_frame: 39
@@ -176,17 +176,11 @@ special_s_hold_end:
 special_air_s_u:
   extra:
     cancel_frame: 44
-special_air_s_u_wall_end:
-  extra:
-    cancel_frame: 41
 special_air_s_d:
   blend_frames: 2
 special_air_s_d_hit:
   extra:
-    cancel_frame: 41
-special_air_s_d_wall_end:
-  extra:
-    cancel_frame: 41
+    cancel_frame: 34
 special_hi:
   extra:
     cancel_frame: 37

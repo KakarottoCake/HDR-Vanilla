@@ -23,6 +23,5 @@
     <float hash="air_start_speed_mul_y">0.2</float>
     <float hash="air_accel_y">0.132</float>
     <float hash="air_max_speed_y">0.5</float>
-    <int hash="whiff_drift_lockout_frame">16</int>
   </struct>
 </struct>

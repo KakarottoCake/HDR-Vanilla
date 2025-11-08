@@ -41,6 +41,7 @@ unsafe extern "C" fn special_air_s_d_main(fighter: &mut L2CFighterCommon) -> L2C
     } else { //removed qc input
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_s_d"), 0.0, 1.0, false, 0.0, false, false);
     }
+    bounce_check(fighter);
     fighter.sub_shift_status_main(L2CValue::Ptr(special_air_s_d_main_loop as *const () as _))
 }
 
@@ -129,71 +130,14 @@ unsafe extern "C" fn special_air_s_u_main_loop(fighter: &mut L2CFighterCommon) -
     0.into()
 }
 
-// FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_D_HIT
-
-unsafe extern "C" fn special_air_s_d_hit_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_s_d_hit"), 0.0, 1.0, false, 0.0, false, false);
-    // use normal gravity/drift values (no custom values for now)
-    let ab_d_hit_after_speed_x = fighter.get_param_float("param_special_s", "ab_d_hit_after_speed_x");
-    let ab_d_hit_after_speed_y = fighter.get_param_float("param_special_s", "ab_d_hit_after_speed_y");
-    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
-    sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, -ab_d_hit_after_speed_x, 0.0);
-    sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ab_d_hit_after_speed_y);
-    KineticModule::suspend_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
-    fighter.sub_shift_status_main(L2CValue::Ptr(special_air_s_bounce_main_loop as *const () as _))
-}
-
-unsafe extern "C" fn special_air_s_bounce_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let prev_inflict_status = VarModule::get_int(fighter.battle_object, vars::common::instance::PREV_STATUS_INFLICT_STATUS);
-    let hit_drift_lockout_frame = fighter.get_param_float("param_special_s", "ab_d_hit_after_stick_control_start_frame");
-    let whiff_drift_lockout_frame = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.whiff_drift_lockout_frame");
-    if fighter.global_table[CURRENT_FRAME] == hit_drift_lockout_frame
-    && prev_inflict_status & *COLLISION_KIND_MASK_HIT != 0 {
-        KineticModule::resume_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
-    }
-    if prev_inflict_status & *COLLISION_KIND_MASK_HIT == 0 
-    && fighter.global_table[CURRENT_FRAME] == whiff_drift_lockout_frame {
-        KineticModule::resume_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
-    }
-    if (CancelModule::is_enable_cancel(fighter.module_accessor) && fighter.sub_air_check_fall_common().get_bool())
-    || fighter.sub_transition_group_check_air_cliff().get_bool() {
-        return 1.into();
-    }
-    if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
-        fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
-    } else {
-        if MotionModule::is_end(fighter.module_accessor) {
-            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
-        }
-    }
-    0.into()
-}
-
-// FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_WALL_END
-
-unsafe extern "C" fn special_air_s_wall_end_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let motion = if fighter.global_table[PREV_STATUS_KIND] == *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_D {"special_air_s_d_wall_end"} else {"special_air_s_u_wall_end"};
-    MotionModule::change_motion(fighter.module_accessor, Hash40::new(motion), 0.0, 1.0, false, 0.0, false, false);
-    // use normal gravity/drift values (no custom values for now)
-    let ab_d_hit_after_speed_x = fighter.get_param_float("param_special_s", "ab_d_hit_after_speed_x");
-    let ab_d_hit_after_speed_y = fighter.get_param_float("param_special_s", "ab_d_hit_after_speed_y");
-    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
-    sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, -ab_d_hit_after_speed_x, 0.0);
-    sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ab_d_hit_after_speed_y);
-    KineticModule::suspend_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
-    fighter.sub_shift_status_main(L2CValue::Ptr(special_air_s_bounce_main_loop as *const () as _))
-}
-
-// helpers
-
 // using current up b stats
 unsafe extern "C" fn set_startup_speed(fighter: &mut L2CFighterCommon) -> L2CValue {
     let x_speed = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let y_speed = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-    let air_start_speed_mul_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.air_start_speed_mul_x");
-    let air_start_speed_mul_y = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.air_start_speed_mul_y");
-    let air_accel_y = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.air_accel_y");
-    let air_max_speed_y = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.air_max_speed_y");
+    let air_start_speed_mul_x = fighter.get_param_float("param_special_s", "air_start_speed_mul_x");
+    let air_start_speed_mul_y = fighter.get_param_float("param_special_s", "air_start_speed_mul_y");
+    let air_accel_y = fighter.get_param_float("param_special_s", "air_accel_y");
+    let air_max_speed_y = fighter.get_param_float("param_special_s", "air_max_speed_y");
     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
     sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, x_speed * air_start_speed_mul_x, 0.0);
     sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, y_speed * air_start_speed_mul_y);
@@ -211,7 +155,7 @@ unsafe extern "C" fn bounce_check(fighter: &mut L2CFighterCommon) -> L2CValue {
         }
         fighter.change_status(FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_D_HIT.into(), false.into());
     } else {
-        wall_check(fighter);
+         wall_check(fighter);
     }
     0.into()
 }
@@ -238,8 +182,8 @@ unsafe extern "C" fn cache_input(fighter: &mut L2CFighterCommon) -> L2CValue {
         if fighter.is_button_on(Buttons::Attack | Buttons::Catch) 
         && !fighter.is_button_on(Buttons::CStickOn) 
         && !fighter.is_cat_flag(Cat1::AttackHi3 | Cat1::SpecialHi) {
-            EFFECT(fighter, Hash40::new("sys_smash_flash_s"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1.75, 4, 4, 4, 0, 0, 0, false);
-            LAST_EFFECT_SET_RATE(fighter, 0.5);
+            EFFECT(fighter, Hash40::new("sys_smash_flash_s"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1.35, 4, 4, 4, 0, 0, 0, false);
+            LAST_EFFECT_SET_RATE(fighter, 0.8);
             fighter.on_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_S_U_TO_D);
             VarModule::set_float(fighter.battle_object, vars::bayonetta::status::SPECIAL_S_ABK_ANGLE, -1.15); //angle forced down during dabk windup
         } else {
@@ -274,7 +218,7 @@ unsafe extern "C" fn angling(fighter: &mut L2CFighterCommon, dive: bool) -> L2CV
         joint_rotator(fighter, frame, Hash40::new("rot"), Vector3f{x: -14.5*stick, y:0.0, z:0.0}, 1.0, 12.0, 31.0, 40.0);
         if frame > 11.0 && !VarModule::is_flag(fighter.battle_object, vars::bayonetta::status::SPECIAL_1F_CHECK) {
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR_ANGLE);
-            let base = fighter.get_param_float("param_special_s", "ab_u_rotate"); // base seems to actually be 35* before falling??
+            let base = fighter.get_param_float("param_special_s", "ab_u_rotate");
             let speed = fighter.get_param_float("param_special_s", "ab_u_motion_speed_mul");
             let maxrot = 13.0;
             let angle = if facing < 0.0 {
@@ -282,20 +226,9 @@ unsafe extern "C" fn angling(fighter: &mut L2CFighterCommon, dive: bool) -> L2CV
             } else {
                 base + stick *maxrot //r
             };
-            let angle_rad = angle.to_radians();
-
-            // have to manually calculate what the horizontal distance should be..
-            let base_angle: f32 = 35.0;
-            let base_angle_c: f32 = 90.0 - base_angle;
-            let base_c = 63.0;
-            let base_dist = (base_c*f32::sin(90.0_f32.to_radians()))/f32::sin(base_angle_c.to_radians());
-            let angle_c: f32 = 90.0 - angle;
-            let new_dist = (base_c*f32::sin(90.0_f32.to_radians()))/f32::sin(angle_c.to_radians());
-            let ratio = new_dist / base_dist;
-            let new_speed = ratio*speed;
-
-            sv_kinetic_energy!(set_angle, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, angle_rad);
-            sv_kinetic_energy!(set_speed_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, new_speed);
+            let angle = angle.to_radians();
+            sv_kinetic_energy!(set_angle, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, angle);
+            sv_kinetic_energy!(set_speed_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, speed - stick*0.08); //min .71, max .87
             VarModule::on_flag(fighter.battle_object, vars::bayonetta::status::SPECIAL_1F_CHECK); //only angle once
         }
     }
@@ -429,7 +362,4 @@ pub fn install(agent: &mut Agent) {
     agent.status(Pre, *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_U, special_air_s_x_pre);
     agent.status(Main, *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_U, special_air_s_u_main);
     agent.status(End, *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_U, special_air_s_x_end);
-
-    agent.status(Main, *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_D_HIT, special_air_s_d_hit_main);
-    agent.status(Main, *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_WALL_END, special_air_s_wall_end_main);
 }
