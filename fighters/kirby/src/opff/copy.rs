@@ -969,7 +969,8 @@ unsafe fn bayo_air_special_cancels(fighter: &mut L2CFighterCommon) {
             WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_SPECIAL);
             WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_ESCAPE);
         }
-        if !fighter.is_in_hitlag() {
+        if !fighter.is_in_hitlag() 
+        && !StopModule::is_stop(fighter.module_accessor) {
             fighter.sub_transition_group_check_air_special();
             fighter.sub_transition_group_check_air_escape();
         }

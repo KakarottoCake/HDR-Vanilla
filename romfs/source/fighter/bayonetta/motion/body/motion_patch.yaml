@@ -94,7 +94,7 @@ attack_dash:
     cancel_frame: 43
 attack_s3_s:
   extra:
-    cancel_frame: 45
+    cancel_frame: 47
 attack_s3_s2:
   extra:
     cancel_frame: 47
@@ -103,7 +103,7 @@ attack_s3_s3:
     cancel_frame: 50
 attack_hi3:
   extra:
-    cancel_frame: 26
+    cancel_frame: 28
 attack_lw3:
   flags:
     move: false
@@ -116,13 +116,13 @@ attack_air_f:
   extra:
     cancel_frame: 30
 attack_air_f2:
-  blend_frames: 2
+  blend_frames: 0
   extra:
     cancel_frame: 30
 attack_air_f3:
-  blend_frames: 2
+  blend_frames: 0
   extra:
-    cancel_frame: 45
+    cancel_frame: 42
 attack_air_hi:
   extra:
     cancel_frame: 39
@@ -158,7 +158,7 @@ special_s_edge:
     unk_800: false
     unk_1000: false
     unk_2000: false
-  blend_frames: 5
+  blend_frames: 2
   animations:
   - name: d01specialsedge.nuanmb
   scripts:
@@ -168,7 +168,7 @@ special_s_edge:
   extra:
     intangible_start_frame: 0
     intangible_end_frame: 0
-    cancel_frame: 25
+    cancel_frame: 12
     freeze_during_hitstop: false
 special_s_hold_end:
   extra:
@@ -176,11 +176,51 @@ special_s_hold_end:
 special_air_s_u:
   extra:
     cancel_frame: 44
+special_air_s_u_wall_end:
+  extra:
+    cancel_frame: 41
 special_air_s_d:
-  blend_frames: 2
+  blend_frames: 1
+  extra:
+    cancel_frame: 40
 special_air_s_d_hit:
   extra:
-    cancel_frame: 34
+    cancel_frame: 41
+special_air_s_d_wall_end:
+  extra:
+    cancel_frame: 41
+special_air_s_d_landing:
+  extra:
+    cancel_frame: 31
+special_air_s_d_landing_edge:
+  game_script: game_specialairsdlandingedge
+  flags:
+    turn: false
+    loop: false
+    move: true
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 1
+  animations:
+  - name: d01specialairsdlandingedge.nuanmb
+  scripts:
+  - expression_specialairsdlandingedge
+  - sound_specialairsdlandingedge
+  - effect_specialairsdlandingedge
+  extra:
+    intangible_start_frame: 0
+    intangible_end_frame: 0
+    cancel_frame: 6
+    freeze_during_hitstop: false
 special_hi:
   extra:
     cancel_frame: 37

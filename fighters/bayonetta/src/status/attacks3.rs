@@ -47,11 +47,14 @@ unsafe extern "C" fn attack_s3_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
         }
     }
     // combo input
-    if fighter.is_flag(*FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO) && check_input(fighter) {
-        if fighter.is_cat_flag(Cat1::AttackS3 | Cat1::AttackN)
+    if check_input(fighter) {
+        if fighter.is_flag(*FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO)
+        && (fighter.is_cat_flag(Cat1::AttackS3 | Cat1::AttackN)
         || (!fighter.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_ACTION)
         && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) 
-        && fighter.is_button_on(Buttons::Attack))
+        && fighter.is_button_on(Buttons::Attack)
+        && !fighter.is_button_trigger(Buttons::Attack)
+        && !VarModule::is_flag(fighter.battle_object, vars::bayonetta::status::ATTACK_INVALID_COMBO_INPUT)))
         {
             fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_S3.into(), true.into())
         }
@@ -63,30 +66,32 @@ unsafe extern "C" fn attack_s3_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
 }
 
 unsafe extern "C" fn check_input(fighter: &mut L2CFighterCommon) -> bool {
-    let special_stick_y = fighter.get_param_float("common", "special_stick_y");
+    let attack_hi3_stick_y = fighter.get_param_float("common", "attack_hi3_stick_y");
     let lr = fighter.lr();
-    let stick_x = VarModule::get_float(fighter.battle_object, vars::common::instance::ATTACK_S3_CSTICK_X);
-    // filter non forwards inputs
-    if fighter.is_button_on(Buttons::CStickOn) {
-        if fighter.right_stick_y().abs() >= special_stick_y 
-        || fighter.right_stick_x() * lr <= 0.0 {
+    // f1 of input try to filter non jab/ftilt inputs
+    if fighter.is_button_trigger(Buttons::Attack) {
+        if fighter.is_stick_backward()
+        || fighter.stick_y().abs() > attack_hi3_stick_y {
             fighter.clear_commands(Cat1::AttackN); 
-            fighter.clear_commands(Cat1::AttackS3); 
+            fighter.clear_commands(Cat1::AttackS3);
+            VarModule::on_flag(fighter.battle_object, vars::bayonetta::status::ATTACK_INVALID_COMBO_INPUT);
             return false.into();
         }
-    } else {
-        if fighter.left_stick_y().abs() >= special_stick_y
-        || fighter.left_stick_x() * lr <= 0.0 {
-            fighter.clear_commands(Cat1::AttackN); 
-            fighter.clear_commands(Cat1::AttackS3); 
-            return false.into();
-        }
+        VarModule::off_flag(fighter.battle_object, vars::bayonetta::status::ATTACK_INVALID_COMBO_INPUT);
+    }
+    // hold input restriction
+    if fighter.is_stick_backward()
+    || fighter.left_stick_y().abs() > attack_hi3_stick_y
+    || fighter.right_stick_y().abs() > attack_hi3_stick_y {
+        VarModule::on_flag(fighter.battle_object, vars::bayonetta::status::ATTACK_INVALID_COMBO_INPUT);
+        return false.into();
     }
     // again but also filter grab
     if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CATCH)
     || fighter.global_table[CMD_CAT1].get_i32() & (
-        *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3 |
-        *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4 |
+        //*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW | *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI |
+        //*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3 |
+        //*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4 |
         *FIGHTER_PAD_CMD_CAT1_FLAG_CATCH
     ) == 1 {
         return false.into();

@@ -122,7 +122,7 @@ unsafe extern "C" fn effect_attacklw4(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 20.0);
     if is_excute(agent) {
-        LANDING_EFFECT(agent, Hash40::new("bayonetta_heelstomp"), Hash40::new("top"), 5, 0, 0, 0, 0, 0, 0.6, 0, 0, 0, 0, 0, 0, false);
+        EFFECT(agent, Hash40::new("bayonetta_heelstomp"), Hash40::new("top"), 5, 0, 0, 0, 0, 0, 0.55, 0, 0, 0, 0, 0, 0, false);
         if agent.get_int(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_COSTUME_KIND) == 2 {LAST_EFFECT_SET_COLOR(agent, 1.498, 0.298, 0.498); }
         else {LAST_EFFECT_SET_COLOR(agent, 0.098, 0.698, 1.498); }
         LANDING_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 5, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);

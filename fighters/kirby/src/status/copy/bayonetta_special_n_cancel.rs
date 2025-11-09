@@ -3,7 +3,7 @@ use super::*;
 // FIGHTER_KIRBY_STATUS_KIND_BAYONETTA_SPECIAL_N
 
 unsafe extern "C" fn special_n_init(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
+    if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
         return smashline::original_status(Init, fighter, *FIGHTER_KIRBY_STATUS_KIND_BAYONETTA_SPECIAL_N)(fighter);
     }
     air_stall(fighter);
@@ -12,7 +12,7 @@ unsafe extern "C" fn special_n_init(fighter: &mut L2CFighterCommon) -> L2CValue 
 
 unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     VarModule::set_int(fighter.battle_object, vars::bayonetta::instance::SPECIAL_N_CANCEL_TYPE, 0);
-    if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
+    if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
         fighter.on_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SPECIAL_N_FOOT);
         fighter.on_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_FLAG_SPECIAL_N_FOOT);
         fighter.set_int64(hash40("special_n_start_f") as i64, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_N_INT_MOTION_KIND_G);
