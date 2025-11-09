@@ -20,7 +20,7 @@ pub unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> 
         if MotionModule::is_end(fighter.module_accessor) {
             fighter.change_status(FIGHTER_REFLET_STATUS_KIND_SPECIAL_N_HOLD.into(), false.into())
         }
-        if fighter.is_button_trigger(Buttons::Special) {
+        if fighter.is_button_trigger(Buttons::Special | Buttons::Attack) {
             VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
         } // buffered release
     }
@@ -71,7 +71,7 @@ pub unsafe extern "C" fn special_n_hold_main(fighter: &mut L2CFighterCommon) -> 
 }
 
 pub unsafe extern "C" fn special_n_hold_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.is_button_trigger(Buttons::Special) 
+    if fighter.is_button_trigger(Buttons::Special | Buttons::Attack) 
     || VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK) { // buffered fire
         VarModule::off_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
         fighter.change_status(FIGHTER_REFLET_STATUS_KIND_SPECIAL_N_SHOOT.into(), true.into())

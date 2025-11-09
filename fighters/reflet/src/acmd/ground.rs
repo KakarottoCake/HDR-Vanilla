@@ -87,6 +87,8 @@ unsafe extern "C" fn game_attack12(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         if agent.get_float(*FIGHTER_REFLET_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CURRENT_POINT) > 0.1 {
             agent.on_flag(*FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
+        } else {
+            ComboModule::reset(boma);
         }
     }
     frame(lua_state, 9.0);

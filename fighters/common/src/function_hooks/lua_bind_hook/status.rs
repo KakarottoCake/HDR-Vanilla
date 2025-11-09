@@ -348,11 +348,16 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
             next_status = *FIGHTER_STATUS_KIND_JUMP_SQUAT;
         }
 
-        if boma.kind() == *FIGHTER_KIND_REFLET
-        && StatusModule::status_kind(boma) == *FIGHTER_STATUS_KIND_SPECIAL_HI
-        && next_status == *FIGHTER_STATUS_KIND_FALL_SPECIAL
-        && !VarModule::is_flag(boma.object(), vars::reflet::instance::SPECIAL_HI_ENABLE_FREEFALL) {
-            next_status = *FIGHTER_STATUS_KIND_FALL;
+        if boma.kind() == *FIGHTER_KIND_REFLET {
+            if StatusModule::status_kind(boma) == *FIGHTER_STATUS_KIND_SPECIAL_HI
+            && next_status == *FIGHTER_STATUS_KIND_FALL_SPECIAL
+            && !VarModule::is_flag(boma.object(), vars::reflet::instance::SPECIAL_HI_ENABLE_FREEFALL) {
+                next_status = *FIGHTER_STATUS_KIND_FALL;
+            }
+            if boma.is_status_one_of(&[*FIGHTER_REFLET_STATUS_KIND_SPECIAL_LW_CAPTURE, *FIGHTER_REFLET_STATUS_KIND_SPECIAL_LW_END])
+            && next_status == *FIGHTER_STATUS_KIND_FALL_SPECIAL {
+                next_status = *FIGHTER_STATUS_KIND_FALL;
+            }
         }
 
         if boma.kind() == *FIGHTER_KIND_MEWTWO 
