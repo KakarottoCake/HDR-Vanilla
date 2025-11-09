@@ -210,7 +210,7 @@ unsafe extern "C" fn game_attacklw4(agent: &mut L2CAgentBase) {
     if agent.is_flag( *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON) {
         frame(lua_state, 19.0);
         if is_excute(agent) {
-            ATTACK(agent, 2, 0, Hash40::new("top"), 9.0, 45, 100, 0, 50, 3.5, 0.0, 3.5, 9.0, Some(0.0), Some(3.5), Some(10.0), 0.8, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 6, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_SWORD);
+            ATTACK(agent, 2, 0, Hash40::new("top"), 9.0, 45, 100, 0, 50, 3.5, 0.0, 3.5, 7.0, Some(0.0), Some(3.5), Some(10.0), 0.8, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 6, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_SWORD);
             ATTACK(agent, 3, 0, Hash40::new("top"), 9.0, 45, 100, 0, 50, 3.5, 0.0, 3.5, -2.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 6, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_SWORD);
         }
         frame(lua_state, 20.0);
