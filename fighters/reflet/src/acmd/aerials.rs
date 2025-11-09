@@ -4,7 +4,6 @@ unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK); // disable landing lag
         VarModule::set_int(agent.battle_object, vars::reflet::instance::ATTACK_AIR_LEVIN_LENIENCY, 5);
     }
     frame(lua_state, 1.0);
@@ -46,30 +45,27 @@ unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
         }
     }
     frame(lua_state, 26.0);
-    if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK) {//lev
-        if is_excute(agent) {
+    FT_MOTION_RATE_RANGE(agent, 26.0, 36.0, 8.0);
+    if is_excute(agent) {
+        if agent.is_flag(*FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON) {
             ATTACK(agent, 0, 0, Hash40::new("sword"), 5.0, 361, 80, 0, 40, 2.5, 0.0, 9.0, 0.0, Some(0.0), Some(2.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_SWORD);
             AttackModule::clear(boma, 1, false);
             AttackModule::clear(boma, 2, false);
-        }
-    } else {//br
-        FT_MOTION_RATE_RANGE(agent, 26.0, 36.0, 8.0);//-2 br
-        if is_excute(agent) {
+        } else {
             AttackModule::clear_all(boma);
         }
     }
-    frame(lua_state, 31.0);
-    if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK) {//+1 lev
-        FT_MOTION_RATE_RANGE(agent, 31.0, 36.0, 6.0);
-        if is_excute(agent) {
+    frame(lua_state, 32.25);
+    if is_excute(agent) {
+        if agent.is_flag(*FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON) {
             AttackModule::clear_all(boma);
         }
     }
-    frame(lua_state, 33.0);//+1 lev
+    frame(lua_state, 33.0); 
     if is_excute(agent) {
         LEVIN_OFF(boma);
     }
-    frame(lua_state, 36.0);//+1 lev
+    frame(lua_state, 36.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         agent.off_flag( *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
@@ -118,7 +114,6 @@ unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK); // disable landing lag
         VarModule::set_int(agent.battle_object, vars::reflet::instance::ATTACK_AIR_LEVIN_LENIENCY, 5);
     }
     frame(lua_state, 1.0);
@@ -134,8 +129,7 @@ unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
             ATTACK(agent, 0, 0, Hash40::new("armr"), 12.5, 66, 95, 0, 42, 3.5, -2.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_SWORD);
             ATTACK(agent, 1, 0, Hash40::new("sword"), 12.5, 66, 95, 0, 42, 4.0, 0.0, 1.0, -2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_SWORD);
             ATTACK(agent, 2, 0, Hash40::new("sword"), 12.5, 71, 95, 0, 42, 4.3, 0.0, 7.5, -2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_SWORD);
-        }//nerf closer range fair?
-        else {
+        } else {
             ATTACK(agent, 0, 0, Hash40::new("armr"), 7.5, 66, 110, 0, 40, 3.5, -2.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
             ATTACK(agent, 1, 0, Hash40::new("sword"), 7.5, 66, 110, 0, 40, 3.5, 0.0, 0.5, -2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
             ATTACK(agent, 2, 0, Hash40::new("sword"), 7.5, 71, 110, 0, 40, 3.5, 0.0, 6.0, -2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
@@ -153,8 +147,7 @@ unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
         }
     }
     frame(lua_state, 21.0);
-    if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK) {//lev
-        FT_MOTION_RATE_RANGE(agent, 21.0, 27.0, 9.0);//+3 lev
+    if agent.is_flag(*FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON) {
         if is_excute(agent) {
             AttackModule::clear_all(boma);
         }
@@ -163,8 +156,7 @@ unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         LEVIN_OFF(boma);
     }
-    frame(lua_state, 27.0);//+3 lev
-    FT_MOTION_RATE(agent, 1.0);
+    frame(lua_state, 27.0);
     if is_excute(agent) {
         agent.off_flag( *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
@@ -222,7 +214,6 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK); // disable landing lag
         VarModule::set_int(agent.battle_object, vars::reflet::instance::ATTACK_AIR_LEVIN_LENIENCY, 5);
     }
     frame(lua_state, 4.0);
@@ -258,12 +249,10 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
     }
     frame(lua_state, 21.0);
-    if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK) {//lev
-        FT_MOTION_RATE_RANGE(agent, 21.0, 27.0, 9.0);//+3 lev
+    if agent.is_flag(*FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON) {
         LEVIN_OFF(boma);
     }
-    frame(lua_state, 27.0);//+3 lev
-    FT_MOTION_RATE(agent, 1.0);
+    frame(lua_state, 27.0);
     if is_excute(agent) {
         agent.off_flag( *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
@@ -278,8 +267,7 @@ unsafe extern "C" fn effect_attackairb(agent: &mut L2CAgentBase) {
             AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_reflet_levin"), Hash40::new("tex_reflet_sword2"), 6, Hash40::new("sword"), 0.0, 0.0, 0.0, Hash40::new("sword"), 0.0, 10.75, 0.0, true, Hash40::new("null"), Hash40::new("sword"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.1);
             EFFECT_FOLLOW(agent, Hash40::new("reflet_thunderswoed"), Hash40::new("sword"), 0, 0, 0, 0, 0, 0, 1.2, true);
             EFFECT_FOLLOW(agent, Hash40::new("reflet_thunderswoed_flare"), Hash40::new("sword"), 0, 0, 0, 0, 0, 0, 1, true);
-        }
-        else{
+        } else {
             AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_reflet_sword_hdr"), Hash40::new("tex_reflet_sword5"), 4, Hash40::new("sword"), 0.0, 0.4, 0.0, Hash40::new("sword"), 0.0, 8.5, 0.0, true, Hash40::new("reflet_swoed_flare"), Hash40::new("sword"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.1);
         }
     }
@@ -309,7 +297,6 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK); // disable landing lag
         VarModule::set_int(agent.battle_object, vars::reflet::instance::ATTACK_AIR_LEVIN_LENIENCY, 5);
     }
     frame(lua_state, 5.0);
@@ -330,22 +317,19 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
         }
     }
     frame(lua_state, 15.0);
-    if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK) {
-        if is_excute(agent) {
+    FT_MOTION_RATE_RANGE(agent, 15.0, 27.0, 10.0);
+    if is_excute(agent) {
+        if agent.is_flag(*FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON) {
             ATTACK(agent, 0, 0, Hash40::new("sword"), 5.0, 79, 80, 0, 40, 2.5, 0.0, 9.0, 0.0, Some(0.0), Some(2.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_SWORD);
             AttackModule::clear(boma, 1, false);
             AttackModule::clear(boma, 2, false);
-        }
-    } else {
-        FT_MOTION_RATE_RANGE(agent, 15.0, 27.0, 10.0);//bronze -2
-        if is_excute(agent) {
+        } else {
             AttackModule::clear_all(boma);
         }
     }
-    frame(lua_state, 20.0);//-2 base
-    if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK) {
-        FT_MOTION_RATE_RANGE(agent, 20.0, 27.0, 8.0);//+1 levin
-        if is_excute(agent) {
+    frame(lua_state, 21.0);
+    if is_excute(agent) {
+        if agent.is_flag(*FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON) {
             AttackModule::clear_all(boma);
         }
     }
@@ -354,7 +338,7 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         LEVIN_OFF(boma);
     }
-    frame(lua_state, 29.0);//+1 levin
+    frame(lua_state, 29.0);
     if is_excute(agent) {
         agent.off_flag( *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
@@ -390,7 +374,6 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK); // disable landing lag
         VarModule::set_int(agent.battle_object, vars::reflet::instance::ATTACK_AIR_LEVIN_LENIENCY, 5);
     }
     frame(lua_state, 6.0);
@@ -436,20 +419,17 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
         }
     }
     frame(lua_state, 18.0);
-    if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK) { //lev
-        FT_MOTION_RATE_RANGE(agent, 18.0, 48.0, 27.0);
-        if is_excute(agent) {
+    FT_MOTION_RATE_RANGE(agent, 18.0, 48.0, 25.0);
+    if is_excute(agent) {
+        if agent.is_flag(*FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON) { //lev
             ATTACK(agent, 0, 0, Hash40::new("sword"), 5.0, 361, 80, 0, 40, 2.5, 0.0, 9.0, 0.0, Some(0.0), Some(2.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_SWORD);
             AttackModule::clear(boma, 1, false);
             AttackModule::clear(boma, 2, false);
-        }
-    } else {//bromz
-        FT_MOTION_RATE_RANGE(agent, 18.0, 48.0, 25.0);
-        if is_excute(agent) {
+        } else {
             AttackModule::clear_all(boma);
         }
     }
-    frame(lua_state, 23.0);
+    frame(lua_state, 24.0); // 23
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
@@ -457,7 +437,7 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         LEVIN_OFF(boma);
     }
-    frame(lua_state, 48.0);//-5 br, -2 lev
+    frame(lua_state, 48.0); // 43
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         agent.off_flag( *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);

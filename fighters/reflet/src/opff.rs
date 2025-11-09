@@ -27,10 +27,6 @@ unsafe fn levin_leniency(fighter: &mut L2CFighterCommon, boma: &mut BattleObject
                 }
             }
         }
-        if VarModule::get_int(fighter.battle_object, vars::reflet::instance::ATTACK_AIR_LEVIN_LENIENCY) >= 0 
-        && fighter.is_flag(*FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON) {
-            VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);//enable levin lag
-        }
     }
 }
 
