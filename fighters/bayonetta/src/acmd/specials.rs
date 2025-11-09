@@ -121,28 +121,17 @@ unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialsedge(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    //let status_frame = boma.status_frame() as f32 - 15.0;
-    //let mul = (1.0 - (status_frame/50.0)).max(0.01);
     FT_MOTION_RATE(agent, 1.0);
-    //sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, mul);
     frame(lua_state, 5.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
-        //KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
-        //sv_kinetic_energy!(set_accel, agent, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.02);
     }
     frame(lua_state, 10.0);
-    //FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
         agent.off_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_S_FLAG_WALL_CHECK);
         agent.off_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_ACTION);
         agent.set_int(*FIGHTER_BAYONETTA_SHOOTING_STEP_WAIT_END, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SHOOTING_STEP);
-    }
-    frame(lua_state, 15.0);
-    if is_excute(agent) {
-        //CancelModule::enable_cancel(boma);
-        //KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL); // reset drift/gravity stuff
     }
 }
 
@@ -496,9 +485,9 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 14.0);
     if is_excute(agent) {
+        FOOT_EFFECT(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, -0.5, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
         if agent.is_situation(*SITUATION_KIND_GROUND) {
-            FOOT_EFFECT(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
-            LANDING_EFFECT(agent, Hash40::new("sys_v_smoke_a"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
+            LANDING_EFFECT(agent, Hash40::new("sys_v_smoke_a"), Hash40::new("top"), 0, 0, -0.5, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
         }
     }
     frame(lua_state, 19.0);

@@ -259,52 +259,12 @@ unsafe extern "C" fn check_input(fighter: &mut L2CFighterCommon) -> bool {
     // again but also filter grab
     if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CATCH)
     || fighter.global_table[CMD_CAT1].get_i32() & (
-        //*FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW | *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI |
-        //*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3 |
-        //*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4 |
         *FIGHTER_PAD_CMD_CAT1_FLAG_CATCH
     ) == 1 {
         return false.into();
     }
     true.into()
 }
-
-//unsafe extern "C" fn check_input(fighter: &mut L2CFighterCommon) -> bool {
-//    let turn_x = fighter.get_param_float("common", "turn_stick_x");
-//    let special_stick_y = fighter.get_param_float("common", "special_stick_y");
-//    let lr = fighter.lr();
-//    let stick_x = VarModule::get_float(fighter.battle_object, vars::common::instance::ATTACK_S3_CSTICK_X);
-//    let mut valid_direc = true;
-//    // filter turnaround on 5f buffer check
-//    if fighter.is_cat_flag(Cat1::AttackS3) 
-//    && (stick_x  + lr).abs() < 1.0
-//    {
-//        return false.into()
-//    }
-//    // filter on bufferable on-hit input 
-//    if ((fighter.stick_x() * lr < turn_x && fighter.is_button_off(Buttons::CStickOn))
-//    || (fighter.right_stick_x() * lr < turn_x) && fighter.is_button_on(Buttons::CStickOn))
-//    {
-//        return false.into()
-//    }
-//    // filter up/down tilt
-//    if ((fighter.stick_y().abs() > special_stick_y && fighter.is_button_off(Buttons::CStickOn))
-//    || (fighter.right_stick_y().abs() > special_stick_y) && fighter.is_button_on(Buttons::CStickOn))
-//    {
-//        return false.into()
-//    }
-//    // again but also filter grab
-//    if !ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CATCH)
-//    && fighter.global_table[CMD_CAT1].get_i32() & (
-//        *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW | *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI |
-//        *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3 |
-//        *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4 |
-//        *FIGHTER_PAD_CMD_CAT1_FLAG_CATCH
-//    ) == 0 {
-//        return true.into()
-//    }
-//    false.into()
-//}
 
 pub fn install(agent: &mut Agent) {
     agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_S, special_s_main);
