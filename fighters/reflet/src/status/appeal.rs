@@ -44,13 +44,15 @@ pub unsafe fn KILL_RESOURCE(fighter: &mut L2CAgentBase, boma: &mut BattleObjectM
             if boma.get_int(*FIGHTER_REFLET_INSTANCE_WORK_ID_INT_THUNDER_SWORD_CURRENT_POINT) > 0 {
                 boma.set_int(0, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_THUNDER_SWORD_CURRENT_POINT);
                 FighterSpecializer_Reflet::set_flag_to_table(fighter.module_accessor as *mut app::FighterModuleAccessor, *FIGHTER_REFLET_MAGIC_KIND_SWORD, true, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_THROWAWAY_TABLE);
-                VarModule::on_flag(fighter.battle_object, vars::reflet::instance::DISCARD_SKIP_STATUS);
                 LEVIN_OFF(boma);
+                ItemModule::set_have_item_visibility(boma, true, 0);
+                app::FighterSpecializer_Reflet::change_grimoire(fighter.module_accessor as *mut app::FighterModuleAccessor, -1);
             } else {
                 let resource_cap = fighter.get_param_int("param_private", "thunder_sword_usage_count_max");
                 boma.set_int(resource_cap, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_THUNDER_SWORD_CURRENT_POINT);
                 LEVIN_ON_TAUNT(boma);
                 FighterSpecializer_Reflet::set_flag_to_table(fighter.module_accessor as *mut app::FighterModuleAccessor, *FIGHTER_REFLET_MAGIC_KIND_SWORD, true, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_RECOVER_TABLE);
+                ItemModule::set_have_item_visibility(boma, false, 0);
             }
         } else if boma.is_button_on(Buttons::Special) {
             VarModule::on_flag(fighter.battle_object, vars::reflet::instance::DISCARD_SKIP_STATUS);
@@ -89,11 +91,14 @@ pub unsafe fn MAGIC_HANDLER(fighter: &mut L2CAgentBase, boma: &mut BattleObjectM
         MotionModule::set_frame_material(item_boma, last_magic_kind as f32, MaterialAnimeKind{_address: 0});
         FighterSpecializer_Reflet::set_flag_to_table(fighter.module_accessor as *mut app::FighterModuleAccessor, last_magic_kind, false, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_THROWAWAY_TABLE);
         app::FighterSpecializer_Reflet::change_grimoire(fighter.module_accessor as *mut app::FighterModuleAccessor, -1);
+        ItemModule::set_have_item_visibility(boma, true, 0);
+
     } else {
         if last_magic_kind == *FIGHTER_REFLET_MAGIC_KIND_GIGA_FIRE {boma.set_float(resource_cap as f32, resource_kind); }
         else {boma.set_int(resource_cap, resource_kind); }
         FighterSpecializer_Reflet::set_flag_to_table(fighter.module_accessor as *mut app::FighterModuleAccessor, last_magic_kind, true, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_RECOVER_TABLE);
         app::FighterSpecializer_Reflet::change_grimoire(fighter.module_accessor as *mut app::FighterModuleAccessor, last_magic_kind);
+        ItemModule::set_have_item_visibility(boma, false, 0);
     }
 }
 
