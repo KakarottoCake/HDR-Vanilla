@@ -330,19 +330,19 @@ unsafe extern "C" fn game_specialairsd(agent: &mut L2CAgentBase) {
         agent.on_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_S_FLAG_LANDING_FALL_SPECIAL);
     }
     frame(lua_state, 33.0); // 37 (8 after clear)
-    FT_MOTION_RATE_RANGE(agent, 33.0, 40.0, 12.0); // faf 46 -> 49
+    FT_MOTION_RATE_RANGE(agent, 33.0, 41.0, 12.0); // faf 46 -> 49
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
         agent.clear_lua_stack();
         lua_args!(agent, FIGHTER_KINETIC_ENERGY_ID_MOTION);
         let og_speed_mul = app::sv_kinetic_energy::get_speed_mul(lua_state);
-        sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 11.0/7.0 * og_speed_mul); // partial comp movement during endlag
+        sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 11.0/8.0 * og_speed_mul); // partial comp movement during endlag
     }
-    frame(lua_state, 38.5); // 47
+    frame(lua_state, 37.66); // 47
     if is_excute(agent) {
         KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
     }
-    frame(lua_state, 40.0); // 49
+    frame(lua_state, 41.0); // 49
     //FT_MOTION_RATE(agent, 1.0); keep it rated for appearance
     if is_excute(agent) {
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL); // clear mot energy

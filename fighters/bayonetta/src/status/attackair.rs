@@ -103,7 +103,7 @@ unsafe extern "C" fn cut_speed(fighter: &mut L2CFighterCommon) -> L2CValue {
         return 1.into();
     }
     match hitbox_id {
-        0 => {hit_x = 0.45;
+        0 => {hit_x = 0.4;
              hit_y += -0.1}, // fair 1 knee hitbox
         1 => hit_x = 0.5, // inner hit
         2 => hit_x = 0.55, // middle hit

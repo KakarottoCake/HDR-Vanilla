@@ -93,7 +93,7 @@ unsafe extern "C" fn special_s_edge_main(fighter: &mut L2CFighterCommon) -> L2CV
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s_edge"), start_frame, 1.0, false, 0.0, false, false);
     // calc speed
     let air_accel_y = fighter.get_param_float("air_accel_y", "");
-    let mut speed = (1.125 - (frame as f32/25.0)).max(0.0025);
+    let mut speed = (1.125 - (frame as f32/23.0)).max(0.00125);
     sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -air_accel_y / 1.25);
     //sv_kinetic_energy!(controller_set_accel_x_mul, fighter, 0.03);
     sv_kinetic_energy!(set_speed_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, speed);

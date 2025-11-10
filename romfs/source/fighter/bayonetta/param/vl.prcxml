@@ -61,7 +61,7 @@
       <int hash="ab_u_landing_frame_2nd">22</int>
       <int hash="ab_d_enable_frame">-1</int>
       <int hash="ab_d_change_frame">-1</int>
-      <float hash="ab_d_motion_speed_mul">1.0</float>
+      <float hash="ab_d_motion_speed_mul">1.2</float>
       <float hash="ab_d_rotate">-0.5</float>
       <float hash="ab_d_hit_after_speed_x">0.375</float>
       <float hash="ab_d_hit_after_speed_y">2.5</float>

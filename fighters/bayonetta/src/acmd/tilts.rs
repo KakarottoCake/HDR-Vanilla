@@ -11,13 +11,13 @@ unsafe extern "C" fn game_attacks3(agent: &mut L2CAgentBase) {
     frame(lua_state, 22.0);
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 24.0); // 9
-    FT_MOTION_RATE_RANGE(agent, 24.0, 29.0, 4.0);
+    FT_MOTION_RATE_RANGE(agent, 24.0, 30.0, 4.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("kneer"), 4.0, 70, 25, 0, 33, 3.5, -4.0, 1.0, 1.5, Some(-4.0), Some(1.0), Some(4.5), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        ATTACK(agent, 1, 0, Hash40::new("kneer"), 4.0, 84, 25, 0, 33, 5.0, -2.5, 1.0, 3.0, Some(4.0), Some(1.0), Some(3.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        ATTACK(agent, 0, 0, Hash40::new("kneer"), 4.0, 70, 25, 0, 33, 3.5, -4.0, 1.0, 1.9, Some(-4.0), Some(1.0), Some(4.5), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        ATTACK(agent, 1, 0, Hash40::new("kneer"), 4.0, 84, 25, 0, 33, 4.8, -2.7, 1.0, 3.2, Some(3.7), Some(1.0), Some(3.2), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
     }
-    frame(lua_state, 29.0);
-    FT_MOTION_RATE_RANGE(agent, 29.0, 47.0, 15.0); // 26
+    frame(lua_state, 30.0);
+    FT_MOTION_RATE_RANGE(agent, 30.0, 48.0, 15.0); // 26
     if is_excute(agent) {
         AttackModule::clear_all(boma);
         if !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) {
@@ -26,11 +26,11 @@ unsafe extern "C" fn game_attacks3(agent: &mut L2CAgentBase) {
             agent.on_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_CHECK_END);
         }
     }
-    frame(lua_state, 29.1);
+    frame(lua_state, 30.1);
     if is_excute(agent) {
         agent.on_flag(*FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
     }
-    frame(lua_state, 47.0);
+    frame(lua_state, 48.0);
     FT_MOTION_RATE(agent, 1.0);
 }
 
@@ -43,7 +43,7 @@ unsafe extern "C" fn effect_attacks3(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 24.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW_WORK(agent, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_EFFECT_KIND_BAYONETTA_ATTACK_LINE2, Hash40::new("top"), 0, 11.75, -1.5, 0, 0, 0, 1.0, true);
+        EFFECT_FOLLOW_WORK(agent, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_EFFECT_KIND_BAYONETTA_ATTACK_LINE2, Hash40::new("top"), 0, 11.75, -2.0, 0, 0, 0, 1.0, true);
         LAST_EFFECT_SET_SCALE_W(agent, 1.25, 1.125, 1.25);
         LAST_EFFECT_SET_RATE(agent, 0.45);
         let effect = EffectModule::get_last_handle(boma) as u64;
@@ -53,24 +53,24 @@ unsafe extern "C" fn effect_attacks3(agent: &mut L2CAgentBase) {
     frame(lua_state, 25.25);
     if is_excute(agent) {
         let effect = VarModule::get_int64(agent.battle_object, vars::bayonetta::status::EFFECT_HANDLE);
-        EffectModule::set_pos(boma, effect as u32, &Vector3f{x: 0.0, y: 11.75, z: -0.5});
+        EffectModule::set_pos(boma, effect as u32, &Vector3f{x: 0.0, y: 11.75, z: -1.0});
     }
     frame(lua_state, 26.5);
     if is_excute(agent) {
         let effect = VarModule::get_int64(agent.battle_object, vars::bayonetta::status::EFFECT_HANDLE);
-        EffectModule::set_pos(boma, effect as u32, &Vector3f{x: 0.0, y: 11.75, z: 0.0});
+        EffectModule::set_pos(boma, effect as u32, &Vector3f{x: 0.0, y: 11.75, z: -0.5});
     }
     frame(lua_state, 27.75);
     if is_excute(agent) {
         let effect = VarModule::get_int64(agent.battle_object, vars::bayonetta::status::EFFECT_HANDLE);
-        EffectModule::set_pos(boma, effect as u32, &Vector3f{x: 0.0, y: 11.75, z: 0.5});
+        EffectModule::set_pos(boma, effect as u32, &Vector3f{x: 0.0, y: 11.75, z: 0.0});
     }
     frame(lua_state, 29.0);
     if is_excute(agent) {
         let effect = VarModule::get_int64(agent.battle_object, vars::bayonetta::status::EFFECT_HANDLE);
         EffectModule::set_rate(boma, effect as u32, 2.0);
         EffectModule::set_scale(boma, effect as u32, &Vector3f::new(1.1, 0.85, 1.1));
-        EffectModule::set_pos(boma, effect as u32, &Vector3f{x: 0.0, y: 11.75, z: 4.2});
+        EffectModule::set_pos(boma, effect as u32, &Vector3f{x: 0.0, y: 11.75, z: 3.7});
     } //quick fadeout effect??
 }
 
