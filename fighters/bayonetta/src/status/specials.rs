@@ -50,8 +50,8 @@ unsafe extern "C" fn kick_checks(fighter: &mut L2CFighterCommon) -> L2CValue {
                 GroundModule::set_correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
                 fighter.change_status(statuses::bayonetta::SPECIAL_S_KICK.into(), true.into())
             } 
-            VarModule::off_flag(fighter.battle_object, vars::bayonetta::status::SPECIAL_1F_CHECK);
         }
+        VarModule::off_flag(fighter.battle_object, vars::bayonetta::status::SPECIAL_1F_CHECK);
     }
     if motion_frame > 35.0 {EFFECT_OFF_KIND(fighter, Hash40::new("bayonetta_heelslide_burst"), false, false); } //fx
     0.into()
