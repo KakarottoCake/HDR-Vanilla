@@ -14,7 +14,7 @@ unsafe extern "C" fn game_specialnend1(agent: &mut L2CAgentBase) {
             let article_boma = &mut (*sv_battle_object::module_accessor(object_id));
             use interpolation::Lerp;
             let (base_damage, max_damage, base_bkb, max_bkb, base_kbg, max_kbg, base_size, max_size)
-                = (10.0, 20.0, 25, 85, 100, 50, 5.5 as f32, 6.5 as f32);
+                = (10.0, 20.0, 30, 90, 100, 50, 5.5 as f32, 6.5 as f32);
             let lerp = WorkModule::get_float(article_boma, *WEAPON_KAMUI_DRAGONHAND_INSTANCE_WORK_ID_FLOAT_HOLD_RATE);
             let damage = Lerp::lerp(&base_damage, &max_damage, &lerp);
             let bkb = Lerp::lerp(&base_bkb, &max_bkb, &lerp);
@@ -54,7 +54,7 @@ unsafe extern "C" fn game_specialnend2(agent: &mut L2CAgentBase) {
             let article_boma = &mut (*sv_battle_object::module_accessor(object_id));
             use interpolation::Lerp;
             let (base_damage, max_damage, base_bkb, max_bkb, base_kbg, max_kbg, base_size, max_size)
-                = (10.0, 20.0, 25, 85, 100, 50, 5.5 as f32, 6.5 as f32);
+                = (10.0, 20.0, 30, 90, 100, 50, 5.5 as f32, 6.5 as f32);
             let lerp = WorkModule::get_float(article_boma, *WEAPON_KAMUI_DRAGONHAND_INSTANCE_WORK_ID_FLOAT_HOLD_RATE);
             let damage = Lerp::lerp(&base_damage, &max_damage, &lerp);
             let bkb = Lerp::lerp(&base_bkb, &max_bkb, &lerp);
