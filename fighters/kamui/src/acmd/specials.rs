@@ -13,14 +13,14 @@ unsafe extern "C" fn game_specialnend1(agent: &mut L2CAgentBase) {
             let object_id = smash::app::lua_bind::Article::get_battle_object_id(article) as u32;
             let article_boma = &mut (*sv_battle_object::module_accessor(object_id));
             use interpolation::Lerp;
-            let base_damage = 10.0 as f32;
-            let max_damage = 20.0 as f32;
-            let base_size = 5.5 as f32;
-            let max_size = 6.5 as f32;
+            let (base_damage, max_damage, base_bkb, max_bkb, base_kbg, max_kbg, base_size, max_size)
+                = (10.0, 20.0, 25, 85, 100, 50, 5.5 as f32, 6.5 as f32);
             let lerp = WorkModule::get_float(article_boma, *WEAPON_KAMUI_DRAGONHAND_INSTANCE_WORK_ID_FLOAT_HOLD_RATE);
             let damage = Lerp::lerp(&base_damage, &max_damage, &lerp);
+            let bkb = Lerp::lerp(&base_bkb, &max_bkb, &lerp);
+            let kbg = Lerp::lerp(&base_kbg, &max_kbg, &lerp);
             let size = Lerp::lerp(&base_size, &max_size, &lerp);
-            ATTACK(agent, 0, 0, Hash40::new("havel"), damage, 50, 100, 0, 50, size, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 3, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BITE);
+            ATTACK(agent, 0, 0, Hash40::new("havel"), damage, 50, kbg, 0, bkb, size, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BITE);
         }
     }
     frame(lua_state, 10.0);
@@ -53,18 +53,18 @@ unsafe extern "C" fn game_specialnend2(agent: &mut L2CAgentBase) {
             let object_id = smash::app::lua_bind::Article::get_battle_object_id(article) as u32;
             let article_boma = &mut (*sv_battle_object::module_accessor(object_id));
             use interpolation::Lerp;
-            let base_damage = 10.0 as f32;
-            let max_damage = 20.0 as f32;
-            let base_size = 5.5 as f32;
-            let max_size = 6.5 as f32;
+            let (base_damage, max_damage, base_bkb, max_bkb, base_kbg, max_kbg, base_size, max_size)
+                = (10.0, 20.0, 25, 85, 100, 50, 5.5 as f32, 6.5 as f32);
             let lerp = WorkModule::get_float(article_boma, *WEAPON_KAMUI_DRAGONHAND_INSTANCE_WORK_ID_FLOAT_HOLD_RATE);
             let damage = Lerp::lerp(&base_damage, &max_damage, &lerp);
+            let bkb = Lerp::lerp(&base_bkb, &max_bkb, &lerp);
+            let kbg = Lerp::lerp(&base_kbg, &max_kbg, &lerp);
             let size = Lerp::lerp(&base_size, &max_size, &lerp);
             if WorkModule::is_flag(article_boma, *WEAPON_KAMUI_DRAGONHAND_INSTANCE_WORK_ID_FLAG_IS_KAMUI) {
-                ATTACK(agent, 0, 0, Hash40::new("top"), damage, 50, 100, 0, 50, size, 0.0, 9.0, 22.0, Some(0.0), Some(9.0), Some(14.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 3, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BITE);
+                ATTACK(agent, 0, 0, Hash40::new("top"), damage, 50, kbg, 0, bkb, size, 0.0, 9.0, 22.0, Some(0.0), Some(9.0), Some(14.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BITE);
             }
             else {
-                ATTACK(agent, 0, 0, Hash40::new("top"), damage, 50, 100, 0, 50, size, 0.0, 8.9, 22.0, Some(0.0), Some(8.9), Some(14.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 3, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BITE);
+                ATTACK(agent, 0, 0, Hash40::new("top"), damage, 50, kbg, 0, bkb, size, 0.0, 8.9, 22.0, Some(0.0), Some(8.9), Some(14.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BITE);
             }
         }
     }

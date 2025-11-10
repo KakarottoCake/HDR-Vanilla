@@ -258,7 +258,7 @@ unsafe extern "C" fn effect_attackairb(agent: &mut L2CAgentBase) {
     frame(lua_state, 6.1);
     if is_excute(agent) {
         if VarModule::get_float(agent.battle_object, vars::kamui::status::ATTACK_AIR_B_CHARGE) > 0.0 {
-            EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 1.6, 17.0, -8.0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, true);
+            EFFECT_FOLLOW(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 1.0, 17.0, -8.0, 0, 0, 0, 0.9, true);
             LAST_EFFECT_SET_RATE(agent, 0.75);
             LAST_EFFECT_SET_COLOR(agent, 0.5, 0.5, 1.0);
         }

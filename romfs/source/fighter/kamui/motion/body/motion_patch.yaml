@@ -90,7 +90,7 @@ attack_s3_s:
     cancel_frame: 32
 attack_hi3:
   extra:
-    cancel_frame: 36
+    cancel_frame: 39
 attack_lw3:
   extra:
     cancel_frame: 26
