@@ -1,6 +1,6 @@
 use super::*;
 use crate::globals::*;
-use std::arch::asm;
+
 pub mod energy;
 pub mod effect;
 pub mod finals;
@@ -734,9 +734,9 @@ unsafe fn status_module__change_status(status_module: *const u64, status_kind_ne
 // Only extra elec hitlag for hit character
 #[skyline::hook(offset = 0x406824, inline)]
 unsafe fn change_elec_hitlag_for_attacker(ctx: &mut skyline::hooks::InlineCtx) {
-    let is_attacker = *ctx.registers[4].w.as_ref() & 1 == 0;
-    if *ctx.registers[8].x.as_ref() == smash::hash40("collision_attr_elec") && is_attacker {
-        *ctx.registers[8].x.as_mut() = smash::hash40("collision_attr_normal");
+    let is_attacker = ctx.registers[4].w() & 1 == 0;
+    if ctx.registers[8].x() == smash::hash40("collision_attr_elec") && is_attacker {
+        ctx.registers[8].set_x(smash::hash40("collision_attr_normal"));
     }
 }
 
@@ -782,11 +782,10 @@ unsafe fn set_uniform_buffer(stage: u64, index: u64, buffer: u64) {
 // Allows us to set the hitbox overlap threshold for phantom hits
 #[skyline::hook(offset = 0x3e6664, inline)]
 unsafe fn phantom_hit_check(ctx: &mut skyline::hooks::InlineCtx) {
-    let opponent_battle_object_id = *(*ctx.registers[20].x.as_ref() as *const u32).add(0x28 / 4);
+    let opponent_battle_object_id = *(ctx.registers[20].x() as *const u32).add(0x28 / 4);
     let opponent_boma = &mut *(sv_battle_object::module_accessor(opponent_battle_object_id));
 
-    let mut phantom_threshold: f32;
-    asm!("fmov w8, s9", out("w8") phantom_threshold);
+    let mut phantom_threshold = ctx.registers_f[9].s();
 
     if opponent_boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_DAMAGE]) {
         // threshold while shielding
@@ -798,7 +797,7 @@ unsafe fn phantom_hit_check(ctx: &mut skyline::hooks::InlineCtx) {
         phantom_threshold = 0.0;
     }
 
-    asm!("fmov s9, w8", in("w8") phantom_threshold)
+    ctx.registers_f[9].set_s(phantom_threshold)
 }
 
 pub fn install() {
@@ -853,6 +852,11 @@ pub fn install() {
 
         // Disables airdodge refresh on hit
         skyline::patching::Patch::in_text(0x632530).nop();
+
+        // Allows airtime counter (FIGHTER_INSTANCE_WORK_ID_INT_FRAME_IN_AIR)
+        // to increment when on ledge (SITUATION_KIND_CLIFF)
+        // Matches Melee behavior
+        skyline::patching::Patch::in_text(0x614fb4).data(0x54000060);
     }
     skyline::install_hooks!(
         before_collision,

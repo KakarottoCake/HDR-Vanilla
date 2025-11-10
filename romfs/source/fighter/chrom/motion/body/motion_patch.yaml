@@ -37,11 +37,11 @@ attack_hi4:
   extra:
     xlu_start: 0
     xlu_end: 0
-    cancel_frame: 0
+    cancel_frame: 45
     no_stop_intp: false
 attack_lw3:
   extra:
-    cancel_frame: 20
+    cancel_frame: 19
 attack_s3_s:
   extra:
     cancel_frame: 44
@@ -171,7 +171,7 @@ special_air_lw_hit:
   extra:
     xlu_start: 1
     xlu_end: 9
-    cancel_frame: 35
+    cancel_frame: 36
 special_air_n_end:
   extra:
     cancel_frame: 38
@@ -284,7 +284,7 @@ special_lw_hit:
   extra:
     xlu_start: 1
     xlu_end: 9
-    cancel_frame: 35
+    cancel_frame: 36
 special_n_end:
   extra:
     cancel_frame: 28

@@ -4,13 +4,11 @@ unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    FT_MOTION_RATE_RANGE(agent, 1.0, 6.0, 7.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         VarModule::off_flag(agent.battle_object, vars::samusd::instance::ATTACK_AIR_N_LANDING_HIT);
     }
     frame(lua_state, 6.0);
-    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         VarModule::on_flag(agent.battle_object, vars::samusd::instance::ATTACK_AIR_N_LANDING_HIT);
     }
@@ -183,7 +181,7 @@ unsafe extern "C" fn game_landingairn(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     if is_excute(agent) {
         if VarModule::is_flag(agent.battle_object, vars::samusd::instance::ATTACK_AIR_N_LANDING_HIT) {
-            ATTACK(agent, 0, 0, Hash40::new("top"), 4.0, 361, 100, 0, 40, 4.0, 0.0, 4.0, -4.0, Some(0.0), Some(4.0), Some(4.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
+            ATTACK(agent, 0, 0, Hash40::new("top"), 4.0, 361, 100, 0, 40, 5.0, 0.0, 4.5, -3.5, Some(0.0), Some(4.5), Some(3.5), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
         }
     }
     frame(lua_state, 4.0);

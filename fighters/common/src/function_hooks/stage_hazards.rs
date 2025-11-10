@@ -44,11 +44,11 @@ unsafe fn area_manager_process(manager: *const u64) {
 
 #[skyline::hook(offset = 0x178ab60, inline)]
 unsafe fn init_stage(ctx: &mut skyline::hooks::InlineCtx) {
-    let stage_id = *ctx.registers[1].w.as_ref();
+    let stage_id = ctx.registers[1].w();
     let is_alt_haz_off = ([0x59].contains(&stage_id) && get_current_stage_alt() == 0)
         || (stage_id == 0x68 && get_current_stage_alt() == 0);
     if is_alt_haz_off {
-        *ctx.registers[3].w.as_mut() = 0;
+        ctx.registers[3].set_w(0);
     }
 }
 
@@ -62,7 +62,7 @@ unsafe fn handle_movement_grav_update(ctx: &mut skyline::hooks::InlineCtx) {
 
 #[skyline::hook(offset = 0x25fc644, inline)]
 unsafe fn fix_hazards_for_online(ctx: &skyline::hooks::InlineCtx) {
-    let ptr = *ctx.registers[1].x.as_ref();
+    let ptr = ctx.registers[1].x();
     let stage_id = *(ptr as *const u16) as u32;
     let is_alt_haz_off = ([0x59].contains(&stage_id) && get_current_stage_alt() == 0)
         || (stage_id == 0x68 && get_current_stage_alt() == 0);
@@ -73,8 +73,8 @@ unsafe fn fix_hazards_for_online(ctx: &skyline::hooks::InlineCtx) {
 
 #[skyline::hook(offset = 0x2981EDC, inline)]
 unsafe fn lylat_no_rot(ctx: &mut skyline::hooks::InlineCtx) {
-    if *ctx.registers[8].x.as_ref() == 3 {
-        *ctx.registers[8].x.as_mut() = 5;
+    if ctx.registers[8].x() == 3 {
+        ctx.registers[8].set_x(5);
     }
 }
 
@@ -86,9 +86,9 @@ unsafe fn lylat_no_rot(ctx: &mut skyline::hooks::InlineCtx) {
 #[skyline::hook(offset = 0x297D6AC, inline)]
 unsafe fn lylat_set_form_hazards_off(ctx: &mut skyline::hooks::InlineCtx) {
     if get_current_stage_alt() == 0 {
-        *ctx.registers[8].x.as_mut() = 0x2;
+        ctx.registers[8].set_x(0x2);
     } else {
-        *ctx.registers[8].x.as_mut() = 0x4;
+        ctx.registers[8].set_x(0x4);
     }
 }
 

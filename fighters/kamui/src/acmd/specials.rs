@@ -295,8 +295,12 @@ unsafe extern "C" fn game_specialswallend(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
 	let lua_state = agent.lua_state_agent;
 	let boma = agent.boma();
+    if is_excute(agent) {
+        GroundModule::select_cliff_hangdata(boma, 1);
+    }
 	frame(lua_state, 3.0);
 	if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
 		SA_SET(agent, *SITUATION_KIND_AIR);
 	}
 	frame(lua_state, 4.0);
@@ -307,6 +311,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
 	frame(lua_state, 18.0);
     FT_MOTION_RATE(agent, 1.0);
 	if is_excute(agent) {
+        GroundModule::select_cliff_hangdata(boma, 0);
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
 		ATTACK(agent, 0, 0, Hash40::new("top"), 4.5, 75, 100, 100, 0, 5.0, 0.0, 4.0, -5.0, Some(0.0), Some(4.0), Some(8.0), 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
 		AttackModule::set_no_damage_fly_smoke_all(boma, true, false);
@@ -346,8 +351,11 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
 	if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
 		WorkModule::off_flag(boma, *FIGHTER_KAMUI_STATUS_SPECIAL_HI_FLAG_TILT_BODY_ON);
-        WorkModule::on_flag(boma, *FIGHTER_KAMUI_STATUS_SPECIAL_HI_FLAG_AIR_CONTROL);
 	}
+    frame(lua_state, 40.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_KAMUI_STATUS_SPECIAL_HI_FLAG_AIR_CONTROL);
+    }
 	frame(lua_state, 49.0);
 	FT_MOTION_RATE(agent, 0.8);
 }
@@ -382,6 +390,8 @@ unsafe extern "C" fn game_speciallwhit(agent: &mut L2CAgentBase) {
         ArticleModule::remove_exist(boma, *FIGHTER_KAMUI_GENERATE_ARTICLE_WATERDRAGON, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
         VisibilityModule::set_whole(boma, true);
     }
+    // not in is_excute because I want this flag to reset if we happen to edge cancel this or something
+    VarModule::on_flag(agent.battle_object, vars::kamui::status::SPECIAL_LW_ENABLE_FALL);
 }
 
 unsafe extern "C" fn effect_speciallwhit(agent: &mut L2CAgentBase) {
