@@ -3,7 +3,7 @@ use super::*;
 // FIGHTER_STATUS_KIND_SPECIAL_N
 
 unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.change_motion_by_situation("special_n_start", "special_air_n_start", 0.0, 1.0, false, 0.0, false, false);
+    fighter.sub_change_motion_by_situation_kirby_copy(Hash40::new("special_n_start").into(), Hash40::new("special_air_n_start").into(), false.into());
     fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP, *GROUND_CORRECT_KIND_AIR);
     // skipped checking flag and setting the flag to the returned bool
     fighter.enable_transition_term_many(&[
@@ -47,12 +47,12 @@ unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
     // fire during window
     if fighter.is_flag(*FIGHTER_MASTER_STATUS_SPECIAL_N_FLAG_CAN_SHOOT)
     && fighter.is_button_off(Buttons::Special) {
-        fighter.change_status(FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_SHOOT.into(), false.into());
+        fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_MASTER_SPECIAL_N_SHOOT.into(), false.into());
         return 1.into();
     }
     // full charge
     if MotionModule::is_end(fighter.module_accessor) {
-        fighter.change_status(FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_MAX_SHOOT.into(), false.into());
+        fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_MASTER_SPECIAL_N_MAX_SHOOT.into(), false.into());
         return 1.into();
     }
     // cancel/turn
@@ -62,18 +62,22 @@ unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
     if cancel_start_frame <= hold_frame
     && cancel_end_frame >= hold_frame {
         match cancel_checks(fighter) {
-            1 => fighter.change_status(FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_TURN.into(), false.into()),
-            2 => fighter.change_status(FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_CANCEL.into(), true.into()),
-            3 => fighter.change_status(FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_JUMP_CANCEL.into(), true.into()),
+            1 => fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_MASTER_SPECIAL_N_TURN.into(), false.into()),
+            2 => fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_MASTER_SPECIAL_N_CANCEL.into(), true.into()),
+            3 => fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_MASTER_SPECIAL_N_JUMP_CANCEL.into(), true.into()),
             _ => (),
         }
     }
     // landing handle
     if StatusModule::is_situation_changed(fighter.module_accessor) {
-        fighter.change_motion_inherit_frame_by_situation("special_n_start", "special_air_n_start", -1.0, 1.0, 0.0, false, false);
         fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP, *GROUND_CORRECT_KIND_AIR);
-        if fighter.is_situation(*SITUATION_KIND_GROUND) {
-            SoundModule::play_landing_se(fighter.module_accessor, Hash40::new("se_master_landing_01"));
+        if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+            SoundModule::play_landing_se(fighter.module_accessor, Hash40::new("se_kirby_landing_01"));
+            FighterMotionModuleImpl::change_motion_kirby_copy(fighter.module_accessor, Hash40::new("special_n_start"), MotionModule::frame(fighter.module_accessor), 1.0, false, 0.0, true, false);
+
+            //FighterMotionModuleImpl::change_motion_inherit_frame_kirby_copy(fighter.module_accessor, Hash40::new("master_special_n_start"), -1.0, 1.0, 0.0, false, false);
+        } else {
+            FighterMotionModuleImpl::change_motion_inherit_frame_kirby_copy(fighter.module_accessor, Hash40::new("master_special_air_n_start"), -1.0, 1.0, 0.0, false, false);
         }
     }
     0.into()
@@ -120,7 +124,11 @@ unsafe extern "C" fn special_n_exec(fighter: &mut L2CFighterCommon) -> L2CValue 
 
 unsafe extern "C" fn special_n_hold_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let frame = fighter.get_float(*FIGHTER_MASTER_STATUS_SPECIAL_N_WORK_FLOAT_INHERIT_MOTION_FRAME);
-    fighter.change_motion_by_situation("special_n_start", "special_air_n_start", frame, 1.0, false, 0.0, true, false);
+    if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+        FighterMotionModuleImpl::change_motion_kirby_copy(fighter.module_accessor, Hash40::new("special_n_start"), frame, 1.0, false, 0.0, true, false);
+    } else {
+        FighterMotionModuleImpl::change_motion_kirby_copy(fighter.module_accessor, Hash40::new("special_air_n_start"), frame, 1.0, false, 0.0, true, false);
+    }
     fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP, *GROUND_CORRECT_KIND_AIR);
     // skipped checking flag and setting the flag to the returned bool
     fighter.enable_transition_term_many(&[
@@ -148,7 +156,7 @@ unsafe extern "C" fn special_n_hold_main(fighter: &mut L2CFighterCommon) -> L2CV
 
 unsafe extern "C" fn special_n_turn_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.on_flag(*FIGHTER_MASTER_STATUS_SPECIAL_N_FLAG_AFTER_TURN);
-    fighter.change_motion_by_situation("special_n_turn", "special_air_n_turn", 0.0, 1.0, false, 0.0, false, false);
+    fighter.sub_change_motion_by_situation_kirby_copy(Hash40::new("special_n_turn").into(), Hash40::new("special_air_n_turn").into(), false.into());
     fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP, *GROUND_CORRECT_KIND_AIR);
     if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_BOW) {
         ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_BOW, Hash40::new("special_n_turn"), false, -1.0);
@@ -169,15 +177,17 @@ unsafe extern "C" fn special_n_turn_main_loop(fighter: &mut L2CFighterCommon) ->
     }
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.set_float(turn_frame + frame, *FIGHTER_MASTER_STATUS_SPECIAL_N_WORK_FLOAT_INHERIT_MOTION_FRAME);
-        fighter.change_status(FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_HOLD.into(), false.into())
+        fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_MASTER_SPECIAL_N_HOLD.into(), false.into())
     }
     fighter.sub_exec_special_start_common_kinetic_setting(L2CValue::Hash40s("param_special_n"));
     // landing handle
     if StatusModule::is_situation_changed(fighter.module_accessor) {
-        fighter.change_motion_inherit_frame_by_situation("special_n_turn", "special_air_n_turn", -1.0, 1.0, 0.0, false, false);
         fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP, *GROUND_CORRECT_KIND_AIR);
-        if fighter.is_situation(*SITUATION_KIND_GROUND) {
-            SoundModule::play_landing_se(fighter.module_accessor, Hash40::new("se_master_landing_01"));
+        if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+            SoundModule::play_landing_se(fighter.module_accessor, Hash40::new("se_kirby_landing_01"));
+            FighterMotionModuleImpl::change_motion_inherit_frame_kirby_copy(fighter.module_accessor, Hash40::new("master_special_n_turn"), -1.0, 1.0, 0.0, false, false);
+        } else {
+            FighterMotionModuleImpl::change_motion_inherit_frame_kirby_copy(fighter.module_accessor, Hash40::new("master_special_air_n_turn"), -1.0, 1.0, 0.0, false, false);
         }
     }
     0.into()
@@ -186,7 +196,7 @@ unsafe extern "C" fn special_n_turn_main_loop(fighter: &mut L2CFighterCommon) ->
 // FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_CANCEL
 
 unsafe extern "C" fn special_n_cancel_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.change_motion_by_situation("special_n_cancel", "special_air_n_cancel", 0.0, 1.0, false, 0.0, false, false);
+    fighter.sub_change_motion_by_situation_kirby_copy(Hash40::new("special_n_cancel").into(), Hash40::new("special_air_n_cancel").into(), false.into());
     fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP, *GROUND_CORRECT_KIND_AIR);
     fighter.change_kinetic_by_situation(*FIGHTER_KINETIC_TYPE_GROUND_STOP, *FIGHTER_KINETIC_TYPE_AIR_STOP);
     if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_BOW) {
@@ -198,9 +208,13 @@ unsafe extern "C" fn special_n_cancel_main(fighter: &mut L2CFighterCommon) -> L2
 unsafe extern "C" fn special_n_cancel_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_air_check_dive();
     if StatusModule::is_situation_changed(fighter.module_accessor) {
-        fighter.change_motion_inherit_frame_by_situation("special_n_cancel", "special_air_n_cancel", 0.0, 1.0, 0.0, false, false);
         fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP, *GROUND_CORRECT_KIND_AIR);
         fighter.change_kinetic_by_situation(*FIGHTER_KINETIC_TYPE_GROUND_STOP, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+        if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+            FighterMotionModuleImpl::change_motion_inherit_frame_kirby_copy(fighter.module_accessor, Hash40::new("special_n_cancel"), -1.0, 1.0, 0.0, false, false);
+        } else {
+            FighterMotionModuleImpl::change_motion_inherit_frame_kirby_copy(fighter.module_accessor, Hash40::new("special_air_n_cancel"), -1.0, 1.0, 0.0, false, false);
+        }
     }
     // cancel
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
@@ -224,12 +238,12 @@ unsafe extern "C" fn special_n_cancel_main_loop(fighter: &mut L2CFighterCommon) 
 }
 
 pub fn install(agent: &mut Agent) {
-    agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_N, special_n_main);
-    agent.status(Exec, *FIGHTER_STATUS_KIND_SPECIAL_N, special_n_exec);
-    agent.status(Main, *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_HOLD, special_n_hold_main);
+    agent.status(Main, *FIGHTER_KIRBY_STATUS_KIND_MASTER_SPECIAL_N, special_n_main);
+    agent.status(Exec, *FIGHTER_KIRBY_STATUS_KIND_MASTER_SPECIAL_N, special_n_exec);
+    agent.status(Main, *FIGHTER_KIRBY_STATUS_KIND_MASTER_SPECIAL_N_HOLD, special_n_hold_main);
 
-    agent.status(Main, *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_TURN, special_n_turn_main);
-    agent.status(Exec, *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_TURN, special_n_exec);
+    agent.status(Main, *FIGHTER_KIRBY_STATUS_KIND_MASTER_SPECIAL_N_TURN, special_n_turn_main);
+    agent.status(Exec, *FIGHTER_KIRBY_STATUS_KIND_MASTER_SPECIAL_N_TURN, special_n_exec);
 
-    agent.status(Main, *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_CANCEL, special_n_cancel_main);
+    agent.status(Main, *FIGHTER_KIRBY_STATUS_KIND_MASTER_SPECIAL_N_CANCEL, special_n_cancel_main);
 }
