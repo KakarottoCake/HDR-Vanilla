@@ -5,11 +5,13 @@ unsafe extern "C" fn game_specialnfire(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     FT_MOTION_RATE_RANGE(agent, 1.0, 25.0, 13.0);
+    ArticleModule::set_rate(boma, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, (25.0 - 1.0)/13.0);
     if is_excute(agent) {
         VarModule::off_flag(agent.battle_object, vars::krool::instance::SPECIAL_N_GRAB);
     }
     frame(lua_state, 25.0);
     FT_MOTION_RATE(agent, 1.0);
+    ArticleModule::set_rate(boma, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, 1.0);
     if is_excute(agent) {
         if boma.is_button_on(Buttons::SpecialRaw) {
             VarModule::on_flag(agent.battle_object, vars::krool::instance::SPECIAL_N_GRAB);
@@ -22,12 +24,15 @@ unsafe extern "C" fn game_specialnfire(agent: &mut L2CAgentBase) {
     frame(lua_state, 26.0);
     if VarModule::is_flag(agent.battle_object, vars::krool::instance::SPECIAL_N_GRAB) {
         FT_MOTION_RATE_RANGE(agent, 26.0, 37.0, 1.0);
+        ArticleModule::set_rate(boma, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, (37.0 - 26.0)/1.0);
     }
     else {
         FT_MOTION_RATE_RANGE(agent, 26.0, 30.0, 8.0);
+        ArticleModule::set_rate(boma, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, (30.0 - 26.0)/8.0);
     }
     frame(lua_state, 30.0);
     FT_MOTION_RATE(agent, 1.0);
+    ArticleModule::set_rate(boma, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, 1.0);
     if is_excute(agent) {
         if !VarModule::is_flag(agent.battle_object, vars::krool::instance::SPECIAL_N_GRAB) {
             WorkModule::on_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_SHOOT_IRONBALL);
@@ -36,12 +41,14 @@ unsafe extern "C" fn game_specialnfire(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 37.0);
     FT_MOTION_RATE_RANGE(agent, 37.0, 70.0, 25.0);
+    ArticleModule::set_rate(boma, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, (70.0 - 37.0)/25.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_SHOOT_CANCEL);
         WorkModule::on_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_NO_SHOOT_CANCEL);
     }
     frame(lua_state, 70.0);
     FT_MOTION_RATE(agent, 1.0);
+    ArticleModule::set_rate(boma, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, 1.0);
     if is_excute(agent) {
         WorkModule::off_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_SHOOT_CANCEL);
         WorkModule::off_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_NO_SHOOT_CANCEL);
@@ -51,6 +58,13 @@ unsafe extern "C" fn game_specialnfire(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_specialnfire(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    frame(lua_state, 25.0);
+    if is_excute(agent) {
+        if boma.is_button_on(Buttons::SpecialRaw) {
+            EFFECT_FOLLOW(agent, Hash40::new("sys_sp_flash"), Hash40::new("top"), 4, 18, 17, 0, 0, 0, 0.5, true);
+            LAST_EFFECT_SET_RATE(agent, 0.8);
+        }
+    }
     frame(lua_state, 30.0);
     if is_excute(agent) {
         if agent.is_situation(*SITUATION_KIND_GROUND) {
@@ -136,14 +150,7 @@ unsafe extern "C" fn game_specialnfirehi(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         MotionModule::set_rate(boma, 1.25);
     }
-    frame(lua_state, 10.0);
-    if is_excute(agent) {
-    }
     frame(lua_state, 13.0);
-    if is_excute(agent) {
-        MotionModule::set_rate(boma, 2.0);
-    }
-    frame(lua_state, 15.0);
     if is_excute(agent) {
         MotionModule::set_rate(boma, 1.0);
     }
@@ -158,18 +165,24 @@ unsafe extern "C" fn effect_specialnfirehi(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 16.0);
     if is_excute(agent) {
-        LANDING_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), -5, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        if agent.is_situation(*SITUATION_KIND_GROUND) {
+            LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
     }
     frame(lua_state, 17.0);
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("krool_cannon_shot"), Hash40::new("haver"), 0, 2, 25, 0, 0, 0, 1.3, 0, 0, 0, 0, 0, 0, true);
+        EFFECT_FOLLOW(agent, Hash40::new("krool_cannon_shot"), Hash40::new("haver"), 0, 2, 25, 0, 0, 0, 1.3, true);
+    }
+    frame(lua_state, 18.0);
+    if is_excute(agent) {
+        EFFECT_DETACH_KIND(agent, Hash40::new("krool_cannon_shot"), -1);
     }
 }
 
 unsafe extern "C" fn sound_specialnfirehi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 16.0);
+    frame(lua_state, 17.0);
     if is_excute(agent) {
         if WorkModule::is_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_NO_SHOOT_CANCEL) {
             PLAY_SE(agent, Hash40::new("se_krool_special_n07"));
@@ -187,24 +200,21 @@ unsafe extern "C" fn expression_specialnfirehi(agent: &mut L2CAgentBase) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
         ItemModule::set_have_item_visibility(boma, false, 0);
     }
-    frame(lua_state, 16.0);
+    frame(lua_state, 17.0);
     if is_excute(agent) {
         if IS_GENERATABLE_ARTICLE(agent, *FIGHTER_KROOL_GENERATE_ARTICLE_IRONBALL) {
             QUAKE(agent, *CAMERA_QUAKE_KIND_S);
         }
-    }
-    frame(lua_state, 18.0);
-    if is_excute(agent) {
         ControlModule::set_rumble(boma, Hash40::new("rbkind_explosion"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(lua_state, 54.0);
+    frame(lua_state, 56.0);
     if is_excute(agent) {
         VisibilityModule::set_int64(boma, hash40("crown") as i64, hash40("crown_normal") as i64);
         if ArticleModule::is_exist(boma, *FIGHTER_KROOL_GENERATE_ARTICLE_PIRATEHAT) {
             ArticleModule::set_visibility_whole(boma, *FIGHTER_KROOL_GENERATE_ARTICLE_PIRATEHAT, false, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
         }
     }
-    frame(lua_state, 67.0);
+    frame(lua_state, 65.0);
     if is_excute(agent) {
         ItemModule::set_have_item_visibility(boma, true, 0);
     }
@@ -240,13 +250,15 @@ unsafe extern "C" fn effect_specialnfireb(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 16.0);
     if is_excute(agent) {
-        LANDING_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), -5, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        if agent.is_situation(*SITUATION_KIND_GROUND) {
+            LANDING_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), -5, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
     }
-    frame(lua_state, 17.0);
+    frame(lua_state, 22.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("krool_cannon_shot"), Hash40::new("haver"), 0, 2, 25, 0, 0, 0, 1.3, true);
     }
-    frame(lua_state, 18.0);
+    frame(lua_state, 23.0);
     if is_excute(agent) {
         EFFECT_DETACH_KIND(agent, Hash40::new("krool_cannon_shot"), -1);
     }
@@ -374,4 +386,7 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialairnloop", game_specialnloop, Priority::Low);
     agent.acmd("effect_specialnloop", effect_specialnloop, Priority::Low);
     agent.acmd("effect_specialairnloop", effect_specialnloop, Priority::Low);
+
+    agent.acmd("effect_specialnspitb", effect_specialnfireb, Priority::Low);
+    agent.acmd("effect_specialairnspitb", effect_specialnfireb, Priority::Low);
 }

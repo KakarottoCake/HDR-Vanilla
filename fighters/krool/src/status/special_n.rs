@@ -8,6 +8,7 @@ pub unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CVa
     }
     ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, false, -1);
     ArticleModule::change_status_exist(fighter.module_accessor, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, *WEAPON_KROOL_BLUNDERBUSS_STATUS_KIND_FIRE);
+    special_n_change_motion(fighter, Hash40::new("special_n_fire"), Hash40::new("special_air_n_fire"));
     special_n_set_kinetic(fighter);
     if !StopModule::is_stop(fighter.module_accessor) {
         special_n_substatus(fighter, false.into());
@@ -73,15 +74,13 @@ pub unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> 
             special_n_change_motion(fighter, Hash40::new("special_n_fire"), Hash40::new("special_air_n_fire"));
         }
     }
-    if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-        if CancelModule::is_enable_cancel(fighter.module_accessor) {
-            if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+    if CancelModule::is_enable_cancel(fighter.module_accessor) {
+        if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+            return 1.into();
+        }
+        else {
+            if fighter.sub_air_check_fall_common().get_bool() {
                 return 1.into();
-            }
-            else {
-                if fighter.sub_air_check_fall_common().get_bool() {
-                    return 1.into();
-                }
             }
         }
     }
@@ -112,16 +111,20 @@ pub unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> 
             let motion = if fighter.is_situation(*SITUATION_KIND_GROUND) { Hash40::new("special_n_fire_hi") } else { Hash40::new("special_air_n_fire_hi") };
             MotionModule::change_motion(fighter.module_accessor, motion, 0.0, 1.0, false, 0.0, false, false);
             ArticleModule::change_status_exist(fighter.module_accessor, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, *WEAPON_KROOL_BLUNDERBUSS_STATUS_KIND_SPIT);
+            ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, Hash40::new("spit_hi"), true, 0.0);
+            fighter.set_int(*FIGHTER_KROOL_SPECIAL_N_SPIT_TYPE_HI, *FIGHTER_KROOL_INSTANCE_WORK_ID_INT_SPECIAL_N_SPIT_TYPE);
             return 0.into();
         }
         else if PostureModule::lr(fighter.module_accessor) * fighter.stick_x() < 0.0 {
             let motion = if fighter.is_situation(*SITUATION_KIND_GROUND) { Hash40::new("special_n_fire_b") } else { Hash40::new("special_air_n_fire_b") };
             MotionModule::change_motion(fighter.module_accessor, motion, 0.0, 1.0, false, 0.0, false, false);
             ArticleModule::change_status_exist(fighter.module_accessor, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, *WEAPON_KROOL_BLUNDERBUSS_STATUS_KIND_SPIT);
+            ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, Hash40::new("spit_b"), true, 0.0);
             return 0.into();
         }
     }
-    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)
+    || VarModule::is_flag(fighter.battle_object, vars::krool::instance::SPECIAL_N_GRAB) {
         if fighter.is_flag(*FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_SHOOT_CANCEL) {
             if !ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_KROOL_GENERATE_ARTICLE_IRONBALL)
             || fighter.is_flag(*FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_NO_SHOOT_IRONBALL) {
