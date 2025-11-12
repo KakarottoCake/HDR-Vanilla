@@ -79,7 +79,7 @@
     <float index="8">0.00</float>
     <float index="9">0.00</float>
   </list>
-  <float hash="attack_s3_stick_x">0.2</float>0.6<
+  <float hash="attack_s3_stick_x">0.2</float>
   <float hash="attack_s3_stick_dir_hi">0.2</float>
   <float hash="attack_s3_stick_dir_lw">-0.2</float>
   <float hash="attack_hi3_stick_y">0.2</float>
