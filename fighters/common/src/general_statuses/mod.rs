@@ -836,17 +836,19 @@ unsafe extern "C" fn get_gravity_factor(fighter: &mut L2CFighterCommon) -> f32 {
     0.8.lerp(&1.0, &scalar)
 }
 
-// calculates launch angle factor
-// "compares the length of the vector to the corner of the screen, to the length of the kb vector" -JOB
-unsafe extern "C" fn get_angle_factor(angle_threshold: f32, angle: f32) -> f32 {
-    let angle_threshold = angle_threshold.to_radians();
-    let angle = (90.0 - ((angle % 180.0).abs() - 90.0).abs()).to_radians();
-    if angle <= angle_threshold { return 1.0; }
+// Calculates launch angle ratio
+// Needed to determine your launch-angle-dependent threshold at which
+// knockback speedup begins
+unsafe extern "C" fn get_angle_ratio(angle_threshold: f32, angle: f32) -> f32 {
+    let angle_relative = (90.0 - ((angle % 180.0).abs() - 90.0).abs());
 
-    // magic JOB math
-    let angle_factor = ((angle_threshold.cos().powf(2.0) / 640.0_f32.powf(2.0)) + (angle_threshold.sin().powf(2.0) / 360.0_f32.powf(2.0))).sqrt()
-        / ((angle.cos().powf(2.0) / 640.0_f32.powf(2.0)) + (angle.sin().powf(2.0) / 360.0_f32.powf(2.0))).sqrt();
-    return angle_factor;
+    let ratio = if angle_relative <= angle_threshold {
+        0.0
+    } else {
+        (angle_relative - angle_threshold) / (90.0 - angle_threshold)
+    };
+
+    return ratio
 }
 
 unsafe extern "C" fn check_damage_speed_up_fail(fighter: &mut L2CFighterCommon) -> bool {
@@ -869,16 +871,16 @@ unsafe extern "C" fn fighterstatusdamage_init_damage_speed_up_by_speed(
 ) {
     let angle = angle.get_f32();
     let angle_threshold = 29.358;
-    let speed_start_horizontal = 3.8; // the start of scaling at angles below the angle_threshold
+    let speed_start_horizontal = 3.3; // the start of scaling at angles below the angle_threshold
     let gravity_factor = get_gravity_factor(fighter);
-    let speed_start_vertical = 6.2 * gravity_factor; // the start of scaling at completely vertical angles
-    let speed_end = 7.2; // the end of scaling
+    let speed_start_vertical = 6.0 * gravity_factor; // the start of scaling at completely vertical angles
+    let speed_end_horizontal = 5.7; // the end of scaling at angles below the angle_threshold
+    let speed_end_vertical = speed_end_horizontal + (speed_start_vertical - speed_start_horizontal); // the end of scaling at completely vertical angles
 
-    // calculate true speed_start using angle
-    let angle_factor = get_angle_factor(angle_threshold, angle); // the actual angle factor
-    let ratio_base = get_angle_factor(angle_threshold, 90.0); // the max angle factor
-    let ratio = (1.0 - angle_factor) / (1.0 - ratio_base);
-    let speed_start = speed_start_horizontal.lerp(&speed_start_vertical, &ratio);
+    let angle_ratio = get_angle_ratio(angle_threshold, angle);
+
+    let speed_start = speed_start_horizontal.lerp(&speed_start_vertical, &angle_ratio);
+    let speed_end = speed_end_horizontal.lerp(&speed_end_vertical, &angle_ratio);
 
     // exit if speed is too slow
     let speed = factor.get_f32();
@@ -890,7 +892,7 @@ unsafe extern "C" fn fighterstatusdamage_init_damage_speed_up_by_speed(
     }
 
     // calculate speed_up_mul
-    let min_mul = 1.25;
+    let min_mul = 1.2;
     let max_mul = 1.6;
     let power = 1.0;
     let ratio = ((speed - speed_start) / (speed_end - speed_start));
