@@ -234,12 +234,12 @@ unsafe extern "C" fn var_reset(fighter: &mut L2CFighterCommon) -> L2CValue {
 }
 
 unsafe extern "C" fn check_input(fighter: &mut L2CFighterCommon) -> bool {
-    let attack_hi3_stick_y = fighter.get_param_float("common", "attack_hi3_stick_y");
+    let special_stick_y = fighter.get_param_float("common", "special_stick_y");
     let lr = fighter.lr();
     // f1 of input try to filter non jab/ftilt inputs
     if fighter.is_button_trigger(Buttons::Attack | Buttons::Special) {
         if fighter.is_stick_backward()
-        || fighter.stick_y().abs() > attack_hi3_stick_y {
+        || fighter.stick_y().abs() > special_stick_y {
             fighter.clear_commands(Cat1::AttackN); 
             fighter.clear_commands(Cat1::AttackS3);
             fighter.clear_commands(Cat1::SpecialN); 
@@ -251,8 +251,8 @@ unsafe extern "C" fn check_input(fighter: &mut L2CFighterCommon) -> bool {
     }
     // hold input restriction
     if fighter.is_stick_backward()
-    || fighter.left_stick_y().abs() > attack_hi3_stick_y
-    || fighter.right_stick_y().abs() > attack_hi3_stick_y {
+    || fighter.left_stick_y().abs() > special_stick_y
+    || fighter.right_stick_y().abs() > special_stick_y {
         VarModule::on_flag(fighter.battle_object, vars::bayonetta::status::ATTACK_INVALID_COMBO_INPUT);
         return false.into();
     }
