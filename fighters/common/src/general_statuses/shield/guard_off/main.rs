@@ -38,9 +38,7 @@ unsafe fn sub_status_guard_off_main_common_cancel(fighter: &mut L2CFighterCommon
         return true.into();
     }
 
-    // check rivals shield drop
-    if fighter.status_frame() < 5 // only enabled on the first 5F of shield drop
-    && misc::check_plat_drop_oos(fighter).get_bool() {
+    if misc::check_plat_drop_for_guard_off(fighter).get_bool() {
         return true.into();
     }
 
