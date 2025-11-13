@@ -9,15 +9,6 @@ unsafe extern "C" fn game_fly(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn effect_fly(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("master_bow_arrow1"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, true);
-        EFFECT_OFF_KIND(agent, Hash40::new("master_bow_hold2"), true, true);
-    }
-}
-
 unsafe extern "C" fn effect_haved(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -51,7 +42,6 @@ unsafe extern "C" fn effect_haved2(agent: &mut L2CAgentBase) {
 
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_fly", game_fly, Priority::Low);
-    agent.acmd("effect_fly", effect_fly, Priority::Low);
 
     agent.acmd("effect_haved", effect_haved, Priority::Low);
 

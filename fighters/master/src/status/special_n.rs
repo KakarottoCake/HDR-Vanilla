@@ -47,12 +47,12 @@ unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
     // fire during window
     if fighter.is_flag(*FIGHTER_MASTER_STATUS_SPECIAL_N_FLAG_CAN_SHOOT)
     && fighter.is_button_off(Buttons::Special) {
-        fighter.change_status(FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_SHOOT.into(), false.into());
+        fighter.change_status(FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_SHOOT.into(), true.into());
         return 1.into();
     }
     // full charge
     if MotionModule::is_end(fighter.module_accessor) {
-        fighter.change_status(FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_MAX_SHOOT.into(), false.into());
+        fighter.change_status(FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_MAX_SHOOT.into(), true.into());
         return 1.into();
     }
     // cancel/turn
@@ -116,6 +116,36 @@ unsafe extern "C" fn special_n_exec(fighter: &mut L2CFighterCommon) -> L2CValue 
     0.into()
 }
 
+unsafe extern "C" fn special_n_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    // kill arrow interrupt
+    if ![*FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_TURN,
+         *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_HOLD,
+         *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_CANCEL,
+         *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_JUMP_CANCEL,
+         *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_SHOOT,
+         *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_MAX_SHOOT].contains(&fighter.global_table[STATUS_KIND].get_i32())
+    {
+        ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_BOW, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_ARROW1, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_ARROW2, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+    }
+    // kill charge visuals on cancel
+    if [*FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_CANCEL,
+        *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_JUMP_CANCEL,
+        *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_SHOOT,
+        *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_MAX_SHOOT].contains(&fighter.global_table[STATUS_KIND].get_i32())
+    {
+        if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_ARROW1) {
+            let article = ArticleModule::get_article(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_ARROW1);
+            let article_id = smash::app::lua_bind::Article::get_battle_object_id(article) as u32;
+            let article_boma = sv_battle_object::module_accessor(article_id);
+            EffectModule::kill_kind(article_boma, Hash40::new("master_bow_hold1"), true, true);
+            EffectModule::kill_kind(article_boma, Hash40::new("master_bow_hold2"), true, true);
+        }
+    }
+    0.into()
+}
+
 // FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_HOLD
 
 unsafe extern "C" fn special_n_hold_main(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -161,10 +191,14 @@ unsafe extern "C" fn special_n_turn_main_loop(fighter: &mut L2CFighterCommon) ->
     fighter.sub_air_check_dive();
     let turn_frame = fighter.motion_frame();
     let frame = fighter.get_float(*FIGHTER_MASTER_STATUS_SPECIAL_N_WORK_FLOAT_INHERIT_MOTION_FRAME);
-    // try to fix missing/delayed fx with extended cancel window
+    // fix effect desync and forced full-charge if turning too close to end of window
     if turn_frame + frame > 44.0 && turn_frame + frame < 50.0 {
         if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_ARROW1) {
             ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_ARROW1, Hash40::new("haved_2"), true, turn_frame + frame);
+        }
+        if fighter.is_button_off(Buttons::Special) {
+            fighter.change_status(FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_SHOOT.into(), true.into());
+            return 1.into();
         }
     }
     if MotionModule::is_end(fighter.module_accessor) {
@@ -226,10 +260,14 @@ unsafe extern "C" fn special_n_cancel_main_loop(fighter: &mut L2CFighterCommon) 
 pub fn install(agent: &mut Agent) {
     agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_N, special_n_main);
     agent.status(Exec, *FIGHTER_STATUS_KIND_SPECIAL_N, special_n_exec);
+    agent.status(End, *FIGHTER_STATUS_KIND_SPECIAL_N, special_n_end);
+
     agent.status(Main, *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_HOLD, special_n_hold_main);
+    agent.status(End, *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_HOLD, special_n_end);
 
     agent.status(Main, *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_TURN, special_n_turn_main);
     agent.status(Exec, *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_TURN, special_n_exec);
+    agent.status(End, *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_TURN, special_n_end);
 
     agent.status(Main, *FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_CANCEL, special_n_cancel_main);
 }
