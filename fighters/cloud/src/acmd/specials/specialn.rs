@@ -3,11 +3,13 @@ use super::*;
 unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    if is_excute(agent) {
+        VarModule::on_flag(agent.battle_object, vars::cloud::status::SPECIAL_N_HOLD);
+    }
     frame(lua_state, 10.0);
     if is_excute(agent) {
         agent.on_flag(*FIGHTER_CLOUD_STATUS_WORK_ID_SPECIAL_N_FLAG_SPECIAL_FALL);
-        if agent.is_button_on(Buttons::SpecialAll) {
-            VarModule::on_flag(agent.battle_object, vars::cloud::status::SPECIAL_N_HOLD);
+        if VarModule::is_flag(agent.battle_object, vars::cloud::status::SPECIAL_N_HOLD) {
             MotionModule::set_rate(boma, 0.375);
         }
         else {
@@ -82,11 +84,13 @@ unsafe extern "C" fn effect_specialairn(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialn_lb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    if is_excute(agent) {
+        VarModule::on_flag(agent.battle_object, vars::cloud::status::SPECIAL_N_HOLD);
+    }
     frame(lua_state, 10.0);
     if is_excute(agent) {
         agent.on_flag(*FIGHTER_CLOUD_STATUS_WORK_ID_SPECIAL_N_FLAG_SPECIAL_FALL);
-        if agent.is_button_on(Buttons::SpecialAll) {
-            VarModule::on_flag(agent.battle_object, vars::cloud::status::SPECIAL_N_HOLD);
+        if VarModule::is_flag(agent.battle_object, vars::cloud::status::SPECIAL_N_HOLD) {
             MotionModule::set_rate(boma, 0.375);
         }
         else {
