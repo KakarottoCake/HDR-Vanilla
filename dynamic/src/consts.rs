@@ -403,9 +403,10 @@ pub mod vars {
         pub mod instance {
             // flag
             pub const SPECIAL_S_BEAKBOMB_ACTIVE: i32 = 0x0100;
-            pub const SPECIAL_N_BAYONET_DISABLE: i32 = 0x0101;
-            pub const SPECIAL_S_FAIL_ENABLE: i32 = 0x0102;
-            pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0103;
+            pub const SPECIAL_N_LAND_CANCEL: i32 = 0x0101;
+            pub const SPECIAL_N_BAYONET_DISABLE: i32 = 0x0102;
+            pub const SPECIAL_S_FAIL_ENABLE: i32 = 0x0103;
+            pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0104;
 
             // int
             pub const HUD_DISPLAY_TIME: i32 = 0x0100;
