@@ -7,7 +7,8 @@ pub fn install() {
         process_knockback,
         calculate_knockback,
         set_thrown_lr,
-        set_damage_lr
+        set_damage_lr,
+        get_attack_lr_check
     );
 }
 
@@ -362,12 +363,34 @@ unsafe fn set_damage_lr(ctx: &mut skyline::hooks::InlineCtx) {
     let boma = ctx.registers[19].x() as *mut smash::app::BattleObjectModuleAccessor;
     let pos_x = PostureModule::pos_x(boma);
     let lr = PostureModule::lr(boma);
+    let attack_lr_check = VarModule::get_int((*opponent_boma).object(), vars::common::instance::ATTACK_LR_CHECK);
 
-    let damage_lr: f32 = if opponent_pos_x >= pos_x {
-        1.0
+    let default_lr: f32 = if opponent_pos_x >= pos_x { 1.0 } else { -1.0 };
+    let damage_lr: f32 = if attack_lr_check == *ATTACK_LR_CHECK_F || attack_lr_check == *ATTACK_LR_CHECK_B {
+        let ecb_edge = if opponent_pos_x >= pos_x {
+            // Right ECB point
+            *GroundModule::get_rhombus(boma, true).add(3)
+        } else {
+            // Left ECB point
+            *GroundModule::get_rhombus(boma, true).add(2)
+        };
+        if (ecb_edge.x * 0.5) >= opponent_pos_x { -default_lr } else { default_lr }
     } else {
-        -1.0
+        default_lr
     };
 
     ctx.registers_f[0].set_s(damage_lr)
+}
+
+#[skyline::hook(offset = 0x3ff1b8, inline)]
+unsafe fn get_attack_lr_check(ctx: &mut skyline::hooks::InlineCtx) {
+    let attack_module = ctx.registers[1].x();
+    let boma = *(attack_module as *mut *mut BattleObjectModuleAccessor).add(1);
+
+    if !(*boma).is_fighter() {
+        return;
+    }
+
+    let attack_lr_check = ctx.registers[8].w() as i32;
+    VarModule::set_int((*boma).object(), vars::common::instance::ATTACK_LR_CHECK, attack_lr_check);
 }
