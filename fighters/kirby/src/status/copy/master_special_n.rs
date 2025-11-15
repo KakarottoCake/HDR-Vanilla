@@ -203,6 +203,10 @@ unsafe extern "C" fn special_n_turn_main_loop(fighter: &mut L2CFighterCommon) ->
     if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_ARROW1) {
         if turn_frame + frame >= 44.0 && ArticleModule::motion_kind(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_ARROW1, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL)) != hash40("haved_2") {
             ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_ARROW1, Hash40::new("haved_2"), true, turn_frame + frame);
+            fighter.on_flag(*FIGHTER_MASTER_STATUS_SPECIAL_N_FLAG_CAN_SHOOT);
+        }
+        if turn_frame + frame >= 74.0 {
+            fighter.off_flag(*FIGHTER_MASTER_STATUS_SPECIAL_N_FLAG_CAN_SHOOT);
         }
     }
     if MotionModule::is_end(fighter.module_accessor) {
