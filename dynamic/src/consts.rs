@@ -1870,6 +1870,10 @@ pub mod vars {
             pub const SPECIAL_S_INPUT_CHECK: i32 = 0x1101;
             pub const SPECIAL_S_STOP: i32 = 0x1102;
 
+            pub const SPECIAL_LW_AIR_FALL: i32 = 0x1100;
+            pub const SPECIAL_LW_ENABLE_CONTROL: i32 = 0x1100;
+            pub const SPECIAL_LW_ENABLE_GRAVITY: i32 = 0x1101;
+
             // ints
             pub const ATTACK_LW4_TIMER: i32 = 0x1100;
 
@@ -2115,6 +2119,10 @@ pub mod statuses {
         pub const FLOAT: i32 = 0x1F6;
         pub const SPECIAL_HI_RUSH: i32 = 0x1F7;
         pub const SPECIAL_HI_END: i32 = 0x1F8;
+    }
+
+    pub mod trail {
+        pub const SPECIAL_LW_LANDING: i32 = 0x1F5;
     }
 
     pub mod wolf {
