@@ -363,23 +363,51 @@ unsafe fn set_damage_lr(ctx: &mut skyline::hooks::InlineCtx) {
     let boma = ctx.registers[19].x() as *mut smash::app::BattleObjectModuleAccessor;
     let pos_x = PostureModule::pos_x(boma);
     let lr = PostureModule::lr(boma);
+    // The ATTACK_LR_CHECK value used by the connecting hitbox
     let attack_lr_check = VarModule::get_int((*opponent_boma).object(), vars::common::instance::ATTACK_LR_CHECK);
 
     let default_lr = if opponent_pos_x >= pos_x { 1.0 } else { -1.0 };
-    let damage_lr: f32 = if attack_lr_check == *ATTACK_LR_CHECK_F || attack_lr_check == *ATTACK_LR_CHECK_B {
-        let ecb_mid = if default_lr > 0.0 {
-            let ecb_right = *GroundModule::get_rhombus(boma, true).add(3);
-            ((ecb_right.x - pos_x) * 0.5) + pos_x
+    let damage_lr: f32 = {
+        if attack_lr_check != *ATTACK_LR_CHECK_F && attack_lr_check != *ATTACK_LR_CHECK_B {
+            // If reverse hits are disabled for a hitbox,
+            // always determine facing direction solely based on attacker base position
+            default_lr
         } else {
-            let ecb_left = *GroundModule::get_rhombus(boma, true).add(2);
-            ((pos_x - ecb_left.x) * 0.5) + ecb_left.x
-        };
+            // Calculate the half-distance to your ECB's outermost edge
+            let ecb_mid = if opponent_pos_x >= pos_x {
+                let ecb_right = *GroundModule::get_rhombus(boma, true).add(3);
+                ((ecb_right.x - pos_x) * 0.5) + pos_x
+            } else {
+                let ecb_left = *GroundModule::get_rhombus(boma, true).add(2);
+                ((pos_x - ecb_left.x) * 0.5) + ecb_left.x
+            };
 
-        // if the mid-ecb crosses the attacker's position, flip the default_lr
-        let cond = if default_lr > 0.0 { ecb_mid >= opponent_pos_x } else { ecb_mid <= opponent_pos_x };
-        if cond { -default_lr } else { default_lr }
-    } else {
-        default_lr
+            let attacker_lr = PostureModule::lr(opponent_boma);
+
+            // Determine whether you are functionally "behind" the attacker
+            let is_behind_attacker = if opponent_pos_x >= pos_x {
+                (attack_lr_check == *ATTACK_LR_CHECK_F && attacker_lr > 0.0)
+                    || (attack_lr_check == *ATTACK_LR_CHECK_B && attacker_lr < 0.0)
+            } else {
+                (attack_lr_check == *ATTACK_LR_CHECK_F && attacker_lr < 0.0)
+                    || (attack_lr_check == *ATTACK_LR_CHECK_B && attacker_lr > 0.0)
+            };
+
+            // Determine whether your mid-ECB crosses the attacker's base position
+            let mid_ecb_crosses_attacker = if opponent_pos_x >= pos_x {
+                ecb_mid >= opponent_pos_x
+            } else {
+                ecb_mid <= opponent_pos_x
+            };
+
+            // If hit behind the attacker,
+            // only turn to face them if you are far enough behind them
+            if is_behind_attacker && mid_ecb_crosses_attacker {
+                -default_lr
+            } else {
+                default_lr
+            }
+        }
     };
 
     ctx.registers_f[0].set_s(damage_lr)
