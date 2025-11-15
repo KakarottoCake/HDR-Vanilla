@@ -365,16 +365,19 @@ unsafe fn set_damage_lr(ctx: &mut skyline::hooks::InlineCtx) {
     let lr = PostureModule::lr(boma);
     let attack_lr_check = VarModule::get_int((*opponent_boma).object(), vars::common::instance::ATTACK_LR_CHECK);
 
-    let default_lr: f32 = if opponent_pos_x >= pos_x { 1.0 } else { -1.0 };
+    let default_lr = if opponent_pos_x >= pos_x { 1.0 } else { -1.0 };
     let damage_lr: f32 = if attack_lr_check == *ATTACK_LR_CHECK_F || attack_lr_check == *ATTACK_LR_CHECK_B {
-        let ecb_edge = if opponent_pos_x >= pos_x {
-            // Right ECB point
-            *GroundModule::get_rhombus(boma, true).add(3)
+        let ecb_mid = if default_lr > 0.0 {
+            let ecb_right = *GroundModule::get_rhombus(boma, true).add(3);
+            ((ecb_right.x - pos_x) * 0.5) + pos_x
         } else {
-            // Left ECB point
-            *GroundModule::get_rhombus(boma, true).add(2)
+            let ecb_left = *GroundModule::get_rhombus(boma, true).add(2);
+            ((pos_x - ecb_left.x) * 0.5) + ecb_left.x
         };
-        if (ecb_edge.x * 0.5) >= opponent_pos_x { -default_lr } else { default_lr }
+
+        // if the mid-ecb crosses the attacker's position, flip the default_lr
+        let cond = if default_lr > 0.0 { ecb_mid >= opponent_pos_x } else { ecb_mid <= opponent_pos_x };
+        if cond { -default_lr } else { default_lr }
     } else {
         default_lr
     };
