@@ -92,6 +92,20 @@ attack_13:
 attack_11:
   extra:
     cancel_frame: 17
+attack_s3_hi:
+  remove: true
+attack_s3_s:
+  game_script: game_attacks3
+  animations:
+    - name: c01attacks3s.nuanmb
+  scripts:
+    - expression_attacks3
+    - sound_attacks3
+    - effect_attacks3
+  extra:
+    cancel_frame: 32
+attack_s3_lw:
+  remove: true
 attack_hi4:
   extra:
     cancel_frame: 46
