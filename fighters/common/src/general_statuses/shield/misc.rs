@@ -396,8 +396,8 @@ pub unsafe fn check_plat_drop_for_guard_off(fighter: &mut L2CFighterCommon) -> L
     let stick_y = fighter.global_table[STICK_Y].get_f32();
     let flick_y = fighter.global_table[FLICK_Y].get_i32();
     let pass_stick_y = fighter.get_param_float("common", "pass_stick_y");
-    let pass_flick_y = fighter.get_param_int("common", "pass_flick_y");
-    if stick_y > pass_stick_y || flick_y > pass_flick_y  {
+    let buffer = ControlModule::get_command_life_count_max(fighter.module_accessor) as i32;
+    if stick_y > pass_stick_y || flick_y + 1 >= buffer {
         return false.into();
     }
 
