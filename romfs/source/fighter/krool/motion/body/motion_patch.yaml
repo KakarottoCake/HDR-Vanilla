@@ -150,7 +150,7 @@ special_n_fire_hi:
     unk_2000: false
   blend_frames: 0
   animations:
-    - name: d00specialnspitf.nuanmb
+    - name: d00specialnspithi.nuanmb
       unk: 0
   scripts:
     - expression_specialnfirehi
@@ -180,7 +180,7 @@ special_air_n_fire_hi:
     unk_2000: false
   blend_frames: 0
   animations:
-    - name: d00specialairnspitf.nuanmb
+    - name: d00specialairnspithi.nuanmb
       unk: 0
   scripts:
     - expression_specialairnfirehi
