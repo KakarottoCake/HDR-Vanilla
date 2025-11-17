@@ -5,6 +5,8 @@ use globals::*;
 mod appeal;
 mod attack_air;
 mod attack_s4;
+
+mod landing_fall_special;
 mod catch;
 mod guard_damage;
 mod item_throw;
@@ -81,6 +83,7 @@ pub fn install(agent: &mut Agent) {
     appeal::install(agent);
     attack_air::install(agent);
     attack_s4::install(agent);
+    landing_fall_special::install(agent);
     catch::install(agent);
     guard_damage::install(agent);
     item_throw::install(agent);
