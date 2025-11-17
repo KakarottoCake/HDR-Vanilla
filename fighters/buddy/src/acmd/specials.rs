@@ -154,15 +154,6 @@ unsafe extern "C" fn effect_specialnattack(agent: &mut L2CAgentBase) {
             EFFECT_FOLLOW(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("top"), 0, 0.8, 17.5, 0, 0, 0, 0.9, true);
         }
     }
-    frame(lua_state, 31.0);
-    if is_excute(agent) {
-        EFFECT_FOLLOW_WORK(agent, *FIGHTER_BUDDY_INSTANCE_WORK_ID_INT_EFFECT_KIND_FLYING, Hash40::new("k_bag_bottom"), -3, 4, 0, 0, 0, 0, 0.6, true);
-        LAST_EFFECT_SET_RATE(agent, 1.6);
-    }
-    frame(lua_state, 34.0);
-    if is_excute(agent) {
-        EFFECT_OFF_KIND_WORK(agent, *FIGHTER_BUDDY_INSTANCE_WORK_ID_INT_EFFECT_KIND_FLYING, false, true);
-    }
 }
 
 unsafe extern "C" fn sound_specialnattack(agent: &mut L2CAgentBase) {

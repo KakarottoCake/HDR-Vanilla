@@ -9,7 +9,7 @@ pub unsafe extern "C" fn bayonet_pre(fighter: &mut L2CFighterCommon) -> L2CValue
         fighter.module_accessor,
         app::SituationKind(*SITUATION_KIND_GROUND),
         *FIGHTER_KINETIC_TYPE_MOTION,
-        *GROUND_CORRECT_KIND_GROUND as u32,
+        *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP as u32,
         app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
         true,
         *FIGHTER_BUDDY_STATUS_WORK_KEEP_FLAG_SPECIAL_N_FLAG,
@@ -52,7 +52,7 @@ pub unsafe extern "C" fn bayonet_main(fighter: &mut L2CFighterCommon) -> L2CValu
     if !ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_BUDDY_GENERATE_ARTICLE_PARTNER) {
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_BUDDY_GENERATE_ARTICLE_PARTNER, false, 0);
     }
-    ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_BUDDY_GENERATE_ARTICLE_PARTNER, Hash40::new("attack_s3_hi"), false, 0.0);
+    ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_BUDDY_GENERATE_ARTICLE_PARTNER, Hash40::new("attack_s3_s"), false, 0.0);
 
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_BUDDY_STATUS_SPECIAL_N_FLAG_START_PRECEDE_CHECK);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_BUDDY_STATUS_SPECIAL_N_FLAG_PRECEDE_TURN);
@@ -66,23 +66,17 @@ pub unsafe extern "C" fn bayonet_main(fighter: &mut L2CFighterCommon) -> L2CValu
 
 /// main status loop for bayonet
 unsafe extern "C" fn bayonet_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    // exit if the animation is not done yet
-    if MotionModule::motion_kind(fighter.module_accessor) != hash40("special_n_attack_end") {
-        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_BUDDY_STATUS_SPECIAL_N_FLAG_PRECEDE_END) {
-            let start_frame = 26.0;
-            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_BUDDY_STATUS_SPECIAL_N_FLAG_PRECEDE_END);
-            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_n_attack_end"), start_frame, 1.0, false, 0.0, false, false);
-            
-            if !ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_BUDDY_GENERATE_ARTICLE_PARTNER) {
-                ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_BUDDY_GENERATE_ARTICLE_PARTNER, false, 0);
-            }
-            ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_BUDDY_GENERATE_ARTICLE_PARTNER, Hash40::new("special_n_start"), false, start_frame);
-        }
-    }
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status(FIGHTER_BUDDY_STATUS_KIND_SPECIAL_N_SHOOT.into(), false.into());
-        return 1.into();
+        return 0.into();
     }
+
+    /*
+    //Go into fall if sliding off or ground below disappears 
+    if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
+        fighter.change_status(FIGHTER_BUDDY_STATUS_KIND_SPECIAL_N_SHOOT_FALL.into(), false.into());
+        return 1.into();
+    } */
     0.into()
 }
 
