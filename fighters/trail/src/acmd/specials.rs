@@ -841,11 +841,17 @@ unsafe extern "C" fn effect_specialairlwstart(agent: &mut L2CAgentBase) {
         EFFECT_FOLLOW(agent, Hash40::new("trail_flow_aura"), Hash40::new("kneer"), 0, 0, 0, 0, 0, 0, 1, true);
         EFFECT_FOLLOW(agent, Hash40::new("trail_flow_aura"), Hash40::new("kneel"), 0, 0, 0, 0, 0, 0, 1, true);
     }
+    frame(agent.lua_state_agent, 15.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("trail_flow_spiral"), Hash40::new("top"), 0, 9, 0, 0, 0, 0, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("trail_flow_spiral2"), Hash40::new("top"), 0, 9, 0, 0, 0, 0, 0.5, true);
+    }
     frame(agent.lua_state_agent, 37.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("trail_keyblade_flare"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
+        LAST_EFFECT_SET_COLOR(agent, 5.0, 0.0, 3.0);
         EFFECT_FOLLOW(agent, Hash40::new("trail_flow_spark"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, true);
-        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_trail_keyblade1"), Hash40::new("tex_trail_keyblade2"), 7, Hash40::new("haver"), 0, 2, 0, Hash40::new("haver"), 0, 13.8, 0, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_trail_flow"), Hash40::new("tex_trail_keyblade2"), 14, Hash40::new("haver"), 0, 2, 0, Hash40::new("haver"), 0, 13.8, 0, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
     }
     frame(agent.lua_state_agent, 65.0);
     if is_excute(agent) {
