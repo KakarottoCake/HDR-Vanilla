@@ -4,10 +4,10 @@ unsafe extern "C" fn game_specialngstart(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    FT_MOTION_RATE_RANGE(agent, 1.0, 10.0, 7.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 10.0, 8.0);
     frame(lua_state, 10.0);
     FT_MOTION_RATE(agent, 1.0);
-    frame(lua_state, 14.0); // 12
+    frame(lua_state, 13.0); // 12
     FT_MOTION_RATE_RANGE(agent, 14.0, 24.0, 6.0);
     if is_excute(agent) {
         HIT_NODE(agent, Hash40::new("bust"), *HIT_STATUS_XLU);
@@ -120,20 +120,21 @@ unsafe extern "C" fn game_specialngend(agent: &mut L2CAgentBase) {
     let loop_count = VarModule::get_int(agent.battle_object, vars::palutena::status::SPECIAL_N_GREEN_LOOP) as f32;
     let damage = 1.75 - loop_count/4.0; // 1.5-0.75
     frame(lua_state, 1.0);
-    FT_MOTION_RATE(agent, 1.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 13.0, 10.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), damage, 110, 100, 40, 0, 5.5, 0.0, 6.5, 0.375, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 6, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
         ATTACK(agent, 1, 0, Hash40::new("top"), damage, 145, 100, 40, 0, 5.5, 0.0, 12.25, -1.5, Some(0.0), Some(12.25), Some(2.25), 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 6, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
         ATTACK(agent, 2, 0, Hash40::new("top"), damage, 180, 100, 40, 0, 5.5, 0.0, 18.0, -2.5, Some(0.0), Some(18.0), Some(3.25), 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 6, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
     }
-    frame(lua_state, 7.0);
+    frame(lua_state, 8.0);
     if is_excute(agent) {
         let angle_mod = ((sv_math::rand(hash40("fighter"), 51) as i32) - 25) as u64;
         ATTACK(agent, 0, 1, Hash40::new("top"), 5.0, 90 + angle_mod, 116, 0, 75, 6.5, 0.0, 6.5, 0.375, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
         ATTACK(agent, 1, 1, Hash40::new("top"), 5.0, 90 + angle_mod, 116, 0, 75, 6.5, 0.0, 13.25, -2.5, Some(0.0), Some(13.25), Some(3.25), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
         ATTACK(agent, 2, 1, Hash40::new("top"), 5.0, 90 + angle_mod, 116, 0, 75, 6.5, 0.0, 20.0, -4.5, Some(0.0), Some(20.0), Some(5.25), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
     }
-    frame(lua_state, 12.0); // 44 faf
+    frame(lua_state, 13.0); // 11
+    FT_MOTION_RATE(agent, 1.0); // 42 faf
     //FT_MOTION_RATE_RANGE(agent, 29.0, 46.0, 15.0);
     if is_excute(agent) {
         HIT_NODE(agent, Hash40::new("bust"), *HIT_STATUS_NORMAL);
@@ -143,6 +144,7 @@ unsafe extern "C" fn game_specialngend(agent: &mut L2CAgentBase) {
         HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_NORMAL);
         HIT_NODE(agent, Hash40::new("arml"), *HIT_STATUS_NORMAL);
         AttackModule::clear_all(boma);
+        VarModule::set_int(agent.battle_object, vars::palutena::status::SPECIAL_N_GREEN_BUTTON_TIMER, 1);
     }
 }
 
@@ -169,7 +171,8 @@ unsafe extern "C" fn effect_specialngend(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 17.0);
     if is_excute(agent) {
-        EffectModule::kill_kind(boma, Hash40::new("sys_club_tornado"), true, true);
+        EFFECT_OFF_KIND(agent, Hash40::new("palutena_wand_light_trace_grey"), false, false);
+        EFFECT_OFF_KIND(agent, Hash40::new("palutena_wand_light2_grey"), false, false);
     }
     frame(lua_state, 21.0);
     if is_excute(agent) {

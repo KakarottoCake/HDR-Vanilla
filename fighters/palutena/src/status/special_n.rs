@@ -401,7 +401,7 @@ unsafe extern "C" fn special_n_g_init(fighter: &mut L2CFighterCommon) -> L2CValu
     // tweak until it feels good idk
     sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.07);
     sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.7);
-    sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.6, 0.0);
+    sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.7, 0.0);
 
     return 0.into();
 }
@@ -429,8 +429,36 @@ unsafe extern "C" fn special_n_g_main_loop(fighter: &mut L2CFighterCommon) -> L2
 }
 
 unsafe extern "C" fn special_n_g_end_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    special_n_main_loop_common(fighter, hash40("special_n_g_end"), hash40("special_air_n_g_end"));
-    return 1.into();
+    //fighter.sub_transition_group_check_air_cliff();
+    if CancelModule::is_enable_cancel(fighter.module_accessor) {
+        if fighter.sub_wait_ground_check_common(false.into()).get_bool()
+        || fighter.sub_air_check_fall_common().get_bool() {
+            return 1.into();
+        }
+        // only fastfall when actionable
+        fighter.sub_air_check_dive();
+    }
+
+    if StatusModule::is_situation_changed(fighter.module_accessor) {
+        fighter.sub_change_kinetic_type_by_situation(FIGHTER_KINETIC_TYPE_GROUND_STOP.into(), FIGHTER_KINETIC_TYPE_MOTION_FALL.into());
+        fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP, *GROUND_CORRECT_KIND_AIR);
+        fighter.change_motion_inherit_frame_by_situation("special_n_g_end", "special_air_n_g_end", -1.0, 1.0, 0.0, false, false);
+    }
+    // cut speed on hitbox clear
+    if VarModule::get_int(fighter.battle_object, vars::palutena::status::SPECIAL_N_GREEN_BUTTON_TIMER) == 1 {
+        VarModule::set_int(fighter.battle_object, vars::palutena::status::SPECIAL_N_GREEN_BUTTON_TIMER, -1);
+        if !fighter.is_situation(*SITUATION_KIND_GROUND) {
+            let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y * 0.4, 0.0, 0.0, 0.0);
+            sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, ENERGY_CONTROLLER_RESET_TYPE_FALL_ADJUST, speed_x * 0.4, 0.0, 0.0, 0.0, 0.0);
+        }
+    }
+
+    if MotionModule::is_end(fighter.module_accessor) {
+        fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_FALL, false);
+    }
+    return 0.into();
 }
 
 unsafe extern "C" fn special_n_g_rise_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -444,24 +472,33 @@ unsafe extern "C" fn special_n_g_rise_main_loop(fighter: &mut L2CFighterCommon) 
             // loop
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_n_g_loop"), 0.0, 1.0, false, 0.0, false, false);
         } else {
+            VarModule::off_flag(fighter.battle_object, vars::common::status::DISABLE_ECB_SHIFT);
+            VarModule::set_int(fighter.battle_object, vars::palutena::status::SPECIAL_N_GREEN_BUTTON_TIMER, 0);
+            fighter.set_situation_keep(L2CValue::I32(*SITUATION_KIND_AIR), 0.into());
             let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
             let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-            fighter.set_situation_keep(L2CValue::I32(*SITUATION_KIND_AIR), 0.into());
-            // ground finisher
-            if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) {
+            // check if gr, kinetics
+            let ground = if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) && speed_y < 0.001 {true} else {false};
+            if ground {
                 StatusModule::set_situation_kind(fighter.module_accessor, SituationKind(*SITUATION_KIND_GROUND), false);
+                fighter.global_table[SITUATION_KIND].assign(&L2CValue::I32(*SITUATION_KIND_GROUND));
+                // gr momentum transfer
                 KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_UNIQ);
-                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
-                palutena_special_n_init_common(fighter);
-                MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_n_g_end"), 0.0, 1.0, false, 0.0, false, false);
-                return 1.into();
+                sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_GROUND, speed_x*1.5, 0.0, 0.0, 0.0, 0.0);
+                sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
+                sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, -1.0, -1.0);
+                let ground_brake = fighter.get_param_float("ground_brake", "");
+                sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ground_brake / 2.0, 0.0);
+                KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
+                KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+                KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+            } else {
+                // pop up finisher
+                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
+                sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, (speed_y + 0.5).clamp(-0.5, 1.0));
             }
-            // air finisher
-            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
-            sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, (speed_y + 0.3).clamp(-0.3, 0.5));
-            //sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.75);
-            sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.6, 0.0);
-            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_n_g_end"), 0.0, 1.0, false, 0.0, false, false);
+            fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP, *GROUND_CORRECT_KIND_AIR);
+            fighter.change_motion_by_situation("special_n_g_end", "special_air_n_g_end", 0.0, 1.0, false, 0.0, false, false);
             return 1.into();
         }
     }
@@ -471,8 +508,9 @@ unsafe extern "C" fn special_n_g_rise_main_loop(fighter: &mut L2CFighterCommon) 
             if fighter.is_cat_flag(Cat1::SpecialAny) {
                 VarModule::set_int(fighter.battle_object, vars::palutena::status::SPECIAL_N_GREEN_BUTTON_TIMER, 5);
                 let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-                let add_y = if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) {1.5} else {0.9}; // rise off ground easier
-                let max_y = 1.2 - 0.1*(loop_count as f32); // slower rise the longer the move goes on, 1.1-0.8
+                let ground = if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) && speed_y < 0.001 {true} else {false};
+                let add_y = if ground {1.5} else {0.9}; // rise off ground easier
+                let max_y = if ground {1.5} else {1.2 - 0.0875*(loop_count as f32)}; // slower rise the longer the move goes on, 1.1125-0.85
                 sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, (speed_y + add_y).min(max_y));
                 fighter.clear_commands(Cat1::SpecialAny);
             }
