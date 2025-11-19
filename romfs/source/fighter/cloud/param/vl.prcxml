@@ -51,7 +51,7 @@
       <float hash="special_air_hi_accel_y">0.5</float>
       <float hash="special_hi_lr_stick_x">0.25</float>
       <float hash="special_hi_dir_stick_x">0.625</float>
-      <float hash="special_hi_dir_mul">16</float>
+      <float hash="special_hi_dir_mul">13</float>
       <float hash="special_hi_fall_x_mul">0.6</float>
       <int hash="special_hi_landing_frame">22</int>
       <int hash="hi2_hit_fall_frame">50</int>
@@ -70,7 +70,7 @@
       <float hash="special_air_hi_accel_y">0.25</float>
       <float hash="special_hi_lr_stick_x">0.25</float>
       <float hash="special_hi_dir_stick_x">0.625</float>
-      <float hash="special_hi_dir_mul">16</float>
+      <float hash="special_hi_dir_mul">13</float>
       <float hash="special_hi_fall_x_mul">0.8</float>
       <int hash="special_hi_landing_frame">22</int>
       <int hash="hi2_hit_fall_frame">50</int>
