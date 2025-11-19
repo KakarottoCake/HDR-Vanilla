@@ -43,16 +43,16 @@ unsafe extern "C" fn special_n3_catch_main(fighter: &mut L2CFighterCommon) -> L2
         sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_GROUND, speed_x, 0.0, 0.0, 0.0, 0.0);
         sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
         sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
-        sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, brake_x, 0.0);
+        sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, brake_x * 1.2, 0.0);
         KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_lw3_catch"), 0.0, 1.0, false, 0.0, false, false);
     }
     else {
         let air_brake_x = fighter.get_param_float("air_brake_x", "");
-        sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_AIR, speed_x * 0.5, 0.0, 0.0, 0.0, 0.0);
+        sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_AIR, speed_x * 0.4, 0.0, 0.0, 0.0, 0.0);
         sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
         sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
-        sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, air_brake_x, 0.0);
+        sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, air_brake_x * 1.2, 0.0);
         KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
         if !VarModule::is_flag(fighter.object(), vars::miifighter::instance::SPECIAL_N3_STALL) {
             VarModule::on_flag(fighter.object(), vars::miifighter::instance::SPECIAL_N3_STALL);
@@ -121,8 +121,12 @@ unsafe extern "C" fn special_n3_throw_init(fighter: &mut L2CFighterCommon) -> L2
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
     }
     else {
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, 0.0, 0.0, 0.0, 0.0);
+        sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.03);
+        sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.4);
+        sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.4);
     }
     
     return 0.into();
@@ -241,22 +245,7 @@ unsafe extern "C" fn special_n3_throw_main_loop(fighter: &mut L2CFighterCommon) 
         if 0.0 < attack_power {
             AttackModule::set_power(fighter.module_accessor, 0, attack_power, true);
         }
-        if counter_throw_object_id != *BATTLE_OBJECT_ID_INVALID {
-            if sv_battle_object::category(counter_throw_object_id as u32) == *BATTLE_OBJECT_CATEGORY_WEAPON {
-                let counter_throw_boma = sv_battle_object::module_accessor(counter_throw_object_id as u32);
-                LinkModule::remove_model_constraint(counter_throw_boma, true);
-                if LinkModule::is_link(counter_throw_boma, *LINK_NO_ARTICLE) {
-                    LinkModule::unlink(counter_throw_boma, *LINK_NO_ARTICLE);
-                }
-            }
-            if sv_battle_object::category(counter_throw_object_id as u32) == *BATTLE_OBJECT_CATEGORY_ITEM {
-                let counter_throw_boma = sv_battle_object::module_accessor(counter_throw_object_id as u32);
-                LinkModule::remove_model_constraint(counter_throw_boma, true);
-                if LinkModule::is_link(counter_throw_boma, *ITEM_LINK_NO_HAVE) {
-                    LinkModule::unlink(counter_throw_boma, *ITEM_LINK_NO_HAVE);
-                }
-            }
-        }
+        reset_link(fighter, false);
     }
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_FALL, false);
@@ -269,29 +258,18 @@ unsafe extern "C" fn special_n3_throw_main_loop(fighter: &mut L2CFighterCommon) 
 unsafe extern "C" fn special_n3_throw_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     CatchModule::catch_cut(fighter.module_accessor, false, false);
     VarModule::off_flag(fighter.battle_object, vars::miifighter::instance::SPECIAL_N3_IS_LINK);
-    let counter_throw_object_id = VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_N3_GRABBED_OBJECT_ID);
-    if counter_throw_object_id != *BATTLE_OBJECT_ID_INVALID {
-        if sv_battle_object::category(counter_throw_object_id as u32) == *BATTLE_OBJECT_CATEGORY_WEAPON {
-            let counter_throw_boma = sv_battle_object::module_accessor(counter_throw_object_id as u32);
-            LinkModule::remove_model_constraint(counter_throw_boma, true);
-            if LinkModule::is_link(counter_throw_boma, *LINK_NO_ARTICLE) {
-                LinkModule::unlink(counter_throw_boma, *LINK_NO_ARTICLE);
-            }
-        }
-        if sv_battle_object::category(counter_throw_object_id as u32) == *BATTLE_OBJECT_CATEGORY_ITEM {
-            let counter_throw_boma = sv_battle_object::module_accessor(counter_throw_object_id as u32);
-            LinkModule::remove_model_constraint(counter_throw_boma, true);
-            if LinkModule::is_link(counter_throw_boma, *LINK_NO_ARTICLE) {
-                LinkModule::unlink(counter_throw_boma, *LINK_NO_ARTICLE);
-            }
-        }
-        VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_N3_GRABBED_OBJECT_ID, *BATTLE_OBJECT_ID_INVALID);
-    }
+    reset_link(fighter, true);
     
     return 0.into();
 }
 
 unsafe extern "C" fn special_n3_throw_exit(fighter: &mut L2CFighterCommon) -> L2CValue {
+    reset_link(fighter, true);
+    
+    return 0.into();
+}
+
+unsafe fn reset_link(fighter: &mut L2CFighterCommon, reset_grab_id: bool) {
     let counter_throw_object_id = VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_N3_GRABBED_OBJECT_ID);
     VarModule::off_flag(fighter.battle_object, vars::miifighter::instance::SPECIAL_N3_IS_LINK);
     if counter_throw_object_id != *BATTLE_OBJECT_ID_INVALID {
@@ -309,10 +287,10 @@ unsafe extern "C" fn special_n3_throw_exit(fighter: &mut L2CFighterCommon) -> L2
                 LinkModule::unlink(counter_throw_boma, *LINK_NO_ARTICLE);
             }
         }
-        VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_N3_GRABBED_OBJECT_ID, *BATTLE_OBJECT_ID_INVALID);
+        if reset_grab_id {
+            VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_N3_GRABBED_OBJECT_ID, *BATTLE_OBJECT_ID_INVALID);
+        }
     }
-    
-    return 0.into();
 }
 
 pub fn install(agent: &mut Agent) {
