@@ -1,11 +1,6 @@
 use super::*;
 
 pub unsafe extern "C" fn special_lw3_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.set_status_kind_interrupt(*FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_LW3_CATCH);
-    return 1.into();
-}
-
-unsafe extern "C" fn special_lw3_catch_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(
         fighter.module_accessor,
         app::SituationKind(*SITUATION_KIND_NONE),
@@ -34,43 +29,53 @@ unsafe extern "C" fn special_lw3_catch_pre(fighter: &mut L2CFighterCommon) -> L2
     return 0.into();
 }
 
-unsafe extern "C" fn special_lw3_catch_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-    let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-    KineticModule::unable_energy_all(fighter.module_accessor);
+pub unsafe extern "C" fn special_lw3_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.is_situation(*SITUATION_KIND_GROUND) {
-        let brake_x = fighter.get_param_float("ground_brake", "");
-        sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_GROUND, speed_x, 0.0, 0.0, 0.0, 0.0);
-        sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
-        sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
-        sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, brake_x, 0.0);
-        KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
-        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_lw3_catch"), 0.0, 1.0, false, 0.0, false, false);
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
     }
     else {
-        let air_brake_x = fighter.get_param_float("air_brake_x", "");
-        sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_AIR, speed_x * 0.5, 0.0, 0.0, 0.0, 0.0);
-        sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
-        sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
-        sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, air_brake_x, 0.0);
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
         KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
-        if !VarModule::is_flag(fighter.object(), vars::miifighter::instance::SPECIAL_LW3_STALL) {
-            VarModule::on_flag(fighter.object(), vars::miifighter::instance::SPECIAL_LW3_STALL);
-            let start_accel_y = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_lw"), hash40("lw3_throw_start_accel_y"));
-            let throw_speed_max_y = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_lw"), hash40("lw3_throw_speed_max_y"));
-            sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y * 0.5, 0.0, 0.0, 0.0);
-            sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
-            sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -start_accel_y);
-            sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, throw_speed_max_y);
-        }
+        KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_lw3_catch"), 0.0, 1.0, false, 0.0, false, false);
     }
+    special_lw3_change_motion(fighter);
 
-    fighter.main_shift(special_lw3_catch_main_loop)
+    fighter.main_shift(special_lw3_main_loop)
 }
 
-unsafe extern "C" fn special_lw3_catch_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe fn special_lw3_change_motion(fighter: &mut L2CFighterCommon) {
+    let motion = if fighter.is_situation(*SITUATION_KIND_GROUND) {
+        match VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE) {
+            0 => {
+                Hash40::new("special_lw3_1g")
+            },
+            1 => {
+                Hash40::new("special_lw3_2g")
+            },
+            _ => {
+                Hash40::new("special_lw3_3g")
+            }
+        }
+    }
+    else {
+        match VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE) {
+            0 => {
+                Hash40::new("special_lw3_1a")
+            },
+            1 => {
+                Hash40::new("special_lw3_2a")
+            },
+            _ => {
+                Hash40::new("special_lw3_3a")
+            }
+        }
+    };
+    MotionModule::change_motion(fighter.module_accessor, motion, 0.0, 1.0, false, 0.0, false, false);
+}
+
+unsafe extern "C" fn special_lw3_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
@@ -80,32 +85,64 @@ unsafe extern "C" fn special_lw3_catch_main_loop(fighter: &mut L2CFighterCommon)
             return 1.into();
         }
     }
-    if fighter.status_frame() < 15 {
-        StatusModule::set_keep_situation_air(fighter.module_accessor, true);
-    } else {
-        StatusModule::set_keep_situation_air(fighter.module_accessor, false);
-    }
     if MotionModule::is_end(fighter.module_accessor) {
-        let status = if fighter.is_situation(*SITUATION_KIND_GROUND) { FIGHTER_STATUS_KIND_WAIT } else { FIGHTER_STATUS_KIND_FALL };
-        fighter.change_status(status.into(), false.into());
+        fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_FALL, false);
+        return 1.into();
     }
     if StatusModule::is_situation_changed(fighter.module_accessor) {
         if fighter.is_situation(*SITUATION_KIND_GROUND) {
-            GroundModule::correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-            MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_lw3_catch"), -1.0, 1.0, 0.0, false, false);
+            if VarModule::is_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_LW3_ENABLE_LANDING) {
+                fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
+            }
+            else {
+                fighter.set_float(14.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME); // parameterize
+                fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
+            }
         }
         else {
             GroundModule::correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-            MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_lw3_catch"), -1.0, 1.0, 0.0, false, false);
+            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         }
+        return 1.into();
+    }
+    if !VarModule::is_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_LW3_INC_STAGE)
+    && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) {
+        VarModule::on_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_LW3_INC_STAGE);
+        special_lw3_change_stage(fighter, VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE));
     }
 
-    return 0.into()
+    return 0.into();
 }
 
-pub fn install(agent: &mut Agent) {
-    agent.status(Pre, *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_LW3_CATCH, special_lw3_catch_pre);
-    agent.status(Main, *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_LW3_CATCH, special_lw3_catch_main);
+unsafe fn special_lw3_change_stage(fighter: &mut L2CFighterCommon, stage: i32) {
+    EffectModule::req(fighter.module_accessor, Hash40::new("melee_guage_smork"), &Vector3f::zero(), &Vector3f::zero(), 1.0, 0, 0, false, 0);
+    match stage {
+        0 => {
+            VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_TIMER, 600);  // parameterize
+            app::FighterUtil::flash_eye_info(fighter.module_accessor);
+            let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_steam1"), Hash40::new("head"), &Vector3f::zero(), &Vector3f::zero(), 1.0, false, 0, 0, 0, 0, 0, false, false);
+            VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1, handle as i32);
+            VarModule::inc_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE);
+        },
+        1 => {
+            VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_TIMER, 600);  // parameterize
+            app::FighterUtil::flash_eye_info(fighter.module_accessor);
+            let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_steam2"), Hash40::new("head"), &Vector3f::zero(), &Vector3f::zero(), 1.0, false, 0, 0, 0, 0, 0, false, false);
+            VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, handle as i32);
+            VarModule::inc_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE);
+        }
+        _ => {
+            VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE, 0);
+            let handle = VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1) as u32;
+            EffectModule::kill(fighter.module_accessor, handle, false, false);
+            let handle2 = VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2) as u32;
+            EffectModule::kill(fighter.module_accessor, handle2, false, false);
+            VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1, -1);
+            VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, -1);
+        }
+    }
+}
+
+pub unsafe extern "C" fn special_lw3_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    return 0.into();
 }

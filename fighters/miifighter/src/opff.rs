@@ -13,45 +13,6 @@ unsafe fn feint_jump_jc(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
-//Earthquake Punch
-unsafe fn earthquake_punch(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
-    if fighter.is_status(*FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_LW1_GROUND) {
-        let is_hold = ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL);
-        let charge = VarModule::get_int(fighter.battle_object, vars::miifighter::status::SPECIAL_LW1_CHARGE);
-        let charge_distance = VarModule::get_float(fighter.battle_object, vars::miifighter::status::SPECIAL_LW1_CHARGE_DISTANCE) as f32;
-        let charge_start_frame = ParamModule::get_float(boma.object(), ParamType::Agent, "earthquake_fist_ground.charge_start_frame");
-        let charge_end_frame = ParamModule::get_float(boma.object(), ParamType::Agent, "earthquake_fist_ground.charge_end_frame");
-        let max_charge_frames = ParamModule::get_float(boma.object(), ParamType::Agent, "earthquake_fist_ground.max_charge_frames");
-        let max_charge_distance = ParamModule::get_float(boma.object(), ParamType::Agent, "earthquake_fist_ground.max_charge_distance");
-        let lr = PostureModule::lr(fighter.module_accessor);
-        let is_ground = GroundModule::ray_check(
-            fighter.module_accessor, 
-            &Vector2f{ x: PostureModule::pos_x(fighter.module_accessor) + ((charge_distance + 12.0) * lr), y: PostureModule::pos_y(fighter.module_accessor)}, 
-            &Vector2f{ x: 0.0, y: -6.0}, true
-        ) == 1;
-        if MotionModule::end_frame(boma) - fighter.motion_frame() < 2.0 {
-            // reimpl status
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_WAIT, false);
-        }
-        //println!("is_hold: {}, charge: {}, charge_distance: {}, is_ground: {}", is_hold, charge, charge_distance, is_ground);
-        if (charge_start_frame..charge_end_frame).contains(&fighter.motion_frame()) && charge < (max_charge_frames as i32) && is_hold {
-            MotionModule::set_rate(fighter.module_accessor, (charge_end_frame - charge_start_frame)/max_charge_frames);
-            let eff_handle = VarModule::get_int64(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW1_QUAKE_EFFECT_HANDLE);
-            let pos_offset = charge_distance + (max_charge_distance/max_charge_frames);
-            let mut eff_pos_offset = (charge as f32/max_charge_frames) + charge_distance + (max_charge_distance/max_charge_frames);
-            if is_ground {
-                VarModule::set_float(fighter.battle_object, vars::miifighter::status::SPECIAL_LW1_CHARGE_DISTANCE, pos_offset);
-                eff_pos_offset = (10.0 - 10.0 * (charge as f32/max_charge_frames)) + charge_distance + (max_charge_distance/max_charge_frames);
-            }
-            EffectModule::set_pos(boma, eff_handle as u32, &Vector3f::new(0.0, 0.0, eff_pos_offset));
-            VarModule::set_int64(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW1_QUAKE_EFFECT_HANDLE, eff_handle as u64);
-            VarModule::set_int(fighter.battle_object, vars::miifighter::status::SPECIAL_LW1_CHARGE, (charge + 1) as i32);
-        } else {
-            MotionModule::set_rate(fighter.module_accessor, 1.0);
-        }
-    }
-}
-
 // TODO: create cancel animation for aerial EQF cancel
 // Prevents aerial EQF cancel from grabbing ledge for first 7f
 unsafe fn eqf_cancel_ledgegrab_lockout(fighter: &mut L2CFighterCommon) {
@@ -62,6 +23,20 @@ unsafe fn eqf_cancel_ledgegrab_lockout(fighter: &mut L2CFighterCommon) {
         }
         if fighter.status_frame() == 6 {
             notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
+        }
+    }
+}
+
+unsafe fn boiling_punt_timer(fighter: &mut L2CFighterCommon) {
+    if VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE) > 0 {
+        if VarModule::countdown_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_TIMER, 0) {
+            VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE, 0);
+            let handle = VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1) as u32;
+            EffectModule::kill(fighter.module_accessor, handle, false, false);
+            let handle2 = VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2) as u32;
+            EffectModule::kill(fighter.module_accessor, handle2, false, false);
+            VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1, -1);
+            VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, -1);
         }
     }
 }
@@ -114,8 +89,8 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     feint_jump_jc(boma);
-    earthquake_punch(fighter, boma);
     eqf_cancel_ledgegrab_lockout(fighter);
+    boiling_punt_timer(fighter);
     fastfall_specials(fighter);
 }
 
