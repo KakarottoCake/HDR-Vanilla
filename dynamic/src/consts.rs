@@ -904,10 +904,12 @@ pub mod vars {
 
             // flags
             pub const SPECIAL_N_GRAB: i32 = 0x01CF;
+            pub const SPECIAL_LW_DISABLE_STALL: i32 = 0x01D0;
         }
         pub mod status {
             // ints
             pub const ATTACK_CHARGE: i32 = 0x1100;
+            pub const SPECIAL_LW_STOP_Y_FRAME: i32 = 0x1101;
 
             // flags
             pub const SPECIAL_LW_GUT_CHARGED: i32 = 0x1100;
@@ -1144,17 +1146,15 @@ pub mod vars {
     pub mod miifighter {
         pub mod instance {
             // ints
-            pub const SPECIAL_N3_GRABBED_OBJECT_ID: i32 = 0x0100;
-            pub const SPECIAL_LW1_QUAKE_EFFECT_HANDLE: i32 = 0x0101;
-            pub const SPECIAL_LW3_STAGE: i32 = 0x0102;
-            pub const SPECIAL_LW3_TIMER: i32 = 0x0103;
-            pub const SPECIAL_LW3_EFFECT_HANDLE_1: i32 = 0x0104;
-            pub const SPECIAL_LW3_EFFECT_HANDLE_2: i32 = 0x0105;
+            pub const SPECIAL_LW1_QUAKE_EFFECT_HANDLE: i32 = 0x0100;
+            pub const SPECIAL_LW3_STAGE: i32 = 0x0101;
+            pub const SPECIAL_LW3_TIMER: i32 = 0x0102;
+            pub const SPECIAL_LW3_EFFECT_HANDLE_1: i32 = 0x0103;
+            pub const SPECIAL_LW3_EFFECT_HANDLE_2: i32 = 0x0104;
 
             // flags
             pub const SPECIAL_N3_STALL: i32 = 0x0100;
-            pub const SPECIAL_N3_IS_LINK: i32 = 0x0101;
-            pub const SPECIAL_LW3_STALL: i32 = 0x0102;
+            pub const SPECIAL_LW3_STALL: i32 = 0x0101;
         }
         pub mod status {
             // ints
@@ -1167,6 +1167,8 @@ pub mod vars {
             pub const SPECIAL_LW2_CHECK_HOLD: i32 = 0x1100;
             pub const SPECIAL_LW3_INC_STAGE: i32 = 0x1101;
             pub const SPECIAL_LW3_ENABLE_LANDING: i32 = 0x1102;
+            pub const SPECIAL_LW3_CLEAR_CRIT: i32 = 0x1103;
+            pub const SPECIAL_LW3_ENABLE_BOUNCE: i32 = 0x1104;
         }
     }
 
