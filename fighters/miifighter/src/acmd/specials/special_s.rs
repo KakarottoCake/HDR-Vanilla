@@ -316,7 +316,7 @@ unsafe extern "C" fn game_specials3dash(agent: &mut L2CAgentBase) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
     }
     frame(lua_state, 32.0);
-    FT_MOTION_RATE_RANGE(agent, 32.0, 52.0, 20.0);
+    FT_MOTION_RATE_RANGE(agent, 32.0, 52.0, 24.0);
     frame(lua_state, 52.0);
     FT_MOTION_RATE(agent, 1.0);
 }
