@@ -348,64 +348,6 @@ special_lw3_3a:
 special_air_lw3_throw:
   extra:
     cancel_frame: 37
-special_n3_yeet:
-  game_script: game_specialn3yeet
-  flags:
-    turn: false
-    loop: false
-    move: true
-    fix_trans: false
-    fix_rot: false
-    fix_scale: false
-    unk_40: false
-    unk_80: true
-    unk_100: false
-    unk_200: false
-    unk_400: false
-    unk_800: false
-    unk_1000: false
-    unk_2000: false
-  blend_frames: 0
-  animations:
-  - name: d00specialn3yeet.nuanmb
-  scripts:
-  - expression_specialn3yeet
-  - sound_specialn3yeet
-  - effect_specialn3yeet
-  extra:
-    intangible_start_frame: 0
-    intangible_end_frame: 0
-    cancel_frame: 0
-    freeze_during_hitstop: true
-special_air_n3_yeet:
-  game_script: game_specialairn3yeet
-  flags:
-    turn: false
-    loop: false
-    move: true
-    fix_trans: false
-    fix_rot: false
-    fix_scale: false
-    unk_40: false
-    unk_80: true
-    unk_100: false
-    unk_200: false
-    unk_400: false
-    unk_800: false
-    unk_1000: false
-    unk_2000: false
-  blend_frames: 0
-  animations:
-  - name: d00specialairn3yeet.nuanmb
-  scripts:
-  - expression_specialairn3yeet
-  - sound_specialairn3yeet
-  - effect_specialairn3yeet
-  extra:
-    intangible_start_frame: 0
-    intangible_end_frame: 0
-    cancel_frame: 0
-    freeze_during_hitstop: true
 catch_dash:
   extra:
     cancel_frame: 41
