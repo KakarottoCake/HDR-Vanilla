@@ -464,10 +464,10 @@ unsafe extern "C" fn special_n_g_end_main_loop(fighter: &mut L2CFighterCommon) -
 unsafe extern "C" fn special_n_g_rise_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let timer = VarModule::get_int(fighter.battle_object, vars::palutena::status::SPECIAL_N_GREEN_BUTTON_TIMER);
     let loop_count = VarModule::get_int(fighter.battle_object, vars::palutena::status::SPECIAL_N_GREEN_LOOP);
-    // extend loop twice (goes 3 times) if hop initiated in last 10 frames
+    // extend loop twice (goes 3 times) if hop initiated in last 12 frames
     if MotionModule::is_end(fighter.module_accessor) {
         VarModule::inc_int(fighter.battle_object, vars::palutena::status::SPECIAL_N_GREEN_LOOP);
-        if timer >= -5
+        if timer >= -7
         && loop_count < 3 {
             // loop
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_n_g_loop"), 0.0, 1.0, false, 0.0, false, false);
