@@ -105,6 +105,16 @@ unsafe extern "C" fn special_lw3_main_loop(fighter: &mut L2CFighterCommon) -> L2
         }
         return 1.into();
     }
+    if VarModule::is_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_LW3_ENABLE_BOUNCE) {
+        VarModule::off_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_LW3_ENABLE_BOUNCE);
+        // if !VarModule::is_flag(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STALL) {
+        //     VarModule::on_flag(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STALL);
+        //     if KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) <= 0.0 {
+        //         let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+        //         sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 1.5); // parameterize
+        //     }
+        // }
+    }
     if !VarModule::is_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_LW3_INC_STAGE)
     && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) {
         VarModule::on_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_LW3_INC_STAGE);
@@ -118,14 +128,14 @@ unsafe fn special_lw3_change_stage(fighter: &mut L2CFighterCommon, stage: i32) {
     EffectModule::req(fighter.module_accessor, Hash40::new("melee_guage_smork"), &Vector3f::zero(), &Vector3f::zero(), 1.0, 0, 0, false, 0);
     match stage {
         0 => {
-            VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_TIMER, 600);  // parameterize
+            VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_TIMER, 480);  // parameterize
             app::FighterUtil::flash_eye_info(fighter.module_accessor);
             let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_steam1"), Hash40::new("head"), &Vector3f::zero(), &Vector3f::zero(), 1.0, false, 0, 0, 0, 0, 0, false, false);
             VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1, handle as i32);
             VarModule::inc_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE);
         },
         1 => {
-            VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_TIMER, 600);  // parameterize
+            VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_TIMER, 480);  // parameterize
             app::FighterUtil::flash_eye_info(fighter.module_accessor);
             let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_steam2"), Hash40::new("head"), &Vector3f::zero(), &Vector3f::zero(), 1.0, false, 0, 0, 0, 0, 0, false, false);
             VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, handle as i32);
@@ -139,10 +149,21 @@ unsafe fn special_lw3_change_stage(fighter: &mut L2CFighterCommon, stage: i32) {
             EffectModule::kill(fighter.module_accessor, handle2, false, false);
             VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1, -1);
             VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, -1);
+            if fighter.is_motion(Hash40::new("special_lw3_3g"))
+            && VarModule::is_flag(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STALL)
+            && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT)
+            && !VarModule::is_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_LW3_CLEAR_CRIT) {
+                VarModule::on_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_LW3_CLEAR_CRIT);
+                SlowModule::set_whole(fighter.module_accessor, 4, 1);
+                EffectModule::req_screen(fighter.module_accessor, Hash40::new("bg_criticalhit"), false, true, true);
+            }
         }
     }
 }
 
 pub unsafe extern "C" fn special_lw3_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    SlowModule::clear_whole(fighter.module_accessor);
+    CameraModule::reset_all(fighter.module_accessor);
+    EffectModule::remove_screen(fighter.module_accessor, Hash40::new("bg_criticalhit"), 0);
     return 0.into();
 }

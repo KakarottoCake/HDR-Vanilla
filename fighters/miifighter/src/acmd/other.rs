@@ -97,6 +97,43 @@ unsafe extern "C" fn game_escapeairslide(agent: &mut L2CAgentBase) {
     }
 }
 
+extern "Rust" {
+    fn gimmick_flash(boma: &mut BattleObjectModuleAccessor);
+}
+
+unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 10.0);
+    if is_excute(agent) {
+        if app::smashball::is_training_mode() && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_APPEAL_LW) {
+            gimmick_flash(boma);
+            let stage = VarModule::get_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE);
+            match stage {
+                0 => {
+                    let handle = EffectModule::req_follow(boma, Hash40::new("sys_steam1"), Hash40::new("head"), &Vector3f::zero(), &Vector3f::zero(), 1.0, false, 0, 0, 0, 0, 0, false, false);
+                    VarModule::set_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1, handle as i32);
+                    VarModule::inc_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE);
+                },
+                1 => {
+                    let handle = EffectModule::req_follow(boma, Hash40::new("sys_steam2"), Hash40::new("head"), &Vector3f::zero(), &Vector3f::zero(), 1.0, false, 0, 0, 0, 0, 0, false, false);
+                    VarModule::set_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, handle as i32);
+                    VarModule::inc_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE);
+                }
+                _ => {
+                    VarModule::set_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE, 0);
+                    let handle = VarModule::get_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1) as u32;
+                    EffectModule::kill(boma, handle, false, false);
+                    let handle2 = VarModule::get_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2) as u32;
+                    EffectModule::kill(boma, handle2, false, false);
+                    VarModule::set_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1, -1);
+                    VarModule::set_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, -1);
+                }
+            }
+        }
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_cliffescape", acmd_stub, Priority::Low);
 
@@ -112,4 +149,7 @@ pub fn install(agent: &mut Agent) {
 
     agent.acmd("game_escapeair", game_escapeair, Priority::Low);
     agent.acmd("game_escapeairslide", game_escapeairslide, Priority::Low);
+
+    agent.acmd("game_appeallwl", game_appeallw, Priority::Low);
+    agent.acmd("game_appeallwr", game_appeallw, Priority::Low);
 }
