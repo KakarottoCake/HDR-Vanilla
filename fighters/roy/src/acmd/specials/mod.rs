@@ -290,7 +290,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 40.0);
     FT_MOTION_RATE(agent, 1.0);
-    frame(lua_state, 44.0);
+    frame(lua_state, 42.0);
     if is_excute(agent) {
         KineticModule::resume_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     }

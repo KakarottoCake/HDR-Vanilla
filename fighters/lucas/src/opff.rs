@@ -183,7 +183,7 @@ unsafe fn upspecialend(fighter: &mut L2CFighterCommon) {
             fighter.select_cliff_hangdata_from_name("special_air_hi_end");
             KineticModule::suspend_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         }
-        else if fighter.status_frame() == 15 {
+        else if fighter.status_frame() == 10 {
             KineticModule::resume_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         }
     }

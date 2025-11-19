@@ -35,7 +35,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     && fighter.is_status_one_of(&[
         *FIGHTER_STATUS_KIND_SPECIAL_N,
         *FIGHTER_STATUS_KIND_SPECIAL_S,
-        *FIGHTER_STATUS_KIND_SPECIAL_HI,
         *FIGHTER_GANON_STATUS_KIND_SPECIAL_N_TURN,
         *FIGHTER_GANON_STATUS_KIND_SPECIAL_HI_THROW,
         *FIGHTER_GANON_STATUS_KIND_SPECIAL_LW_WALL_END
