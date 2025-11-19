@@ -75,6 +75,32 @@ unsafe extern "C" fn game_throwhi(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn effect_throwhi(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 21.0);
+    if is_excute(agent) {
+        LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), -1.5, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(lua_state, 24.0);
+    if is_excute(agent) {
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_younglink_sword_hdr"), Hash40::new("younglink_sword2"), 6, Hash40::new("sword"), 0.5, 0, 0, Hash40::new("sword"), 9.7, 0, -0.25, true, Hash40::new("younglink_sword"), Hash40::new("sword"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.5, 0.2);
+    }
+    frame(lua_state, 30.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("top"), 0, 30, 0, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true);
+    }
+    frame(lua_state, 32.0);
+    if is_excute(agent) {
+        AFTER_IMAGE_OFF(agent, 5);
+    }
+    frame(lua_state, 39.0);
+    if is_excute(agent) {
+        FOOT_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
+        LAST_EFFECT_SET_RATE(agent, 1.3);
+    }
+}
+
 unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -103,6 +129,8 @@ unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
         let target_group = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
         let target_no = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
+        let opponent_boma = agent.get_grabbed_opponent_boma();
+        VarModule::on_flag(opponent_boma.object(), vars::common::instance::IS_KNOCKDOWN_THROW);
     }
 }
 
@@ -112,6 +140,7 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_throwb", game_throwb, Priority::Low);
 
     agent.acmd("game_throwhi", game_throwhi, Priority::Low);
+    agent.acmd("effect_throwhi", effect_throwhi, Priority::Low);
 
     agent.acmd("game_throwlw", game_throwlw, Priority::Low);
 }

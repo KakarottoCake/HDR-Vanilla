@@ -37,7 +37,11 @@ unsafe fn attack_module_set_attack(module: u64, id: i32, group: i32, data: &mut 
             data.r_eff = 50;
             data.r_add = 70;
             data.sub_shield = 0;
-            data.lr_check = smash_rs::app::AttackLRCheck::Pos;
+
+            // ID 0:
+            // ground-only, cannot reverse hit
+            data.target_situation = smash_rs::app::CollisionSituationMask::Ground;
+            data.lr_check = smash_rs::app::AttackLRCheck::Forward;
         }
         if (*boma).is_status(*FIGHTER_STATUS_KIND_CATCH_ATTACK) {
             if !VarModule::is_flag((*boma).object(), vars::common::status::PUMMEL_OVERRIDE_GLOBAL_STATS) {
@@ -83,6 +87,15 @@ unsafe fn attack_module_set_attack(module: u64, id: i32, group: i32, data: &mut 
     }
 
     call_original!(module, id, group, data);
+
+    if (*boma).is_status(*FIGHTER_STATUS_KIND_CLIFF_ATTACK) {
+        // ID 1:
+        // air-only, can reverse hit
+        data.target_situation = smash_rs::app::CollisionSituationMask::Air;
+        data.lr_check = smash_rs::app::AttackLRCheck::Pos;
+
+        call_original!(module, 1, group, data);
+    }
 }
 
 #[skyline::hook(offset = 0x403c3c, inline)]
@@ -339,27 +352,8 @@ unsafe fn post_spike_check(ctx: &mut skyline::hooks::InlineCtx) {
         ctx.registers_f[11].set_s(kb)
     }
 
-    // Forces tumble for throws
-    let fighter = util::get_fighter_common_from_accessor(&mut (*boma));
-    if VarModule::is_flag((*boma).object(), vars::common::instance::FORCE_TUMBLE_NO_BOUNCE)
-    || [ // THROWN statuses
-        *FIGHTER_STATUS_KIND_BITTEN_WARIO_END,
-        *FIGHTER_STATUS_KIND_CATCHED_AIR_END_GANON,
-        *FIGHTER_STATUS_KIND_CLUNG_THROWN_BLANK_DIDDY,
-        *FIGHTER_STATUS_KIND_CLUNG_THROWN_DIDDY,
-        *FIGHTER_STATUS_KIND_DEMON_DIVED,
-        *FIGHTER_STATUS_KIND_DRAGGED_RIDLEY,
-        *FIGHTER_STATUS_KIND_MEWTWO_THROWN,
-        *FIGHTER_STATUS_KIND_MIIFIGHTER_COUNTER_THROWN,
-        *FIGHTER_STATUS_KIND_MIIFIGHTER_SUPLEX_THROWN,
-        *FIGHTER_STATUS_KIND_SHOULDERED_DONKEY_THROWN,
-        *FIGHTER_STATUS_KIND_SWALLOWED_THROWN,
-        *FIGHTER_STATUS_KIND_SWALLOWED_THROWN_STAR,
-        // *FIGHTER_STATUS_KIND_SWING_GAOGAEN_FAILURE,
-        *FIGHTER_STATUS_KIND_SWING_GAOGAEN_LARIAT,
-        *FIGHTER_STATUS_KIND_SWING_GAOGAEN_SHOULDER,
-        *FIGHTER_STATUS_KIND_THROWN,
-    ].contains(&(fighter.global_table[STATUS_KIND].get_i32())) {
+    // Forces tumble for knockdown throws
+    if VarModule::is_flag((*boma).object(), vars::common::instance::IS_KNOCKDOWN_THROW) {
         // Set damage level to 3 (tumble)
         ctx.registers[24].set_w(3);
     }
