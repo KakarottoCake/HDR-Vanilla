@@ -25,7 +25,7 @@ unsafe extern "C" fn check_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
 }
 
 unsafe extern "C" fn check_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    weapon.set_int(29, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    weapon.set_int(30, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     MotionModule::change_motion(weapon.module_accessor, Hash40::new("check"), 0.0, 1.0, false, 0.0, false, false);
 
     let mut pos = *PostureModule::pos(weapon.get_owner_boma());
@@ -38,8 +38,13 @@ unsafe extern "C" fn check_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
 unsafe extern "C" fn check_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
     weapon.dec_int(*WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     let life = weapon.get_int(*WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    // if interrupted before GFX spawn, kill it
+    if life > 20 
+    && LinkModule::is_parent_damage_reaction(weapon.module_accessor, *WEAPON_LINK_NO_CONSTRAINT) {
+        weapon.on_flag(*WEAPON_PALUTENA_EXPLOSIVEFLAME_INSTANCE_WORK_ID_FLAG_RESERVE_MISS);
+    }
     if life == 20 {
-        // use f0 pos, effective 8f to release special
+        // use f0 pos, effective 9f to release special
         let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
         let palutena = utils::util::get_battle_object_from_id(owner_id);
         let palutena_boma: &mut BattleObjectModuleAccessor = &mut *(*palutena).module_accessor;

@@ -35,18 +35,18 @@ unsafe extern "C" fn effect_specialngstart(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("sys_club_tornado"), Hash40::new("top"), 0.5, 0, 0.5, 0, 0, 0, 1, true);
         LAST_EFFECT_SET_COLOR(agent, 0.05, 1.5, 0.05);
-        LAST_EFFECT_SET_SCALE_W(agent, 0.61, 0.95, 0.61);
+        LAST_EFFECT_SET_SCALE_W(agent, 0.6125, 0.925, 0.6125);
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("sys_club_tornado"), Hash40::new("top"), 0.5, -0.25, 0.5, 0, 0, 0, 1.2, true);
         LAST_EFFECT_SET_COLOR(agent, 0.25, 0.75, 0.25);
         LAST_EFFECT_SET_ALPHA(agent, 0.25);
-        LAST_EFFECT_SET_SCALE_W(agent, 0.83, 1.0, 0.83);
+        LAST_EFFECT_SET_SCALE_W(agent, 0.8, 0.975, 0.8);
     }
     frame(lua_state, 20.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("sys_club_tornado"), Hash40::new("top"), 0.5, -0.125, 0.5, 0, 0, 0, 0.95, true);
         LAST_EFFECT_SET_COLOR(agent, 0.05, 0.67, 0.05);
         LAST_EFFECT_SET_ALPHA(agent, 0.65);
-        LAST_EFFECT_SET_SCALE_W(agent, 0.72, 0.975, 0.72);
+        LAST_EFFECT_SET_SCALE_W(agent, 0.725, 0.95, 0.725);
     }
 }
 
@@ -92,9 +92,9 @@ unsafe extern "C" fn game_specialngloop(agent: &mut L2CAgentBase) {
         HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_XLU);
         HIT_NODE(agent, Hash40::new("arml"), *HIT_STATUS_XLU);
         // multihit segment
-        ATTACK(agent, 0, 0, Hash40::new("top"), damage, 110, 100, 40, 0, 5.5, 0.0, 6.5, 0.375, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 6, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
-        ATTACK(agent, 1, 0, Hash40::new("top"), damage, 145, 100, 40, 0, 5.5, 0.0, 12.25, -1.5, Some(0.0), Some(12.25), Some(2.25), 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 6, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
-        ATTACK(agent, 2, 0, Hash40::new("top"), damage, 180, 100, 40, 0, 5.5, 0.0, 18.0, -2.5, Some(0.0), Some(18.0), Some(3.25), 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 6, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
+        ATTACK(agent, 0, 0, Hash40::new("top"), damage, 111, 100, 42, 0, 5.75, 0.0, 6.75, 0.75, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 6, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
+        ATTACK(agent, 1, 0, Hash40::new("top"), damage, 145, 100, 40, 0, 5.75, 0.0, 11.75, -1.25, Some(0.0), Some(11.75), Some(2.0), 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 6, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
+        ATTACK(agent, 2, 0, Hash40::new("top"), damage, 177, 100, 38, 0, 5.75, 0.0, 17.75, -2.25, Some(0.0), Some(17.75), Some(3.0), 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 6, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
     }
 }
 
@@ -122,16 +122,16 @@ unsafe extern "C" fn game_specialngend(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     FT_MOTION_RATE_RANGE(agent, 1.0, 13.0, 10.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), damage, 110, 100, 40, 0, 5.5, 0.0, 6.5, 0.375, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 6, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
-        ATTACK(agent, 1, 0, Hash40::new("top"), damage, 145, 100, 40, 0, 5.5, 0.0, 12.25, -1.5, Some(0.0), Some(12.25), Some(2.25), 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 6, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
-        ATTACK(agent, 2, 0, Hash40::new("top"), damage, 180, 100, 40, 0, 5.5, 0.0, 18.0, -2.5, Some(0.0), Some(18.0), Some(3.25), 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 6, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
+        ATTACK(agent, 0, 0, Hash40::new("top"), damage, 111, 100, 42, 0, 5.75, 0.0, 6.75, 0.75, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 6, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
+        ATTACK(agent, 1, 0, Hash40::new("top"), damage, 145, 100, 40, 0, 5.75, 0.0, 11.75, -1.25, Some(0.0), Some(11.75), Some(2.0), 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 6, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
+        ATTACK(agent, 2, 0, Hash40::new("top"), damage, 177, 100, 38, 0, 5.75, 0.0, 17.75, -2.25, Some(0.0), Some(17.75), Some(3.0), 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 6, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {
         let angle_mod = ((sv_math::rand(hash40("fighter"), 51) as i32) - 25) as u64;
-        ATTACK(agent, 0, 1, Hash40::new("top"), 5.0, 90 + angle_mod, 116, 0, 75, 6.5, 0.0, 6.5, 0.375, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
-        ATTACK(agent, 1, 1, Hash40::new("top"), 5.0, 90 + angle_mod, 116, 0, 75, 6.5, 0.0, 13.25, -2.5, Some(0.0), Some(13.25), Some(3.25), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
-        ATTACK(agent, 2, 1, Hash40::new("top"), 5.0, 90 + angle_mod, 116, 0, 75, 6.5, 0.0, 20.0, -4.5, Some(0.0), Some(20.0), Some(5.25), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
+        ATTACK(agent, 0, 1, Hash40::new("top"), 5.0, 90 + angle_mod, 123, 0, 66, 6.5, 0.0, 6.5, 0.75, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
+        ATTACK(agent, 1, 1, Hash40::new("top"), 5.0, 90 + angle_mod, 123, 0, 66, 6.5, 0.0, 13.25, -2.5, Some(0.0), Some(13.25), Some(3.25), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
+        ATTACK(agent, 2, 1, Hash40::new("top"), 5.0, 90 + angle_mod, 123, 0, 66, 6.5, 0.0, 20.0, -4.5, Some(0.0), Some(20.0), Some(5.25), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
     }
     frame(lua_state, 13.0); // 11
     FT_MOTION_RATE(agent, 1.0); // 42 faf
@@ -158,12 +158,12 @@ unsafe extern "C" fn effect_specialngend(agent: &mut L2CAgentBase) {
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("sys_club_tornado"), Hash40::new("top"), 0.5, 0, 0.5, 0, 0, 0, 1, true);
         LAST_EFFECT_SET_COLOR(agent, 0.05, 1.0, 0.05);
         LAST_EFFECT_SET_RATE(agent, 2.0);
-        LAST_EFFECT_SET_SCALE_W(agent, 0.9, 1.05, 0.9);
+        LAST_EFFECT_SET_SCALE_W(agent, 0.925, 1.1, 0.925);
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("sys_club_tornado"), Hash40::new("top"), 0.5, 0, 0.5, 0, 0, 0, 1.2, true);
         LAST_EFFECT_SET_COLOR(agent, 0.25, 1.0, 0.25);
         LAST_EFFECT_SET_RATE(agent, 2.0);
         LAST_EFFECT_SET_ALPHA(agent, 0.4);
-        LAST_EFFECT_SET_SCALE_W(agent, 1.05, 1.1, 1.05);
+        LAST_EFFECT_SET_SCALE_W(agent, 1.075, 1.15, 1.075);
     }
     frame(lua_state, 7.0);
     if is_excute(agent) {
