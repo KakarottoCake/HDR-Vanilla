@@ -857,13 +857,14 @@ pub mod vars {
             pub const PURIN_SPECIAL_N_HIT_CANCEL_OK: i32 = 0x11F9;
             pub const PALUTENA_SPECIAL_N_HOLD: i32 = 0x11FA;
 
-            pub use super::super::mario::status::SPECIAL_N_FIREBRAND;
-            pub use super::super::luigi::status::SPECIAL_N_THUNDERHAND;
-            pub use super::super::mariod::status::SPECIAL_N_CHILL_PILL;
             pub use super::super::daisy::status::SPECIAL_N_CRYSTAL_ACTIVE;
             pub use super::super::daisy::status::SPECIAL_N_AIR_START;
             pub use super::super::daisy::status::SPECIAL_N_DIVE;
             pub use super::super::daisy::status::SPECIAL_N_AUTOCANCEL;
+            pub use super::super::krool::status::SPECIAL_N_ANGLED;
+            pub use super::super::luigi::status::SPECIAL_N_THUNDERHAND;
+            pub use super::super::mario::status::SPECIAL_N_FIREBRAND;
+            pub use super::super::mariod::status::SPECIAL_N_CHILL_PILL;
         }
     }
 
@@ -910,7 +911,8 @@ pub mod vars {
             pub const ATTACK_CHARGE: i32 = 0x1100;
 
             // flags
-            pub const SPECIAL_LW_GUT_CHARGED: i32 = 0x1100;
+            pub const SPECIAL_N_ANGLED: i32 = 0x1100;
+            pub const SPECIAL_LW_GUT_CHARGED: i32 = 0x1101;
         }
     }
 

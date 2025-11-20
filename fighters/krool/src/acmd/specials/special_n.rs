@@ -18,7 +18,7 @@ unsafe extern "C" fn game_specialnfire(agent: &mut L2CAgentBase) {
             agent.on_flag(*FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_NO_SHOOT_IRONBALL);
         }
         else {
-            VarModule::on_flag(agent.battle_object, vars::krool::status::ATTACK_CHARGE);
+            VarModule::on_flag(agent.battle_object, vars::krool::status::SPECIAL_N_ANGLED);
         }
     }
     frame(lua_state, 26.0);
@@ -236,10 +236,14 @@ unsafe extern "C" fn game_specialnfireb(agent: &mut L2CAgentBase) {
         MotionModule::set_rate(boma, 1.0);
     }
     frame(lua_state, 15.0);
+    FT_MOTION_RATE_RANGE(agent, 15.0, 22.0, 4.0);
+    ArticleModule::set_rate(boma, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, (22.0 - 15.0)/4.0);
     if is_excute(agent) {
         REVERSE_LR(agent);
     }
     frame(lua_state, 22.0);
+    FT_MOTION_RATE(agent, 1.0);
+    ArticleModule::set_rate(boma, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, 1.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_SHOOT_IRONBALL);
     }
@@ -323,14 +327,11 @@ unsafe extern "C" fn game_specialnloop(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        if agent.is_situation(*SITUATION_KIND_AIR) {
-            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-        }
         if VarModule::is_flag(agent.battle_object, vars::krool::instance::SPECIAL_N_GRAB) {
             CATCH(agent, 0, Hash40::new("top"), 4.5, 0.0, 9.5, 10.7, Some(0.0), Some(9.5), Some(17.5), *FIGHTER_STATUS_KIND_SWALLOWED, *COLLISION_SITUATION_MASK_GA);
             ATTACK(agent, 1, 0, Hash40::new("top"), 0.0, 160, 100, 20, 0, 6.0, 0.0, 9.0, 22.0, Some(0.0), Some(9.0), Some(28.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 3, false, false, true, true, false, *COLLISION_SITUATION_MASK_GA_d, *COLLISION_CATEGORY_MASK_NO_STAGE_GIMMICK, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
             ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 5.0, 361, 100, 0, 0, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
-            SEARCH(agent, 0, 0, Hash40::new("top"), 7.0, 0.0, 8.0, 11.0, Some(0.0), Some(8.0), Some(28.0), *COLLISION_KIND_MASK_AH, *HIT_STATUS_MASK_ALL, 1, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, true);
+            SEARCH(agent, 0, 0, Hash40::new("top"), 7.0, 0.0, 8.0, 11.0, Some(0.0), Some(8.0), Some(30.0), *COLLISION_KIND_MASK_AH, *HIT_STATUS_MASK_ALL, 1, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, true);
         }
     }
 }
