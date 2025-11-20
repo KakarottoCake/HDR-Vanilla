@@ -34,25 +34,17 @@ unsafe extern "C" fn game_kroolspecialnfire(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, 1.0);
     ArticleModule::set_rate(boma, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, 1.0);
     if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_SHOOT_CANCEL);
         if !VarModule::is_flag(agent.battle_object, vars::krool::instance::SPECIAL_N_GRAB) {
             WorkModule::on_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_SHOOT_IRONBALL);
-            WorkModule::on_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_NO_SHOOT_CANCEL);
         }
     }
     frame(lua_state, 37.0);
     FT_MOTION_RATE_RANGE(agent, 37.0, 70.0, 25.0);
     ArticleModule::set_rate(boma, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, (70.0 - 37.0)/25.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_SHOOT_CANCEL);
-        WorkModule::on_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_NO_SHOOT_CANCEL);
-    }
     frame(lua_state, 70.0);
     FT_MOTION_RATE(agent, 1.0);
     ArticleModule::set_rate(boma, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, 1.0);
-    if is_excute(agent) {
-        WorkModule::off_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_SHOOT_CANCEL);
-        WorkModule::off_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_NO_SHOOT_CANCEL);
-    }
 }
 
 unsafe extern "C" fn effect_kroolspecialnfire(agent: &mut L2CAgentBase) {
@@ -76,6 +68,28 @@ unsafe extern "C" fn effect_kroolspecialnfire(agent: &mut L2CAgentBase) {
         if !VarModule::is_flag(agent.battle_object, vars::krool::instance::SPECIAL_N_GRAB) {
             EFFECT(agent, Hash40::new("krool_cannon_shot"), Hash40::new("top"), 16, 10, 0, 0, 0, 0, 1.3, 0, 0, 0, 0, 0, 0, false);
         }
+    }
+}
+
+unsafe extern "C" fn sound_kroolspecialnfire(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 1.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_krool_special_n08"));
+    }
+    frame(lua_state, 31.0);
+    if is_excute(agent) {
+        if WorkModule::is_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_SHOOT_IRONBALL) {
+            PLAY_SE(agent, Hash40::new("se_krool_special_n01"));
+        }
+        else {
+            PLAY_SE(agent, Hash40::new("se_krool_special_n07"));
+        }
+    }
+    frame(lua_state, 60.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_krool_special_n09"));
     }
 }
 
@@ -310,6 +324,8 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_kroolspecialairnfire", game_kroolspecialnfire, Priority::Low);
     agent.acmd("effect_kroolspecialnfire", effect_kroolspecialnfire, Priority::Low);
     agent.acmd("effect_kroolspecialairnfire", effect_kroolspecialnfire, Priority::Low);
+    agent.acmd("sound_kroolspecialnfire", sound_kroolspecialnfire, Priority::Low);
+    agent.acmd("sound_kroolspecialairnfire", sound_kroolspecialnfire, Priority::Low);
     agent.acmd("expression_kroolspecialnfire", expression_kroolspecialnfire, Priority::Low);
     agent.acmd("expression_kroolspecialairnfire", expression_kroolspecialnfire, Priority::Low);
 

@@ -34,25 +34,17 @@ unsafe extern "C" fn game_specialnfire(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, 1.0);
     ArticleModule::set_rate(boma, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, 1.0);
     if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_SHOOT_CANCEL);
         if !VarModule::is_flag(agent.battle_object, vars::krool::instance::SPECIAL_N_GRAB) {
             WorkModule::on_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_SHOOT_IRONBALL);
-            WorkModule::on_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_NO_SHOOT_CANCEL);
         }
     }
     frame(lua_state, 37.0);
     FT_MOTION_RATE_RANGE(agent, 37.0, 70.0, 25.0);
     ArticleModule::set_rate(boma, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, (70.0 - 37.0)/25.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_SHOOT_CANCEL);
-        WorkModule::on_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_NO_SHOOT_CANCEL);
-    }
     frame(lua_state, 70.0);
     FT_MOTION_RATE(agent, 1.0);
     ArticleModule::set_rate(boma, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, 1.0);
-    if is_excute(agent) {
-        WorkModule::off_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_SHOOT_CANCEL);
-        WorkModule::off_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_NO_SHOOT_CANCEL);
-    }
 }
 
 unsafe extern "C" fn effect_specialnfire(agent: &mut L2CAgentBase) {
@@ -88,11 +80,11 @@ unsafe extern "C" fn sound_specialnfire(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 31.0);
     if is_excute(agent) {
-        if !WorkModule::is_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_NO_SHOOT_CANCEL) {
-            PLAY_SE(agent, Hash40::new("se_krool_special_n07"));
-        }
-        else if !VarModule::is_flag(agent.battle_object, vars::krool::instance::SPECIAL_N_GRAB) {
+        if WorkModule::is_flag(boma, *FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_SHOOT_IRONBALL) {
             PLAY_SE(agent, Hash40::new("se_krool_special_n01"));
+        }
+        else {
+            PLAY_SE(agent, Hash40::new("se_krool_special_n07"));
         }
     }
     frame(lua_state, 60.0);
@@ -116,7 +108,8 @@ unsafe extern "C" fn expression_specialnfire(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 30.0);
     if is_excute(agent) {
-        if !VarModule::is_flag(agent.battle_object, vars::krool::instance::SPECIAL_N_GRAB) && IS_GENERATABLE_ARTICLE(agent, *FIGHTER_KROOL_GENERATE_ARTICLE_IRONBALL) {
+        if !VarModule::is_flag(agent.battle_object, vars::krool::instance::SPECIAL_N_GRAB)
+        && IS_GENERATABLE_ARTICLE(agent, *FIGHTER_KROOL_GENERATE_ARTICLE_IRONBALL) {
             QUAKE(agent, *CAMERA_QUAKE_KIND_S);
         }
     }

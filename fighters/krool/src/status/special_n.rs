@@ -121,14 +121,10 @@ pub unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> 
             return 0.into();
         }
     }
-    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)
-    || VarModule::is_flag(fighter.battle_object, vars::krool::instance::SPECIAL_N_GRAB) {
+    if VarModule::is_flag(fighter.battle_object, vars::krool::instance::SPECIAL_N_GRAB) {
         if fighter.is_flag(*FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_SHOOT_CANCEL) {
-            if !ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_KROOL_GENERATE_ARTICLE_IRONBALL)
-            || fighter.is_flag(*FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_NO_SHOOT_IRONBALL) {
-                fighter.change_status(FIGHTER_KROOL_STATUS_KIND_SPECIAL_N_SUCTION.into(), true.into());
-                return 0.into();
-            }
+            fighter.change_status(FIGHTER_KROOL_STATUS_KIND_SPECIAL_N_SUCTION.into(), true.into());
+            return 0.into();
         }
     }
     if MotionModule::is_end(fighter.module_accessor) {
