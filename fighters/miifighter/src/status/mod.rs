@@ -5,6 +5,7 @@ use globals::*;
 mod special_lw1;
 mod special_lw2;
 mod special_lw3;
+mod special_n1;
 mod special_n2;
 mod special_n3;
 mod special_s1;
@@ -35,7 +36,14 @@ unsafe extern "C" fn move_customizer(fighter: &mut L2CFighterCommon) -> L2CValue
     if let Some(original) = get_original_customizer(fighter) {
         original(fighter);
     }
-    if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_N_2 {
+    if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_N_1 {
+        fighter.sv_set_status_func(
+            FIGHTER_STATUS_KIND_SPECIAL_N.into(),
+            LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN.into(),
+            std::mem::transmute(special_n1::special_n1_main as *const ())
+        );
+    }
+    else if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_N_2 {
         fighter.sv_set_status_func(
             FIGHTER_STATUS_KIND_SPECIAL_N.into(),
             LUA_SCRIPT_STATUS_FUNC_STATUS_PRE.into(),

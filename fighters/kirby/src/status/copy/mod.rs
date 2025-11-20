@@ -20,6 +20,7 @@ mod luigi_special_n;
 mod mario_special_n;
 mod mariod_special_n;
 mod mewtwo_special_n;
+mod miifighter_special_n;
 mod miigunner_special_n;
 mod pacman_special_n;
 mod palutena_special_n;
@@ -55,6 +56,7 @@ pub fn install(agent: &mut Agent) {
     mario_special_n::install(agent);
     mariod_special_n::install(agent);
     mewtwo_special_n::install(agent);
+    miifighter_special_n::install(agent);
     miigunner_special_n::install(agent);
     pacman_special_n::install(agent);
     palutena_special_n::install(agent);

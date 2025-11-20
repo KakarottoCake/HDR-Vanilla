@@ -836,10 +836,11 @@ pub mod vars {
 
             // ints
             pub const SPECIAL_N_PICKEL_MATERIAL_INDEX: i32 = 0x01F5;
-            pub use super::super::bayonetta::instance::SPECIAL_N_CANCEL_TYPE;
             pub const SPECIAL_N_PTRAINER_PLEDGE_STATE: i32 = 0x01F6;    // Unique var as it doesn't like borrowing from ptrainer
-            pub use super::super::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER;
             pub const SPECIAL_N_PTRAINER_PLEDGE_EFFECT_HANDLE: i32 = 0x01F7;
+            
+            pub use super::super::bayonetta::instance::SPECIAL_N_CANCEL_TYPE;
+            pub use super::super::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER;
 
             // floats
             pub use super::super::reflet::instance::SPECIAL_N_CHARGE;
@@ -847,6 +848,9 @@ pub mod vars {
         pub mod status {
             // ints
             pub const PURIN_SPECIAL_N_ENABLE_HIT_CANCEL_FRAME: i32 = 0x11F9;
+
+            pub use super::super::miifighter::status::SPECIAL_N1_ANGLE;
+            pub use super::super::miifighter::status::SPECIAL_N1_SPEED;
 
             // flags
             pub const SPECIAL_N_PICKEL_MINING_TIMER: i32 = 0x11F4;
@@ -857,13 +861,14 @@ pub mod vars {
             pub const PURIN_SPECIAL_N_HIT_CANCEL_OK: i32 = 0x11F9;
             pub const PALUTENA_SPECIAL_N_HOLD: i32 = 0x11FA;
 
-            pub use super::super::mario::status::SPECIAL_N_FIREBRAND;
-            pub use super::super::luigi::status::SPECIAL_N_THUNDERHAND;
-            pub use super::super::mariod::status::SPECIAL_N_CHILL_PILL;
             pub use super::super::daisy::status::SPECIAL_N_CRYSTAL_ACTIVE;
             pub use super::super::daisy::status::SPECIAL_N_AIR_START;
             pub use super::super::daisy::status::SPECIAL_N_DIVE;
             pub use super::super::daisy::status::SPECIAL_N_AUTOCANCEL;
+            pub use super::super::luigi::status::SPECIAL_N_THUNDERHAND;
+            pub use super::super::mario::status::SPECIAL_N_FIREBRAND;
+            pub use super::super::mariod::status::SPECIAL_N_CHILL_PILL;
+            pub use super::super::miifighter::status::SPECIAL_N1_CHECK_HOLD;
         }
     }
 
@@ -1161,14 +1166,17 @@ pub mod vars {
             pub const SPECIAL_LW1_CHARGE: i32 = 0x1100;
 
             // floats
-            pub const SPECIAL_LW1_CHARGE_DISTANCE: i32 = 0x1100;
+            pub const SPECIAL_N1_ANGLE: i32 = 0x1100;
+            pub const SPECIAL_N1_SPEED: i32 = 0x1101;
+            pub const SPECIAL_LW1_CHARGE_DISTANCE: i32 = 0x1102;
 
             // flags
-            pub const SPECIAL_LW2_CHECK_HOLD: i32 = 0x1100;
-            pub const SPECIAL_LW3_INC_STAGE: i32 = 0x1101;
-            pub const SPECIAL_LW3_ENABLE_LANDING: i32 = 0x1102;
-            pub const SPECIAL_LW3_CLEAR_CRIT: i32 = 0x1103;
-            pub const SPECIAL_LW3_ENABLE_BOUNCE: i32 = 0x1104;
+            pub const SPECIAL_N1_CHECK_HOLD: i32 = 0x1100;
+            pub const SPECIAL_LW2_CHECK_HOLD: i32 = 0x1101;
+            pub const SPECIAL_LW3_INC_STAGE: i32 = 0x1102;
+            pub const SPECIAL_LW3_ENABLE_LANDING: i32 = 0x1103;
+            pub const SPECIAL_LW3_CLEAR_CRIT: i32 = 0x1104;
+            pub const SPECIAL_LW3_ENABLE_BOUNCE: i32 = 0x1105;
         }
     }
 

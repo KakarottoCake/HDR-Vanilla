@@ -348,6 +348,66 @@ special_lw3_3a:
 special_air_lw3_throw:
   extra:
     cancel_frame: 37
+special_n1_bowl:
+  game_script: game_specialn1bowl
+  flags:
+    turn: false
+    loop: false
+    move: true
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+    - name: d00specialn1bowl.nuanmb
+      unk: 0
+  scripts:
+    - expression_specialn1bowl
+    - sound_specialn1bowl
+    - effect_specialn1bowl
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 80
+    no_stop_intp: false
+special_air_n1_bowl:
+  game_script: game_specialairn1bowl
+  flags:
+    turn: false
+    loop: false
+    move: false
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+    - name: d00specialairn1bowl.nuanmb
+      unk: 0
+  scripts:
+    - expression_specialairn1bowl
+    - sound_specialairn1bowl
+    - effect_specialairn1bowl
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 67
+    no_stop_intp: false
 catch_dash:
   extra:
     cancel_frame: 41
