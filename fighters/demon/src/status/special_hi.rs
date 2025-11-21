@@ -141,7 +141,7 @@ unsafe extern "C" fn special_hi_rise_main_loop(fighter: &mut L2CFighterCommon) -
     let landing_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_hi"), hash40("landing_frame"));
     if fighter.global_table[CURRENT_FRAME].get_i32() > landing_frame {
         if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
-            fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
+            fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
             return 0.into();
         }
     }
