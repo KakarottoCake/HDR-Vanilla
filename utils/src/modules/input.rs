@@ -516,6 +516,21 @@ fn exec_internal(input_module: &mut InputModule, control_module: u64, call_origi
         ))
     };
 
+    // Allows us to control the length of tap buffer situationally
+    let control_module =
+        unsafe { *((*input_module.owner).module_accessor as *const u64).add(0x48 / 8) };
+    let inner_object = unsafe { *(control_module as *const u64).add(0x140 / 8) };
+    let command_life_max = unsafe { &mut *(inner_object as *mut u32).add(2) };
+    let temp_tap_buffer = unsafe { VarModule::get_int(&mut (*input_module.owner), vars::common::instance::TAP_BUFFER_MAX) };
+    let precede = unsafe {
+        if temp_tap_buffer == 0 {
+            WorkModule::get_param_int((*input_module.owner).module_accessor, hash40("common"), hash40("precede"))
+        } else {
+            temp_tap_buffer
+        }
+    };
+    *command_life_max = precede as u32;
+
     unsafe {
         // Allow Aidou with only A button held
         // Also extends directional inputs for Tilt Stick Aidou
