@@ -51,8 +51,11 @@ unsafe extern "C" fn special_n1_main_loop(fighter: &mut L2CFighterCommon) -> L2C
     if VarModule::is_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_CHECK_HOLD) {
         VarModule::off_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_CHECK_HOLD);
         if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-            let throw_speed = if fighter.is_situation(*SITUATION_KIND_GROUND) { 2.75 } else { 2.25 };   // parameterize
-            VarModule::set_float(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_ANGLE, 30.0);  // parameterize
+            let bowl_speed_ground = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "special_n1.bowl_speed_ground");
+            let bowl_speed_air = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "special_n1.bowl_speed_air");
+            let bowl_angle = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "special_n1.bowl_angle");
+            let throw_speed = if fighter.is_situation(*SITUATION_KIND_GROUND) { bowl_speed_ground } else { bowl_speed_air };
+            VarModule::set_float(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_ANGLE, bowl_angle);
             VarModule::set_float(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_SPEED, throw_speed);
             fighter.change_motion_inherit_frame_by_situation("special_n1_bowl", "special_air_n1_bowl", -1.0, 1.0, 0.0, false, false);
         }
@@ -68,11 +71,13 @@ unsafe extern "C" fn special_n1_main_loop(fighter: &mut L2CFighterCommon) -> L2C
 unsafe fn special_n_change_motion(fighter: &mut L2CFighterCommon, motion: Hash40) {
     if fighter.is_flag(*FIGHTER_MIIFIGHTER_STATUS_WORK_ID_IRONBALL_FLAG_FIRST) {
         let _motion = if fighter.is_motion(Hash40::new("special_n1_bowl")) {
-            VarModule::set_float(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_SPEED, 2.25);  // parameterize
+            let bowl_speed_air = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "special_n1.bowl_speed_air");
+            VarModule::set_float(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_SPEED, bowl_speed_air);
             Hash40::new("special_air_n1_bowl")
         }
         else if fighter.is_motion(Hash40::new("special_air_n1_bowl")) {
-            VarModule::set_float(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_SPEED, 2.75);  // parameterize
+            let bowl_speed_ground = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "special_n1.bowl_speed_ground");
+            VarModule::set_float(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_SPEED, bowl_speed_ground);
             Hash40::new("special_n1_bowl")
         }
         else { motion };
