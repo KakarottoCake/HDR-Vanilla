@@ -95,7 +95,8 @@ unsafe extern "C" fn special_lw3_main_loop(fighter: &mut L2CFighterCommon) -> L2
                 fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
             }
             else {
-                fighter.set_float(14.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME); // parameterize
+                let landing_lag = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "boiling_punt.landing_lag");
+                fighter.set_float(landing_lag, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
                 fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
             }
         }
@@ -114,16 +115,20 @@ unsafe extern "C" fn special_lw3_main_loop(fighter: &mut L2CFighterCommon) -> L2
             if !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) {
                 // disable stall and limit vertical speed on whiff
                 VarModule::on_flag(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STALL);
-                sum_speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL).clamp(-2.0, 0.0);  // parameterize
+                let bounce_clamp_y_min = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "boiling_punt.bounce_clamp_y_min");
+                let bounce_clamp_y_max = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "boiling_punt.bounce_clamp_y_max");
+                sum_speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL).clamp(bounce_clamp_y_min, bounce_clamp_y_max);
             }
 
             let air_speed_x_stable = fighter.get_param_float("air_speed_x_stable", "");
-            let speed_x_mul = 0.8;  // parameterize
+            let speed_x_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "boiling_punt.speed_x_mul");
             KineticModule::clear_speed_all(fighter.module_accessor);
             sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, sum_speed_y);
             sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, sum_speed_x);
             sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, air_speed_x_stable * speed_x_mul);
-            KineticModule::add_speed(fighter.module_accessor, &Vector3f::new(-0.3, 1.5, 0.0));  // parameterize
+            let bounce_speed_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "boiling_punt.bounce_speed_x");
+            let bounce_speed_y = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "boiling_punt.bounce_speed_y");
+            KineticModule::add_speed(fighter.module_accessor, &Vector3f::new(bounce_speed_x, bounce_speed_y, 0.0));
         }
     }
     if !VarModule::is_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_LW3_INC_STAGE)
@@ -138,16 +143,16 @@ unsafe extern "C" fn special_lw3_main_loop(fighter: &mut L2CFighterCommon) -> L2
 unsafe fn special_lw3_change_stage(fighter: &mut L2CFighterCommon, stage: i32) {
     match stage {
         0 => {
-            VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_TIMER, 480);  // parameterize
             app::FighterUtil::flash_eye_info(fighter.module_accessor);
-            let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_steam1"), Hash40::new("head"), &Vector3f::zero(), &Vector3f::zero(), 1.0, false, 0, 0, 0, 0, 0, false, false);
+            let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_steam1"), Hash40::new("head"), &Vector3f::new(3.0, 0.0, 0.0), &Vector3f::zero(), 0.8, false, 0, 0, 0, 0, 0, false, false);
+            EffectModule::set_alpha(fighter.module_accessor, handle as u32, 3.0);
             VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1, handle as i32);
             VarModule::inc_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE);
         },
         1 => {
-            VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_TIMER, 480);  // parameterize
             app::FighterUtil::flash_eye_info(fighter.module_accessor);
-            let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_steam2"), Hash40::new("head"), &Vector3f::zero(), &Vector3f::zero(), 1.0, false, 0, 0, 0, 0, 0, false, false);
+            let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_steam2"), Hash40::new("head"), &Vector3f::new(3.0, 0.0, 0.0), &Vector3f::zero(), 0.8, false, 0, 0, 0, 0, 0, false, false);
+            EffectModule::set_alpha(fighter.module_accessor, handle as u32, 3.0);
             VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, handle as i32);
             VarModule::inc_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE);
         }
@@ -169,11 +174,15 @@ unsafe fn special_lw3_change_stage(fighter: &mut L2CFighterCommon, stage: i32) {
             }
         }
     }
+    //ColorBlendModule::cancel_main_color(fighter.module_accessor, 0);
 }
 
 pub unsafe extern "C" fn special_lw3_end(fighter: &mut L2CFighterCommon) -> L2CValue {
-    SlowModule::clear_whole(fighter.module_accessor);
-    CameraModule::reset_all(fighter.module_accessor);
-    EffectModule::remove_screen(fighter.module_accessor, Hash40::new("bg_criticalhit"), 0);
+    if VarModule::is_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_LW3_CLEAR_CRIT) {
+        SlowModule::clear_whole(fighter.module_accessor);
+        CameraModule::reset_all(fighter.module_accessor);
+        EffectModule::remove_screen(fighter.module_accessor, Hash40::new("bg_criticalhit"), 0);
+    }
+    
     return 0.into();
 }

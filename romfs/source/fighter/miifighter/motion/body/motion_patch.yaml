@@ -200,7 +200,7 @@ special_lw3_1g:
   extra:
     intangible_start_frame: 0
     intangible_end_frame: 0
-    cancel_frame: 40
+    cancel_frame: 46
     freeze_during_hitstop: true
 special_lw3_1a:
   game_script: game_speciallw31a
@@ -258,7 +258,7 @@ special_lw3_2g:
   extra:
     intangible_start_frame: 0
     intangible_end_frame: 0
-    cancel_frame: 40
+    cancel_frame: 46
     freeze_during_hitstop: true
 special_lw3_2a:
   game_script: game_speciallw32a
@@ -345,7 +345,7 @@ special_lw3_3a:
   extra:
     intangible_start_frame: 0
     intangible_end_frame: 0
-    cancel_frame: 92
+    cancel_frame: 40
     freeze_during_hitstop: true
 # moved to special_n3
 special_air_lw3_throw:

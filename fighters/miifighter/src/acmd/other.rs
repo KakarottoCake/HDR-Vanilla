@@ -111,12 +111,14 @@ unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
             let stage = VarModule::get_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE);
             match stage {
                 0 => {
-                    let handle = EffectModule::req_follow(boma, Hash40::new("sys_steam1"), Hash40::new("head"), &Vector3f::zero(), &Vector3f::zero(), 1.0, false, 0, 0, 0, 0, 0, false, false);
+                    let handle = EffectModule::req_follow(boma, Hash40::new("sys_steam1"), Hash40::new("head"), &Vector3f::new(3.0, 0.0, 0.0), &Vector3f::zero(), 0.8, false, 0, 0, 0, 0, 0, false, false);
+                    EffectModule::set_alpha(boma, handle as u32, 3.0);
                     VarModule::set_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1, handle as i32);
                     VarModule::inc_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE);
                 },
                 1 => {
-                    let handle = EffectModule::req_follow(boma, Hash40::new("sys_steam2"), Hash40::new("head"), &Vector3f::zero(), &Vector3f::zero(), 1.0, false, 0, 0, 0, 0, 0, false, false);
+                    let handle = EffectModule::req_follow(boma, Hash40::new("sys_steam2"), Hash40::new("head"), &Vector3f::new(3.0, 0.0, 0.0), &Vector3f::zero(), 0.8, false, 0, 0, 0, 0, 0, false, false);
+                    EffectModule::set_alpha(boma, handle as u32, 3.0);
                     VarModule::set_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, handle as i32);
                     VarModule::inc_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE);
                 }

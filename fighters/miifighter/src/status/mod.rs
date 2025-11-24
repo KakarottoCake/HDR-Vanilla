@@ -126,10 +126,54 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, -1);
 }
 
+unsafe extern "C" fn dead_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    reset_boiling_punt(fighter);
+    smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_DEAD)(fighter)
+}
+
+unsafe extern "C" fn rebirth_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    reset_boiling_punt(fighter);
+    smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_REBIRTH)(fighter)
+}
+
+unsafe extern "C" fn damage_fly_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    reset_boiling_punt(fighter);
+    smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_DAMAGE_FLY)(fighter)
+}
+
+unsafe extern "C" fn damage_fly_roll_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    reset_boiling_punt(fighter);
+    smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL)(fighter)
+}
+
+unsafe extern "C" fn damage_fly_meteor_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    reset_boiling_punt(fighter);
+    smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR)(fighter)
+}
+
+unsafe fn reset_boiling_punt(fighter: &mut L2CFighterCommon) {
+    if VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE) > 0 {
+        VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE, 0);
+        //EFFECT_FOLLOW(fighter, Hash40::new("sys_flash"), Hash40::new("top"), -3, 13, -2.5, 0, 0, 0, 0.38, false);
+        let handle = VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1) as u32;
+        EffectModule::kill(fighter.module_accessor, handle, false, false);
+        let handle2 = VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2) as u32;
+        EffectModule::kill(fighter.module_accessor, handle2, false, false);
+        VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1, -1);
+        VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, -1);
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
     special_lw1::install(agent);
     special_lw2::install(agent);
     special_n3::install(agent);
     special_s1::install(agent);
+
+    agent.status(Main, *FIGHTER_STATUS_KIND_DEAD, dead_main);
+    agent.status(Main, *FIGHTER_STATUS_KIND_REBIRTH, rebirth_main);
+    agent.status(Main, *FIGHTER_STATUS_KIND_DAMAGE_FLY, damage_fly_main);
+    agent.status(Main, *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL, damage_fly_roll_main);
+    agent.status(Main, *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR, damage_fly_meteor_main);
 }
