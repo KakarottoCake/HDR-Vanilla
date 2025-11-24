@@ -198,7 +198,7 @@ unsafe extern "C" fn game_specialn3catch(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE_RANGE(agent, 3.5, 6.0, 3.0);
     if is_excute(agent) {
         GrabModule::set_rebound(boma, true);
-        CATCH(agent, 2, Hash40::new("top"), 5.0, 0.0, 7.0, 9.0, Some(0.0), Some(7.0), Some(10.5), *FIGHTER_STATUS_KIND_MIIFIGHTER_SUPLEX_THROWN, *COLLISION_SITUATION_MASK_GA);
+        CATCH(agent, 2, Hash40::new("top"), 5.0, 0.0, 7.0, 9.0, Some(0.0), Some(7.0), Some(9.5), *FIGHTER_STATUS_KIND_MIIFIGHTER_SUPLEX_THROWN, *COLLISION_SITUATION_MASK_GA);
     }
     frame(lua_state, 6.0);
     FT_MOTION_RATE(agent, 1.2);
@@ -222,7 +222,7 @@ unsafe extern "C" fn effect_specialn3catch(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("sys_guard_mark"), true, true);
-        EFFECT_FOLLOW(agent, Hash40::new("miifighter_counter_success"), Hash40::new("top"), -1, 7, 9, 0, 90, 0, 0.6, false);
+        EFFECT_FOLLOW(agent, Hash40::new("miifighter_counter_success"), Hash40::new("top"), -1, 7, 8, 0, 90, 0, 0.6, false);
     }
 }
 
