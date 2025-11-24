@@ -144,7 +144,7 @@ unsafe extern "C" fn game_specialn2finish(agent: &mut L2CAgentBase) {
     frame(lua_state, 12.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
-        let kbg = if boma.is_situation(*SITUATION_KIND_GROUND) { 100 } else { 92 };
+        let kbg = if boma.is_situation(*SITUATION_KIND_GROUND) { 106 } else { 98 };
         ATTACK(agent, 0, 0, Hash40::new("top"), 10.5, 80, kbg, 0, 60, 5.5, 0.0, 7.5, 12.5, Some(0.0), Some(17.0), Some(12.5), 1.4, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
     }
     wait(lua_state, 1.0);
@@ -217,6 +217,15 @@ unsafe extern "C" fn game_specialn3catch(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn effect_specialn3catch(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("sys_guard_mark"), true, true);
+        EFFECT_FOLLOW(agent, Hash40::new("miifighter_counter_success"), Hash40::new("top"), -1, 7, 9, 0, 90, 0, 0.6, false);
+    }
+}
+
 unsafe extern "C" fn game_specialn3throw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -228,10 +237,10 @@ unsafe extern "C" fn game_specialn3throw(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 1.0);
     if is_excute(agent) {
-        FT_CATCH_STOP(agent, 5, 1);
+        FT_CATCH_STOP(agent, 7, 1);
     }
     frame(lua_state, 2.0);
-    FT_MOTION_RATE_RANGE(agent, 2.0, 7.0, 9.0);
+    FT_MOTION_RATE_RANGE(agent, 2.0, 7.0, 10.0);
     frame(lua_state, 7.0);
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 9.0);
@@ -242,14 +251,10 @@ unsafe extern "C" fn game_specialn3throw(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         ATTACK_IGNORE_THROW(agent, 0, 0, Hash40::new("top"), 9.0, 361, 85, 0, 80, 4.0, 0.0, 3.0, -5.0, Some(0.0), Some(3.0), Some(-11.0), 1.1, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
     }
-    frame(lua_state, 13.0);
-    if is_excute(agent) {
-        AttackModule::clear_all(boma);
-        FT_CATCH_STOP(agent, 5, 1);
-    }
     frame(lua_state, 14.0);
     FT_MOTION_RATE(agent, 0.5);
     if is_excute(agent) {
+        AttackModule::clear_all(boma);
         let target = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
         let target_group = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
         let target_no = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
@@ -271,12 +276,12 @@ unsafe extern "C" fn game_specialairn3throw(agent: &mut L2CAgentBase) {
         WorkModule::on_flag(boma, *FIGHTER_MIIFIGHTER_STATUS_COUNTER_THROW_FLAG_THROW_AFTER_LANDING);
         WHOLE_HIT(agent, *HIT_STATUS_INVINCIBLE);
         REVERSE_LR(agent);
-        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 14.0, 280, 51, 0, 26, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 14.0, 280, 47, 0, 26, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 70, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
     }
     frame(lua_state, 1.0);
     if is_excute(agent) {
-        FT_CATCH_STOP(agent, 5, 1);
+        FT_CATCH_STOP(agent, 7, 1);
     }
     frame(lua_state, 2.0);
     FT_MOTION_RATE_RANGE(agent, 2.0, 7.0, 10.0);
@@ -289,7 +294,6 @@ unsafe extern "C" fn game_specialairn3throw(agent: &mut L2CAgentBase) {
     frame(lua_state, 11.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
-        FT_CATCH_STOP(agent, 5, 1);
     }
     frame(lua_state, 13.0);
     if is_excute(agent) {
@@ -363,6 +367,8 @@ pub fn install(agent: &mut Agent) {;
 
     agent.acmd("game_speciallw3catch", game_specialn3catch, Priority::Low);
     agent.acmd("game_specialairlw3catch", game_specialn3catch, Priority::Low);
+    agent.acmd("effect_speciallw3catch", effect_specialn3catch, Priority::Low);
+    agent.acmd("effect_specialairlw3catch", effect_specialn3catch, Priority::Low);
     
     agent.acmd("game_speciallw3throw", game_specialn3throw, Priority::Low);
     agent.acmd("game_specialairlw3throw", game_specialairn3throw, Priority::Low);
