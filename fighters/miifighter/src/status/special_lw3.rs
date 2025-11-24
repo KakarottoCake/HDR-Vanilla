@@ -108,24 +108,22 @@ unsafe extern "C" fn special_lw3_main_loop(fighter: &mut L2CFighterCommon) -> L2
     if VarModule::is_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_LW3_ENABLE_BOUNCE) {
         VarModule::off_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_LW3_ENABLE_BOUNCE);
         if !VarModule::is_flag(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STALL) {
-            if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) {
-                // slightly different physics on hit to improve feel
-                let sum_speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
-                KineticModule::clear_speed_all(fighter.module_accessor);
-                sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
-                sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, sum_speed_x);
-                KineticModule::add_speed(fighter.module_accessor, &Vector3f::new(-0.3, 1.5, 0.0));
-            }
-            else {
+            let sum_speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
+            let mut sum_speed_y = 0.0;
+            
+            if !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) {
+                // disable stall and limit vertical speed on whiff
                 VarModule::on_flag(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STALL);
-                let sum_speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
-                let mut sum_speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
-                sum_speed_y = sum_speed_y.clamp(-2.0, 0.5);
-                KineticModule::clear_speed_all(fighter.module_accessor);
-                sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, sum_speed_y);
-                sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, sum_speed_x);
-                KineticModule::add_speed(fighter.module_accessor, &Vector3f::new(-0.3, 1.5, 0.0));
+                sum_speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL).clamp(-2.0, 0.0);  // parameterize
             }
+
+            let air_speed_x_stable = fighter.get_param_float("air_speed_x_stable", "");
+            let speed_x_mul = 0.8;  // parameterize
+            KineticModule::clear_speed_all(fighter.module_accessor);
+            sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, sum_speed_y);
+            sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, sum_speed_x);
+            sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, air_speed_x_stable * speed_x_mul);
+            KineticModule::add_speed(fighter.module_accessor, &Vector3f::new(-0.3, 1.5, 0.0));  // parameterize
         }
     }
     if !VarModule::is_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_LW3_INC_STAGE)
