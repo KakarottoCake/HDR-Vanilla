@@ -1,3 +1,8 @@
+#![allow(improper_ctypes)]
+
+use rlua_lua53_sys as lua;
+use locks::RwLock;
+
 macro_rules! lua_gettop {
     ($state:ident) => {{
         let top = *($state as *const u64).add(2);
@@ -24,6 +29,8 @@ macro_rules! lua_settop {
         }
     }};
 }
+
+pub static STAGE_MANAGER: RwLock<StageManager> = RwLock::new(StageManager::new());
 
 #[skyline::from_offset(0x38f86a0)]
 unsafe extern "C" fn luaL_tolstring(lua_state: u64, index: i32, size: *mut usize) -> *const u8;
@@ -431,6 +438,133 @@ unsafe fn set_parry_button_taunt_text(ctx: &skyline::hooks::InlineCtx) {
     }
 }
 
+extern "C" fn send_message(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let value = skyline::from_c_str(lua::lua_tostring(state, -1) as _);
+        println!("HDR Lua says: {}", value);
+        lua::lua_pop(state, 1);
+        0
+    }
+}
+
+unsafe fn push_new_singleton(
+    lua_state: *mut lua::lua_State,
+    name: &'static str,
+    registry: &[lua::luaL_Reg],
+) {
+    let real_name = format!("{}\0", name);
+    let meta_name = format!("Metatable{}\0", name);
+    lua::luaL_newmetatable(lua_state, meta_name.as_ptr() as _);
+    lua::lua_pushvalue(lua_state, -1);
+    lua::lua_setfield(lua_state, -2, "__index\0".as_ptr() as _);
+
+    lua::luaL_setfuncs(lua_state, registry.as_ptr(), 0);
+    lua::lua_pop(lua_state, 1);
+
+    lua::lua_newtable(lua_state);
+    lua::lua_getfield(lua_state, lua::LUA_REGISTRYINDEX, meta_name.as_ptr() as _);
+    lua::lua_setmetatable(lua_state, -2);
+
+    let global_table = lua::bindings::index2addr(lua_state, lua::LUA_REGISTRYINDEX);
+    let table = (*global_table).value.ptr;
+    let value = if *(table as *mut u32).add(3) < 2 {
+        todo!()
+    } else {
+        (*(table as *mut *mut lua::bindings::TValue).add(2)).add(1)
+    };
+    lua::bindings::auxsetstr(lua_state, value, real_name.as_ptr() as _);
+}
+
+extern "C" {
+    fn add_to_key_context(ctx: &skyline::hooks::InlineCtx);
+}
+
+#[skyline::hook(replace = add_to_key_context, inline)]
+unsafe fn add_to_key_context_hook(ctx: &skyline::hooks::InlineCtx) {
+    let lua_state: *mut lua::lua_State = ctx.registers[19].x() as _;
+
+    let registry = &[
+        lua::luaL_Reg {
+            name: "send_message\0".as_ptr() as _,
+            func: Some(send_message),
+        },
+        lua::luaL_Reg {
+            name: "set_selected_panel_and_preview\0".as_ptr() as _,
+            func: Some(set_selected_panel_and_preview),
+        },
+        lua::luaL_Reg {
+            name: "get_selected_panel\0".as_ptr() as _,
+            func: Some(get_selected_panel),
+        },
+        lua::luaL_Reg {
+            name: "get_selected_preview\0".as_ptr() as _,
+            func: Some(get_selected_preview),
+        },
+    ];
+
+    push_new_singleton(lua_state, "HDR", registry);
+}
+
+pub struct StageManager {
+    pub selected_panel: Option<i32>,
+    pub selected_preview: Option<i32>,
+}
+
+impl StageManager{
+    pub const fn new() -> Self {
+        Self {
+            selected_panel: None,
+            selected_preview: None
+        }
+    }
+}
+
+extern "C" fn set_selected_panel_and_preview(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let preview_id = lua::lua_tointegerx(state, -1, std::ptr::null_mut()) as i32;
+        lua::lua_pop(state, 1);
+
+        let panel_id = lua::lua_tointegerx(state, -1, std::ptr::null_mut()) as i32;
+        lua::lua_pop(state, 1);
+
+        let mut mgr = STAGE_MANAGER.write();
+
+        mgr.selected_panel = Some(panel_id);
+        mgr.selected_preview = Some(preview_id);
+
+        println!("selected_panel set to: {}", panel_id);
+        println!("selected_preview set to: {}", preview_id);
+
+        0
+    }
+}
+
+extern "C" fn get_selected_panel(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let mgr = STAGE_MANAGER.read();
+        if let Some(panel_id) = mgr.selected_panel {
+            lua::lua_pushinteger(state, panel_id as i64);
+            return 1
+        }
+
+        lua::lua_pushinteger(state, -1);
+        1
+    }
+}
+
+extern "C" fn get_selected_preview(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let mgr = STAGE_MANAGER.read();
+        if let Some(preview_id) = mgr.selected_preview {
+            lua::lua_pushinteger(state, preview_id as i64);
+            return 1
+        }
+
+        lua::lua_pushinteger(state, -1);
+        1
+    }
+}
+
 pub fn install() {
     unsafe {
         skyline::patching::Patch::in_text(0x5292c70).data((lua_print_impl as *const ()));
@@ -460,6 +594,7 @@ pub fn install() {
         exit_jc,
         set_pane_text_values,
         set_parry_button_shield_text,
-        set_parry_button_taunt_text
+        set_parry_button_taunt_text,
+        add_to_key_context_hook
     );
 }
