@@ -400,6 +400,16 @@ unsafe extern "C" fn effect_landingairlw(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn expression_landingairlw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
+        RUMBLE_HIT(agent, Hash40::new("rbkind_attackl"), 0);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_impact"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_attackairn", game_attackairn, Priority::Low);
     agent.acmd("effect_attackairn", effect_attackairn, Priority::Low);
@@ -420,4 +430,5 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("effect_attackairlw", effect_attackairlw, Priority::Low);
     agent.acmd("game_landingairlw", acmd_stub, Priority::Low);
     agent.acmd("effect_landingairlw", effect_landingairlw, Priority::Low);
+    agent.acmd("expression_landingairlw", expression_landingairlw, Priority::Low);
 }
