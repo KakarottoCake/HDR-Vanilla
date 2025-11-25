@@ -353,10 +353,8 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
 		WorkModule::off_flag(boma, *FIGHTER_KAMUI_STATUS_SPECIAL_HI_FLAG_TILT_BODY_ON);
         WorkModule::on_flag(boma, *FIGHTER_KAMUI_STATUS_SPECIAL_HI_FLAG_AIR_CONTROL);
         KineticModule::suspend_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
-	}
-	frame(lua_state, 49.0);
-	FT_MOTION_RATE(agent, 0.8);
-    frame(lua_state, 60.0);
+    }
+    frame(lua_state, 49.0);
     if is_excute(agent) {
         KineticModule::resume_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     }
