@@ -541,7 +541,7 @@ fn exec_internal(input_module: &mut InputModule, control_module: u64, call_origi
     let tap_buffer = input_module.command_life_count_max;
     let precede = unsafe {
         if tap_buffer == -1 {
-            WorkModule::get_param_int((*input_module.owner).module_accessor, hash40("common"), hash40("precede"))
+            ParamModule::get_int(&mut (*input_module.owner), ParamType::Common, "precede")
         } else {
             tap_buffer
         }
