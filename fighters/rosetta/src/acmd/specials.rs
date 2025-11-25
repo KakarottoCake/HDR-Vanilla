@@ -22,7 +22,7 @@ unsafe extern "C" fn game_specialhiend(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         KineticModule::suspend_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     }
-    frame(lua_state, 10.0);
+    frame(lua_state, 16.0);
     if is_excute(agent) {
         KineticModule::resume_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     }
