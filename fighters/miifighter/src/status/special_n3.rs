@@ -111,6 +111,35 @@ unsafe extern "C" fn special_n3_catch_main_loop(fighter: &mut L2CFighterCommon) 
     return 0.into()
 }
 
+unsafe extern "C" fn special_n3_throw_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    StatusModule::init_settings(
+        fighter.module_accessor,
+        app::SituationKind(*SITUATION_KIND_NONE),
+        *FIGHTER_KINETIC_TYPE_UNIQ,
+        *GROUND_CORRECT_KIND_KEEP as u32,
+        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
+        true,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT,
+        0
+    );
+    FighterStatusModuleImpl::set_fighter_status_data(
+        fighter.module_accessor,
+        false,
+        *FIGHTER_TREADED_KIND_NO_REAC,
+        false,
+        false,
+        false,
+        (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_N | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK) as u64,
+        0,
+        *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_N as u32,
+        0
+    );
+
+    return 0.into();
+}
+
 unsafe extern "C" fn special_n3_throw_init(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.set_float(1.0, *FIGHTER_STATUS_THROW_WORK_FLOAT_MOTION_RATE);
     smash::app::KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_MOTION, fighter.module_accessor);
@@ -212,6 +241,7 @@ pub fn install(agent: &mut Agent) {
     agent.status(Pre, *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_LW3_CATCH, special_n3_catch_pre);
     agent.status(Main, *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_LW3_CATCH, special_n3_catch_main);
 
+    agent.status(Pre, *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_LW3_THROW, special_n3_throw_pre);
     agent.status(Init, *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_LW3_THROW, special_n3_throw_init);
     agent.status(Main, *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_LW3_THROW, special_n3_throw_main);
     agent.status(End, *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_LW3_THROW, special_n3_throw_end);
