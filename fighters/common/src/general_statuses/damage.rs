@@ -673,11 +673,11 @@ unsafe fn ftStatusUniqProcessDamage_init(fighter: &mut L2CFighterCommon, arg2: L
     // Reduce buffer during non-tumble kb
     if level == *DAMAGE_LEVEL_2 {
         let damage_level2_precede = ParamModule::get_int(fighter.battle_object, ParamType::Common, "damage_level2_precede");
-        VarModule::set_int(fighter.battle_object, vars::common::instance::TAP_BUFFER_MAX, damage_level2_precede);
+        InputModule::set_command_life_count_max(fighter.battle_object, damage_level2_precede as u32);
     }
     else if level == *DAMAGE_LEVEL_3 {
         let damage_level3_precede = ParamModule::get_int(fighter.battle_object, ParamType::Common, "damage_level3_precede");
-        VarModule::set_int(fighter.battle_object, vars::common::instance::TAP_BUFFER_MAX, damage_level3_precede);
+        InputModule::set_command_life_count_max(fighter.battle_object, damage_level3_precede as u32);
     }
 }
 
@@ -715,11 +715,11 @@ unsafe fn ftStatusUniqProcessDamageAir_init(fighter: &mut L2CFighterCommon, arg2
     // Reduce buffer during non-tumble kb
     if level == *DAMAGE_LEVEL_2 {
         let damage_level2_precede = ParamModule::get_int(fighter.battle_object, ParamType::Common, "damage_level2_precede");
-        VarModule::set_int(fighter.battle_object, vars::common::instance::TAP_BUFFER_MAX, damage_level2_precede);
+        InputModule::set_command_life_count_max(fighter.battle_object, damage_level2_precede as u32);
     }
     else if level == *DAMAGE_LEVEL_3 {
         let damage_level3_precede = ParamModule::get_int(fighter.battle_object, ParamType::Common, "damage_level3_precede");
-        VarModule::set_int(fighter.battle_object, vars::common::instance::TAP_BUFFER_MAX, damage_level3_precede);
+        InputModule::set_command_life_count_max(fighter.battle_object, damage_level3_precede as u32);
     }
 }
 
@@ -745,7 +745,7 @@ unsafe fn status_DamageAir_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
 
 #[skyline::hook(replace = L2CFighterCommon_sub_damage_uniq_process_exit)]
 unsafe fn sub_damage_uniq_process_exit(fighter: &mut L2CFighterCommon) -> L2CValue {
-    VarModule::set_int(fighter.battle_object, vars::common::instance::TAP_BUFFER_MAX, 0);
+    InputModule::reset_command_life_count_max(fighter.battle_object);
 
     original!()(fighter)
 }

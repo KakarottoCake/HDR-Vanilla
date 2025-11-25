@@ -80,7 +80,7 @@ unsafe fn sub_ftStatusUniqProcessGuardDamage_initStatus_Inner(fighter: &mut L2CF
         ControlModule::clear_command(boma, false);
 
         let guard_damage_precede = ParamModule::get_int(fighter.battle_object, ParamType::Common, "guard_damage_precede");
-        VarModule::set_int(fighter.battle_object, vars::common::instance::TAP_BUFFER_MAX, guard_damage_precede);
+        InputModule::set_command_life_count_max(fighter.battle_object, guard_damage_precede as u32);
     } 
 
     let setoff_speed_mul = fighter.get_param_float("common","shield_setoff_speed_mul");

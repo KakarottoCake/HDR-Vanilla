@@ -143,9 +143,8 @@ pub unsafe fn status_LandingStiffness(fighter: &mut L2CFighterCommon) -> L2CValu
         }
         else {
             // Reduce buffer out of non-CCd non-tumble hitstun landing
-            let precede = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("precede"));
             let damage_level3_precede = ParamModule::get_int(fighter.battle_object, ParamType::Common, "damage_level3_precede");
-            VarModule::set_int(fighter.battle_object, vars::common::instance::TAP_BUFFER_MAX, damage_level3_precede);
+            InputModule::set_command_life_count_max(fighter.battle_object, damage_level3_precede as u32);
         }
     }
 
@@ -1067,7 +1066,7 @@ unsafe fn sub_calc_landing_motion_rate(_fighter: &mut L2CFighterCommon, end_fram
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_landing_uniq_process_exit)]
 pub unsafe fn sub_landing_uniq_process_exit(fighter: &mut L2CFighterCommon) -> L2CValue {
     VarModule::off_flag(fighter.battle_object, vars::common::instance::IS_CC_NON_TUMBLE);
-    VarModule::set_int(fighter.battle_object, vars::common::instance::TAP_BUFFER_MAX, 0);
+    InputModule::reset_command_life_count_max(fighter.battle_object);
     
     original!()(fighter)
 }
