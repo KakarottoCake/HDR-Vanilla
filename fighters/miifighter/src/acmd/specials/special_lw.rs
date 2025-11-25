@@ -441,8 +441,12 @@ unsafe extern "C" fn effect_speciallw32g(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 17.0);
     if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("miifighter_boiling2"), Hash40::new("top"), -2, 6.7, 3, -16, -43, 15, 1, true);
+        LAST_EFFECT_SET_COLOR(agent, 3.0, 1.0, 0.0);
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 7, -4, 180, 0, 0, 0.7, true);
+        LAST_EFFECT_SET_COLOR(agent, 2.0, 0.5, 0.0);
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 6.5, 10.5, 0, 0, 0, 1, true);
+        LAST_EFFECT_SET_COLOR(agent, 3.0, 0.0, 0.0);
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {
@@ -513,12 +517,14 @@ unsafe extern "C" fn effect_speciallw32a(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 8.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_c"), Hash40::new("sys_attack_arc_c"), Hash40::new("top"), 2, 7, -2, 75, -151, 70, 0.9, true, *EF_FLIP_YZ);
+        EFFECT_FOLLOW_FLIP(agent, Hash40::new("miifighter_boiling_air2"), Hash40::new("miifighter_boiling_air2"), Hash40::new("top"), 2, 7, -2, 75, -151, 70, 0.9, true, *EF_FLIP_YZ);
+        LAST_EFFECT_SET_COLOR(agent, 2.0, 1.0, 0.0);
         LAST_EFFECT_SET_RATE(agent, 1.5);
     }
     frame(lua_state, 9.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_NO_STOP_FLIP(agent, Hash40::new("sys_attack_impact"), Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, -1, 2.5, 0, 0, 0, 1.0, true, *EF_FLIP_YZ);
+        LAST_EFFECT_SET_COLOR(agent, 3.0, 0.0, 0.0);
     }
 }
 
@@ -723,8 +729,7 @@ unsafe extern "C" fn effect_speciallw33a(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 12.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW_FLIP(agent, Hash40::new("miifighter_counter_arc"), Hash40::new("miifighter_counter_arc"), Hash40::new("top"), -1, 5, 0, 90, 90, 0, 0.72, true, *EF_FLIP_YZ);
-        LAST_PARTICLE_SET_COLOR(agent, 3.0, 0.5, 0.5);
+        EFFECT_FOLLOW_FLIP(agent, Hash40::new("miifighter_boiling_air3"), Hash40::new("miifighter_boiling_air3"), Hash40::new("top"), -1, 5, 0, 90, 90, 0, 0.72, true, *EF_FLIP_YZ);
     }
 }
 
