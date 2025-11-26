@@ -1,7 +1,6 @@
 #![allow(improper_ctypes)]
 
 use rlua_lua53_sys as lua;
-use locks::RwLock;
 use utils::modules::stage_mgr::STAGE_MANAGER;
 
 macro_rules! lua_gettop {

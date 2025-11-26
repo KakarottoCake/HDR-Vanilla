@@ -12,7 +12,6 @@ use smash::phx::Hash40 as Hash40_2;
 use smash::{app::BattleObject, hash40};
 
 use super::PARAM_MODULE_OFFSET;
-use super::stage_mgr::STAGE_MANAGER;
 
 macro_rules! get_param_module {
     ($object:ident) => {{
