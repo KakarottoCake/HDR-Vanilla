@@ -1132,15 +1132,15 @@ local setup = function()
         stage_panels[i] = StagePanel.new()
 
         local strike_panel = root_view:get_parts(get_stage_panel_name(i - 1)):get_pane("set_rep_strike")
+        local perma_strike_panel = root_view:get_parts(get_stage_panel_name(i - 1)):get_pane("set_rep_perma")
         strike_panel:set_visible(false)
+        perma_strike_panel:set_visible(false)
 
         local is_perma_strike = HDR.is_perma_strike_stage(i)
         if is_perma_strike then
             stage_panels[i].is_striked_ = true
             stage_panels[i].is_perma_striked_ = true
-            -- TODO set perma strike here!
-            -- local perma_strike_pane = parts:get_pane("set_rep_perma_strike")
-            -- perma_strike_pane:set_visible(false)
+            perma_strike_panel:set_visible(true)
         end
     end
 
@@ -1579,17 +1579,18 @@ local strike_stage = function(panel_id, is_strike)
                 stage_panels[panel_id + 1].is_perma_striked_ = false
                 local parts = root_view:get_parts(get_stage_panel_name(panel_id))
                 local strike_pane = parts:get_pane("set_rep_strike")
+                local perma_strike_pane = parts:get_pane("set_rep_perma")
                 strike_pane:set_visible(false)
+                perma_strike_pane:set_visible(false)
                 HDR.set_perma_strike_stage(panel_id + 1, false)
             elseif stage_panels[panel_id + 1].is_striked_ then
                 stage_panels[panel_id + 1].is_perma_striked_ = true
                 local parts = root_view:get_parts(get_stage_panel_name(panel_id))
                 local strike_pane = parts:get_pane("set_rep_strike")
+                local perma_strike_pane = parts:get_pane("set_rep_perma")
                 strike_pane:set_visible(false)
+                perma_strike_pane:set_visible(true)
                 HDR.set_perma_strike_stage(panel_id + 1, true)
-                -- TODO set perma strike here!
-                -- local perma_strike_pane = parts:get_pane("set_rep_perma_strike")
-                -- perma_strike_pane:set_visible(false)
             else
                 stage_panels[panel_id + 1].is_striked_ = true
                 local parts = root_view:get_parts(get_stage_panel_name(panel_id))
@@ -1602,7 +1603,9 @@ local strike_stage = function(panel_id, is_strike)
             stage_panels[panel_id + 1].is_perma_striked_ = false
             local parts = root_view:get_parts(get_stage_panel_name(panel_id))
             local strike_pane = parts:get_pane("set_rep_strike")
+            local perma_strike_pane = parts:get_pane("set_rep_perma")
             strike_pane:set_visible(false)
+            perma_strike_pane:set_visible(false)
             HDR.set_perma_strike_stage(panel_id + 1, false)
         end
     end
@@ -2175,7 +2178,7 @@ local update_stage_previews = function()
     end
 
     local is_striked = current_selected_panel ~= UI_INVALID_INDEX and
-    stage_panels[current_selected_panel + 1].is_striked_
+        stage_panels[current_selected_panel + 1].is_striked_
     if is_striked ~= prev_invalid_stage_2 then
         local anim = "on_atteintion"
         if not is_striked then
