@@ -436,6 +436,8 @@ unsafe fn set_parry_button_taunt_text(ctx: &skyline::hooks::InlineCtx) {
     }
 }
 
+// Borrowed a ton of this logic from stage-alts-2
+// Thanks Blujay!!
 unsafe fn push_new_singleton(
     lua_state: *mut lua::lua_State,
     name: &'static str,
