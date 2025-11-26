@@ -2,6 +2,7 @@
 
 use rlua_lua53_sys as lua;
 use locks::RwLock;
+use utils::modules::stage_mgr::STAGE_MANAGER;
 
 macro_rules! lua_gettop {
     ($state:ident) => {{
@@ -29,8 +30,6 @@ macro_rules! lua_settop {
         }
     }};
 }
-
-pub static STAGE_MANAGER: RwLock<StageManager> = RwLock::new(StageManager::new());
 
 #[skyline::from_offset(0x38f86a0)]
 unsafe extern "C" fn luaL_tolstring(lua_state: u64, index: i32, size: *mut usize) -> *const u8;
@@ -438,15 +437,6 @@ unsafe fn set_parry_button_taunt_text(ctx: &skyline::hooks::InlineCtx) {
     }
 }
 
-extern "C" fn send_message(state: *mut lua::lua_State) -> i32 {
-    unsafe {
-        let value = skyline::from_c_str(lua::lua_tostring(state, -1) as _);
-        println!("HDR Lua says: {}", value);
-        lua::lua_pop(state, 1);
-        0
-    }
-}
-
 unsafe fn push_new_singleton(
     lua_state: *mut lua::lua_State,
     name: &'static str,
@@ -500,22 +490,29 @@ unsafe fn add_to_key_context_hook(ctx: &skyline::hooks::InlineCtx) {
             name: "get_selected_preview\0".as_ptr() as _,
             func: Some(get_selected_preview),
         },
+        lua::luaL_Reg {
+            name: "set_is_my_music\0".as_ptr() as _,
+            func: Some(set_is_my_music),
+        },
+        lua::luaL_Reg {
+            name: "set_perma_strike_stage\0".as_ptr() as _,
+            func: Some(set_perma_strike_stage),
+        },
+        lua::luaL_Reg {
+            name: "is_perma_strike_stage\0".as_ptr() as _,
+            func: Some(is_perma_strike_stage),
+        },
     ];
 
     push_new_singleton(lua_state, "HDR", registry);
 }
 
-pub struct StageManager {
-    pub selected_panel: Option<i32>,
-    pub selected_preview: Option<i32>,
-}
-
-impl StageManager{
-    pub const fn new() -> Self {
-        Self {
-            selected_panel: None,
-            selected_preview: None
-        }
+extern "C" fn send_message(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let value = skyline::from_c_str(lua::lua_tostring(state, -1) as _);
+        println!("HDR Lua says: {}", value);
+        lua::lua_pop(state, 1);
+        0
     }
 }
 
@@ -527,7 +524,7 @@ extern "C" fn set_selected_panel_and_preview(state: *mut lua::lua_State) -> i32 
         let panel_id = lua::lua_tointegerx(state, -1, std::ptr::null_mut()) as i32;
         lua::lua_pop(state, 1);
 
-        let mut mgr = STAGE_MANAGER.write();
+        let mut mgr = STAGE_MANAGER.lock().unwrap();
 
         mgr.selected_panel = Some(panel_id);
         mgr.selected_preview = Some(preview_id);
@@ -541,7 +538,7 @@ extern "C" fn set_selected_panel_and_preview(state: *mut lua::lua_State) -> i32 
 
 extern "C" fn get_selected_panel(state: *mut lua::lua_State) -> i32 {
     unsafe {
-        let mgr = STAGE_MANAGER.read();
+        let mgr = STAGE_MANAGER.lock().unwrap();
         if let Some(panel_id) = mgr.selected_panel {
             lua::lua_pushinteger(state, panel_id as i64);
             return 1
@@ -554,13 +551,66 @@ extern "C" fn get_selected_panel(state: *mut lua::lua_State) -> i32 {
 
 extern "C" fn get_selected_preview(state: *mut lua::lua_State) -> i32 {
     unsafe {
-        let mgr = STAGE_MANAGER.read();
+        let mgr = STAGE_MANAGER.lock().unwrap();
         if let Some(preview_id) = mgr.selected_preview {
             lua::lua_pushinteger(state, preview_id as i64);
             return 1
         }
 
         lua::lua_pushinteger(state, -1);
+        1
+    }
+}
+
+extern "C" fn set_is_my_music(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let is_my_music = lua::lua_toboolean(state, -1) > 0;
+        lua::lua_pop(state, 1);
+
+        let mut mgr = STAGE_MANAGER.lock().unwrap();
+
+        mgr.is_my_music = Some(is_my_music);
+
+        println!("is_my_music set to: {}", is_my_music);
+
+        0
+    }
+}
+
+extern "C" fn set_perma_strike_stage(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let is_strike = lua::lua_toboolean(state, -1) > 0;
+        lua::lua_pop(state, 1);
+
+        let panel_id = lua::lua_tointegerx(state, -1, std::ptr::null_mut()) as i32;
+        lua::lua_pop(state, 1);
+
+        let mut mgr = STAGE_MANAGER.lock().unwrap();
+
+        if is_strike {
+            mgr.perma_striked_stages.insert(panel_id);
+        }
+        else {
+            mgr.perma_striked_stages.remove(&panel_id);
+        }
+
+        0
+    }
+}
+
+extern "C" fn is_perma_strike_stage(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let panel_id = lua::lua_tointegerx(state, -1, std::ptr::null_mut()) as i32;
+        lua::lua_pop(state, 1);
+
+        let mut mgr = STAGE_MANAGER.lock().unwrap();
+        if mgr.perma_striked_stages.contains(&panel_id) {
+            lua::lua_pushboolean(state, 1);
+        }
+        else {
+            lua::lua_pushboolean(state, 0);
+        }
+
         1
     }
 }

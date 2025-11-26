@@ -12,6 +12,7 @@ use smash::phx::Hash40 as Hash40_2;
 use smash::{app::BattleObject, hash40};
 
 use super::PARAM_MODULE_OFFSET;
+use super::stage_mgr::STAGE_MANAGER;
 
 macro_rules! get_param_module {
     ($object:ident) => {{
@@ -495,6 +496,8 @@ impl<T> MiddleOutExt<T> for [T] {
 /// all Training stages, and makes them non-interactable, so that the UI looks as expected.
 #[arc_callback]
 fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
+    println!("modifying ui_stage_db_prc");
+    
     // ensure this is the file data it should be
     assert_eq!(hash, hash40(STAGE_DB_PRC));
 
@@ -554,7 +557,7 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
             .clone();
         
         stage_map.insert(name_id.clone(), entry.clone());
-        used_stages.insert(name_id.clone(), false);
+        used_stages.insert(name_id, false);
     }
 
     for n in 0..num_pages {

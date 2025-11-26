@@ -194,7 +194,8 @@ local StagePanel = { -- R46
             frame_ = 0,
             target_scale_ = 0.0,
             scale_value_ = 0.0,
-            is_striked_ = false
+            is_striked_ = false,
+            is_perma_striked_ = false,
         }
     end
 }
@@ -1132,6 +1133,15 @@ local setup = function()
 
         local strike_panel = root_view:get_parts(get_stage_panel_name(i - 1)):get_pane("set_rep_strike")
         strike_panel:set_visible(false)
+
+        local is_perma_strike = HDR.is_perma_strike_stage(i)
+        if is_perma_strike then
+            stage_panels[i].is_striked_ = true
+            stage_panels[i].is_perma_striked_ = true
+            -- TODO set perma strike here!
+            -- local perma_strike_pane = parts:get_pane("set_rep_perma_strike")
+            -- perma_strike_pane:set_visible(false)
+        end
     end
 
     for i = 0, USE_STAGE_NUM - 1, 1 do
@@ -1561,11 +1571,40 @@ local check_for_cancel = function()
 end
 
 local strike_stage = function(panel_id, is_strike)
-    if panel_id ~= UI_INVALID_INDEX and stage_panels[panel_id + 1].is_striked_ ~= is_strike then
-        stage_panels[panel_id + 1].is_striked_ = is_strike
-        local parts = root_view:get_parts(get_stage_panel_name(panel_id))
-        local strike_pane = parts:get_pane("set_rep_strike")
-        strike_pane:set_visible(is_strike)
+    if panel_id ~= UI_INVALID_INDEX then
+        UiSoundManager.play_se_label("se_system_plate_catch")
+        if is_strike then
+            if stage_panels[panel_id + 1].is_perma_striked_ then
+                stage_panels[panel_id + 1].is_striked_ = false
+                stage_panels[panel_id + 1].is_perma_striked_ = false
+                local parts = root_view:get_parts(get_stage_panel_name(panel_id))
+                local strike_pane = parts:get_pane("set_rep_strike")
+                strike_pane:set_visible(false)
+                HDR.set_perma_strike_stage(panel_id + 1, false)
+            elseif stage_panels[panel_id + 1].is_striked_ then
+                stage_panels[panel_id + 1].is_perma_striked_ = true
+                local parts = root_view:get_parts(get_stage_panel_name(panel_id))
+                local strike_pane = parts:get_pane("set_rep_strike")
+                strike_pane:set_visible(false)
+                HDR.set_perma_strike_stage(panel_id + 1, true)
+                -- TODO set perma strike here!
+                -- local perma_strike_pane = parts:get_pane("set_rep_perma_strike")
+                -- perma_strike_pane:set_visible(false)
+            else
+                stage_panels[panel_id + 1].is_striked_ = true
+                local parts = root_view:get_parts(get_stage_panel_name(panel_id))
+                local strike_pane = parts:get_pane("set_rep_strike")
+                strike_pane:set_visible(true)
+                HDR.set_perma_strike_stage(panel_id + 1, false)
+            end
+        else
+            stage_panels[panel_id + 1].is_striked_ = false
+            stage_panels[panel_id + 1].is_perma_striked_ = false
+            local parts = root_view:get_parts(get_stage_panel_name(panel_id))
+            local strike_pane = parts:get_pane("set_rep_strike")
+            strike_pane:set_visible(false)
+            HDR.set_perma_strike_stage(panel_id + 1, false)
+        end
     end
 end
 
@@ -2761,6 +2800,7 @@ end
 main = function()
     setup()
     stage_select_bgm:setup()
+    HDR.set_is_my_music(IS_MY_MUSIC)
     xpcall(setup_from_environment, print_error_handler)
     root_view:play_animation("in", 1.0)
     if IS_SIMPLE_CANCEL == true then
