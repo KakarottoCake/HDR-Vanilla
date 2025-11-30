@@ -45,8 +45,11 @@ unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, 2.5);
     frame(lua_state, 61.0);
     if is_excute(agent) {
-        if DamageModule::damage(boma, 0) > 2.5 {
+        let damage = DamageModule::damage(boma, 0);
+        if damage >= 2.5 {
             DamageModule::add_damage(boma, -2.5, 0);
+        } else {
+            DamageModule::add_damage(boma, -damage, 0);
         }
     }
     frame(lua_state, 71.0);
