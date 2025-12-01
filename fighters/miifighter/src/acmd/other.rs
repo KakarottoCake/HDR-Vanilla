@@ -106,7 +106,9 @@ unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 10.0);
     if is_excute(agent) {
-        if app::smashball::is_training_mode() && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_APPEAL_LW) {
+        if app::smashball::is_training_mode()
+        && agent.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_CUSTOMIZE_SPECIAL_LW_NO) == 2
+        && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_APPEAL_LW) {
             gimmick_flash(boma);
             let stage = VarModule::get_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE);
             match stage {

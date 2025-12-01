@@ -48,28 +48,16 @@ pub unsafe extern "C" fn special_lw3_main(fighter: &mut L2CFighterCommon) -> L2C
 unsafe fn special_lw3_change_motion(fighter: &mut L2CFighterCommon) {
     let motion = if fighter.is_situation(*SITUATION_KIND_GROUND) {
         match VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE) {
-            0 => {
-                Hash40::new("special_lw3_1g")
-            },
-            1 => {
-                Hash40::new("special_lw3_2g")
-            },
-            _ => {
-                Hash40::new("special_lw3_3g")
-            }
+            0 => { Hash40::new("special_lw3_1g") },
+            1 => { Hash40::new("special_lw3_2g") },
+            _ => { Hash40::new("special_lw3_3g") }
         }
     }
     else {
         match VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE) {
-            0 => {
-                Hash40::new("special_lw3_1a")
-            },
-            1 => {
-                Hash40::new("special_lw3_2a")
-            },
-            _ => {
-                Hash40::new("special_lw3_3a")
-            }
+            0 => { Hash40::new("special_lw3_1a") },
+            1 => { Hash40::new("special_lw3_2a") },
+            _ => { Hash40::new("special_lw3_3a") }
         }
     };
     MotionModule::change_motion(fighter.module_accessor, motion, 0.0, 1.0, false, 0.0, false, false);
