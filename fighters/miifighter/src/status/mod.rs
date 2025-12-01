@@ -167,6 +167,7 @@ unsafe fn reset_boiling_punt(fighter: &mut L2CFighterCommon) {
         VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1, -1);
         VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, -1);
     }
+    ColorBlendModule::cancel_main_color(fighter.module_accessor, 0);
 }
 
 pub fn install(agent: &mut Agent) {

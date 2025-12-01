@@ -148,6 +148,7 @@ unsafe fn special_lw3_change_stage(fighter: &mut L2CFighterCommon, stage: i32) {
             EffectModule::set_alpha(fighter.module_accessor, handle as u32, 3.0);
             VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, handle as i32);
             VarModule::inc_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE);
+            VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_TIMER, 300);
         }
         _ => {
             VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE, 0);
@@ -165,9 +166,9 @@ unsafe fn special_lw3_change_stage(fighter: &mut L2CFighterCommon, stage: i32) {
                 SlowModule::set_whole(fighter.module_accessor, 4, 1);
                 EffectModule::req_screen(fighter.module_accessor, Hash40::new("bg_criticalhit"), false, true, true);
             }
+            ColorBlendModule::cancel_main_color(fighter.module_accessor, 0);
         }
     }
-    //ColorBlendModule::cancel_main_color(fighter.module_accessor, 0);
 }
 
 pub unsafe extern "C" fn special_lw3_end(fighter: &mut L2CFighterCommon) -> L2CValue {

@@ -27,21 +27,24 @@ unsafe fn eqf_cancel_ledgegrab_lockout(fighter: &mut L2CFighterCommon) {
     }
 }
 
-// unsafe fn boiling_punt_timer(fighter: &mut L2CFighterCommon) {
-//     if VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE) > 0 {
-//         let timer = VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_TIMER);
-//         if timer >= 5 {
-//             if timer % 30 == 0 {
-//                 let vec1 = Vector4f{ x: 0.85, y: 0.85, z: 0.85, w: 0.2};
-//                 let vec2 = Vector4f{ x: 1.0, y: 0.0, z: 0.0, w: 0.5};
-//                 ColorBlendModule::set_main_color(fighter.module_accessor, &vec1, &vec2, 0.25, 2.5, 5, true);
-//             }
-//             if timer % 30 == 20 {
-//                 ColorBlendModule::cancel_main_color(fighter.module_accessor, 0);
-//             }
-//         }
-//     }
-// }
+unsafe fn boiling_punt_timer(fighter: &mut L2CFighterCommon) {
+    if VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE) > 1 {
+        let timer = VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_TIMER);
+        if !VarModule::countdown_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_TIMER, 0) {
+            if timer % 60 == 0 {
+                let vec1 = Vector4f{ x: 0.85, y: 0.85, z: 0.85, w: 0.2};
+                let vec2 = Vector4f{ x: 0.85, y: 0.0, z: 0.0, w: 0.5};
+                ColorBlendModule::set_main_color(fighter.module_accessor, &vec1, &vec2, 1.0, 1.0, 7, true);
+            }
+            if timer % 60 == 52 {
+                ColorBlendModule::cancel_main_color(fighter.module_accessor, 0);
+            }
+        }
+        else {
+            VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_TIMER, 300);
+        }
+    }
+}
 
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
@@ -75,7 +78,7 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     feint_jump_jc(boma);
     eqf_cancel_ledgegrab_lockout(fighter);
-    //boiling_punt_timer(fighter);
+    boiling_punt_timer(fighter);
     fastfall_specials(fighter);
 }
 

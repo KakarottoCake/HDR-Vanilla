@@ -123,6 +123,7 @@ unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
                     EffectModule::set_alpha(boma, handle as u32, 3.0);
                     VarModule::set_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, handle as i32);
                     VarModule::inc_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE);
+                    VarModule::set_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_TIMER, 300);
                 }
                 _ => {
                     VarModule::set_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE, 0);
@@ -132,6 +133,7 @@ unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
                     EffectModule::kill(boma, handle2, false, false);
                     VarModule::set_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1, -1);
                     VarModule::set_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, -1);
+                    ColorBlendModule::cancel_main_color(boma, 0);
                 }
             }
         }
