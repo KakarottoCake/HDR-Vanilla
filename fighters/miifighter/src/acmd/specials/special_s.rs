@@ -133,6 +133,7 @@ unsafe extern "C" fn game_specials1end(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 29.0);
     if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_MIIFIGHTER_STATUS_WORK_ID_FLAG_100KICK_ENABLE_LANDING);
         AttackModule::clear_all(boma);
     }
 }

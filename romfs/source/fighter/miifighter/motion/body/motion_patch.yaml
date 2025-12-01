@@ -141,7 +141,7 @@ attack_air_lw:
     cancel_frame: 46
 special_s1_end:
   extra:
-    cancel_frame: 53
+    cancel_frame: 57
 special_air_s1_end:
   extra:
     cancel_frame: 60
