@@ -851,6 +851,8 @@ pub mod vars {
 
             pub use super::super::miifighter::status::SPECIAL_N1_ANGLE;
             pub use super::super::miifighter::status::SPECIAL_N1_SPEED;
+            pub use super::super::miifighter::status::SPECIAL_N1_EFFECT_HANDLE;
+            pub use super::super::miifighter::status::SPECIAL_N1_CHARGE;
 
             // flags
             pub const SPECIAL_N_PICKEL_MINING_TIMER: i32 = 0x11F4;
@@ -868,7 +870,8 @@ pub mod vars {
             pub use super::super::luigi::status::SPECIAL_N_THUNDERHAND;
             pub use super::super::mario::status::SPECIAL_N_FIREBRAND;
             pub use super::super::mariod::status::SPECIAL_N_CHILL_PILL;
-            pub use super::super::miifighter::status::SPECIAL_N1_CHECK_HOLD;
+            pub use super::super::miifighter::status::SPECIAL_N1_START_HOLD;
+            pub use super::super::miifighter::status::SPECIAL_N1_END_HOLD;
         }
     }
 
@@ -1163,7 +1166,9 @@ pub mod vars {
         }
         pub mod status {
             // ints
-            pub const SPECIAL_LW1_CHARGE: i32 = 0x1100;
+            pub const SPECIAL_N1_CHARGE: i32 = 0x1100;
+            pub const SPECIAL_N1_EFFECT_HANDLE: i32 = 0x1101;
+            pub const SPECIAL_LW1_CHARGE: i32 = 0x1102;
 
             // floats
             pub const SPECIAL_N1_ANGLE: i32 = 0x1100;
@@ -1171,12 +1176,13 @@ pub mod vars {
             pub const SPECIAL_LW1_CHARGE_DISTANCE: i32 = 0x1102;
 
             // flags
-            pub const SPECIAL_N1_CHECK_HOLD: i32 = 0x1100;
-            pub const SPECIAL_LW2_CHECK_HOLD: i32 = 0x1101;
-            pub const SPECIAL_LW3_INC_STAGE: i32 = 0x1102;
-            pub const SPECIAL_LW3_ENABLE_LANDING: i32 = 0x1103;
-            pub const SPECIAL_LW3_CLEAR_CRIT: i32 = 0x1104;
-            pub const SPECIAL_LW3_ENABLE_BOUNCE: i32 = 0x1105;
+            pub const SPECIAL_N1_START_HOLD: i32 = 0x1100;
+            pub const SPECIAL_N1_END_HOLD: i32 = 0x1101;
+            pub const SPECIAL_LW2_CHECK_HOLD: i32 = 0x1102;
+            pub const SPECIAL_LW3_INC_STAGE: i32 = 0x1103;
+            pub const SPECIAL_LW3_ENABLE_LANDING: i32 = 0x1104;
+            pub const SPECIAL_LW3_CLEAR_CRIT: i32 = 0x1105;
+            pub const SPECIAL_LW3_ENABLE_BOUNCE: i32 = 0x1106;
         }
     }
 
