@@ -48,20 +48,8 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     && !StatusModule::is_changing(fighter.module_accessor)
     && (
         fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_N])
-        || ([*FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_N_1,
-            *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_S_1,
-            *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_HI_1,
-            *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_1
-            ].contains(&WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_WAZA_CUSTOMIZE_TO))
-            && fighter.is_status_one_of(&[
-                *FIGHTER_STATUS_KIND_SPECIAL_N,
-                *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_S1_END
-            ])
-        )
         || ([*FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_N_2,
-            *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_S_2,
-            *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_HI_2,
-            *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_2
+            *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_HI_2
             ].contains(&WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_WAZA_CUSTOMIZE_TO))
             && fighter.is_status_one_of(&[
                 *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_N2_MISS,
@@ -70,16 +58,11 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
                 *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_HI2_END
             ])
         )
-        || ([*FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_N_3,
-            *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_S_3,
-            *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_HI_3,
-            *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_3
+        || ([*FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_S_3,
+            *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_HI_3
             ].contains(&WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_WAZA_CUSTOMIZE_TO))
             && fighter.is_status_one_of(&[
-                *FIGHTER_STATUS_KIND_SPECIAL_N,
                 *FIGHTER_STATUS_KIND_SPECIAL_HI,
-                *FIGHTER_STATUS_KIND_SPECIAL_LW,
-                *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_N3_TURN,
                 *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_S3_THROW,
             ])
         )

@@ -49,6 +49,7 @@ unsafe extern "C" fn special_n1_main_loop(fighter: &mut L2CFighterCommon) -> L2C
             return 1.into();
         }
     }
+    fighter.sub_air_check_dive();
     let charge = VarModule::get_int(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_CHARGE) as f32;
     let angle = 45.0 - charge;
     let guide_pos = arrow_guide_pos(fighter, angle);

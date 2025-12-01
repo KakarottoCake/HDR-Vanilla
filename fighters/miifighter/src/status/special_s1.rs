@@ -195,6 +195,9 @@ pub unsafe extern "C" fn special_s1_end_main_loop(fighter: &mut L2CFighterCommon
             return 1.into();
         }
     }
+    if fighter.is_situation(*SITUATION_KIND_AIR) {
+        fighter.sub_air_check_dive();
+    }
     if fighter.get_int(*FIGHTER_MIIFIGHTER_STATUS_WORK_ID_INT_100KICK_START_SITUATION) == *SITUATION_KIND_GROUND {
         if MotionModule::is_end(fighter.module_accessor) {
             fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_FALL, false);
