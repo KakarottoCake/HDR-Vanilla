@@ -2,6 +2,7 @@
 
 use rlua_lua53_sys as lua;
 use utils::modules::stage_mgr::STAGE_MANAGER;
+use std::ffi::CString;
 
 macro_rules! lua_gettop {
     ($state:ident) => {{
@@ -503,6 +504,10 @@ unsafe fn add_to_key_context_hook(ctx: &skyline::hooks::InlineCtx) {
             name: "is_perma_strike_stage\0".as_ptr() as _,
             func: Some(is_perma_strike_stage),
         },
+        lua::luaL_Reg {
+            name: "get_page_name\0".as_ptr() as _,
+            func: Some(get_page_name),
+        },
     ];
 
     push_new_singleton(lua_state, "HDR", registry);
@@ -542,7 +547,7 @@ extern "C" fn get_selected_panel(state: *mut lua::lua_State) -> i32 {
         let mgr = STAGE_MANAGER.lock().unwrap();
         if let Some(panel_id) = mgr.selected_panel {
             lua::lua_pushinteger(state, panel_id as i64);
-            return 1
+            return 1;
         }
 
         lua::lua_pushinteger(state, -1);
@@ -555,7 +560,7 @@ extern "C" fn get_selected_preview(state: *mut lua::lua_State) -> i32 {
         let mgr = STAGE_MANAGER.lock().unwrap();
         if let Some(preview_id) = mgr.selected_preview {
             lua::lua_pushinteger(state, preview_id as i64);
-            return 1
+            return 1;
         }
 
         lua::lua_pushinteger(state, -1);
@@ -590,8 +595,7 @@ extern "C" fn set_perma_strike_stage(state: *mut lua::lua_State) -> i32 {
 
         if is_strike {
             mgr.perma_striked_stages.insert(panel_id);
-        }
-        else {
+        } else {
             mgr.perma_striked_stages.remove(&panel_id);
         }
 
@@ -607,10 +611,24 @@ extern "C" fn is_perma_strike_stage(state: *mut lua::lua_State) -> i32 {
         let mut mgr = STAGE_MANAGER.lock().unwrap();
         if mgr.perma_striked_stages.contains(&panel_id) {
             lua::lua_pushboolean(state, 1);
-        }
-        else {
+        } else {
             lua::lua_pushboolean(state, 0);
         }
+
+        1
+    }
+}
+
+extern "C" fn get_page_name(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let page_num = lua::lua_tointegerx(state, -1, std::ptr::null_mut()) as usize;
+        lua::lua_pop(state, 1);
+
+        let mut mgr = STAGE_MANAGER.lock().unwrap();
+        let stages = mgr.stage_pages.as_ref().unwrap();
+        let c_str = CString::new(stages[page_num].name.clone()).expect("String contained null byte");
+
+        lua::lua_pushstring(state, c_str.as_ptr());
 
         1
     }

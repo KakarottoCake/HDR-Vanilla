@@ -1,12 +1,15 @@
 
 use std::{collections::HashSet, sync::{LazyLock, Mutex}};
 
+use crate::StagePage;
+
 pub static STAGE_MANAGER: LazyLock<Mutex<StageManager>> = LazyLock::new(||{Mutex::new(StageManager::new())});
 
 pub struct StageManager {
     pub selected_panel: Option<i32>,
     pub selected_preview: Option<i32>,
     pub is_my_music: Option<bool>,
+    pub stage_pages: Option<Vec<StagePage>>,
     pub perma_striked_stages: HashSet<i32>
 }
 
@@ -16,6 +19,7 @@ impl StageManager{
             selected_panel: None,
             selected_preview: None,
             is_my_music: None,
+            stage_pages: None,
             perma_striked_stages: HashSet::new(),
         }
     }

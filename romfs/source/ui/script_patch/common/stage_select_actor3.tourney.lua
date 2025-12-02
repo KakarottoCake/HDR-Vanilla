@@ -1050,6 +1050,8 @@ local change_page = function(should_play_page_change)
 end
 
 local change_sub_page = function(target_page)
+    local page_name = HDR.get_page_name(target_page)
+
     -- Page is actually all the parts of the set_parts_n_stage_XXX
     local current_page_ = pages[current_page + 1]
     local target_page_ = pages[target_page + 1]

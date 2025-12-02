@@ -11,6 +11,8 @@ use prc::{hash40::Hash40, ParamKind};
 use smash::phx::Hash40 as Hash40_2;
 use smash::{app::BattleObject, hash40};
 
+use crate::STAGE_MANAGER;
+
 use super::PARAM_MODULE_OFFSET;
 
 macro_rules! get_param_module {
@@ -320,14 +322,14 @@ pub struct TourneyConfig {
 #[serde(default)]
 #[repr(C)]
 pub struct StagePage {
-    name: String,
-    useOfficial: bool,
+    pub name: String,
+    pub useOfficial: bool,
     /// the ordered list of starters stages which should be enabled,
     /// or `None` if there are no starters
-    starters: Option<Vec<String>>,
+    pub starters: Option<Vec<String>>,
     /// the ordered list of counterpick stages which should be enabled,
     /// or `None` if there are no counterpicks
-    counterpicks: Option<Vec<String>>
+    pub counterpicks: Option<Vec<String>>
 }
 
 impl Default for TourneyConfig {
@@ -559,7 +561,10 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
         used_stages.insert(name_id, false);
     }
 
+    let mut pages: Vec<StagePage> = Vec::new();
     for n in 0..num_pages {
+        pages.push(stage_pages[n].clone());
+
         let starters = stage_pages[n].starters.as_ref().unwrap();
         let counterpicks = stage_pages[n].counterpicks.as_ref().unwrap();
 
@@ -647,6 +652,9 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
             }
         }
     }
+
+    let mut mgr = STAGE_MANAGER.lock().unwrap();
+    mgr.stage_pages = Some(pages);
 
     // Add all the unused stages back into the prc with a disp_order of -1
     // This is important so that main menu music and random stage selection work
