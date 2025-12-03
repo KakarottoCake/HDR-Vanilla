@@ -1051,6 +1051,8 @@ end
 
 local change_sub_page = function(target_page)
     local page_name = HDR.get_page_name(target_page)
+    root_view:get_pane("txt_page_back"):set_text_string(page_name)
+    root_view:get_pane("txt_page_forward"):set_text_string(page_name)
 
     -- Page is actually all the parts of the set_parts_n_stage_XXX
     local current_page_ = pages[current_page + 1]
