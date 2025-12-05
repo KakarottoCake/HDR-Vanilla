@@ -31,7 +31,8 @@
   </list>
   <list size="4" hash="param_special_s">
     <struct index="0">
-      <float hash="throw_speed">4.0</float>
+      <float hash="throw_angle">30.0</float>
+      <float hash="throw_speed">3.5</float>
       <int hash="hold_max_frame">0</int>
     </struct>
     <hash40 index="1">dummy</hash40>

@@ -1205,10 +1205,9 @@ pub mod vars {
         }
         pub mod status {
             // flags
-            pub const SPECIAL_N1_WAVE: i32 = 0x1100;
-            pub const SPECIAL_S2_EDGE_CANCEL: i32 = 0x1101;
-            pub const SPECIAL_LW2_SHOCK_SPELL_HOLD: i32 = 0x1102;
-            pub const SPECIAL_S2_GROUND_START: i32 = 0x1103;
+            pub const SPECIAL_S2_EDGE_CANCEL: i32 = 0x1100;
+            pub const SPECIAL_LW2_SHOCK_SPELL_HOLD: i32 = 0x1101;
+            pub const SPECIAL_S2_GROUND_START: i32 = 0x1102;
         }
     }
 
