@@ -27,6 +27,8 @@ pub unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CVa
         special_n_substatus(fighter);
     }
     fighter.global_table[SUB_STATUS2].assign(&L2CValue::Ptr(special_n_substatus as *const () as _));
+    VarModule::on_flag(fighter.battle_object, vars::sonic::instance::SPECIAL_AIR_ACTION_USED);
+
     fighter.main_shift(special_n_main_loop)
 }
 
