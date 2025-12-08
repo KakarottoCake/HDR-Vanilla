@@ -1,8 +1,9 @@
 #![allow(improper_ctypes)]
 
+use rand::{seq::SliceRandom, thread_rng};
 use rlua_lua53_sys as lua;
-use utils::modules::stage_mgr::STAGE_MANAGER;
 use std::ffi::CString;
+use utils::modules::stage_mgr::STAGE_MANAGER;
 
 macro_rules! lua_gettop {
     ($state:ident) => {{
@@ -471,8 +472,10 @@ extern "C" {
     fn add_to_key_context(ctx: &skyline::hooks::InlineCtx);
 }
 
-#[skyline::hook(replace = add_to_key_context, inline)]
+#[skyline::hook(replace = add_to_key_context)]
 unsafe fn add_to_key_context_hook(ctx: &skyline::hooks::InlineCtx) {
+    call_original!(ctx);
+
     let lua_state: *mut lua::lua_State = ctx.registers[19].x() as _;
 
     let registry = &[
@@ -507,6 +510,14 @@ unsafe fn add_to_key_context_hook(ctx: &skyline::hooks::InlineCtx) {
         lua::luaL_Reg {
             name: "get_page_name\0".as_ptr() as _,
             func: Some(get_page_name),
+        },
+        lua::luaL_Reg {
+            name: "set_random_stage_index\0".as_ptr() as _,
+            func: Some(set_random_stage_index),
+        },
+        lua::luaL_Reg {
+            name: "get_random_stage_index\0".as_ptr() as _,
+            func: Some(get_random_stage_index),
         },
     ];
 
@@ -629,6 +640,38 @@ extern "C" fn get_page_name(state: *mut lua::lua_State) -> i32 {
         let c_str = CString::new(stages[page_num].name.clone()).expect("String contained null byte");
 
         lua::lua_pushstring(state, c_str.as_ptr());
+
+        1
+    }
+}
+
+extern "C" fn set_random_stage_index(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let index = lua::lua_tointegerx(state, -1, std::ptr::null_mut()) as i32;
+        lua::lua_pop(state, 1);
+
+        let mut mgr = STAGE_MANAGER.lock().unwrap();
+
+        mgr.random_stage_indexes.get_or_insert(Vec::new()).push(index);
+
+        0
+    }
+}
+
+extern "C" fn get_random_stage_index(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let mut rng = thread_rng();
+        let mut mgr = STAGE_MANAGER.lock().unwrap();
+        
+        if let Some(indexes) = &mgr.random_stage_indexes {
+            let index = indexes.choose(&mut rng);
+            match index {
+                Some(value) => lua::lua_pushinteger(state, *value as i64),
+                None => lua::lua_pushinteger(state, -1)
+            }
+        }
+
+        mgr.random_stage_indexes = None;
 
         1
     }

@@ -293,6 +293,9 @@ end
 -- this is basically a map<id, is_training>
 local training_stages = {}
 
+-- all of the (1 indexed) IDs which are actually Random
+local random_stages = {}
+
 -- Performs interpolation of a value using a sin wave for a more natural curve than just linear
 -- CLOSURE_4, R64
 local sin_interpolate = function(progress, total)
@@ -1078,22 +1081,25 @@ local change_sub_page = function(target_page)
     -- reposition and show the new page's panels
     for i, panel in ipairs(target_page_) do
         -- dont reposition or show any invalid stages
-        if i > STAGE_PANEL_LIST_NUM then
+        if target_page * PANELS_PER_PAGE + i > STAGE_PANEL_LIST_NUM then
             break
         end
 
         -- set the preview
         UiScriptPlayer.invoke("set_stage_preview_from_panel", 0, target_page * PANELS_PER_PAGE + i - 1)
-        -- use the set preview to check if this preview is the training stage
-        local is_random = UiScriptPlayer.invoke("is_training_stage_preview", 0)
+        -- use the set preview to check if this preview is the training or random stage
+        local is_training = UiScriptPlayer.invoke("is_training_stage_preview", 0)
+        local is_random = UiScriptPlayer.invoke("is_random_stage_preview", 0)
+
+        random_stages[target_page * PANELS_PER_PAGE + i] = is_random
 
         -- if its the training stage (which we are using as a buffer to align the stages),
         -- then hide the stage, and record whether its the training stage or not
-        print("is random: " .. tostring(is_random))
-        if is_random == true then
+        print("is training: " .. tostring(is_training))
+        if is_training == true then
             -- save that this is the training stage
-            training_stages[i] = true
-            print("found the random stage: " .. i)
+            training_stages[target_page * PANELS_PER_PAGE + i] = true
+            print("found the training stage: " .. target_page * PANELS_PER_PAGE + i)
             panel:set_visible(false)
 
             --[[ for getting reflective data about the stages
@@ -1107,7 +1113,7 @@ local change_sub_page = function(target_page)
             ]]
                --
         else
-            training_stages[i] = false
+            training_stages[target_page * PANELS_PER_PAGE + i] = false
 
             -- print("setting root pane parent pane position")
             -- panel:get_root_pane():get_parent_pane():set_position(positions[offset].x, positions[offset].y)
@@ -2483,6 +2489,44 @@ local update_from_pointer = function()
     end
 end
 
+local is_good_random_stage = function(stage_index)
+    return not training_stages[stage_index] and
+            not random_stages[stage_index] and
+            not stage_panels[stage_index].is_striked_ and
+            not stage_panels[stage_index].is_perma_striked_
+end
+
+-- Ult's lua engine doesn't include a random implementation, so this function
+-- pushes all non-training, non-random, non-struck stage panel indexes to the HDR stage manager,
+-- then pulls a random index from it. 
+local handle_single_page_random = function()
+    local random_stage_select_count = 0
+
+    for i, panel in ipairs(pages[current_page + 1]) do
+        local index = current_page * PANELS_PER_PAGE + i
+
+        if index > STAGE_PANEL_LIST_NUM then
+            break
+        end
+
+        -- skip training, random, and struck stages
+        if is_good_random_stage(index) then
+            HDR.set_random_stage_index(index)
+            random_stage_select_count = random_stage_select_count + 1
+        end
+    end
+
+    if random_stage_select_count > 0 then
+        local random_index = HDR.get_random_stage_index()
+        un_decide_medal()
+        UiScriptPlayer.invoke("set_stage_preview_from_panel", 0, random_index - 1)
+        UiScriptPlayer.invoke("set_hand_position_from_panel", random_index - (current_page * PANELS_PER_PAGE) - 1)
+        UiScriptPlayer.invoke("set_medal_position_from_panel", 0, random_index - (current_page * PANELS_PER_PAGE) - 1)
+        change_panel(random_index - 1)
+        handle_panel_decide()
+    end
+end
+
 -- CLOSURE_79, R138
 local try_handle_exiting_scene = function()
     if scene_state == SCENE_STATE_REGULAR or scene_state == SCENE_STATE_EXITED then
@@ -2492,6 +2536,13 @@ local try_handle_exiting_scene = function()
     update_panel_scalings()
 
     if scene_state == SCENE_STATE_SHOULD_EXIT then
+        -- intercept the random stage and check if we need to handle single page random
+        if UiScriptPlayer.invoke("is_random_stage_preview", current_selected_preview) and
+            virtual_input:is_pressing(INPUT_ALT_L) then
+                scene_state = SCENE_STATE_REGULAR
+                handle_single_page_random()
+                return false
+        end
         next_scene_animation:play(1.0)
         scene_state = SCENE_STATE_EXITING
     elseif scene_state == SCENE_STATE_EXITING then
