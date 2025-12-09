@@ -17,7 +17,7 @@ const JUMP_FALL_STABLE_MUL: f32 = 0.25;
 
 const AIR_FALL_SPEED_X: f32 = 0.0;
 const AIR_FALL_SPEED_Y: f32 = -3.0;
-const AIR_LANDING_LAG: f32 = 20.0;
+const AIR_LANDING_LAG: f32 = 27.0;
 
 pub unsafe extern "C" fn speciallw_main(fighter: &mut smashline::L2CFighterCommon) -> smashline::L2CValue {
     if StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_AIR {
