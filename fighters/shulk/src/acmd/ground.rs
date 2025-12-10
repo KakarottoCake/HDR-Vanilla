@@ -79,8 +79,34 @@ unsafe extern "C" fn effect_attack13(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 5.0);
     if is_excute(agent) {
-        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_sword_jab"), Hash40::new("tex_shulk_sword2"), 10, Hash40::new("haver"), 0, 2.8, 0.9, Hash40::new("haver"), 0, 14, 0.9, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.1, 0.2);
+    if WorkModule::get_int(agent.module_accessor, *FIGHTER_SHULK_INSTANCE_WORK_ID_INT_SPECIAL_N_TYPE) == 0{
+    if is_excute(agent) {
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_sword_jab"), Hash40::new("tex_shulk_sword2"), 8, Hash40::new("haver"), 0, 3, 0.9, Hash40::new("haver"), 0, 19, 1.1, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
     }
+    }
+    else if WorkModule::get_int(agent.module_accessor, *FIGHTER_SHULK_INSTANCE_WORK_ID_INT_SPECIAL_N_TYPE) == 1{
+    if is_excute(agent) {
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_sword_hdr_speed"), Hash40::new("tex_shulk_sword2"), 8, Hash40::new("haver"), 0, 3, 0.9, Hash40::new("haver"), 0, 19, 1.1, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
+    }
+    }
+    else if WorkModule::get_int(agent.module_accessor, *FIGHTER_SHULK_INSTANCE_WORK_ID_INT_SPECIAL_N_TYPE) == 2{
+    if is_excute(agent) {
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_sword_hdr_shield"), Hash40::new("tex_shulk_sword2"), 8, Hash40::new("haver"), 0, 3, 0.9, Hash40::new("haver"), 0, 19, 1.1, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
+    }
+    }
+    else if WorkModule::get_int(agent.module_accessor, *FIGHTER_SHULK_INSTANCE_WORK_ID_INT_SPECIAL_N_TYPE) == 3{
+    if is_excute(agent) {
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_sword_hdr_buster"), Hash40::new("tex_shulk_sword2"), 8, Hash40::new("haver"), 0, 3, 0.9, Hash40::new("haver"), 0, 19, 1.1, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
+    }
+    }
+    else if WorkModule::get_int(agent.module_accessor, *FIGHTER_SHULK_INSTANCE_WORK_ID_INT_SPECIAL_N_TYPE) == 4{
+    if is_excute(agent) {
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_sword_hdr_smash"), Hash40::new("tex_shulk_sword2"), 8, Hash40::new("haver"), 0, 3, 0.9, Hash40::new("haver"), 0, 19, 1.1, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
+    }
+    }
+    else if is_excute(agent) {
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_sword_jab"), Hash40::new("tex_shulk_sword2"), 8, Hash40::new("haver"), 0, 3, 0.9, Hash40::new("haver"), 0, 19, 1.1, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
+    }    }
     frame(lua_state, 10.0);
     if is_excute(agent) {
         AFTER_IMAGE_OFF(agent, 2);
@@ -125,8 +151,33 @@ unsafe extern "C" fn effect_attackdash(agent: &mut L2CAgentBase) {
         LANDING_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
     frame(lua_state, 13.0);
+        if WorkModule::get_int(agent.module_accessor, *FIGHTER_SHULK_INSTANCE_WORK_ID_INT_SPECIAL_N_TYPE) == 0{
     if is_excute(agent) {
-        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_sword_hdr"), Hash40::new("tex_shulk_sword4"), 4, Hash40::new("haver"), 0, 3, 0.9, Hash40::new("haver"), 0, 19.3, 0.9, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.2);
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_sword_hdr"), Hash40::new("tex_shulk_sword2"), 8, Hash40::new("haver"), 0, 3, 0.9, Hash40::new("haver"), 0, 19, 1.1, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
+    }
+    }
+    else if WorkModule::get_int(agent.module_accessor, *FIGHTER_SHULK_INSTANCE_WORK_ID_INT_SPECIAL_N_TYPE) == 1{
+    if is_excute(agent) {
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_sword_hdr_speed"), Hash40::new("tex_shulk_sword2"), 8, Hash40::new("haver"), 0, 3, 0.9, Hash40::new("haver"), 0, 19, 1.1, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
+    }
+    }
+    else if WorkModule::get_int(agent.module_accessor, *FIGHTER_SHULK_INSTANCE_WORK_ID_INT_SPECIAL_N_TYPE) == 2{
+    if is_excute(agent) {
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_sword_hdr_shield"), Hash40::new("tex_shulk_sword2"), 8, Hash40::new("haver"), 0, 3, 0.9, Hash40::new("haver"), 0, 19, 1.1, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
+    }
+    }
+    else if WorkModule::get_int(agent.module_accessor, *FIGHTER_SHULK_INSTANCE_WORK_ID_INT_SPECIAL_N_TYPE) == 3{
+    if is_excute(agent) {
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_sword_hdr_buster"), Hash40::new("tex_shulk_sword2"), 8, Hash40::new("haver"), 0, 3, 0.9, Hash40::new("haver"), 0, 19, 1.1, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
+    }
+    }
+    else if WorkModule::get_int(agent.module_accessor, *FIGHTER_SHULK_INSTANCE_WORK_ID_INT_SPECIAL_N_TYPE) == 4{
+    if is_excute(agent) {
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_sword_hdr_smash"), Hash40::new("tex_shulk_sword2"), 8, Hash40::new("haver"), 0, 3, 0.9, Hash40::new("haver"), 0, 19, 1.1, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
+    }
+    }
+    else if is_excute(agent) {
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_sword_hdr"), Hash40::new("tex_shulk_sword2"), 8, Hash40::new("haver"), 0, 3, 0.9, Hash40::new("haver"), 0, 19, 1.1, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {
