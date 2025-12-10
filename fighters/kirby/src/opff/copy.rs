@@ -717,21 +717,6 @@ unsafe fn packun_ptooie_scale(fighter: &mut L2CFighterCommon) {
 }
 
 // Hero
-unsafe fn dash_cancel_frizz(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_BRAVE_SPECIAL_N_SHOOT)
-    && fighter.is_situation(*SITUATION_KIND_GROUND)
-    && fighter.is_motion(Hash40::new("brave_special_n1"))
-    && fighter.motion_frame() > 20.0 && fighter.motion_frame() < 44.0 // after F20 and before the FAF
-    && (fighter.get_float(*FIGHTER_BRAVE_INSTANCE_WORK_ID_FLOAT_SP) > 12.0)
-    {
-        if fighter.check_dash_cancel() {
-            let mut brave_fighter = app::Fighter{battle_object: *(fighter.battle_object)};
-            FighterSpecializer_Brave::add_sp(&mut brave_fighter, -10.0);
-            EFFECT(fighter, Hash40::new("sys_flash"), Hash40::new("top"), 0, 15, -2, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, false);
-        }
-    }
-}
-
 unsafe fn brave_nspecial_cancels(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_BRAVE_SPECIAL_N_CANCEL)
     && fighter.is_situation(*SITUATION_KIND_AIR)
@@ -1088,7 +1073,6 @@ pub unsafe fn kirby_copy_handler(fighter: &mut L2CFighterCommon) {
         },
         // Hero
         0x53 => {
-            dash_cancel_frizz(fighter);
             brave_nspecial_cancels(fighter);
         },
         // Banjo & Kazooie
