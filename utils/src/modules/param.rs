@@ -605,6 +605,7 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
                         
                         *disp_order = stage_order;
                         out_list.push(new_entry);
+                        used_stages.insert("Random".to_string(), true);
                     }
                 }
 
@@ -666,6 +667,7 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
                         
                         *disp_order = stage_order;
                         out_list.push(new_entry);
+                        used_stages.insert("Random".to_string(), true);
                     }
                 }
 
