@@ -29,7 +29,7 @@ pub unsafe extern "C" fn brave_on_attack(vtable: u64, battleObject: *mut BattleO
     let boma = &mut (*(&mut *(battleObject)).module_accessor);
     if boma.is_motion_one_of(&[Hash40::new_raw(0xc1a0567e3), Hash40::new_raw(0x10a24f50e9)]) {
         if [0x3, 0x2d, 0x31].contains(&(&mut *(sv_battle_object::module_accessor(collisionLog.opponent_battle_object_id))).kind()) {
-            if sv_math::rand(hash40("fighter"), 100) == 1 {
+            if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) && sv_math::rand(hash40("fighter"), 100) == 1 {
                 StatusModule::change_status_request(&mut *(sv_battle_object::module_accessor(collisionLog.opponent_battle_object_id)), 0xb5, false);
             }
         }
