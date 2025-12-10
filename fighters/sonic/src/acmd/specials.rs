@@ -206,7 +206,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
         GroundModule::select_cliff_hangdata(boma, 2);
         ArticleModule::shoot_exist(boma, *FIGHTER_SONIC_GENERATE_ARTICLE_GIMMICKJUMP, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
     }
-    frame(lua_state, 23.0);
+    frame(lua_state, 8.0);
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
     }   

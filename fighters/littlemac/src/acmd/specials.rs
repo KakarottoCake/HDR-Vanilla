@@ -342,6 +342,11 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     frame(lua_state, 32.0);
     if is_excute(agent) {
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+        KineticModule::suspend_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+    }
+    frame(lua_state, 41.0);
+    if is_excute(agent) {
+        KineticModule::resume_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         let air_speed_x_stable = WorkModule::get_param_float(boma, hash40("air_speed_x_stable"), 0);
         let fall_x_mul = WorkModule::get_param_float(boma, hash40("param_special_hi"), hash40("special_hi_fall_x_mul"));
         sv_kinetic_energy!(set_stable_speed, agent, FIGHTER_KINETIC_ENERGY_ID_CONTROL, air_speed_x_stable * fall_x_mul, 0.0);
