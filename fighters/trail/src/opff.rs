@@ -154,15 +154,6 @@ unsafe fn flower_frame(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
-unsafe fn side_special_actionability(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_status(*FIGHTER_TRAIL_STATUS_KIND_SPECIAL_S_END) {
-        if MotionModule::frame(boma) > MotionModule::end_frame(boma) - 1.0 {
-            boma.change_status_req(*FIGHTER_STATUS_KIND_FALL, true);
-        }
-    }
-}
-
-
 // wall jump out of sonic blade
 unsafe fn side_special_walljump(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_status_one_of(&[
@@ -170,17 +161,6 @@ unsafe fn side_special_walljump(boma: &mut BattleObjectModuleAccessor) {
         *FIGHTER_TRAIL_STATUS_KIND_SPECIAL_S_END])
     && boma.is_situation(*SITUATION_KIND_AIR) {
         boma.check_wall_jump_cancel();
-    }
-}
-
-// remove arrow effect from sonic blade once sora begins the attack
-unsafe fn side_special_effect_handler(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_status_one_of(&[*FIGHTER_TRAIL_STATUS_KIND_SPECIAL_S_ATTACK, *FIGHTER_TRAIL_STATUS_KIND_SPECIAL_S_END]) {
-        let effect = WorkModule::get_int(boma, *FIGHTER_TRAIL_STATUS_SPECIAL_S_INT_SEARCH_GUIDE_EFFECT_HANDLE) as u32;
-        if effect != 0 {
-            EffectModule::kill(boma, effect, true, true);
-            WorkModule::set_int(boma, 0, *FIGHTER_TRAIL_STATUS_SPECIAL_S_INT_SEARCH_GUIDE_EFFECT_HANDLE);
-        }
     }
 }
 
@@ -218,9 +198,7 @@ pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut
     attack_lw4_rebound(boma, frame);
     magic_handling(fighter, boma, frame);
     flower_frame(boma);
-    side_special_actionability(boma);
     side_special_walljump(boma);
-    side_special_effect_handler(boma);
     fastfall_specials(fighter);
     initialize_magic(fighter);
 }
