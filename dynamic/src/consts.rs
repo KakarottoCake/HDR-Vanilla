@@ -1202,15 +1202,14 @@ pub mod vars {
     pub mod miiswordsman {
         pub mod instance {
             // flags
-            pub const SPECIAL_S3_CHAKRAM_STICK: i32 = 0x0100;
-            pub const SPECIAL_HI2_DASH_HIT: i32 = 0x0101;
+            pub const SPECIAL_HI2_DASH_HIT: i32 = 0x0100;
         }
         pub mod status {
             // flags
-            pub const SPECIAL_N1_WAVE: i32 = 0x1100;
+            pub const SPECIAL_S2_GROUND_START: i32 = 0x1100;
             pub const SPECIAL_S2_EDGE_CANCEL: i32 = 0x1101;
-            pub const SPECIAL_LW2_SHOCK_SPELL_HOLD: i32 = 0x1102;
-            pub const SPECIAL_S2_GROUND_START: i32 = 0x1103;
+            pub const SPECIAL_LW1_CHECK_BUTTON: i32 = 0x1102;
+            pub const SPECIAL_LW2_HOLD: i32 = 0x1103;
         }
     }
 
