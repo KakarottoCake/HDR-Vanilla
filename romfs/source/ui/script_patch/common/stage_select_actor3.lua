@@ -1031,6 +1031,19 @@ local change_sub_page = function(target_page)
     local current_page_ = pages[current_page + 1]
     local target_page_ = pages[target_page + 1]
 
+    local page_back = target_page
+    if target_page < 1 then
+        page_back = #pages
+    end
+
+    local page_forward = target_page + 2
+    if page_forward > #pages then
+        page_forward = 1
+    end
+
+    root_view:get_pane("txt_page_back"):set_text_string("Page " .. page_back)
+    root_view:get_pane("txt_page_forward"):set_text_string("Page " .. page_forward)
+
     local positions = {}
 
     for i = 1, PANELS_PER_PAGE, 1 do
@@ -1342,6 +1355,7 @@ local setup_from_environment = function()
     end
 
     UiScriptPlayer.invoke("setup_bgm")
+    change_sub_page(0)
 end
 
 -- Cancels, presumably a part of the exit sequence
