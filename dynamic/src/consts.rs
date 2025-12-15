@@ -1208,8 +1208,9 @@ pub mod vars {
             // flags
             pub const SPECIAL_S2_GROUND_START: i32 = 0x1100;
             pub const SPECIAL_S2_EDGE_CANCEL: i32 = 0x1101;
-            pub const SPECIAL_LW1_CHECK_BUTTON: i32 = 0x1102;
-            pub const SPECIAL_LW2_HOLD: i32 = 0x1103;
+            pub const SPECIAL_LW1_CHECK_INPUT: i32 = 0x1102;
+            pub const SPECIAL_LW1_CHANGE_KINETIC: i32 = 0x1103;
+            pub const SPECIAL_LW2_HOLD: i32 = 0x1104;
         }
     }
 
@@ -2054,6 +2055,10 @@ pub mod statuses {
 
     pub mod mewtwo {
         pub const FLOAT: i32 = 0x1E9;
+    }
+
+    pub mod miiswordsman_tornadoshot {
+        pub const SHOCK_SPELL: i32 = 0x2;
     }
 
     pub mod packun_firebreath {

@@ -65,16 +65,23 @@ unsafe extern "C" fn special_lw1_main_loop(fighter: &mut L2CFighterCommon) -> L2
     if KineticModule::is_enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL) {
         fighter.sub_air_check_dive();
     }
-    if VarModule::is_flag(fighter.battle_object, vars::miiswordsman::status::SPECIAL_LW1_CHECK_BUTTON) {
+    if VarModule::is_flag(fighter.battle_object, vars::miiswordsman::status::SPECIAL_LW1_CHECK_INPUT) {
         if fighter.is_cat_flag(Cat1::AttackLw3 | Cat1::AttackLw4) {
-            VarModule::off_flag(fighter.battle_object, vars::miiswordsman::status::SPECIAL_LW1_CHECK_BUTTON);
+            VarModule::off_flag(fighter.battle_object, vars::miiswordsman::status::SPECIAL_LW1_CHECK_INPUT);
             fighter.change_motion_by_situation("special_lw1_mordschlag", "special_air_lw1_mordschlag", 0.0, 1.0, false, 0.0, false, false);
             //special_lw1_change_kinetic(fighter, 1);
         }
         else if fighter.is_cat_flag(Cat1::SpecialLw) {
-            VarModule::off_flag(fighter.battle_object, vars::miiswordsman::status::SPECIAL_LW1_CHECK_BUTTON);
+            VarModule::off_flag(fighter.battle_object, vars::miiswordsman::status::SPECIAL_LW1_CHECK_INPUT);
             fighter.change_motion_by_situation("special_lw1_flourish", "special_air_lw1_flourish", 0.0, 1.0, false, 0.0, false, false);
             special_lw1_set_physics(fighter, 2);
+        }
+    }
+    if VarModule::is_flag(fighter.battle_object, vars::miiswordsman::status::SPECIAL_LW1_CHANGE_KINETIC) {
+        VarModule::off_flag(fighter.battle_object, vars::miiswordsman::status::SPECIAL_LW1_CHANGE_KINETIC);
+        if fighter.is_situation(*SITUATION_KIND_AIR) {
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+            //KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         }
     }
     
@@ -93,11 +100,13 @@ unsafe fn special_lw1_set_physics(fighter: &mut L2CFighterCommon, attack_type: i
             }
             let air_accel_y = fighter.get_param_float("air_accel_y", "");
             let air_speed_y_stable = fighter.get_param_float("air_speed_y_stable", "");
-            sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, sum_speed_x * 0.8, speed_y, 0.0, 0.0, 0.0); // parameterize
-            sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -air_accel_y);
+            sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
+            sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -air_accel_y * 0.8);
             sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, air_speed_y_stable);
             sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, air_speed_y_stable);
             KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+            sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_AIR, sum_speed_x * 0.8, 0.0, 0.0, 0.0, 0.0); // parameterize
+            KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
         }
     }
     else if attack_type == 1 {
