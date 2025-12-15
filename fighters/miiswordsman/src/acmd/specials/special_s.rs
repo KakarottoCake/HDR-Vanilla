@@ -7,56 +7,77 @@ use super::*;
 unsafe extern "C" fn game_specials1start(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let end_frame = MotionModule::end_frame(boma);
     frame(lua_state, 1.0);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 0.4);
-    }
+    FT_MOTION_RATE(agent, 0.4);
 }
 
-unsafe extern "C" fn game_specialairs1start(agent: &mut L2CAgentBase) {
+unsafe extern "C" fn effect_specials1start(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let end_frame = MotionModule::end_frame(boma);
-    frame(lua_state, 1.0);
+    frame(lua_state, 8.0);
     if is_excute(agent) {
-        FT_MOTION_RATE(agent, 0.4);
+        if agent.is_situation(*SITUATION_KIND_GROUND) {
+            FOOT_EFFECT(agent, Hash40::new("sys_turn_smoke"), Hash40::new("top"), -3.5, 0, -2.5, 0, 0, 0, 1, 3, 0, 2, 0, 0, 0, false);
+        }
+    }
+    frame(lua_state, 10.0);
+    if is_excute(agent) {
+        let sword_flare = agent.get_int64(*FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_EFT_ID_SWORD_FLARE) as u64;
+        EFFECT_FOLLOW(agent, Hash40::new_raw(sword_flare), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
+        LAST_EFFECT_SET_COLOR(agent, 0.9, 1.4, 0.72);
+    }
+    frame(lua_state, 12.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("miiswordsman_hensoku_flash_s"), Hash40::new("haver"), 0, 6, -1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+    }
+    frame(lua_state, 16.0);
+    if is_excute(agent) {
+        if agent.is_situation(*SITUATION_KIND_GROUND) {
+            LANDING_EFFECT(agent, Hash40::new("sys_whirlwind_r"), Hash40::new("top"), -2, 0, 0, 0, 0, 0, 0.75, 0, 0, 0, 0, 0, 0, false);
+            LAST_EFFECT_SET_RATE(agent, 1.3);
+        }
+    }
+    frame(lua_state, 18.0);
+    if is_excute(agent) {
+        let sword_flare = agent.get_int64(*FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_EFT_ID_SWORD_FLARE) as u64;
+        EFFECT_FOLLOW(agent, Hash40::new_raw(sword_flare), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
+        LAST_EFFECT_SET_COLOR(agent, 3, 3, 3);
+    }
+    frame(lua_state, 22.5);
+    if is_excute(agent) {
+        FOOT_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), -8, 0, -2.5, 0, 0, 0, 1.2, 3, 0, 3, 0, 0, 0, false);
     }
 }
 
 unsafe extern "C" fn game_specials1(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 1.0);
     if is_excute(agent) {
-
+        PostureModule::add_pos(boma, &Vector3f::new(0.0, -5.0, 0.0));
     }
 }
 
-unsafe extern "C" fn game_specialairs1(agent: &mut L2CAgentBase) {
+unsafe extern "C" fn effect_specials1(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 1.0);
     if is_excute(agent) {
-
+        let tex_sword = agent.get_int64(*FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_EFT_TEX_SWORD) as u64;
+        let sword_add = agent.get_int64(*FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_EFT_TEX_SWORD_ADD) as u64;
+        let sword_flare = agent.get_int64(*FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_EFT_ID_SWORD_FLARE) as u64;
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new_raw(tex_sword), Hash40::new_raw(sword_add), 8, Hash40::new("haver"), 0.0, 0.2, 0.0, Hash40::new("haver"), -0.0, 11.5, 0.0, true, Hash40::new_raw(sword_flare), Hash40::new("haver"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.5, 0.2);
+        EFFECT_FOLLOW_WORK(agent, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_EFT_ID_SWORD_FLARE, Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
+        LAST_EFFECT_SET_COLOR(agent, 0.9, 1.4, 0.72);
+    }
+    frame(lua_state, 7.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("miiswordsman_hensoku_aura"), Hash40::new("head"), 1.7, 2.7, 0, 0, 0, 0, 1, true);
+        EffectModule::enable_sync_init_pos_last(boma);
+        // agent.clear_lua_stack();
+        // lua_args!(agent, Hash40::new("null"), Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        // sv_animcmd::EFFECT_BRANCH_SITUATION(agent.lua_state_agent);
+        // agent.clear_lua_stack();
     }
 }
-/*
-unsafe fn game_specials1hit(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    frame(lua_state, 2.0);
-    if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("haver"), 12.5, 44, 75, 0, 56, 4.5, 0.0, 2.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 1, 0, Hash40::new("haver"), 12.5, 44, 75, 0, 56, 4.5, 0.0, 6.5, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 2, 0, Hash40::new("haver"), 12.5, 44, 75, 0, 56, 4.5, 0.0, 11.5, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_SWORD);
-    }
-    frame(lua_state, 5.0);
-    if is_excute(agent) {
-        AttackModule::clear_all(boma);
-    }
-}
-*/
 
 // =============================================================================================
 // ===================================== KINETIC SLASH =========================================
@@ -348,10 +369,14 @@ unsafe extern "C" fn game_specialairs3_1lw(agent: &mut L2CAgentBase) {
 
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_specials1start", game_specials1start, Priority::Low);
-    agent.acmd("game_specialairs1start", game_specialairs1start, Priority::Low);
+    agent.acmd("effect_specials1start", effect_specials1start, Priority::Low);
+    agent.acmd("game_specialairs1start", game_specials1start, Priority::Low);
+    agent.acmd("effect_specialairs1start", effect_specials1start, Priority::Low);
 
     agent.acmd("game_specials1", game_specials1, Priority::Low);
-    agent.acmd("game_specialairs1", game_specialairs1, Priority::Low);
+    agent.acmd("game_specialairs1", game_specials1, Priority::Low);
+    agent.acmd("effect_specials1", effect_specials1, Priority::Low);
+    agent.acmd("effect_specialairs1", effect_specials1, Priority::Low);
 
     agent.acmd("game_specials2start", game_specials2start, Priority::Low);
     agent.acmd("effect_specials2start", effect_specials2start, Priority::Low);
