@@ -25,10 +25,8 @@ unsafe extern "C" fn effect_specials1start(agent: &mut L2CAgentBase) {
         let sword_flare = agent.get_int64(*FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_EFT_ID_SWORD_FLARE) as u64;
         EFFECT_FOLLOW(agent, Hash40::new_raw(sword_flare), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
         LAST_EFFECT_SET_COLOR(agent, 0.9, 1.4, 0.72);
-    }
-    frame(lua_state, 12.0);
-    if is_excute(agent) {
-        EFFECT(agent, Hash40::new("miiswordsman_hensoku_flash_s"), Hash40::new("haver"), 0, 6, -1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+        EFFECT(agent, Hash40::new("miiswordsman_hensoku_flash_s"), Hash40::new("top"), 0, 4, -12, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+        LAST_EFFECT_SET_RATE(agent, 0.5);
     }
     frame(lua_state, 16.0);
     if is_excute(agent) {
