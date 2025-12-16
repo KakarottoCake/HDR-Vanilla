@@ -119,7 +119,7 @@ pub unsafe fn initialize_fireball(fighter: &mut L2CFighterCommon) {
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
-    && fighter.is_status(*FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A) && fighter.status_frame() >= 60 {
+    && fighter.is_status(*FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A) && fighter.motion_frame() >= 60.0 {
         fighter.sub_air_check_dive();
     }
 }
