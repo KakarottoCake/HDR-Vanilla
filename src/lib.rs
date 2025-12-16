@@ -40,6 +40,7 @@ mod online;
 mod matchup;
 
 use skyline::libc::c_char;
+use std::os::raw::c_void;
 #[cfg(feature = "main_nro")]
 use skyline_web::*;
 use std::{fs, path::Path};
@@ -276,31 +277,56 @@ unsafe fn game_exit(game_state: u64, arg: u64) {
     call_original!(game_state, arg);
 }
 
-#[repr(C)]
-pub struct FuckingAssStringStructureShit {
-    pub fuck_if_i_know: u32,
-    pub len: u32,
-    pub shit_ass_string: [u8; 40],
-}
-
-impl FuckingAssStringStructureShit {
+impl HashedString {
     pub fn set(&mut self, replacement: &str) {
-        self.len = replacement.len() as u32;
-        self.shit_ass_string[..replacement.len()].copy_from_slice(replacement.as_bytes());
-        self.shit_ass_string[replacement.len()] = b'\0';
+        self.length = replacement.len() as u32;
+        self.string[..replacement.len()].copy_from_slice(replacement.as_bytes());
+        self.string[replacement.len()] = b'\0';
+    }
+
+    pub fn as_str(&self) -> &str {
+        let len = self.string.iter().position(|&c| c == 0).unwrap_or(self.string.len());
+        std::str::from_utf8(&self.string[..len]).unwrap_or("")
     }
 }
 
 #[skyline::hook(offset = 0x23357f8, inline)]
 unsafe fn sss_to_css(ctx: &InlineCtx) {
-    let thing = ctx.registers[1].x() as *mut FuckingAssStringStructureShit;
-    (*thing).set("CharaSelectScene");
+    let hashed_string = ctx.registers[1].x() as *mut HashedString;
+    let current_scene = (*hashed_string).as_str();
+
+    if current_scene == "StageSelectScene" {
+        (*hashed_string).set("CharaSelectScene");
+    }
 }
 
 #[skyline::hook(offset = 0x2335184, inline)]
 unsafe fn css_to_sss(ctx: &InlineCtx) {
-    let thing = ctx.registers[1].x() as *mut FuckingAssStringStructureShit;
-    (*thing).set("StageSelectScene");
+    let hashed_string = ctx.registers[1].x() as *mut HashedString;
+    let current_scene = (*hashed_string).as_str();
+
+    if current_scene == "CharaSelectScene" {
+        let text = skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as u64;
+        let flag_ptr = (text + 0x530996c) as *const u8;
+        
+        let flag = *flag_ptr.add(3);
+
+        // This is something to pay attention to when this goes to prerelease
+        // flag == 0 is the standard mode and flag == 4 is random stage select
+        // Unsure if there are more modes, but I'm checking for standard mode just
+        // to be safe. If there are more modes we need to apply this to, we can
+        // add them as they're found.
+        if flag == 0 {
+            (*hashed_string).set("StageSelectScene");
+        }
+    }
+}
+
+#[repr(C)]
+pub struct HashedString {
+    pub length: u32,
+    pub hash: u32,
+    pub string: [u8; 64],
 }
 
 #[repr(C)]
@@ -364,8 +390,8 @@ pub fn main() {
             training_reset_music2,
             main_menu_quick,
             title_screen_play,
-            //sss_to_css,
-            //css_to_sss,
+            sss_to_css,
+            css_to_sss,
             //copy_fighter_info,
             //load_ingame_call_sequence_scene,
             //load_melee_scene,
