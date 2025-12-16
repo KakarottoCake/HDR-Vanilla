@@ -231,37 +231,35 @@ unsafe extern "C" fn game_speciallw2(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    FT_MOTION_RATE_RANGE(agent, 1.0, 6.0, 7.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 6.0, 8.0);
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
     }
-    frame(lua_state, 6.0);
-    FT_MOTION_RATE_RANGE(agent, 6.0, 12.0, 16.0);
+    frame(lua_state, 6.0);  // f9
+    FT_MOTION_RATE_RANGE(agent, 6.0, 12.0, 18.0);
     if is_excute(agent) {
         if boma.is_button_on(Buttons::Special) {
             VarModule::on_flag(agent.object(), vars::miiswordsman::status::SPECIAL_LW2_HOLD);
         }
     }
-    frame(lua_state, 9.0);
+    frame(lua_state, 7.0);  // f12
     if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
+        VarModule::on_flag(agent.battle_object, vars::miiswordsman::status::SPECIAL_LW2_CHANGE_ARTICLE);
         ArticleModule::generate_article(boma, *FIGHTER_MIISWORDSMAN_GENERATE_ARTICLE_TORNADOSHOT, false, 0);
-        ArticleModule::change_status_exist(boma, *FIGHTER_MIISWORDSMAN_GENERATE_ARTICLE_TORNADOSHOT, statuses::miiswordsman_tornadoshot::SHOCK_SPELL);
     }
-    frame(lua_state, 12.0);
+    frame(lua_state, 12.0); // f27
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_REVERSE_SLASH_FLAG_SPECIAL_FALL);
     }
     frame(lua_state, 16.0);
     FT_MOTION_RATE_RANGE(agent, 16.0, 23.0, 10.0);
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
-        AttackModule::clear_all(boma);
-    }
     frame(lua_state, 23.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         WorkModule::off_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_REVERSE_SLASH_FLAG_SPECIAL_FALL);
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
     }
 }
 
@@ -296,11 +294,7 @@ unsafe extern "C" fn effect_speciallw2(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 16.0);
     if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("sys_smokescreen"), false, false);
-        EFFECT_DETACH_KIND(agent, Hash40::new("sys_smokescreen"), -1);
         EFFECT_OFF_KIND(agent, Hash40::new("sys_damage_paralysis"), true, true);
-        EFFECT_OFF_KIND(agent, Hash40::new("sys_thunder_flash"), true, true);
-        EFFECT_DETACH_KIND(agent, Hash40::new("sys_hit_elec"), -1);
     }
     frame(lua_state, 20.0);
     if is_excute(agent) {
@@ -365,7 +359,7 @@ unsafe extern "C" fn game_specialairlw3(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 16.0);
-    sv_kinetic_energy!(set_speed_mul_2nd, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.4, 1.0);
+    //sv_kinetic_energy!(set_speed_mul_2nd, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.4, 1.0);
     frame(lua_state, 17.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_WORK_ID_FLAG_JET_STUB_WALL_CHECK);

@@ -1211,6 +1211,14 @@ pub mod vars {
             pub const SPECIAL_LW1_CHECK_INPUT: i32 = 0x1102;
             pub const SPECIAL_LW1_CHANGE_KINETIC: i32 = 0x1103;
             pub const SPECIAL_LW2_HOLD: i32 = 0x1104;
+            pub const SPECIAL_LW2_CHANGE_ARTICLE: i32 = 0x1105;
+        }
+    }
+
+    pub mod miiswordsman_shockspell {
+        pub mod status {
+            // flags
+            pub const SHOCK_SPELL_HOLD: i32 = 0x1100;
         }
     }
 
@@ -2058,7 +2066,7 @@ pub mod statuses {
     }
 
     pub mod miiswordsman_tornadoshot {
-        pub const SHOCK_SPELL: i32 = 0x2;
+        pub const SHOCK_SPELL: i32 = 0x1;
     }
 
     pub mod packun_firebreath {
