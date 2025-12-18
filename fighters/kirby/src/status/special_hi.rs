@@ -152,7 +152,9 @@ unsafe extern "C" fn special_hi_h_main_loop(fighter: &mut L2CFighterCommon) -> L
     }
     else {
         if fighter.is_situation(*SITUATION_KIND_GROUND) && fighter.is_prev_situation(*SITUATION_KIND_AIR) {
-            StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_FALL_SPECIAL, false);
+            if fighter.status_frame() >= 36 {
+                StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, false);
+            }
         }
     }
 

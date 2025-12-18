@@ -715,6 +715,30 @@ unsafe extern "C" fn expression_speciallwtoair(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_speciallw2(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        ArticleModule::change_motion(boma, *FIGHTER_KIRBY_GENERATE_ARTICLE_STONE, Hash40::new("special_lw2"), false, -1.0);
+    }
+    frame(lua_state, 14.0);
+    if is_excute(agent) {
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+    }
+}
+
+unsafe extern "C" fn game_specialairlw2(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        ArticleModule::change_motion(boma, *FIGHTER_KIRBY_GENERATE_ARTICLE_STONE, Hash40::new("special_air_lw2"), false, -1.0);
+    }
+    frame(lua_state, 14.0);
+    if is_excute(agent) {
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialnstart", game_specialnstart, Priority::Low);
     agent.acmd("game_specialairnstart", game_specialnstart, Priority::Low);
@@ -757,4 +781,6 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("effect_specialairlw", effect_specialairlw, Priority::Low);
     agent.acmd("game_speciallwtoground", game_speciallwtoground, Priority::Low);
     agent.acmd("game_speciallwtoair", game_speciallwtoair, Priority::Low);
+    agent.acmd("game_speciallw2", game_speciallw2, Priority::Low);
+    agent.acmd("game_specialairlw2", game_specialairlw2, Priority::Low);
 }
