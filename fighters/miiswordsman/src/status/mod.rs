@@ -2,6 +2,9 @@ use super::*;
 use globals::*;
 // status script import
 
+mod special_n2;
+mod special_n3;
+
 mod special_s1;
 mod special_s2;
 
@@ -54,24 +57,31 @@ unsafe extern "C" fn move_customizer(fighter: &mut L2CFighterCommon) -> L2CValue
     if let Some(original) = get_original_customizer(fighter) {
         original(fighter);
     }
+    if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_N_2 {
+        fighter.sv_set_status_func(
+            FIGHTER_STATUS_KIND_SPECIAL_N.into(),
+            LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN.into(),
+            std::mem::transmute(special_n2::special_n2_main as *const ())
+        );
+    }
     // Blurring Blade -> Chakram
-    // if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_N_3 {
-    //     fighter.sv_set_status_func(
-    //         FIGHTER_STATUS_KIND_SPECIAL_N.into(),
-    //         LUA_SCRIPT_STATUS_FUNC_STATUS_PRE.into(),
-    //         std::mem::transmute(special_n3::special_n3_pre as *const ())
-    //     );
-    //     fighter.sv_set_status_func(
-    //         FIGHTER_STATUS_KIND_SPECIAL_N.into(),
-    //         LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN.into(),
-    //         std::mem::transmute(special_n3::special_n3_main as *const ())
-    //     );
-    //     fighter.sv_set_status_func(
-    //         FIGHTER_STATUS_KIND_SPECIAL_N.into(),
-    //         LUA_SCRIPT_STATUS_FUNC_STATUS_END.into(),
-    //         std::mem::transmute(special_n3::special_n3_end as *const ())
-    //     );
-    // }
+    else if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_N_3 {
+        fighter.sv_set_status_func(
+            FIGHTER_STATUS_KIND_SPECIAL_N.into(),
+            LUA_SCRIPT_STATUS_FUNC_STATUS_PRE.into(),
+            std::mem::transmute(special_n3::special_n3_pre as *const ())
+        );
+        fighter.sv_set_status_func(
+            FIGHTER_STATUS_KIND_SPECIAL_N.into(),
+            LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN.into(),
+            std::mem::transmute(special_n3::special_n3_main as *const ())
+        );
+        fighter.sv_set_status_func(
+            FIGHTER_STATUS_KIND_SPECIAL_N.into(),
+            LUA_SCRIPT_STATUS_FUNC_STATUS_END.into(),
+            std::mem::transmute(special_n3::special_n3_end as *const ())
+        );
+    }
     // Chakram -> Power Thrust
     // else if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_S_3 {
     //     fighter.sv_set_status_func(

@@ -170,9 +170,12 @@ unsafe extern "C" fn effect_specials2attack(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specials3_1(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let end_frame = MotionModule::end_frame(boma);
+    frame(lua_state, 1.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 18.0, 22.0);
     if is_excute(agent) {
-        FT_MOTION_RATE(agent, 1.27);
+        if agent.is_situation(*SITUATION_KIND_AIR) {
+            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+        }
         WorkModule::on_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_REQUEST_GENERATE);
     }
     frame(lua_state, 10.0);
@@ -181,188 +184,25 @@ unsafe extern "C" fn game_specials3_1(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 17.0);
     if is_excute(agent) {
-        if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) || ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL_RAW) {
+        if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
             WorkModule::on_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_FLICK);
         }
         else {
             WorkModule::off_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_FLICK);
         }
     }
-    frame(lua_state, 18.0);
+    frame(lua_state, 18.0); // f23
+    if WorkModule::is_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_FLICK) {
+        FT_MOTION_RATE_RANGE(agent, 18.0, 41.0, 29.0);
+    }
+    else {
+        FT_MOTION_RATE_RANGE(agent, 18.0, 41.0, 25.0);
+    }
     if is_excute(agent) {
-        if WorkModule::is_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_FLICK){
-            FT_MOTION_RATE(agent, 1.25);
-        }
-        else{
-            FT_MOTION_RATE(agent, 1.1);
-        }
         ArticleModule::shoot_exist(boma, *FIGHTER_MIISWORDSMAN_GENERATE_ARTICLE_CHAKRAM, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
-    }  
-}
-
-unsafe extern "C" fn game_specials3_1hi(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    let end_frame = MotionModule::end_frame(boma);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 1.27);
-        WorkModule::on_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_REQUEST_GENERATE);
     }
-    frame(lua_state, 10.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_CHECK_MOTION_HI_LW);
-    }
-    frame(lua_state, 17.0);
-    if is_excute(agent) {
-        if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) || ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL_RAW) {
-            WorkModule::on_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_FLICK);
-        }
-        else {
-            WorkModule::off_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_FLICK);
-        }
-    }
-    frame(lua_state, 18.0);
-    if is_excute(agent) {
-        if WorkModule::is_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_FLICK){
-            FT_MOTION_RATE(agent, 1.25);
-        }
-        else{
-            FT_MOTION_RATE(agent, 1.1);
-        }
-        ArticleModule::shoot_exist(boma, *FIGHTER_MIISWORDSMAN_GENERATE_ARTICLE_CHAKRAM, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
-    }     
-}
-
-unsafe extern "C" fn game_specials3_1lw(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    let end_frame = MotionModule::end_frame(boma);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 1.27);
-        WorkModule::on_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_REQUEST_GENERATE);
-    }
-    frame(lua_state, 10.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_CHECK_MOTION_HI_LW);
-    }
-    frame(lua_state, 17.0);
-    if is_excute(agent) {
-        if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) || ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL_RAW) {
-            WorkModule::on_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_FLICK);
-        }
-        else {
-            WorkModule::off_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_FLICK);
-        }
-    }
-    frame(lua_state, 18.0);
-    if is_excute(agent) {
-        if WorkModule::is_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_FLICK){
-            FT_MOTION_RATE(agent, 1.25);
-        }
-        else{
-            FT_MOTION_RATE(agent, 1.1);
-        }
-        ArticleModule::shoot_exist(boma, *FIGHTER_MIISWORDSMAN_GENERATE_ARTICLE_CHAKRAM, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
-    }    
-}
-
-unsafe extern "C" fn game_specialairs3_1(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    let end_frame = MotionModule::end_frame(boma);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 1.27);
-        WorkModule::on_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_REQUEST_GENERATE);
-    }
-    frame(lua_state, 10.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_CHECK_MOTION_HI_LW);
-    }
-    frame(lua_state, 17.0);
-    if is_excute(agent) {
-        if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) || ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL_RAW) {
-            WorkModule::on_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_FLICK);
-        }
-        else {
-            WorkModule::off_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_FLICK);
-        }
-    }
-    frame(lua_state, 18.0);
-    if is_excute(agent) {
-        if WorkModule::is_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_FLICK){
-            FT_MOTION_RATE(agent, 1.25);
-        }
-        else{
-            FT_MOTION_RATE(agent, 1.1);
-        }
-        ArticleModule::shoot_exist(boma, *FIGHTER_MIISWORDSMAN_GENERATE_ARTICLE_CHAKRAM, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
-    }     
-}
-
-unsafe extern "C" fn game_specialairs3_1hi(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    let end_frame = MotionModule::end_frame(boma);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 1.27);
-        WorkModule::on_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_REQUEST_GENERATE);
-    }
-    frame(lua_state, 10.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_CHECK_MOTION_HI_LW);
-    }
-    frame(lua_state, 17.0);
-    if is_excute(agent) {
-        if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) || ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL_RAW) {
-            WorkModule::on_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_FLICK);
-        }
-        else {
-            WorkModule::off_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_FLICK);
-        }
-    }
-    frame(lua_state, 18.0);
-    if is_excute(agent) {
-        if WorkModule::is_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_FLICK){
-            FT_MOTION_RATE(agent, 1.25);
-        }
-        else{
-            FT_MOTION_RATE(agent, 1.1);
-        }
-        ArticleModule::shoot_exist(boma, *FIGHTER_MIISWORDSMAN_GENERATE_ARTICLE_CHAKRAM, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
-    }    
-}
-
-unsafe extern "C" fn game_specialairs3_1lw(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    let end_frame = MotionModule::end_frame(boma);
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 1.27);
-        WorkModule::on_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_REQUEST_GENERATE);
-    }
-    frame(lua_state, 10.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_CHECK_MOTION_HI_LW);
-    }
-    frame(lua_state, 17.0);
-    if is_excute(agent) {
-        if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) || ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL_RAW) {
-            WorkModule::on_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_FLICK);
-        }
-        else {
-            WorkModule::off_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_FLICK);
-        }
-    }
-    frame(lua_state, 18.0);
-    if is_excute(agent) {
-        if WorkModule::is_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_CHAKRAM_FLAG_FLICK){
-            FT_MOTION_RATE(agent, 1.25);
-        }
-        else{
-            FT_MOTION_RATE(agent, 1.1);
-        }
-        ArticleModule::shoot_exist(boma, *FIGHTER_MIISWORDSMAN_GENERATE_ARTICLE_CHAKRAM, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
-    }     
+    frame(lua_state, 41.0);
+    FT_MOTION_RATE(agent, 1.0);
 }
 
 pub fn install(agent: &mut Agent) {
@@ -389,10 +229,9 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("effect_specialairs2attack", effect_specials2attack, Priority::Low);
 
     agent.acmd("game_specials3_1", game_specials3_1, Priority::Low);
-    agent.acmd("game_specials3_1hi", game_specials3_1hi, Priority::Low);
-    agent.acmd("game_specials3_1lw", game_specials3_1lw, Priority::Low);
-    
-    agent.acmd("game_specialairs3_1", game_specialairs3_1, Priority::Low);
-    agent.acmd("game_specialairs3_1hi", game_specialairs3_1hi, Priority::Low);
-    agent.acmd("game_specialairs3_1lw", game_specialairs3_1lw, Priority::Low);
+    agent.acmd("game_specialairs3_1", game_specials3_1, Priority::Low);
+    agent.acmd("game_specials3_1hi", game_specials3_1, Priority::Low);
+    agent.acmd("game_specialairs3_1hi", game_specials3_1, Priority::Low);
+    agent.acmd("game_specials3_1lw", game_specials3_1, Priority::Low);
+    agent.acmd("game_specialairs3_1lw", game_specials3_1, Priority::Low);
 }
