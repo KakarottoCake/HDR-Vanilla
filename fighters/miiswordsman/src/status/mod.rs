@@ -16,23 +16,6 @@ mod special_hi3;
 mod special_lw1;
 mod special_lw3;
 
-mod final_hold;
-
-pub unsafe extern "C" fn miisword_situation_helper(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if StatusModule::is_changing(fighter.module_accessor) {
-        return 1.into()
-    }
-    else {
-        if fighter.global_table[PREV_SITUATION_KIND] == SITUATION_KIND_GROUND && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_AIR {
-            return 1.into()
-        }
-        if fighter.global_table[PREV_SITUATION_KIND] != SITUATION_KIND_GROUND && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
-            return 1.into()
-        }
-    }
-    return 0.into()
-}
-
 unsafe fn set_move_customizer(fighter: &mut L2CFighterCommon, customizer: unsafe extern "C" fn(&mut L2CFighterCommon) -> L2CValue) {
     if fighter.global_table["move_customizer_set"].get_bool() {
         return;
@@ -125,21 +108,21 @@ unsafe extern "C" fn move_customizer(fighter: &mut L2CFighterCommon) -> L2CValue
     }
     // Power Thrust -> Blurring Blade
     else if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_3 {
-        // fighter.sv_set_status_func(
-        //     FIGHTER_STATUS_KIND_SPECIAL_LW.into(),
-        //     LUA_SCRIPT_STATUS_FUNC_STATUS_PRE.into(),
-        //     std::mem::transmute(special_lw3::special_lw3_pre as *const ())
-        // );
-        // fighter.sv_set_status_func(
-        //     FIGHTER_STATUS_KIND_SPECIAL_LW.into(),
-        //     LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN.into(),
-        //     std::mem::transmute(special_lw3::special_lw3_main as *const ())
-        // );
-        // fighter.sv_set_status_func(
-        //     FIGHTER_STATUS_KIND_SPECIAL_LW.into(),
-        //     LUA_SCRIPT_STATUS_FUNC_STATUS_END.into(),
-        //     std::mem::transmute(special_wl3::special_lw3_end as *const ())
-        // );
+        fighter.sv_set_status_func(
+            FIGHTER_STATUS_KIND_SPECIAL_LW.into(),
+            LUA_SCRIPT_STATUS_FUNC_STATUS_PRE.into(),
+            std::mem::transmute(special_lw3::special_lw3_pre as *const ())
+        );
+        fighter.sv_set_status_func(
+            FIGHTER_STATUS_KIND_SPECIAL_LW.into(),
+            LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN.into(),
+            std::mem::transmute(special_lw3::special_lw3_main as *const ())
+        );
+        fighter.sv_set_status_func(
+            FIGHTER_STATUS_KIND_SPECIAL_LW.into(),
+            LUA_SCRIPT_STATUS_FUNC_STATUS_END.into(),
+            std::mem::transmute(special_lw3::special_lw3_end as *const ())
+        );
     }
     0.into()
 }
@@ -157,6 +140,8 @@ pub fn install(agent: &mut Agent) {
     special_hi::install(agent);
     special_hi2::install(agent);
     special_hi3::install(agent);
+
+    special_lw3::install(agent);
 
     agent.on_start(on_start);
 }

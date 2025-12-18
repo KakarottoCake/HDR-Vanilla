@@ -120,30 +120,136 @@ special_air_n2:
     move: true
   extra:
     cancel_frame: 47
+# Now maps to special_lw3
 special_n3_end:
   extra:
-    cancel_frame: 80
+    cancel_frame: 40
 special_air_n3_end:
   extra:
-    cancel_frame: 80
-special_n3_end_turn:
+    cancel_frame: 40
+special_lw3_end2:
+  game_script: game_speciallw3end2
+  flags:
+    turn: false
+    loop: false
+    move: true
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+  - name: d03speciallw3end2.nuanmb
+  scripts:
+  - expression_speciallw3end2
+  - sound_speciallw3end2
+  - effect_speciallw3end2
   extra:
-    cancel_frame: 80
-special_air_n3_end_turn:
+    intangible_start_frame: 0
+    intangible_end_frame: 0
+    cancel_frame: 56
+    freeze_during_hitstop: true
+special_air_lw3_end2:
+  game_script: game_specialairlw3end2
+  flags:
+    turn: false
+    loop: false
+    move: true
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+  - name: d03specialairlw3end2.nuanmb
+  scripts:
+  - expression_specialairlw3end2
+  - sound_specialairlw3end2
+  - effect_specialairlw3end2
   extra:
-    cancel_frame: 80
+    intangible_start_frame: 0
+    intangible_end_frame: 0
+    cancel_frame: 56
+    freeze_during_hitstop: true
 special_n3_end_max:
   extra:
-    cancel_frame: 80
+    cancel_frame: 40
 special_air_n3_end_max:
   extra:
-    cancel_frame: 80
-special_n3_end_max_turn:
+    cancel_frame: 40
+special_lw3_end2_max:
+  game_script: game_speciallw3end2max
+  flags:
+    turn: false
+    loop: false
+    move: true
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+  - name: d03speciallw3end2.nuanmb
+  scripts:
+  - expression_speciallw3end2max
+  - sound_speciallw3end2max
+  - effect_speciallw3end2max
   extra:
-    cancel_frame: 80
-special_air_n3_end_max_turn:
+    intangible_start_frame: 0
+    intangible_end_frame: 0
+    cancel_frame: 56
+    freeze_during_hitstop: true
+special_air_lw3_end2_max:
+  game_script: game_specialairlw3end2max
+  flags:
+    turn: false
+    loop: false
+    move: true
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+  - name: d03specialairlw3end2.nuanmb
+  scripts:
+  - expression_specialairlw3end2max
+  - sound_specialairlw3end2max
+  - effect_specialairlw3end2max
   extra:
-    cancel_frame: 80
+    intangible_start_frame: 0
+    intangible_end_frame: 0
+    cancel_frame: 56
+    freeze_during_hitstop: true
+# Now maps to special_n3
 special_s3_1:
   extra:
     cancel_frame: 41
@@ -300,6 +406,7 @@ special_air_lw1_mordschlag:
     intangible_end_frame: 0
     cancel_frame: 54
     freeze_during_hitstop: true
+# Now maps to special_s3
 special_air_lw3_end_air:
   blend_frames: 5
 catch:
