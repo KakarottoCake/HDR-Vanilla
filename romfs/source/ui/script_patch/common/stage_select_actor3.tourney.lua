@@ -1056,6 +1056,28 @@ local change_sub_page = function(target_page)
     local page_name = HDR.get_page_name(target_page)
     root_view:get_pane("txt_page_back"):set_text_string(page_name)
     root_view:get_pane("txt_page_forward"):set_text_string(page_name)
+    
+    local bans = HDR.get_bans(target_page)
+    local dsr = HDR.get_dsr(target_page)
+
+    local ban_dsr_string = ""
+    if bans > 1 then
+        ban_dsr_string = bans .. " Bans"
+    elseif bans > 0 then
+        ban_dsr_string = bans .. " Ban"
+    else
+        ban_dsr_string = "No Bans"
+    end
+
+    if dsr == "None" or string.len(dsr) == 0 then
+        ban_dsr_string = ban_dsr_string .. " - No DSR"
+    else
+        ban_dsr_string = ban_dsr_string .. " - " .. dsr
+    end
+
+    if string.len(ban_dsr_string) > 0 then
+        root_view:get_parts("set_parts_rule"):get_pane("set_txt_00"):set_text_string(ban_dsr_string)
+    end
 
     -- Page is actually all the parts of the set_parts_n_stage_XXX
     local current_page_ = pages[current_page + 1]

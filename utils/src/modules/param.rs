@@ -329,7 +329,9 @@ pub struct StagePage {
     pub starters: Option<Vec<String>>,
     /// the ordered list of counterpick stages which should be enabled,
     /// or `None` if there are no counterpicks
-    pub counterpicks: Option<Vec<String>>
+    pub counterpicks: Option<Vec<String>>,
+    pub bans: Option<i8>,
+    pub dsr: Option<String>,
 }
 
 impl Default for TourneyConfig {
@@ -347,7 +349,9 @@ impl Default for StagePage {
             name: String::new(), 
             useOfficial: false,
             starters: None, 
-            counterpicks: None 
+            counterpicks: None,
+            bans: None,
+            dsr: None,
         }
     }
 }

@@ -523,6 +523,14 @@ unsafe fn add_to_key_context_hook(ctx: &skyline::hooks::InlineCtx) {
             name: "stage_loading\0".as_ptr() as _,
             func: Some(stage_loading),
         },
+        lua::luaL_Reg {
+            name: "get_bans\0".as_ptr() as _,
+            func: Some(get_bans),
+        },
+        lua::luaL_Reg {
+            name: "get_dsr\0".as_ptr() as _,
+            func: Some(get_dsr),
+        },
     ];
 
     push_new_singleton(lua_state, "HDR", registry);
@@ -671,7 +679,7 @@ extern "C" fn get_random_stage_index(state: *mut lua::lua_State) -> i32 {
             let index = indexes.choose(&mut rng);
             match index {
                 Some(value) => lua::lua_pushinteger(state, *value as i64),
-                None => lua::lua_pushinteger(state, -1)
+                None => lua::lua_pushinteger(state, -1),
             }
         }
 
@@ -686,6 +694,48 @@ extern "C" fn stage_loading(state: *mut lua::lua_State) -> i32 {
         let mut mgr = STAGE_MANAGER.lock().unwrap();
         mgr.stage_loading = Some(true);
         0
+    }
+}
+
+extern "C" fn get_bans(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let page_num = lua::lua_tointegerx(state, -1, std::ptr::null_mut()) as usize;
+        lua::lua_pop(state, 1);
+        let mut mgr = STAGE_MANAGER.lock().unwrap();
+
+        if let Some(pages) = &mgr.stage_pages {
+            let page = &pages[page_num];
+            match page.bans {
+                Some(bans) => lua::lua_pushinteger(state, bans as i64),
+                None => lua::lua_pushinteger(state, -1),
+            }
+        }
+
+        1
+    }
+}
+
+extern "C" fn get_dsr(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let page_num = lua::lua_tointegerx(state, -1, std::ptr::null_mut()) as usize;
+        lua::lua_pop(state, 1);
+        let mut mgr = STAGE_MANAGER.lock().unwrap();
+
+        if let Some(pages) = &mgr.stage_pages {
+            let page = &pages[page_num];
+            match &page.dsr {
+                Some(dsr) => {
+                    let c_str = CString::new(dsr.clone()).expect("String contained null byte");
+                    lua::lua_pushstring(state, c_str.as_ptr());
+                },
+                None => { 
+                    let c_str = CString::new("").expect("");
+                    lua::lua_pushstring(state, c_str.as_ptr()); 
+                },
+            }
+        }
+
+        1
     }
 }
 
