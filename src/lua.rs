@@ -520,8 +520,8 @@ unsafe fn add_to_key_context_hook(ctx: &skyline::hooks::InlineCtx) {
             func: Some(get_random_stage_index),
         },
         lua::luaL_Reg {
-            name: "random_selected\0".as_ptr() as _,
-            func: Some(random_selected),
+            name: "stage_loading\0".as_ptr() as _,
+            func: Some(stage_loading),
         },
     ];
 
@@ -681,10 +681,10 @@ extern "C" fn get_random_stage_index(state: *mut lua::lua_State) -> i32 {
     }
 }
 
-extern "C" fn random_selected(state: *mut lua::lua_State) -> i32 {
+extern "C" fn stage_loading(state: *mut lua::lua_State) -> i32 {
     unsafe {
         let mut mgr = STAGE_MANAGER.lock().unwrap();
-        mgr.random_selected = Some(true);
+        mgr.stage_loading = Some(true);
         0
     }
 }

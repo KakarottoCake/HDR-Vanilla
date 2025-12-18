@@ -2426,9 +2426,7 @@ local try_handle_exiting_scene = function()
     update_panel_scalings()
 
     if scene_state == SCENE_STATE_SHOULD_EXIT then
-        if UiScriptPlayer.invoke("is_random_stage_preview", current_selected_preview) then
-            HDR.random_selected();
-        end
+        HDR.stage_loading();
         next_scene_animation:play(1.0)
         scene_state = SCENE_STATE_EXITING
     elseif scene_state == SCENE_STATE_EXITING then

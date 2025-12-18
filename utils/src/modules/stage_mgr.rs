@@ -13,7 +13,7 @@ pub struct StageManager {
     pub is_my_music: Option<bool>,
     pub stage_pages: Option<Vec<StagePage>>,
     pub random_stage_indexes: Option<Vec<i32>>,
-    pub random_selected: Option<bool>,
+    pub stage_loading: Option<bool>,
     pub perma_striked_stages: HashSet<i32>,
 }
 
@@ -25,7 +25,7 @@ impl StageManager {
             is_my_music: None,
             stage_pages: None,
             random_stage_indexes: None,
-            random_selected: None,
+            stage_loading: None,
             perma_striked_stages: HashSet::new(),
         }
     }

@@ -2543,9 +2543,8 @@ local try_handle_exiting_scene = function()
                 handle_single_page_random()
                 return false
             end
-            
-            HDR.random_selected();
         end
+        HDR.stage_loading();
         next_scene_animation:play(1.0)
         scene_state = SCENE_STATE_EXITING
     elseif scene_state == SCENE_STATE_EXITING then
