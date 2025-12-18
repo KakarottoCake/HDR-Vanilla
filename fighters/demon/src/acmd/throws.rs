@@ -4,7 +4,7 @@ use smash2;
 unsafe extern "C" fn game_catch(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 6.0);
+    frame(lua_state, 1.0);
     if is_excute(agent) {
         GrabModule::set_rebound(boma, true);
     }
