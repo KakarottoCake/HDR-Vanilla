@@ -7,6 +7,7 @@ mod special_n3;
 
 mod special_s1;
 mod special_s2;
+mod special_s3;
 
 mod special_hi;
 mod special_hi2;
@@ -83,24 +84,24 @@ unsafe extern "C" fn move_customizer(fighter: &mut L2CFighterCommon) -> L2CValue
         );
     }
     // Chakram -> Power Thrust
-    // else if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_S_3 {
-    //     fighter.sv_set_status_func(
-    //         FIGHTER_STATUS_KIND_SPECIAL_S.into(),
-    //         LUA_SCRIPT_STATUS_FUNC_STATUS_PRE.into(),
-    //         std::mem::transmute(special_s3::special_s3_pre as *const ())
-    //     );
-    //     fighter.sv_set_status_func(
-    //         FIGHTER_STATUS_KIND_SPECIAL_S.into(),
-    //         LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN.into(),
-    //         std::mem::transmute(special_s3::special_s3_main as *const ())
-    //     );
-    //     fighter.sv_set_status_func(
-    //         FIGHTER_STATUS_KIND_SPECIAL_S.into(),
-    //         LUA_SCRIPT_STATUS_FUNC_STATUS_END.into(),
-    //         std::mem::transmute(special_s3::special_s3_end as *const ())
-    //     );
-    // }
-    /*else*/ if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_1 {
+    else if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_S_3 {
+        fighter.sv_set_status_func(
+            FIGHTER_STATUS_KIND_SPECIAL_S.into(),
+            LUA_SCRIPT_STATUS_FUNC_STATUS_PRE.into(),
+            std::mem::transmute(special_s3::special_s3_pre as *const ())
+        );
+        fighter.sv_set_status_func(
+            FIGHTER_STATUS_KIND_SPECIAL_S.into(),
+            LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN.into(),
+            std::mem::transmute(special_s3::special_s3_main as *const ())
+        );
+        fighter.sv_set_status_func(
+            FIGHTER_STATUS_KIND_SPECIAL_S.into(),
+            LUA_SCRIPT_STATUS_FUNC_STATUS_END.into(),
+            std::mem::transmute(special_s3::special_s3_end as *const ())
+        );
+    }
+    else if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_1 {
         fighter.sv_set_status_func(
             FIGHTER_STATUS_KIND_SPECIAL_LW.into(),
             LUA_SCRIPT_STATUS_FUNC_STATUS_PRE.into(),
@@ -119,11 +120,11 @@ unsafe extern "C" fn move_customizer(fighter: &mut L2CFighterCommon) -> L2CValue
     }
     // Power Thrust -> Blurring Blade
     else if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_3 {
-        fighter.sv_set_status_func(
-            FIGHTER_STATUS_KIND_SPECIAL_LW.into(),
-            LUA_SCRIPT_STATUS_FUNC_STATUS_PRE.into(),
-            std::mem::transmute(special_lw3::special_lw3_pre as *const ())
-        );
+        // fighter.sv_set_status_func(
+        //     FIGHTER_STATUS_KIND_SPECIAL_LW.into(),
+        //     LUA_SCRIPT_STATUS_FUNC_STATUS_PRE.into(),
+        //     std::mem::transmute(special_lw3::special_lw3_pre as *const ())
+        // );
         // fighter.sv_set_status_func(
         //     FIGHTER_STATUS_KIND_SPECIAL_LW.into(),
         //     LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN.into(),
@@ -146,14 +147,11 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
 pub fn install(agent: &mut Agent) {
     special_s1::install(agent);
     special_s2::install(agent);
+    special_s3::install(agent);
 
     special_hi::install(agent);
     special_hi2::install(agent);
     special_hi3::install(agent);
-
-    special_lw3::install(agent);
-
-    final_hold::install(agent);
 
     agent.on_start(on_start);
 }
