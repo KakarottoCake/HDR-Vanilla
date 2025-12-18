@@ -2537,11 +2537,14 @@ local try_handle_exiting_scene = function()
 
     if scene_state == SCENE_STATE_SHOULD_EXIT then
         -- intercept the random stage and check if we need to handle single page random
-        if UiScriptPlayer.invoke("is_random_stage_preview", current_selected_preview) and
-            virtual_input:is_pressing(INPUT_ALT_L) then
+        if UiScriptPlayer.invoke("is_random_stage_preview", current_selected_preview) then
+            if virtual_input:is_pressing(INPUT_ALT_L) then
                 scene_state = SCENE_STATE_REGULAR
                 handle_single_page_random()
                 return false
+            end
+            
+            HDR.random_selected();
         end
         next_scene_animation:play(1.0)
         scene_state = SCENE_STATE_EXITING

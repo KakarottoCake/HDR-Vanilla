@@ -519,6 +519,10 @@ unsafe fn add_to_key_context_hook(ctx: &skyline::hooks::InlineCtx) {
             name: "get_random_stage_index\0".as_ptr() as _,
             func: Some(get_random_stage_index),
         },
+        lua::luaL_Reg {
+            name: "random_selected\0".as_ptr() as _,
+            func: Some(random_selected),
+        },
     ];
 
     push_new_singleton(lua_state, "HDR", registry);
@@ -674,6 +678,14 @@ extern "C" fn get_random_stage_index(state: *mut lua::lua_State) -> i32 {
         mgr.random_stage_indexes = None;
 
         1
+    }
+}
+
+extern "C" fn random_selected(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let mut mgr = STAGE_MANAGER.lock().unwrap();
+        mgr.random_selected = Some(true);
+        0
     }
 }
 
