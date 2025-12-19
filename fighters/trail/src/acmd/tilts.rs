@@ -216,7 +216,6 @@ unsafe extern "C" fn effect_attackhi3(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 12.0);
     if is_excute(agent) {
-        handle = EffectModule::req_follow(boma, Hash40::new_raw(0x12542f686b), Hash40::new("top"), &Vector3f::new(0.0, 22.0, 0.0), &Vector3f::new(-70.0, -90.0, 0.0), 1.05, true, 0, 0, 0, 0, 0, false, false);
         EFFECT_FOLLOW(agent, Hash40::new("trail_keyblade_flare"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
     }
     frame(lua_state, 14.0);
