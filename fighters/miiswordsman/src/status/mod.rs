@@ -48,7 +48,6 @@ unsafe extern "C" fn move_customizer(fighter: &mut L2CFighterCommon) -> L2CValue
             std::mem::transmute(special_n2::special_n2_main as *const ())
         );
     }
-    // Blurring Blade -> Chakram
     else if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_N_3 {
         fighter.sv_set_status_func(
             FIGHTER_STATUS_KIND_SPECIAL_N.into(),
@@ -66,7 +65,6 @@ unsafe extern "C" fn move_customizer(fighter: &mut L2CFighterCommon) -> L2CValue
             std::mem::transmute(special_n3::special_n3_end as *const ())
         );
     }
-    // Chakram -> Power Thrust
     else if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_S_3 {
         fighter.sv_set_status_func(
             FIGHTER_STATUS_KIND_SPECIAL_S.into(),
@@ -106,7 +104,6 @@ unsafe extern "C" fn move_customizer(fighter: &mut L2CFighterCommon) -> L2CValue
             std::mem::transmute(special_lw1::special_lw1_end as *const ())
         );
     }
-    // Power Thrust -> Blurring Blade
     else if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_3 {
         fighter.sv_set_status_func(
             FIGHTER_STATUS_KIND_SPECIAL_LW.into(),
