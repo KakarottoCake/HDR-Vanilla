@@ -107,9 +107,11 @@ unsafe extern "C" fn special_lw3_end_main_loop(fighter: &mut L2CFighterCommon) -
         fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_FALL, false);
         return 0.into();
     }
-    if let Some(func_ptr) = smashline::api::get_target_function("lua2cpp_miiswordsman.nrs", 0x3a8e0) {
-        let apply_charge_muls: fn(&mut L2CFighterCommon) = std::mem::transmute(func_ptr);
-        apply_charge_muls(fighter);
+    if fighter.is_motion_one_of(&[Hash40::new("special_lw3_end2"), Hash40::new("special_air_lw3_end2")]) {
+        if let Some(func_ptr) = smashline::api::get_target_function("lua2cpp_miiswordsman.nrs", 0x3a8e0) {
+            let apply_charge_muls: fn(&mut L2CFighterCommon) = std::mem::transmute(func_ptr);
+            apply_charge_muls(fighter);
+        }
     }
 
     return 0.into();
@@ -151,9 +153,11 @@ unsafe extern "C" fn special_lw3_end_max_main_loop(fighter: &mut L2CFighterCommo
         fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_FALL, false);
         return 0.into();
     }
-    if let Some(func_ptr) = smashline::api::get_target_function("lua2cpp_miiswordsman.nrs", 0x3a8e0) {
-        let apply_charge_muls: fn(&mut L2CFighterCommon) = std::mem::transmute(func_ptr);
-        apply_charge_muls(fighter);
+    if fighter.is_motion_one_of(&[Hash40::new("special_lw3_end2_max"), Hash40::new("special_air_lw3_end2_max")]) {
+        if let Some(func_ptr) = smashline::api::get_target_function("lua2cpp_miiswordsman.nrs", 0x3a8e0) {
+            let apply_charge_muls: fn(&mut L2CFighterCommon) = std::mem::transmute(func_ptr);
+            apply_charge_muls(fighter);
+        }
     }
 
     return 0.into();

@@ -14,7 +14,7 @@
     </struct>
     <hash40 index="1">dummy</hash40>
     <struct index="2">
-      <float hash="n3_attack_power_mul_max">2.0</float>
+      <float hash="n3_attack_power_mul_max">1.8</float>
     </struct>
     <hash40 index="3">dummy</hash40>
   </list>
