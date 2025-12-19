@@ -875,7 +875,7 @@ unsafe fn map_controls_hook(
     };
 
     if (*out).buttons.intersects(parry_manual) {
-        (*out).buttons |= Buttons::ParryManual;
+        (*out).buttons |= Buttons::Parry;
     }
 
     if (*out).buttons.intersects(Buttons::Guard) 

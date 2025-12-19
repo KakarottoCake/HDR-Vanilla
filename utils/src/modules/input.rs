@@ -616,7 +616,7 @@ fn exec_internal(input_module: &mut InputModule, control_module: u64, call_origi
     // Parry cat flag
     let parry_input = unsafe {
         ControlModule::check_button_on((*input_module.owner).module_accessor, 0x3) // CONTROL_PAD_BUTTON_GUARD
-        && (triggered_buttons.intersects(Buttons::Parry) || triggered_buttons.intersects(Buttons::ParryManual))
+        && triggered_buttons.intersects(Buttons::Parry)
     };
 
     let parry_offset = CatHdr::Parry.bits().trailing_zeros() as usize;
