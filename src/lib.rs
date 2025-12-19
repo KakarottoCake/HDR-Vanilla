@@ -44,6 +44,7 @@ use std::os::raw::c_void;
 #[cfg(feature = "main_nro")]
 use skyline_web::*;
 use std::{fs, path::Path};
+use utils::STAGE_MANAGER;
 
 #[cfg(not(feature = "main_nro"))]
 #[no_mangle]
@@ -372,6 +373,34 @@ unsafe fn copy_fighter_info(
     call_original!(dst, src);
 }
 
+// This is a hook on the main scene transition function
+// key_str is the scene name
+// Add anything requiring a scene transition check here
+#[skyline::hook(offset = 0x3726120)]
+unsafe fn scene_transition(
+    list_ptr: *mut c_void,
+    key_struct: *const HashedString, 
+    context_struct: *const HashedString, 
+    factory: *mut c_void
+) {
+    if !key_struct.is_null() {
+        let len = (*key_struct).length;
+        let hash = (*key_struct).hash;
+        
+        let str_ptr = (key_struct as *const u8).add(8) as *const c_char;
+        let key_str = skyline::from_c_str(str_ptr);
+        println!("Transitioning to scene: '{}'", key_str);
+
+        // Clear perma-strikes when going to main menu or the rules screen
+        if key_str == "MeleeRuleScene" || key_str == "MainMenuScene" {
+            let mut mgr = STAGE_MANAGER.lock().unwrap();
+            mgr.perma_striked_stages.clear();
+        }
+    }
+
+    call_original!(list_ptr, key_struct, context_struct, factory);
+}
+
 #[skyline::main(name = "hdr")]
 pub fn main() {
     #[cfg(feature = "main_nro")]
@@ -392,6 +421,7 @@ pub fn main() {
             title_screen_play,
             sss_to_css,
             css_to_sss,
+            scene_transition
             //copy_fighter_info,
             //load_ingame_call_sequence_scene,
             //load_melee_scene,
