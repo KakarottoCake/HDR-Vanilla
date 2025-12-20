@@ -119,30 +119,37 @@ unsafe fn map_controls_hook(
     let mappings = mappings.add(player_idx as usize);
     let parry_map = if (*out).buttons.intersects(Buttons::Guard) { Buttons::Parry | Buttons::GuardHold } else { Buttons::Parry | Buttons::Guard };
 
+    // Map the Footstool input to any combination of two distinct jump buttons
+    let shorthop_map = if (*out).buttons.intersects(Buttons::Jump) { Buttons::TreadJump | Buttons::JumpMini | Buttons::Jump } else { Buttons::JumpMini | Buttons::Jump };
+    // If shorthop button is pressed before we mapped shorthop_map, then we know two buttons are pressed
+    if (*out).buttons.intersects(Buttons::JumpMini) {
+        (*out).buttons |= Buttons::TreadJump;
+    }
+
     if controller.style == ControllerStyle::GCController {
         (*out).buttons |= apply_button_mappings!(
             controller,
             mappings,
-            (l, gc_l, JumpMini, Buttons::JumpMini | Buttons::Jump)(
+            (l, gc_l, JumpMini, shorthop_map)(
                 r,
                 gc_r,
                 JumpMini,
-                Buttons::JumpMini | Buttons::Jump
-            )(zl, gc_z, JumpMini, Buttons::JumpMini | Buttons::Jump)(
+                shorthop_map
+            )(zl, gc_z, JumpMini, shorthop_map)(
                 zr,
                 gc_z,
                 JumpMini,
-                Buttons::JumpMini | Buttons::Jump
-            )(a, gc_a, JumpMini, Buttons::JumpMini | Buttons::Jump)(
+                shorthop_map
+            )(a, gc_a, JumpMini, shorthop_map)(
                 b,
                 gc_b,
                 JumpMini,
-                Buttons::JumpMini | Buttons::Jump
-            )(x, gc_x, JumpMini, Buttons::JumpMini | Buttons::Jump)(
+                shorthop_map
+            )(x, gc_x, JumpMini, shorthop_map)(
                 y,
                 gc_y,
                 JumpMini,
-                Buttons::JumpMini | Buttons::Jump
+                shorthop_map
             )
         );
         (*out).buttons |= apply_button_mappings!(
@@ -263,36 +270,36 @@ unsafe fn map_controls_hook(
         (*out).buttons |= apply_button_mappings!(
             controller,
             mappings,
-            (l, joy_shoulder, JumpMini, Buttons::JumpMini | Buttons::Jump)(
+            (l, joy_shoulder, JumpMini, shorthop_map)(
                 r,
                 joy_shoulder,
                 JumpMini,
-                Buttons::JumpMini | Buttons::Jump
+                shorthop_map
             )(
                 zl,
                 joy_zshoulder,
                 JumpMini,
-                Buttons::JumpMini | Buttons::Jump
+                shorthop_map
             )(
                 zr,
                 joy_zshoulder,
                 JumpMini,
-                Buttons::JumpMini | Buttons::Jump
-            )(left_sl, joy_sl, JumpMini, Buttons::JumpMini | Buttons::Jump)(
+                shorthop_map
+            )(left_sl, joy_sl, JumpMini, shorthop_map)(
                 left_sr,
                 joy_sr,
                 JumpMini,
-                Buttons::JumpMini | Buttons::Jump
+                shorthop_map
             )(
                 right_sl,
                 joy_sl,
                 JumpMini,
-                Buttons::JumpMini | Buttons::Jump
+                shorthop_map
             )(
                 right_sr,
                 joy_sr,
                 JumpMini,
-                Buttons::JumpMini | Buttons::Jump
+                shorthop_map
             )
         );
         (*out).buttons |= apply_button_mappings!(
@@ -434,22 +441,22 @@ unsafe fn map_controls_hook(
                     dpad_left,
                     joy_down,
                     JumpMini,
-                    Buttons::JumpMini | Buttons::Jump
+                    shorthop_map
                 )(
                     dpad_right,
                     joy_up,
                     JumpMini,
-                    Buttons::JumpMini | Buttons::Jump
+                    shorthop_map
                 )(
                     dpad_up,
                     joy_left,
                     JumpMini,
-                    Buttons::JumpMini | Buttons::Jump
+                    shorthop_map
                 )(
                     dpad_down,
                     joy_right,
                     JumpMini,
-                    Buttons::JumpMini | Buttons::Jump
+                    shorthop_map
                 )
             );
             (*out).buttons |= apply_button_mappings!(
@@ -511,16 +518,16 @@ unsafe fn map_controls_hook(
             (*out).buttons |= apply_button_mappings!(
                 controller,
                 mappings,
-                (a, joy_down, JumpMini, Buttons::JumpMini | Buttons::Jump)(
+                (a, joy_down, JumpMini, shorthop_map)(
                     y,
                     joy_up,
                     JumpMini,
-                    Buttons::JumpMini | Buttons::Jump
-                )(b, joy_left, JumpMini, Buttons::JumpMini | Buttons::Jump)(
+                    shorthop_map
+                )(b, joy_left, JumpMini, shorthop_map)(
                     x,
                     joy_right,
                     JumpMini,
-                    Buttons::JumpMini | Buttons::Jump
+                    shorthop_map
                 )
             );
             (*out).buttons |= apply_button_mappings!(
@@ -617,26 +624,26 @@ unsafe fn map_controls_hook(
         (*out).buttons |= apply_button_mappings!(
             controller,
             mappings,
-            (l, pro_l, JumpMini, Buttons::JumpMini | Buttons::Jump)(
+            (l, pro_l, JumpMini, shorthop_map)(
                 r,
                 pro_r,
                 JumpMini,
-                Buttons::JumpMini | Buttons::Jump
-            )(zl, pro_zl, JumpMini, Buttons::JumpMini | Buttons::Jump)(
+                shorthop_map
+            )(zl, pro_zl, JumpMini, shorthop_map)(
                 zr,
                 pro_zr,
                 JumpMini,
-                Buttons::JumpMini | Buttons::Jump
-            )(a, pro_a, JumpMini, Buttons::JumpMini | Buttons::Jump)(
+                shorthop_map
+            )(a, pro_a, JumpMini, shorthop_map)(
                 b,
                 pro_b,
                 JumpMini,
-                Buttons::JumpMini | Buttons::Jump
-            )(x, pro_x, JumpMini, Buttons::JumpMini | Buttons::Jump)(
+                shorthop_map
+            )(x, pro_x, JumpMini, shorthop_map)(
                 y,
                 pro_y,
                 JumpMini,
-                Buttons::JumpMini | Buttons::Jump
+                shorthop_map
             )
         );
         (*out).buttons |= apply_button_mappings!(

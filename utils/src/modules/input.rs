@@ -632,7 +632,7 @@ fn exec_internal(input_module: &mut InputModule, control_module: u64, call_origi
     // Footstool cat flag
     let footstool_input = unsafe {
         (*input_module.owner).is_situation(*SITUATION_KIND_AIR)
-        && triggered_buttons.intersects(Buttons::JumpMini | Buttons::AppealAll) 
+        && triggered_buttons.intersects(Buttons::TreadJump) 
     };
 
     let footstool_offset = CatHdr::TreadJump.bits().trailing_zeros() as usize;
