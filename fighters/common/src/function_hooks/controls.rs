@@ -248,6 +248,16 @@ unsafe fn map_controls_hook(
                 gc_y,
                 Parry,
                 parry_map
+            )(dpad_up, gc_dup, Parry, parry_map)(
+                dpad_down,
+                gc_ddown,
+                Parry,
+                parry_map
+            )(dpad_left, gc_dlr, Parry, parry_map)(
+                dpad_right,
+                gc_dlr,
+                Parry,
+                parry_map
             )
         );
         if (*mappings).gc_absmash & 1 != 0 {
@@ -763,6 +773,16 @@ unsafe fn map_controls_hook(
             )(
                 y,
                 pro_y,
+                Parry,
+                parry_map
+            )(dpad_up, pro_dup, Parry, parry_map)(
+                dpad_down,
+                pro_ddown,
+                Parry,
+                parry_map
+            )(dpad_left, pro_dlr, Parry, parry_map)(
+                dpad_right,
+                pro_dlr,
                 Parry,
                 parry_map
             )
