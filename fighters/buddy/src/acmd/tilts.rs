@@ -23,7 +23,7 @@ unsafe extern "C" fn effect_attacks3(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 7.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 8, 7, 180, 215, 90, 0.8, true);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 8, 7, 180, 235, 90, 0.8, true);
         LAST_EFFECT_SET_RATE(agent, 2.0);
         let color_vec = match WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) {
             0 => Vector3f::new(0.8, 0.3, 0.0),
@@ -38,6 +38,14 @@ unsafe extern "C" fn effect_attacks3(agent: &mut L2CAgentBase) {
         };
         LAST_EFFECT_SET_COLOR(agent, color_vec.x, color_vec.y, color_vec.z);
         LAST_EFFECT_SET_SCALE_W(agent, 0.75, 0.8, 0.8);
+    }
+    frame(lua_state, 9.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("k_head"), 4.5, -0.5, 0.5, 0, 0, 0, 0.65, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(lua_state, 11.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("sys_attack_arc_d"), false, false);
     }
 }
 
