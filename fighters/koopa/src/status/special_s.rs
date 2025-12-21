@@ -261,13 +261,13 @@ unsafe extern "C" fn special_s_squat_main(fighter: &mut L2CFighterCommon) -> L2C
 
 unsafe extern "C" fn special_s_squat_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.status_frame() >= 10 {
-        if fighter.is_situation(*SITUATION_KIND_GROUND) {   // TEMPORARY UNTIL CRASHES ARE FIXED
+        //if fighter.is_situation(*SITUATION_KIND_GROUND) {   // TEMPORARY UNTIL CRASHES ARE FIXED
             if fighter.global_table[CMD_CAT2].get_i32() & *FIGHTER_PAD_CMD_CAT2_FLAG_THROW_LW != 0 {
                 VarModule::set_int(fighter.battle_object, vars::koopa::instance::SPECIAL_S_THROW_TYPE, SPECIAL_S_KIND_LW);
                 fighter.change_status(FIGHTER_KOOPA_STATUS_KIND_SPECIAL_S_LANDING.into(),false.into());
                 return 0.into();
             }
-        }
+        //}
         // Uncommenting this will allow early transition into Flying Slam
         // else if fighter.global_table[CMD_CAT2].get_i32() & *FIGHTER_PAD_CMD_CAT2_FLAG_THROW_HI != 0 {
         //     VarModule::set_int(fighter.battle_object, vars::koopa::instance::SPECIAL_S_THROW_TYPE, SPECIAL_S_KIND_HI);
@@ -293,8 +293,7 @@ unsafe extern "C" fn special_s_squat_main_loop(fighter: &mut L2CFighterCommon) -
         let mut throw_input = SPECIAL_S_KIND_F;    // default to fthrow
         let mut next_status = FIGHTER_KOOPA_STATUS_KIND_SPECIAL_S_LANDING;
         if throw_Lw {
-            throw_input = if fighter.is_situation(*SITUATION_KIND_GROUND) { SPECIAL_S_KIND_LW } else { SPECIAL_S_KIND_HI };
-            next_status = if fighter.is_situation(*SITUATION_KIND_GROUND) { FIGHTER_KOOPA_STATUS_KIND_SPECIAL_S_LANDING } else { FIGHTER_KOOPA_STATUS_KIND_SPECIAL_S_JUMP };
+            throw_input = SPECIAL_S_KIND_LW;
         }
         else if throw_Hi {
             throw_input = SPECIAL_S_KIND_HI;
@@ -618,6 +617,18 @@ unsafe extern "C" fn special_s_landing_exec(fighter: &mut L2CFighterCommon) -> L
     0.into()
 }
 
+unsafe extern "C" fn special_s_landing_exit(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[0xB] != FIGHTER_KOOPA_STATUS_KIND_SPECIAL_S_JUMP
+    && fighter.global_table[0xB] != FIGHTER_KOOPA_STATUS_KIND_SPECIAL_S_FALL
+    && fighter.global_table[0xB] != FIGHTER_KOOPA_STATUS_KIND_SPECIAL_S_LANDING {
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KOOPA_STATUS_SPECIAL_S_FLAG_CAPTURE) {
+            special_s_ejected(fighter);
+        }
+    }
+
+    0.into()
+}
+
 pub fn install(agent: &mut Agent) {
     agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_S, special_s_main);
 
@@ -636,4 +647,5 @@ pub fn install(agent: &mut Agent) {
     agent.status(Init, *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_S_LANDING, special_s_landing_init);
     agent.status(Main, *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_S_LANDING, special_s_landing_main);
     agent.status(Exec, *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_S_LANDING, special_s_landing_exec);
+    agent.status(Exit, *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_S_LANDING, special_s_landing_exit);
 }

@@ -371,6 +371,35 @@ special_s_throwlw:
     intangible_end_frame: 0
     cancel_frame: 40
     freeze_during_hitstop: false
+special_air_s_throwlw:
+  game_script: game_specialairsthrowlw
+  flags:
+    turn: true
+    loop: false
+    move: false
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+  - name: d01specialsthrowlw.nuanmb
+  scripts:
+  - expression_specialairsthrowlw
+  - sound_specialairsthrowlw
+  - effect_specialairsthrowlw
+  extra:
+    intangible_start_frame: 0
+    intangible_end_frame: 0
+    cancel_frame: 40
+    freeze_during_hitstop: false
 special_s_throw_lw_jump:
   game_script: game_specialsjump
   flags:
