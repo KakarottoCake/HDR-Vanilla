@@ -97,7 +97,7 @@ attack_air_n:
     cancel_frame: 39
 attack_air_f:
   extra:
-    cancel_frame: 41
+    cancel_frame: 39
 attack_air_f_boost:
   game_script: game_attackairfboost
   flags:
