@@ -199,6 +199,8 @@ pub mod vars {
 
             pub const IS_DITCIT: i32 = 0x006E;
 
+            pub const IGNORE_REDUCED_SCREENSHAKE: i32 = 0x006F;
+
             // ints
 
             pub const LAST_ATTACK_RECEIVER_ENTRY_ID: i32 = 0x0000;
