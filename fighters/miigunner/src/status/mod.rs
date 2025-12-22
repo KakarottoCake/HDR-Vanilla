@@ -6,9 +6,13 @@ mod attack_air;
 //mod down;
 //mod landing_attack_air;
 mod landing_fall_special;
-mod special_hi;
+
+mod special_hi1;
+mod special_hi3;
+
 mod special_n1;
 mod special_n3;
+
 mod special_s;
 
 unsafe fn set_move_customizer(fighter: &mut L2CFighterCommon, customizer: unsafe extern "C" fn(&mut L2CFighterCommon) -> L2CValue) {
@@ -40,24 +44,29 @@ unsafe extern "C" fn move_customizer(fighter: &mut L2CFighterCommon) -> L2CValue
         fighter.sv_set_status_func(
             FIGHTER_STATUS_KIND_SPECIAL_HI.into(),
             LUA_SCRIPT_STATUS_FUNC_STATUS_PRE.into(),
-            std::mem::transmute(special_hi::special_hi1_pre as *const ())
+            std::mem::transmute(special_hi1::special_hi1_pre as *const ())
         );
         fighter.sv_set_status_func(
             FIGHTER_STATUS_KIND_SPECIAL_HI.into(),
             LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN.into(),
-            std::mem::transmute(special_hi::special_hi1_main as *const ())
+            std::mem::transmute(special_hi1::special_hi1_main as *const ())
         );
         fighter.sv_set_status_func(
             FIGHTER_STATUS_KIND_SPECIAL_HI.into(),
             LUA_SCRIPT_STATUS_FUNC_STATUS_END.into(),
-            std::mem::transmute(special_hi::special_hi1_end as *const ())
+            std::mem::transmute(special_hi1::special_hi1_end as *const ())
         );
     }
     else if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_HI_3 {
         fighter.sv_set_status_func(
             FIGHTER_STATUS_KIND_SPECIAL_HI.into(),
+            LUA_SCRIPT_STATUS_FUNC_STATUS_PRE.into(),
+            std::mem::transmute(special_hi3::special_hi3_pre as *const ())
+        );
+        fighter.sv_set_status_func(
+            FIGHTER_STATUS_KIND_SPECIAL_HI.into(),
             LUA_SCRIPT_STATUS_FUNC_EXIT_STATUS.into(),
-            std::mem::transmute(special_hi::special_hi3_exit as *const ())
+            std::mem::transmute(special_hi3::special_hi3_exit as *const ())
         );
     }
     
@@ -89,7 +98,7 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
     if fighter.is_situation(*SITUATION_KIND_GROUND) || fighter.is_situation(*SITUATION_KIND_CLIFF)
     || fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_REBIRTH, *FIGHTER_STATUS_KIND_DEAD, *FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_GIMMICK_SPRING_JUMP]) {
         VarModule::off_flag(fighter.battle_object, vars::miigunner::instance::BOOSTED_ATTACK_AIR_LW_AIRTIME);
-        VarModule::off_flag(fighter.battle_object, vars::miigunner::instance::SPECIAL_HI1_LAUNCH_AIR_USED);
+        VarModule::off_flag(fighter.battle_object, vars::miigunner::instance::SPECIAL_HI_AIR_USED);
     }
     true.into()
 }
@@ -109,7 +118,7 @@ pub fn install(agent: &mut Agent) {
     //down::install(agent);
     //landing_attack_air::install(agent);
     landing_fall_special::install(agent);
-    special_hi::install(agent);
+    special_hi3::install(agent);
     special_n1::install(agent);
     special_n3::install(agent);
     special_s::install(agent);

@@ -1175,7 +1175,8 @@ pub mod vars {
             // flags
             pub const BOOSTED_AERIAL_LANDING: i32 = 0x0100;
             pub const BOOSTED_ATTACK_AIR_LW_AIRTIME: i32 = 0x0101;
-            pub const SPECIAL_HI1_LAUNCH_AIR_USED: i32 = 0x0102;
+            pub const SPECIAL_HI_AIR_USED: i32 = 0x0102;
+            pub const SPECIAL_HI3_GROUND_START: i32 = 0x0103;
 
             // ints
             pub const SPECIAL_S2_STEALTHBOMB_EFFECT_HANDLE: i32 = 0x0100;
