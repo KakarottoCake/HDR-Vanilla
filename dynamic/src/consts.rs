@@ -153,7 +153,7 @@ pub mod vars {
 
             pub const ENABLE_AIR_ESCAPE_JUMPSQUAT: i32 = 0x0051;
 
-            pub const FORCE_TUMBLE_NO_BOUNCE: i32 = 0x0052;
+            pub const IS_KNOCKDOWN_THROW: i32 = 0x0052;
 
             pub const IS_HEAVY_ATTACK: i32 = 0x0053;
 
@@ -199,6 +199,8 @@ pub mod vars {
 
             pub const IS_DITCIT: i32 = 0x006E;
 
+            pub const IGNORE_REDUCED_SCREENSHAKE: i32 = 0x006F;
+
             // ints
 
             pub const LAST_ATTACK_RECEIVER_ENTRY_ID: i32 = 0x0000;
@@ -237,6 +239,8 @@ pub mod vars {
             pub const RIGHT_STICK_FLICK_Y: i32 = 0x0012;
 
             pub const PREV_STATUS_TRANSITION_FRAME: i32 = 0x0013;
+
+            pub const ATTACK_LR_CHECK: i32 = 0x0014;
 
             // floats
 
@@ -448,6 +452,7 @@ pub mod vars {
         pub mod instance {   
             // flag
             pub const SPECIAL_S_DISABLE_STALL: i32 = 0x0100;
+            pub const DISABLE_SPECIAL_LW: i32 = 0x0101;
         }
         pub mod status {
             // flags
@@ -1857,10 +1862,10 @@ pub mod vars {
             // flags
             pub const ATTACK_12_ENABLE_S3_COMBO: i32 = 0x0100;
             pub const ATTACK_LW4_REBOUND: i32 = 0x0101;
-            pub const DISABLE_SPECIAL_N: i32 = 0x102;
+            pub const DISABLE_SPECIAL_N: i32 = 0x0102;
 
             // ints
-            pub const SPECIAL_N_MAGIC_TIMER: i32 = 0x100;
+            pub const SPECIAL_N_MAGIC_TIMER: i32 = 0x0100;
 
             // floats
             pub const SPECIAL_S_JUMP_SPEED_X: i32 = 0x0100;
