@@ -94,10 +94,10 @@ unsafe fn remove_homing_missiles(boma: &mut BattleObjectModuleAccessor) {
 }
 
 unsafe fn missile_land_cancel(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_status_one_of(&[
-        *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_1_AIR,
-        *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_2_AIR ]) {
-        boma.check_land_cancel(None);
+    if boma.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_2_AIR)
+    && boma.status_frame() > 23 {
+        //let landing_frame = (50.0 - boma.status_frame() as f32).clamp(4.0, 12.0);
+        boma.check_land_cancel(Some(12.0));
     }
 }
 
