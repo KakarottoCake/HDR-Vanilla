@@ -279,8 +279,13 @@ pub unsafe fn get_param_float_hook(x0 /*boma*/: u64, x1 /*param_type*/: u64, x2 
         }
         
         else if fighter_kind == *FIGHTER_KIND_MIIGUNNER {
+            // not found within the special_hi status scripts
             if x1 == hash40("param_special_hi") && x2 == hash40("hi1_first_jump_y_speed") {
-                return 3.5 + (2.7 * VarModule::get_float(boma_reference.object(), vars::miigunner::status::ATTACK_CHARGE)) / 29.0;
+                let charge = VarModule::get_float(boma_reference.object(), vars::miigunner::status::ATTACK_CHARGE);
+                let base_y_speed = ParamModule::get_float(boma_reference.object(), ParamType::Agent, "param_special_hi1.base_y_speed");
+                let charge_y_speed_mul = ParamModule::get_float(boma_reference.object(), ParamType::Agent, "param_special_hi1.charge_y_speed_mul");
+                let charge_y_speed_div = ParamModule::get_float(boma_reference.object(), ParamType::Agent, "param_special_hi1.charge_y_speed_div");
+                return base_y_speed + (charge_y_speed_mul * charge) / charge_y_speed_div;
             }
         }
 
@@ -373,18 +378,6 @@ pub unsafe fn get_param_float_hook(x0 /*boma*/: u64, x1 /*param_type*/: u64, x2 
                     return original * rate;
                 }
             } 
-        }
-    
-    }
-    else if boma_reference.is_weapon() {
-
-        // For articles
-        let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-
-        if fighter_kind == *WEAPON_KIND_SNAKE_TRENCHMORTAR_BULLET {
-            if x1 == hash40("param_trenchmortarbullet") && x2 == hash40("speed_x") {
-                return ControlModule::get_stick_x(boma) / 1.5 * PostureModule::lr(boma);
-            }
         }
 
         else if fighter_kind == *WEAPON_KIND_DEDEDE_GORDO {
