@@ -66,13 +66,6 @@ unsafe fn teleport(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModule
 	} 
 }
 
-unsafe fn up_special_startup_ledgegrab(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_HI) {
-        // allows ledgegrab during upB startup
-        fighter.sub_transition_group_check_air_cliff();
-    }
-}
-
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
@@ -82,6 +75,7 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 		*FIGHTER_ROSETTA_STATUS_KIND_SPECIAL_N_SHOOT,
 		*FIGHTER_ROSETTA_STATUS_KIND_SPECIAL_N_CHARGE,
 		*FIGHTER_ROSETTA_STATUS_KIND_SPECIAL_N_RETURN,
+		*FIGHTER_ROSETTA_STATUS_KIND_SPECIAL_HI_END
         ]) 
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
@@ -91,7 +85,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     // launch_star_cancel(boma);
 	teleport(fighter, boma);
-	up_special_startup_ledgegrab(fighter);
 	fastfall_specials(fighter);
 }
 

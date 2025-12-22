@@ -4,8 +4,11 @@
     <struct index="0">
       <float hash="p1_y">21.8</float>
     </struct>
+    <!-- SIDE SPECIAL -->
     <hash40 index="1">dummy</hash40>
+    <!-- UP SPECIAL -->
     <struct index="2">
+      <float hash="p1_x">12</float>
       <float hash="p1_y">21.8</float>
     </struct>
   </list>
@@ -53,6 +56,7 @@
       <float hash="jump_accel_y">0.035</float>
       <float hash="fall_max_speed_x">0.6</float>
       <float hash="fall_special_max_speed_x_mul">0.6</float>
+      <int hash="landing_frame">28</int>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>
