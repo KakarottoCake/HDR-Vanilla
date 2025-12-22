@@ -114,16 +114,16 @@ unsafe extern "C" fn special_s_forward_main_loop(fighter: &mut L2CFighterCommon)
         else {
             let frame = MotionModule::frame(fighter.module_accessor);
             let rate = MotionModule::rate(fighter.module_accessor);
-            MotionModule::change_motion_inherit_frame(
-                fighter.module_accessor,
-                Hash40::new("special_air_s"),
-                frame,
-                rate,
-                0.0,
-                true,
-                false
-            );
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
+            // MotionModule::change_motion_inherit_frame(
+            //     fighter.module_accessor,
+            //     Hash40::new("special_air_s"),
+            //     frame,
+            //     rate,
+            //     0.0,
+            //     true,
+            //     false
+            // );
+            // KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
             GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         }
     }

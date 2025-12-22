@@ -15,14 +15,14 @@ extern "Rust" {
  
 unsafe fn bowser_bomb(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_LW_G]) {
-        if boma.status_frame() > 14 && boma.status_frame() < 31 {
+        if boma.status_frame() >= 14 && boma.status_frame() < 30 {
             let stick_x = boma.stick_x();
             if stick_x != 0.0 {
                 let motion_vec = x_motion_vec(1.0, stick_x);
                 KineticModule::add_speed_outside(boma, *KINETIC_OUTSIDE_ENERGY_TYPE_WIND_NO_ADDITION, &motion_vec);
             }
         }
-        if boma.status_frame() > 20 && boma.status_frame() < 31 {
+        if boma.status_frame() >= 20 && boma.status_frame() < 30 {
             if boma.is_situation(*SITUATION_KIND_AIR) {
                 boma.check_jump_cancel(false, false);
             }
@@ -36,7 +36,7 @@ unsafe fn flame_cancel(boma: &mut BattleObjectModuleAccessor) {
         return;
     }
     if boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_N) {
-        if boma.status_frame() < 23 && !boma.is_motion_one_of(&[Hash40::new("special_n_max"), Hash40::new("special_air_n_max")]) {
+        if boma.motion_frame() < 22.0 && !boma.is_motion_one_of(&[Hash40::new("special_n_max"), Hash40::new("special_air_n_max")]) {
             if boma.is_situation(*SITUATION_KIND_GROUND) && StatusModule::prev_situation_kind(boma) == *SITUATION_KIND_AIR {
                 MotionModule::set_frame(boma, 22.0, true);
             }
@@ -119,11 +119,7 @@ pub unsafe fn initialize_fireball(fighter: &mut L2CFighterCommon) {
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
-    && fighter.is_status_one_of(&[
-        *FIGHTER_STATUS_KIND_SPECIAL_N,
-        *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A,
-        ])
-    && fighter.is_situation(*SITUATION_KIND_AIR) {
+    && fighter.is_status(*FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A) && fighter.motion_frame() >= 60.0 {
         fighter.sub_air_check_dive();
     }
 }
