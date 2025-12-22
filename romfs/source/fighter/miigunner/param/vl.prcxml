@@ -71,7 +71,10 @@
       <float hash="hi2_jump_stable_speed_x_mul">1.0</float>
     </struct>
     <struct index="2">
-      <float hash="hi3_rush_speed">1.6</float>
+      <float hash="hi3_rush_speed">2.0</float>
+      <int hash="hi3_rush_brake_frame">15</int>
+      <float hash="hi3_rush_end_speed_rate">0.0</float>
+      <float hash="hi3_rush_end_stick_x_mul">0.0</float>
     </struct>
     <hash40 index="3">dummy</hash40>
   </list>

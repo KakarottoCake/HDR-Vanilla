@@ -104,6 +104,14 @@ pub unsafe extern "C" fn special_hi1_end(fighter: &mut L2CFighterCommon) -> L2CV
     return 0.into();
 }
 
+pub unsafe extern "C" fn special_hi3_exit(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[STATUS_KIND] != *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH {
+        VarModule::on_flag(fighter.battle_object, vars::miigunner::instance::SPECIAL_HI1_LAUNCH_AIR_USED);
+    }
+    
+    return 0.into();
+}
+
 unsafe extern "C" fn special_hi3_rush_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.off_flag(*FIGHTER_MIIGUNNER_STATUS_ARM_ROCKET_RUSH_FLAG_CONTINUE);
     fighter.set_int(0, *FIGHTER_MIIGUNNER_STATUS_ARM_ROCKET_RUSH_INT_RUSH_FRAME);
@@ -146,7 +154,7 @@ unsafe extern "C" fn special_hi3_rush_main_loop(fighter: &mut L2CFighterCommon) 
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
-    if MotionModule::is_end(fighter.module_accessor) || fighter.status_frame() > 16 {
+    if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status(FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH_END.into(), false.into());
     }
 
@@ -161,6 +169,14 @@ unsafe extern "C" fn sub_special_hi3_rush(fighter: &mut L2CFighterCommon, param:
     return 0.into();
 }
 
+unsafe extern "C" fn special_hi3_rush_exit(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[STATUS_KIND] != *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH_END {
+        VarModule::on_flag(fighter.battle_object, vars::miigunner::instance::SPECIAL_HI1_LAUNCH_AIR_USED);
+    }
+    
+    return 0.into();
+}
+
 unsafe extern "C" fn special_hi3_rush_end_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_hi3_end"), 0.0, 1.0, false, 0.0, false, false);
     fighter.set_int(*FIGHTER_STATUS_KIND_FALL_SPECIAL, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_INT_STATUS_KIND_END);
@@ -172,10 +188,10 @@ unsafe extern "C" fn special_hi3_rush_end_main_loop(fighter: &mut L2CFighterComm
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
-    if fighter.status_frame() > 11
-    && !VarModule::is_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_CANCEL) {
+    if fighter.motion_frame() >= 12.0 && !VarModule::is_flag(fighter.battle_object, vars::miigunner::instance::SPECIAL_HI1_LAUNCH_AIR_USED) {
         VarModule::on_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
         fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+        return 0.into();
     }
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status(FIGHTER_STATUS_KIND_FALL_SPECIAL.into(), false.into());
@@ -186,5 +202,6 @@ unsafe extern "C" fn special_hi3_rush_end_main_loop(fighter: &mut L2CFighterComm
 
 pub fn install(agent: &mut Agent) {
     agent.status(Main, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH, special_hi3_rush_main);
+    agent.status(Exit, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH, special_hi3_rush_exit);
     agent.status(Main, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH_END, special_hi3_rush_end_main);
 }

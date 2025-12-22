@@ -105,21 +105,52 @@ unsafe extern "C" fn game_specialhi2(agent: &mut L2CAgentBase) {
 }
 
 // ================================================================================================
-// ======================================= JETPACK JOYRIDE ========================================
+// ========================================= JET STREAM ===========================================
 // ================================================================================================
 
 unsafe extern "C" fn game_specialhi3start(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
 	frame(lua_state, 1.0);
-	FT_MOTION_RATE(agent, 1.5);
+	FT_MOTION_RATE_RANGE(agent, 1.0, 8.0, 11.0);
+	if is_excute(agent) {
+		VarModule::on_flag(agent.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
+	}
+	frame(lua_state, 8.0);
+	FT_MOTION_RATE(agent, 1.0);
 }
 
 unsafe extern "C" fn game_specialhi3(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
 	frame(lua_state, 1.0);
-	FT_MOTION_RATE(agent, 0.85);
+	FT_MOTION_RATE_RANGE(agent, 1.0, 34.0, 4.0);
+	frame(lua_state, 34.0);
+	FT_MOTION_RATE(agent, 1.0);
+	// end_frame 39
+}
+
+unsafe extern "C" fn effect_specialhi3(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("miigunner_armrocket_start"), Hash40::new("rot"), -2.5, -4, 1.5, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+        EFFECT_FOLLOW(agent, Hash40::new("miigunner_armrocket"), Hash40::new("armr"), 0, 0, 0, 0, 0, 90, 1, true);
+        EffectModule::enable_sync_init_pos_last(boma);
+    }
+	frame(lua_state, 34.0);
+	if is_excute(agent) {
+		EFFECT_OFF_KIND(agent, Hash40::new("miigunner_armrocket"), false, false);
+	}
+}
+
+unsafe extern "C" fn game_specialairhi3end(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 1.0);
+	FT_MOTION_RATE_RANGE(agent, 1.0, 12.0, 14.0);
+	frame(lua_state, 12.0);
+	FT_MOTION_RATE(agent, 1.0);
 }
 
 unsafe extern "C" fn effect_landingfallspecial(agent: &mut L2CAgentBase) {
@@ -148,6 +179,9 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialairhi3start", game_specialhi3start, Priority::Low);
 
     agent.acmd("game_specialhi3", game_specialhi3, Priority::Low);
+    agent.acmd("effect_specialhi3", effect_specialhi3, Priority::Low);
+
+    agent.acmd("game_specialairhi3end", game_specialairhi3end, Priority::Low);
 
 	agent.acmd("effect_landingfallspecial", effect_landingfallspecial, Priority::Low);
 }
