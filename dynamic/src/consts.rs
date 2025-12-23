@@ -834,6 +834,7 @@ pub mod vars {
             pub const SPECIAL_N_PICKEL_CYCLE_MATERIAL: i32 = 0x01F4;
             pub const SPECIAL_LW_USED_JUMPS: i32 = 0x01F5;
             pub use super::super::bayonetta::instance::WAS_CANCEL;
+            pub use super::super::miigunner::status::SPECIAL_N1_CLEAR_CRIT;
             pub use super::super::ridley::instance::SPECIAL_N_EXPLODE;
 
             // ints
@@ -1168,6 +1169,7 @@ pub mod vars {
             // flags
             pub const BOOSTED_AERIAL: i32 = 0x1100;
             pub const CHECK_BOOSTED_AERIAL: i32 = 0x1101;
+            pub const SPECIAL_N1_CLEAR_CRIT: i32 = 0x1102;
 
             // floats
             pub const ATTACK_CHARGE: i32 = 0x1100;

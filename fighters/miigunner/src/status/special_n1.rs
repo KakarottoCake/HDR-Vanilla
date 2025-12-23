@@ -132,106 +132,45 @@ pub unsafe extern "C" fn special_n1_fire_main_loop(fighter: &mut L2CFighterCommo
         fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_FALL, false);
         return 0.into();
     }
-    if !StatusModule::is_changing(fighter.module_accessor)
-    && StatusModule::is_situation_changed(fighter.module_accessor) {
-        fighter.change_kinetic_by_situation(*FIGHTER_KINETIC_TYPE_GROUND_STOP, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-        fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK, *GROUND_CORRECT_KIND_AIR);
-        if (fighter.is_motion(Hash40::new("special_n1_fire")) || fighter.is_motion(Hash40::new("special_air_n1_fire"))) {
-            fighter.change_motion_inherit_frame_keep_rate_by_situation("special_n1_fire", "special_air_n1_fire", -1.0, 1.0, 0.0);
+    if !StatusModule::is_changing(fighter.module_accessor) {
+        if StatusModule::is_situation_changed(fighter.module_accessor) {
+            fighter.change_kinetic_by_situation(*FIGHTER_KINETIC_TYPE_GROUND_STOP, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+            fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK, *GROUND_CORRECT_KIND_AIR);
+            if (fighter.is_motion(Hash40::new("special_n1_fire")) || fighter.is_motion(Hash40::new("special_air_n1_fire"))) {
+                fighter.change_motion_inherit_frame_keep_rate_by_situation("special_n1_fire", "special_air_n1_fire", -1.0, 1.0, 0.0);
+            }
+            else if (fighter.is_motion(Hash40::new("special_n1_fire_max")) || fighter.is_motion(Hash40::new("special_air_n1_fire_max"))) {
+                fighter.change_motion_inherit_frame_keep_rate_by_situation("special_n1_fire_max", "special_air_n1_fire_max", -1.0, 1.0, 0.0);
+            }
+            else {
+                fighter.change_motion_inherit_frame_keep_rate_by_situation("special_n1_neon", "special_air_n1_neon", -1.0, 1.0, 0.0);
+            }
         }
-        else if (fighter.is_motion(Hash40::new("special_n1_fire_max")) || fighter.is_motion(Hash40::new("special_air_n1_fire_max"))) {
-            fighter.change_motion_inherit_frame_keep_rate_by_situation("special_n1_fire_max", "special_air_n1_fire_max", -1.0, 1.0, 0.0);
-        }
-        else {
-            fighter.change_motion_inherit_frame_keep_rate_by_situation("special_n1_neon", "special_air_n1_neon", -1.0, 1.0, 0.0);
+        if fighter.is_motion_one_of(&[Hash40::new("special_n1_neon"), Hash40::new("special_air_n1_neon")]) {
+            if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT)
+            && !VarModule::is_flag(fighter.battle_object, vars::miigunner::status::SPECIAL_N1_CLEAR_CRIT) {
+                VarModule::on_flag(fighter.battle_object, vars::miigunner::status::SPECIAL_N1_CLEAR_CRIT);
+                SlowModule::set_whole(fighter.module_accessor, 4, 5);
+                EffectModule::req_screen(fighter.module_accessor, Hash40::new("bg_criticalhit"), false, true, true);
+            }
         }
     }
 
     return 0.into();
 }
 
-// pub unsafe extern "C" fn special_n1_cancel_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-//     let cancel_status = fighter.get_int(*FIGHTER_MIIGUNNER_STATUS_GUNNER_CHARGE_WORK_INT_CANCEL_STATUS);
-//     if fighter.is_situation(*SITUATION_KIND_GROUND) {
-//         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
-//         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-//         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_n1_cancel"), 0.0, 1.0, false, 0.0, false, false);
-//     }
-//     else {
-//         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
-//         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-//         let motion = if cancel_status == *FIGHTER_STATUS_KIND_JUMP_AERIAL {
-//             Hash40::new("special_air_n1_jump_cancel")
-//         } else if cancel_status == *FIGHTER_STATUS_KIND_FLY {
-//             Hash40::new("special_air_n1_jump_cancel")
-//         } else {
-//             Hash40::new("special_air_n1_cancel")
-//         };
-//         MotionModule::change_motion(fighter.module_accessor, motion, 0.0, 1.0, false, 0.0, false, false);
-//     }
-//     if cancel_status == *STATUS_KIND_NONE {
-//         ControlModule::set_rumble(fighter.module_accessor, Hash40::new("rbkind_attackm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32)
-//     }
-//     ControlModule::set_add_jump_mini_button_life(fighter.module_accessor, 8);
+pub unsafe extern "C" fn special_n1_fire_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if VarModule::is_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_LW3_CLEAR_CRIT) {
+        SlowModule::clear_whole(fighter.module_accessor);
+        CameraModule::reset_all(fighter.module_accessor);
+        EffectModule::remove_screen(fighter.module_accessor, Hash40::new("bg_criticalhit"), 0);
+    }
     
-//     fighter.main_shift(special_n1_cancel_main_loop)
-// }
-
-// pub unsafe extern "C" fn special_n1_cancel_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-//     let cancel_status = fighter.get_int(*FIGHTER_MIIGUNNER_STATUS_GUNNER_CHARGE_WORK_INT_CANCEL_STATUS);
-//     fighter.sub_check_charge_cancel_jump_mini_attack();
-//     if fighter.is_situation(*SITUATION_KIND_GROUND) {
-//         if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK)
-//         && cancel_status == *FIGHTER_STATUS_KIND_JUMP_SQUAT {
-//             FighterControlModuleImpl::update_attack_air_kind(fighter.module_accessor, true);
-//         }
-//     }
-//     if cancel_status != *STATUS_KIND_NONE {
-//         // if !CancelModule::is_enable_cancel(fighter.module_accessor) {
-//         //     if !MotionModule::is_end(fighter.module_accessor) {
-//         //         // goto
-//         //     }
-//         // }
-//         if cancel_status == *FIGHTER_STATUS_KIND_GUARD_ON {
-//             //if !ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {}
-//             fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_FALL, false);
-//             return 0.into();
-//         }
-//     }
-//     if CancelModule::is_enable_cancel(fighter.module_accessor) {
-//         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
-//         || !fighter.sub_air_check_fall_common().get_bool() {
-//             return 0.into();
-//         }
-//     }
-//     if MotionModule::is_end(fighter.module_accessor) {
-//         fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_FALL, false);
-//         return 0.into();
-//     }
-//     if StatusModule::is_situation_changed(fighter.module_accessor) {
-//         if fighter.is_situation(*SITUATION_KIND_GROUND) {
-//             let motion = if fighter.kind == *FIGHTER_KIND_KIRBY { Hash40::new("miigunner_special_air_n1_jump_cancel") } else { Hash40::new("special_air_n1_jump_cancel") };
-//             if MotionModule::motion_kind(fighter.module_accessor) == motion {
-//                 fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), true.into());
-//                 return 0.into();
-//             } 
-//             GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
-//             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-//             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_n1_cancel"), -1.0, 1.0, 0.0, false, false);
-//             fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_MIIGUNNER_STATUS_GUNNER_CHARGE_WORK_INT_CANCEL_STATUS);
-//         }
-//         else {
-//             GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-//             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-//             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_n1_cancel"), -1.0, 1.0, 0.0, false, false);
-//             fighter.set_int(*STATUS_KIND_NONE, *FIGHTER_MIIGUNNER_STATUS_GUNNER_CHARGE_WORK_INT_CANCEL_STATUS);
-//         }
-//     }
-
-//     return 0.into();
-// }
+    return 0.into();
+}
 
 pub fn install(agent: &mut Agent) {
     agent.status(Main, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_HOLD, special_n1_hold_main);
     agent.status(Main, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_FIRE, special_n1_fire_main);
+    agent.status(End, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_FIRE, special_n1_fire_end);
 }
