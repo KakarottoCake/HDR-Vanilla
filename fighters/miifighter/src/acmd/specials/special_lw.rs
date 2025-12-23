@@ -336,11 +336,11 @@ unsafe extern "C" fn expression_speciallw31g(agent: &mut L2CAgentBase) {
     frame(lua_state, 15.0);
     if is_excute(agent) {
         ItemModule::set_have_item_visibility(boma, false, 0);
-        RUMBLE_HIT(agent, Hash40::new("rbkind_attacks"), 0);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohits"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
     frame(lua_state, 17.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohits"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        RUMBLE_HIT(agent, Hash40::new("rbkind_attacks"), 0);
     }
     frame(lua_state, 39.0);
     if is_excute(agent) {
@@ -473,11 +473,11 @@ unsafe extern "C" fn expression_speciallw32g(agent: &mut L2CAgentBase) {
     frame(lua_state, 15.0);
     if is_excute(agent) {
         ItemModule::set_have_item_visibility(boma, false, 0);
-        RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
     frame(lua_state, 17.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
     }
     frame(lua_state, 39.0);
     if is_excute(agent) {
@@ -543,11 +543,11 @@ unsafe extern "C" fn expression_speciallw32a(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 7.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohits"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        RUMBLE_HIT(agent, Hash40::new("rbkind_attacks"), 0);
     }
     frame(lua_state, 9.0);
     if is_excute(agent) {
-        RUMBLE_HIT(agent, Hash40::new("rbkind_attacks"), 0);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohits"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
 }
 
