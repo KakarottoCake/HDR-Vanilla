@@ -42,15 +42,17 @@ pub unsafe extern "C" fn special_n_substatus(fighter: &mut L2CFighterCommon, par
                     sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, sum_speed_y + back_air_spd_y);
                 }
                 KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-                if fighter.is_situation(*SITUATION_KIND_AIR) {
-                    let facing = fighter.lr();
-                    sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_AIR, 0.0, 0.0, 0.0, 0.0, 0.0);
-                    sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, sum_speed_x - back_air_spd_x * facing, 0.0);
-                }
-                else {
-                    let facing = fighter.lr();
-                    sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_GROUND, 0.0, 0.0, 0.0, 0.0, 0.0);
-                    sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, sum_speed_x - back_spd_x * facing, 0.0);
+                if !fighter.is_motion_one_of(&[Hash40::new("special_n_fire_hi"), Hash40::new("special_air_n_fire_hi")]) {
+                    if fighter.is_situation(*SITUATION_KIND_AIR) {
+                        let facing = fighter.lr();
+                        sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_AIR, 0.0, 0.0, 0.0, 0.0, 0.0);
+                        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, sum_speed_x - back_air_spd_x * facing, 0.0);
+                    }
+                    else {
+                        let facing = fighter.lr();
+                        sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_GROUND, 0.0, 0.0, 0.0, 0.0, 0.0);
+                        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, sum_speed_x - back_spd_x * facing, 0.0);
+                    }
                 }
             }
         }
