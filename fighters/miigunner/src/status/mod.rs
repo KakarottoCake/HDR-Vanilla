@@ -11,6 +11,7 @@ mod special_hi1;
 mod special_hi3;
 
 mod special_n1;
+mod special_n2;
 mod special_n3;
 
 mod special_s;
@@ -40,7 +41,14 @@ unsafe extern "C" fn move_customizer(fighter: &mut L2CFighterCommon) -> L2CValue
     if let Some(original) = get_original_customizer(fighter) {
         original(fighter);
     }
-    if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_HI_1 {
+    if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_N_2 {
+        fighter.sv_set_status_func(
+            FIGHTER_STATUS_KIND_SPECIAL_N.into(),
+            LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN.into(),
+            std::mem::transmute(special_n2::special_n2_main as *const ())
+        );
+    }
+    else if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_HI_1 {
         fighter.sv_set_status_func(
             FIGHTER_STATUS_KIND_SPECIAL_HI.into(),
             LUA_SCRIPT_STATUS_FUNC_STATUS_PRE.into(),
