@@ -16,9 +16,14 @@ unsafe extern "C" fn game_specialhi1(agent: &mut L2CAgentBase) {
 		WorkModule::on_flag(boma, *FIGHTER_MIIGUNNER_STATUS_BOTTOM_SHOOT_FLAG_JUMP);
 	}
 	frame(lua_state, 12.0);
+	if !VarModule::is_flag(agent.battle_object, vars::miigunner::instance::SPECIAL_HI_AIR_USED) {
+		FT_MOTION_RATE_RANGE(agent, 12.0, 25.0, 24.0);
+	}
 	if is_excute(agent) {
 		ArticleModule::generate_article(boma, *FIGHTER_MIIGUNNER_GENERATE_ARTICLE_BOTTOMSHOOT, false, 0);
 	}
+	frame(lua_state, 25.0);
+	FT_MOTION_RATE(agent, 1.0);
 }
 
 unsafe extern "C" fn effect_specialhi1(agent: &mut L2CAgentBase) {
