@@ -12,6 +12,12 @@ pub struct NormalCameraParams {
     pub normal_camera_vertical_angle: f32,
     pub normal_camera_fov: f32,
     pub target_interpolation_rate: f32,
+    pub unk_0x19bdd14296: f32,
+    pub others: [f32; 2],
+    pub camera_offset_y_min_distance: f32,
+    pub camera_offset_y_min: f32,
+    pub camera_offset_y_max_distance: f32,
+    pub camera_offset_y_max: f32,
     // others...
 }
 
@@ -58,6 +64,19 @@ pub enum QuakeKind {
     Invalid,
 }
 
+pub static DEFAULT_TARGET_INTERPOLATION_RATE: f32 = 0.75;
+
+#[derive(Copy, Clone)]
+pub struct ReducedCameraTrackingSpeed {
+    pub target_interpolation_rate: f32,
+    pub normalize_increment: f32,
+}
+
+pub static mut REDUCED_CAMERA_TRACKING_SPEED: [ReducedCameraTrackingSpeed; 8] = [
+    ReducedCameraTrackingSpeed{target_interpolation_rate: DEFAULT_TARGET_INTERPOLATION_RATE, normalize_increment: 0.0};
+    8
+];
+
 // Doubles camera speed
 #[skyline::hook(offset = 0x4fdc10)]
 unsafe fn normal_camera(ptr: u64, float: f32) {
@@ -68,12 +87,13 @@ unsafe fn normal_camera(ptr: u64, float: f32) {
 #[skyline::hook(offset = 0x2621490)]
 pub fn parse_stprm_active_camera_params(param_obj: u64, params: &mut NormalCameraParams) {
     call_original!(param_obj, params);
-    params.normal_camera_min_distance = params.normal_camera_min_distance.max(140.0);
-    params.normal_camera_min_distance_2 = params.normal_camera_min_distance_2.max(140.0);
+    let fov = params.normal_camera_fov.to_degrees();
+    params.normal_camera_min_distance = (0.2 * fov.powf(2.0)) - (17.0 * fov) + 450.0;
+    params.normal_camera_min_distance_2 = (0.2 * fov.powf(2.0)) - (17.0 * fov) + 450.0;
     params.swing_rate_x = 0.0;
     params.swing_rate_y = 0.0;
     params.normal_camera_vertical_angle = params.normal_camera_vertical_angle.max(-5.0_f32.to_radians());
-    params.target_interpolation_rate = 0.9;
+    params.target_interpolation_rate = DEFAULT_TARGET_INTERPOLATION_RATE;
 }
 
 // The following function hook handles Unrestricted Camera
@@ -96,6 +116,38 @@ pub fn parse_stprm_pause_camera_params(param_obj: u64, params: &mut PauseCameraP
     params.pause_camera_gyro_limit_angle_down = 0.0;
     params.pause_camera_gyro_limit_angle_right = 0.0;
     params.pause_camera_gyro_limit_angle_left = 0.0;
+}
+
+#[skyline::hook(offset = 0x4fddcc, inline)]
+unsafe fn normal_camera_get_active_camera_params(ctx: &mut skyline::hooks::InlineCtx) {
+    let ptr = ctx.registers[19].x();
+    let normal_camera_params = *((ptr + 0x1e0) as *const u64);
+    let current_tir = *((normal_camera_params + 0x38) as *mut f32);
+
+    let target_interpolation_rate: f32 = if REDUCED_CAMERA_TRACKING_SPEED.iter().any(|&x| x.target_interpolation_rate < DEFAULT_TARGET_INTERPOLATION_RATE) {
+        let (idx, min) = REDUCED_CAMERA_TRACKING_SPEED
+            .iter()
+            .copied()
+            .enumerate()
+            .fold((0, REDUCED_CAMERA_TRACKING_SPEED[0]), |acc, x| {
+                let (best_idx, best) = acc;
+                let (i, val) = x;
+
+                if val.target_interpolation_rate < best.target_interpolation_rate {
+                    (i, val)
+                } else {
+                    (best_idx, best)
+                }
+        });
+        let normalize_increment = min.normalize_increment;
+        let new_tir = (min.target_interpolation_rate + normalize_increment).min(DEFAULT_TARGET_INTERPOLATION_RATE);
+        REDUCED_CAMERA_TRACKING_SPEED[idx].target_interpolation_rate = new_tir;
+        new_tir
+    } else {
+        (current_tir + 0.01).min(DEFAULT_TARGET_INTERPOLATION_RATE)
+    };
+
+    *((normal_camera_params + 0x38) as *mut f32) = target_interpolation_rate;
 }
 
 // Runs immediately before CameraModule::req_quake is called
@@ -139,6 +191,7 @@ pub fn install() {
         normal_camera,
         parse_stprm_active_camera_params,
         parse_stprm_pause_camera_params,
+        normal_camera_get_active_camera_params,
         damage_fly_req_quake,
         camera_module__req_quake,
     );
