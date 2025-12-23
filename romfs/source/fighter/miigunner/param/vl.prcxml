@@ -30,6 +30,8 @@
   <list size="1" hash="param_flamepillar">
     <struct index="0">
       <int hash="life">25</int>
+      <float hash="pillar_accel_y">0.01</float>
+      <float hash="pillar_speed_max_y">0.5</float>
     </struct>
   </list>
   <list hash="param_stealthbomb">
