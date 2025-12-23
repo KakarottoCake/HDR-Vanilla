@@ -10,7 +10,7 @@ unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE_RANGE(agent, 6.0, 9.0, 4.0);
     frame(lua_state, 9.0);
     if is_excute(agent) {
-        VarModule::on_flag(agent.battle_object, vars::miigunner::status::BOOSTED_AERIAL);
+        VarModule::on_flag(agent.battle_object, vars::miigunner::status::CHECK_BOOSTED_AERIAL);
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {

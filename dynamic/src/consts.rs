@@ -1167,6 +1167,7 @@ pub mod vars {
         pub mod status {
             // flags
             pub const BOOSTED_AERIAL: i32 = 0x1100;
+            pub const CHECK_BOOSTED_AERIAL: i32 = 0x1101;
 
             // floats
             pub const ATTACK_CHARGE: i32 = 0x1100;
