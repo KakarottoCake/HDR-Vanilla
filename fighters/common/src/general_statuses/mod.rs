@@ -940,7 +940,7 @@ unsafe extern "C" fn fighterstatusdamage_init_damage_camera_tracking(
         reduced
     };
 
-    println!("speed: {} rate: {}", speed, target_interpolation_rate);
+    //println!("speed: {} rate: {}", speed, target_interpolation_rate);
     
     let id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let reaction_frame_mul_speed_up = fighter.reaction_frame_mul_speed_up().get_f32();
