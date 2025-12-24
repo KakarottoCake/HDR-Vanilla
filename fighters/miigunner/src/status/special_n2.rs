@@ -44,12 +44,12 @@ unsafe extern "C" fn special_n2_main_loop(fighter: &mut L2CFighterCommon) -> L2C
             return 1.into();
         }
     }
-    // if fighter.is_situation(*SITUATION_KIND_AIR) {
-    //     fighter.sub_air_check_dive();
-    // }
+    if fighter.is_situation(*SITUATION_KIND_AIR) {
+        fighter.sub_air_check_dive();
+    }
     fighter.check_land_cancel(Some(6.0));
     let mut step = fighter.get_int(*FIGHTER_MIIGUNNER_RAPID_SHOT_STATUS_WORK_ID_INT_STEP);
-    let mut change_motion = false;  // l70
+    let mut change_motion = false;
     if !StatusModule::is_changing(fighter.module_accessor) {
         if fighter.is_situation(*SITUATION_KIND_GROUND) {
             if step == *FIGHTER_MIIGUNNER_RAPID_SHOT_STEP_START {
@@ -92,6 +92,7 @@ unsafe extern "C" fn special_n2_main_loop(fighter: &mut L2CFighterCommon) -> L2C
             else if step == *FIGHTER_MIIGUNNER_RAPID_SHOT_STEP_SHOT {
                 if MotionModule::is_end(fighter.module_accessor) {
                     fighter.off_flag(*FIGHTER_MIIGUNNER_RAPID_SHOT_STATUS_WORK_ID_FLAG_CONTINUE);
+                    change_motion = true;
                 }
                 else if fighter.is_prev_situation(*SITUATION_KIND_AIR) {
                     change_motion = true;
@@ -127,7 +128,6 @@ unsafe extern "C" fn special_n2_main_loop(fighter: &mut L2CFighterCommon) -> L2C
                 ControlModule::clear_command(fighter.module_accessor, true);
             }
         }
-        // step = lb0
         step = fighter.get_int(*FIGHTER_MIIGUNNER_RAPID_SHOT_STATUS_WORK_ID_INT_STEP);
         if fighter.is_situation(*SITUATION_KIND_GROUND) {
             GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
