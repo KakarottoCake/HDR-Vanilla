@@ -121,12 +121,41 @@ unsafe extern "C" fn game_specialhi3start(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
 	frame(lua_state, 1.0);
-	FT_MOTION_RATE_RANGE(agent, 1.0, 8.0, 11.0);
+	FT_MOTION_RATE_RANGE(agent, 1.0, 8.0, 12.0);
 	if is_excute(agent) {
 		VarModule::on_flag(agent.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
 	}
 	frame(lua_state, 8.0);
 	FT_MOTION_RATE(agent, 1.0);
+}
+
+unsafe extern "C" fn effect_specialhi3start(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+	frame(lua_state, 1.0);
+	if is_excute(agent) {
+		EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_sp_flash"), Hash40::new("sys_sp_flash"), Hash40::new("top"), -5, 12, -3, 0, 0, 0, 0.45, false, *EF_FLIP_AXIS_YZ);
+		LAST_EFFECT_SET_RATE(agent, 1.3);
+	}
+    frame(lua_state, 7.0);
+    if is_excute(agent) {
+        LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, false);
+    }
+}
+
+unsafe extern "C" fn sound_specialhi3start(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+	frame(lua_state, 1.0);
+	if is_excute(agent) {
+		let sfx_handle = SoundModule::play_se(boma, Hash40::new("se_miigunner_appeal_s01"), true, false, false, false, app::enSEType(0));
+		SoundModule::set_se_pitch_status(boma, 0.2);
+	}
+	frame(lua_state, 4.0);
+	if is_excute(agent) {
+		STOP_SE(agent, Hash40::new("se_miigunner_appeal_s01"));
+		SoundModule::set_se_pitch_status(boma, 1.0);
+	}
 }
 
 unsafe extern "C" fn game_specialhi3(agent: &mut L2CAgentBase) {
@@ -143,6 +172,8 @@ unsafe extern "C" fn effect_specialhi3(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
+		EFFECT_FOLLOW(agent, Hash40::new("miigunner_gimmck_attack"), Hash40::new("rot"), 0, 12, 0, 0, 0, 0, 1, true);
+		LAST_EFFECT_SET_SCALE_W(agent, 1, 1, 1);
         EFFECT(agent, Hash40::new("miigunner_armrocket_start"), Hash40::new("rot"), -2.5, -4, 1.5, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         EFFECT_FOLLOW(agent, Hash40::new("miigunner_armrocket"), Hash40::new("armr"), 0, 0, 0, 0, 0, 90, 1, true);
         EffectModule::enable_sync_init_pos_last(boma);
@@ -150,6 +181,10 @@ unsafe extern "C" fn effect_specialhi3(agent: &mut L2CAgentBase) {
 	frame(lua_state, 34.0);
 	if is_excute(agent) {
 		EFFECT_OFF_KIND(agent, Hash40::new("miigunner_armrocket"), false, false);
+	}
+	frame(lua_state, 36.0);
+	if is_excute(agent) {
+		EFFECT_OFF_KIND(agent, Hash40::new("miigunner_gimmck_attack"), false, false);
 	}
 }
 
@@ -185,7 +220,11 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialhi2", game_specialhi2, Priority::Low);
 
     agent.acmd("game_specialhi3start", game_specialhi3start, Priority::Low);
+    agent.acmd("effect_specialhi3start", effect_specialhi3start, Priority::Low);
+    agent.acmd("sound_specialhi3start", sound_specialhi3start, Priority::Low);
     agent.acmd("game_specialairhi3start", game_specialhi3start, Priority::Low);
+    agent.acmd("effect_specialairhi3start", effect_specialhi3start, Priority::Low);
+    agent.acmd("sound_specialairhi3start", sound_specialhi3start, Priority::Low);
 
     agent.acmd("game_specialhi3", game_specialhi3, Priority::Low);
     agent.acmd("effect_specialhi3", effect_specialhi3, Priority::Low);
