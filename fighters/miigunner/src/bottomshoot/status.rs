@@ -1,7 +1,7 @@
 use super::*;
 
 unsafe extern "C" fn shoot_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    ModelModule::set_scale(weapon.module_accessor, 0.6);
+    ModelModule::set_scale(weapon.module_accessor, 0.7);
     return smashline::original_status(Main, weapon, *WEAPON_MIIGUNNER_BOTTOMSHOOT_STATUS_KIND_SHOOT)(weapon);
 }
 
