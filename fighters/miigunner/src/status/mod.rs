@@ -14,7 +14,7 @@ mod special_n1;
 mod special_n2;
 mod special_n3;
 
-mod special_s;
+mod special_s3;
 
 unsafe fn set_move_customizer(fighter: &mut L2CFighterCommon, customizer: unsafe extern "C" fn(&mut L2CFighterCommon) -> L2CValue) {
     if fighter.global_table["move_customizer_set"].get_bool() {
@@ -46,6 +46,13 @@ unsafe extern "C" fn move_customizer(fighter: &mut L2CFighterCommon) -> L2CValue
             FIGHTER_STATUS_KIND_SPECIAL_N.into(),
             LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN.into(),
             std::mem::transmute(special_n2::special_n2_main as *const ())
+        );
+    }
+    else if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_S_3 {
+        fighter.sv_set_status_func(
+            FIGHTER_STATUS_KIND_SPECIAL_S.into(),
+            LUA_SCRIPT_STATUS_FUNC_STATUS_PRE.into(),
+            std::mem::transmute(special_s3::special_s3_pre as *const ())
         );
     }
     else if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_HI_1 {
@@ -129,5 +136,5 @@ pub fn install(agent: &mut Agent) {
     special_hi3::install(agent);
     special_n1::install(agent);
     special_n3::install(agent);
-    special_s::install(agent);
+    special_s3::install(agent);
 }

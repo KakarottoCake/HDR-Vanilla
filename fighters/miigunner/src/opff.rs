@@ -66,23 +66,6 @@ unsafe fn reflector_jc(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
-unsafe fn remove_homing_missiles(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_1_GROUND) {
-        StatusModule::change_status_request_from_script(boma, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_2_GROUND, false);
-    }
-    else if boma.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_1_AIR) {
-        StatusModule::change_status_request_from_script(boma, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_2_AIR, false);
-    }
-}
-
-unsafe fn missile_land_cancel(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_2_AIR)
-    && boma.status_frame() > 23 {
-        //let landing_frame = (50.0 - boma.status_frame() as f32).clamp(4.0, 12.0);
-        boma.check_land_cancel(Some(12.0));
-    }
-}
-
 unsafe fn stealth_burst_land_cancel(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S2_END) {
         boma.check_land_cancel(None);
@@ -127,8 +110,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     special_waza_charge_handle(boma);
     reflector_jc(boma);
-    remove_homing_missiles(boma);
-    missile_land_cancel(boma);
     stealth_burst_land_cancel(boma);
     vortex_item_grab_ac(fighter);
     fastfall_specials(fighter);
