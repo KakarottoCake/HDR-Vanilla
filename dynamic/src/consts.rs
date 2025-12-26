@@ -1604,10 +1604,10 @@ pub mod vars {
             pub const ATTACK_AIR_B_USED: i32 = 0x0100;
             pub const SPECIAL_S_AIR_USED: i32 = 0x0101;
             pub const SPECIAL_HI_GROUND_START: i32 = 0x0103;
-            pub const SPECIAL_HI_MARKER_EFFECT_HANDLE: i32 = 0x0104;
 
             // ints
             pub const SPECIAL_HI_CHARGE_FRAME: i32 = 0x0100;
+            pub const SPECIAL_HI_MARKER_EFFECT_HANDLE: i32 = 0x0101;
 
             // floats
             pub const SPECIAL_HI_ROT_X: i32 = 0x0100;
@@ -1618,6 +1618,9 @@ pub mod vars {
             pub const IS_CHARGE_FINISHED: i32 = 0x1101;
             pub const ATTACK_AIR_B_MAX_CHARGE: i32 = 0x1102;
             pub const ATTACK_AIR_B_CHARGE_LEVEL: i32 = 0x1103;
+
+            // ints
+            pub const SPECIAL_HI_KEEP_FRAME: i32 = 0x1100;
         }
     }
 
