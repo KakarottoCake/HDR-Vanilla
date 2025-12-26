@@ -1,26 +1,25 @@
 use super::*;
 
-pub unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+pub unsafe extern "C" fn krool_special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.set_int(0x50000000, *FIGHTER_KROOL_INSTANCE_WORK_ID_INT_BATTLE_OBJECT_ID_BLUNDERBUSS);
     fighter.set_int(0x50000000, *FIGHTER_KROOL_INSTANCE_WORK_ID_INT_BATTLE_OBJECT_ID_SPITBALL);
-    ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_KROOL_GENERATE_ARTICLE_PIRATEHAT, false, -1);
     ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, false, -1);
     ArticleModule::change_status_exist(fighter.module_accessor, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, *WEAPON_KROOL_BLUNDERBUSS_STATUS_KIND_FIRE);
-    special_n_change_motion(fighter, Hash40::new("special_n_fire"), Hash40::new("special_air_n_fire"));
-    special_n_set_kinetic(fighter);
+    krool_special_n_change_motion(fighter, Hash40::new("krool_special_n_fire"), Hash40::new("krool_special_air_n_fire"));
+    krool_special_n_set_kinetic(fighter);
     if !StopModule::is_stop(fighter.module_accessor) {
-        special_n_substatus(fighter, false.into());
+        krool_special_n_substatus(fighter, false.into());
     }
-    fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(special_n_substatus as *const () as _));
+    fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(krool_special_n_substatus as *const () as _));
     fighter.off_flag(*FIGHTER_KROOL_INSTANCE_WORK_ID_FLAG_SPECIAL_N_SUCTION_IRONBALL);
     fighter.set_int(*FIGHTER_KROOL_SPECIAL_N_SPIT_TYPE_NONE, *FIGHTER_KROOL_INSTANCE_WORK_ID_INT_SPECIAL_N_SPIT_TYPE);
     fighter.off_flag(*FIGHTER_KROOL_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CATCH_CUT);
 
-    fighter.main_shift(special_n_main_loop)
+    fighter.main_shift(krool_special_n_main_loop)
 }
 
 // // FUN_710002a5b0
-pub unsafe extern "C" fn special_n_substatus(fighter: &mut L2CFighterCommon, param_1: L2CValue) -> L2CValue {
+pub unsafe extern "C" fn krool_special_n_substatus(fighter: &mut L2CFighterCommon, param_1: L2CValue) -> L2CValue {
     if !param_1.get_bool() {
         if !fighter.is_flag(*FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_SHOOT_IRONBALL_END) {
             if fighter.is_flag(*FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_SHOOT_IRONBALL) {
@@ -42,17 +41,15 @@ pub unsafe extern "C" fn special_n_substatus(fighter: &mut L2CFighterCommon, par
                     sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, sum_speed_y + back_air_spd_y);
                 }
                 KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-                if !fighter.is_motion_one_of(&[Hash40::new("special_n_fire_hi"), Hash40::new("special_air_n_fire_hi")]) {
-                    if fighter.is_situation(*SITUATION_KIND_AIR) {
-                        let facing = fighter.lr();
-                        sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_AIR, 0.0, 0.0, 0.0, 0.0, 0.0);
-                        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, sum_speed_x - back_air_spd_x * facing, 0.0);
-                    }
-                    else {
-                        let facing = fighter.lr();
-                        sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_GROUND, 0.0, 0.0, 0.0, 0.0, 0.0);
-                        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, sum_speed_x - back_spd_x * facing, 0.0);
-                    }
+                if fighter.is_situation(*SITUATION_KIND_AIR) {
+                    let facing = fighter.lr();
+                    sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_AIR, 0.0, 0.0, 0.0, 0.0, 0.0);
+                    sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, sum_speed_x - back_air_spd_x * facing, 0.0);
+                }
+                else {
+                    let facing = fighter.lr();
+                    sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_GROUND, 0.0, 0.0, 0.0, 0.0, 0.0);
+                    sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, sum_speed_x - back_spd_x * facing, 0.0);
                 }
             }
         }
@@ -61,17 +58,17 @@ pub unsafe extern "C" fn special_n_substatus(fighter: &mut L2CFighterCommon, par
     return 0.into();
 }
 
-pub unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+pub unsafe extern "C" fn krool_special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     if StatusModule::is_changing(fighter.module_accessor)
     || StatusModule::is_situation_changed(fighter.module_accessor) {
-        if fighter.is_motion_one_of(&[Hash40::new("special_n_fire_hi"), Hash40::new("special_air_n_fire_hi")]) {
-            special_n_change_motion(fighter, Hash40::new("special_n_fire_hi"), Hash40::new("special_air_n_fire_hi"));
+        if fighter.is_motion_one_of(&[Hash40::new("krool_special_n_fire_hi"), Hash40::new("krool_special_air_n_fire_hi")]) {
+            krool_special_n_change_motion(fighter, Hash40::new("krool_special_n_fire_hi"), Hash40::new("krool_special_air_n_fire_hi"));
         }
-        else if fighter.is_motion_one_of(&[Hash40::new("special_n_fire_b"), Hash40::new("special_air_n_fire_b")]) {
-            special_n_change_motion(fighter, Hash40::new("special_n_fire_b"), Hash40::new("special_air_n_fire_b"));
+        else if fighter.is_motion_one_of(&[Hash40::new("krool_special_n_fire_b"), Hash40::new("krool_special_air_n_fire_b")]) {
+            krool_special_n_change_motion(fighter, Hash40::new("krool_special_n_fire_b"), Hash40::new("krool_special_air_n_fire_b"));
         }
         else {
-            special_n_change_motion(fighter, Hash40::new("special_n_fire"), Hash40::new("special_air_n_fire"));
+            krool_special_n_change_motion(fighter, Hash40::new("krool_special_n_fire"), Hash40::new("krool_special_air_n_fire"));
         }
     }
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
@@ -108,7 +105,7 @@ pub unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> 
     if VarModule::is_flag(fighter.battle_object, vars::krool::status::SPECIAL_N_ANGLED) {
         VarModule::off_flag(fighter.battle_object, vars::krool::status::SPECIAL_N_ANGLED);
         if fighter.stick_y() > 0.5 {
-            let motion = if fighter.is_situation(*SITUATION_KIND_GROUND) { Hash40::new("special_n_fire_hi") } else { Hash40::new("special_air_n_fire_hi") };
+            let motion = if fighter.is_situation(*SITUATION_KIND_GROUND) { Hash40::new("krool_special_n_fire_hi") } else { Hash40::new("krool_special_air_n_fire_hi") };
             MotionModule::change_motion(fighter.module_accessor, motion, 0.0, 1.0, false, 0.0, false, false);
             ArticleModule::change_status_exist(fighter.module_accessor, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, *WEAPON_KROOL_BLUNDERBUSS_STATUS_KIND_SPIT);
             ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, Hash40::new("spit_hi"), true, 0.0);
@@ -116,7 +113,7 @@ pub unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> 
             return 0.into();
         }
         else if PostureModule::lr(fighter.module_accessor) * fighter.stick_x() < 0.0 {
-            let motion = if fighter.is_situation(*SITUATION_KIND_GROUND) { Hash40::new("special_n_fire_b") } else { Hash40::new("special_air_n_fire_b") };
+            let motion = if fighter.is_situation(*SITUATION_KIND_GROUND) { Hash40::new("krool_special_n_fire_b") } else { Hash40::new("krool_special_air_n_fire_b") };
             MotionModule::change_motion(fighter.module_accessor, motion, 0.0, 1.0, false, 0.0, false, false);
             ArticleModule::change_status_exist(fighter.module_accessor, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, *WEAPON_KROOL_BLUNDERBUSS_STATUS_KIND_SPIT);
             ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_KROOL_GENERATE_ARTICLE_BLUNDERBUSS, Hash40::new("spit_b"), true, 0.0);
@@ -125,7 +122,7 @@ pub unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> 
     }
     if VarModule::is_flag(fighter.battle_object, vars::krool::instance::SPECIAL_N_GRAB) {
         if fighter.is_flag(*FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_SHOOT_CANCEL) {
-            fighter.change_status(FIGHTER_KROOL_STATUS_KIND_SPECIAL_N_SUCTION.into(), true.into());
+            fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_KROOL_SPECIAL_N_SUCTION.into(), true.into());
             return 0.into();
         }
     }
@@ -140,12 +137,12 @@ pub unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> 
 }
 
 // FUN_7100025c00
-pub unsafe extern "C" fn special_n_set_kinetic(fighter: &mut L2CFighterCommon) {
-    let sum_speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);  // l70
-    let sum_speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);  // l80
-    let start_mul_spd_x = fighter.get_param_float("param_special_n", "special_n_start_mul_spd_x");  // l90
-    let start_air_mul_spd_x = fighter.get_param_float("param_special_n", "special_n_start_air_mul_spd_x");  // la0
-    let start_mul_spd_y = fighter.get_param_float("param_special_n", "special_n_start_mul_spd_y");  // lb0
+pub unsafe extern "C" fn krool_special_n_set_kinetic(fighter: &mut L2CFighterCommon) {
+    let sum_speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let sum_speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let start_mul_spd_x = fighter.get_param_float("param_special_n", "special_n_start_mul_spd_x");
+    let start_air_mul_spd_x = fighter.get_param_float("param_special_n", "special_n_start_air_mul_spd_x");
+    let start_mul_spd_y = fighter.get_param_float("param_special_n", "special_n_start_mul_spd_y");
     if fighter.global_table[STATUS_KIND_INTERRUPT].get_i32() == *FIGHTER_STATUS_KIND_SPECIAL_N {
         KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_MOTION);
         sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, 0.0, 0.0, 0.0, 0.0);
@@ -169,7 +166,7 @@ pub unsafe extern "C" fn special_n_set_kinetic(fighter: &mut L2CFighterCommon) {
 }
 
 // FUN_7100027ed0
-pub unsafe extern "C" fn special_n_change_motion(fighter: &mut L2CFighterCommon, hash1: Hash40, hash2: Hash40) {
+pub unsafe extern "C" fn krool_special_n_change_motion(fighter: &mut L2CFighterCommon, hash1: Hash40, hash2: Hash40) {
     if fighter.is_situation(*SITUATION_KIND_AIR) {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         if fighter.is_flag(*FIGHTER_KROOL_STATUS_SPECIAL_N_FLAG_FIRST) {
@@ -195,5 +192,5 @@ pub unsafe extern "C" fn special_n_change_motion(fighter: &mut L2CFighterCommon,
 }
 
 pub fn install(agent: &mut Agent) {
-    agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_N, special_n_main);
+    agent.status(Main, *FIGHTER_KIRBY_STATUS_KIND_KROOL_SPECIAL_N, krool_special_n_main);
 }

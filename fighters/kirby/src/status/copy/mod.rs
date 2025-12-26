@@ -13,6 +13,7 @@ mod ganon_special_n;
 mod ganon_special_n_float;
 mod gaogaen_special_n;
 mod koopa_special_n;
+mod krool_special_n;
 mod littlemac_special_n;
 mod lucario_special_n;
 mod lucas_special_n;
@@ -49,6 +50,7 @@ pub fn install(agent: &mut Agent) {
     ganon_special_n_float::install(agent);
     gaogaen_special_n::install(agent);
     koopa_special_n::install(agent);
+    krool_special_n::install(agent);
     littlemac_special_n::install(agent);
     lucario_special_n::install(agent);
     lucas_special_n::install(agent);
