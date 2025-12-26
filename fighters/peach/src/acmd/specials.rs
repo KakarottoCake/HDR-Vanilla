@@ -155,7 +155,7 @@ unsafe extern "C" fn game_specialshitend(agent: &mut L2CAgentBase) {
     frame(lua_state, 5.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
-        if !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_ATTACK) {
+        if !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
             KineticModule::unable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
             KineticModule::mul_speed(boma, &Vector3f::new(1.0, 0.67, 1.0), *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
         }
@@ -221,6 +221,7 @@ unsafe extern "C" fn game_specialhistart(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         AttackModule::clear_all(boma);
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+        KineticModule::suspend_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
     }
     frame(lua_state, 30.0);

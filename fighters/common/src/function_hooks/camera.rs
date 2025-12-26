@@ -98,8 +98,30 @@ pub fn parse_stprm_pause_camera_params(param_obj: u64, params: &mut PauseCameraP
     params.pause_camera_gyro_limit_angle_left = 0.0;
 }
 
+// Runs immediately before CameraModule::req_quake is called
+// within the routine that determines on-hit screenshake strength
+#[skyline::hook(offset = 0x6c2590, inline)]
+unsafe fn damage_fly_req_quake(ctx: &mut skyline::hooks::InlineCtx) {
+    let boma = &mut *(ctx.registers[19].x() as *mut BattleObjectModuleAccessor);
+    let kb = DamageModule::reaction(boma, 0);
+
+    // Ignore global screenshake reduction on hits above 170 knockback units
+    if kb > 170.0 {
+        VarModule::on_flag(boma.object(), vars::common::instance::IGNORE_REDUCED_SCREENSHAKE);
+    }
+}
+
 #[skyline::hook(offset = 0x3ebe20)]
 unsafe fn camera_module__req_quake(camera_module: *const u64, quake_kind: i32) {
+    let boma = *(camera_module as *mut *mut BattleObjectModuleAccessor).add(1);
+
+    if VarModule::has_var_module((*boma).object())
+    && VarModule::is_flag((*boma).object(), vars::common::instance::IGNORE_REDUCED_SCREENSHAKE) {
+        VarModule::off_flag((*boma).object(), vars::common::instance::IGNORE_REDUCED_SCREENSHAKE);
+        // Use vanilla's screenshake strength for this instance
+        return call_original!(camera_module, quake_kind);
+    }
+
     use QuakeKind::*;
     let mut quake_kind = std::mem::transmute(quake_kind.clone());
     let quake_kind = match quake_kind {
@@ -117,6 +139,7 @@ pub fn install() {
         normal_camera,
         parse_stprm_active_camera_params,
         parse_stprm_pause_camera_params,
-        camera_module__req_quake
+        damage_fly_req_quake,
+        camera_module__req_quake,
     );
 }

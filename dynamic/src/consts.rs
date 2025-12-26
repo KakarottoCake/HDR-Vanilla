@@ -153,7 +153,7 @@ pub mod vars {
 
             pub const ENABLE_AIR_ESCAPE_JUMPSQUAT: i32 = 0x0051;
 
-            pub const FORCE_TUMBLE_NO_BOUNCE: i32 = 0x0052;
+            pub const IS_KNOCKDOWN_THROW: i32 = 0x0052;
 
             pub const IS_HEAVY_ATTACK: i32 = 0x0053;
 
@@ -199,6 +199,8 @@ pub mod vars {
 
             pub const IS_DITCIT: i32 = 0x006E;
 
+            pub const IGNORE_REDUCED_SCREENSHAKE: i32 = 0x006F;
+
             // ints
 
             pub const LAST_ATTACK_RECEIVER_ENTRY_ID: i32 = 0x0000;
@@ -237,6 +239,8 @@ pub mod vars {
             pub const RIGHT_STICK_FLICK_Y: i32 = 0x0012;
 
             pub const PREV_STATUS_TRANSITION_FRAME: i32 = 0x0013;
+
+            pub const ATTACK_LR_CHECK: i32 = 0x0014;
 
             // floats
 
@@ -451,6 +455,7 @@ pub mod vars {
         pub mod instance {   
             // flag
             pub const SPECIAL_S_DISABLE_STALL: i32 = 0x0100;
+            pub const DISABLE_SPECIAL_LW: i32 = 0x0101;
         }
         pub mod status {
             // flags
@@ -834,6 +839,7 @@ pub mod vars {
             //pub const DISABLE_SPECIAL_HI: i32 = 0x01FF; //Weird value to avoid conflicts with copy ability values
             pub const SPECIAL_N_PICKEL_CYCLE_MATERIAL: i32 = 0x01F4;
             pub const SPECIAL_LW_USED_JUMPS: i32 = 0x01F5;
+            pub const DISABLE_SPECIAL_LW: i32 = 0x01F8;
             pub use super::super::bayonetta::instance::WAS_CANCEL;
             pub const BUDDY_SPECIAL_N_BAYONET_ACTIVE: i32 = 0x01F6;
             pub use super::super::ridley::instance::SPECIAL_N_EXPLODE;
@@ -863,13 +869,14 @@ pub mod vars {
             pub const PURIN_SPECIAL_N_HIT_CANCEL_OK: i32 = 0x11F9;
             pub const PALUTENA_SPECIAL_N_HOLD: i32 = 0x11FA;
 
-            pub use super::super::mario::status::SPECIAL_N_FIREBRAND;
-            pub use super::super::luigi::status::SPECIAL_N_THUNDERHAND;
-            pub use super::super::mariod::status::SPECIAL_N_CHILL_PILL;
             pub use super::super::daisy::status::SPECIAL_N_CRYSTAL_ACTIVE;
             pub use super::super::daisy::status::SPECIAL_N_AIR_START;
             pub use super::super::daisy::status::SPECIAL_N_DIVE;
             pub use super::super::daisy::status::SPECIAL_N_AUTOCANCEL;
+            pub use super::super::krool::status::SPECIAL_N_ANGLED;
+            pub use super::super::luigi::status::SPECIAL_N_THUNDERHAND;
+            pub use super::super::mario::status::SPECIAL_N_FIREBRAND;
+            pub use super::super::mariod::status::SPECIAL_N_CHILL_PILL;
         }
     }
 
@@ -916,7 +923,8 @@ pub mod vars {
             pub const ATTACK_CHARGE: i32 = 0x1100;
 
             // flags
-            pub const SPECIAL_LW_GUT_CHARGED: i32 = 0x1100;
+            pub const SPECIAL_N_ANGLED: i32 = 0x1100;
+            pub const SPECIAL_LW_GUT_CHARGED: i32 = 0x1101;
         }
     }
 
@@ -1862,10 +1870,10 @@ pub mod vars {
             // flags
             pub const ATTACK_12_ENABLE_S3_COMBO: i32 = 0x0100;
             pub const ATTACK_LW4_REBOUND: i32 = 0x0101;
-            pub const DISABLE_SPECIAL_N: i32 = 0x102;
+            pub const DISABLE_SPECIAL_N: i32 = 0x0102;
 
             // ints
-            pub const SPECIAL_N_MAGIC_TIMER: i32 = 0x100;
+            pub const SPECIAL_N_MAGIC_TIMER: i32 = 0x0100;
 
             // floats
             pub const SPECIAL_S_JUMP_SPEED_X: i32 = 0x0100;
