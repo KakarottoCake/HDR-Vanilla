@@ -16,13 +16,13 @@ unsafe extern "C" fn game_specialhi1(agent: &mut L2CAgentBase) {
 		WorkModule::on_flag(boma, *FIGHTER_MIIGUNNER_STATUS_BOTTOM_SHOOT_FLAG_JUMP);
 	}
 	frame(lua_state, 12.0);
-	if !VarModule::is_flag(agent.battle_object, vars::miigunner::instance::SPECIAL_HI_AIR_USED) {
-		FT_MOTION_RATE_RANGE(agent, 12.0, 25.0, 22.0);
+	if VarModule::get_float(agent.battle_object, vars::miigunner::status::ATTACK_CHARGE) <= 10.0 {
+		FT_MOTION_RATE_RANGE(agent, 12.0, 38.0, 13.0);
 	}
 	if is_excute(agent) {
 		ArticleModule::generate_article(boma, *FIGHTER_MIIGUNNER_GENERATE_ARTICLE_BOTTOMSHOOT, false, 0);
 	}
-	frame(lua_state, 25.0);
+	frame(lua_state, 38.0);
 	FT_MOTION_RATE(agent, 1.0);
 }
 
@@ -38,13 +38,17 @@ unsafe extern "C" fn effect_specialhi1(agent: &mut L2CAgentBase) {
 	if is_excute(agent) {
 		let handle = VarModule::get_int64(agent.battle_object, vars::miigunner::instance::SPECIAL_HI1_LAUNCH_EFFECT_HANDLE);
 		EffectModule::set_rate(boma, handle as u32, 1.0);
-		if VarModule::get_float(agent.battle_object, vars::miigunner::status::ATTACK_CHARGE) <= 10.0 && !VarModule::is_flag(agent.battle_object, vars::miigunner::instance::SPECIAL_HI_AIR_USED) {
+		if VarModule::get_float(agent.battle_object, vars::miigunner::status::ATTACK_CHARGE) <= 10.0 && !VarModule::is_flag(agent.battle_object, vars::miigunner::instance::SPECIAL_HI1_AIR_USED) {
 			EffectModule::set_rgb(boma, handle as u32, 0.15, 0.55, 10.0);
 		}
 	}
 	frame(lua_state, 12.0);
 	if is_excute(agent) {
 		LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
+	}
+	frame(lua_state, 38.0);
+	if is_excute(agent) {
+		EFFECT_OFF_KIND(agent, Hash40::new("miigunner_bottom_shot"), false, false);
 	}
 }
 
@@ -199,10 +203,23 @@ unsafe extern "C" fn effect_specialhi3(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialairhi3end(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 1.0);
-	FT_MOTION_RATE_RANGE(agent, 1.0, 12.0, 14.0);
-	frame(lua_state, 12.0);
-	FT_MOTION_RATE(agent, 1.0);
+	frame(lua_state, 9.0);
+	if is_excute(agent) {
+		AttackModule::clear_all(boma);
+	}
+}
+
+unsafe extern "C" fn effect_specialairhi3end(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+	frame(lua_state, 1.0);
+	if is_excute(agent) {
+		let rot = VarModule::get_float(agent.battle_object, vars::miigunner::instance::SPECIAL_HI3_ROT);
+		let (pos_y, pos_z) = match rot {
+			0.0..=20.0 => (8.0, 10.0),
+			20.0..=40.0 => (9.0, 8.0),
+			40.0..=60.0 => (13.0, 6.0),
+			60.0..90.0 => (13.0, 5.0),
 			_ => (13.0, 0.0)
 		};
 		EFFECT_FOLLOW(agent, Hash40::new("miigunner_gimmck_attack"), Hash40::new("top"), 0, pos_y, pos_z, 90.0 - rot, 0, 0, 1, true);

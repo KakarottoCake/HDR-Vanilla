@@ -57,15 +57,13 @@ unsafe extern "C" fn special_hi1_main_loop(fighter: &mut L2CFighterCommon) -> L2
     }
     special_hi1_charge(fighter);
     // handle actionability
-    if fighter.motion_frame() > 25.0 && VarModule::get_float(fighter.battle_object, vars::miigunner::status::ATTACK_CHARGE) <= 10.0 {
-        let charge = VarModule::get_float(fighter.battle_object, vars::miigunner::status::ATTACK_CHARGE);
-        DamageModule::add_damage(fighter.module_accessor, charge, 0);
+    if fighter.motion_frame() > 46.0 && VarModule::get_float(fighter.battle_object, vars::miigunner::status::ATTACK_CHARGE) <= 10.0 {
         // if already used once this airtime
-        if VarModule::is_flag(fighter.battle_object, vars::miigunner::instance::SPECIAL_HI_AIR_USED) {
+        if VarModule::is_flag(fighter.battle_object, vars::miigunner::instance::SPECIAL_HI1_AIR_USED) {
             VarModule::on_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
         }
         else {
-            VarModule::on_flag(fighter.battle_object, vars::miigunner::instance::SPECIAL_HI_AIR_USED);
+            VarModule::on_flag(fighter.battle_object, vars::miigunner::instance::SPECIAL_HI1_AIR_USED);
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
             return 1.into();
         }
