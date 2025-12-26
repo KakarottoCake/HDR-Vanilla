@@ -781,18 +781,6 @@ unsafe fn breegull_bayonet(fighter: &mut L2CFighterCommon) {
     }
 }
 
-// Byleth
-unsafe fn master_nspecial_cancels(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_MASTER_SPECIAL_N_CANCEL) {
-        if fighter.is_situation(*SITUATION_KIND_AIR) {
-            if fighter.get_int(*FIGHTER_MASTER_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE) == *FIGHTER_MASTER_SPECIAL_N_CANCEL_TYPE_AIR_ESCAPE_AIR {
-                fighter.set_int(*FIGHTER_MASTER_SPECIAL_N_CANCEL_TYPE_NONE, *FIGHTER_MASTER_STATUS_SPECIAL_N_WORK_INT_CANCEL_TYPE);
-                //ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_AIR_ESCAPE);
-            }
-        }
-    }
-}
-
 // Steve
 unsafe fn pickel_mining(fighter: &mut L2CFighterCommon) { 
     if fighter.get_int(*FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_COPY_CHARA) == *FIGHTER_KIND_PICKEL {
