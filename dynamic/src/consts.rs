@@ -1178,16 +1178,16 @@ pub mod vars {
             // flags
             pub const BOOSTED_AERIAL_LANDING: i32 = 0x0100;
             pub const BOOSTED_ATTACK_AIR_LW_AIRTIME: i32 = 0x0101;
-            pub const SPECIAL_HI_AIR_USED: i32 = 0x0102;
-            pub const SPECIAL_HI3_GROUND_START: i32 = 0x0103;
-
+            pub const SPECIAL_HI1_AIR_USED: i32 = 0x0102;
+            
             // ints
             pub const SPECIAL_S2_STEALTHBOMB_EFFECT_HANDLE: i32 = 0x0100;
             pub const SPECIAL_S3_MISSILE_OBJECT_ID: i32 = 0x0101;
             pub const SPECIAL_HI1_LAUNCH_EFFECT_HANDLE: i32 = 0x0102;
-
+            
             // floats
             pub const SPECIAL_N3_CHARGE: i32 = 0x0102;
+            pub const SPECIAL_HI3_ROT: i32 = 0x0103;
         }
     }
 

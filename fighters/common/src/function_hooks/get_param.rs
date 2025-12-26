@@ -287,11 +287,6 @@ pub unsafe fn get_param_float_hook(x0 /*boma*/: u64, x1 /*param_type*/: u64, x2 
                 let charge_y_speed_div = ParamModule::get_float(boma_reference.object(), ParamType::Agent, "param_special_hi1.charge_y_speed_div");
                 return base_y_speed + (charge_y_speed_mul * charge) / charge_y_speed_div;
             }
-            if x1 == hash40("param_special_hi") && x2 == hash40("hi3_rush_angle") {
-                if VarModule::is_flag(boma_reference.object(), vars::miigunner::instance::SPECIAL_HI3_GROUND_START) {
-                    return ParamModule::get_float(boma_reference.object(), ParamType::Agent, "param_special_hi3.hi3_rush_angle_ground");
-                }
-            }
         }
 
         else if fighter_kind == *FIGHTER_KIND_SHEIK {

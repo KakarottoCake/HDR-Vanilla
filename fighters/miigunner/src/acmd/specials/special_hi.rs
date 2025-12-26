@@ -163,8 +163,16 @@ unsafe extern "C" fn game_specialhi3(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
 	frame(lua_state, 1.0);
 	FT_MOTION_RATE_RANGE(agent, 1.0, 34.0, 4.0);
+	let rot = VarModule::get_float(agent.battle_object, vars::miigunner::instance::SPECIAL_HI3_ROT);
+	if is_excute(agent) {
+		ATTACK(agent, 0, 0, Hash40::new("bust"), 9.0, (rot + (90.0 - rot) / 1.5) as u64, 35, 0, 80, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+	}
 	frame(lua_state, 34.0);
 	FT_MOTION_RATE(agent, 1.0);
+	frame(lua_state, 38.0);
+	if is_excute(agent) {
+		ATTACK(agent, 0, 0, Hash40::new("bust"), 8.0, (rot + (90.0 - rot) / 1.1) as u64, 42, 0, 80, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+	}
 	// end_frame 39
 }
 
@@ -182,7 +190,7 @@ unsafe extern "C" fn effect_specialhi3(agent: &mut L2CAgentBase) {
 	if is_excute(agent) {
 		EFFECT_OFF_KIND(agent, Hash40::new("miigunner_armrocket"), false, false);
 	}
-	frame(lua_state, 36.0);
+	frame(lua_state, 37.0);
 	if is_excute(agent) {
 		EFFECT_OFF_KIND(agent, Hash40::new("miigunner_gimmck_attack"), false, false);
 	}
@@ -195,6 +203,14 @@ unsafe extern "C" fn game_specialairhi3end(agent: &mut L2CAgentBase) {
 	FT_MOTION_RATE_RANGE(agent, 1.0, 12.0, 14.0);
 	frame(lua_state, 12.0);
 	FT_MOTION_RATE(agent, 1.0);
+			_ => (13.0, 0.0)
+		};
+		EFFECT_FOLLOW(agent, Hash40::new("miigunner_gimmck_attack"), Hash40::new("top"), 0, pos_y, pos_z, 90.0 - rot, 0, 0, 1, true);
+	}
+	frame(lua_state, 7.0);
+	if is_excute(agent) {
+		EFFECT_OFF_KIND(agent, Hash40::new("miigunner_gimmck_attack"), false, false);
+	}
 }
 
 unsafe extern "C" fn effect_landingfallspecial(agent: &mut L2CAgentBase) {
@@ -230,6 +246,7 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("effect_specialhi3", effect_specialhi3, Priority::Low);
 
     agent.acmd("game_specialairhi3end", game_specialairhi3end, Priority::Low);
+    agent.acmd("effect_specialairhi3end", effect_specialairhi3end, Priority::Low);
 
 	agent.acmd("effect_landingfallspecial", effect_landingfallspecial, Priority::Low);
 }

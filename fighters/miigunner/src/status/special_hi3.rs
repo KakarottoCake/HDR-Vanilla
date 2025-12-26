@@ -1,12 +1,6 @@
 use super::*;
 
 pub unsafe extern "C" fn special_hi3_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.is_situation(*SITUATION_KIND_GROUND) {
-        VarModule::on_flag(fighter.battle_object, vars::miigunner::instance::SPECIAL_HI3_GROUND_START);
-    }
-    else {
-        VarModule::off_flag(fighter.battle_object, vars::miigunner::instance::SPECIAL_HI3_GROUND_START);
-    }
     StatusModule::init_settings(
         fighter.module_accessor,
         app::SituationKind(*SITUATION_KIND_NONE),
@@ -36,10 +30,6 @@ pub unsafe extern "C" fn special_hi3_pre(fighter: &mut L2CFighterCommon) -> L2CV
 }
 
 pub unsafe extern "C" fn special_hi3_exit(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[STATUS_KIND] != *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH {
-        VarModule::on_flag(fighter.battle_object, vars::miigunner::instance::SPECIAL_HI_AIR_USED);
-    }
-    
     return 0.into();
 }
 
@@ -85,6 +75,9 @@ unsafe extern "C" fn special_hi3_rush_main_loop(fighter: &mut L2CFighterCommon) 
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
+    fighter.check_wall_jump_cancel();
+    let rot = fighter.get_float(*FIGHTER_MIIGUNNER_STATUS_ARM_ROCKET_RUSH_FLOAT_ROT_X);
+    VarModule::set_float(fighter.battle_object, vars::miigunner::instance::SPECIAL_HI3_ROT, rot);
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status(FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH_END.into(), false.into());
     }
@@ -101,10 +94,35 @@ unsafe extern "C" fn sub_special_hi3_rush(fighter: &mut L2CFighterCommon, param:
 }
 
 unsafe extern "C" fn special_hi3_rush_exit(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[STATUS_KIND] != *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH_END {
-        VarModule::on_flag(fighter.battle_object, vars::miigunner::instance::SPECIAL_HI_AIR_USED);
-    }
-    
+    return 0.into();
+}
+
+unsafe extern "C" fn special_hi3_rush_end_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    StatusModule::init_settings(
+        fighter.module_accessor,
+        app::SituationKind(*SITUATION_KIND_NONE),
+        *FIGHTER_KINETIC_TYPE_AIR_STOP,
+        *GROUND_CORRECT_KIND_KEEP as u32,
+        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES),
+        true,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_MIIGUNNER_ARM_ROCKET_RUSH_END_FLAG,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_MIIGUNNER_ARM_ROCKET_RUSH_END_INT,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_MIIGUNNER_ARM_ROCKET_RUSH_END_FLOAT,
+        *FS_SUCCEEDS_KEEP_ATTACK
+    );
+    FighterStatusModuleImpl::set_fighter_status_data(
+        fighter.module_accessor,
+        false,
+        *FIGHTER_TREADED_KIND_NO_REAC,
+        false,
+        false,
+        false,
+        *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_KEEP as u64,
+        0,
+        *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_HI as u32,
+        0
+    );
+
     return 0.into();
 }
 
@@ -119,13 +137,11 @@ unsafe extern "C" fn special_hi3_rush_end_main_loop(fighter: &mut L2CFighterComm
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
-    if fighter.motion_frame() >= 12.0 && !VarModule::is_flag(fighter.battle_object, vars::miigunner::instance::SPECIAL_HI_AIR_USED) {
-        VarModule::on_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
-        fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
-        return 0.into();
+    if fighter.motion_frame() <= 12.0 {
+        fighter.check_wall_jump_cancel();
     }
     if MotionModule::is_end(fighter.module_accessor) {
-        fighter.change_status(FIGHTER_STATUS_KIND_FALL_SPECIAL.into(), false.into());
+        fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, *FIGHTER_STATUS_KIND_FALL_SPECIAL, false);
     }
 
     return 0.into();
@@ -134,5 +150,7 @@ unsafe extern "C" fn special_hi3_rush_end_main_loop(fighter: &mut L2CFighterComm
 pub fn install(agent: &mut Agent) {
     agent.status(Main, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH, special_hi3_rush_main);
     agent.status(Exit, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH, special_hi3_rush_exit);
+    
+    agent.status(Pre, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH_END, special_hi3_rush_end_pre);
     agent.status(Main, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH_END, special_hi3_rush_end_main);
 }
