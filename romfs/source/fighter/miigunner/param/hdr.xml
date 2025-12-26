@@ -22,6 +22,6 @@
     <float hash="charge_y_speed_div">29.0</float>
   </struct>
   <struct hash="param_special_hi3">
-    <float hash="hi3_rush_angle_ground">108</float>
+    <float hash="hi3_rush_angle_ground">140</float>
   </struct>
 </struct>

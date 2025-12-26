@@ -74,7 +74,7 @@
       <float hash="hi2_jump_stable_speed_x_mul">1.0</float>
     </struct>
     <struct index="2">
-      <float hash="hi3_rush_angle">120</float>
+      <float hash="hi3_rush_angle">140</float>
       <float hash="hi3_rush_speed">2.0</float>
       <float hash="hi3_rush_stick_angle_max">20</float>
       <float hash="hi3_rush_stick_angle">2</float>
