@@ -1203,6 +1203,24 @@ pub mod vars {
         }
     }
 
+    pub mod miigunner_stealthbomb {
+        pub mod instance {
+            // floats
+            pub const ANGLE: i32 = 0x0100;
+        }
+        pub mod status {
+            // flags
+            pub const REFLECT: i32 = 0x1100;    // remove if not needed
+
+            // ints
+            pub const FOLLOW_FRAME: i32 = 0x1100;
+            pub const BACK_ROT_FRAME: i32 = 0x1101;
+
+            // floats
+            pub const TURN_DIST: i32 = 0x1100;
+        }
+    }
+
     pub mod miiswordsman {
         pub mod instance {
             // flags
@@ -2061,6 +2079,9 @@ pub mod statuses {
         pub const FLOAT: i32 = 0x1E9;
     }
 
+    pub mod miigunner_stealthbomb {
+        pub const TURN: i32 = 0x2;
+    }
     pub mod packun_firebreath {
         pub const REGULAR: i32 = 0x0;
     }
