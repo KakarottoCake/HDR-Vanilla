@@ -40,11 +40,9 @@ mod online;
 mod matchup;
 
 use skyline::libc::c_char;
-use std::os::raw::c_void;
 #[cfg(feature = "main_nro")]
 use skyline_web::*;
 use std::{fs, path::Path};
-use utils::STAGE_MANAGER;
 
 #[cfg(not(feature = "main_nro"))]
 #[no_mangle]
@@ -278,56 +276,31 @@ unsafe fn game_exit(game_state: u64, arg: u64) {
     call_original!(game_state, arg);
 }
 
-impl HashedString {
-    pub fn set(&mut self, replacement: &str) {
-        self.length = replacement.len() as u32;
-        self.string[..replacement.len()].copy_from_slice(replacement.as_bytes());
-        self.string[replacement.len()] = b'\0';
-    }
+#[repr(C)]
+pub struct FuckingAssStringStructureShit {
+    pub fuck_if_i_know: u32,
+    pub len: u32,
+    pub shit_ass_string: [u8; 40],
+}
 
-    pub fn as_str(&self) -> &str {
-        let len = self.string.iter().position(|&c| c == 0).unwrap_or(self.string.len());
-        std::str::from_utf8(&self.string[..len]).unwrap_or("")
+impl FuckingAssStringStructureShit {
+    pub fn set(&mut self, replacement: &str) {
+        self.len = replacement.len() as u32;
+        self.shit_ass_string[..replacement.len()].copy_from_slice(replacement.as_bytes());
+        self.shit_ass_string[replacement.len()] = b'\0';
     }
 }
 
 #[skyline::hook(offset = 0x23357f8, inline)]
 unsafe fn sss_to_css(ctx: &InlineCtx) {
-    let hashed_string = ctx.registers[1].x() as *mut HashedString;
-    let current_scene = (*hashed_string).as_str();
-
-    if current_scene == "StageSelectScene" {
-        (*hashed_string).set("CharaSelectScene");
-    }
+    let thing = ctx.registers[1].x() as *mut FuckingAssStringStructureShit;
+    (*thing).set("CharaSelectScene");
 }
 
 #[skyline::hook(offset = 0x2335184, inline)]
 unsafe fn css_to_sss(ctx: &InlineCtx) {
-    let hashed_string = ctx.registers[1].x() as *mut HashedString;
-    let current_scene = (*hashed_string).as_str();
-
-    if current_scene == "CharaSelectScene" {
-        let text = skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as u64;
-        let flag_ptr = (text + 0x530996c) as *const u8;
-        
-        let flag = *flag_ptr.add(3);
-
-        // This is something to pay attention to when this goes to prerelease
-        // flag == 0 is the standard mode and flag == 4 is random stage select
-        // Unsure if there are more modes, but I'm checking for standard mode just
-        // to be safe. If there are more modes we need to apply this to, we can
-        // add them as they're found.
-        if flag == 0 {
-            (*hashed_string).set("StageSelectScene");
-        }
-    }
-}
-
-#[repr(C)]
-pub struct HashedString {
-    pub length: u32,
-    pub hash: u32,
-    pub string: [u8; 64],
+    let thing = ctx.registers[1].x() as *mut FuckingAssStringStructureShit;
+    (*thing).set("StageSelectScene");
 }
 
 #[repr(C)]
@@ -373,34 +346,6 @@ unsafe fn copy_fighter_info(
     call_original!(dst, src);
 }
 
-// This is a hook on the main scene transition function
-// key_str is the scene name
-// Add anything requiring a scene transition check here
-#[skyline::hook(offset = 0x3726120)]
-unsafe fn scene_transition(
-    list_ptr: *mut c_void,
-    key_struct: *const HashedString, 
-    context_struct: *const HashedString, 
-    factory: *mut c_void
-) {
-    if !key_struct.is_null() {
-        let len = (*key_struct).length;
-        let hash = (*key_struct).hash;
-        
-        let str_ptr = (key_struct as *const u8).add(8) as *const c_char;
-        let key_str = skyline::from_c_str(str_ptr);
-        println!("Transitioning to scene: '{}'", key_str);
-
-        // Clear perma-strikes when going to main menu or the rules screen
-        if key_str == "MeleeRuleScene" || key_str == "MainMenuScene" {
-            let mut mgr = STAGE_MANAGER.lock().unwrap();
-            mgr.perma_striked_stages.clear();
-        }
-    }
-
-    call_original!(list_ptr, key_struct, context_struct, factory);
-}
-
 #[skyline::main(name = "hdr")]
 pub fn main() {
     #[cfg(feature = "main_nro")]
@@ -419,9 +364,8 @@ pub fn main() {
             training_reset_music2,
             main_menu_quick,
             title_screen_play,
-            sss_to_css,
-            css_to_sss,
-            scene_transition
+            //sss_to_css,
+            //css_to_sss,
             //copy_fighter_info,
             //load_ingame_call_sequence_scene,
             //load_melee_scene,

@@ -11,8 +11,6 @@ use prc::{hash40::Hash40, ParamKind};
 use smash::phx::Hash40 as Hash40_2;
 use smash::{app::BattleObject, hash40};
 
-use crate::STAGE_MANAGER;
-
 use super::PARAM_MODULE_OFFSET;
 
 macro_rules! get_param_module {
@@ -322,16 +320,14 @@ pub struct TourneyConfig {
 #[serde(default)]
 #[repr(C)]
 pub struct StagePage {
-    pub name: String,
-    pub useOfficial: bool,
+    name: String,
+    useOfficial: bool,
     /// the ordered list of starters stages which should be enabled,
     /// or `None` if there are no starters
-    pub starters: Option<Vec<String>>,
+    starters: Option<Vec<String>>,
     /// the ordered list of counterpick stages which should be enabled,
     /// or `None` if there are no counterpicks
-    pub counterpicks: Option<Vec<String>>,
-    pub bans: Option<i8>,
-    pub dsr: Option<String>,
+    counterpicks: Option<Vec<String>>
 }
 
 impl Default for TourneyConfig {
@@ -349,9 +345,7 @@ impl Default for StagePage {
             name: String::new(), 
             useOfficial: false,
             starters: None, 
-            counterpicks: None,
-            bans: None,
-            dsr: None,
+            counterpicks: None 
         }
     }
 }
@@ -501,8 +495,6 @@ impl<T> MiddleOutExt<T> for [T] {
 /// all Training stages, and makes them non-interactable, so that the UI looks as expected.
 #[arc_callback]
 fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
-    println!("modifying ui_stage_db_prc");
-    
     // ensure this is the file data it should be
     assert_eq!(hash, hash40(STAGE_DB_PRC));
 
@@ -550,7 +542,7 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
         let stage_struct = entry
             .try_into_ref::<ParamStruct>()
             .expect("Failed to get struct from PRC entry");
-
+        
         // Find the name_id for the key
         let name_id = stage_struct.0
             .iter()
@@ -562,13 +554,10 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
             .clone();
         
         stage_map.insert(name_id.clone(), entry.clone());
-        used_stages.insert(name_id, false);
+        used_stages.insert(name_id.clone(), false);
     }
 
-    let mut pages: Vec<StagePage> = Vec::new();
     for n in 0..num_pages {
-        pages.push(stage_pages[n].clone());
-
         let starters = stage_pages[n].starters.as_ref().unwrap();
         let counterpicks = stage_pages[n].counterpicks.as_ref().unwrap();
 
@@ -585,35 +574,9 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
                     .unwrap();
                 
                 *disp_order = stage_order; // Set starter display order
+                stage_order += 1;
                 out_list.push(new_entry);
                 used_stages.insert(starter_name.clone(), true);
-
-                // If the stage is RandomNormal (standard Random panel), add Random in the same spot.
-                // Standard SSS will ignore Random entirely and display RandomNormal.
-                // Likewise, Training Mode and My Music ignore RandomNormal entirely and layout Random correctly,
-                // Albeit, with a weird icon sometimes. Still, this preserves the correct layout in both
-                // Training Mode and My Music, and *also* allows people to change the Menu Music, since
-                // My Music replaces the Random stage with the MenuMusic "stage"
-                // This of course assumes the user has put "Random" on one of their stage pages
-                if starter_name == "RandomNormal" {
-                    if let Some(entry) = stage_map.get("Random") {
-                        let mut new_entry = entry.clone();
-                        let stage_struct = new_entry.try_into_mut::<ParamStruct>().unwrap();
-                        let disp_order = stage_struct.0
-                            .iter_mut()
-                            .find(|param| param.0 == prc::hash40::Hash40(hash40("disp_order")))
-                            .unwrap()
-                            .1
-                            .try_into_mut::<i8>()
-                            .unwrap();
-                        
-                        *disp_order = stage_order;
-                        out_list.push(new_entry);
-                        used_stages.insert("Random".to_string(), true);
-                    }
-                }
-
-                stage_order += 1;
             }
         }
 
@@ -654,28 +617,9 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
                     .unwrap();
                 
                 *disp_order = stage_order; // Set counterpick display order
-                out_list.push(new_entry);
-                used_stages.insert(counterpick_name.clone(), true);    
-
-                if counterpick_name == "RandomNormal" {
-                    if let Some(entry) = stage_map.get("Random") {
-                        let mut new_entry = entry.clone();
-                        let stage_struct = new_entry.try_into_mut::<ParamStruct>().unwrap();
-                        let disp_order = stage_struct.0
-                            .iter_mut()
-                            .find(|param| param.0 == prc::hash40::Hash40(hash40("disp_order")))
-                            .unwrap()
-                            .1
-                            .try_into_mut::<i8>()
-                            .unwrap();
-                        
-                        *disp_order = stage_order;
-                        out_list.push(new_entry);
-                        used_stages.insert("Random".to_string(), true);
-                    }
-                }
-
                 stage_order += 1;
+                out_list.push(new_entry);
+                used_stages.insert(counterpick_name.clone(), true);                
             }
         }
 
@@ -702,9 +646,6 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
         }
     }
 
-    let mut mgr = STAGE_MANAGER.lock().unwrap();
-    mgr.stage_pages = Some(pages);
-
     // Add all the unused stages back into the prc with a disp_order of -1
     // This is important so that main menu music and random stage selection work
     for used_stage in used_stages.iter() {
@@ -720,7 +661,7 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
                     .try_into_mut::<i8>()
                     .unwrap();
                 
-                *disp_order = -1;
+                *disp_order = -1; 
                 out_list.push(new_entry); 
             }
         }
