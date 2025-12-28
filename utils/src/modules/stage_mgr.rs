@@ -10,7 +10,6 @@ pub static STAGE_MANAGER: LazyLock<Mutex<StageManager>> = LazyLock::new(|| Mutex
 pub struct StageManager {
     pub selected_panel: Option<i32>,
     pub selected_preview: Option<i32>,
-    pub is_my_music: Option<bool>,
     pub stage_pages: Option<Vec<StagePage>>,
     pub random_stage_indexes: Option<Vec<i32>>,
     pub stage_loading: Option<bool>,
@@ -22,7 +21,6 @@ impl StageManager {
         Self {
             selected_panel: None,
             selected_preview: None,
-            is_my_music: None,
             stage_pages: None,
             random_stage_indexes: None,
             stage_loading: None,
