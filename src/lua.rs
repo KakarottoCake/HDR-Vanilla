@@ -496,10 +496,6 @@ unsafe fn add_to_key_context_hook(ctx: &skyline::hooks::InlineCtx) {
             func: Some(get_selected_preview),
         },
         lua::luaL_Reg {
-            name: "set_is_my_music\0".as_ptr() as _,
-            func: Some(set_is_my_music),
-        },
-        lua::luaL_Reg {
             name: "set_perma_strike_stage\0".as_ptr() as _,
             func: Some(set_perma_strike_stage),
         },
@@ -530,6 +526,10 @@ unsafe fn add_to_key_context_hook(ctx: &skyline::hooks::InlineCtx) {
         lua::luaL_Reg {
             name: "get_dsr\0".as_ptr() as _,
             func: Some(get_dsr),
+        },
+        lua::luaL_Reg {
+            name: std::ptr::null(),
+            func: None,
         },
     ];
 
@@ -588,21 +588,6 @@ extern "C" fn get_selected_preview(state: *mut lua::lua_State) -> i32 {
 
         lua::lua_pushinteger(state, -1);
         1
-    }
-}
-
-extern "C" fn set_is_my_music(state: *mut lua::lua_State) -> i32 {
-    unsafe {
-        let is_my_music = lua::lua_toboolean(state, -1) > 0;
-        lua::lua_pop(state, 1);
-
-        let mut mgr = STAGE_MANAGER.lock().unwrap();
-
-        mgr.is_my_music = Some(is_my_music);
-
-        println!("is_my_music set to: {}", is_my_music);
-
-        0
     }
 }
 

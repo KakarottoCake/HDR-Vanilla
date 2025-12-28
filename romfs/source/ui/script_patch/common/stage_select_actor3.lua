@@ -2740,7 +2740,6 @@ end
 main = function()
     setup()
     stage_select_bgm:setup()
-    HDR.set_is_my_music(IS_MY_MUSIC)
     setup_from_environment()
     root_view:play_animation("in", 1.0)
     if IS_SIMPLE_CANCEL == true then
