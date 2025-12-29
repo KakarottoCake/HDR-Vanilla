@@ -157,6 +157,12 @@ pub unsafe fn get_param_float_hook(x0 /*boma*/: u64, x1 /*param_type*/: u64, x2 
             _ => {}
         }
 
+        if x2 == hash40("damage_fly_correction_max") {
+            if VarModule::is_flag(boma_reference.object(), vars::common::instance::ENABLE_FRAME_DATA_DEBUG) {
+                return 15.0;
+            }
+        }
+
         // Coupled with "landing_heavy" change in change_motion hook
         // Because we start heavy landing anims on f3 rather than f1, we need to push back the heavy landing FAF by 2 frames so it is accurate to the defined per-character param
         if x1 == hash40("landing_frame") {
