@@ -522,6 +522,11 @@ pub mod vars {
             // ints
             pub const CAMERA_LOCKOUT_TIMER: i32 = 0x0105;
         }
+        pub mod status {
+            // flags
+            pub const CHECK_STEP_CANCEL: i32 = 0x1100;
+            pub const ENABLE_STEP_CANCEL: i32 = 0x1101;
+        }
     }
 
     pub mod diddy {
@@ -1977,6 +1982,10 @@ pub mod statuses {
 
     pub mod daisy_kinopio {
         pub const YAP: i32 = 0x1;
+    }
+
+    pub mod demon {
+        pub const CANCEL_STEP: i32 = 0x213;
     }
 
     pub mod diddy {

@@ -43,9 +43,13 @@ mod attack_stand_1;
 
 mod attack_squat_2;
 
+// mod attack_step_2s;
+
 mod attack_air;
 
 mod special_hi;
+
+mod cancel_step;
 
 pub fn install(agent: &mut Agent) {
     wait::install(agent);
@@ -69,7 +73,11 @@ pub fn install(agent: &mut Agent) {
 
     attack_squat_2::install(agent);
 
+    // attack_step_2s::install(agent);
+
     attack_air::install(agent);
 
     special_hi::install(agent);
+
+    cancel_step::install(agent);
 }

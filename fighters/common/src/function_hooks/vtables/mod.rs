@@ -1,6 +1,7 @@
 use super::*;
 
 mod brave;
+mod demon;
 mod donkey;
 mod duckhunt;
 mod edge;
@@ -26,6 +27,7 @@ mod weapon;
 
 pub fn install() {
     brave::install();
+    demon::install();
     donkey::install();
     duckhunt::install();
     edge::install();

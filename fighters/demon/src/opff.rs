@@ -54,11 +54,21 @@ unsafe fn camera_lockout(fighter: &mut L2CFighterCommon) {
     VarModule::set_int(fighter.battle_object, vars::demon::instance::CAMERA_LOCKOUT_TIMER, (lockout - 1).max(0));
 }
 
+unsafe fn check_step_cancel(fighter: &mut L2CFighterCommon) {
+    if VarModule::is_flag(fighter.battle_object, vars::demon::status::ENABLE_STEP_CANCEL)
+    && !fighter.global_table[IS_STOPPING].get_bool() {
+        if fighter.is_cat_flag(Cat4::Command623NB) {
+            fighter.change_status(statuses::demon::CANCEL_STEP.into(), false.into());
+        }
+    }
+}
+
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     korean_back_dash(boma);
     enable_both_recovery_specials(boma);
     fastfall_specials(fighter);
     camera_lockout(fighter);
+    check_step_cancel(fighter);
 }
 
 pub extern "C" fn demon_frame_wrapper(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
