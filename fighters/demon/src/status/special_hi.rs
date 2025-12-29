@@ -141,6 +141,7 @@ unsafe extern "C" fn special_hi_rise_main_loop(fighter: &mut L2CFighterCommon) -
     let landing_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_hi"), hash40("landing_frame"));
     if fighter.global_table[CURRENT_FRAME].get_i32() > landing_frame {
         if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+            WorkModule::set_float(fighter.module_accessor, 24.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
             fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
             return 0.into();
         }
@@ -150,6 +151,7 @@ unsafe extern "C" fn special_hi_rise_main_loop(fighter: &mut L2CFighterCommon) -
     }
 
     if MotionModule::is_end(fighter.module_accessor) {
+        WorkModule::set_float(fighter.module_accessor, 24.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
         fighter.change_status(FIGHTER_DEMON_STATUS_KIND_SPECIAL_HI_FALL.into(), false.into());
         return 0.into();
     }
