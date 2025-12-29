@@ -32,6 +32,7 @@ unsafe extern "C" fn demon_attack_lw3_main_loop(fighter: &mut L2CFighterCommon) 
 }
 
 unsafe extern "C" fn demon_attack_lw3_cancel_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    HitModule::set_xlu_frame_global(fighter.module_accessor, 9, 0);
     MotionModule::change_motion(
         fighter.module_accessor,
         Hash40::new("attack_lw3_cancel"),
@@ -69,7 +70,14 @@ unsafe extern "C" fn demon_attack_lw3_cancel_main_loop(fighter: &mut L2CFighterC
             WorkModule::set_int(fighter.module_accessor, status, *FIGHTER_DEMON_STATUS_ATTACK_LW_3_WORK_INT_CANCEL_STATUS);
         }
     }
+
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
+        if fighter.sub_wait_ground_check_common(false.into()).get_bool()
+        || fighter.sub_air_check_fall_common().get_bool() {
+            return 0.into();
+        }
+    }
+    else {
         let status = WorkModule::get_int(fighter.module_accessor, *FIGHTER_DEMON_STATUS_ATTACK_LW_3_WORK_INT_CANCEL_STATUS);
         if ![
             *FIGHTER_STATUS_KIND_WAIT,
@@ -83,19 +91,18 @@ unsafe extern "C" fn demon_attack_lw3_cancel_main_loop(fighter: &mut L2CFighterC
             fighter.change_status(status.into(), clear_buffer.into());
             return 0.into();
         }
-        if fighter.sub_wait_ground_check_common(false.into()).get_bool()
-        || fighter.sub_air_check_fall_common().get_bool() {
-            return 0.into();
-        }
     }
+
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
         fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         return 1.into();
     }
+
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status(FIGHTER_STATUS_KIND_SQUAT_WAIT.into(), false.into());
         return 1.into();
     }
+
     0.into()
 }
 

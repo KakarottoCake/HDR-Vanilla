@@ -77,17 +77,17 @@ unsafe extern "C" fn game_attacklw3(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn game_attacklw3cancel(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    if is_excute(agent) {
-        WHOLE_HIT(agent, *HIT_STATUS_XLU);
-    }
-    wait(lua_state, 9.0);
-    if is_excute(agent) {
-        WHOLE_HIT(agent, *HIT_STATUS_NORMAL);
-    }
-}
+// unsafe extern "C" fn game_attacklw3cancel(agent: &mut L2CAgentBase) {
+//     let lua_state = agent.lua_state_agent;
+//     let boma = agent.boma();
+//     if is_excute(agent) {
+//         WHOLE_HIT(agent, *HIT_STATUS_XLU);
+//     }
+//     wait(lua_state, 9.0);
+//     if is_excute(agent) {
+//         WHOLE_HIT(agent, *HIT_STATUS_NORMAL);
+//     }
+// }
 
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_attacks3", game_attacks3, Priority::Low);
@@ -96,5 +96,5 @@ pub fn install(agent: &mut Agent) {
 
     agent.acmd("game_attacklw3", game_attacklw3, Priority::Low);
 
-    agent.acmd("game_attacklw3cancel", game_attacklw3cancel, Priority::Low);
+    // agent.acmd("game_attacklw3cancel", game_attacklw3cancel, Priority::Low);
 }
