@@ -377,6 +377,7 @@ pub mod vars {
             pub const PSYCHE_UP_ACTIVE: i32 = 0x0102;
             pub const MENU_TRAINING_MODE_LOCK: i32 = 0x0103;
             pub const SPECIAL_LW_CSTICK_BUFFER: i32 = 0x0104;
+            pub const DISABLE_SPECIAL_HI: i32 = 0x0105;
 
             // ints
             pub const SPELL_SLOT_1: i32 = 0x0100;
