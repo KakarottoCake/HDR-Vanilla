@@ -596,6 +596,7 @@ pub mod vars {
         pub mod instance {
             // flag
             pub const SPECIAL_HI2_ENABLE: i32 = 0x0100;
+            pub const SPECIAL_HI_AERIAL_USED: i32 = 0x0101;
 
             // int
             pub const SPECIAL_LW_GUNMAN_TIMER: i32 = 0x0100;
