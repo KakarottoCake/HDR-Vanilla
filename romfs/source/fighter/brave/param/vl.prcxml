@@ -17,8 +17,8 @@
     <float hash="sp_special_s1">12</float>
     <float hash="sp_special_s2">20</float>
     <float hash="sp_special_s3">42</float>
-    <float hash="sp_special_hi1">10</float>
-    <float hash="sp_special_hi2">16</float>
+    <float hash="sp_special_hi1">12</float>
+    <float hash="sp_special_hi2">20</float>
     <float hash="sp_special_hi3">25</float>
   </struct>
   <list hash="param_critical">
@@ -84,6 +84,7 @@
       <float hash="start_control_max_speed_x_mul_air">0.85</float>
       <float hash="start_accel_y_mul_air">0.5</float>
       <float hash="start_max_speed_y_mul_air">0.8</float>
+      <int hash="command_window_closing_frame">60</int>
       <int hash="cure_limit_num">3</int>
       <float hash="deathball1_offset_y">15</float>
       <int hash="speed_up_frame">600</int>
