@@ -13,8 +13,6 @@ mod special_lw;
 mod special_lw1;
 mod special_lw3;
 
-mod final_hold;
-
 pub unsafe extern "C" fn miisword_situation_helper(fighter: &mut L2CFighterCommon) -> L2CValue {
     if StatusModule::is_changing(fighter.module_accessor) {
         return 1.into()
@@ -81,8 +79,6 @@ pub fn install(agent: &mut Agent) {
     special_lw::install(agent);
     special_lw1::install(agent);
     special_lw3::install(agent);
-
-    final_hold::install(agent);
 
     agent.on_start(on_start);
 }

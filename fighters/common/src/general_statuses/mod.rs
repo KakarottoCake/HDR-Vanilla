@@ -3,6 +3,7 @@ use super::*;
 use globals::*;
 use interpolation::Lerp;
 use utils::game_modes::CustomMode;
+use crate::function_hooks::camera::{REDUCED_CAMERA_TRACKING_SPEED, DEFAULT_TARGET_INTERPOLATION_RATE, ReducedCameraTrackingSpeed};
 
 macro_rules! interrupt {
     () => { return L2CValue::I32(1); };
@@ -83,10 +84,10 @@ pub unsafe fn status_pre_DamageAir(fighter: &mut L2CFighterCommon) -> L2CValue {
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_DamageFlyCommon_init)]
 pub unsafe fn damage_fly_common_init(fighter: &mut L2CFighterCommon) {
-    if VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_KNOCKDOWN_THROW) {
+    if VarModule::is_flag(fighter.battle_object, vars::common::instance::FORCE_TUMBLE_NO_BOUNCE) {
         WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DAMAGE_FLY_REFLECT_D);
     }
-    VarModule::off_flag(fighter.battle_object, vars::common::instance::IS_KNOCKDOWN_THROW);
+    VarModule::off_flag(fighter.battle_object, vars::common::instance::FORCE_TUMBLE_NO_BOUNCE);
     original!()(fighter)
 }
 
@@ -901,6 +902,52 @@ unsafe extern "C" fn fighterstatusdamage_init_damage_speed_up_by_speed(
     WorkModule::set_float(fighter.module_accessor, speed_up_mul, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DAMAGE_SPEED_UP_MAX_MAG);
 }
 
+unsafe extern "C" fn fighterstatusdamage_init_damage_camera_tracking(
+    fighter: &mut L2CFighterCommon,
+    factor: L2CValue, // Labeled this way because if shot out of a tornado, the game will pass in your hitstun frames instead of speed.
+    angle: L2CValue
+) {
+    if fighter.kind() == *FIGHTER_KIND_NANA {
+        return;
+    }
+
+    let angle = angle.get_f32();
+    let angle_threshold = 45.0;
+    let speed_start_horizontal = 3.0; // the start of camera tracking speed reduction at angles below the angle_threshold
+    let gravity_factor = get_gravity_factor(fighter);
+    let speed_start_vertical = 6.0 * gravity_factor; // the start of camera tracking speed reduction at completely vertical angles
+    let speed_end_horizontal = 6.25; // the end of camera tracking speed reduction at angles below the angle_threshold
+    let speed_end_vertical = speed_start_vertical + 7.0; // the end of camera tracking speed reduction at completely vertical angles
+
+    let angle_ratio = get_angle_ratio(angle_threshold, angle);
+
+    let speed_start = speed_start_horizontal.lerp(&speed_start_vertical, &angle_ratio);
+    let speed_end = speed_end_horizontal.lerp(&speed_end_vertical, &angle_ratio);
+
+    // exit if speed is too slow
+    let speed = factor.get_f32();
+    if check_damage_speed_up_fail(fighter) || speed <= speed_start {
+        return;
+    }
+
+    // calculate target_interpolation_rate
+    let base = 0.69;
+    let reduced = 0.1;
+    let ratio = ((speed - speed_start) / (speed_end - speed_start));
+    let target_interpolation_rate: f32 = if speed <= speed_end {
+        base.lerp(&reduced, &ratio)
+    } else {
+        reduced
+    };
+
+    //println!("speed: {} rate: {}", speed, target_interpolation_rate);
+    
+    let id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let reaction_frame_mul_speed_up = fighter.reaction_frame_mul_speed_up().get_f32();
+    let dif = DEFAULT_TARGET_INTERPOLATION_RATE - target_interpolation_rate;
+    REDUCED_CAMERA_TRACKING_SPEED[id] = ReducedCameraTrackingSpeed{target_interpolation_rate: target_interpolation_rate, normalize_increment: (dif / reaction_frame_mul_speed_up) * 0.5};
+}
+
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_FighterStatusDamage__correctDamageVector)]
 pub unsafe fn FighterStatusDamage__correctDamageVector(fighter: &mut L2CFighterCommon) -> L2CValue {
     match utils::game_modes::get_custom_mode() {
@@ -924,6 +971,8 @@ pub unsafe fn FighterStatusDamage__correctDamageVector(fighter: &mut L2CFighterC
     }
 
     fighterstatusdamage_init_damage_speed_up_by_speed(fighter, speed_vector.into(), angle.into(), false.into());
+
+    fighterstatusdamage_init_damage_camera_tracking(fighter, speed_vector.into(), angle.into());
 
     ret
 }

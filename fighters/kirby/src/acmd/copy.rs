@@ -1,5 +1,6 @@
 use super::*;
 
+mod buddy;
 mod chrom;
 mod daisy;
 mod diddy;
@@ -33,6 +34,7 @@ mod trail;
 mod wolf;
 
 pub fn install(agent: &mut Agent) {
+    buddy::install(agent);
     chrom::install(agent);
     daisy::install(agent);
     diddy::install(agent);
