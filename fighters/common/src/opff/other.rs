@@ -17,6 +17,10 @@ use crate::misc::*;
 use globals::*;
 use crate::util::get_fighter_common_from_accessor;
 
+use std::sync::LazyLock;
+use std::sync::RwLock;
+use std::collections::HashMap;
+
 unsafe fn hitstun_overlay_orange(boma: &mut BattleObjectModuleAccessor, id: usize) {
     let cmb_vec1 = Vector4f{x: 0.949, y: 0.5137, z: 0.08643, w: 0.69};
     let cmb_vec2 = Vector4f{x: 0.949, y: 0.5137, z: 0.08643, w: 0.0};
@@ -112,6 +116,40 @@ pub unsafe fn cliff_xlu_frame_counter(fighter: &mut L2CFighterCommon) {
             VarModule::set_int(fighter.battle_object, vars::common::instance::CLIFF_XLU_FRAME, 0);
         }
     }
+}
+
+static mut PREVIOUS_FRAME_AIRTIME_COUNT: LazyLock<RwLock<HashMap<i32, i32>>> = LazyLock::new(||
+    RwLock::new(HashMap::<i32, i32>::new())
+);
+
+pub unsafe fn fighter_frame_in_air_inc_ensure(fighter: &mut L2CFighterCommon) {
+    let player_idx: i32 = (*fighter.module_accessor).get_player_idx_from_boma();
+    let mut current_air_frames: i32 = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_FRAME_IN_AIR);
+    let previous_air_frames: i32 = PREVIOUS_FRAME_AIRTIME_COUNT.read().unwrap().get(&player_idx).copied().unwrap_or(-1);
+    // println!("[{}] AIRTIME: {}", player_idx, current_air_frames);
+    if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_AIR {
+        // see: fighters/common/src/function_hooks/lua_bind_hook/status.rs
+        if !(*fighter.module_accessor).is_prev_status_one_of(&[
+            *FIGHTER_STATUS_KIND_DEMO,
+            *FIGHTER_STATUS_KIND_ENTRY,
+            *FIGHTER_STATUS_KIND_CAPTURE_PULLED,
+            *FIGHTER_STATUS_KIND_CAPTURE_WAIT,
+            *FIGHTER_STATUS_KIND_CAPTURE_DAMAGE,
+            *FIGHTER_STATUS_KIND_THROWN,
+            *FIGHTER_STATUS_KIND_CATCHED_GANON,
+            *FIGHTER_STATUS_KIND_CATCHED_AIR_GANON,
+            *FIGHTER_STATUS_KIND_CATCHED_REFLET,
+            *FIGHTER_STATUS_KIND_CATCHED_RIDLEY,
+            *FIGHTER_STATUS_KIND_CAPTURE_JACK_WIRE,
+            *FIGHTER_STATUS_KIND_CAPTURE_MASTER_SWORD]) {
+            if (previous_air_frames == current_air_frames) {
+                current_air_frames += 1;
+                // println!("[{}] INCREMENTING MISSED AIRTIME! NEW AIRTIME: {}", player_idx, current_air_frames);
+                WorkModule::set_int(fighter.module_accessor, current_air_frames, *FIGHTER_INSTANCE_WORK_ID_INT_FRAME_IN_AIR);
+            }
+        }
+    }
+    PREVIOUS_FRAME_AIRTIME_COUNT.write().unwrap().insert(player_idx, current_air_frames);
 }
 
 pub unsafe fn ecb_shift_disabled_motions(fighter: &mut L2CFighterCommon) {
