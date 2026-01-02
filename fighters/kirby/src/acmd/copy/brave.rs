@@ -13,20 +13,20 @@ unsafe extern "C" fn sound_bravespecialn1(agent: &mut L2CAgentBase) {
             }
         }
         frame(lua_state, 8.0);
+        if WorkModule::is_flag(boma, *FIGHTER_BRAVE_STATUS_SPECIAL_N_FLAG_SUCCESS_SP) {
         if is_excute(agent) {
             PLAY_SE(agent, Hash40::new("se_brave_special_n02"));
             PLAY_SE(agent, Hash40::new(sound));
+            }
         }
         else {
         if is_excute(agent) {
             STOP_SE(agent, Hash40::new("se_brave_special_n01"));
+            PLAY_SE(agent, Hash40::new("se_brave_miss"));
         }
     }
-    frame(lua_state, 10.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_brave_miss"));
-    }
 }
+
 
 unsafe extern "C" fn sound_bravespecialn2(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
@@ -41,18 +41,17 @@ unsafe extern "C" fn sound_bravespecialn2(agent: &mut L2CAgentBase) {
             }
         }
         frame(lua_state, 11.0);
+        if WorkModule::is_flag(boma, *FIGHTER_BRAVE_STATUS_SPECIAL_N_FLAG_SUCCESS_SP) {
         if is_excute(agent) {
             PLAY_SE(agent, Hash40::new("se_brave_special_n03"));
             PLAY_SE(agent, Hash40::new(sound));
+            }
         }
         else {
         if is_excute(agent) {
             STOP_SE(agent, Hash40::new("se_brave_special_n01"));
+            PLAY_SE(agent, Hash40::new("se_brave_miss"));
         }
-    }
-    frame(lua_state, 12.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_brave_miss"));
     }
 }
 
@@ -70,19 +69,18 @@ unsafe extern "C" fn sound_bravespecialn3(agent: &mut L2CAgentBase) {
             }
         }
         frame(lua_state, 17.0);
+        if WorkModule::is_flag(boma, *FIGHTER_BRAVE_STATUS_SPECIAL_N_FLAG_SUCCESS_SP) {
         if is_excute(agent) {
             PLAY_SE(agent, Hash40::new("se_brave_special_n05"));
             PLAY_SE(agent, Hash40::new(sound));
         }
+        }
         else {
         if is_excute(agent) {
             STOP_SE(agent, Hash40::new("se_brave_special_n04"));
+            PLAY_SE(agent, Hash40::new("se_brave_miss"));
+            }
         }
-    }
-    frame(lua_state, 17.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_brave_miss"));
-    }
 }
 
 pub fn install(agent: &mut Agent) {
