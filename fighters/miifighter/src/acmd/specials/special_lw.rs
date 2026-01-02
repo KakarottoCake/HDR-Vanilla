@@ -441,7 +441,7 @@ unsafe extern "C" fn effect_speciallw32g(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 17.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("miifighter_boiling2"), Hash40::new("top"), -2, 6.7, 3, -16, -43, 15, 1, true);
+        EFFECT_FOLLOW_FLIP(agent, Hash40::new("miifighter_boiling2"), Hash40::new("miifighter_boiling2"), Hash40::new("top"), -2, 4.7, 1.5, -16, -43, 15, 1, true, *EF_FLIP_AXIS_YZ);
         LAST_EFFECT_SET_COLOR(agent, 3.0, 1.0, 0.0);
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 7, -4, 180, 0, 0, 0.7, true);
         LAST_EFFECT_SET_COLOR(agent, 2.0, 0.5, 0.0);
@@ -555,7 +555,7 @@ unsafe extern "C" fn game_speciallw33g(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    FT_MOTION_RATE_RANGE(agent, 1.0, 43.0, 12.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 43.0, 8.0);
     frame(lua_state, 43.0);
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 50.0);
@@ -686,21 +686,21 @@ unsafe extern "C" fn game_speciallw33a(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 11.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("kneel"), 19.2, 290, 51, 0, 22, 4.5, 3.5, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_KICK);
-        ATTACK(agent, 1, 0, Hash40::new("kneel"), 19.2, 290, 51, 0, 22, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_KICK);
+        ATTACK(agent, 0, 0, Hash40::new("kneel"), 19.2, 287, 36, 0, 42, 4.5, 3.5, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_KICK);
+        ATTACK(agent, 1, 0, Hash40::new("kneel"), 19.2, 287, 36, 0, 42, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_KICK);
         AttackModule::set_optional_hit_sound(boma, 0, Hash40::new("se_common_kick_hit_l"));
         AttackModule::set_optional_hit_sound(boma, 1, Hash40::new("se_common_kick_hit_l"));
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("kneel"), 19.2, 290, 51, 0, 22, 4.5, 3.5, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_KICK);
-        ATTACK(agent, 1, 0, Hash40::new("kneel"), 19.2, 290, 51, 0, 22, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_KICK);
+        ATTACK(agent, 0, 0, Hash40::new("kneel"), 19.2, 287, 36, 0, 42, 4.5, 3.5, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_KICK);
+        ATTACK(agent, 1, 0, Hash40::new("kneel"), 19.2, 287, 36, 0, 42, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_KICK);
         AttackModule::set_optional_hit_sound(boma, 0, Hash40::new("se_common_kick_hit_l"));
         AttackModule::set_optional_hit_sound(boma, 1, Hash40::new("se_common_kick_hit_l"));
     }
     frame(lua_state, 17.0);
     if is_excute(agent) {
-        VarModule::on_flag(agent.battle_object, vars::miifighter::status::SPECIAL_LW3_ENABLE_BOUNCE);
+        //VarModule::on_flag(agent.battle_object, vars::miifighter::status::SPECIAL_LW3_ENABLE_BOUNCE);
         AttackModule::clear_all(boma);
     }
     frame(lua_state, 20.0);
@@ -730,6 +730,8 @@ unsafe extern "C" fn effect_speciallw33a(agent: &mut L2CAgentBase) {
     frame(lua_state, 12.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("miifighter_boiling_air3"), Hash40::new("miifighter_boiling_air3"), Hash40::new("top"), -1, 5, 0, 90, 90, 0, 0.72, true, *EF_FLIP_YZ);
+        EFFECT_FOLLOW(agent, Hash40::new("miifighter_boiling_firearc"), Hash40::new("top"), -1, 5, 0, 90, 180, 0, 0.72, true);
+        LAST_EFFECT_SET_RATE(agent, 0.8);
     }
 }
 

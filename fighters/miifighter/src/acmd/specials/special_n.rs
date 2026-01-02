@@ -304,7 +304,7 @@ unsafe extern "C" fn game_specialn3throw(agent: &mut L2CAgentBase) {
         let target_no = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         let opponent_boma = agent.get_grabbed_opponent_boma();
         if opponent_boma.is_fighter() {
-            VarModule::on_flag(opponent_boma.object(), vars::common::instance::IS_KNOCKDOWN_THROW);
+            VarModule::on_flag(opponent_boma.object(), vars::common::instance::FORCE_TUMBLE_NO_BOUNCE);
         }
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
         WHOLE_HIT(agent, *HIT_STATUS_NORMAL);
@@ -346,7 +346,7 @@ unsafe extern "C" fn game_specialairn3throw(agent: &mut L2CAgentBase) {
         let target_no = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         let opponent_boma = agent.get_grabbed_opponent_boma();
         if opponent_boma.is_fighter() {
-            VarModule::on_flag(opponent_boma.object(), vars::common::instance::IS_KNOCKDOWN_THROW);
+            VarModule::on_flag(opponent_boma.object(), vars::common::instance::FORCE_TUMBLE_NO_BOUNCE);
         }
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
         WHOLE_HIT(agent, *HIT_STATUS_NORMAL);
