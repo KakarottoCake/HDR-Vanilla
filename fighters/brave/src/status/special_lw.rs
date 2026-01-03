@@ -87,10 +87,10 @@ unsafe extern "C" fn special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2C
 }
 
 // FUN_7100027810
-unsafe extern "C" fn special_lw_set_index(fighter: &mut L2CFighterCommon) {
+unsafe extern "C" fn special_lw_set_index(fighter: &mut L2CFighterCommon) -> bool {
     if FighterControlModuleImpl::get_stick_button_trigger(fighter.module_accessor, *FIGHTER_CONTROLLER_STICK_BUTTON_UP) == 0
     && FighterControlModuleImpl::get_stick_button_trigger(fighter.module_accessor, *FIGHTER_CONTROLLER_STICK_BUTTON_DOWN) == 0 {
-        return;
+        return false;
     }
     if FighterControlModuleImpl::get_stick_button_trigger(fighter.module_accessor, *FIGHTER_CONTROLLER_STICK_BUTTON_UP) == 1 {
         fighter.dec_int(*FIGHTER_BRAVE_INSTANCE_WORK_ID_INT_SPECIAL_LW_SELECT_INDEX);
@@ -131,6 +131,42 @@ unsafe extern "C" fn special_lw_set_index(fighter: &mut L2CFighterCommon) {
     let brave = fighter.global_table[0x4].get_ptr() as *mut Fighter;
     let select_index = fighter.get_int(*FIGHTER_BRAVE_INSTANCE_WORK_ID_INT_SPECIAL_LW_SELECT_INDEX);
     FighterSpecializer_Brave::special_lw_select_index(brave, select_index);
+    let command = FighterSpecializer_Brave::get_special_lw_command_from_index(brave, select_index);
+    set_command_overhead_effect(fighter, command);
+
+    return true;
+}
+
+unsafe extern "C" fn set_command_overhead_effect(fighter: &mut L2CFighterCommon, command: i32) {
+    EffectModule::kill_kind(fighter.module_accessor, Hash40::new("brave_command_attack"), false, false);
+    EffectModule::kill_kind(fighter.module_accessor, Hash40::new("brave_command_magic"), false, false);
+    EffectModule::kill_kind(fighter.module_accessor, Hash40::new("brave_command_support"), false, false);
+    let base_hash = "brave_command_";
+    let eff_hash = match command {
+        0 => format!("{}{}", base_hash, "support"),     // Heal
+        1 => format!("{}{}", base_hash, "attack"),      // Sizz
+        2 => format!("{}{}", base_hash, "attack"),      // Sizzle
+        3 => format!("{}{}", base_hash, "attack"),      // Bang
+        4 => format!("{}{}", base_hash, "attack"),      // Kaboom
+        5 => format!("{}{}", base_hash, "magic"),       // Whack
+        6 => format!("{}{}", base_hash, "magic"),       // Thwack
+        7 => format!("{}{}", base_hash, "magic"),       // Magic Burst
+        8 => format!("{}{}", base_hash, "magic"),       // Kamikazee
+        9 => format!("{}{}", base_hash, "magic"),       // Kaclang
+        10 => format!("{}{}", base_hash, "support"),    // Acceleratle
+        11 => format!("{}{}", base_hash, "support"),    // Oomph
+        12 => format!("{}{}", base_hash, "support"),    // Bounce
+        13 => format!("{}{}", base_hash, "magic"),      // Snooze
+        14 => format!("{}{}", base_hash, "support"),    // Hocus Pocus
+        15 => format!("{}{}", base_hash, "nozoom"),     // Zoom (unused)
+        16 => format!("{}{}", base_hash, "attack"),     // Flame Slash
+        17 => format!("{}{}", base_hash, "attack"),     // Kacrackle Slash
+        18 => format!("{}{}", base_hash, "magic"),      // Metal Slash
+        19 => format!("{}{}", base_hash, "attack"),     // Hatchet Man
+        20 => format!("{}{}", base_hash, "support"),    // Psyche Up
+        _ => format!("{}{}", base_hash, "attack")
+    };
+    EffectModule::req_on_joint(fighter.module_accessor, Hash40::new(eff_hash.as_str()), Hash40::new("top"), &Vector3f::new(0.0, 23.5, 0.0), &Vector3f::zero(), 0.5, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
 }
 
 unsafe extern "C" fn special_lw_start_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -184,6 +220,142 @@ unsafe extern "C" fn special_lw_start_pre(fighter: &mut L2CFighterCommon) -> L2C
     );
 
     ret
+}
+
+unsafe extern "C" fn special_lw_select_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.set_int(0, *FIGHTER_BRAVE_STATUS_SPECIAL_LW_HOLD_INT_SELECT_INPUT_COUNT);
+    fighter.set_int(-1, *FIGHTER_BRAVE_STATUS_SPECIAL_LW_HOLD_INT_NEXT_STATUS);
+    fighter.change_motion_by_situation("special_lw_select", "special_air_lw_select", 0.0, 1.0, false, 0.0, false, false);
+    WorkModule::set_int64(fighter.module_accessor, hash40("special_lw_select") as i64, *FIGHTER_BRAVE_STATUS_SPECIAL_LW_HOLD_INT_SELECT_MOTION);
+    WorkModule::set_int64(fighter.module_accessor, hash40("special_air_lw_select") as i64, *FIGHTER_BRAVE_STATUS_SPECIAL_LW_HOLD_INT_SELECT_MOTION_AIR);
+    WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_GUARD);
+    WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_ESCAPE);
+    WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_JUMP);
+    WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_ESCAPE);
+    WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_JUMP_AERIAL);
+
+    fighter.main_shift(special_lw_select_main_loop)
+}
+
+unsafe extern "C" fn special_lw_select_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.is_flag(*FIGHTER_BRAVE_STATUS_SPECIAL_LW_FLAG_AUTO_CANCEL) {
+        if fighter.is_situation(*SITUATION_KIND_GROUND) {
+            fighter.set_int(*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_BRAVE_STATUS_SPECIAL_LW_HOLD_INT_NEXT_STATUS);
+            fighter.change_status(FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_CANCEL.into(), false.into());
+        }
+        else {
+            fighter.set_int(*FIGHTER_STATUS_KIND_FALL, *FIGHTER_BRAVE_STATUS_SPECIAL_LW_HOLD_INT_NEXT_STATUS);
+            fighter.change_status(FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_CANCEL.into(), false.into());
+        }
+        return 1.into();
+    }
+    if fighter.is_pad_flag(PadFlag::AttackTrigger) || fighter.is_pad_flag(PadFlag::SpecialTrigger)
+    || fighter.is_flag(*FIGHTER_BRAVE_STATUS_SPECIAL_LW_FLAG_DECIDE) {
+        let brave = fighter.global_table[0x4].get_ptr() as *mut Fighter;
+        if !fighter.is_flag(*FIGHTER_BRAVE_STATUS_SPECIAL_LW_FLAG_DECIDE) {
+            FighterSpecializer_Brave::special_lw_cursor_decide(brave);
+        }
+        let select_index = fighter.get_int(*FIGHTER_BRAVE_INSTANCE_WORK_ID_INT_SPECIAL_LW_SELECT_INDEX);
+        let command = FighterSpecializer_Brave::get_special_lw_command_from_index(brave, select_index);
+        let sp_cost = FighterSpecializer_Brave::get_special_lw_command_sp_cost(fighter.module_accessor, FighterBraveSpecialLwCommand{ _address: command as u8 }, true);
+        if brave_special_check_sp_set_flag(fighter, sp_cost, *FIGHTER_BRAVE_STATUS_SPECIAL_LW_FLAG_SUCCESS_SP) {
+            FighterSpecializer_Brave::special_lw_decide_command(brave, FighterBraveSpecialLwCommand{ _address: command as u8 }, select_index);
+            fighter.change_status(FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_START.into(), true.into());
+        }
+        else {
+            fighter.change_status(FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_FAILURE.into(), true.into());
+        }
+        return 1.into();
+    }
+    if fighter.is_pad_flag(PadFlag::GuardTrigger)
+    || fighter.is_flag(*FIGHTER_BRAVE_STATUS_SPECIAL_LW_FLAG_GUARD_CANCEL) {
+        fighter.off_flag(*FIGHTER_BRAVE_STATUS_SPECIAL_LW_FLAG_GUARD_CANCEL);
+        if fighter.is_situation(*SITUATION_KIND_GROUND) {
+            fighter.set_int(*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_BRAVE_STATUS_SPECIAL_LW_HOLD_INT_NEXT_STATUS);
+            fighter.change_status(FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_CANCEL.into(), false.into());
+        }
+        else {
+            if !fighter.is_flag(*FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_ESCAPE_AIR) {
+                fighter.set_int(*FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_BRAVE_STATUS_SPECIAL_LW_HOLD_INT_NEXT_STATUS);
+                fighter.change_status(FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_CANCEL.into(), false.into());
+            }
+        }
+        
+        return 1.into();
+    }
+    if fighter.is_cat_flag(Cat1::JumpButton)
+    || fighter.is_flag(*FIGHTER_BRAVE_STATUS_SPECIAL_LW_FLAG_JUMP_CANCEL) {
+        fighter.off_flag(*FIGHTER_BRAVE_STATUS_SPECIAL_LW_FLAG_JUMP_CANCEL);
+        if fighter.is_situation(*SITUATION_KIND_GROUND) {
+            if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON) {
+                fighter.set_int(*FIGHTER_STATUS_KIND_JUMP_SQUAT, *FIGHTER_BRAVE_STATUS_SPECIAL_LW_HOLD_INT_NEXT_STATUS);
+                fighter.change_status(FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_CANCEL.into(), false.into());
+                return 1.into();
+            }
+        }
+        else {
+            if fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT) < fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX) {
+                if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL_BUTTON) {
+                    fighter.set_int(*FIGHTER_STATUS_KIND_JUMP_AERIAL, *FIGHTER_BRAVE_STATUS_SPECIAL_LW_HOLD_INT_NEXT_STATUS);
+                    fighter.change_status(FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_CANCEL.into(), false.into());
+                    return 1.into();
+                }
+            }
+        }
+    }
+    if StatusModule::is_situation_changed(fighter.module_accessor) {
+        if fighter.is_situation(*SITUATION_KIND_GROUND) {
+            WorkModule::set_int64(fighter.module_accessor, hash40("special_lw_select") as i64, *FIGHTER_BRAVE_STATUS_SPECIAL_LW_HOLD_INT_SELECT_MOTION);
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_lw_landing"), 0.0, 1.0, false, 0.0, false, false);
+        }
+        else {
+            let motion = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BRAVE_STATUS_SPECIAL_LW_HOLD_INT_SELECT_MOTION_AIR);
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new_raw(motion), 0.0, 1.0, true, 6.0, false, false);
+        }
+    }
+    fighter.sub_exec_special_start_common_kinetic_setting(Hash40::new("param_special_n").into());
+    if special_lw_set_index(fighter) {
+        if fighter.is_motion_one_of(&[Hash40::new("special_lw_select"), Hash40::new("special_air_lw_select")]) {
+            if fighter.get_int(*FIGHTER_BRAVE_STATUS_SPECIAL_LW_HOLD_INT_SELECT_INPUT_COUNT) <= 0 {
+                if WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BRAVE_STATUS_SPECIAL_LW_HOLD_INT_SELECT_MOTION) == hash40("special_lw_select") {
+                    fighter.change_motion_by_situation("special_lw_select2", "special_air_lw_select2", 0.0, 1.0, false, 0.0, false, false);
+                    WorkModule::set_int64(fighter.module_accessor, hash40("special_lw_select2") as i64, *FIGHTER_BRAVE_STATUS_SPECIAL_LW_HOLD_INT_SELECT_MOTION);
+                    WorkModule::set_int64(fighter.module_accessor, hash40("special_air_lw_select2") as i64, *FIGHTER_BRAVE_STATUS_SPECIAL_LW_HOLD_INT_SELECT_MOTION_AIR);
+                }
+            }
+        }
+    }
+    if MotionModule::is_end(fighter.module_accessor) {
+        if fighter.is_situation(*SITUATION_KIND_GROUND) {
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_lw_select"), 0.0, 1.0, false, 0.0, false, false);
+            WorkModule::set_int64(fighter.module_accessor, hash40("special_lw_select") as i64, *FIGHTER_BRAVE_STATUS_SPECIAL_LW_HOLD_INT_SELECT_MOTION);
+        }
+        else {
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_lw_select"), 0.0, 1.0, false, 0.0, false, false);
+            WorkModule::set_int64(fighter.module_accessor, hash40("special_air_lw_select") as i64, *FIGHTER_BRAVE_STATUS_SPECIAL_LW_HOLD_INT_SELECT_MOTION_AIR);
+        }
+    }
+
+    return 0.into();
+}
+
+unsafe extern "C" fn brave_special_check_sp_set_flag(fighter: &mut L2CFighterCommon, sp_cost: i32, success: i32) -> bool {
+    let sp = fighter.get_float(*FIGHTER_BRAVE_INSTANCE_WORK_ID_FLOAT_SP);
+    let max_sp = fighter.get_float(*FIGHTER_BRAVE_INSTANCE_WORK_ID_FLOAT_MAX_SP);
+    if sp_cost as f32 <= sp {
+        fighter.on_flag(success);
+        return true;
+    }
+    fighter.off_flag(success);
+    return false;
+}
+
+unsafe extern "C" fn special_lw_select_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    EffectModule::kill_kind(fighter.module_accessor, Hash40::new("brave_command_attack"), false, false);
+    EffectModule::kill_kind(fighter.module_accessor, Hash40::new("brave_command_magic"), false, false);
+    EffectModule::kill_kind(fighter.module_accessor, Hash40::new("brave_command_support"), false, false);
+    
+    return smashline::original_status(End, fighter, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_SELECT)(fighter);
 }
 
 unsafe extern "C" fn special_lw_start_main(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -305,6 +477,9 @@ pub fn install(agent: &mut Agent) {
     agent.status(Pre, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_START, special_lw_start_pre);
     agent.status(Main, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_START, special_lw_start_main);
     agent.status(End, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_START, special_lw_start_end);
+
+    agent.status(Main, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_SELECT, special_lw_select_main);
+    agent.status(End, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_SELECT, special_lw_select_end);
 
     agent.status(Pre, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_STEEL_START, special_lw_steel_start_pre);
     agent.status(Main, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_STEEL_START, special_lw_steel_start_main);
