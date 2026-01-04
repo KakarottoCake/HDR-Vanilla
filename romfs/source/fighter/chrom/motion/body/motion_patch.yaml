@@ -41,7 +41,7 @@ attack_hi4:
     no_stop_intp: false
 attack_lw3:
   extra:
-    cancel_frame: 19
+    cancel_frame: 24
 attack_s3_s:
   extra:
     cancel_frame: 44
