@@ -99,26 +99,17 @@ unsafe fn trajectory_manager_hook(
     let max_launch_speed_x = total_speed * max_di.to_radians().cos();
     let max_launch_speed_y = total_speed * max_di.to_radians().sin();
 
-    // knockback_info has pre-calculated values stored in an array
-    // these index values come from analyzing 71006c33f0, which this function calls
-    // red_line (no DI) is still WIP
-    // but it honestly might be as simple as 
-    // 
-    // let red_line = 40 *8;
-    // *knockback_info.add(red_line + 0) = launch_speed.x;
-    // *knockback_info.add(red_line + 1) = launch_speed.y;
-    // 
-    // because if the other two lines are precalculated with ult values, the 
-    // regular one probably is too, even though the main launch_speed values have been
-    // adjusted. need to test.
-
+    let red_line = 40;
     let green_line = 40 + (1 * 8);
     let blue_line = 40 + (2 * 8);
 
-    *knockback_info.add(green_line + 0) = min_launch_speed_x;
+    *knockback_info.add(red_line) = launch_speed.x;
+    *knockback_info.add(red_line + 1) = launch_speed.y;
+
+    *knockback_info.add(green_line) = min_launch_speed_x;
     *knockback_info.add(green_line + 1) = min_launch_speed_y;
     
-    *knockback_info.add(blue_line + 0) = max_launch_speed_x;
+    *knockback_info.add(blue_line) = max_launch_speed_x;
     *knockback_info.add(blue_line + 1) = max_launch_speed_y;
 
     call_original!(main_obj, unused_arg, boma_ptr, knockback_info);
