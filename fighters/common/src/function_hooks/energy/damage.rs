@@ -27,7 +27,6 @@ unsafe fn hitstun_fall_speed_1(ctx: &mut skyline::hooks::InlineCtx) {
 
 #[skyline::hook(offset = 0x6c399c, inline)]
 unsafe fn hitstun_gravity_2(ctx: &mut skyline::hooks::InlineCtx) {
-    println!("DEBUG >>>>>>> hitstun_gravity_2");
     let work_module = ctx.registers[23].x();
     let boma = *(work_module as *mut *mut BattleObjectModuleAccessor).add(1);
     let air_accel_y = WorkModule::get_param_float(boma, hash40("air_accel_y"), 0);
@@ -41,7 +40,6 @@ unsafe fn hitstun_gravity_2(ctx: &mut skyline::hooks::InlineCtx) {
 
 #[skyline::hook(offset = 0x6c39c4, inline)]
 unsafe fn hitstun_fall_speed_2(ctx: &mut skyline::hooks::InlineCtx) {
-    println!("DEBUG >>>>>>> hitstun_fall_speed_2");
     let work_module = ctx.registers[23].x();
     let boma = *(work_module as *mut *mut BattleObjectModuleAccessor).add(1);
     let air_speed_y_stable = WorkModule::get_param_float(boma, hash40("air_speed_y_stable"), 0);
