@@ -1,7 +1,7 @@
 use super::*;
 use crate::consts::*;
 use crate::consts::globals::*;
-use std::ffi::{c_void, c_float};
+use std::ffi::c_float;
 
 #[skyline::hook(offset = 0x6d2498, inline)]
 unsafe fn hitstun_gravity_1(ctx: &mut skyline::hooks::InlineCtx) {
@@ -37,10 +37,6 @@ unsafe fn hitstun_gravity_2(ctx: &mut skyline::hooks::InlineCtx) {
     let hitstun_gravity = air_accel_y.clamp(hitstun_gravity_min, hitstun_gravity_max);
 
     ctx.registers_f[0].set_s(hitstun_gravity);
-
-    // DEBUG
-    let knockback_info = ctx.registers[22].x() as *const f32;
-    print_knockback_info(knockback_info);
 }
 
 #[skyline::hook(offset = 0x6c39c4, inline)]
@@ -51,10 +47,6 @@ unsafe fn hitstun_fall_speed_2(ctx: &mut skyline::hooks::InlineCtx) {
     let air_speed_y_stable = WorkModule::get_param_float(boma, hash40("air_speed_y_stable"), 0);
 
     ctx.registers_f[0].set_s(air_speed_y_stable);
-
-    // DEBUG
-    let knockback_info = ctx.registers[22].x() as *const f32;
-    print_knockback_info(knockback_info);
 }
 
 #[skyline::hook(offset = 0x6d5920, inline)]
@@ -81,59 +73,53 @@ unsafe fn hitstun_fall_speed_3(ctx: &mut skyline::hooks::InlineCtx) {
 
 #[skyline::hook(offset = 0x13e90a0)]
 unsafe fn trajectory_manager_hook(
-    main_obj: *mut c_void,
+    main_obj: *mut u8,
     unused_arg: u64,
-    boma_ptr: *mut c_void,
+    boma_ptr: *mut u8,
     knockback_info: *mut f32, 
 ) {
+    // Exit if trajectory display is disabled
+    // Derived from original function
+    let ptr_1 = *(main_obj.add(8) as *const *const u8);
+    let ptr_2 = *(ptr_1.add(0x80) as *const *const u8);
+    let show_trajectory_flag = *ptr_2.add(0xb49);
+    if show_trajectory_flag == 0 {
+        return call_original!(main_obj, unused_arg, boma_ptr, knockback_info);
+    }
+
+    // Check if hit is valid for this
+    let kb_bytes = knockback_info as *const u8;
+    let is_valid_hit = *kb_bytes.add(0x111);
+    let flag_b = *kb_bytes.add(0x44); // Unsure what this flag is, but it's checked as well
+    if is_valid_hit != 0 || flag_b != 0 {
+        return call_original!(main_obj, unused_arg, boma_ptr, knockback_info);
+    }
+
+    // calculate three knockback vectors: normal, min DI, max DI
     let boma = boma_ptr as *mut BattleObjectModuleAccessor;
-    
     let di_angle = WorkModule::get_param_float(boma, hash40("common"), hash40("damage_fly_correction_max"));
     let launch_speed = Vector2f::new(*knockback_info.add(4), *knockback_info.add(5));
-    let total_speed = (launch_speed.x.powi(2) + launch_speed.y.powi(2)).sqrt();
-    let kb_angle = launch_speed.y.atan2(launch_speed.x).to_degrees();
-    let min_di = kb_angle - di_angle;
-    let max_di = kb_angle + di_angle;
-    let min_launch_speed_x = total_speed * min_di.to_radians().cos();
-    let min_launch_speed_y = total_speed * min_di.to_radians().sin();
-    let max_launch_speed_x = total_speed * max_di.to_radians().cos();
-    let max_launch_speed_y = total_speed * max_di.to_radians().sin();
+    let launch_speed_min = knockback_util::rotate_vector2f(
+        launch_speed,
+        -di_angle
+    );
+    let launch_speed_max = knockback_util::rotate_vector2f(
+        launch_speed,
+        di_angle
+    );
 
+    // store the three vectors in the knockback info
     let red_line = 40;
+    *knockback_info.add(red_line) = launch_speed_max.x;
+    *knockback_info.add(red_line + 1) = launch_speed_max.y;
     let green_line = 40 + (1 * 8);
+    *knockback_info.add(green_line) = launch_speed.x;
+    *knockback_info.add(green_line + 1) = launch_speed.y;
     let blue_line = 40 + (2 * 8);
+    *knockback_info.add(blue_line) = launch_speed_min.x;
+    *knockback_info.add(blue_line + 1) = launch_speed_min.y;
 
-    *knockback_info.add(red_line) = launch_speed.x;
-    *knockback_info.add(red_line + 1) = launch_speed.y;
-
-    *knockback_info.add(green_line) = min_launch_speed_x;
-    *knockback_info.add(green_line + 1) = min_launch_speed_y;
-    
-    *knockback_info.add(blue_line) = max_launch_speed_x;
-    *knockback_info.add(blue_line + 1) = max_launch_speed_y;
-
-    call_original!(main_obj, unused_arg, boma_ptr, knockback_info);
-}
-
-// DEBUG
-unsafe fn print_knockback_info(knockback_info: *const f32) {
-    let knockback = *knockback_info;
-    let hitstun = *knockback_info.add(0x48 / 4);
-    let damage = *knockback_info.add(22);
-    let sdi_mul = *knockback_info.add(24);
-    let launch_radians = *knockback_info.add(0x10);
-    let launch_speed = Vector2f::new(*knockback_info.add(4), *knockback_info.add(5));
-    let is_tumble = *(knockback_info.add(1) as *const u32) >= 3;
-
-    println!("DEBUG >>>>>>> knockback: {}", knockback);
-    println!("DEBUG >>>>>>> hitstun: {}", hitstun);
-    println!("DEBUG >>>>>>> damage: {}", damage);
-    println!("DEBUG >>>>>>> sdi_mul: {}", sdi_mul);
-    println!("DEBUG >>>>>>> launch_radians: {}", launch_radians);
-    println!("DEBUG >>>>>>> launch_speed.x: {}", launch_speed.x);
-    println!("DEBUG >>>>>>> launch_speed.y: {}", launch_speed.y);
-    println!("DEBUG >>>>>>> is_tumble: {}", is_tumble);
-    println!("----------")
+    return call_original!(main_obj, unused_arg, boma_ptr, knockback_info);
 }
 
 pub fn install() {
