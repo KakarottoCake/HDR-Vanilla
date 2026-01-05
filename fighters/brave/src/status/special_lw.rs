@@ -361,9 +361,10 @@ unsafe extern "C" fn brave_special_check_sp_set_flag(fighter: &mut L2CFighterCom
 unsafe extern "C" fn set_icon_wobble(fighter: &mut L2CFighterCommon, handle: i32) {
     if handle == -1 { return; }
     let frame = fighter.status_frame();
+    let facing = fighter.lr();
     // oscillate up and down slightly
     let offset = ((frame as f32 * 0.125) / std::f32::consts::PI).cos();
-    EffectModule::set_pos(fighter.module_accessor, handle as u32, &Vector3f::new(0.0, 20.0 + offset, 2.0));
+    EffectModule::set_pos(fighter.module_accessor, handle as u32, &Vector3f::new(5.0 * facing, 20.0 + offset, 2.0));
 }
 
 unsafe extern "C" fn special_lw_exit(fighter: &mut L2CFighterCommon) -> L2CValue {
