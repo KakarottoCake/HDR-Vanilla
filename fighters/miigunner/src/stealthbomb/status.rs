@@ -56,7 +56,7 @@ unsafe extern "C" fn tame_init(weapon: &mut L2CWeaponCommon) -> L2CValue {
     println!("angle_cos: {}", angle.cos());
     println!("angle_sin: {}", angle.sin());
     println!();
-    sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 1.0 * angle.cos(), 1.0 * angle.sin());
+    //sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 1.0 * angle.cos(), 1.0 * angle.sin());
     return 0.into();
 }
 
@@ -206,6 +206,16 @@ unsafe extern "C" fn turn_substatus_inner(weapon: &mut L2CWeaponCommon) {
 }
 
 unsafe extern "C" fn turn_fastshift(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    println!("hit check");
+    println!();
+    if AttackModule::is_infliction(weapon.module_accessor, *COLLISION_KIND_MASK_HIT) {
+        println!("imgonnablowup");
+        weapon.clear_lua_stack();
+        lua_args!(weapon, MA_MSC_CMD_ARTICLE_GENERATE_ARTICLE_LINK_PARENTS, WEAPON_LINK_NO_CONSTRAINT, FIGHTER_MIIGUNNER_GENERATE_ARTICLE_STEALTHBOMB_S);
+        sv_module_access::article(weapon.lua_state_agent);
+        weapon.pop_lua_stack(1);
+        notify_event_msc_cmd!(weapon, Hash40::new_raw(0x27936dbb96d));
+    }
     if !StopModule::is_stop(weapon.module_accessor) {
         if turn_fastshift_inner(weapon).get_bool() {
             return 1.into();
@@ -298,29 +308,33 @@ unsafe extern "C" fn turn_fastshift_inner(weapon: &mut L2CWeaponCommon) -> L2CVa
         return 1.into();
     }
 
-    if correct == *GROUND_CORRECT_KIND_NONE {
-        if !StatusModule::is_changing(weapon.module_accessor) {
-            if GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_SIDE as u32) {
-                GroundModule::set_correct(weapon.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_NONE));
-                return 0.into();
-            }
-        }
-        if GroundModule::is_touch(weapon.module_accessor, (*GROUND_TOUCH_FLAG_UP | *GROUND_TOUCH_FLAG_DOWN) as u32) {
-            notify_event_msc_cmd!(weapon, Hash40::new_raw(0x18b78d41a0));
-        }
+    // if correct == *GROUND_CORRECT_KIND_NONE {
+    //     if !StatusModule::is_changing(weapon.module_accessor) {
+    //         if GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_SIDE as u32) {
+    //             GroundModule::set_correct(weapon.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_NONE));
+    //             return 0.into();
+    //         }
+    //     }
+    //     if GroundModule::is_touch(weapon.module_accessor, (*GROUND_TOUCH_FLAG_UP | *GROUND_TOUCH_FLAG_DOWN) as u32) {
+    //         notify_event_msc_cmd!(weapon, Hash40::new_raw(0x18b78d41a0));
+    //     }
+    // }
+    if GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_ALL as u32) {
+        notify_event_msc_cmd!(weapon, Hash40::new_raw(0x27936dbb96d));
     }
 
     //add
-    // if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_PARRY | *COLLISION_KIND_MASK_REFLECTOR) {
-    //     VarModule::on_flag(weapon.module_accessor, vars::miigunner_stealthbomb::status::REFLECT);
-    // }
-    if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_HIT) {
-        weapon.clear_lua_stack();
-        lua_args!(weapon, MA_MSC_CMD_ARTICLE_GENERATE_ARTICLE_LINK_PARENTS, WEAPON_LINK_NO_CONSTRAINT, FIGHTER_MIIGUNNER_GENERATE_ARTICLE_STEALTHBOMB_S);
-        sv_module_access::article(weapon.lua_state_agent);
-        weapon.pop_lua_stack(1);
-        notify_event_msc_cmd!(weapon, Hash40::new_raw(0x27936dbb96d));
+    if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_PARRY | *COLLISION_KIND_MASK_REFLECTOR) {
+        VarModule::on_flag(weapon.battle_object, vars::miigunner_stealthbomb::status::REFLECT);
     }
+    // if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_HIT) {
+    //     println!("imgonnablowup");
+    //     weapon.clear_lua_stack();
+    //     lua_args!(weapon, MA_MSC_CMD_ARTICLE_GENERATE_ARTICLE_LINK_PARENTS, WEAPON_LINK_NO_CONSTRAINT, FIGHTER_MIIGUNNER_GENERATE_ARTICLE_STEALTHBOMB_S);
+    //     sv_module_access::article(weapon.lua_state_agent);
+    //     weapon.pop_lua_stack(1);
+    //     notify_event_msc_cmd!(weapon, Hash40::new_raw(0x27936dbb96d));
+    // }
 
     return 0.into();
 }
@@ -352,8 +366,13 @@ unsafe extern "C" fn turn_exec_inner(weapon: &mut L2CWeaponCommon) -> L2CValue {
             
             let diff_x = x - pos_x;
             let diff_y = y - pos_y;
+
+            println!("diff_x: {}", diff_x);
+            println!("diff_y: {}", diff_y);
             
             let atan = diff_y.atan2(diff_x);
+
+            println!("atan: {}", atan);
             
             let atan = if atan < -std::f32::consts::PI {
                 atan + std::f32::consts::PI * 2.0
@@ -368,6 +387,9 @@ unsafe extern "C" fn turn_exec_inner(weapon: &mut L2CWeaponCommon) -> L2CValue {
             };
 
             let atan = atan - angle;
+
+            println!("angle: {}", angle);
+            println!("corrected atan: {}", atan);
             
             let atan = if atan < -std::f32::consts::PI {
                 atan + std::f32::consts::PI * 2.0
@@ -380,6 +402,8 @@ unsafe extern "C" fn turn_exec_inner(weapon: &mut L2CWeaponCommon) -> L2CValue {
                     atan
                 }
             };
+
+            println!("re-corrected atan: {}", atan);
 
             let turn_angle = 0.75;  //WorkModule::get_param_float(weapon.module_accessor, hash40("param_boomerang"), hash40("turn_angle")).to_radians();
             let atan = if turn_angle < atan {
@@ -394,8 +418,7 @@ unsafe extern "C" fn turn_exec_inner(weapon: &mut L2CWeaponCommon) -> L2CValue {
                 }
             };
 
-            println!("current angle: {}", angle);
-            println!("atan: {}", atan);
+            println!("final atan: {}", atan);
             angle = atan;
 
             //WorkModule::set_float(weapon.module_accessor, atan, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLOAT_ANGLE);
@@ -449,7 +472,19 @@ unsafe extern "C" fn turn_exec_inner(weapon: &mut L2CWeaponCommon) -> L2CValue {
         //WorkModule::dec_int(weapon.module_accessor, *WN_LINK_BOOMERANG_TURN_WORK_INT_BACK_ROT_FRAME);
         VarModule::dec_int(weapon.battle_object, vars::miigunner_stealthbomb::status::BACK_ROT_FRAME);
     }
+    println!();
 
+    return 0.into();
+}
+
+unsafe extern "C" fn turn_end(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    println!("end");
+    if AttackModule::is_infliction(weapon.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) {
+        weapon.clear_lua_stack();
+        lua_args!(weapon, MA_MSC_CMD_ARTICLE_GENERATE_ARTICLE_LINK_PARENTS, WEAPON_LINK_NO_CONSTRAINT, FIGHTER_MIIGUNNER_GENERATE_ARTICLE_STEALTHBOMB_S);
+        sv_module_access::article(weapon.lua_state_agent);
+        weapon.pop_lua_stack(1);
+    }
     return 0.into();
 }
 
@@ -464,4 +499,5 @@ pub fn install(agent: &mut Agent) {
     agent.status(Init, statuses::miigunner_stealthbomb::TURN, turn_init);
     agent.status(Main, statuses::miigunner_stealthbomb::TURN, turn_main);
     agent.status(Exec, statuses::miigunner_stealthbomb::TURN, turn_exec);
+    agent.status(End, statuses::miigunner_stealthbomb::TURN, turn_end);
 }

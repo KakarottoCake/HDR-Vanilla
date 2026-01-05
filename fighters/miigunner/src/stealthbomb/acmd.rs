@@ -66,13 +66,6 @@ unsafe extern "C" fn sound_tame(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_turn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    println!("GAME_TURN");
-    println!("GAME_TURN");
-    println!("GAME_TURN");
-    println!("GAME_TURN");
-    println!("GAME_TURN");
-    println!("GAME_TURN");
-    println!();
     if is_excute(agent) {
 		ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 366, 0, 0, 0, 3.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_BOMB);
     }
