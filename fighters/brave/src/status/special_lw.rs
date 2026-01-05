@@ -32,6 +32,7 @@ unsafe extern "C" fn special_lw_pre(fighter: &mut L2CFighterCommon) -> L2CValue 
 unsafe extern "C" fn special_lw_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     VarModule::off_flag(fighter.battle_object, vars::brave::instance::SPECIAL_LW_CSTICK_BUFFER);
     VarModule::set_float(fighter.battle_object, vars::brave::instance::SPECIAL_LW_CSTICK_BUFFER_DIR, 0.0);
+    VarModule::set_int(fighter.battle_object, vars::brave::instance::MENU_ICON_EFFECT_HANDLE, -1);
     let brave = fighter.global_table[0x4].get_ptr() as *mut Fighter;
     if fighter.get_int(*FIGHTER_BRAVE_INSTANCE_WORK_ID_INT_SPECIAL_LW_WINDOW_STATE) == *FIGHTER_BRAVE_COMMAND_WINDOW_STATE_CLOSE {
         FighterSpecializer_Brave::special_lw_close_window(brave, true, false, false);
@@ -74,6 +75,8 @@ unsafe extern "C" fn special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2C
         }
         if !fighter.is_flag(*FIGHTER_BRAVE_STATUS_SPECIAL_LW_FLAG_DECIDE) {
             special_lw_set_index(fighter);
+            let handle = VarModule::get_int(fighter.battle_object, vars::brave::instance::MENU_ICON_EFFECT_HANDLE);
+            set_icon_wobble(fighter, handle);
             if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
                 fighter.on_flag(*FIGHTER_BRAVE_STATUS_SPECIAL_LW_FLAG_GUARD_CANCEL);
             }
@@ -166,7 +169,10 @@ unsafe extern "C" fn set_command_overhead_effect(fighter: &mut L2CFighterCommon,
         20 => format!("{}{}", base_hash, "support"),    // Psyche Up
         _ => format!("{}{}", base_hash, "attack")
     };
-    EffectModule::req_on_joint(fighter.module_accessor, Hash40::new(eff_hash.as_str()), Hash40::new("top"), &Vector3f::new(0.0, 23.5, 0.0), &Vector3f::zero(), 0.5, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
+    let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new(eff_hash.as_str()), Hash40::new("top"), &Vector3f::new(0.0, 20.0, 2.0), &Vector3f::zero(), 0.35, false, 0, 0, 0, 0, 0, false, false);
+    EffectModule::set_rate(fighter.module_accessor, handle as u32, 0.000001);
+    EffectModule::set_alpha(fighter.module_accessor, handle as u32, 2.0);
+    VarModule::set_int(fighter.battle_object, vars::brave::instance::MENU_ICON_EFFECT_HANDLE, handle as i32);
 }
 
 unsafe extern "C" fn special_lw_start_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -325,6 +331,8 @@ unsafe extern "C" fn special_lw_select_main_loop(fighter: &mut L2CFighterCommon)
             }
         }
     }
+    let handle = VarModule::get_int(fighter.battle_object, vars::brave::instance::MENU_ICON_EFFECT_HANDLE);
+    set_icon_wobble(fighter, handle);
     if MotionModule::is_end(fighter.module_accessor) {
         if fighter.is_situation(*SITUATION_KIND_GROUND) {
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_lw_select"), 0.0, 1.0, false, 0.0, false, false);
@@ -350,12 +358,31 @@ unsafe extern "C" fn brave_special_check_sp_set_flag(fighter: &mut L2CFighterCom
     return false;
 }
 
-unsafe extern "C" fn special_lw_select_end(fighter: &mut L2CFighterCommon) -> L2CValue {
-    EffectModule::kill_kind(fighter.module_accessor, Hash40::new("brave_command_attack"), false, false);
-    EffectModule::kill_kind(fighter.module_accessor, Hash40::new("brave_command_magic"), false, false);
-    EffectModule::kill_kind(fighter.module_accessor, Hash40::new("brave_command_support"), false, false);
+unsafe extern "C" fn set_icon_wobble(fighter: &mut L2CFighterCommon, handle: i32) {
+    if handle == -1 { return; }
+    let frame = fighter.status_frame();
+    // oscillate up and down slightly
+    let offset = ((frame as f32 * 0.125) / std::f32::consts::PI).cos();
+    EffectModule::set_pos(fighter.module_accessor, handle as u32, &Vector3f::new(0.0, 20.0 + offset, 2.0));
+}
+
+unsafe extern "C" fn special_lw_exit(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let interrupt = StatusModule::status_kind_next(fighter.module_accessor);
+    if interrupt == *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_SELECT {
+        return 0.into();
+    }
     
-    return smashline::original_status(End, fighter, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_SELECT)(fighter);
+    let handle = VarModule::get_int(fighter.battle_object, vars::brave::instance::MENU_ICON_EFFECT_HANDLE);
+    if interrupt == *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_START
+    || interrupt == *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_STEEL_START {
+        EffectModule::set_rate(fighter.module_accessor, handle as u32, 1.0);
+    }
+    else {
+        EffectModule::kill(fighter.module_accessor, handle as u32, true, true);
+    }
+    VarModule::set_int(fighter.battle_object, vars::brave::instance::MENU_ICON_EFFECT_HANDLE, -1);
+    
+    return 0.into();
 }
 
 unsafe extern "C" fn special_lw_start_main(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -473,13 +500,14 @@ unsafe extern "C" fn special_lw_failure_pre(fighter: &mut L2CFighterCommon) -> L
 pub fn install(agent: &mut Agent) {
     agent.status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_LW, special_lw_pre);
     agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_LW, special_lw_main);
+    agent.status(Exit, *FIGHTER_STATUS_KIND_SPECIAL_LW, special_lw_exit);
 
     agent.status(Pre, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_START, special_lw_start_pre);
     agent.status(Main, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_START, special_lw_start_main);
     agent.status(End, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_START, special_lw_start_end);
 
     agent.status(Main, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_SELECT, special_lw_select_main);
-    agent.status(End, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_SELECT, special_lw_select_end);
+    agent.status(Exit, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_SELECT, special_lw_exit);
 
     agent.status(Pre, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_STEEL_START, special_lw_steel_start_pre);
     agent.status(Main, *FIGHTER_BRAVE_STATUS_KIND_SPECIAL_LW_STEEL_START, special_lw_steel_start_main);

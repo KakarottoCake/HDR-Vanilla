@@ -390,10 +390,11 @@ pub mod vars {
             pub const SPELL_SLOT_USED_1_4: i32 = 0x0107;
             pub const SPELL_SLOT_USED_2_1: i32 = 0x0108;
             pub const SPELL_SLOT_USED_2_2: i32 = 0x0109;
-            pub const SPELL_SLOT_USED_2_3: i32 = 0x0110;
-            pub const SPELL_SLOT_USED_2_4: i32 = 0x0111;
-            pub const CURSOR_SLOT: i32 = 0x0112;
-            pub const MENU_TRAINING_MODE_INDEX: i32 = 0x0113;
+            pub const SPELL_SLOT_USED_2_3: i32 = 0x010A;
+            pub const SPELL_SLOT_USED_2_4: i32 = 0x010B;
+            pub const CURSOR_SLOT: i32 = 0x010C;
+            pub const MENU_TRAINING_MODE_INDEX: i32 = 0x010D;
+            pub const MENU_ICON_EFFECT_HANDLE: i32 = 0x010E;
             
             // floats
             pub const SPECIAL_LW_CSTICK_BUFFER_DIR: i32 = 0x0100;
