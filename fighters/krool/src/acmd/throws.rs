@@ -161,7 +161,7 @@ unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 2.0, 361, 100, 0, 40, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
     }
     frame(lua_state, 15.0);
-    FT_MOTION_RATE_RANGE(agent, 15.0, 35.0, 10.0);
+    FT_MOTION_RATE_RANGE(agent, 15.0, 35.0, 12.0);
     frame(lua_state, 35.0);
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 40.0);
