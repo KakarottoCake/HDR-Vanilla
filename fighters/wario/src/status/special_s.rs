@@ -27,6 +27,7 @@ unsafe extern "C" fn special_s_drive_main_loop(fighter: &mut L2CFighterCommon) -
 
     if StatusModule::situation_kind(bike_boma) == *SITUATION_KIND_AIR
     && (ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD)
+        || ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK)
         || ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL))
     {
         VarModule::on_flag(fighter.battle_object, wario::instance::SPECIAL_S_CANCEL);
