@@ -13,6 +13,15 @@
       <float hash="p2_y">8</float>
     </struct>
   </list>
+  <list hash="param_soccerball">
+    <struct index="0">
+      <int hash="life_minous_bound_character">20</int>
+      <int hash="life_minous_bound_ground">10</int>
+    </struct>
+    <hash40 index="1">dummy</hash40>
+    <hash40 index="2">dummy</hash40>
+    <hash40 index="3">dummy</hash40>
+  </list>
   <list hash="param_special_hi">
     <struct index="0">
       <int hash="hulahoop_jump_frame">30</int>
