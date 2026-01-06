@@ -10,20 +10,6 @@ unsafe fn sub_ftStatusUniqProcessGuardOn_initStatus_common(fighter: &mut L2CFigh
         app::ShieldStatus(*SHIELD_STATUS_NORMAL),
         0
     );
-    // special conditions for rivals mode
-    match utils::game_modes::get_custom_mode() {
-        Some(modes) => {
-            if modes.contains(&game_modes::CustomMode::RivalsOfAetherMode) {
-                ShieldModule::set_status(
-                    fighter.module_accessor,
-                    *FIGHTER_SHIELD_KIND_GUARD,
-                    app::ShieldStatus(*SHIELD_STATUS_NONE),
-                    0
-                );
-            }
-        },
-        _ => {}
-    }
     let hit_stop_mul = WorkModule::get_param_float(
         fighter.module_accessor,
         hash40("common"),

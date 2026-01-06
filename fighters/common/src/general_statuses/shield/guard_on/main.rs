@@ -69,21 +69,6 @@ unsafe fn sub_status_guard_on_main_air_common(fighter: &mut L2CFighterCommon) ->
 #[skyline::hook(replace = L2CFighterCommon_status_GuardOn_Main)]
 unsafe fn status_GuardOn_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
     misc::check_enable_cstick_buffer_rolls(fighter);
-    // special conditions for rivals mode
-    match utils::game_modes::get_custom_mode() {
-        Some(modes) => {
-            if modes.contains(&game_modes::CustomMode::RivalsOfAetherMode) {
-                if !sub_status_guard_on_main_air_common(fighter).get_bool()
-                && !misc::sub_guard_cont(fighter).get_bool()
-                && fighter.status_frame() > 1 {
-                    VarModule::on_flag(fighter.object(), vars::common::instance::IS_PARRY_FOR_GUARD_OFF);
-                    fighter.change_status(FIGHTER_STATUS_KIND_GUARD_OFF.into(), false.into());
-                }
-                return L2CValue::I32(0);
-            }
-        },
-        _ => {}
-    }
     if
         !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_GUARD_ON_WORK_FLAG_EFFECT) &&
         0.0 < fighter.global_table[CURRENT_FRAME].get_f32()
