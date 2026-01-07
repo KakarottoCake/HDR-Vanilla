@@ -271,6 +271,7 @@ pub extern "C" fn rivals_mode(fighter: &mut L2CFighterCommon) {
                     rivals_waveland(fighter);
                     rivals_jab_tilt(fighter);
                     rivals_landing_lag_jc(fighter);
+                    rivals_parry_stun(fighter);
                 }
             },
             _ => {}
@@ -421,4 +422,26 @@ unsafe fn rivals_landing_lag_jc(fighter: &mut L2CFighterCommon) {
             fighter.check_jump_cancel(false, false);
         }
     }
+}
+
+// get stunned when parried
+unsafe fn rivals_parry_stun(fighter: &mut L2CFighterCommon) {
+    if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_FURAFURA{
+        return;
+    }
+
+    let prev_inflict_status = VarModule::get_int(fighter.battle_object, vars::common::instance::PREV_STATUS_INFLICT_STATUS);
+    let was_previously_parried = StatusModule::is_changing(fighter.module_accessor) && prev_inflict_status & *COLLISION_KIND_MASK_PARRY != 0;
+    let is_currently_parried = CancelModule::is_enable_cancel(fighter.module_accessor) && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_PARRY);
+
+    if was_previously_parried || is_currently_parried {
+        WorkModule::set_flag(
+            fighter.module_accessor,
+            MotionModule::is_anim_resource(fighter.module_accessor, Hash40::new("down_spot_u")),
+            *FIGHTER_STATUS_DOWN_FLAG_UP
+        );
+        fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_FURAFURA_STAND, *FIGHTER_STATUS_KIND_SHIELD_BREAK_FALL, false);
+        return;
+    }
+
 }
