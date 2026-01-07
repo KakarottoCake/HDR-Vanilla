@@ -647,8 +647,19 @@ fn exec_internal(input_module: &mut InputModule, control_module: u64, call_origi
 
     // Parry cat flag
     let parry_input = unsafe {
-        ControlModule::check_button_on((*input_module.owner).module_accessor, 0x3) // CONTROL_PAD_BUTTON_GUARD
-        && triggered_buttons.intersects(Buttons::Parry)
+        let mut parry_input = ControlModule::check_button_on((*input_module.owner).module_accessor, 0x3) // CONTROL_PAD_BUTTON_GUARD
+        && triggered_buttons.intersects(Buttons::Parry);
+
+        match super::super::game_modes::get_custom_mode() {
+            Some(modes) => {
+                if modes.contains(&utils_dyn::game_modes::CustomMode::RivalsOfAetherMode) {
+                    parry_input = parry_input || triggered_buttons.intersects(Buttons::Guard);
+                }
+            },
+            _ => {}
+        }
+
+        parry_input
     };
 
     let parry_offset = CatHdr::Parry.bits().trailing_zeros() as usize;

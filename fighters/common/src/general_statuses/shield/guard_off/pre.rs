@@ -16,15 +16,12 @@ unsafe fn status_pre_GuardOff(fighter: &mut L2CFighterCommon) -> L2CValue {
                 let stick_x = stick_x * PostureModule::lr(fighter.module_accessor);
                 let stick_y = fighter.stick_y();
                 let stick_vertical = stick_y.abs() >= stick_x.abs() && stick_y < 0.0;
-                dbg!("Rivals Mode: Guard Off Stick Input Detected - X: {}, Y: {}", stick_x, stick_y);
                 if !stick_vertical && stick_x >= 0.4 {
-                    dbg!("Rivals Mode: Guard Off Escape Forward Input Detected");
                     VarModule::off_flag(fighter.battle_object, vars::common::instance::IS_PARRY_FOR_GUARD_OFF);
                     fighter.set_status_kind_interrupt(*FIGHTER_STATUS_KIND_ESCAPE_F);
                     return true.into();
                 }
                 if !stick_vertical && stick_x <= -0.4 {
-                    dbg!("Rivals Mode: Guard Off Escape Forward Input Detected");
                     VarModule::off_flag(fighter.battle_object, vars::common::instance::IS_PARRY_FOR_GUARD_OFF);
                     fighter.set_status_kind_interrupt(*FIGHTER_STATUS_KIND_ESCAPE_B);
                     return true.into();
