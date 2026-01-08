@@ -327,25 +327,11 @@ unsafe fn rivals_drift_di(fighter: &mut L2CFighterCommon) {
             );
         }
     
-        // TODO: just hard code these values 
-        let mut speed_mul = ParamModule::get_float(
-            fighter.object(),
-            ParamType::Common,
-            "drift_di.speed_mul_base",
-        );
-        let speed_mul_add_max = ParamModule::get_float(
-            fighter.object(),
-            ParamType::Common,
-            "drift_di.speed_mul_add_max",
-        );
+        let mut speed_mul = 0.005;
+        let speed_mul_add_max = 0.0025;
+        let speed_lerp_max = 3.0;
     
-        let lerp_max_speed = ParamModule::get_float(
-            fighter.object(),
-            ParamType::Common,
-            "drift_di.speed_lerp_max",
-        );
-    
-        let ratio = 1.0 - (initial_speed_x.abs() / lerp_max_speed).clamp(0.0, 1.0);
+        let ratio = 1.0 - (initial_speed_x.abs() / speed_lerp_max).clamp(0.0, 1.0);
         speed_mul = (speed_mul + speed_mul_add_max) * ratio;
     
         let drift_value = fighter.left_stick_x() * speed_mul;
