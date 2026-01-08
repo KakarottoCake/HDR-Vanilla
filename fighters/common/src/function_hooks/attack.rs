@@ -282,11 +282,11 @@ unsafe fn set_parry_hitlag(ctx: &mut skyline::hooks::InlineCtx) {
 unsafe fn x03df93c(ctx: &mut skyline::hooks::InlineCtx) {
     let opponent_battle_object_id = *(ctx.registers[22].x() as *const u32).add(0x24 / 4);
     let opponent_battle_object = utils::util::get_battle_object_from_id(opponent_battle_object_id);
-    let opponent_boma = (&mut *(*opponent_battle_object).module_accessor);
+    let defender_boma = (&mut *(*opponent_battle_object).module_accessor);
 
-    if opponent_boma.is_status(*FIGHTER_STATUS_KIND_GUARD_OFF)
+    if defender_boma.is_status(*FIGHTER_STATUS_KIND_GUARD_OFF)
     && VarModule::is_flag(opponent_battle_object, vars::common::instance::IS_PARRY_FOR_GUARD_OFF)
-    && opponent_boma.get_int(*FIGHTER_STATUS_GUARD_ON_WORK_INT_JUST_FRAME) > 0 {
+    && defender_boma.get_int(*FIGHTER_STATUS_GUARD_ON_WORK_INT_JUST_FRAME) > 0 {
         ctx.registers[8].set_w(ctx.registers[8].w() | *COLLISION_KIND_MASK_PARRY as u32);
         let attack_module = ctx.registers[19].x();
         let attacker_boma = &mut *(*(attack_module as *mut *mut BattleObjectModuleAccessor).add(1));
@@ -294,8 +294,19 @@ unsafe fn x03df93c(ctx: &mut skyline::hooks::InlineCtx) {
         if attacker_boma.is_fighter() {
             // clear ledge and respawn iframes
             VarModule::set_int(attacker_boma.object(), vars::common::instance::CLIFF_XLU_FRAME, 0);
+            HitModule::cancel_xlu_global(attacker_boma, 0);
             HitModule::set_xlu_frame_global(attacker_boma, 0, 0);
             HitModule::set_invincible_frame_global(attacker_boma, 0, false, 0);  // sub_rebirth_uniq_process_exit
+        }
+
+        // RoA invuln on parry success
+        match utils::game_modes::get_custom_mode() {
+            Some(modes) => {
+                if modes.contains(&game_modes::CustomMode::RivalsOfAetherMode) {
+                    HitModule::set_xlu_frame_global(defender_boma, 60, 0);
+                }
+            },
+            _ => {}
         }
     }
 }
