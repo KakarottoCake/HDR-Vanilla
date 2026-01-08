@@ -51,6 +51,8 @@ mod special_hi;
 
 mod cancel_step;
 
+mod catch;
+
 pub fn install(agent: &mut Agent) {
     wait::install(agent);
     squat_wait::install(agent);
@@ -80,4 +82,6 @@ pub fn install(agent: &mut Agent) {
     special_hi::install(agent);
 
     cancel_step::install(agent);
+
+    catch::install(agent);
 }

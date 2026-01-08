@@ -23,8 +23,14 @@ pub unsafe extern "C" fn demon_on_attack(vtable: u64, fighter: &mut Fighter, log
     original!()(vtable, fighter, log)
 }
 
+#[skyline::hook(offset = 0x934310)]
+pub unsafe extern "C" fn demon_some_event(_vtable: u64, _fighter: &mut Fighter, event: u64) -> u64 {
+    event
+}
+
 pub fn install() {
     skyline::install_hooks!(
         demon_on_attack,
+        demon_some_event
     );
 }
