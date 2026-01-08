@@ -483,12 +483,23 @@ unsafe fn sub_transition_group_check_ground_guard(fighter: &mut L2CFighterCommon
     match utils::game_modes::get_custom_mode() {
         Some(modes) => {
             if modes.contains(&game_modes::CustomMode::RivalsOfAetherMode) {
+                // Cannot parry if using shield lock (for convenience)
+                let guard_hold = fighter.check_guard_hold().get_bool();
+                if guard_hold {
+                    return false.into();
+                }
+                // Parry input
                 if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON) {
-                    if fighter.sub_check_command_parry().get_bool() {
+                    if fighter.sub_check_command_parry().get_bool()  {
                         VarModule::on_flag(fighter.object(), vars::common::instance::IS_PARRY_FOR_GUARD_OFF);
                         fighter.change_status(FIGHTER_STATUS_KIND_GUARD_OFF.into(), false.into());
                         return true.into();
                     }
+                }
+                // C-Stick rolls
+                if fighter.sub_check_command_guard().get_bool() 
+                && shield::misc::check_cstick_escape_oos(fighter, true).get_bool() {
+                    return true.into();
                 }
                 return false.into();
             }
