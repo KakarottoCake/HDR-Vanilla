@@ -414,7 +414,14 @@ unsafe fn rivals_landing_lag_jc(fighter: &mut L2CFighterCommon) {
 unsafe fn rivals_parry_stun(fighter: &mut L2CFighterCommon) {
 
     if fighter.is_status_one_of(&[
-        *FIGHTER_STATUS_KIND_FURAFURA,
+        // parry stun statuses
+        *FIGHTER_STATUS_KIND_FURAFURA_END,
+        *FIGHTER_STATUS_KIND_FALL_SPECIAL,
+
+        // jab
+        *FIGHTER_STATUS_KIND_ATTACK,
+
+        // damage statuses
         *FIGHTER_STATUS_KIND_DAMAGE,
         *FIGHTER_STATUS_KIND_DAMAGE_AIR,
         *FIGHTER_STATUS_KIND_DAMAGE_FLY,
@@ -463,7 +470,8 @@ unsafe fn rivals_parry_stun(fighter: &mut L2CFighterCommon) {
             MotionModule::is_anim_resource(fighter.module_accessor, Hash40::new("down_spot_u")),
             *FIGHTER_STATUS_DOWN_FLAG_UP
         );
-        fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_FURAFURA_STAND, *FIGHTER_STATUS_KIND_SHIELD_BREAK_FALL, false);
+        fighter.set_float(30.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
+        fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_FURAFURA_END, *FIGHTER_STATUS_KIND_FALL_SPECIAL, false);
         return;
     }
 
