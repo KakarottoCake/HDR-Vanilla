@@ -33,6 +33,12 @@ unsafe extern "C" fn game_attackstep2(agent: &mut L2CAgentBase) {
         HIT_NODE(agent, Hash40::new("arml"), *HIT_STATUS_XLU);
         HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_XLU);
     }
+    frame(lua_state, 1.0);
+    FT_MOTION_RATE(agent, 0.7);
+    frame(lua_state, 7.0);
+    FT_MOTION_RATE(agent, 0.5);
+    frame(lua_state, 9.0);
+    FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 10.0);
     if is_excute(agent) {
         HIT_NODE(agent, Hash40::new("head"), *HIT_STATUS_NORMAL);
@@ -132,6 +138,12 @@ unsafe extern "C" fn game_attackstep2f(agent: &mut L2CAgentBase) {
         HIT_NODE(agent, Hash40::new("arml"), *HIT_STATUS_XLU);
         HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_XLU);
     }
+    frame(lua_state, 1.0);
+    FT_MOTION_RATE(agent, 0.7);
+    frame(lua_state, 7.0);
+    FT_MOTION_RATE(agent, 0.5);
+    frame(lua_state, 9.0);
+    FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 10.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("handr"), 14.0, 90, 0, 0, 95, 2.5, 0.0, 0.0, 0.0, None, None, None, 0.3, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_DEMON_PUNCH01, *ATTACK_REGION_PUNCH);
