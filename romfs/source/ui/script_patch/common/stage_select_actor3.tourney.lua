@@ -1053,9 +1053,20 @@ local change_page = function(should_play_page_change)
 end
 
 local change_sub_page = function(target_page)
-    local page_name = HDR.get_page_name(target_page)
-    root_view:get_pane("txt_page_back"):set_text_string(page_name)
-    root_view:get_pane("txt_page_forward"):set_text_string(page_name)
+    local back_page = target_page - 1
+    if back_page < 0 then
+        back_page = total_pages - 1
+    end
+
+    local forward_page = target_page + 1
+    if forward_page >= total_pages then
+        forward_page = 0
+    end
+
+    local back_page_name = HDR.get_page_name(back_page)
+    local forward_page_name = HDR.get_page_name(forward_page)
+    root_view:get_pane("txt_page_back"):set_text_string(back_page_name)
+    root_view:get_pane("txt_page_forward"):set_text_string(forward_page_name)
     
     local bans = HDR.get_bans(target_page)
     local dsr = HDR.get_dsr(target_page)
