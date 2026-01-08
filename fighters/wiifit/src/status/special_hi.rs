@@ -67,8 +67,8 @@ unsafe extern "C" fn special_hi_jump_main(fighter: &mut L2CFighterCommon) -> L2C
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_jump"), 0.0, 1.0, false, 0.0, false, false);
     fighter.set_float(0.0, *FIGHTER_WIIFIT_STATUS_SPECIAL_HI_WORK_FLOAT_JUMP_RESTART_BACKUP_SPEED_Y);
     fighter.set_float(0.0, *FIGHTER_WIIFIT_STATUS_SPECIAL_HI_WORK_FLOAT_JUMP_RESTART_FRAME);
-    fighter.off_flag(*FIGHTER_WIIFIT_STATUS_SPECIAL_HI_FLAG_JUMP_RESTART);
-    fighter.off_flag(*FIGHTER_WIIFIT_STATUS_SPECIAL_HI_FLAG_JUMP_RESTART_NOW);
+    fighter.on_flag(*FIGHTER_WIIFIT_STATUS_SPECIAL_HI_FLAG_JUMP_RESTART);
+    fighter.on_flag(*FIGHTER_WIIFIT_STATUS_SPECIAL_HI_FLAG_JUMP_RESTART_NOW);
     fighter.set_float(1.0, *FIGHTER_WIIFIT_STATUS_SPECIAL_HI_WORK_FLOAT_JUMP_MOTION_RATE_NOW);
     fighter.set_float(0.0, *FIGHTER_WIIFIT_STATUS_SPECIAL_HI_WORK_FLOAT_SE_PITCH);
 
@@ -95,10 +95,9 @@ unsafe extern "C" fn special_hi_jump_main_loop(fighter: &mut L2CFighterCommon) -
     }
     if jump_flag {
         let restart_start_frame = fighter.get_param_int("param_special_hi", "hulahoop_jump_restart_start_frame");
-        println!("what: {}", fighter.status_frame());
         if fighter.status_frame() >= restart_start_frame {
             let restart_end_frame = fighter.get_param_int("param_special_hi", "hulahoop_jump_restart_end_frame");
-            if dbg!(fighter.status_frame() <= restart_end_frame) {
+            if fighter.status_frame() <= restart_end_frame {
                 if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
                     let sum_speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
                     let add_speed_y = fighter.get_param_float("param_special_hi", "hulahoop_jump_restart_add_speed_y");
@@ -109,7 +108,7 @@ unsafe extern "C" fn special_hi_jump_main_loop(fighter: &mut L2CFighterCommon) -
                     }
                     sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y);
                     fighter.set_float(speed_y, *FIGHTER_WIIFIT_INSTANCE_WORK_ID_FLOAT_SPECIAL_HI_JUMP_SPEED_Y);
-                    println!("setting speed_y to {}", speed_y);
+                    //println!("setting speed_y to {}", speed_y);
                     let motion_rate_now = fighter.get_float(*FIGHTER_WIIFIT_STATUS_SPECIAL_HI_WORK_FLOAT_JUMP_MOTION_RATE_NOW);
                     let add_motion_rate = fighter.get_param_float("param_special_hi", "hulahoop_jump_restart_add_motion_rate");
                     let motion_rate = motion_rate_now + (add_motion_rate / 100.0);
@@ -142,7 +141,7 @@ unsafe extern "C" fn special_hi_jump_main_loop(fighter: &mut L2CFighterCommon) -
     else {
         let jump_speed_y = fighter.get_float(*FIGHTER_WIIFIT_INSTANCE_WORK_ID_FLOAT_SPECIAL_HI_JUMP_SPEED_Y);
         let jump_gravity = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), 0x1d57d7b043);
-        let jump_speed_y_mod = (jump_speed_y - jump_gravity).max(0.4);
+        let jump_speed_y_mod = (jump_speed_y - jump_gravity).max(0.6);
         let jump_y_speed = fighter.get_param_float("param_special_hi", "hulahoop_jump_y_speed");
         let init_speed_x = fighter.get_float(*FIGHTER_WIIFIT_STATUS_SPECIAL_HI_WORK_FLOAT_JUMP_INIT_SPEED_X);
         let max_speed_y_rate = fighter.get_param_float("param_special_hi", "hulahoop_jump_stick_max_speed_y_rate");
