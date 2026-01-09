@@ -468,14 +468,14 @@ unsafe extern "C" fn expression_speciallwhit(agent: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut Agent) {
-    agent.acmd("game_specialn2", game_specialn, Priority::Low);
-    agent.acmd("game_specialairn2", game_specialn, Priority::Low);
-    agent.acmd("effect_specialn2", effect_specialn, Priority::Low);
-    agent.acmd("effect_specialairn2", effect_specialn, Priority::Low);
-    agent.acmd("sound_specialn2", sound_specialn, Priority::Low);
-    agent.acmd("sound_specialairn2", sound_specialn, Priority::Low);
-    agent.acmd("expression_specialn2", expression_specialn, Priority::Low);
-    agent.acmd("expression_specialairn2", expression_specialn, Priority::Low);
+    agent.acmd("game_specialn", game_specialn, Priority::Low);
+    agent.acmd("game_specialairn", game_specialn, Priority::Low);
+    agent.acmd("effect_specialn", effect_specialn, Priority::Low);
+    agent.acmd("effect_specialairn", effect_specialn, Priority::Low);
+    agent.acmd("sound_specialn", sound_specialn, Priority::Low);
+    agent.acmd("sound_specialairn", sound_specialn, Priority::Low);
+    agent.acmd("expression_specialn", expression_specialn, Priority::Low);
+    agent.acmd("expression_specialairn", expression_specialn, Priority::Low);
 
     agent.acmd("game_specialsjump", game_specialsjump, Priority::Low);
     agent.acmd("game_specialairsblow", game_specialairsblow, Priority::Low);
