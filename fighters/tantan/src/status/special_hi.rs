@@ -118,6 +118,107 @@ unsafe extern "C" fn special_hi_ground_jump_init(fighter: &mut L2CFighterCommon)
     return smashline::original_status(Init, fighter, *FIGHTER_TANTAN_STATUS_KIND_SPECIAL_HI_GROUND_JUMP)(fighter);
 }
 
+// if fighter.is_flag(*FIGHTER_TANTAN_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_AIR_HOP) {
+//             fighter.off_flag(*FIGHTER_TANTAN_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_AIR_HOP);
+//             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+//         }
+
+// unsafe extern "C" fn special_hi_ground_jump_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+//     if fighter.is_flag(*FIGHTER_TANTAN_STATUS_SPECIAL_HI_FLAG_GROUND_HIGH_JUMP) {
+//         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_long"), 0.0, 1.0, false, 0.0, false, false);
+//     }
+//     else {
+//         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_short"), 0.0, 1.0, false, 0.0, false, false);
+//     }
+
+//     fighter.main_shift(special_hi_ground_jump_main_loop)
+// }
+
+// unsafe extern "C" fn special_hi_ground_jump_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+//     if MotionModule::is_end(fighter.module_accessor) {
+//         fighter.change_status(FIGHTER_TANTAN_STATUS_KIND_SPECIAL_HI_GROUND_END.into(), false.into());
+//         return 0.into();
+//     }
+//     if CancelModule::is_enable_cancel(fighter.module_accessor)
+//     && !fighter.sub_air_check_fall_common().get_bool() {
+//         return 1.into();
+//     }
+//     if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_TANTAN_GENERATE_ARTICLE_SPIRALLEFT) {
+//         let some_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_hi"), 0x1fee7bcce6);
+//         if MotionModule::frame(fighter.module_accessor) >= some_frame as f32 {
+//             WorkModule::set_int64(fighter.module_accessor, hash40("special_hi_l") as i64, *FIGHTER_TANTAN_INSTANCE_WORK_ID_INT_ATTACK_MOTION_KIND);
+//             fighter.on_flag(*FIGHTER_TANTAN_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_IS_L);
+//             ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_TANTAN_GENERATE_ARTICLE_SPIRALLEFT, false, -1);
+//             if fighter.is_flag(*FIGHTER_TANTAN_STATUS_SPECIAL_HI_FLAG_GROUND_HIGH_JUMP) {
+//                 if fighter.is_flag(*FIGHTER_TANTAN_INSTANCE_WORK_ID_FLAG_DRAGONIZE_L) {
+//                     ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_TANTAN_GENERATE_ARTICLE_SPIRALLEFT, Hash40::new("special_hi_long_dragon"), false, 0.0);
+//                 }
+//                 else {
+//                     ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_TANTAN_GENERATE_ARTICLE_SPIRALLEFT, Hash40::new("special_hi_long_l"), false, 0.0);
+//                 }
+//             }
+//             else {
+//                 if fighter.is_flag(*FIGHTER_TANTAN_INSTANCE_WORK_ID_FLAG_DRAGONIZE_L) {
+//                     ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_TANTAN_GENERATE_ARTICLE_SPIRALLEFT, Hash40::new("special_hi_short_dragon"), false, 0.0);
+//                 }
+//                 else {
+//                     ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_TANTAN_GENERATE_ARTICLE_SPIRALLEFT, Hash40::new("special_hi_short_l"), false, 0.0);
+//                 }
+//             }
+//             VisibilityModule::set_int64(fighter.module_accessor, hash40("arm_l") as i64, hash40("arm_l_hide") as i64);
+//             VisibilityModule::set_int64(fighter.module_accessor, hash40("punch_l") as i64, hash40("punch_l_hide") as i64);
+//             fighter.off_flag(*FIGHTER_TANTAN_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_IS_L);
+//             ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_TANTAN_GENERATE_ARTICLE_SPIRALRIGHT, false, -1);
+//             if fighter.is_flag(*FIGHTER_TANTAN_STATUS_SPECIAL_HI_FLAG_GROUND_HIGH_JUMP) {
+//                 let punch_kind_r = fighter.get_int(*FIGHTER_TANTAN_INSTANCE_WORK_ID_INT_PUNCH_KIND_R);
+//                 if punch_kind_r == *FIGHTER_TANTAN_SPECIAL_LW_VARIOUS_KIND_PUNCH_R_3 {
+//                     ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_TANTAN_GENERATE_ARTICLE_SPIRALRIGHT, Hash40::new("special_hi_long_ring"), false, 0.0);
+//                 }
+//                 else {
+//                     ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_TANTAN_GENERATE_ARTICLE_SPIRALRIGHT, Hash40::new("special_hi_long_r"), false, 0.0);
+//                 }
+//             }
+//             else {
+//                 let punch_kind_r = fighter.get_int(*FIGHTER_TANTAN_INSTANCE_WORK_ID_INT_PUNCH_KIND_R);
+//                 if punch_kind_r == *FIGHTER_TANTAN_SPECIAL_LW_VARIOUS_KIND_PUNCH_R_3 {
+//                     ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_TANTAN_GENERATE_ARTICLE_SPIRALRIGHT, Hash40::new("special_hi_short_ring"), false, 0.0);
+//                 }
+//                 else {
+//                     ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_TANTAN_GENERATE_ARTICLE_SPIRALRIGHT, Hash40::new("special_hi_short_r"), false, 0.0);
+//                 }
+//             }
+//             VisibilityModule::set_int64(fighter.module_accessor, hash40("arm_r") as i64, hash40("arm_r_hide") as i64);
+//             VisibilityModule::set_int64(fighter.module_accessor, hash40("punch_r") as i64, hash40("punch_r_hide") as i64);
+//         }
+//     }
+//     let effect_start_frame_g = fighter.get_param_int("param_special_hi", "effect_start_frame_g");
+//     let mut article = 0;
+//     let mut toggle = false;
+//     if MotionModule::frame(fighter.module_accessor) >= effect_start_frame_g as f32 {
+//         article = *FIGHTER_TANTAN_GENERATE_ARTICLE_SPIRALLEFT;
+//         toggle = true;
+//     }
+//     else {
+//         article = *FIGHTER_TANTAN_GENERATE_ARTICLE_SPIRALRIGHT;
+//         toggle = true;
+//     }
+//     let effect_end_frame_g = fighter.get_param_int("param_special_hi", "effect_end_frame_g");
+//     if MotionModule::frame(fighter.module_accessor) >= effect_end_frame_g as f32 {
+//         article = *FIGHTER_TANTAN_GENERATE_ARTICLE_SPIRALLEFT;
+//         toggle = false;
+//     }
+//     else {
+//         article = *FIGHTER_TANTAN_GENERATE_ARTICLE_SPIRALRIGHT;
+//         toggle = false;
+//     }
+//     if let Some(func_ptr) = smashline::api::get_target_function("lua2cpp_tantan.nrs", 0x3b450) {
+//         let modify_arm_flare: fn(&mut L2CFighterCommon, i32, bool) = std::mem::transmute(func_ptr);
+//         modify_arm_flare(fighter, article, toggle);
+//     }
+    
+//     return 0.into();
+// }
+
 unsafe extern "C" fn special_hi_ground_end_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let control_accel_x_mul = fighter.get_param_float("param_special_hi", "end_control_accel_x_mul_g");
     let control_max_speed_x_mul = fighter.get_param_float("param_special_hi", "end_control_max_speed_x_mul_g");
@@ -245,6 +346,7 @@ pub fn install(agent: &mut Agent) {
     agent.status(Main, *FIGHTER_TANTAN_STATUS_KIND_SPECIAL_HI_GROUND, special_hi_ground_main);
 
     agent.status(Init, *FIGHTER_TANTAN_STATUS_KIND_SPECIAL_HI_GROUND_JUMP, special_hi_ground_jump_init);
+    //agent.status(Main, *FIGHTER_TANTAN_STATUS_KIND_SPECIAL_HI_GROUND_JUMP, special_hi_ground_jump_main);
 
     agent.status(Main, *FIGHTER_TANTAN_STATUS_KIND_SPECIAL_HI_GROUND_END, special_hi_ground_end_main);
     
