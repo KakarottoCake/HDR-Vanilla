@@ -4,9 +4,9 @@ use super::*;
 use globals::*;
 
 unsafe fn track_effect(fighter: &mut L2CFighterCommon) {
-    if VarModule::is_flag(fighter.battle_object, vars::wiifit::instance::RING_EFFECT_VISIBLE)
+    if VarModule::is_flag(fighter.battle_object, vars::wiifit::instance::SPECIAL_LW_EFFECT_ON)
     && WorkModule::get_int(fighter.module_accessor, *FIGHTER_WIIFIT_INSTANCE_WORK_ID_INT_SPECIAL_LW_WAZA_EFFECTIVE_FRAME) <= 0 {
-        VarModule::off_flag(fighter.battle_object, vars::wiifit::instance::RING_EFFECT_VISIBLE);
+        VarModule::off_flag(fighter.battle_object, vars::wiifit::instance::SPECIAL_LW_EFFECT_ON);
     }
 }
 

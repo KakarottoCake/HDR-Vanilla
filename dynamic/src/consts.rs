@@ -1903,24 +1903,8 @@ pub mod vars {
     pub mod wiifit {
         pub mod instance {
             // flags
-            pub const SPECIAL_LW_RESPAWN_COOLDOWN: i32 = 0x0100;
-            pub const RING_EFFECT_VISIBLE: i32 = 0x0101;
-            pub const SPECIAL_S_DISABLE_STALL: i32 = 0x0102;
-
-            // ints
-            pub const RING_SHOW_MOTION: i32 = 0x0100;
-            pub const RING_EFFECT_HANDLE: i32 = 0x0101;
-            pub const RING_SECOND_EFFECT_HANDLE: i32 = 0x0102;
-            pub const RING_THIRD_EFFECT_HANDLE: i32 = 0x0103;
-
-            // floats
-            pub const RING_START_FRAME: i32 = 0x0100;
-            pub const RING_CURRENT_FRAME: i32 = 0x0101;
-            pub const RING_END_FRAME: i32 = 0x0102;
-            pub const RING_START_SIZE: i32 = 0x0103;
-            pub const RING_END_SIZE: i32 = 0x0104;
-            pub const RING_COLOR: i32 = 0x0105;     // this is a vector, so it needs three values (next value starts at 0x0108)
-            pub const RING_SECOND_COLOR: i32 = 0x108;
+            pub const SPECIAL_S_DISABLE_STALL: i32 = 0x0100;
+            pub const SPECIAL_LW_EFFECT_ON: i32 = 0x0101;
         }
     }
 

@@ -27,7 +27,7 @@ unsafe extern "C" fn effect_attacks3(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
-    if VarModule::is_flag(agent.battle_object, vars::wiifit::instance::RING_EFFECT_VISIBLE) {
+    if VarModule::is_flag(agent.battle_object, vars::wiifit::instance::SPECIAL_LW_EFFECT_ON) {
         frame(lua_state, 4.0);
         if is_excute(agent) {
             EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_c"), Hash40::new("sys_attack_arc_c"), Hash40::new("top"), 0, 8, -5, 180, 0, 90, 1, true, *EF_FLIP_YZ);
@@ -70,7 +70,7 @@ unsafe extern "C" fn game_attackhi3(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 5.0);
     if is_excute(agent) {
-        let (size_a, size_h) = if VarModule::is_flag(agent.battle_object, vars::wiifit::instance::RING_EFFECT_VISIBLE)
+        let (size_a, size_h) = if VarModule::is_flag(agent.battle_object, vars::wiifit::instance::SPECIAL_LW_EFFECT_ON)
             { (4.3, 4.0) } else { (3.5, 3.5) };
         ATTACK(agent, 0, 0, Hash40::new("armr"), 10.0, 90, 102, 0, 45, size_a, 3.5, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("top"), 10.0, 78, 102, 0, 45, 3.0, 0.0, 10.0, -5.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
@@ -93,7 +93,7 @@ unsafe extern "C" fn effect_attackhi3(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), -5, 0, -1.5, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
-    if VarModule::is_flag(agent.battle_object, vars::wiifit::instance::RING_EFFECT_VISIBLE) {
+    if VarModule::is_flag(agent.battle_object, vars::wiifit::instance::SPECIAL_LW_EFFECT_ON) {
         frame(lua_state, 4.0);
         if is_excute(agent) {
             EFFECT_FOLLOW(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 4, 6, 0.25, -90, 0, 0, 0.8, true);
@@ -137,7 +137,7 @@ unsafe extern "C" fn game_attacklw3(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_attacklw3(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    if VarModule::is_flag(agent.battle_object, vars::wiifit::instance::RING_EFFECT_VISIBLE) {
+    if VarModule::is_flag(agent.battle_object, vars::wiifit::instance::SPECIAL_LW_EFFECT_ON) {
         frame(lua_state, 7.0);
         if is_excute(agent) {
             EFFECT_FOLLOW(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 2, -1, 5, -30, 0, 0, 0.8, true);
