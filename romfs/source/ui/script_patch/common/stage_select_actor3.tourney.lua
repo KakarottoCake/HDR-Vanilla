@@ -406,7 +406,6 @@ local set_tab_form_text = function(stage_form)
     }
 
     tab_layout:play_animation(string.format("stage_%s", form_names[stage_form + 1]), 1.0)
-    tab_form_button_pane:set_text_message(string.format("mel_stage_select_%s", form_names[stage_form + 1]))
 end
 
 -- Plays the looping long-cancel sound effect (when you are holding B to exit)
@@ -1065,8 +1064,10 @@ local change_sub_page = function(target_page)
 
     local back_page_name = HDR.get_page_name(back_page)
     local forward_page_name = HDR.get_page_name(forward_page)
+    local current_page_name = HDR.get_page_name(target_page)
     root_view:get_pane("txt_page_back"):set_text_string(back_page_name)
     root_view:get_pane("txt_page_forward"):set_text_string(forward_page_name)
+    tab_form_button_pane:set_text_string(current_page_name)
     
     local bans = HDR.get_bans(target_page)
     local dsr = HDR.get_dsr(target_page)
