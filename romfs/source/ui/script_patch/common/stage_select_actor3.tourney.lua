@@ -2162,6 +2162,7 @@ end
 
 -- CLOSURE_74, R134
 local update_stage_previews = function()
+    ENABLE_STAGE_FORM_TYPE = false
     prev_highlighed_preview = highlighed_preview
 
     highlighed_preview = UiScriptPlayer.invoke("get_hand_on_stage_preview_id")
