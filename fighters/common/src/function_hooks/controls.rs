@@ -910,6 +910,11 @@ unsafe fn map_controls_hook(
         (*out).buttons |= Buttons::GuardHold;
     }
 
+    // Taunt macros TreadJump
+    if (*out).buttons.intersects(Buttons::AppealAll) {
+        (*out).buttons |= Buttons::TreadJump;
+    }
+
     // Check if the button combos are being pressed and then force Stock Share + AttackRaw/SpecialRaw depending on input
 
     if controller.current_buttons.l()
