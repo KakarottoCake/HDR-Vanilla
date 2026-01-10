@@ -4,6 +4,7 @@ use smash::phx::*;
 use smash::hash40;
 use smash::lib::lua_const::*;
 use smash::lua2cpp::*;
+use smash_script::macros::ToF32;
 use utils::consts::*;
 use utils::ext::*;
 use utils::*;
@@ -350,31 +351,56 @@ unsafe fn rivals_waveland(fighter: &mut L2CFighterCommon) {
         *FIGHTER_STATUS_KIND_ESCAPE_AIR,
         *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE
     ]) {
-        // TODO: unabling these terms does not work properly
-        let terms_to_unable = [
-            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_DASH,
-            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE,
-            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_AIR,
-            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_B,
-            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_F,
-            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD,
-            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON,
-            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT,
-            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT_B,
-            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT_F,
-            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT_RV,
-            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT_WAIT,
-            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN,
-            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_DASH,
-            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_RUN,
-            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_WALK,
-        ];
-        if fighter.status_frame() < 13 {
-            fighter.unable_transition_term_many(&terms_to_unable);
-        } else {
-            fighter.enable_transition_term_many(&terms_to_unable);
+        let landing_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("param_motion"), hash40("landing_frame_escape_air_slide_max"));
+        if fighter.status_frame().to_f32() < landing_frame {
+            let terms_to_enable = [
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_COMMAND1,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI3,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW3,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW4_START,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_S3,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_S4_START,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_PICKUP_HEAVY,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_PICKUP_LIGHT,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_SHOOT,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_SHOOT_S3,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_SHOOT_S4,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_SWING,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_SWING_3,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_SWING_4,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_FORCE,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI_COMMAND,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW_COMMAND,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N2_COMMAND,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N_COMMAND,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S_COMMAND,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SUPER_SPECIAL2,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SUPER_SPECIAL,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_FINAL,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N,
+                *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N,
+            ];
+            fighter.enable_transition_term_many(&terms_to_enable);
+            if fighter.sub_transition_group_check_ground_item().get_bool()
+            || fighter.sub_transition_group_check_ground_special().get_bool()
+            || fighter.sub_transition_group_check_ground_attack().get_bool()
+            || fighter.sub_transition_group_check_ground_jump().get_bool() {
+                return;
+            }
         }
-        CancelModule::enable_cancel(fighter.module_accessor);
     }
 }
 

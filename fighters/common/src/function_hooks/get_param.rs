@@ -166,6 +166,11 @@ pub unsafe fn get_param_float_hook(x0 /*boma*/: u64, x1 /*param_type*/: u64, x2 
                 }
                 else if modes.contains(&CustomMode::RivalsOfAetherMode) {
 
+                    // RoA universal 13F airdodge landing lag
+                    if x1 == hash40("param_motion") && x2 == hash40("landing_frame_escape_air_slide_max") {
+                        return 13.0;
+                    }
+
                     // RoA universal 4F heavy landing lag
                     if x1 == hash40("landing_frame") {
                         VarModule::set_float(boma_reference.object(), vars::common::instance::LANDING_LAG_FOR_RIVALS_MODE, 4.0);
