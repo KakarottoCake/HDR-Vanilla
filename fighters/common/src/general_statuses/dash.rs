@@ -583,7 +583,7 @@ unsafe extern "C" fn status_dash_main_common(fighter: &mut L2CFighterCommon, arg
                 let is_backdash = StatusModule::prev_status_kind(fighter.module_accessor, 0) == *FIGHTER_STATUS_KIND_TURN
                     && StatusModule::prev_status_kind(fighter.module_accessor, 1) == *FIGHTER_STATUS_KIND_DASH;
 
-                if fighter.global_table[CURRENT_FRAME].get_i32() == 1  // if you are on f2 of current dash
+                if fighter.global_table[CURRENT_FRAME].get_i32() == 2  // if you are on f3 of current dash
                 && !is_backdash  // AND you are not in a backdash
                 && !fighter.is_stick_backward() // AND stick is not backwards
                 && stick_x.abs() < dash_stick_x {  // AND stick_x < dash stick threshold
