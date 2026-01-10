@@ -812,7 +812,7 @@ special_air_hi_short_end:
   extra:
     xlu_start: 0
     xlu_end: 0
-    cancel_frame: 21
+    cancel_frame: 20
     no_stop_intp: false
 catch_attack:
   extra:
