@@ -350,7 +350,8 @@ unsafe fn rivals_waveland(fighter: &mut L2CFighterCommon) {
         *FIGHTER_STATUS_KIND_ESCAPE_AIR,
         *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE
     ]) {
-        CancelModule::enable_cancel(fighter.module_accessor);
+        fighter.clear_commands(Cat2::CommonGuard);
+        fighter.clear_commands(CatHdr::Parry);
         let terms_to_unable = [
             *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_DASH,
             *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE,
@@ -374,6 +375,7 @@ unsafe fn rivals_waveland(fighter: &mut L2CFighterCommon) {
         } else {
             fighter.enable_transition_term_many(&terms_to_unable);
         }
+        CancelModule::enable_cancel(fighter.module_accessor);
     }
 }
 

@@ -495,11 +495,11 @@ unsafe fn sub_transition_group_check_ground_guard(fighter: &mut L2CFighterCommon
                         fighter.change_status(FIGHTER_STATUS_KIND_GUARD_OFF.into(), false.into());
                         return true.into();
                     }
-                }
-                // C-Stick rolls
-                if fighter.sub_check_command_guard().get_bool() 
-                && shield::misc::check_cstick_escape_oos(fighter, true).get_bool() {
-                    return true.into();
+                    // C-Stick rolls
+                    if fighter.sub_check_command_guard().get_bool() 
+                    && shield::misc::check_cstick_escape_oos(fighter, true).get_bool() {
+                        return true.into();
+                    }
                 }
                 return false.into();
             }
