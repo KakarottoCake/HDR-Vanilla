@@ -1,5 +1,4 @@
 var AButtonHeld = false;
-var enabled = [];
 var buttonCount = 0;
 var rows = 0;
 var currPos = 0;
