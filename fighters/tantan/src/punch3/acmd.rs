@@ -4,6 +4,7 @@ unsafe extern "C" fn game_attackshort(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
+        VarModule::off_flag(agent.get_owner_boma().object(), vars::tantan::instance::ARMS_ATTACK_CANCEL);
         ATTACK(agent, 0, 0, Hash40::new("cakram1"), 5.0, 70, 95, 0, 40, 0.7, 0.0, 2.0, 0.0, None, None, None, 0.9, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, -2.5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_TANTAN_PUNCH03, *ATTACK_REGION_PUNCH);
         AttackModule::enable_safe_pos(boma);
         AttackModule::disable_tip(boma);

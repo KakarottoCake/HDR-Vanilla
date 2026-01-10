@@ -3,37 +3,6 @@ utils::import_noreturn!(common::opff::fighter_common_opff);
 use super::*;
 use globals::*;
 
-//TODO: Figure out how to cancel arm recoil with a tilt/aerial, and if it's worth implementing
-unsafe fn recoil_cancel(boma: &mut BattleObjectModuleAccessor) {
-    if !VarModule::is_flag(boma.object(), vars::tantan::status::ARMS_ATTACK_CANCEL) { return; }
-
-    let mut new_status = 0;
-    if boma.is_cat_flag(Cat1::AttackS4) {
-        new_status = *FIGHTER_STATUS_KIND_ATTACK_S3;
-    } else if boma.is_cat_flag(Cat1::AttackHi4) {
-        new_status = *FIGHTER_STATUS_KIND_ATTACK_HI3;
-    } else if boma.is_cat_flag(Cat1::AttackLw4) {
-        new_status = *FIGHTER_STATUS_KIND_ATTACK_LW3;
-    } else if boma.is_cat_flag(Cat1::AttackS3) {
-        new_status = *FIGHTER_STATUS_KIND_ATTACK_S3;
-    } else if boma.is_cat_flag(Cat1::AttackHi3) {
-        new_status = *FIGHTER_STATUS_KIND_ATTACK_HI3;
-    } else if boma.is_cat_flag(Cat1::AttackLw3) {
-        new_status = *FIGHTER_STATUS_KIND_ATTACK_LW3;
-    } else if boma.is_cat_flag(Cat1::AttackN) {
-        new_status = *FIGHTER_STATUS_KIND_ATTACK;
-    }
-    if (new_status > 0) {
-        if !boma.is_situation(*SITUATION_KIND_AIR) {
-            StatusModule::change_status_request_from_script(boma, new_status, false);
-        }
-        else {
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_AIR, false);
-        }
-        VarModule::off_flag(boma.object(), vars::tantan::status::ARMS_ATTACK_CANCEL);
-    }
-}
-
 unsafe fn arms_switch_during_normals(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_status_one_of(&[
         *FIGHTER_STATUS_KIND_ATTACK_S3,
@@ -45,8 +14,8 @@ unsafe fn arms_switch_during_normals(boma: &mut BattleObjectModuleAccessor) {
         *FIGHTER_STATUS_KIND_ATTACK_HI4,
         *FIGHTER_STATUS_KIND_ATTACK_LW4])
     || (boma.is_motion(Hash40::new("attack_13"))) {
-        if !boma.is_in_hitlag() {
-            if boma.is_cat_flag(Cat1::SpecialLw) {
+        if boma.is_cat_flag(Cat1::SpecialLw) {
+            if !boma.is_in_hitlag() {
                 WorkModule::on_flag(boma,*FIGHTER_TANTAN_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_CHANGE_PUNCH_R);
                 boma.clear_commands(Cat1::SpecialLw); 
             }
@@ -75,10 +44,10 @@ unsafe fn double_dragon(boma: &mut BattleObjectModuleAccessor) {
     }
     else {
         let dragonEffect = VarModule::get_int(boma.object(),vars::tantan::instance::ARMR_DRAGONIZE_EFFECT_HANDLE) as u32;
-        ModelModule::set_joint_scale(boma, Hash40::new("pr1_main"), &Vector3f::new(1.0, 1.0, 1.0));
         if dragonEffect > 0 {
-            EffectModule::kill(boma, dragonEffect, false,false);
-            VarModule::set_int(boma.object(),vars::tantan::instance::ARMR_DRAGONIZE_EFFECT_HANDLE,0);
+            ModelModule::set_joint_scale(boma, Hash40::new("pr1_main"), &Vector3f::new(1.0, 1.0, 1.0));
+            EffectModule::kill(boma, dragonEffect, false, false);
+            VarModule::set_int(boma.object(), vars::tantan::instance::ARMR_DRAGONIZE_EFFECT_HANDLE, 0);
         }
     }
 }
@@ -94,7 +63,6 @@ unsafe fn fsmash_effect_translation(boma: &mut BattleObjectModuleAccessor) {
 }
 
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
-    recoil_cancel(boma);
     arms_switch_during_normals(boma);
     double_dragon(boma);
     fsmash_effect_translation(boma);

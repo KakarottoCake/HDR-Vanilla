@@ -10,6 +10,7 @@ mod attack;
 mod attack_air;
 mod attack_jump_aerial;
 mod attack_landing;
+mod attack_ext;
 mod attack_s3;
 mod attack_s4;
 
@@ -56,6 +57,7 @@ pub fn install(agent: &mut Agent) {
     attack_air::install(agent);
     attack_jump_aerial::install(agent);
     attack_landing::install(agent);
+    attack_ext::install(agent);
     attack_s3::install(agent);
     attack_s4::install(agent);
 
