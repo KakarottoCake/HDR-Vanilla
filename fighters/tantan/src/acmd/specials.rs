@@ -209,6 +209,41 @@ unsafe extern "C" fn effect_specialhistart(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_specialhilong(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 1.0);
+    if is_excute(agent) {
+        HIT_NODE(agent, Hash40::new("handr"), *HIT_STATUS_XLU);
+        HIT_NODE(agent, Hash40::new("armr5"), *HIT_STATUS_XLU);
+        HIT_NODE(agent, Hash40::new("armr4"), *HIT_STATUS_XLU);
+        HIT_NODE(agent, Hash40::new("handl"), *HIT_STATUS_XLU);
+        HIT_NODE(agent, Hash40::new("arml5"), *HIT_STATUS_XLU);
+        HIT_NODE(agent, Hash40::new("arml4"), *HIT_STATUS_XLU);
+    }
+    frame(lua_state, 4.0);
+    if is_excute(agent) {
+        HIT_NO(agent, 2, *HIT_STATUS_OFF);
+        HIT_NO(agent, 3, *HIT_STATUS_OFF);
+        HIT_NO(agent, 4, *HIT_STATUS_OFF);
+        HIT_NO(agent, 5, *HIT_STATUS_OFF);
+        HIT_NO(agent, 6, *HIT_STATUS_OFF);
+        HIT_NO(agent, 7, *HIT_STATUS_OFF);
+        HIT_NO(agent, 8, *HIT_STATUS_OFF);
+        HIT_NO(agent, 9, *HIT_STATUS_OFF);
+        HIT_NO(agent, 10, *HIT_STATUS_OFF);
+        HIT_NO(agent, 11, *HIT_STATUS_OFF);
+        HIT_NO(agent, 12, *HIT_STATUS_OFF);
+        HIT_NO(agent, 13, *HIT_STATUS_OFF);
+        HIT_NO(agent, 18, *HIT_STATUS_OFF);
+        HIT_NO(agent, 19, *HIT_STATUS_OFF);
+    }
+    frame(lua_state, 15.0);
+    if is_excute(agent) {
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+    }
+}
+
 unsafe extern "C" fn effect_specialhilong(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -380,19 +415,14 @@ unsafe extern "C" fn game_specialairhistart(agent: &mut L2CAgentBase) {
         WorkModule::on_flag(boma, *FIGHTER_TANTAN_STATUS_SPECIAL_HI_FLAG_REVERSE_LR);
     }
     frame(lua_state, 5.0);
-    FT_MOTION_RATE(agent, 5.0/(8.0-5.0));
-    frame(lua_state, 7.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_STATUS_AIR_LASSO_FLAG_CHECK);
-        WorkModule::on_flag(boma, *FIGHTER_STATUS_AIR_LASSO_FLAG_HANG_IMMIDIATE);
-    }
+    FT_MOTION_RATE_RANGE(agent, 5.0, 8.0, 5.0);
     frame(lua_state, 8.0);
     FT_MOTION_RATE(agent, 1.0);
+    frame(lua_state, 9.0);
     if is_excute(agent) {
-        GroundModule::select_cliff_hangdata(boma, *FIGHTER_TANTAN_CLIFF_HANG_DATA_AIR_LASSO as u32);
         WorkModule::off_flag(boma, *FIGHTER_STATUS_AIR_LASSO_FLAG_HANG_IMMIDIATE);
     }
-    frame(lua_state, 10.0);
+    frame(lua_state, 11.0);
     if is_excute(agent) {
         WorkModule::off_flag(boma, *FIGHTER_STATUS_AIR_LASSO_FLAG_CHECK);
     }
@@ -456,6 +486,9 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("expression_specialairnend", expression_specialairnend, Priority::Low);
 
     agent.acmd("effect_specialhistart", effect_specialhistart, Priority::Low);
+
+    agent.acmd("game_specialhishort", game_specialhilong, Priority::Low);
+    agent.acmd("game_specialhilong", game_specialhilong, Priority::Low);
 
     agent.acmd("effect_specialhilong", effect_specialhilong, Priority::Low);
     agent.acmd("sound_specialhilong", sound_specialhilong, Priority::Low);
