@@ -84,34 +84,35 @@ unsafe extern "C" fn attackjumpsquat_exec(fighter: &mut L2CFighterCommon) -> L2C
     let ret = smashline::original_status(Exec, fighter, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_JUMP_SQUAT)(fighter);
     check_recoil_cancel(fighter);
 
-    return 0.into();
+    return ret;
 }
 
 unsafe extern "C" fn attackwalk_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
     let ret = smashline::original_status(Exec, fighter, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_WALK)(fighter);
     check_recoil_cancel(fighter);
 
-    return 0.into();
+    return ret;
 }
 
 unsafe extern "C" fn attackwalkback_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
     let ret = smashline::original_status(Exec, fighter, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_WALK_BACK)(fighter);
     check_recoil_cancel(fighter);
 
-    return 0.into();
+    return ret;
 }
 
 unsafe extern "C" fn attacklanding_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let ret = smashline::original_status(Exec, fighter, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_LANDING)(fighter);
     check_recoil_cancel(fighter);
 
-    return 0.into();
+    return ret;
 }
 
 unsafe extern "C" fn attacklandinglight_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
     let ret = smashline::original_status(Exec, fighter, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_LANDING_LIGHT)(fighter);
     check_recoil_cancel(fighter);
 
-    return 0.into();
+    return ret;
 }
 
 unsafe extern "C" fn attacksquat_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -124,7 +125,7 @@ unsafe extern "C" fn attacksquatwait_exec(fighter: &mut L2CFighterCommon) -> L2C
     let ret = smashline::original_status(Exec, fighter, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_SQUAT_WAIT)(fighter);
     check_recoil_cancel(fighter);
 
-    return 0.into();
+    return ret;
 }
 
 pub fn install(agent: &mut Agent) {
