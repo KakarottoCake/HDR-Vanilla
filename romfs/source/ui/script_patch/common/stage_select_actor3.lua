@@ -487,7 +487,6 @@ local set_tab_form_text = function(stage_form)
     }
 
     tab_layout:play_animation(string.format("stage_%s", form_names[stage_form + 1]), 1.0)
-    tab_form_button_pane:set_text_message(string.format("mel_stage_select_%s", form_names[stage_form + 1]))
 end
 
 -- Plays the looping long-cancel sound effect (when you are holding B to exit)
@@ -1036,6 +1035,8 @@ local change_sub_page = function(target_page)
         page_back = #pages
     end
 
+    local page_current = target_page + 1
+
     local page_forward = target_page + 2
     if page_forward > #pages then
         page_forward = 1
@@ -1043,6 +1044,7 @@ local change_sub_page = function(target_page)
 
     root_view:get_pane("txt_page_back"):set_text_string("Page " .. page_back)
     root_view:get_pane("txt_page_forward"):set_text_string("Page " .. page_forward)
+    tab_form_button_pane:set_text_string("Page " .. page_current)
 
     local positions = {}
 
