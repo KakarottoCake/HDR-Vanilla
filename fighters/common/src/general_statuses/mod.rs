@@ -136,6 +136,22 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_LandingStiffness)]
 pub unsafe fn status_LandingStiffness(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[PREV_STATUS_KIND] == FIGHTER_STATUS_KIND_DAMAGE_AIR {
+
+        // special conditions for rivals mode
+        match utils::game_modes::get_custom_mode() {
+            Some(modes) => {
+                if modes.contains(&game_modes::CustomMode::RivalsOfAetherMode) {
+                    if !VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_CC_NON_TUMBLE) {
+                        // Reduce buffer out of non-CCd non-tumble hitstun landing
+                        let damage_level3_precede = ParamModule::get_int(fighter.battle_object, ParamType::Common, "damage_level3_precede");
+                        InputModule::set_command_life_count_max(fighter.battle_object, damage_level3_precede as u32);
+                    }
+                    return original!()(fighter);
+                }
+            },
+            _ => {}
+        }
+
         if VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_CC_NON_TUMBLE) {
             // halve hitstun on non-tumble landing if CC'd
             // if halved hitstun is less than your heavy landing lag value, use your heavy landing lag value
