@@ -31,6 +31,11 @@ unsafe fn set_transition_terms(fighter: &mut L2CFighterCommon, some_bool: bool) 
 
 unsafe fn check_recoil_cancel(fighter: &mut L2CFighterCommon) {
     if !VarModule::is_flag(fighter.battle_object, vars::tantan::instance::ARMS_ATTACK_CANCEL) { return; }
+    if fighter.is_flag(*FIGHTER_TANTAN_INSTANCE_WORK_ID_FLAG_ATTACK_IS_CANCEL) {
+        VarModule::off_flag(fighter.battle_object, vars::tantan::instance::ARMS_ATTACK_CANCEL);
+        return;
+    }
+
     let mut new_status = 0;
     if fighter.is_cat_flag(Cat1::AttackS4) {
         new_status = *FIGHTER_STATUS_KIND_ATTACK_S3;
