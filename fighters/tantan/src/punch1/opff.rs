@@ -23,6 +23,7 @@ unsafe extern "C" fn dragon_frame(weapon: &mut L2CFighterBase) {
             }
             if is_dragonized {
                 PostureModule::set_scale(weapon.module_accessor, bigScale, false);
+                AttackModule::set_power_mul_5th(weapon.module_accessor, 1.5);
             }
         }
     }
