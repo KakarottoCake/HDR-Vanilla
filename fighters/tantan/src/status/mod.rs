@@ -44,6 +44,7 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     VarModule::off_flag(fighter.battle_object, vars::tantan::instance::SPECIAL_HI_GROUND_START);
     VarModule::off_flag(fighter.battle_object, vars::tantan::instance::SPECIAL_HI_AIR_JUMP);
     VarModule::off_flag(fighter.battle_object, vars::tantan::instance::SPECIAL_HI_ENABLE_FREEFALL);
+    VarModule::off_flag(fighter.battle_object, vars::tantan::instance::ARMS_ATTACK_CANCEL);
 }
 
 pub fn install(agent: &mut Agent) {
