@@ -565,6 +565,22 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
         used_stages.insert(name_id, false);
     }
 
+    if let Some(entry) = stage_map.get("Random") {
+        let mut new_entry = entry.clone();
+        let stage_struct = new_entry.try_into_mut::<ParamStruct>().unwrap();
+        let disp_order = stage_struct.0
+            .iter_mut()
+            .find(|param| param.0 == prc::hash40::Hash40(hash40("disp_order")))
+            .unwrap()
+            .1
+            .try_into_mut::<i8>()
+            .unwrap();
+        
+        *disp_order = stage_order;
+        out_list.push(new_entry);
+        used_stages.insert("Random".to_string(), true);
+    }
+
     let mut pages: Vec<StagePage> = Vec::new();
     for n in 0..num_pages {
         pages.push(stage_pages[n].clone());
