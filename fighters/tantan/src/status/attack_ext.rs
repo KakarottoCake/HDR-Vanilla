@@ -55,18 +55,17 @@ unsafe fn check_recoil_cancel(fighter: &mut L2CFighterCommon) {
 
     if (new_status > 0) {
         //DamageModule::add_damage(fighter.module_accessor, new_status as f32, 0);
+        VarModule::off_flag(fighter.battle_object, vars::tantan::instance::ARMS_ATTACK_CANCEL);
         if fighter.is_situation(*SITUATION_KIND_GROUND) {
             if fighter.is_pad_flag(PadFlag::JumpTrigger) {
-                StatusModule::change_status_force(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, false);
-            }
-            else {
-                StatusModule::change_status_force(fighter.module_accessor, new_status, false);
+                new_status = *FIGHTER_STATUS_KIND_JUMP_SQUAT;
             }
         }
         else {
-            StatusModule::change_status_force(fighter.module_accessor, *FIGHTER_STATUS_KIND_ATTACK_AIR, false);
+            new_status = *FIGHTER_STATUS_KIND_ATTACK_AIR;
         }
-        VarModule::off_flag(fighter.battle_object, vars::tantan::instance::ARMS_ATTACK_CANCEL);
+        VarModule::set_int(fighter.battle_object, vars::common::status::WARP_EFF_HANDLER, new_status);
+        VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
     }
 }
 

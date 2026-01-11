@@ -3,6 +3,16 @@ utils::import_noreturn!(common::opff::fighter_common_opff);
 use super::*;
 use globals::*;
 
+unsafe fn recoil_cancel(fighter: &mut L2CFighterCommon) {
+    // Since we check for the recoil cancel in exec, we need to transition in main or our acmd lags a frame behind
+    if VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK) {
+        VarModule::off_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
+        // Just hijacking this to save reload time, I'll replace it later
+        let new_status = VarModule::get_int(fighter.battle_object, vars::common::status::WARP_EFF_HANDLER);
+        StatusModule::change_status_force(fighter.module_accessor, new_status, false);
+    }
+}
+
 unsafe fn arms_switch_during_normals(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_status_one_of(&[
         *FIGHTER_STATUS_KIND_ATTACK_S3,
@@ -63,6 +73,7 @@ unsafe fn fsmash_effect_translation(boma: &mut BattleObjectModuleAccessor) {
 }
 
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
+    recoil_cancel(fighter);
     arms_switch_during_normals(boma);
     double_dragon(boma);
     fsmash_effect_translation(boma);
