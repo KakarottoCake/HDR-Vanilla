@@ -577,21 +577,16 @@ unsafe extern "C" fn status_dash_main_common(fighter: &mut L2CFighterCommon, arg
     }
 
     // RoA mode babydash
-    match utils::game_modes::get_custom_mode() {
-        Some(modes) => {
-            if modes.contains(&game_modes::CustomMode::RivalsOfAetherMode) {
-                let is_backdash = StatusModule::prev_status_kind(fighter.module_accessor, 0) == *FIGHTER_STATUS_KIND_TURN
-                    && StatusModule::prev_status_kind(fighter.module_accessor, 1) == *FIGHTER_STATUS_KIND_DASH;
+    if utils::game_modes::check_custom_mode(CustomMode::RivalsOfAetherMode) {
+        let is_backdash = StatusModule::prev_status_kind(fighter.module_accessor, 0) == *FIGHTER_STATUS_KIND_TURN
+            && StatusModule::prev_status_kind(fighter.module_accessor, 1) == *FIGHTER_STATUS_KIND_DASH;
 
-                if fighter.global_table[CURRENT_FRAME].get_i32() == 2  // if you are on f3 of current dash
-                && !is_backdash  // AND you are not in a backdash
-                && !fighter.is_stick_backward() // AND stick is not backwards
-                && stick_x.abs() < dash_stick_x {  // AND stick_x < dash stick threshold
-                    interrupt!(fighter, FIGHTER_STATUS_KIND_RUN_BRAKE, true);
-                }
-            }
-        },
-        _ => {}
+        if fighter.global_table[CURRENT_FRAME].get_i32() == 2  // if you are on f3 of current dash
+        && !is_backdash  // AND you are not in a backdash
+        && !fighter.is_stick_backward() // AND stick is not backwards
+        && stick_x.abs() < dash_stick_x {  // AND stick_x < dash stick threshold
+            interrupt!(fighter, FIGHTER_STATUS_KIND_RUN_BRAKE, true);
+        }
     }
 
     ok!()

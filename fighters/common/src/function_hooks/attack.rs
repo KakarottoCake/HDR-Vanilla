@@ -50,40 +50,35 @@ unsafe fn attack_module_set_attack(module: u64, id: i32, group: i32, data: &mut 
         }
     }
 
-    match utils::game_modes::get_custom_mode() {
-        Some(modes) => {
-            if modes.contains(&CustomMode::ElementMode) {
-                let rand = sv_math::rand(hash40("fighter"), 21);
-                match rand { 
-                    0 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_aura");          data.sound_attr = CollisionSoundAttr::Fire; },
-                    1 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_bury");          data.sound_attr = CollisionSoundAttr::Heavy; },
-                    2 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_bind_extra");    data.sound_attr = CollisionSoundAttr::Elec; },
-                    3 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_cutup");         data.sound_attr = CollisionSoundAttr::CutUp; },
-                    4 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_coin");          data.sound_attr = CollisionSoundAttr::Coin; },
-                    5 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_normal_poison"); data.sound_attr = CollisionSoundAttr::Fire; },
-                    6 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_elec");          data.sound_attr = CollisionSoundAttr::Elec; },
-                    7 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_fire");          data.sound_attr = CollisionSoundAttr::Fire; },
-                    8 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_flower");        data.sound_attr = CollisionSoundAttr::Kick; },
-                    9 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_ice");           data.sound_attr = CollisionSoundAttr::Freeze; },
-                    10 => { data.attr = smash_rs::phx::Hash40::new("collision_attr_magic");         data.sound_attr = CollisionSoundAttr::Magic; },
-                    11 => { data.attr = smash_rs::phx::Hash40::new("collision_attr_normal");        data.sound_attr = CollisionSoundAttr::Punch; },
-                    12 => { data.attr = smash_rs::phx::Hash40::new("collision_attr_paralyze");      data.sound_attr = CollisionSoundAttr::Elec; },
-                    13 => { data.attr = smash_rs::phx::Hash40::new("collision_attr_purple");        data.sound_attr = CollisionSoundAttr::Fire; },
-                    14 => { data.attr = smash_rs::phx::Hash40::new("collision_attr_sleep");         data.sound_attr = CollisionSoundAttr::Magic; },
-                    15 => { data.attr = smash_rs::phx::Hash40::new("collision_attr_slip");          data.sound_attr = CollisionSoundAttr::Slap; },
-                    16 => { data.attr = smash_rs::phx::Hash40::new("collision_attr_sting");         data.sound_attr = CollisionSoundAttr::CutUp; },
-                    17 => { data.attr = smash_rs::phx::Hash40::new("collision_attr_turn");          data.sound_attr = CollisionSoundAttr::Harisen; },
-                    _ => {} // (slightly larger) chance for the attack to not be randomized
-                }
+    if utils::game_modes::check_custom_mode(CustomMode::ElementMode) {
+        let rand = sv_math::rand(hash40("fighter"), 21);
+        match rand { 
+            0 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_aura");          data.sound_attr = CollisionSoundAttr::Fire; },
+            1 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_bury");          data.sound_attr = CollisionSoundAttr::Heavy; },
+            2 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_bind_extra");    data.sound_attr = CollisionSoundAttr::Elec; },
+            3 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_cutup");         data.sound_attr = CollisionSoundAttr::CutUp; },
+            4 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_coin");          data.sound_attr = CollisionSoundAttr::Coin; },
+            5 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_normal_poison"); data.sound_attr = CollisionSoundAttr::Fire; },
+            6 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_elec");          data.sound_attr = CollisionSoundAttr::Elec; },
+            7 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_fire");          data.sound_attr = CollisionSoundAttr::Fire; },
+            8 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_flower");        data.sound_attr = CollisionSoundAttr::Kick; },
+            9 =>  { data.attr = smash_rs::phx::Hash40::new("collision_attr_ice");           data.sound_attr = CollisionSoundAttr::Freeze; },
+            10 => { data.attr = smash_rs::phx::Hash40::new("collision_attr_magic");         data.sound_attr = CollisionSoundAttr::Magic; },
+            11 => { data.attr = smash_rs::phx::Hash40::new("collision_attr_normal");        data.sound_attr = CollisionSoundAttr::Punch; },
+            12 => { data.attr = smash_rs::phx::Hash40::new("collision_attr_paralyze");      data.sound_attr = CollisionSoundAttr::Elec; },
+            13 => { data.attr = smash_rs::phx::Hash40::new("collision_attr_purple");        data.sound_attr = CollisionSoundAttr::Fire; },
+            14 => { data.attr = smash_rs::phx::Hash40::new("collision_attr_sleep");         data.sound_attr = CollisionSoundAttr::Magic; },
+            15 => { data.attr = smash_rs::phx::Hash40::new("collision_attr_slip");          data.sound_attr = CollisionSoundAttr::Slap; },
+            16 => { data.attr = smash_rs::phx::Hash40::new("collision_attr_sting");         data.sound_attr = CollisionSoundAttr::CutUp; },
+            17 => { data.attr = smash_rs::phx::Hash40::new("collision_attr_turn");          data.sound_attr = CollisionSoundAttr::Harisen; },
+            _ => {} // (slightly larger) chance for the attack to not be randomized
+        }
 
-                let ret = call_original!(module, id, group, data);
-                if rand == 5 {
-                    AttackModule::set_poison_param(boma, 0, 361, 45, 1.0, false);
-                }
-                return ret;
-            }
-        },
-        _ => {}
+        let ret = call_original!(module, id, group, data);
+        if rand == 5 {
+            AttackModule::set_poison_param(boma, 0, 361, 45, 1.0, false);
+        }
+        return ret;
     }
 
     call_original!(module, id, group, data);
@@ -100,34 +95,24 @@ unsafe fn attack_module_set_attack(module: u64, id: i32, group: i32, data: &mut 
 
 #[skyline::hook(offset = 0x403c3c, inline)]
 unsafe fn get_damage_frame_mul(ctx: &mut skyline::hooks::InlineCtx) {
-    match utils::game_modes::get_custom_mode() {
-        Some(modes) => {
-            let damage_frame_mul: f32 = if modes.contains(&CustomMode::Smash64Mode) {
-                0.533
-            }
-            else {
-                0.42
-            };
-            ctx.registers_f[0].set_s(damage_frame_mul)
-        },
-        _ => {}
+    let damage_frame_mul: f32 = if utils::game_modes::check_custom_mode(CustomMode::Smash64Mode) {
+        0.533
     }
+    else {
+        0.42 // TODO: shouldnt this be parameterized?
+    };
+    ctx.registers_f[0].set_s(damage_frame_mul)
 }
 
 #[skyline::hook(offset = 0x406bf4, inline)]
 unsafe fn get_hitstop_frame_add(ctx: &mut skyline::hooks::InlineCtx) {
-    match utils::game_modes::get_custom_mode() {
-        Some(modes) => {
-            let hitstop_frame_add: f32 = if modes.contains(&CustomMode::Smash64Mode) {
-                5.0
-            }
-            else {
-                4.0
-            };
-            ctx.registers_f[0].set_s(hitstop_frame_add)
-        },
-        _ => {}
+    let hitstop_frame_add: f32 = if utils::game_modes::check_custom_mode(CustomMode::Smash64Mode) {
+        5.0
     }
+    else {
+        4.0 // TODO: shouldnt this be parameterized?
+    };
+    ctx.registers_f[0].set_s(hitstop_frame_add)
 }
 
 // Only applies 0.67 crouch cancel hitlag multiplier to receiver
@@ -300,13 +285,8 @@ unsafe fn x03df93c(ctx: &mut skyline::hooks::InlineCtx) {
         }
 
         // RoA invuln on parry success
-        match utils::game_modes::get_custom_mode() {
-            Some(modes) => {
-                if modes.contains(&game_modes::CustomMode::RivalsOfAetherMode) {
-                    HitModule::set_xlu_frame_global(defender_boma, 60, 0);
-                }
-            },
-            _ => {}
+        if utils::game_modes::check_custom_mode(game_modes::CustomMode::RivalsOfAetherMode) {
+            HitModule::set_xlu_frame_global(defender_boma, 60, 0);
         }
     }
 }

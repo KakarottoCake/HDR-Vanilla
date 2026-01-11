@@ -138,18 +138,13 @@ pub unsafe fn status_LandingStiffness(fighter: &mut L2CFighterCommon) -> L2CValu
     if fighter.global_table[PREV_STATUS_KIND] == FIGHTER_STATUS_KIND_DAMAGE_AIR {
 
         // special conditions for rivals mode
-        match utils::game_modes::get_custom_mode() {
-            Some(modes) => {
-                if modes.contains(&game_modes::CustomMode::RivalsOfAetherMode) {
-                    if !VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_CC_NON_TUMBLE) {
-                        // Reduce buffer out of non-CCd non-tumble hitstun landing
-                        let damage_level3_precede = ParamModule::get_int(fighter.battle_object, ParamType::Common, "damage_level3_precede");
-                        InputModule::set_command_life_count_max(fighter.battle_object, damage_level3_precede as u32);
-                    }
-                    return original!()(fighter);
-                }
-            },
-            _ => {}
+        if utils::game_modes::check_custom_mode(CustomMode::RivalsOfAetherMode) {
+            if !VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_CC_NON_TUMBLE) {
+                // Reduce buffer out of non-CCd non-tumble hitstun landing
+                let damage_level3_precede = ParamModule::get_int(fighter.battle_object, ParamType::Common, "damage_level3_precede");
+                InputModule::set_command_life_count_max(fighter.battle_object, damage_level3_precede as u32);
+            }
+            return original!()(fighter);
         }
 
         if VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_CC_NON_TUMBLE) {
@@ -496,31 +491,26 @@ unsafe fn sub_transition_group_check_ground_guard(fighter: &mut L2CFighterCommon
     }
 
     // special conditions for rivals mode
-    match utils::game_modes::get_custom_mode() {
-        Some(modes) => {
-            if modes.contains(&game_modes::CustomMode::RivalsOfAetherMode) {
-                // Cannot parry if using shield lock (for convenience)
-                let guard_hold = fighter.check_guard_hold().get_bool();
-                if guard_hold {
-                    return false.into();
-                }
-                // Parry input
-                if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON) {
-                    if fighter.sub_check_command_parry().get_bool()  {
-                        VarModule::on_flag(fighter.object(), vars::common::instance::IS_PARRY_FOR_GUARD_OFF);
-                        fighter.change_status(FIGHTER_STATUS_KIND_GUARD_OFF.into(), false.into());
-                        return true.into();
-                    }
-                    // C-Stick rolls
-                    if fighter.sub_check_command_guard().get_bool() 
-                    && shield::misc::check_cstick_escape_oos(fighter, true).get_bool() {
-                        return true.into();
-                    }
-                }
-                return false.into();
+    if utils::game_modes::check_custom_mode(CustomMode::RivalsOfAetherMode) {
+        // Cannot parry if using shield lock (for convenience)
+        let guard_hold = fighter.check_guard_hold().get_bool();
+        if guard_hold {
+            return false.into();
+        }
+        // Parry input
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON) {
+            if fighter.sub_check_command_parry().get_bool()  {
+                VarModule::on_flag(fighter.object(), vars::common::instance::IS_PARRY_FOR_GUARD_OFF);
+                fighter.change_status(FIGHTER_STATUS_KIND_GUARD_OFF.into(), false.into());
+                return true.into();
             }
-        },
-        _ => {}
+            // C-Stick rolls
+            if fighter.sub_check_command_guard().get_bool() 
+            && shield::misc::check_cstick_escape_oos(fighter, true).get_bool() {
+                return true.into();
+            }
+        }
+        return false.into();
     }
 
     if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON) {
@@ -994,13 +984,8 @@ unsafe extern "C" fn fighterstatusdamage_init_damage_camera_tracking(
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_FighterStatusDamage__correctDamageVector)]
 pub unsafe fn FighterStatusDamage__correctDamageVector(fighter: &mut L2CFighterCommon) -> L2CValue {
-    match utils::game_modes::get_custom_mode() {
-        Some(modes) => {
-            if modes.contains(&CustomMode::Smash64Mode) {
-                return 0.into();
-            }
-        },
-        _ => {}
+    if utils::game_modes::check_custom_mode(CustomMode::Smash64Mode) {
+        return 0.into();
     }
     let ret = call_original!(fighter);
 
@@ -1023,13 +1008,8 @@ pub unsafe fn FighterStatusDamage__correctDamageVector(fighter: &mut L2CFighterC
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_FighterStatusDamage__correctDamageVectorEffect)]
 pub unsafe fn FighterStatusDamage__correctDamageVectorEffect(fighter: &mut L2CFighterCommon, param_1: L2CValue) -> L2CValue {
-    match utils::game_modes::get_custom_mode() {
-        Some(modes) => {
-            if modes.contains(&CustomMode::Smash64Mode) {
-                return 0.into();
-            }
-        },
-        _ => {}
+    if utils::game_modes::check_custom_mode(game_modes::CustomMode::Smash64Mode) {
+        return 0.into();
     }
     if fighter.global_table[STATUS_KIND_INTERRUPT] != FIGHTER_STATUS_KIND_DAMAGE_AIR {
         return call_original!(fighter, param_1);

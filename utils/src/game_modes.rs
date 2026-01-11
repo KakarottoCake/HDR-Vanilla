@@ -161,15 +161,6 @@ unsafe fn once_per_game_frame(game_state_ptr: u64) {
                     tag::update();
                 }
             }
-            // if modes.contains(&CustomMode::TurboMode) {
-            //     turbo::update();
-            // }
-            // if modes.contains(&CustomMode::HitfallMode) {
-            //     hitfall::update();
-            // }
-            // if modes.contains(&CustomMode::AirdashMode) {
-            //     airdash::update();
-            // }
         },
         _ => {}
     }

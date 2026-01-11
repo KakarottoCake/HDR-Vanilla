@@ -68,6 +68,15 @@ pub fn is_custom_mode() -> bool {
     }
 }
 
+pub fn check_custom_mode(mode: CustomMode) -> bool {
+    unsafe {
+        match _get_custom_mode() {
+            Some(modes) => modes.contains(&mode),
+            None => false,
+        }
+    }
+}
+
 pub fn get_custom_mode() -> Option<HashSet<CustomMode>> {
     unsafe {
         _get_custom_mode()

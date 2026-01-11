@@ -200,83 +200,54 @@ pub extern "C" fn fighter_reset(fighter: &mut L2CFighterCommon) {
     }
 }
 
-pub extern "C" fn turbo_mode(fighter: &mut L2CFighterCommon) {
-    unsafe {
-        match utils::game_modes::get_custom_mode() {
-            Some(modes) => {
-                if modes.contains(&CustomMode::TurboMode) {
-                    if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-                        // enable turbo behavior
-                        CancelModule::enable_cancel(fighter.boma());
-                        //println!("enabled cancelling!");
+pub unsafe extern "C" fn turbo_mode(fighter: &mut L2CFighterCommon) {
+    if utils::game_modes::check_custom_mode(CustomMode::TurboMode) {
+        if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+            // enable turbo behavior
+            CancelModule::enable_cancel(fighter.boma());
+            //println!("enabled cancelling!");
 
-                        if fighter.is_situation(*SITUATION_KIND_GROUND) {
-                            fighter.sub_wait_ground_check_common(false.into());
-                        } else {
-                            fighter.sub_air_check_fall_common();
-                        }
-                    }
-                }
-            },
-            _ => {}
+            if fighter.is_situation(*SITUATION_KIND_GROUND) {
+                fighter.sub_wait_ground_check_common(false.into());
+            } else {
+                fighter.sub_air_check_fall_common();
+            }
         }
+        
     }
 }
 
-pub extern "C" fn hitfall_mode(fighter: &mut L2CFighterCommon) {
-    unsafe {
-        match utils::game_modes::get_custom_mode() {
-            Some(modes) => {
-                if modes.contains(&CustomMode::HitfallMode)
-                || modes.contains(&CustomMode::RivalsOfAetherMode) {
-                    fighter.check_hitfall();
-                }
-            },
-            _ => {}
-        }
+pub unsafe extern "C" fn hitfall_mode(fighter: &mut L2CFighterCommon) {
+    match utils::game_modes::get_custom_mode() {
+        Some(modes) => {
+            if modes.contains(&CustomMode::HitfallMode)
+            || modes.contains(&CustomMode::RivalsOfAetherMode) {
+                fighter.check_hitfall();
+            }
+        },
+        _ => {}
     }
 }
 
-pub extern "C" fn airdash_mode(fighter: &mut L2CFighterCommon) {
-    unsafe {
-        match utils::game_modes::get_custom_mode() {
-            Some(modes) => {
-                if modes.contains(&CustomMode::AirdashMode) {
-                    fighter.check_airdash();
-                }
-            },
-            _ => {}
-        }
+pub unsafe extern "C" fn airdash_mode(fighter: &mut L2CFighterCommon) {
+    if utils::game_modes::check_custom_mode(CustomMode::AirdashMode) {
+        fighter.check_airdash();
     }
 }
 
-pub extern "C" fn magicseries_mode(fighter: &mut L2CFighterCommon) {
-    unsafe {
-        match utils::game_modes::get_custom_mode() {
-            Some(modes) => {
-                if modes.contains(&CustomMode::MagicSeriesMode) {
-                    fighter.check_magicseries();
-                }
-            },
-            _ => {}
-        }
+pub unsafe extern "C" fn magicseries_mode(fighter: &mut L2CFighterCommon) {
+    if utils::game_modes::check_custom_mode(CustomMode::MagicSeriesMode) {
+        fighter.check_magicseries();
     }
 }
 
-pub extern "C" fn rivals_mode(fighter: &mut L2CFighterCommon) {
-    unsafe {
-        match utils::game_modes::get_custom_mode() {
-            Some(modes) => {
-                if modes.contains(&CustomMode::RivalsOfAetherMode) {
-                    rivals_drift_di(fighter);
-                    rivals_waveland(fighter);
-                    rivals_jab_tilt(fighter);
-                    rivals_landing_lag_jc(fighter);
-                    rivals_parry_stun(fighter);
-                }
-            },
-            _ => {}
-        }
+pub unsafe extern "C" fn rivals_mode(fighter: &mut L2CFighterCommon) {
+    if utils::game_modes::check_custom_mode(CustomMode::RivalsOfAetherMode) {
+        rivals_drift_di(fighter);
+        rivals_waveland(fighter);
+        rivals_jab_tilt(fighter);
+        rivals_landing_lag_jc(fighter);
+        rivals_parry_stun(fighter);
     }
 }
 
