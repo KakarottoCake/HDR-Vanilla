@@ -736,12 +736,14 @@ unsafe fn status_end_dash(fighter: &mut L2CFighterCommon) -> L2CValue {
     }
 
     // baby dashing for RoA mode
-    if StatusModule::status_kind_next(fighter.module_accessor) == *FIGHTER_STATUS_KIND_RUN_BRAKE {
-        let lr = PostureModule::lr(fighter.module_accessor);
-        let baby_dash_speed = ParamModule::get_float(fighter.battle_object, ParamType::Shared, "baby_dash_speed");
-        fighter.clear_lua_stack();
-        lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, baby_dash_speed * lr);
-        app::sv_kinetic_energy::set_speed(fighter.lua_state_agent);
+    if utils::game_modes::check_custom_mode(CustomMode::RivalsOfAetherMode) {
+        if StatusModule::status_kind_next(fighter.module_accessor) == *FIGHTER_STATUS_KIND_RUN_BRAKE {
+            let lr = PostureModule::lr(fighter.module_accessor);
+            let baby_dash_speed = ParamModule::get_float(fighter.battle_object, ParamType::Shared, "baby_dash_speed");
+            fighter.clear_lua_stack();
+            lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, baby_dash_speed * lr);
+            app::sv_kinetic_energy::set_speed(fighter.lua_state_agent);
+        }
     }
 
     if VarModule::is_flag(fighter.battle_object, vars::common::status::APPLY_DASH_END_SPEED_MUL) {

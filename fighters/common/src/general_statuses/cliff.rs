@@ -371,7 +371,7 @@ unsafe fn get_cliff_wait_hit_xlu_frame(fighter: &mut L2CFighterCommon) -> L2CVal
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_transition_group_check_air_cliff)]
 unsafe fn sub_transition_group_check_air_cliff(fighter: &mut L2CFighterCommon) -> L2CValue {
-    // in rivals mode, players can wall jump in all ledge-grabbable statuses
+    // in RoA mode, players can wall jump in all ledge-grabbable statuses
     if utils::game_modes::check_custom_mode(game_modes::CustomMode::RivalsOfAetherMode) {
         VarModule::on_flag(fighter.battle_object, vars::common::status::ENABLE_SPECIAL_WALLJUMP);
         let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);

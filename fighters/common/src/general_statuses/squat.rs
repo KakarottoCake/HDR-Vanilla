@@ -38,6 +38,7 @@ const RIVALS_CC_DAMAGE_ARMOR: f32 = 6.0;
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_Squat_Main)]
 pub unsafe fn status_Squat_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    // reworked CC armor in RoA mode
     if utils::game_modes::check_custom_mode(game_modes::CustomMode::RivalsOfAetherMode) {
         damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, RIVALS_CC_DAMAGE_ARMOR);
     }
@@ -46,6 +47,7 @@ pub unsafe fn status_Squat_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_end_Squat)]
 pub unsafe fn status_end_Squat(fighter: &mut L2CFighterCommon) -> L2CValue {
+    // reworked CC armor in RoA mode
     if utils::game_modes::check_custom_mode(game_modes::CustomMode::RivalsOfAetherMode) {
         damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
     }
@@ -54,6 +56,7 @@ pub unsafe fn status_end_Squat(fighter: &mut L2CFighterCommon) -> L2CValue {
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_SquatWait_Main)]
 pub unsafe fn status_SquatWait_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    // reworked CC armor in RoA mode
     if utils::game_modes::check_custom_mode(game_modes::CustomMode::RivalsOfAetherMode) {
         damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, RIVALS_CC_DAMAGE_ARMOR);
     }
@@ -62,6 +65,7 @@ pub unsafe fn status_SquatWait_Main(fighter: &mut L2CFighterCommon) -> L2CValue 
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_end_SquatWait)]
 pub unsafe fn status_end_SquatWait(fighter: &mut L2CFighterCommon) -> L2CValue {
+    // reworked CC armor in RoA mode
     if utils::game_modes::check_custom_mode(game_modes::CustomMode::RivalsOfAetherMode) {
         damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
     }

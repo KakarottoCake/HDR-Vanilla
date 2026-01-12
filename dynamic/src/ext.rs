@@ -1537,7 +1537,7 @@ impl BomaExt for BattleObjectModuleAccessor {
             }
         }
 
-        // Airdodhe cancels
+        // Airdodge cancels
         if [
             *FIGHTER_STATUS_KIND_ATTACK_AIR
         ].contains(&status_kind) {

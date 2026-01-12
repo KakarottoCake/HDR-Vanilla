@@ -650,6 +650,7 @@ fn exec_internal(input_module: &mut InputModule, control_module: u64, call_origi
         let mut parry_input = ControlModule::check_button_on((*input_module.owner).module_accessor, 0x3) // CONTROL_PAD_BUTTON_GUARD
         && triggered_buttons.intersects(Buttons::Parry);
 
+        // guard always triggers parry for RoA mode
         match super::super::game_modes::get_custom_mode() {
             Some(modes) => {
                 if modes.contains(&utils_dyn::game_modes::CustomMode::RivalsOfAetherMode) {

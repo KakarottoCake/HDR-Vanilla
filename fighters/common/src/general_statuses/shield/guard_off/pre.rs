@@ -4,7 +4,7 @@ use globals::*;
 
 #[skyline::hook(replace = L2CFighterCommon_status_pre_GuardOff)]
 unsafe fn status_pre_GuardOff(fighter: &mut L2CFighterCommon) -> L2CValue {
-    // enable rolls in rivals mode
+    // enable rolls in RoA mode
     if utils::game_modes::check_custom_mode(game_modes::CustomMode::RivalsOfAetherMode) {
         let stick_x = if fighter.is_button_on(Buttons::CStickOn) {
             fighter.right_stick_x()

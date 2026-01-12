@@ -137,7 +137,7 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 pub unsafe fn status_LandingStiffness(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[PREV_STATUS_KIND] == FIGHTER_STATUS_KIND_DAMAGE_AIR {
 
-        // special conditions for rivals mode
+        // special conditions for RoA mode
         if utils::game_modes::check_custom_mode(CustomMode::RivalsOfAetherMode) {
             if !VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_CC_NON_TUMBLE) {
                 // Reduce buffer out of non-CCd non-tumble hitstun landing
@@ -490,7 +490,7 @@ unsafe fn sub_transition_group_check_ground_guard(fighter: &mut L2CFighterCommon
         }
     }
 
-    // special conditions for rivals mode
+    // special conditions for RoA mode
     if utils::game_modes::check_custom_mode(CustomMode::RivalsOfAetherMode) {
         // Cannot parry if using shield lock (for convenience)
         let guard_hold = fighter.check_guard_hold().get_bool();
