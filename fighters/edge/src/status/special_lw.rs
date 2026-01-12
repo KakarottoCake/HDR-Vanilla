@@ -9,7 +9,7 @@ unsafe extern "C" fn special_lw_main(fighter: &mut L2CFighterCommon) -> L2CValue
 }
 
 unsafe extern "C" fn special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.check_hold_input(Some(0), None, *CONTROL_PAD_BUTTON_SPECIAL);
+    fighter.check_hold_input(None, None, *CONTROL_PAD_BUTTON_SPECIAL);
     if MotionModule::is_end(fighter.module_accessor) {
         println!("before: {}", VarModule::is_flag(fighter.battle_object, vars::common::status::CHECK_HOLD_INPUT));
         fighter.change_status(FIGHTER_EDGE_STATUS_KIND_SPECIAL_LW_HIT.into(), false.into());
