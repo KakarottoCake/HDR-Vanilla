@@ -313,6 +313,12 @@ cliff_jump_quick1:
     xlu_end: 17
 cliff_wait:
   blend_frames: 2
+cloud_special_n:
+  extra:
+    cancel_frame: 45
+cloud_special_air_n:
+  extra:
+    cancel_frame: 45
 daisy_special_air_n:
   extra:
     xlu_start: 0

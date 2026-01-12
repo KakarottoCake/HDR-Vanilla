@@ -201,6 +201,8 @@ pub mod vars {
 
             pub const IGNORE_REDUCED_SCREENSHAKE: i32 = 0x006F;
 
+            pub const CHECK_HOLD_INPUT_INSTANCE: i32 = 0x0070;
+
             // ints
 
             pub const LAST_ATTACK_RECEIVER_ENTRY_ID: i32 = 0x0000;
@@ -330,6 +332,9 @@ pub mod vars {
             pub const NO_POCKET: i32 = 0x1052;
 
             pub const IS_DASH_CANCEL: i32 = 0x1055;
+
+            pub const CHECK_HOLD_INPUT_STATUS: i32 = 0x1056;
+            pub const END_CHECK_HOLD: i32 = 0x1057;
 
             // ints
 
@@ -623,7 +628,7 @@ pub mod vars {
     pub mod edge {
         pub mod status {
             // flags
-            pub const FLASH_HOLD: i32 = 0x1100;
+            pub const SPECIAL_LW_HOLD: i32 = 0x1100;
         }
     }
 
@@ -870,6 +875,7 @@ pub mod vars {
             pub const PURIN_SPECIAL_N_HIT_CANCEL_OK: i32 = 0x11F9;
             pub const PALUTENA_SPECIAL_N_HOLD: i32 = 0x11FA;
 
+            pub use super::super::cloud::status::SPECIAL_N_HOLD;
             pub use super::super::daisy::status::SPECIAL_N_CRYSTAL_ACTIVE;
             pub use super::super::daisy::status::SPECIAL_N_AIR_START;
             pub use super::super::daisy::status::SPECIAL_N_DIVE;

@@ -433,6 +433,7 @@ pub trait BomaExt {
     unsafe fn prev_right_stick_x(&mut self) -> f32;
     unsafe fn right_stick_y(&mut self) -> f32;
     unsafe fn prev_right_stick_y(&mut self) -> f32;
+    unsafe fn check_hold_input(&mut self, input: i32, is_instanced: bool) -> bool;
 
     // STATE
     unsafe fn is_status(&mut self, kind: i32) -> bool;
@@ -759,6 +760,34 @@ impl BomaExt for BattleObjectModuleAccessor {
         } else {
             return ControlModule::get_sub_stick_prev_y(self);
         }
+    }
+
+    /// Checks if a given input is held and turns off the check if released
+    /// 
+    /// # Arguments
+    /// * `input` - a `CONTROL_PAD` input (ie `*CONTROL_PAD_BUTTON_ATTACK`)
+    /// * `is_instanced` - whether this hold check should carry between statuses
+    /// 
+    /// Returns true if the end of the hold check has completed, signified by turning on the `common::END_CHECK_HOLD` flag
+    unsafe fn check_hold_input(&mut self, input: i32, is_instanced: bool) -> bool {
+        let hold_check = if is_instanced { vars::common::instance::CHECK_HOLD_INPUT_INSTANCE } else { vars::common::status::CHECK_HOLD_INPUT_STATUS };
+
+        if VarModule::is_flag(self.object(), hold_check) {
+            // check for the input being released, in which case we disable the check
+            if ControlModule::check_button_release(self, input) {
+                VarModule::off_flag(self.object(), hold_check);
+                return false;
+            }
+
+            // if we are still checking for the hold and we are ready to end the check
+            if VarModule::is_flag(self.object(), vars::common::status::END_CHECK_HOLD) {
+                VarModule::off_flag(self.object(), vars::common::status::END_CHECK_HOLD);
+                VarModule::off_flag(self.object(), hold_check);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     unsafe fn get_aerial(&mut self) -> Option<AerialKind> {

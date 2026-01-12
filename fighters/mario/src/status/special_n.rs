@@ -13,6 +13,7 @@ unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue 
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_n"), 0.0, 1.0, false, 0.0, false, false);
     }
+    VarModule::on_flag(fighter.battle_object, vars::common::status::CHECK_HOLD_INPUT_STATUS);
 
     fighter.main_shift(special_n_main_loop)
 }
@@ -24,7 +25,7 @@ unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
             return 1.into();
         }
     }
-    if fighter.status_frame() == 10 && (ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) || ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL_RAW)) {
+    if fighter.check_hold_input(*CONTROL_PAD_BUTTON_SPECIAL, false) {
         VarModule::on_flag(fighter.object(), vars::mario::status::SPECIAL_N_FIREBRAND);
         let motion = if fighter.is_situation(*SITUATION_KIND_GROUND) { Hash40::new("special_n_fire") } else { Hash40::new("special_air_n_fire") };
         MotionModule::change_motion_inherit_frame(fighter.module_accessor, motion, -1.0, 1.0, 0.0, false, false);
