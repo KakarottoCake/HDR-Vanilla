@@ -27,6 +27,7 @@
       <float hash="landing_attack_air_frame_b">7</float>
       <float hash="landing_attack_air_frame_hi">7</float>
       <float hash="landing_attack_air_frame_lw">12</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">1</float>
       <float hash="shield_radius">10</float>
       <float hash="tread_jump_speed_y_mul">0.75</float>
@@ -35,6 +36,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9</float>
+      <float hash="item_range_front_max">12</float>
     </struct>
     <!-- DONKEY KONG -->
     <struct index="1">
@@ -62,6 +65,7 @@
       <float hash="landing_attack_air_frame_b">9</float>
       <float hash="landing_attack_air_frame_hi">13</float>
       <float hash="landing_attack_air_frame_lw">12</float>
+      <float hash="landing_frame">5</float>
       <bool hash="wall_jump_type">false</bool>
       <float hash="tread_jump_speed_y_mul">0.775</float>
       <float hash="tread_mini_jump_speed_y_mul">0.775</float>
@@ -69,6 +73,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">13.5</float>
+      <float hash="item_range_front_max">18</float>
     </struct>
     <!-- LINK -->
     <struct index="2">
@@ -95,6 +101,7 @@
       <float hash="landing_attack_air_frame_b">7</float>
       <float hash="landing_attack_air_frame_hi">14</float>
       <float hash="landing_attack_air_frame_lw">18</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">1</float>
       <float hash="shield_radius">10.4</float>
       <bool hash="wall_jump_type">false</bool>
@@ -104,6 +111,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">10.125</float>
+      <float hash="item_range_front_max">13.5</float>
     </struct>
     <!-- SAMUS -->
     <struct index="3">
@@ -129,6 +138,7 @@
       <float hash="landing_attack_air_frame_f">12</float>
       <float hash="landing_attack_air_frame_b">9</float>
       <float hash="landing_attack_air_frame_hi">10</float>
+      <float hash="landing_frame">5</float>
       <int hash="landing_heavy_frame">5</int>
       <bool hash="squat_walk_type">false</bool>
       <float hash="scale">0.96</float>
@@ -138,6 +148,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">10.5</float>
+      <float hash="item_range_front_max">14</float>
     </struct>
     <!-- YOSHI -->
     <struct index="4">
@@ -163,6 +175,7 @@
       <float hash="landing_attack_air_frame_b">8</float>
       <float hash="landing_attack_air_frame_hi">9</float>
       <float hash="landing_attack_air_frame_lw">14</float>
+      <float hash="landing_frame">5</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="scale">0.94</float>
       <float hash="shield_radius">7.7</float>
@@ -172,6 +185,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">10.125</float>
+      <float hash="item_range_front_max">13.5</float>
     </struct>
     <!-- KIRBY -->
     <struct index="5">
@@ -185,7 +200,7 @@
       <float hash="jump_speed_x">1</float>
       <float hash="jump_speed_x_max">1.6</float>
       <float hash="jump_initial_y">9.07</float>
-      <float hash="air_accel_x_mul">0.045</float>
+      <float hash="air_accel_x_mul">0.04</float>
       <float hash="air_accel_x_add">0.02</float>
       <float hash="air_speed_x_stable">1</float>
       <float hash="air_brake_x">0.02</float>
@@ -194,9 +209,10 @@
       <float hash="dive_speed_y">2.217</float>
       <float hash="weight">74</float>
       <float hash="landing_attack_air_frame_n">7</float>
-      <float hash="landing_attack_air_frame_b">8</float>
-      <float hash="landing_attack_air_frame_hi">8</float>
+      <float hash="landing_attack_air_frame_b">10</float>
+      <float hash="landing_attack_air_frame_hi">9</float>
       <float hash="landing_attack_air_frame_lw">12</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">0.98</float>
       <float hash="shield_radius">8.9</float>
       <int hash="attack_combo_max">3</int>
@@ -208,6 +224,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9</float>
+      <float hash="item_range_front_max">12</float>
     </struct>
     <!-- FOX -->
     <struct index="6">
@@ -235,6 +253,7 @@
       <float hash="landing_attack_air_frame_b">10</float>
       <float hash="landing_attack_air_frame_hi">10</float>
       <float hash="landing_attack_air_frame_lw">10</float>
+      <float hash="landing_frame">4</float>
       <int hash="attack_combo_max">3</int>
       <float hash="combo_attack_13_end">25</float>
       <int hash="attack_100_enable_cnt">2</int>
@@ -244,6 +263,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.75</float>
+      <float hash="item_range_front_max">13</float>
     </struct>
     <!-- PIKACHU -->
     <struct index="7">
@@ -266,11 +287,12 @@
       <float hash="air_speed_y_stable">1.9</float>
       <float hash="dive_speed_y">2.7</float>
       <float hash="weight">80</float>
-      <float hash="landing_attack_air_frame_n">8</float>
-      <float hash="landing_attack_air_frame_f">9</float>
+      <float hash="landing_attack_air_frame_n">7</float>
+      <float hash="landing_attack_air_frame_f">8</float>
       <float hash="landing_attack_air_frame_b">9</float>
       <float hash="landing_attack_air_frame_hi">12</float>
       <float hash="landing_attack_air_frame_lw">13</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">1.05</float>
       <float hash="shield_radius">8.5</float>
       <float hash="tread_jump_speed_y_mul">0.82</float>
@@ -279,6 +301,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">8.625</float>
+      <float hash="item_range_front_max">11.5</float>
     </struct>
     <!-- LUIGI -->
     <struct index="8">
@@ -309,6 +333,7 @@
       <float hash="landing_attack_air_frame_b">8</float>
       <float hash="landing_attack_air_frame_hi">7</float>
       <float hash="landing_attack_air_frame_lw">10</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="scale">1</float>
       <float hash="shield_radius">10.5</float>
@@ -320,6 +345,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.375</float>
+      <float hash="item_range_front_max">12.5</float>
     </struct>
     <!-- NESS -->
     <struct index="9">
@@ -347,6 +374,7 @@
       <float hash="landing_attack_air_frame_b">7</float>
       <float hash="landing_attack_air_frame_hi">9</float>
       <float hash="landing_attack_air_frame_lw">10</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">4</int>
       <float hash="scale">1.055</float>
       <float hash="shield_radius">9</float>
@@ -358,6 +386,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">8.25</float>
+      <float hash="item_range_front_max">11</float>
     </struct>
     <!-- CAPTAIN FALCON -->
     <struct index="10">
@@ -386,6 +416,7 @@
       <float hash="landing_attack_air_frame_b">10</float>
       <float hash="landing_attack_air_frame_hi">9</float>
       <float hash="landing_attack_air_frame_lw">14</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">1.03</float>
       <float hash="shield_radius">11</float>
       <int hash="attack_100_enable_cnt">2</int>
@@ -395,6 +426,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">10.5</float>
+      <float hash="item_range_front_max">14</float>
     </struct>
     <!-- JIGGLYPUFF -->
     <struct index="11">
@@ -414,6 +447,7 @@
       <float hash="dive_speed_y">1.588</float>
       <float hash="weight">64</float>
       <float hash="landing_attack_air_frame_b">10</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">3</int>
       <float hash="scale">1</float>
       <float hash="shield_radius">9.8</float>
@@ -425,6 +459,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9</float>
+      <float hash="item_range_front_max">12</float>
     </struct>
     <!-- PEACH -->
     <struct index="12">
@@ -434,7 +470,7 @@
       <float hash="run_accel_mul">0.02</float>
       <float hash="run_accel_add">0.1</float>
       <float hash="run_speed_max">1.5</float>
-      <int hash="jump_squat_frame">5</int>
+      <int hash="jump_squat_frame">4</int>
       <float hash="jump_speed_x">0.71</float>
       <float hash="jump_speed_x_mul">0.73</float>
       <float hash="jump_speed_x_max">1.3</float>
@@ -452,6 +488,7 @@
       <float hash="landing_attack_air_frame_f">11</float>
       <float hash="landing_attack_air_frame_b">8</float>
       <float hash="landing_attack_air_frame_lw">7</float>
+      <float hash="landing_frame">5</float>
       <int hash="landing_heavy_frame">4</int>
       <float hash="scale">1</float>
       <float hash="shield_radius">11</float>
@@ -461,6 +498,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9</float>
+      <float hash="item_range_front_max">12</float>
     </struct>
     <!-- BOWSER -->
     <struct index="13">
@@ -487,7 +526,7 @@
       <float hash="landing_attack_air_frame_b">13</float>
       <float hash="landing_attack_air_frame_hi">12</float>
       <float hash="landing_attack_air_frame_lw">21</float>
-      <float hash="landing_frame">4</float>
+      <float hash="landing_frame">5</float>
       <int hash="landing_heavy_frame">5</int>
       <bool hash="wall_jump_type">false</bool>
       <float hash="tread_jump_speed_y_mul">0.8</float>
@@ -496,6 +535,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">14.25</float>
+      <float hash="item_range_front_max">19</float>
     </struct>
     <!-- POPO -->
     <struct index="14">
@@ -521,6 +562,7 @@
       <float hash="landing_attack_air_frame_b">9</float>
       <float hash="landing_attack_air_frame_hi">12</float>
       <float hash="landing_attack_air_frame_lw">13</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">4</int>
       <float hash="tread_jump_speed_y_mul">0.835</float>
       <float hash="tread_mini_jump_speed_y_mul">0.835</float>
@@ -528,6 +570,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9</float>
+      <float hash="item_range_front_max">12</float>
     </struct>
     <!-- NANA -->
     <struct index="15">
@@ -553,6 +597,7 @@
       <float hash="landing_attack_air_frame_b">9</float>
       <float hash="landing_attack_air_frame_hi">12</float>
       <float hash="landing_attack_air_frame_lw">13</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">4</int>
       <float hash="tread_jump_speed_y_mul">0.835</float>
       <float hash="tread_mini_jump_speed_y_mul">0.835</float>
@@ -560,6 +605,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">8.25</float>
+      <float hash="item_range_front_max">11</float>
     </struct>
     <!-- SHEIK -->
     <struct index="16">
@@ -585,6 +632,7 @@
       <float hash="landing_attack_air_frame_b">8</float>
       <float hash="landing_attack_air_frame_hi">12</float>
       <float hash="landing_attack_air_frame_lw">11</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="scale">1</float>
       <float hash="shield_radius">11.5</float>
@@ -598,6 +646,8 @@
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
       <bool hash="attach_wall_type">false</bool>
+      <float hash="item_range_front">10.5</float>
+      <float hash="item_range_front_max">14</float>
     </struct>
     <!-- ZELDA -->
     <struct index="17">
@@ -624,6 +674,7 @@
       <float hash="landing_attack_air_frame_f">10</float>
       <float hash="landing_attack_air_frame_b">11</float>
       <float hash="landing_attack_air_frame_lw">11</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">5</int>
       <int hash="attack_100_enable_cnt">1</int>
       <float hash="tread_jump_speed_y_mul">0.79</float>
@@ -632,6 +683,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9</float>
+      <float hash="item_range_front_max">12</float>
     </struct>
     <!-- DR. MARIO -->
     <struct index="18">
@@ -660,6 +713,7 @@
       <float hash="landing_attack_air_frame_b">8</float>
       <float hash="landing_attack_air_frame_hi">8</float>
       <float hash="landing_attack_air_frame_lw">13</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">1</float>
       <float hash="shield_radius">10</float>
       <float hash="tread_jump_speed_y_mul">0.75</float>
@@ -671,6 +725,8 @@
       <float hash="common_effect_0_r">0.5</float>
       <float hash="common_effect_0_g">1.0</float>
       <float hash="common_effect_0_b">2.0</float>
+      <float hash="item_range_front">9</float>
+      <float hash="item_range_front_max">12</float>
     </struct>
     <!-- PICHU -->
     <struct index="19">
@@ -692,11 +748,12 @@
       <float hash="air_accel_y">0.165</float>
       <float hash="air_speed_y_stable">2.65</float>
       <float hash="dive_speed_y">3.344</float>
-      <float hash="weight">62</float>
+      <float hash="weight">55</float>
       <float hash="landing_attack_air_frame_f">10</float>
       <float hash="landing_attack_air_frame_b">13</float>
       <float hash="landing_attack_air_frame_hi">9</float>
       <float hash="landing_attack_air_frame_lw">14</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">1</float>
       <float hash="shield_radius">8.3</float>
       <float hash="tread_jump_speed_y_mul">0.82</float>
@@ -705,6 +762,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">7.875</float>
+      <float hash="item_range_front_max">10.5</float>
     </struct>
     <!-- FALCO -->
     <struct index="20">
@@ -734,6 +793,7 @@
       <float hash="landing_attack_air_frame_b">10</float>
       <float hash="landing_attack_air_frame_hi">9</float>
       <float hash="landing_attack_air_frame_lw">10</float>
+      <float hash="landing_frame">4</float>
       <int hash="attack_combo_max">3</int>
       <float hash="combo_attack_13_end">25</float>
       <int hash="attack_100_enable_cnt">2</int>
@@ -744,6 +804,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.975</float>
+      <float hash="item_range_front_max">13.3</float>
     </struct>
     <!-- MARTH -->
     <struct index="21">
@@ -772,6 +834,7 @@
       <float hash="landing_attack_air_frame_b">12</float>
       <float hash="landing_attack_air_frame_n">8</float>
       <float hash="landing_attack_air_frame_hi">8</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">0.95</float>
       <float hash="shield_radius">12.5</float>
       <float hash="tread_jump_speed_y_mul">0.75</float>
@@ -780,6 +843,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">10.125</float>
+      <float hash="item_range_front_max">13.5</float>
     </struct>
     <!-- YOUNG LINK -->
     <struct index="22">
@@ -804,6 +869,7 @@
       <float hash="landing_attack_air_frame_b">9</float>
       <float hash="landing_attack_air_frame_hi">12</float>
       <float hash="landing_attack_air_frame_lw">16</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">1</float>
       <float hash="shield_radius">10.4</float>
       <int hash="attack_100_enable_cnt">2</int>
@@ -813,6 +879,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">8.625</float>
+      <float hash="item_range_front_max">11.5</float>
     </struct>
     <!-- GANONDORF -->
     <struct index="23">
@@ -840,6 +908,7 @@
       <float hash="landing_attack_air_frame_b">12</float>
       <float hash="landing_attack_air_frame_hi">10</float>
       <float hash="landing_attack_air_frame_lw">15</float>
+      <float hash="landing_frame">5</float>
       <float hash="scale">0.96</float>
       <float hash="shield_radius">13.4</float>
       <float hash="tread_jump_speed_y_mul">0.8</float>
@@ -848,6 +917,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">11.25</float>
+      <float hash="item_range_front_max">15</float>
     </struct>
     <!-- MEWTWO -->
     <struct index="24">
@@ -870,6 +941,7 @@
       <float hash="landing_attack_air_frame_f">9</float>
       <float hash="landing_attack_air_frame_b">12</float>
       <float hash="landing_attack_air_frame_hi">9</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">5</int>
       <bool hash="wall_jump_type">false</bool>
       <int hash="attack_combo_max">2</int>
@@ -881,6 +953,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">11.25</float>
+      <float hash="item_range_front_max">14.3</float>
     </struct>
     <!-- ROY -->
     <struct index="25">
@@ -903,6 +977,7 @@
       <float hash="landing_attack_air_frame_b">13</float>
       <float hash="landing_attack_air_frame_hi">10</float>
       <float hash="landing_attack_air_frame_lw">13</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">4</int>
       <float hash="scale">0.96</float>
       <float hash="shield_radius">12.4</float>
@@ -912,6 +987,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">10.125</float>
+      <float hash="item_range_front_max">13.5</float>
     </struct>
     <!-- MR. GAME & WATCH -->
     <struct index="26">
@@ -938,6 +1015,7 @@
       <float hash="landing_attack_air_frame_b">11</float>
       <float hash="landing_attack_air_frame_hi">10</float>
       <float hash="landing_attack_air_frame_lw">10</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">1</float>
       <float hash="shield_radius">10</float>
       <int hash="attack_combo_max">2</int>
@@ -949,6 +1027,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.6</float>
+      <float hash="item_range_front_max">12.8</float>
     </struct>
     <!-- META KNIGHT -->
     <struct index="27">
@@ -974,6 +1054,7 @@
       <float hash="landing_attack_air_frame_b">13</float>
       <float hash="landing_attack_air_frame_hi">9</float>
       <float hash="landing_attack_air_frame_lw">10</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="scale">1</float>
       <float hash="shield_radius">10.7</float>
@@ -984,6 +1065,8 @@
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
       <int hash="jump_count_max">5</int>
+      <float hash="item_range_front">9</float>
+      <float hash="item_range_front_max">12</float>
     </struct>
     <!-- PIT -->
     <struct index="28">
@@ -1010,6 +1093,7 @@
       <float hash="landing_attack_air_frame_b">10</float>
       <float hash="landing_attack_air_frame_hi">11</float>
       <float hash="landing_attack_air_frame_lw">10</float>
+      <float hash="landing_frame">4</float>
       <int hash="attack_100_enable_cnt">2</int>
       <float hash="tread_jump_speed_y_mul">0.9</float>
       <float hash="tread_mini_jump_speed_y_mul">0.9</float>
@@ -1017,6 +1101,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.75</float>
+      <float hash="item_range_front_max">13</float>
     </struct>
     <!-- ZERO SUIT SAMUS -->
     <struct index="29">
@@ -1047,6 +1133,7 @@
       <float hash="landing_attack_air_frame_b">9</float>
       <float hash="landing_attack_air_frame_hi">8</float>
       <float hash="landing_attack_air_frame_lw">12</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="scale">1</float>
       <float hash="shield_radius">11.6</float>
@@ -1057,6 +1144,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9</float>
+      <float hash="item_range_front_max">12</float>
     </struct>
     <!-- WARIO -->
     <struct index="30">
@@ -1083,8 +1172,9 @@
       <float hash="landing_attack_air_frame_n">8</float>
       <float hash="landing_attack_air_frame_f">7</float>
       <float hash="landing_attack_air_frame_b">12</float>
-      <float hash="landing_attack_air_frame_hi">9</float>
-      <float hash="landing_attack_air_frame_lw">29</float>
+      <float hash="landing_attack_air_frame_hi">10</float>
+      <float hash="landing_attack_air_frame_lw">25</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="scale">1</float>
       <float hash="shield_radius">10</float>
@@ -1094,6 +1184,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">10.35</float>
+      <float hash="item_range_front_max">13.8</float>
     </struct>
     <!-- SNAKE -->
     <struct index="31">
@@ -1121,6 +1213,7 @@
       <float hash="landing_attack_air_frame_b">10</float>
       <float hash="landing_attack_air_frame_hi">10</float>
       <float hash="landing_attack_air_frame_lw">12</float>
+      <float hash="landing_frame">5</float>
       <float hash="scale">0.97</float>
       <float hash="shield_radius">12.4</float>
       <float hash="tread_jump_speed_y_mul">0.825</float>
@@ -1129,6 +1222,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.6</float>
+      <float hash="item_range_front_max">12.8</float>
     </struct>
     <!-- IKE -->
     <struct index="32">
@@ -1156,6 +1251,7 @@
       <float hash="landing_attack_air_frame_b">9</float>
       <float hash="landing_attack_air_frame_hi">12</float>
       <float hash="landing_attack_air_frame_lw">12</float>
+      <float hash="landing_frame">5</float>
       <float hash="scale">1</float>
       <float hash="shield_radius">12.2</float>
       <float hash="tread_jump_speed_y_mul">0.815</float>
@@ -1164,11 +1260,13 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.6</float>
+      <float hash="item_range_front_max">12.8</float>
     </struct>
     <!-- SQUIRTLE -->
     <struct index="33">
       <float hash="walk_speed_max">1.25</float>
-      <float hash="ground_brake">0.0605</float>
+      <float hash="ground_brake">0.055</float>
       <float hash="dash_speed">1.75</float>
       <float hash="run_accel_mul">0.15</float>
       <float hash="run_accel_add">0.01</float>
@@ -1195,6 +1293,7 @@
       <float hash="landing_attack_air_frame_b">9</float>
       <float hash="landing_attack_air_frame_hi">7</float>
       <float hash="landing_attack_air_frame_lw">8</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="scale">1.067</float>
       <float hash="shield_radius">9.2</float>
@@ -1205,6 +1304,8 @@
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
       <bool hash="attach_wall_type">false</bool>
+      <float hash="item_range_front">7.725</float>
+      <float hash="item_range_front_max">10.3</float>
     </struct>
     <!-- IVYSAUR -->
     <struct index="34">
@@ -1234,6 +1335,7 @@
       <float hash="landing_attack_air_frame_b">10</float>
       <float hash="landing_attack_air_frame_hi">13</float>
       <float hash="landing_attack_air_frame_lw">11</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="scale">1.14</float>
       <float hash="shield_radius">10</float>
@@ -1246,6 +1348,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">10.5</float>
+      <float hash="item_range_front_max">14</float>
     </struct>
     <!-- CHARIZARD -->
     <struct index="35">
@@ -1274,6 +1378,7 @@
       <float hash="landing_attack_air_frame_b">14</float>
       <float hash="landing_attack_air_frame_hi">12</float>
       <float hash="landing_attack_air_frame_lw">12</float>
+      <float hash="landing_frame">5</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="tread_jump_speed_y_mul">0.825</float>
       <float hash="tread_mini_jump_speed_y_mul">0.825</float>
@@ -1281,6 +1386,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">12.75</float>
+      <float hash="item_range_front_max">17</float>
     </struct>
     <!-- DIDDY KONG -->
     <struct index="36">
@@ -1306,6 +1413,7 @@
       <float hash="landing_attack_air_frame_f">11</float>
       <float hash="landing_attack_air_frame_b">8</float>
       <float hash="landing_attack_air_frame_lw">12</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="scale">1</float>
       <float hash="shield_radius">9.7</float>
@@ -1318,6 +1426,8 @@
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
       <bool hash="attach_wall_type">false</bool>
+      <float hash="item_range_front">10.125</float>
+      <float hash="item_range_front_max">13.5</float>
     </struct>
     <!-- LUCAS -->
     <struct index="37">
@@ -1342,6 +1452,7 @@
       <float hash="landing_attack_air_frame_n">9</float>
       <float hash="landing_attack_air_frame_b">10</float>
       <float hash="landing_attack_air_frame_lw">10</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">1.055</float>
       <float hash="shield_radius">9.1</float>
       <int hash="attack_combo_max">2</int>
@@ -1354,6 +1465,8 @@
       <float hash="common_effect_0_r">1.8</float>
       <float hash="common_effect_0_g">1.8</float>
       <float hash="common_effect_0_b">0.5</float>
+      <float hash="item_range_front">8.25</float>
+      <float hash="item_range_front_max">11</float>
     </struct>
     <!-- SONIC -->
     <struct index="38">
@@ -1381,6 +1494,7 @@
       <float hash="landing_attack_air_frame_b">10</float>
       <float hash="landing_attack_air_frame_hi">10</float>
       <float hash="landing_attack_air_frame_lw">16</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">4</int>
       <float hash="scale">0.95</float>
       <float hash="shield_radius">10.6</float>
@@ -1390,6 +1504,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">8.4</float>
+      <float hash="item_range_front_max">11.2</float>
     </struct>
     <!-- KING DEDEDE -->
     <struct index="39">
@@ -1418,6 +1534,7 @@
       <float hash="landing_attack_air_frame_b">11</float>
       <float hash="landing_attack_air_frame_hi">12</float>
       <float hash="landing_attack_air_frame_lw">15</float>
+      <float hash="landing_frame">5</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="scale">0.93</float>
       <int hash="attack_combo_max">3</int>
@@ -1430,6 +1547,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">11.7</float>
+      <float hash="item_range_front_max">15.6</float>
     </struct>
     <!-- OLIMAR -->
     <struct index="40">
@@ -1458,6 +1577,7 @@
       <float hash="landing_attack_air_frame_b">8</float>
       <float hash="landing_attack_air_frame_hi">10</float>
       <float hash="landing_attack_air_frame_lw">12</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">0.95</float>
       <float hash="shield_radius">10.3</float>
       <bool hash="wall_jump_type">true</bool>
@@ -1467,6 +1587,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">7.875</float>
+      <float hash="item_range_front_max">10.5</float>
     </struct>
     <!-- LUCARIO -->
     <struct index="41">
@@ -1495,6 +1617,7 @@
       <float hash="landing_attack_air_frame_b">15</float>
       <float hash="landing_attack_air_frame_hi">10</float>
       <float hash="landing_attack_air_frame_lw">10</float>
+      <float hash="landing_frame">5</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="scale">1.05</float>
       <float hash="shield_radius">10.6</float>
@@ -1505,6 +1628,8 @@
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
       <bool hash="attach_wall_type">false</bool>
+      <float hash="item_range_front">9.375</float>
+      <float hash="item_range_front_max">12.5</float>
     </struct>
     <!-- R.O.B. -->
     <struct index="42">
@@ -1513,7 +1638,7 @@
       <float hash="dash_speed">1.3</float>
       <float hash="run_accel_mul">0.02</float>
       <float hash="run_accel_add">0.1</float>
-      <float hash="run_speed_max">1.618</float>
+      <float hash="run_speed_max">1.66</float>
       <int hash="jump_squat_frame">4</int>
       <float hash="jump_speed_x">0.7</float>
       <float hash="jump_speed_x_mul">0.8</float>
@@ -1531,6 +1656,7 @@
       <float hash="landing_attack_air_frame_f">7</float>
       <float hash="landing_attack_air_frame_b">12</float>
       <float hash="landing_attack_air_frame_hi">11</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">6</int>
       <float hash="scale">0.95</float>
       <float hash="shield_radius">13</float>
@@ -1540,6 +1666,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">11.625</float>
+      <float hash="item_range_front_max">15.5</float>
     </struct>
     <!-- TOON LINK -->
     <struct index="43">
@@ -1566,6 +1694,7 @@
       <float hash="landing_attack_air_frame_b">7</float>
       <float hash="landing_attack_air_frame_hi">11</float>
       <float hash="landing_attack_air_frame_lw">22</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">4</int>
       <float hash="scale">1</float>
       <float hash="shield_radius">9.7</float>
@@ -1577,6 +1706,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">8.7</float>
+      <float hash="item_range_front_max">11.6</float>
     </struct>
     <!-- WOLF -->
     <struct index="44">
@@ -1606,6 +1737,7 @@
       <float hash="landing_attack_air_frame_b">10</float>
       <float hash="landing_attack_air_frame_hi">11</float>
       <float hash="landing_attack_air_frame_lw">12</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">1.18</float>
       <float hash="shield_radius">8.7</float>
       <float hash="tread_jump_speed_y_mul">0.825</float>
@@ -1614,6 +1746,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.6</float>
+      <float hash="item_range_front_max">12.8</float>
     </struct>
     <!-- VILLAGER -->
     <struct index="45">
@@ -1641,6 +1775,7 @@
       <float hash="landing_attack_air_frame_f">11</float>
       <float hash="landing_attack_air_frame_b">12</float>
       <float hash="landing_attack_air_frame_hi">9</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">4</int>
       <float hash="scale">1.037</float>
       <float hash="shield_radius">9.6</float>
@@ -1651,6 +1786,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">8.1</float>
+      <float hash="item_range_front_max">10.8</float>
     </struct>
     <!-- MEGA MAN -->
     <struct index="46">
@@ -1678,6 +1815,7 @@
       <float hash="landing_attack_air_frame_b">14</float>
       <float hash="landing_attack_air_frame_hi">17</float>
       <float hash="landing_attack_air_frame_lw">13</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">1</float>
       <float hash="shield_radius">9.8</float>
       <int hash="attack_combo_max">3</int>
@@ -1689,6 +1827,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">8.4</float>
+      <float hash="item_range_front_max">11.2</float>
     </struct>
     <!-- WII FIT TRAINER -->
     <struct index="47">
@@ -1714,6 +1854,7 @@
       <float hash="landing_attack_air_frame_f">9</float>
       <float hash="landing_attack_air_frame_b">10</float>
       <float hash="landing_attack_air_frame_lw">10</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="scale">0.96</float>
       <float hash="shield_radius">12.5</float>
@@ -1723,6 +1864,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">7.5</float>
+      <float hash="item_range_front_max">10</float>
     </struct>
     <!-- ROSALINA & LUMA -->
     <struct index="48">
@@ -1748,6 +1891,7 @@
       <float hash="landing_attack_air_frame_f">10</float>
       <float hash="landing_attack_air_frame_hi">9</float>
       <float hash="landing_attack_air_frame_lw">10</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">4</int>
       <float hash="scale">1</float>
       <float hash="shield_radius">12.6</float>
@@ -1758,6 +1902,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">8.625</float>
+      <float hash="item_range_front_max">11.5</float>
     </struct>
     <!-- LITTLE MAC -->
     <struct index="49">
@@ -1786,6 +1932,7 @@
       <float hash="landing_attack_air_frame_b">9</float>
       <float hash="landing_attack_air_frame_hi">7</float>
       <float hash="landing_attack_air_frame_lw">10</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">4</int>
       <float hash="scale">1.11</float>
       <float hash="shield_radius">10.7</float>
@@ -1796,6 +1943,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.75</float>
+      <float hash="item_range_front_max">13</float>
     </struct>
     <!-- GRENINJA -->
     <struct index="50">
@@ -1820,6 +1969,7 @@
       <float hash="landing_attack_air_frame_b">9</float>
       <float hash="landing_attack_air_frame_hi">12</float>
       <float hash="landing_attack_air_frame_lw">20</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="scale">1</float>
       <float hash="shield_radius">10</float>
@@ -1831,6 +1981,8 @@
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
       <bool hash="attach_wall_type">false</bool>
+      <float hash="item_range_front">10.5</float>
+      <float hash="item_range_front_max">14</float>
     </struct>
     <!-- PALUTENA -->
     <struct index="51">
@@ -1856,6 +2008,7 @@
       <float hash="landing_attack_air_frame_f">8</float>
       <float hash="landing_attack_air_frame_b">12</float>
       <float hash="landing_attack_air_frame_hi">11</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">4</int>
       <float hash="scale">0.95</float>
       <float hash="shield_radius">12.5</float>
@@ -1865,6 +2018,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">8.85</float>
+      <float hash="item_range_front_max">11.8</float>
     </struct>
     <!-- PAC-MAN -->
     <struct index="52">
@@ -1893,6 +2048,7 @@
       <float hash="landing_attack_air_frame_b">12</float>
       <float hash="landing_attack_air_frame_hi">8</float>
       <float hash="landing_attack_air_frame_lw">18</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="tread_jump_speed_y_mul">0.75</float>
       <float hash="tread_mini_jump_speed_y_mul">0.75</float>
@@ -1900,6 +2056,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.6</float>
+      <float hash="item_range_front_max">12.8</float>
     </struct>
     <!-- ROBIN -->
     <struct index="53">
@@ -1928,6 +2086,7 @@
       <float hash="landing_attack_air_frame_f">10</float>
       <float hash="landing_attack_air_frame_b">11</float>
       <float hash="landing_attack_air_frame_lw">12</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">1</float>
       <float hash="shield_radius">11.8</float>
       <float hash="combo_attack_13_end">22</float>
@@ -1939,6 +2098,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">8.625</float>
+      <float hash="item_range_front_max">11.5</float>
     </struct>
     <!-- SHULK -->
     <struct index="54">
@@ -1966,6 +2127,7 @@
       <float hash="landing_attack_air_frame_b">14</float>
       <float hash="landing_attack_air_frame_hi">11</float>
       <float hash="landing_attack_air_frame_lw">13</float>
+      <float hash="landing_frame">5</float>
       <float hash="scale">0.98</float>
       <float hash="shield_radius">12</float>
       <float hash="tread_jump_speed_y_mul">0.8</float>
@@ -1974,6 +2136,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">8.85</float>
+      <float hash="item_range_front_max">11.8</float>
     </struct>
     <!-- BOWSER JR. -->
     <struct index="55">
@@ -2000,6 +2164,7 @@
       <float hash="landing_attack_air_frame_b">10</float>
       <float hash="landing_attack_air_frame_hi">7</float>
       <float hash="landing_attack_air_frame_lw">12</float>
+      <float hash="landing_frame">5</float>
       <int hash="landing_heavy_frame">4</int>
       <int hash="attack_combo_max">3</int>
       <float hash="combo_attack_13_end">25</float>
@@ -2010,6 +2175,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.75</float>
+      <float hash="item_range_front_max">13</float>
     </struct>
     <!-- DUCK HUNT -->
     <struct index="56">
@@ -2036,6 +2203,7 @@
       <float hash="landing_attack_air_frame_b">10</float>
       <float hash="landing_attack_air_frame_hi">9</float>
       <float hash="landing_attack_air_frame_lw">11</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">4</int>
       <float hash="scale">1</float>
       <float hash="shield_radius">9.5</float>
@@ -2046,6 +2214,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9</float>
+      <float hash="item_range_front_max">12</float>
     </struct>
     <!-- RYU -->
     <struct index="57">
@@ -2074,6 +2244,7 @@
       <float hash="landing_attack_air_frame_f">9</float>
       <float hash="landing_attack_air_frame_hi">10</float>
       <float hash="landing_attack_air_frame_lw">12</float>
+      <float hash="landing_frame">5</float>
       <float hash="scale">1.02</float>
       <float hash="shield_radius">12.3</float>
       <float hash="tread_jump_speed_y_mul">0.825</float>
@@ -2082,6 +2253,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">8.625</float>
+      <float hash="item_range_front_max">11.5</float>
     </struct>
     <!-- CLOUD -->
     <struct index="58">
@@ -2109,8 +2282,9 @@
       <float hash="landing_attack_air_frame_n">10</float>
       <float hash="landing_attack_air_frame_f">12</float>
       <float hash="landing_attack_air_frame_b">11</float>
-      <float hash="landing_attack_air_frame_hi">11</float>
+      <float hash="landing_attack_air_frame_hi">13</float>
       <float hash="landing_attack_air_frame_lw">13</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="scale">1.01</float>
       <float hash="shield_radius">12.6</float>
@@ -2120,6 +2294,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.375</float>
+      <float hash="item_range_front_max">12.5</float>
     </struct>
     <!-- CORRIN -->
     <struct index="59">
@@ -2145,8 +2321,9 @@
       <float hash="landing_attack_air_frame_n">10</float>
       <float hash="landing_attack_air_frame_f">10</float>
       <float hash="landing_attack_air_frame_b">14</float>
-      <float hash="landing_attack_air_frame_hi">12</float>
+      <float hash="landing_attack_air_frame_hi">13</float>
       <float hash="landing_attack_air_frame_lw">12</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">0.99</float>
       <float hash="shield_radius">11.8</float>
       <int hash="attack_100_enable_cnt">2</int>
@@ -2156,6 +2333,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.15</float>
+      <float hash="item_range_front_max">12.2</float>
     </struct>
     <!-- BAYONETTA -->
     <struct index="60">
@@ -2183,6 +2362,7 @@
       <float hash="landing_attack_air_frame_b">10</float>
       <float hash="landing_attack_air_frame_hi">8</float>
       <float hash="landing_attack_air_frame_lw">20</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">4</int>
       <float hash="scale">1.03</float>
       <float hash="shield_radius">12.6</float>
@@ -2196,6 +2376,8 @@
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
       <bool hash="attach_wall_type">false</bool>
+      <float hash="item_range_front">9</float>
+      <float hash="item_range_front_max">12</float>
     </struct>
     <!-- INKLING -->
     <struct index="61">
@@ -2224,6 +2406,7 @@
       <float hash="landing_attack_air_frame_b">8</float>
       <float hash="landing_attack_air_frame_hi">8</float>
       <float hash="landing_attack_air_frame_lw">11</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">1.06</float>
       <float hash="shield_radius">10.3</float>
       <int hash="attack_100_enable_cnt">2</int>
@@ -2233,6 +2416,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.75</float>
+      <float hash="item_range_front_max">13</float>
     </struct>
     <!-- RIDLEY -->
     <struct index="62">
@@ -2258,6 +2443,7 @@
       <float hash="landing_attack_air_frame_b">13</float>
       <float hash="landing_attack_air_frame_hi">12</float>
       <float hash="landing_attack_air_frame_lw">14</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">5</int>
       <int hash="attack_100_enable_cnt">2</int>
       <int hash="jump_count_max">4</int>
@@ -2267,6 +2453,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">12.225</float>
+      <float hash="item_range_front_max">16.3</float>
     </struct>
     <!-- SIMON -->
     <struct index="63">
@@ -2291,6 +2479,7 @@
       <float hash="landing_attack_air_frame_f">12</float>
       <float hash="landing_attack_air_frame_b">13</float>
       <float hash="landing_attack_air_frame_lw">18</float>
+      <float hash="landing_frame">5</float>
       <float hash="scale">1</float>
       <float hash="shield_radius">13</float>
       <int hash="attack_combo_max">3</int>
@@ -2303,6 +2492,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.375</float>
+      <float hash="item_range_front_max">12.5</float>
     </struct>
     <!-- KING K. ROOL-->
     <struct index="64">
@@ -2330,6 +2521,7 @@
       <float hash="landing_attack_air_frame_b">14</float>
       <float hash="landing_attack_air_frame_hi">12</float>
       <float hash="landing_attack_air_frame_lw">13</float>
+      <float hash="landing_frame">5</float>
       <int hash="landing_heavy_frame">5</int>
       <bool hash="wall_jump_type">false</bool>
       <float hash="tread_jump_speed_y_mul">0.81</float>
@@ -2338,6 +2530,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">13.875</float>
+      <float hash="item_range_front_max">18.5</float>
     </struct>
     <!-- ISABELLE -->
     <struct index="65">
@@ -2363,6 +2557,7 @@
       <float hash="landing_attack_air_frame_b">12</float>
       <float hash="landing_attack_air_frame_hi">10</float>
       <float hash="landing_attack_air_frame_lw">11</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">4</int>
       <float hash="scale">1.04</float>
       <float hash="shield_radius">9.6</float>
@@ -2373,6 +2568,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">7.875</float>
+      <float hash="item_range_front_max">10.5</float>
     </struct>
     <!-- INCINEROAR -->
     <struct index="66">
@@ -2401,6 +2598,7 @@
       <float hash="landing_attack_air_frame_b">13</float>
       <float hash="landing_attack_air_frame_hi">10</float>
       <float hash="landing_attack_air_frame_lw">13</float>
+      <float hash="landing_frame">5</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="scale">1</float>
       <float hash="shield_radius">12.3</float>
@@ -2411,6 +2609,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.975</float>
+      <float hash="item_range_front_max">13.3</float>
     </struct>
     <!-- PIRANHA PLANT -->
     <struct index="67">
@@ -2438,6 +2638,7 @@
       <float hash="landing_attack_air_frame_b">14</float>
       <float hash="landing_attack_air_frame_hi">7</float>
       <float hash="landing_attack_air_frame_lw">11</float>
+      <float hash="landing_frame">5</float>
       <int hash="attack_100_enable_cnt">2</int>
       <bool hash="wall_jump_type">false</bool>
       <float hash="tread_jump_speed_y_mul">0.825</float>
@@ -2446,6 +2647,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9</float>
+      <float hash="item_range_front_max">12</float>
     </struct>
     <!-- JOKER -->
     <struct index="68">
@@ -2474,6 +2677,7 @@
       <float hash="landing_attack_air_frame_b">9</float>
       <float hash="landing_attack_air_frame_hi">12</float>
       <float hash="landing_attack_air_frame_lw">10</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">1.03</float>
       <float hash="shield_radius">12.5</float>
       <float hash="tread_jump_speed_y_mul">0.8</float>
@@ -2482,6 +2686,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9</float>
+      <float hash="item_range_front_max">12</float>
     </struct>
     <!-- HERO -->
     <struct index="69">
@@ -2509,6 +2715,7 @@
       <float hash="landing_attack_air_frame_b">12</float>
       <float hash="landing_attack_air_frame_hi">7</float>
       <float hash="landing_attack_air_frame_lw">13</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="scale">0.96</float>
       <float hash="shield_radius">12.1</float>
@@ -2518,6 +2725,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">10.125</float>
+      <float hash="item_range_front_max">13.5</float>
     </struct>
     <!-- BANJO & KAZOOIE -->
     <struct index="70">
@@ -2545,6 +2754,7 @@
       <float hash="landing_attack_air_frame_b">12</float>
       <float hash="landing_attack_air_frame_hi">8</float>
       <float hash="landing_attack_air_frame_lw">18</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">4</int>
       <int hash="attack_100_enable_cnt">2</int>
       <float hash="tread_jump_speed_y_mul">0.815</float>
@@ -2553,6 +2763,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">10.5</float>
+      <float hash="item_range_front_max">14</float>
     </struct>
     <!-- TERRY -->
     <struct index="71">
@@ -2570,7 +2782,7 @@
       <float hash="jump_speed_x_max">1.35</float>
       <float hash="jump_aerial_speed_x_mul">0.85</float>
       <float hash="jump_initial_y">11.85</float>
-      <float hash="mini_jump_y">13.2</float>
+      <float hash="mini_jump_y">12.0</float>
       <float hash="air_accel_x_mul">0.04</float>
       <float hash="air_speed_x_stable">1.0</float>
       <float hash="air_brake_x">0.011</float>
@@ -2582,6 +2794,7 @@
       <float hash="landing_attack_air_frame_f">9</float>
       <float hash="landing_attack_air_frame_hi">8</float>
       <float hash="landing_attack_air_frame_lw">13</float>
+      <float hash="landing_frame">5</float>
       <float hash="scale">1.05</float>
       <float hash="shield_radius">12.4</float>
       <float hash="tread_jump_speed_y_mul">0.825</float>
@@ -2590,6 +2803,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">8.625</float>
+      <float hash="item_range_front_max">11.5</float>
     </struct>
     <!-- BYLETH -->
     <struct index="72">
@@ -2617,6 +2832,7 @@
       <float hash="landing_attack_air_frame_b">12</float>
       <float hash="landing_attack_air_frame_hi">12</float>
       <float hash="landing_attack_air_frame_lw">17</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">1.02</float>
       <float hash="shield_radius">12</float>
       <int hash="attack_100_enable_cnt">2</int>
@@ -2626,6 +2842,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.375</float>
+      <float hash="item_range_front_max">12.5</float>
     </struct>
     <!-- MIN MIN -->
     <struct index="73">
@@ -2652,6 +2870,7 @@
       <float hash="landing_attack_air_frame_b">10</float>
       <float hash="landing_attack_air_frame_hi">7</float>
       <float hash="landing_attack_air_frame_lw">13</float>
+      <float hash="landing_frame">4</float>
       <int hash="attack_100_enable_cnt">2</int>
       <float hash="tread_jump_speed_y_mul">0.815</float>
       <float hash="tread_mini_jump_speed_y_mul">0.815</float>
@@ -2659,6 +2878,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">10.125</float>
+      <float hash="item_range_front_max">13.5</float>
     </struct>
     <!-- STEVE -->
     <struct index="74">
@@ -2686,6 +2907,7 @@
       <float hash="landing_attack_air_frame_f">10</float>
       <float hash="landing_attack_air_frame_b">11</float>
       <float hash="landing_attack_air_frame_hi">8</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">1.075</float>
       <float hash="shield_radius">11.4</float>
       <float hash="tread_jump_speed_y_mul">0.75</float>
@@ -2695,6 +2917,8 @@
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
       <bool hash="air_lasso_type">true</bool>
+      <float hash="item_range_front">8.25</float>
+      <float hash="item_range_front_max">11</float>
     </struct>
     <!-- KAZUYA -->
     <struct index="75">
@@ -2715,6 +2939,7 @@
       <float hash="landing_attack_air_frame_f">8</float>
       <float hash="landing_attack_air_frame_b">9</float>
       <float hash="landing_attack_air_frame_lw">22</float>
+      <float hash="landing_frame">5</float>
       <int hash="landing_heavy_frame">4</int>
       <float hash="scale">1.067</float>
       <float hash="shield_radius">12.6</float>
@@ -2725,6 +2950,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">8.625</float>
+      <float hash="item_range_front_max">11.5</float>
     </struct>
     <!-- SORA -->
     <struct index="76">
@@ -2750,12 +2977,15 @@
       <float hash="landing_attack_air_frame_f">9</float>
       <float hash="landing_attack_air_frame_hi">9</float>
       <float hash="landing_attack_air_frame_lw">10</float>
+      <float hash="landing_frame">4</float>
       <bool hash="wall_jump_type">false</bool>
       <float hash="passive_wall_jump_y_speed">1.8</float>
       <float hash="passive_wall_jump_x_speed">1.1</float>
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">8.85</float>
+      <float hash="item_range_front_max">11.8</float>
     </struct>
     <!-- PYRA -->
     <struct index="77">
@@ -2780,6 +3010,7 @@
       <float hash="landing_attack_air_frame_f">11</float>
       <float hash="landing_attack_air_frame_b">11</float>
       <float hash="landing_attack_air_frame_hi">10</float>
+      <float hash="landing_frame">4</float>
       <int hash="attack_100_enable_cnt">2</int>
       <bool hash="wall_jump_type">false</bool>
       <float hash="tread_jump_speed_y_mul">0.75</float>
@@ -2788,6 +3019,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.375</float>
+      <float hash="item_range_front_max">12.5</float>
     </struct>
     <!-- MYTHRA -->
     <struct index="78">
@@ -2811,6 +3044,7 @@
       <float hash="landing_attack_air_frame_f">9</float>
       <float hash="landing_attack_air_frame_hi">9</float>
       <float hash="landing_attack_air_frame_lw">11</float>
+      <float hash="landing_frame">4</float>
       <int hash="attack_100_enable_cnt">2</int>
       <bool hash="wall_jump_type">false</bool>
       <float hash="tread_jump_speed_y_mul">0.75</float>
@@ -2819,6 +3053,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.375</float>
+      <float hash="item_range_front_max">12.5</float>
     </struct>
     <!-- SEPHIROTH -->
     <struct index="79">
@@ -2844,6 +3080,7 @@
       <float hash="landing_attack_air_frame_b">15</float>
       <float hash="landing_attack_air_frame_hi">14</float>
       <float hash="landing_attack_air_frame_lw">30</float>
+      <float hash="landing_frame">5</float>
       <int hash="landing_heavy_frame">4</int>
       <int hash="attack_combo_max">1</int>
       <float hash="combo_attack_12_end">28</float>
@@ -2855,6 +3092,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.75</float>
+      <float hash="item_range_front_max">13</float>
     </struct>
     <!-- MII BRAWLER -->
     <struct index="80">
@@ -2884,6 +3123,7 @@
       <float hash="landing_attack_air_frame_b">10</float>
       <float hash="landing_attack_air_frame_hi">9</float>
       <float hash="landing_attack_air_frame_lw">13</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">4</int>
       <float hash="scale">1.19</float>
       <float hash="shield_radius">9.9</float>
@@ -2896,6 +3136,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.375</float>
+      <float hash="item_range_front_max">12.5</float>
     </struct>
     <!-- MII SWORDFIGHTER -->
     <struct index="81">
@@ -2923,6 +3165,7 @@
       <float hash="landing_attack_air_frame_n">8</float>
       <float hash="landing_attack_air_frame_f">11</float>
       <float hash="landing_attack_air_frame_lw">12</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="scale">1.17</float>
       <float hash="shield_radius">9.9</float>
@@ -2933,6 +3176,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.75</float>
+      <float hash="item_range_front_max">13</float>
     </struct>
     <!-- MII GUNNER -->
     <struct index="82">
@@ -2959,6 +3204,7 @@
       <float hash="landing_attack_air_frame_b">11</float>
       <float hash="landing_attack_air_frame_hi">12</float>
       <float hash="landing_attack_air_frame_lw">13</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">5</int>
       <float hash="scale">1.17</float>
       <float hash="shield_radius">9.5</float>
@@ -2968,6 +3214,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">8.4</float>
+      <float hash="item_range_front_max">11.2</float>
     </struct>
     <!-- DARK SAMUS -->
     <struct index="83">
@@ -2998,6 +3246,7 @@
       <float hash="landing_attack_air_frame_b">12</float>
       <float hash="landing_attack_air_frame_hi">10</float>
       <float hash="landing_attack_air_frame_lw">13</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">6</int>
       <float hash="scale">0.96</float>
       <float hash="shield_radius">12.7</float>
@@ -3006,6 +3255,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">10.5</float>
+      <float hash="item_range_front_max">14</float>
     </struct>
     <!-- DAISY -->
     <struct index="84">
@@ -3035,6 +3286,7 @@
       <float hash="landing_attack_air_frame_b">8</float>
       <float hash="landing_attack_air_frame_hi">8</float>
       <float hash="landing_attack_air_frame_lw">12</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">4</int>
       <int hash="jump_count_max">3</int>
       <bool hash="wall_jump_type">false</bool>
@@ -3044,6 +3296,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9</float>
+      <float hash="item_range_front_max">12</float>
     </struct>
     <!-- LUCINA -->
     <struct index="85">
@@ -3074,6 +3328,7 @@
       <float hash="landing_attack_air_frame_b">11</float>
       <float hash="landing_attack_air_frame_hi">9</float>
       <float hash="landing_attack_air_frame_lw">12</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">0.95</float>
       <float hash="tread_jump_speed_y_mul">0.775</float>
       <float hash="tread_mini_jump_speed_y_mul">0.775</float>
@@ -3081,6 +3336,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">10.125</float>
+      <float hash="item_range_front_max">13.5</float>
     </struct>
     <!-- CHROM -->
     <struct index="86">
@@ -3104,11 +3361,12 @@
       <float hash="air_speed_y_stable">2.6</float>
       <float hash="dive_speed_y">3.3</float>
       <float hash="weight">90</float>
-      <float hash="landing_attack_air_frame_n">10</float>
+      <float hash="landing_attack_air_frame_n">8</float>
       <float hash="landing_attack_air_frame_f">10</float>
       <float hash="landing_attack_air_frame_b">13</float>
       <float hash="landing_attack_air_frame_hi">9</float>
-      <float hash="landing_attack_air_frame_lw">13</float>
+      <float hash="landing_attack_air_frame_lw">11</float>
+      <float hash="landing_frame">4</float>
       <int hash="landing_heavy_frame">4</int>
       <float hash="scale">0.96</float>
       <float hash="shield_radius">12.5</float>
@@ -3120,6 +3378,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">10.125</float>
+      <float hash="item_range_front_max">13.5</float>
     </struct>
     <!-- DARK PIT -->
     <struct index="87">
@@ -3146,6 +3406,7 @@
       <float hash="landing_attack_air_frame_b">10</float>
       <float hash="landing_attack_air_frame_hi">11</float>
       <float hash="landing_attack_air_frame_lw">10</float>
+      <float hash="landing_frame">4</float>
       <int hash="attack_100_enable_cnt">2</int>
       <bool hash="wall_jump_type">false</bool>
       <float hash="tread_jump_speed_y_mul">0.9</float>
@@ -3154,6 +3415,8 @@
       <int hash="attack_hi4_hold_keep_frame">1</int>
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
+      <float hash="item_range_front">9.75</float>
+      <float hash="item_range_front_max">13</float>
     </struct>
     <!-- KEN -->
     <struct index="88">
@@ -3182,6 +3445,7 @@
       <float hash="landing_attack_air_frame_f">10</float>
       <float hash="landing_attack_air_frame_hi">11</float>
       <float hash="landing_attack_air_frame_lw">12</float>
+      <float hash="landing_frame">5</float>
       <float hash="scale">1.02</float>
       <float hash="shield_radius">12.3</float>
       <float hash="tread_jump_speed_y_mul">0.825</float>
@@ -3191,6 +3455,8 @@
       <int hash="attack_s4_hold_keep_frame">1</int>
       <int hash="attack_lw4_hold_keep_frame">1</int>
       <int hash="attack_combo_max">2</int>
+      <float hash="item_range_front">8.625</float>
+      <float hash="item_range_front_max">11.5</float>
     </struct>
     <!-- RICHTER -->
     <struct index="89">
@@ -3218,6 +3484,7 @@
       <float hash="landing_attack_air_frame_b">12</float>
       <float hash="landing_attack_air_frame_hi">8</float>
       <float hash="landing_attack_air_frame_lw">18</float>
+      <float hash="landing_frame">4</float>
       <float hash="scale">1</float>
       <float hash="shield_radius">12.3</float>
       <int hash="attack_combo_max">3</int>
@@ -3231,6 +3498,8 @@
       <float hash="common_effect_0_r">0.902</float>
       <float hash="common_effect_0_g">0.784</float>
       <float hash="common_effect_0_b">0.333</float>
+      <float hash="item_range_front">9.375</float>
+      <float hash="item_range_front_max">12.5</float>
     </struct>
     <!-- GIGA BOWSER -->
     <struct index="90">

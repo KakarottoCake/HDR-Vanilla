@@ -376,10 +376,10 @@ impl MeterModule {
 
 #[skyline::hook(offset = 0x46ae84, inline)]
 unsafe fn hit_module_handle_attack_event(ctx: &InlineCtx)  {
-    let module = *ctx.registers[0].x.as_ref();
+    let module = ctx.registers[0].x();
     let receiver_boma = &mut *(*(module as *mut *mut BattleObjectModuleAccessor).add(1));
 
-    let data = *ctx.registers[1].x.as_ref() as *mut u32;
+    let data = ctx.registers[1].x() as *mut u32;
     let attacker_id = *data;
 
     let collision_id = *data.add(1);
@@ -388,7 +388,7 @@ unsafe fn hit_module_handle_attack_event(ctx: &InlineCtx)  {
         return;
     }
 
-    let collision_data = *ctx.registers[27].x.as_ref() as *mut f32;
+    let collision_data = ctx.registers[27].x() as *mut f32;
     let loc_x = *collision_data.add(4);
     let loc_y = *collision_data.add(5);
     let loc_z = *collision_data.add(6);
@@ -420,6 +420,9 @@ unsafe fn shield_module_send_shield_attack_collision_event(shield_module: *mut u
     VarModule::set_vec3(battle_object, vars::common::instance::LAST_ATTACK_HIT_LOCATION, Vector3f { x: loc_x, y: loc_y, z: loc_z });
 }
 
+// This should probably be in fighters/common/src/general_statuses/damage.rs but the only thing we currently do is meter-related
+// But now we are nopping an instruction in it, which can be found in damage.rs. If the scope widens, it will likely be a good idea
+// to decomp the entire function and/or consoliate things there as it makes more sense.
 #[skyline::hook(offset = offsets::fighter_handle_damage())]
 unsafe fn fighter_handle_damage_hook(fighter: *mut smash::app::BattleObject, arg: *const u8) {
     let module_accessor = (*fighter).module_accessor;

@@ -36,14 +36,6 @@ unsafe fn special_hi_handling(fighter: &mut smash::lua2cpp::L2CFighterCommon, bo
     if WorkModule::get_float(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLOAT_BURNER_ENERGY_VALUE) <= 0.0 {
         WorkModule::set_float(fighter.module_accessor, 10.0, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLOAT_BURNER_ENERGY_VALUE);
     }
-
-    if StatusModule::prev_status_kind(boma, 0) == *FIGHTER_ROBOT_STATUS_KIND_SPECIAL_HI_KEEP {
-        VarModule::set_int(fighter.battle_object, vars::robot::instance::SPECIAL_HI_CHARGE_FRAME, 0);
-    }
-
-    if StatusModule::prev_status_kind(boma, 1) == *FIGHTER_STATUS_KIND_SPECIAL_HI {
-        PostureModule::set_rot(fighter.module_accessor, &Vector3f::zero(), 0);
-    }
 }
 
 // PM-like down-b canceling
@@ -79,7 +71,11 @@ unsafe fn meter_control(boma: &mut BattleObjectModuleAccessor) {
         if charge_frame == 1 {
             MeterModule::drain_direct(boma.object(), 20.0);
         } else if charge_frame > 10 {
-            MeterModule::drain_direct(boma.object(), 2.0);
+            if boma.is_situation(*SITUATION_KIND_GROUND) { 
+                MeterModule::drain_direct(boma.object(), 4.0);
+            } else {
+                MeterModule::drain_direct(boma.object(), 2.0);
+            }
         }
     } else if MeterModule::meter(boma.object()) != burner_energy_value {
         if burner_energy_value == 10.0 {

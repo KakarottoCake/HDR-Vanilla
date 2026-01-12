@@ -1,14 +1,14 @@
 use super::*;
 use super::knockback_util::*;
 use utils::ext::*;
-use std::arch::asm;
 
 pub fn install() {
     skyline::install_hooks!(
         process_knockback,
         calculate_knockback,
         set_thrown_lr,
-        set_damage_lr
+        set_damage_lr,
+        get_attack_lr_check
     );
 }
 
@@ -30,9 +30,9 @@ static mut IS_CALCULATING: Option<(u32, u32)> = None;
 
 #[skyline::hook(offset = 0x402f00, inline)]
 unsafe fn calculate_knockback(ctx: &skyline::hooks::InlineCtx) {
-    let damage_module = *ctx.registers[19].x.as_ref();
+    let damage_module = ctx.registers[19].x();
     let our_boma = *((damage_module + 0x8) as *mut *mut smash::app::BattleObjectModuleAccessor);
-    let ptr = *ctx.registers[20].x.as_ref() as *mut u8;
+    let ptr = ctx.registers[20].x() as *mut u8;
     let id = *(ptr.add(0x24) as *const u32);
     IS_CALCULATING = Some(((*our_boma).battle_object_id, id));
 
@@ -46,10 +46,10 @@ unsafe fn calculate_knockback(ctx: &skyline::hooks::InlineCtx) {
 #[skyline::hook(offset = 0x403950, inline)]
 unsafe fn process_knockback(ctx: &skyline::hooks::InlineCtx) {
     if let Some((defender, attacker)) = IS_CALCULATING {
-        let boma = *ctx.registers[20].x.as_ref() as *mut smash::app::BattleObjectModuleAccessor;
+        let boma = ctx.registers[20].x() as *mut smash::app::BattleObjectModuleAccessor;
         if (*boma).battle_object_id == defender {
             process_item_on_collision(defender, attacker);
-            calculate_finishing_hit(defender, attacker, *ctx.registers[19].x.as_ref() as *const f32);
+            calculate_finishing_hit(defender, attacker, ctx.registers[19].x() as *const f32);
         }
     }
 }
@@ -221,21 +221,22 @@ pub unsafe extern "C" fn is_teammate_alive(defender_boma: &mut BattleObjectModul
 pub unsafe extern "C" fn is_final_killing_hit(defender_boma: &mut BattleObjectModuleAccessor, attacker_boma: &mut BattleObjectModuleAccessor) -> bool {
     // special case for training mode
     if util::is_training_mode() {
-        if VarModule::is_flag(defender_boma.object(), vars::common::instance::ENABLE_FRAME_DATA_DEBUG) {
-            return true;
-        }
+        // if VarModule::is_flag(defender_boma.object(), vars::common::instance::ENABLE_FRAME_DATA_DEBUG) {
+        //     return true;
+        // }
 
         let mut is_training_toggle = false;
         if attacker_boma.is_weapon() {
             let owner_id = WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
             let owner = util::get_battle_object_from_id(owner_id);
             let owner_boma = &mut *(*owner).module_accessor;
-            if VarModule::is_flag(owner_boma.object(), vars::common::instance::ENABLE_FRAME_DATA_DEBUG) {
-                return true;
-            }
-        } else if VarModule::is_flag(attacker_boma.object(), vars::common::instance::ENABLE_FRAME_DATA_DEBUG) {
-            return true;
+            // if VarModule::is_flag(owner_boma.object(), vars::common::instance::ENABLE_FRAME_DATA_DEBUG) {
+            //     return true;
+            // }
         }
+        // else if VarModule::is_flag(attacker_boma.object(), vars::common::instance::ENABLE_FRAME_DATA_DEBUG) {
+        //     return true;
+        // }
         // println!("kill screen training mode is not enabled"); 
         return false;
     }
@@ -315,8 +316,8 @@ pub unsafe extern "C" fn call_finishing_hit_effects(defender_boma: &mut BattleOb
 // We override this to allow throw receiver direction to always be determined by
 // which side the attacker was on
 #[skyline::hook(offset = 0x6c59cc, inline)]
-unsafe fn set_thrown_lr(ctx: &skyline::hooks::InlineCtx) {
-    let opponent_battle_object_id = *(*ctx.registers[20].x.as_ref() as *const u32).add(0x44 / 4);
+unsafe fn set_thrown_lr(ctx: &mut skyline::hooks::InlineCtx) {
+    let opponent_battle_object_id = *(ctx.registers[20].x() as *const u32).add(0x44 / 4);
     let opponent_battle_object = utils::util::get_battle_object_from_id(opponent_battle_object_id);
     let opponent_boma = (&mut *(*opponent_battle_object).module_accessor);
 
@@ -324,7 +325,7 @@ unsafe fn set_thrown_lr(ctx: &skyline::hooks::InlineCtx) {
         return;
     }
 
-    let boma = *ctx.registers[19].x.as_ref() as *mut smash::app::BattleObjectModuleAccessor;
+    let boma = ctx.registers[19].x() as *mut smash::app::BattleObjectModuleAccessor;
     let fighter = util::get_fighter_common_from_accessor(&mut *boma);
 
     fighter.clear_lua_stack();
@@ -340,7 +341,7 @@ unsafe fn set_thrown_lr(ctx: &skyline::hooks::InlineCtx) {
         PostureModule::lr(boma)
     };
 
-    asm!("fmov s0, w8", in("w8") lr)
+    ctx.registers_f[0].set_s(lr)
 }
 
 // This runs immediately before FIGHTER_STATUS_WORK_ID_FLOAT_RESERVE_DAMAGE_LR is set
@@ -349,8 +350,8 @@ unsafe fn set_thrown_lr(ctx: &skyline::hooks::InlineCtx) {
 // We override this to allow receiver turnaround to always be determined by
 // which side the attacker was on
 #[skyline::hook(offset = 0x6c5980, inline)]
-unsafe fn set_damage_lr(ctx: &skyline::hooks::InlineCtx) {
-    let opponent_battle_object_id = *(*ctx.registers[20].x.as_ref() as *const u32).add(0x44 / 4);
+unsafe fn set_damage_lr(ctx: &mut skyline::hooks::InlineCtx) {
+    let opponent_battle_object_id = *(ctx.registers[20].x() as *const u32).add(0x44 / 4);
     let opponent_battle_object = utils::util::get_battle_object_from_id(opponent_battle_object_id);
     let opponent_boma = (&mut *(*opponent_battle_object).module_accessor);
 
@@ -360,15 +361,68 @@ unsafe fn set_damage_lr(ctx: &skyline::hooks::InlineCtx) {
     
     let opponent_pos_x = PostureModule::pos_x(opponent_boma);
 
-    let boma = *ctx.registers[19].x.as_ref() as *mut smash::app::BattleObjectModuleAccessor;
+    let boma = ctx.registers[19].x() as *mut smash::app::BattleObjectModuleAccessor;
     let pos_x = PostureModule::pos_x(boma);
     let lr = PostureModule::lr(boma);
+    // The ATTACK_LR_CHECK value used by the connecting hitbox
+    let attack_lr_check = VarModule::get_int((*opponent_boma).object(), vars::common::instance::ATTACK_LR_CHECK);
 
-    let damage_lr: f32 = if opponent_pos_x >= pos_x {
-        1.0
-    } else {
-        -1.0
+    let default_lr = if opponent_pos_x >= pos_x { 1.0 } else { -1.0 };
+    let damage_lr: f32 = {
+        if attack_lr_check != *ATTACK_LR_CHECK_F && attack_lr_check != *ATTACK_LR_CHECK_B {
+            // If reverse hits are disabled for a hitbox,
+            // always determine facing direction solely based on attacker base position
+            default_lr
+        } else {
+            // Calculate the half-distance to your ECB's outermost edge
+            let ecb_mid = if opponent_pos_x >= pos_x {
+                let ecb_right = *GroundModule::get_rhombus(boma, true).add(3);
+                ((ecb_right.x - pos_x) * 0.5) + pos_x
+            } else {
+                let ecb_left = *GroundModule::get_rhombus(boma, true).add(2);
+                ((pos_x - ecb_left.x) * 0.5) + ecb_left.x
+            };
+
+            let attacker_lr = PostureModule::lr(opponent_boma);
+
+            // Determine whether you are functionally "behind" the attacker
+            let is_behind_attacker = if opponent_pos_x >= pos_x {
+                (attack_lr_check == *ATTACK_LR_CHECK_F && attacker_lr > 0.0)
+                    || (attack_lr_check == *ATTACK_LR_CHECK_B && attacker_lr < 0.0)
+            } else {
+                (attack_lr_check == *ATTACK_LR_CHECK_F && attacker_lr < 0.0)
+                    || (attack_lr_check == *ATTACK_LR_CHECK_B && attacker_lr > 0.0)
+            };
+
+            // Determine whether your mid-ECB crosses the attacker's base position
+            let mid_ecb_crosses_attacker = if opponent_pos_x >= pos_x {
+                ecb_mid >= opponent_pos_x
+            } else {
+                ecb_mid <= opponent_pos_x
+            };
+
+            // If hit behind the attacker,
+            // only turn to face them if you are far enough behind them
+            if is_behind_attacker && mid_ecb_crosses_attacker {
+                -default_lr
+            } else {
+                default_lr
+            }
+        }
     };
 
-    asm!("fmov s0, w8", in("w8") damage_lr)
+    ctx.registers_f[0].set_s(damage_lr)
+}
+
+#[skyline::hook(offset = 0x3ff1b8, inline)]
+unsafe fn get_attack_lr_check(ctx: &mut skyline::hooks::InlineCtx) {
+    let attack_module = ctx.registers[1].x();
+    let boma = *(attack_module as *mut *mut BattleObjectModuleAccessor).add(1);
+
+    if !(*boma).is_fighter() {
+        return;
+    }
+
+    let attack_lr_check = ctx.registers[8].w() as i32;
+    VarModule::set_int((*boma).object(), vars::common::instance::ATTACK_LR_CHECK, attack_lr_check);
 }

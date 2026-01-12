@@ -6,6 +6,7 @@ mod attack_lw4;
 mod special_hi;
 mod special_lw;
 mod special_n;
+mod special_s;
 
 // handle damage to belly
 #[no_mangle]
@@ -48,13 +49,21 @@ pub unsafe extern "C" fn krool_belly_damage_hook_impl(damage: f32, fighter: *mut
 // handle toggling belly on/off
 // #[no_mangle]
 // pub unsafe extern "C" fn krool_belly_toggle_hook(ctx: &mut skyline::hooks::InlineCtx) {
-//     *ctx.registers[0].x.as_mut() = 0;    // bool for toggle
+//     ctx.registers[0].set_x(0);    // bool for toggle
 //     // ...as_mut() &= logic
 // }
 
+unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
+    VarModule::set_float(fighter.battle_object, vars::krool::instance::SPECIAL_LW_STORED_DAMAGE, 0.0);
+    VarModule::off_flag(fighter.battle_object, vars::krool::instance::SPECIAL_N_GRAB);
+}
+
 pub fn install(agent: &mut Agent) {
+    agent.on_start(on_start);
+
     attack_lw4::install(agent);
     special_hi::install(agent);
     special_lw::install(agent);
     special_n::install(agent);
+    special_s::install(agent);
 }

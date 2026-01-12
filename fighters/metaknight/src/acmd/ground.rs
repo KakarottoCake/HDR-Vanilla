@@ -5,7 +5,7 @@ unsafe extern "C" fn game_attack100(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 361, 8, 0, 40, 7.0, 0.0, 6.5, 8.0, Some(0.0), Some(6.5), Some(13.5), 0.5, 0.6, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 361, 8, 0, 30, 6.5, 0.0, 6.5, 7.5, Some(0.0), Some(6.5), Some(13.0), 0.5, 0.6, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         AttackModule::set_add_reaction_frame(boma, 0, 3.0, false);
         ATK_SET_SHIELD_SETOFF_MUL(agent, 0, 4);
     }
@@ -15,7 +15,7 @@ unsafe extern "C" fn game_attack100(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 5.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 361, 8, 0, 40, 7.0, 0.0, 6.5, 8.0, Some(0.0), Some(6.5), Some(13.5), 0.5, 0.6, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 361, 8, 0, 30, 6.5, 0.0, 6.5, 7.5, Some(0.0), Some(6.5), Some(13.0), 0.5, 0.6, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         AttackModule::set_add_reaction_frame(boma, 0, 3.0, false);
         ATK_SET_SHIELD_SETOFF_MUL(agent, 0, 4);
     }
@@ -25,7 +25,8 @@ unsafe extern "C" fn game_attack100(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 9.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 361, 8, 0, 40, 4.0, 0.0, 6.0, -3.0, Some(0.0), Some(6.0), Some(-9.5), 0.5, 0.6, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 361, 8, 0, 30, 4.0, 0.0, 6.0, -3.0, Some(0.0), Some(6.0), Some(-9.5), 0.5, 0.6, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        AttackModule::set_add_reaction_frame(boma, 0, 3.0, false);
         ATK_SET_SHIELD_SETOFF_MUL(agent, 0, 4);
     }
     frame(lua_state, 11.0);
@@ -68,49 +69,49 @@ unsafe extern "C" fn effect_attack100(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 1.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("metaknight_air_hi"), Hash40::new("top"), 1, 6, -1, 20, 165, 105, 0.5, true);
+        EFFECT_FOLLOW(agent, Hash40::new("metaknight_air_hi_hdr"), Hash40::new("top"), 1, 6, -1, 20, 165, 105, 0.5, true);
         EffectModule::set_disable_render_offset_last(boma);
         EffectModule::set_scale_last(boma, &Vector3f::new(1.0, 0.65, 0.7));
     }
     frame(lua_state, 5.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("metaknight_air_hi"), Hash40::new("top"), 0, 7, 0, 90, 0, 25, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("metaknight_air_hi_hdr"), Hash40::new("top"), 0, 7, 0, 90, 0, 25, 1, true);
         EffectModule::set_disable_render_offset_last(boma);
         EffectModule::set_scale_last(boma, &Vector3f::new(1.0, 0.8, 0.65));
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("metaknight_air_hi"), Hash40::new("top"), 1, 6.5, -1, -165, 20, -80, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("metaknight_air_hi_hdr"), Hash40::new("top"), 1, 6.5, -1, -165, 20, -80, 1, true);
         EffectModule::set_disable_render_offset_last(boma);
         EffectModule::set_scale_last(boma, &Vector3f::new(1.0, 0.5, 0.75));
     }
     frame(lua_state, 9.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("metaknight_air_hi"), Hash40::new("top"), 0, 6, 2, -205, 160, -145, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("metaknight_air_hi_hdr"), Hash40::new("top"), 0, 6, 2, -205, 160, -145, 1, true);
         EffectModule::set_disable_render_offset_last(boma);
         EffectModule::set_scale_last(boma, &Vector3f::new(1.0, 0.7, 0.85));
     }
     frame(lua_state, 12.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("metaknight_air_hi"), Hash40::new("top"), 2, 6, 1, 0, -155, 105, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("metaknight_air_hi_hdr"), Hash40::new("top"), 2, 6, 1, 0, -155, 105, 1, true);
         EffectModule::set_disable_render_offset_last(boma);
         EffectModule::set_scale_last(boma, &Vector3f::new(1.0, 0.7, 0.7));
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("metaknight_air_hi"), Hash40::new("top"), 0, 7, 0, 90, 0, -45, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("metaknight_air_hi_hdr"), Hash40::new("top"), 0, 7, 0, 90, 0, -45, 1, true);
         EffectModule::set_disable_render_offset_last(boma);
         EffectModule::set_scale_last(boma, &Vector3f::new(1.0, 0.85, 0.65));
     }
     frame(lua_state, 18.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("metaknight_air_hi"), Hash40::new("top"), 2, 4, 4, -165, 20, -95, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("metaknight_air_hi_hdr"), Hash40::new("top"), 2, 4, 4, -165, 20, -95, 1, true);
         EffectModule::set_disable_render_offset_last(boma);
         EffectModule::set_scale_last(boma, &Vector3f::new(1.0, 0.5, 0.75));
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("metaknight_air_hi"), Hash40::new("top"), -2, 6, -4, -25, -30, -60, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("metaknight_air_hi_hdr"), Hash40::new("top"), -2, 6, -4, -25, -30, -60, 1, true);
         EffectModule::set_disable_render_offset_last(boma);
         EffectModule::set_scale_last(boma, &Vector3f::new(1.0, 0.5, 0.75));
     }

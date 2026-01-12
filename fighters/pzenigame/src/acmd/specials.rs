@@ -4,7 +4,7 @@ unsafe extern "C" fn game_specialnstart(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    FT_MOTION_RATE_RANGE(agent, 1.0, 10.0, 7.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 10.0, 6.0);
     frame(lua_state, 10.0);
     FT_MOTION_RATE_RANGE(agent, 10.0, 19.0, 2.0);
     frame(lua_state, 19.0);
@@ -76,7 +76,7 @@ unsafe extern "C" fn effect_specialnshot(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_specialnshot(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 5.0);
+    frame(lua_state, 6.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_pzenigame_special_n03"));
         let rand = sv_math::rand(hash40("fighter"), 2);
@@ -153,6 +153,10 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         SA_SET(agent, *SITUATION_KIND_AIR);
     }
+    frame(lua_state, 3.0);
+    if is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
+    }
     frame(lua_state, 4.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_REVERSE_LR);
@@ -180,6 +184,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
         AttackModule::clear_all(boma);
+        KineticModule::suspend_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     }
 }
 

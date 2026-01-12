@@ -131,7 +131,7 @@ unsafe extern "C" fn effect_specials(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("shulk_monad_circle_red"), Hash40::new("swordr"), 0, 0, 0, 0, 0, 0, 1, true);
         EFFECT_FOLLOW(agent, Hash40::new("shulk_monad_sword3_red"), Hash40::new("haver"), 0, 2.5, 0.3, 0, 0, 0, 0.4, true);
-        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_swordred1"), Hash40::new("tex_shulk_swordred2"), 6, Hash40::new("haver"), 0.0, 3.0, 0.65, Hash40::new("haver"), 0.0, 15.0, 0.65, true, Hash40::new("null"), Hash40::new("haver"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.2);
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_rush"), Hash40::new("tex_shulk_swordred2"), 15, Hash40::new("haver"), 0.0, 4.0, 0.65, Hash40::new("haver"), 0.0, 20.0, 1.1, true, Hash40::new("null"), Hash40::new("haver"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.2);
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {
@@ -251,8 +251,9 @@ unsafe extern "C" fn expression_specials(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    frame(lua_state, 3.0);
     if is_excute(agent) {
-        boma.select_cliff_hangdata_from_name("special_hi");
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
     }
     frame(lua_state, 9.0);
     if is_excute(agent) {
@@ -261,6 +262,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {
+        boma.select_cliff_hangdata_from_name("special_hi");
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
         WorkModule::on_flag(boma,*FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_MOVE_TRANS);
         WorkModule::on_flag(boma,*FIGHTER_SHULK_STATUS_SPECIAL_HI_FLAG_IS_ADD_SHIFT_RESERVE_INPUT);
@@ -306,15 +308,84 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     frame(lua_state, 25.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma,*FIGHTER_SHULK_STATUS_SPECIAL_HI_FLAG_IS_FALL);
-        WorkModule::on_flag(boma,*FIGHTER_SHULK_STATUS_SPECIAL_HI_FLAG_IS_ENABLE_CONTROL);
     }
     frame(lua_state, 28.0);
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07),*GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
     }
+    frame(lua_state, 38.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(boma,*FIGHTER_SHULK_STATUS_SPECIAL_HI_FLAG_IS_ENABLE_CONTROL);
+    }
     frame(lua_state, 43.0);
     if is_excute(agent) {
         WorkModule::off_flag(boma,*FIGHTER_SHULK_STATUS_SPECIAL_HI_FLAG_IS_ENABLE_ADD_SHIFT_INPUT);
+    }
+}
+
+unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 7.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("shulk_monad_circle_red"), Hash40::new("swordr"), 0, 0, 0, 0, 0, 0, 1, true);
+    }
+    frame(lua_state, 8.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("shulk_monad_sword3_pink"), Hash40::new("haver"), 0, 2.3, 0.3, 0, 0, 0, 0.6, true);
+    }
+    frame(lua_state, 9.0);
+    if is_excute(agent) {
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_airsword"), Hash40::new("tex_shulk_swordpink2"), 10, Hash40::new("haver"), 0, 3, 0.9, Hash40::new("haver"), 0, 22, 0.9, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.2);
+        EFFECT(agent, Hash40::new("shulk_airslash"), Hash40::new("top"), 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+    }
+    frame(lua_state, 10.0);
+    if is_excute(agent) {
+        LANDING_EFFECT(agent, Hash40::new("sys_v_smoke_a"), Hash40::new("top"), 0, 0, -4, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+    }
+    frame(lua_state, 20.0);
+    if is_excute(agent) {
+        AFTER_IMAGE_OFF(agent, 7);
+    }
+    frame(lua_state, 23.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("shulk_monad_sword3_pink_end"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.76, true);
+    }
+    frame(lua_state, 24.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("shulk_monad_sword3_pink"), false, false);
+        EFFECT_OFF_KIND(agent, Hash40::new("shulk_monad_circle_red"), false, false);
+    }
+}
+
+unsafe extern "C" fn effect_specialairhi(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 7.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("shulk_monad_circle_red"), Hash40::new("swordr"), 0, 0, 0, 0, 0, 0, 1, true);
+    }
+    frame(lua_state, 8.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("shulk_monad_sword3_pink"), Hash40::new("haver"), 0, 2.3, 0.3, 0, 0, 0, 0.6, true);
+    }
+    frame(lua_state, 9.0);
+    if is_excute(agent) {
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_airsword"), Hash40::new("tex_shulk_swordpink2"), 10, Hash40::new("haver"), 0, 3, 0.9, Hash40::new("haver"), 0, 22, 0.9, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.2);
+        EFFECT(agent, Hash40::new("shulk_airslash"), Hash40::new("top"), 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+    }
+    frame(lua_state, 20.0);
+    if is_excute(agent) {
+        AFTER_IMAGE_OFF(agent, 7);
+    }
+    frame(lua_state, 23.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("shulk_monad_sword3_pink_end"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.76, true);
+    }
+    frame(lua_state, 24.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("shulk_monad_sword3_pink"), false, false);
+        EFFECT_OFF_KIND(agent, Hash40::new("shulk_monad_circle_red"), false, false);
     }
 }
 
@@ -346,6 +417,32 @@ unsafe extern "C" fn game_specialhiadd(agent: &mut L2CAgentBase) {
     frame(lua_state, 50.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_SHULK_STATUS_SPECIAL_HI_FLAG_IS_ENABLE_CONTROL);
+    }
+}
+
+unsafe extern "C" fn effect_specialhiadd(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("shulk_monad_circle_red"), Hash40::new("swordr"), 0, 0, 0, 0, 0, 0, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("shulk_monad_sword3_pink"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.95, true);
+    }
+    frame(lua_state, 8.0);
+    if is_excute(agent) {
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_airsword"), Hash40::new("tex_shulk_swordpink2"), 6, Hash40::new("haver"), 0, 1, 0.9, Hash40::new("haver"), 0, 30, 0.9, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.2);
+    }
+    frame(lua_state, 14.0);
+    if is_excute(agent) {
+        AFTER_IMAGE_OFF(agent, 4);
+    }
+    frame(lua_state, 24.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("shulk_monad_sword3_pink_end"), Hash40::new("haver"), 0, 0, 0, 0, 90, 0, 1, true);
+    }
+    frame(lua_state, 25.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("shulk_monad_sword3_pink"), false, false);
+        EFFECT_OFF_KIND(agent, Hash40::new("shulk_monad_circle_red"), false, false);
     }
 }
 
@@ -404,8 +501,11 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("expression_specialairs", expression_specials, Priority::Low);
 
     agent.acmd("game_specialhi", game_specialhi, Priority::Low);
+    agent.acmd("effect_specialhi", effect_specialhi, Priority::Low);
     agent.acmd("game_specialairhi", game_specialhi, Priority::Low);
+    agent.acmd("effect_specialairhi", effect_specialairhi, Priority::Low);
     agent.acmd("game_specialhiadd", game_specialhiadd, Priority::Low);
+    agent.acmd("effect_specialhiadd", effect_specialhiadd, Priority::Low);
     
     agent.acmd("game_speciallwattack", game_speciallwattack, Priority::Low);
     agent.acmd("game_specialairlwattack", game_speciallwattack, Priority::Low);

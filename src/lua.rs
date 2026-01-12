@@ -1,3 +1,10 @@
+#![allow(improper_ctypes)]
+
+use rand::{seq::SliceRandom, thread_rng};
+use rlua_lua53_sys as lua;
+use std::ffi::CString;
+use utils::modules::stage_mgr::STAGE_MANAGER;
+
 macro_rules! lua_gettop {
     ($state:ident) => {{
         let top = *($state as *const u64).add(2);
@@ -64,13 +71,13 @@ unsafe fn register_button(arg: u64, id: i32, string: *const u8);
 
 #[skyline::hook(offset = 0x1d33460, inline)]
 unsafe fn add_buttons_to_subwindow(ctx: &mut skyline::hooks::InlineCtx) {
-    let ptr = *ctx.registers[0].x.as_ref();
+    let ptr = ctx.registers[0].x();
     register_button(ptr, 4, "set_parts_category_04\0".as_ptr());
     register_button(ptr, 6, "set_parts_category_05\0".as_ptr());
     // Can't use 5 here since that's for the "OK" button and
     // changing that will break the ability to save changes :weary:
-    // *ctx.registers[1].x.as_mut() = 6;
-    // *ctx.registers[20].x.as_mut() = 6;
+    // ctx.registers[1].set_x(6);
+    // ctx.registers[20].set_x(6);
     IS_IN_UI = true;
 }
 
@@ -82,8 +89,8 @@ unsafe fn set_something(arg: u64, val: u64, val2: u64);
 
 #[skyline::hook(offset = 0x1d33684, inline)]
 unsafe fn setup_buttons(ctx: &skyline::hooks::InlineCtx) {
-    let ptr = *ctx.registers[0].x.as_ref();
-    let ptr2 = *ctx.registers[1].x.as_ref();
+    let ptr = ctx.registers[0].x();
+    let ptr2 = ctx.registers[1].x();
 
     layout_get(ptr, ptr2, 4);
 
@@ -145,7 +152,7 @@ unsafe fn setup_buttons(ctx: &skyline::hooks::InlineCtx) {
 #[skyline::hook(offset = 0x1d33e9c, inline)]
 unsafe fn hijack_animation_get(ctx: &skyline::hooks::InlineCtx) {
     // this memleaks but I DON'T GIVE A FUCK (Askew: doesn't actually memleak you schmuck)
-    let ptr = *ctx.registers[0].x.as_ref();
+    let ptr = ctx.registers[0].x();
     let our_ptr = SHARED_PTR1[0];
     layout_get(ptr, our_ptr, 0);
 
@@ -240,16 +247,16 @@ static mut SHARED_PTR2: [u64; 2] = [0, 0];
 
 #[skyline::hook(offset = 0x1d338e4, inline)]
 unsafe fn frank_talk_think_tankk(ctx: &mut skyline::hooks::InlineCtx) {
-    if *ctx.registers[22].x.as_ref() == 4 {
+    if ctx.registers[22].x() == 4 {
         SHARED_PTR1[0] = 0;
         SHARED_PTR1[1] = 0;
-        *ctx.registers[19].x.as_mut() = SHARED_PTR1.as_ptr() as u64;
+        ctx.registers[19].set_x(SHARED_PTR1.as_ptr() as u64);
     }
 
-    if *ctx.registers[22].x.as_ref() == 5 {
+    if ctx.registers[22].x() == 5 {
         SHARED_PTR2[0] = 0;
         SHARED_PTR2[1] = 0;
-        *ctx.registers[19].x.as_mut() = SHARED_PTR2.as_ptr() as u64;
+        ctx.registers[19].set_x(SHARED_PTR2.as_ptr() as u64);
     }
 }
 
@@ -258,25 +265,25 @@ static mut CURRENT_UI_RIVALS_JUMP: bool = false;
 
 #[skyline::hook(offset = 0x1d30a18, inline)]
 unsafe fn get_on_value_for_custom(ctx: &mut skyline::hooks::InlineCtx) {
-    if *ctx.registers[1].x.as_ref() == 4 {
-        *ctx.registers[19].x.as_mut() = CURRENT_UI_PARRY_TOGGLE as u64;
-    } else if *ctx.registers[1].x.as_ref() == 6 {
-        *ctx.registers[19].x.as_mut() = CURRENT_UI_RIVALS_JUMP as u64;
+    if ctx.registers[1].x() == 4 {
+        ctx.registers[19].set_x(CURRENT_UI_PARRY_TOGGLE as u64);
+    } else if ctx.registers[1].x() == 6 {
+        ctx.registers[19].set_x(CURRENT_UI_RIVALS_JUMP as u64);
     }
 }
 
 #[skyline::hook(offset = 0x1d30a34, inline)]
 unsafe fn get_shared_ptr_for_custom(ctx: &mut skyline::hooks::InlineCtx) {
-    if *ctx.registers[8].x.as_ref() == 4 {
-        *ctx.registers[20].x.as_mut() = SHARED_PTR1.as_ptr() as u64;
-    } else if *ctx.registers[8].x.as_ref() == 6 {
-        *ctx.registers[20].x.as_mut() = SHARED_PTR2.as_ptr() as u64;
+    if ctx.registers[8].x() == 4 {
+        ctx.registers[20].set_x(SHARED_PTR1.as_ptr() as u64);
+    } else if ctx.registers[8].x() == 6 {
+        ctx.registers[20].set_x(SHARED_PTR2.as_ptr() as u64);
     }
 }
 
 #[skyline::hook(offset = 0x1d2fdbc, inline)]
 unsafe fn init_buttons_in_main_loop(ctx: &skyline::hooks::InlineCtx) {
-    let flag = *ctx.registers[1].x.as_ref() != 0;
+    let flag = ctx.registers[1].x() != 0;
     let ptr = SHARED_PTR1[0];
     let func: extern "C" fn(u64, bool) =
         std::mem::transmute(*((*(ptr as *const u64) + 0x60) as *const u64));
@@ -297,19 +304,19 @@ unsafe fn init_buttons_in_main_loop_again(ctx: &skyline::hooks::InlineCtx) {
 
 #[skyline::hook(offset = 0x1d30058, inline)]
 unsafe fn get_index_for_a_press(ctx: &mut skyline::hooks::InlineCtx) {
-    if *ctx.registers[22].x.as_ref() == 4 {
-        *ctx.registers[10].x.as_mut() = CURRENT_UI_PARRY_TOGGLE as u64;
-    } else if *ctx.registers[22].x.as_ref() == 6 {
-        *ctx.registers[10].x.as_mut() = CURRENT_UI_RIVALS_JUMP as u64;
+    if ctx.registers[22].x() == 4 {
+        ctx.registers[10].set_x(CURRENT_UI_PARRY_TOGGLE as u64);
+    } else if ctx.registers[22].x() == 6 {
+        ctx.registers[10].set_x(CURRENT_UI_RIVALS_JUMP as u64);
     }
 }
 
 #[skyline::hook(offset = 0x1d30134, inline)]
 unsafe fn update_index_for_a_press(ctx: &mut skyline::hooks::InlineCtx) {
-    if *ctx.registers[22].x.as_ref() == 4 {
-        CURRENT_UI_PARRY_TOGGLE = *ctx.registers[11].x.as_ref() != 0;
-    } else if *ctx.registers[22].x.as_ref() == 6 {
-        CURRENT_UI_RIVALS_JUMP = *ctx.registers[11].x.as_ref() != 0;
+    if ctx.registers[22].x() == 4 {
+        CURRENT_UI_PARRY_TOGGLE = ctx.registers[11].x() != 0;
+    } else if ctx.registers[22].x() == 6 {
+        CURRENT_UI_RIVALS_JUMP = ctx.registers[11].x() != 0;
     }
 }
 
@@ -335,14 +342,14 @@ unsafe fn set_next_button(arg: u64, button: i32, other: u64) {
 
 #[skyline::hook(offset = 0x1d309c4, inline)]
 unsafe fn skip_set_setting_for_ok(ctx: &mut skyline::hooks::InlineCtx) {
-    if *ctx.registers[1].x.as_ref() == 5 {
-        *ctx.registers[1].x.as_mut() = 300;
+    if ctx.registers[1].x() == 5 {
+        ctx.registers[1].set_x(300);
     }
 }
 
 #[skyline::hook(offset = 0x1d31200, inline)]
 unsafe fn init_ui_state(ctx: &mut skyline::hooks::InlineCtx) {
-    let ptr = (*ctx.registers[8].x.as_ref() as *mut u8).add(1);
+    let ptr = (ctx.registers[8].x() as *mut u8).add(1);
     CURRENT_UI_PARRY_TOGGLE = (*ptr >> 1) & 1 != 0;
     CURRENT_UI_RIVALS_JUMP = (*ptr >> 2) & 1 != 0;
     *ptr &= 1;
@@ -350,7 +357,7 @@ unsafe fn init_ui_state(ctx: &mut skyline::hooks::InlineCtx) {
 
 #[skyline::hook(offset = 0x1d2f3e4, inline)]
 unsafe fn exit_gc(ctx: &mut skyline::hooks::InlineCtx) {
-    let ptr = (*ctx.registers[20].x.as_ref() as *mut u8).add(0xC4);
+    let ptr = (ctx.registers[20].x() as *mut u8).add(0xC4);
     *ptr |= (CURRENT_UI_PARRY_TOGGLE as u8) << 1;
     *ptr |= (CURRENT_UI_RIVALS_JUMP as u8) << 2;
     IS_IN_UI = false;
@@ -358,7 +365,7 @@ unsafe fn exit_gc(ctx: &mut skyline::hooks::InlineCtx) {
 
 #[skyline::hook(offset = 0x1d2f3b0, inline)]
 unsafe fn exit_fk(ctx: &mut skyline::hooks::InlineCtx) {
-    let ptr = (*ctx.registers[20].x.as_ref() as *mut u8).add(0xE0);
+    let ptr = (ctx.registers[20].x() as *mut u8).add(0xE0);
     *ptr |= (CURRENT_UI_PARRY_TOGGLE as u8) << 1;
     *ptr |= (CURRENT_UI_RIVALS_JUMP as u8) << 2;
     IS_IN_UI = false;
@@ -366,7 +373,7 @@ unsafe fn exit_fk(ctx: &mut skyline::hooks::InlineCtx) {
 
 #[skyline::hook(offset = 0x1d2f364, inline)]
 unsafe fn exit_jc(ctx: &mut skyline::hooks::InlineCtx) {
-    let ptr = (*ctx.registers[20].x.as_ref() as *mut u8).add(0xD4);
+    let ptr = (ctx.registers[20].x() as *mut u8).add(0xD4);
     *ptr |= (CURRENT_UI_PARRY_TOGGLE as u8) << 1;
     *ptr |= (CURRENT_UI_RIVALS_JUMP as u8) << 2;
     IS_IN_UI = false;
@@ -381,7 +388,7 @@ unsafe fn get_parts(arg: u64, arg2: *const u8) -> [u64; 4] {
 
 #[skyline::hook(offset = 0x1d33274, inline)]
 unsafe fn set_pane_text_values(ctx: &skyline::hooks::InlineCtx) {
-    let layout_view = *ctx.registers[0].x.as_ref();
+    let layout_view = ctx.registers[0].x();
 
     let mut parts = get_parts(
         [0, layout_view].as_ptr() as _,
@@ -407,27 +414,327 @@ unsafe fn set_pane_text_values(ctx: &skyline::hooks::InlineCtx) {
 
 #[skyline::hook(offset = 0x1d33b60, inline)]
 unsafe fn set_parry_button_shield_text(ctx: &skyline::hooks::InlineCtx) {
-    let sp = (ctx as *const _ as *const u8).add(0x100);
+    let sp = (ctx as *const _ as *const u8).add(0x300);
     let ptr = *(sp.add(0xa8) as *const u64);
 
-    if *ctx.registers[22].x.as_ref() == 4 {
+    if ctx.registers[22].x() == 4 {
         crate::online::set_text_string(*((ptr + 0x10) as *const u64), "Special\0".as_ptr());
     }
-    if *ctx.registers[22].x.as_ref() == 5 {
+    if ctx.registers[22].x() == 5 {
         crate::online::set_text_string(*((ptr + 0x10) as *const u64), "Flick\0".as_ptr());
     }
 }
 
 #[skyline::hook(offset = 0x1d33ca0, inline)]
 unsafe fn set_parry_button_taunt_text(ctx: &skyline::hooks::InlineCtx) {
-    let sp = (ctx as *const _ as *const u8).add(0x100);
+    let sp = (ctx as *const _ as *const u8).add(0x300);
     let ptr = *(sp.add(0xa8) as *const u64);
 
-    if *ctx.registers[22].x.as_ref() == 4 {
+    if ctx.registers[22].x() == 4 {
         crate::online::set_text_string(*((ptr + 0x10) as *const u64), "Taunt\0".as_ptr());
     }
-    if *ctx.registers[22].x.as_ref() == 5 {
+    if ctx.registers[22].x() == 5 {
         crate::online::set_text_string(*((ptr + 0x10) as *const u64), "Button\0".as_ptr());
+    }
+}
+
+// Borrowed a ton of this logic from stage-alts-2
+// Thanks Blujay!!
+unsafe fn push_new_singleton(
+    lua_state: *mut lua::lua_State,
+    name: &'static str,
+    registry: &[lua::luaL_Reg],
+) {
+    let real_name = format!("{}\0", name);
+    let meta_name = format!("Metatable{}\0", name);
+    lua::luaL_newmetatable(lua_state, meta_name.as_ptr() as _);
+    lua::lua_pushvalue(lua_state, -1);
+    lua::lua_setfield(lua_state, -2, "__index\0".as_ptr() as _);
+
+    lua::luaL_setfuncs(lua_state, registry.as_ptr(), 0);
+    lua::lua_pop(lua_state, 1);
+
+    lua::lua_newtable(lua_state);
+    lua::lua_getfield(lua_state, lua::LUA_REGISTRYINDEX, meta_name.as_ptr() as _);
+    lua::lua_setmetatable(lua_state, -2);
+
+    let global_table = lua::bindings::index2addr(lua_state, lua::LUA_REGISTRYINDEX);
+    let table = (*global_table).value.ptr;
+    let value = if *(table as *mut u32).add(3) < 2 {
+        todo!()
+    } else {
+        (*(table as *mut *mut lua::bindings::TValue).add(2)).add(1)
+    };
+    lua::bindings::auxsetstr(lua_state, value, real_name.as_ptr() as _);
+}
+
+extern "C" {
+    fn add_to_key_context(ctx: &skyline::hooks::InlineCtx);
+}
+
+#[skyline::hook(replace = add_to_key_context)]
+unsafe fn add_to_key_context_hook(ctx: &skyline::hooks::InlineCtx) {
+    call_original!(ctx);
+
+    let lua_state: *mut lua::lua_State = ctx.registers[19].x() as _;
+
+    let registry = &[
+        lua::luaL_Reg {
+            name: "send_message\0".as_ptr() as _,
+            func: Some(send_message),
+        },
+        lua::luaL_Reg {
+            name: "set_selected_panel_and_preview\0".as_ptr() as _,
+            func: Some(set_selected_panel_and_preview),
+        },
+        lua::luaL_Reg {
+            name: "get_selected_panel\0".as_ptr() as _,
+            func: Some(get_selected_panel),
+        },
+        lua::luaL_Reg {
+            name: "get_selected_preview\0".as_ptr() as _,
+            func: Some(get_selected_preview),
+        },
+        lua::luaL_Reg {
+            name: "set_perma_strike_stage\0".as_ptr() as _,
+            func: Some(set_perma_strike_stage),
+        },
+        lua::luaL_Reg {
+            name: "is_perma_strike_stage\0".as_ptr() as _,
+            func: Some(is_perma_strike_stage),
+        },
+        lua::luaL_Reg {
+            name: "get_page_name\0".as_ptr() as _,
+            func: Some(get_page_name),
+        },
+        lua::luaL_Reg {
+            name: "set_random_stage_index\0".as_ptr() as _,
+            func: Some(set_random_stage_index),
+        },
+        lua::luaL_Reg {
+            name: "get_random_stage_index\0".as_ptr() as _,
+            func: Some(get_random_stage_index),
+        },
+        lua::luaL_Reg {
+            name: "stage_loading\0".as_ptr() as _,
+            func: Some(stage_loading),
+        },
+        lua::luaL_Reg {
+            name: "get_bans\0".as_ptr() as _,
+            func: Some(get_bans),
+        },
+        lua::luaL_Reg {
+            name: "get_dsr\0".as_ptr() as _,
+            func: Some(get_dsr),
+        },
+        lua::luaL_Reg {
+            name: std::ptr::null(),
+            func: None,
+        },
+    ];
+
+    push_new_singleton(lua_state, "HDR", registry);
+}
+
+extern "C" fn send_message(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let value = skyline::from_c_str(lua::lua_tostring(state, -1) as _);
+        println!("HDR Lua says: {}", value);
+        lua::lua_pop(state, 1);
+        0
+    }
+}
+
+extern "C" fn set_selected_panel_and_preview(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let preview_id = lua::lua_tointegerx(state, -1, std::ptr::null_mut()) as i32;
+        lua::lua_pop(state, 1);
+
+        let panel_id = lua::lua_tointegerx(state, -1, std::ptr::null_mut()) as i32;
+        lua::lua_pop(state, 1);
+
+        let mut mgr = STAGE_MANAGER.lock().unwrap();
+
+        mgr.selected_panel = Some(panel_id);
+        mgr.selected_preview = Some(preview_id);
+
+        println!("selected_panel set to: {}", panel_id);
+        println!("selected_preview set to: {}", preview_id);
+
+        0
+    }
+}
+
+extern "C" fn get_selected_panel(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let mgr = STAGE_MANAGER.lock().unwrap();
+        if let Some(panel_id) = mgr.selected_panel {
+            lua::lua_pushinteger(state, panel_id as i64);
+            return 1;
+        }
+
+        lua::lua_pushinteger(state, -1);
+        1
+    }
+}
+
+extern "C" fn get_selected_preview(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let mgr = STAGE_MANAGER.lock().unwrap();
+        if let Some(preview_id) = mgr.selected_preview {
+            lua::lua_pushinteger(state, preview_id as i64);
+            return 1;
+        }
+
+        lua::lua_pushinteger(state, -1);
+        1
+    }
+}
+
+extern "C" fn set_perma_strike_stage(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let is_strike = lua::lua_toboolean(state, -1) > 0;
+        lua::lua_pop(state, 1);
+
+        let panel_id = lua::lua_tointegerx(state, -1, std::ptr::null_mut()) as i32;
+        lua::lua_pop(state, 1);
+
+        let mut mgr = STAGE_MANAGER.lock().unwrap();
+
+        if is_strike {
+            mgr.perma_striked_stages.insert(panel_id);
+        } else {
+            mgr.perma_striked_stages.remove(&panel_id);
+        }
+
+        0
+    }
+}
+
+extern "C" fn is_perma_strike_stage(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let panel_id = lua::lua_tointegerx(state, -1, std::ptr::null_mut()) as i32;
+        lua::lua_pop(state, 1);
+
+        let mut mgr = STAGE_MANAGER.lock().unwrap();
+        if mgr.perma_striked_stages.contains(&panel_id) {
+            lua::lua_pushboolean(state, 1);
+        } else {
+            lua::lua_pushboolean(state, 0);
+        }
+
+        1
+    }
+}
+
+extern "C" fn get_page_name(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let page_num = lua::lua_tointegerx(state, -1, std::ptr::null_mut()) as usize;
+        lua::lua_pop(state, 1);
+
+        let mut mgr = STAGE_MANAGER.lock().unwrap();
+        let stages = mgr.stage_pages.as_ref().unwrap();
+        let mut c_str = CString::new("").expect("");
+        if page_num < stages.len() {
+            c_str = CString::new(stages[page_num].name.clone()).expect("String contained null byte");
+        }
+
+        lua::lua_pushstring(state, c_str.as_ptr());
+
+        1
+    }
+}
+
+extern "C" fn set_random_stage_index(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let index = lua::lua_tointegerx(state, -1, std::ptr::null_mut()) as i32;
+        lua::lua_pop(state, 1);
+
+        let mut mgr = STAGE_MANAGER.lock().unwrap();
+
+        mgr.random_stage_indexes.get_or_insert(Vec::new()).push(index);
+
+        0
+    }
+}
+
+extern "C" fn get_random_stage_index(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let mut rng = thread_rng();
+        let mut mgr = STAGE_MANAGER.lock().unwrap();
+        
+        if let Some(indexes) = &mgr.random_stage_indexes {
+            let index = indexes.choose(&mut rng);
+            match index {
+                Some(value) => lua::lua_pushinteger(state, *value as i64),
+                None => lua::lua_pushinteger(state, -1),
+            }
+        }
+
+        mgr.random_stage_indexes = None;
+
+        1
+    }
+}
+
+extern "C" fn stage_loading(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let mut mgr = STAGE_MANAGER.lock().unwrap();
+        mgr.stage_loading = Some(true);
+        0
+    }
+}
+
+extern "C" fn get_bans(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let page_num = lua::lua_tointegerx(state, -1, std::ptr::null_mut()) as usize;
+        lua::lua_pop(state, 1);
+        let mut mgr = STAGE_MANAGER.lock().unwrap();
+
+        if let Some(pages) = &mgr.stage_pages {
+            if page_num < pages.len() {
+                let page = &pages[page_num];
+                match page.bans {
+                    Some(bans) => lua::lua_pushinteger(state, bans as i64),
+                    None => lua::lua_pushinteger(state, -1),
+                }
+            }
+            else {
+                lua::lua_pushinteger(state, -1);
+            }
+        }
+
+        1
+    }
+}
+
+extern "C" fn get_dsr(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        let page_num = lua::lua_tointegerx(state, -1, std::ptr::null_mut()) as usize;
+        lua::lua_pop(state, 1);
+        let mut mgr = STAGE_MANAGER.lock().unwrap();
+
+        if let Some(pages) = &mgr.stage_pages {
+            if page_num < pages.len() {
+                let page = &pages[page_num];
+                match &page.dsr {
+                    Some(dsr) => {
+                        let c_str = CString::new(dsr.clone()).expect("String contained null byte");
+                        lua::lua_pushstring(state, c_str.as_ptr());
+                    },
+                    None => { 
+                        let c_str = CString::new("").expect("");
+                        lua::lua_pushstring(state, c_str.as_ptr()); 
+                    },
+                }
+            }
+            else {
+                let c_str = CString::new("").expect("");
+                lua::lua_pushstring(state, c_str.as_ptr()); 
+            }
+        }
+
+        1
     }
 }
 
@@ -460,6 +767,7 @@ pub fn install() {
         exit_jc,
         set_pane_text_values,
         set_parry_button_shield_text,
-        set_parry_button_taunt_text
+        set_parry_button_taunt_text,
+        add_to_key_context_hook
     );
 }

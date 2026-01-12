@@ -27,6 +27,37 @@ unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn effect_attackairn(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 12.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("shulk_monad_sword2"), Hash40::new("haver"), 0, 2.5, 0, 0, 0, 0, 1, true);
+    }
+    frame(lua_state, 13.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("shulk_monad_circle"), Hash40::new("swordr"), 0, 0, 0, 0, 0, 0, 1, true);
+    }
+    frame(lua_state, 14.0);
+    if is_excute(agent) {
+        let trail_hash = shulk_get_trail(agent).to_hash();
+        AFTER_IMAGE4_ON_arg29(agent, trail_hash, Hash40::new("tex_shulk_sword2"), 8, Hash40::new("haver"), 0, 3, 0.9, Hash40::new("haver"), 0, 19, 1.1, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
+    }
+    frame(lua_state, 34.0);
+    if is_excute(agent) {
+        AFTER_IMAGE_OFF(agent, 6);
+    }
+    frame(lua_state, 41.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("shulk_monad_sword2_end"), Hash40::new("haver"), 0, 2.5, 0, 0, 0, 0, 0.98, true);
+    }
+    frame(lua_state, 42.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("shulk_monad_sword2"), false, false);
+        EFFECT_OFF_KIND(agent, Hash40::new("shulk_monad_circle"), false, false);
+    }
+}
+
 unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -50,6 +81,35 @@ unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
     frame(lua_state, 42.0);
     if is_excute(agent) {
         WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+    }
+}
+
+unsafe extern "C" fn effect_attackairf(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 12.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 0.98, 0, 0, 0, 0, 0, 0, true);
+    }
+    frame(lua_state, 13.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("shulk_monad_sword2"), Hash40::new("haver"), 0, 3, 0, 0, 0, 0, 0.95, true);
+        EFFECT_FOLLOW(agent, Hash40::new("shulk_monad_circle"), Hash40::new("swordr"), 0, 0, 0, 0, 0, 0, 1, true);
+        let trail_hash = shulk_get_trail(agent).to_hash();
+        AFTER_IMAGE4_ON_arg29(agent, trail_hash, Hash40::new("tex_shulk_sword2"), 8, Hash40::new("haver"), 0, 3, 0.9, Hash40::new("haver"), 0, 19, 1.1, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
+    }
+    frame(lua_state, 19.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("shulk_monad_sword2_end"), Hash40::new("haver"), 0, 3, 0, 0, 0, 0, 0.98, true);
+    }
+    frame(lua_state, 20.0);
+    if is_excute(agent) {
+        AFTER_IMAGE_OFF(agent, 1);
+        EFFECT_OFF_KIND(agent, Hash40::new("shulk_monad_sword2"), false, false);
+    }
+    frame(lua_state, 21.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("shulk_monad_circle"), false, false);
     }
 }
 
@@ -217,8 +277,10 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
 
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_attackairn", game_attackairn, Priority::Low);
+    agent.acmd("effect_attackairn", effect_attackairn, Priority::Low);
 
     agent.acmd("game_attackairf", game_attackairf, Priority::Low);
+    agent.acmd("effect_attackairf", effect_attackairf, Priority::Low);
 
     agent.acmd("game_attackairb", game_attackairb, Priority::Low);
     agent.acmd("expression_attackairb", expression_attackairb, Priority::Low);

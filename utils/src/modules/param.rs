@@ -2,6 +2,7 @@
 use std::io::Seek;
 use std::sync::Arc;
 use std::{/*borrow::BorrowMut, */collections::HashMap};
+use std::cmp;
 
 use arcropolis_api::{arc_callback, load_original_file};
 use parking_lot::RwLock;
@@ -9,6 +10,8 @@ use prc::hash40::hash40 as to_hash40;
 use prc::{hash40::Hash40, ParamKind};
 use smash::phx::Hash40 as Hash40_2;
 use smash::{app::BattleObject, hash40};
+
+use crate::STAGE_MANAGER;
 
 use super::PARAM_MODULE_OFFSET;
 
@@ -311,22 +314,44 @@ use serde::{Deserialize, Serialize};
 pub struct TourneyConfig {
     /// whether the tourney mode is enabled
     pub enabled: bool,
-    useOfficial: bool,
+    pages: Option<Vec<StagePage>>
+}
+
+#[allow(non_snake_case)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(default)]
+#[repr(C)]
+pub struct StagePage {
+    pub name: String,
+    pub useOfficial: bool,
     /// the ordered list of starters stages which should be enabled,
     /// or `None` if there are no starters
-    starters: Option<Vec<String>>,
+    pub starters: Option<Vec<String>>,
     /// the ordered list of counterpick stages which should be enabled,
     /// or `None` if there are no counterpicks
-    counterpicks: Option<Vec<String>>,
+    pub counterpicks: Option<Vec<String>>,
+    pub bans: Option<i8>,
+    pub dsr: Option<String>,
 }
 
 impl Default for TourneyConfig {
     fn default() -> Self {
         TourneyConfig {
             enabled: false,
+            pages: None
+        }
+    }
+}
+
+impl Default for StagePage {
+    fn default() -> Self {
+        StagePage { 
+            name: String::new(), 
             useOfficial: false,
-            starters: None,
-            counterpicks: None
+            starters: None, 
+            counterpicks: None,
+            bans: None,
+            dsr: None,
         }
     }
 }
@@ -340,16 +365,30 @@ impl TourneyConfig {
         }
 
         // if the stages are not defined, we are not configured
-        if self.starters.is_none() && self.starters.is_none() {
+        if self.pages.is_none() {
             println!("tourney mode stages are enabled, but the stages are missing!");
             return false;
         }
 
-        // if there are too many stages for the allowed number per row, this is invalid.
-        if self.starters.as_ref().unwrap().len() > DEFAULT_ROW_LENGTH
-            || self.counterpicks.as_ref().unwrap().len() > DEFAULT_ROW_LENGTH
-        {
-            println!("Too many starters or counterpicks were enabled! Invalid stage config!")
+        let pages = self.pages.as_ref().unwrap();
+
+        // iterate though each page of stages
+        for page in pages.iter() {
+            let starter_page = page.starters.as_ref().unwrap();
+            let counterpick_page = page.counterpicks.as_ref().unwrap();
+
+            // if there are too many stages for the allowed number per row, this is invalid.
+            if starter_page.len() > DEFAULT_ROW_LENGTH
+            {
+                println!("Too many starters were enabled! Invalid stage config!");
+                return false;
+            }
+
+            if counterpick_page.len() > DEFAULT_ROW_LENGTH
+            {
+                println!("Too many counterpicks were enabled! Invalid stage config!");
+                return false;
+            }
         }
 
         // otherwise, we are configured
@@ -370,20 +409,77 @@ impl TourneyConfig {
                 }
             };
         // if we should be using the official list, load that directly instead (because it could be updated)
-        let unwrapped_config = config.clone().unwrap();
-        if unwrapped_config.enabled && unwrapped_config.useOfficial {
-            config = match std::fs::read_to_string("sd:/ultimate/mods/hdr-stages/tourney_mode_official.json") {
-                Ok(json) => serde_json::from_str(&json)
-                    .expect("A tourney_mode.json was found, but its contents were invalid!"),
-                Err(_) => {
-                    println!(
-                        "No tourney mode config was found. Assuming tourney mode is disabled."
-                    );
-                    None
+        let mut config_clone = config.clone();
+        let unwrapped_config = config_clone.as_mut().unwrap();
+        if unwrapped_config.enabled && unwrapped_config.pages.is_some() {
+            let pages: &mut Vec<StagePage> = unwrapped_config.pages.as_mut().unwrap();
+            let num_pages = cmp::min(8, pages.len());
+
+            for n in 0..num_pages {
+                if pages[n].useOfficial {
+                    pages[n] = match std::fs::read_to_string("sd:/ultimate/mods/hdr-stages/tourney_mode_official.json") {
+                        Ok(json) => serde_json::from_str(&json)
+                            .expect("A tourney_mode.json was found, but its contents were invalid!"),
+                        Err(_) => {
+                            println!(
+                                "No tourney mode config was found. Assuming tourney mode is disabled."
+                            );
+                            StagePage::default()
+                        }
+                    };
+
+                    pages[n].useOfficial = true;
+                    pages[n].name = String::from("Official");
                 }
-            };
+            }
         }
-        return config;
+        return Some(unwrapped_config.clone());
+    }
+}
+
+// Custom iter struct
+pub struct AltMidIter<'a, T> {
+    slice: &'a [T],
+    len: usize,
+    mid: usize,
+    step: usize,
+}
+
+// Custom iterator that goes from the middle out, going right first
+impl<'a, T> Iterator for AltMidIter<'a, T> {
+    type Item = &'a T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.step >= self.len {
+            return None;
+        }
+        let index = if self.step == 0 {
+            self.mid
+        } else if self.step % 2 != 0 {
+            let distance = (self.step + 1) / 2;
+            self.mid + distance
+        } else {
+            let distance = self.step / 2;
+            self.mid - distance
+        };
+        self.step += 1;
+        self.slice.get(index)
+    }
+}
+
+// Extension traits
+pub trait MiddleOutExt<T> {
+    fn iter_middle_out(&self) -> AltMidIter<'_, T>;
+}
+
+impl<T> MiddleOutExt<T> for [T] {
+    fn iter_middle_out(&self) -> AltMidIter<'_, T> {
+        AltMidIter {
+            slice: self,
+            len: self.len(),
+            mid: (self.len().saturating_sub(1)) / 2,
+            step: 0,
+        }
     }
 }
 
@@ -405,6 +501,8 @@ impl TourneyConfig {
 /// all Training stages, and makes them non-interactable, so that the UI looks as expected.
 #[arc_callback]
 fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
+    println!("modifying ui_stage_db_prc");
+    
     // ensure this is the file data it should be
     assert_eq!(hash, hash40(STAGE_DB_PRC));
 
@@ -440,72 +538,208 @@ fn ui_stage_db_prc_callback(hash: u64, mut data: &mut [u8]) -> Option<usize> {
     let list = &mut param_list.0;
     let mut out_list: Vec<ParamKind> = vec![];
 
-    let starters = config.starters.unwrap();
-    let counterpicks = config.counterpicks.unwrap();
+    let stage_pages = config.pages.as_ref().unwrap();
 
-    // disable and enable the appropriate stages in the original structure
-    for entry in list.iter_mut() {
-        let stage_entry = &mut (entry
-            .try_into_mut::<ParamStruct>()
-            .expect("failed to get struct from ui_stage_db.prc entry!")
-            .0);
+    // limit number of pages to 8
+    let num_pages = cmp::min(8, stage_pages.len());
+    let mut stage_order: i8 = 1;
+    let mut stage_map: HashMap<String, ParamKind> = HashMap::new();
+    let mut used_stages: HashMap<String, bool> = HashMap::new();
 
-        // the name_id of the stage: BattleField, Yoshi_Story, Kirby_Pupupu64, etc
-        let name_id = stage_entry
+    for entry in list.iter() {
+        let stage_struct = entry
+            .try_into_ref::<ParamStruct>()
+            .expect("Failed to get struct from PRC entry");
+
+        // Find the name_id for the key
+        let name_id = stage_struct.0
             .iter()
             .find(|param| param.0 == prc::hash40::Hash40(hash40("name_id")))
             .unwrap()
             .1
             .try_into_ref::<String>()
-            .expect("Could not get name_id as String for a stage entry in tourney mode!")
+            .unwrap()
             .clone();
+        
+        stage_map.insert(name_id.clone(), entry.clone());
+        used_stages.insert(name_id, false);
+    }
 
-        // the display order for the stage
-        let disp_order = stage_entry
+    if let Some(entry) = stage_map.get("Random") {
+        let mut new_entry = entry.clone();
+        let stage_struct = new_entry.try_into_mut::<ParamStruct>().unwrap();
+        let disp_order = stage_struct.0
             .iter_mut()
             .find(|param| param.0 == prc::hash40::Hash40(hash40("disp_order")))
             .unwrap()
             .1
             .try_into_mut::<i8>()
-            .expect("Could not get disp_order as an i8 for a stage entry in tourney mode");
+            .unwrap();
+        
+        *disp_order = stage_order;
+        out_list.push(new_entry);
+        used_stages.insert("Random".to_string(), true);
+    }
 
-        *disp_order = -1;
+    let mut pages: Vec<StagePage> = Vec::new();
+    for n in 0..num_pages {
+        pages.push(stage_pages[n].clone());
 
-        // set the disp_order if this is a starter to 1 (see fn docs)
-        match starters.contains(&name_id) {
-            true => {
-                *disp_order = 1;
-                out_list.push(entry.clone());
-                continue;
+        let starters = stage_pages[n].starters.as_ref().unwrap();
+        let counterpicks = stage_pages[n].counterpicks.as_ref().unwrap();
+
+        for starter_name in starters.iter_middle_out() {
+            if let Some(entry) = stage_map.get(starter_name) {
+                let mut new_entry = entry.clone();
+                let stage_struct = new_entry.try_into_mut::<ParamStruct>().unwrap();
+                let disp_order = stage_struct.0
+                    .iter_mut()
+                    .find(|param| param.0 == prc::hash40::Hash40(hash40("disp_order")))
+                    .unwrap()
+                    .1
+                    .try_into_mut::<i8>()
+                    .unwrap();
+                
+                *disp_order = stage_order; // Set starter display order
+                out_list.push(new_entry);
+                used_stages.insert(starter_name.clone(), true);
+
+                // If the stage is RandomNormal (standard Random panel), add Random in the same spot.
+                // Standard SSS will ignore Random entirely and display RandomNormal.
+                // Likewise, Training Mode and My Music ignore RandomNormal entirely and layout Random correctly,
+                // Albeit, with a weird icon sometimes. Still, this preserves the correct layout in both
+                // Training Mode and My Music, and *also* allows people to change the Menu Music, since
+                // My Music replaces the Random stage with the MenuMusic "stage"
+                // This of course assumes the user has put "Random" on one of their stage pages
+                if starter_name == "RandomNormal" {
+                    if let Some(entry) = stage_map.get("Random") {
+                        let mut new_entry = entry.clone();
+                        let stage_struct = new_entry.try_into_mut::<ParamStruct>().unwrap();
+                        let disp_order = stage_struct.0
+                            .iter_mut()
+                            .find(|param| param.0 == prc::hash40::Hash40(hash40("disp_order")))
+                            .unwrap()
+                            .1
+                            .try_into_mut::<i8>()
+                            .unwrap();
+                        
+                        *disp_order = stage_order;
+                        out_list.push(new_entry);
+                        used_stages.insert("Random".to_string(), true);
+                    }
+                }
+
+                stage_order += 1;
             }
-            false => {}
-        };
-
-        // set Random to 2 (see fn docs)
-        if name_id == "Training" {
-            *disp_order = 2;
-            // pad with a bunch of Training stages, which will be hidden
-            let len = starters.len();
-            for _ in 0..(DEFAULT_ROW_LENGTH - len) {
-                out_list.push(entry.clone());
-            }
-            continue;
         }
 
-        // set the disp_order if this is a counterpick to 3 (see fn docs)
-        match counterpicks.contains(&name_id) {
-            true => {
-                *disp_order = 3;
-                out_list.push(entry.clone());
-                continue;
-            }
-            false => {}
-        };
+        // Add the Training stage buffer
+        if let Some(entry) = stage_map.get("Training") {
+            let mut buffer_entry = entry.clone();
+            let stage_struct = buffer_entry.try_into_mut::<ParamStruct>().unwrap();
+            let disp_order = stage_struct.0
+                .iter_mut()
+                .find(|param| param.0 == prc::hash40::Hash40(hash40("disp_order")))
+                .unwrap()
+                .1
+                .try_into_mut::<i8>()
+                .unwrap();
 
-        // otherwise, push this as hidden
-        *disp_order = -1;
-        out_list.push(entry.clone());
-        continue;
+            *disp_order = stage_order; // Set buffer display order
+            stage_order += 1;
+
+            // Pad with the required number of hidden Training stages
+            let len = starters.len();
+            for _ in 0..(DEFAULT_ROW_LENGTH - len) {
+                out_list.push(buffer_entry.clone());
+            }
+            used_stages.insert("Training".to_string(), true);
+        }
+
+        // Add counterpick stages
+        for counterpick_name in counterpicks.iter_middle_out() {
+            if let Some(entry) = stage_map.get(counterpick_name) {
+                let mut new_entry = entry.clone();
+                let stage_struct = new_entry.try_into_mut::<ParamStruct>().unwrap();
+                let disp_order = stage_struct.0
+                    .iter_mut()
+                    .find(|param| param.0 == prc::hash40::Hash40(hash40("disp_order")))
+                    .unwrap()
+                    .1
+                    .try_into_mut::<i8>()
+                    .unwrap();
+                
+                *disp_order = stage_order; // Set counterpick display order
+                out_list.push(new_entry);
+                used_stages.insert(counterpick_name.clone(), true);    
+
+                if counterpick_name == "RandomNormal" {
+                    if let Some(entry) = stage_map.get("Random") {
+                        let mut new_entry = entry.clone();
+                        let stage_struct = new_entry.try_into_mut::<ParamStruct>().unwrap();
+                        let disp_order = stage_struct.0
+                            .iter_mut()
+                            .find(|param| param.0 == prc::hash40::Hash40(hash40("disp_order")))
+                            .unwrap()
+                            .1
+                            .try_into_mut::<i8>()
+                            .unwrap();
+                        
+                        *disp_order = stage_order;
+                        out_list.push(new_entry);
+                        used_stages.insert("Random".to_string(), true);
+                    }
+                }
+
+                stage_order += 1;
+            }
+        }
+
+        // Add the Training stage buffer
+        if let Some(entry) = stage_map.get("Training") {
+            let mut buffer_entry = entry.clone();
+            let stage_struct = buffer_entry.try_into_mut::<ParamStruct>().unwrap();
+            let disp_order = stage_struct.0
+                .iter_mut()
+                .find(|param| param.0 == prc::hash40::Hash40(hash40("disp_order")))
+                .unwrap()
+                .1
+                .try_into_mut::<i8>()
+                .unwrap();
+
+            *disp_order = stage_order; // Set buffer display order
+            stage_order += 1;
+
+            // Pad with the required number of hidden Training stages
+            let len = counterpicks.len();
+            for _ in 0..(DEFAULT_ROW_LENGTH - len) {
+                out_list.push(buffer_entry.clone());
+            }
+        }
+    }
+
+    let mut mgr = STAGE_MANAGER.lock().unwrap();
+    mgr.stage_pages = Some(pages);
+
+    // Add all the unused stages back into the prc with a disp_order of -1
+    // This is important so that main menu music and random stage selection work
+    for used_stage in used_stages.iter() {
+        if !used_stage.1 {
+            if let Some(entry) = stage_map.get(used_stage.0) {
+                let mut new_entry = entry.clone();
+                let stage_struct = new_entry.try_into_mut::<ParamStruct>().unwrap();
+                let disp_order = stage_struct.0
+                    .iter_mut()
+                    .find(|param| param.0 == prc::hash40::Hash40(hash40("disp_order")))
+                    .unwrap()
+                    .1
+                    .try_into_mut::<i8>()
+                    .unwrap();
+                
+                *disp_order = -1;
+                out_list.push(new_entry); 
+            }
+        }
     }
 
     *list = out_list;

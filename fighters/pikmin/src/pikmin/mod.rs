@@ -48,7 +48,7 @@ impl From<i32> for PikminInfo {
                 attr: Hash40::new("collision_attr_water"),
                 attr_special: Hash40::new("collision_attr_water"),
                 sound: *COLLISION_SOUND_ATTR_WATER,
-                color: Vector3f{x: 0.1, y: 0.4, z: 1.0},
+                color: Vector3f{x: 0.2, y: 0.8, z: 2.0},
                 cling_frame: 4
             },
             3 => PikminInfo { // White
