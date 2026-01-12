@@ -3,13 +3,6 @@ use super::*;
 unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    if is_excute(agent) {
-        VarModule::on_flag(agent.battle_object, vars::common::status::CHECK_HOLD_INPUT_STATUS);
-    }
-    frame(lua_state, 8.0);
-    if is_excute(agent) {
-        VarModule::on_flag(agent.battle_object, vars::common::status::END_CHECK_HOLD);
-    }
     frame(lua_state, 10.0);
     if is_excute(agent) {
         agent.on_flag(*FIGHTER_CLOUD_STATUS_WORK_ID_SPECIAL_N_FLAG_SPECIAL_FALL);

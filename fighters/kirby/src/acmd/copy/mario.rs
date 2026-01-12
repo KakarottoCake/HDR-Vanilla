@@ -5,9 +5,6 @@ unsafe extern "C" fn game_mariospecialn(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 10.0);
     FT_MOTION_RATE_RANGE(agent, 10.0, 14.0, 8.0);
-    if is_excute(agent) {
-        VarModule::on_flag(agent.battle_object, vars::common::status::END_CHECK_HOLD);
-    }
     frame(lua_state, 14.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {

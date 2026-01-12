@@ -201,8 +201,6 @@ pub mod vars {
 
             pub const IGNORE_REDUCED_SCREENSHAKE: i32 = 0x006F;
 
-            pub const CHECK_HOLD_INPUT_INSTANCE: i32 = 0x0070;
-
             // ints
 
             pub const LAST_ATTACK_RECEIVER_ENTRY_ID: i32 = 0x0000;
@@ -333,8 +331,7 @@ pub mod vars {
 
             pub const IS_DASH_CANCEL: i32 = 0x1055;
 
-            pub const CHECK_HOLD_INPUT_STATUS: i32 = 0x1056;
-            pub const END_CHECK_HOLD: i32 = 0x1057;
+            pub const CHECK_HOLD_INPUT: i32 = 0x1056;
 
             // ints
 

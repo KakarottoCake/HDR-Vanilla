@@ -433,7 +433,7 @@ pub trait BomaExt {
     unsafe fn prev_right_stick_x(&mut self) -> f32;
     unsafe fn right_stick_y(&mut self) -> f32;
     unsafe fn prev_right_stick_y(&mut self) -> f32;
-    unsafe fn check_hold_input(&mut self, input: i32, is_instanced: bool) -> bool;
+    unsafe fn check_hold_input(&mut self, start_frame: i32, end_frame: Option<i32>, input: i32) -> bool;
 
     // STATE
     unsafe fn is_status(&mut self, kind: i32) -> bool;
@@ -765,25 +765,33 @@ impl BomaExt for BattleObjectModuleAccessor {
     /// Checks if a given input is held and turns off the check if released
     /// 
     /// # Arguments
+    /// * `start_frame` - the status frame to start checking for the held input
+    /// * `end_frame` - the status frame which to stop checking. `None` will keep checking for the entire status
     /// * `input` - a `CONTROL_PAD` input (ie `*CONTROL_PAD_BUTTON_ATTACK`)
-    /// * `is_instanced` - whether this hold check should carry between statuses
     /// 
-    /// Returns true if the end of the hold check has completed, signified by turning on the `common::END_CHECK_HOLD` flag
-    unsafe fn check_hold_input(&mut self, input: i32, is_instanced: bool) -> bool {
-        let hold_check = if is_instanced { vars::common::instance::CHECK_HOLD_INPUT_INSTANCE } else { vars::common::status::CHECK_HOLD_INPUT_STATUS };
+    /// Returns true if the end of the hold check has completed, if the end frame has been specified
+    unsafe fn check_hold_input(&mut self, start_frame: i32, end_frame: Option<i32>, input: i32) -> bool {
+        let persist = end_frame.is_none();
+        if (persist && self.status_frame() < start_frame)
+        || (!persist && !(start_frame..=end_frame.unwrap()).contains(&self.status_frame())) {
+            return false;
+        }
 
-        if VarModule::is_flag(self.object(), hold_check) {
-            // check for the input being released, in which case we disable the check
-            if ControlModule::check_button_release(self, input) {
-                VarModule::off_flag(self.object(), hold_check);
-                return false;
+        if self.status_frame() == start_frame {
+            VarModule::on_flag(self.object(), vars::common::status::CHECK_HOLD_INPUT);
+        }
+
+        if VarModule::is_flag(self.object(), vars::common::status::CHECK_HOLD_INPUT) {
+            // if we are still checking for the hold and we are ready to end the check
+            if !persist && self.status_frame() == end_frame.unwrap() {
+                VarModule::off_flag(self.object(), vars::common::status::CHECK_HOLD_INPUT);
+                return true;
             }
 
-            // if we are still checking for the hold and we are ready to end the check
-            if VarModule::is_flag(self.object(), vars::common::status::END_CHECK_HOLD) {
-                VarModule::off_flag(self.object(), vars::common::status::END_CHECK_HOLD);
-                VarModule::off_flag(self.object(), hold_check);
-                return true;
+            // check for the input being released, in which case we disable the check
+            if ControlModule::check_button_release(self, input) {
+                VarModule::off_flag(self.object(), vars::common::status::CHECK_HOLD_INPUT);
+                return false;
             }
         }
 
