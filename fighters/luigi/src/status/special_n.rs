@@ -24,7 +24,7 @@ unsafe extern "C" fn special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
             return 1.into();
         }
     }
-    if fighter.check_hold_input(0, Some(10), *CONTROL_PAD_BUTTON_SPECIAL) {
+    if fighter.check_hold_input(Some(0), Some(10), *CONTROL_PAD_BUTTON_SPECIAL) {
         VarModule::on_flag(fighter.object(), vars::luigi::status::SPECIAL_N_THUNDERHAND);
         let motion = if fighter.is_situation(*SITUATION_KIND_GROUND) { Hash40::new("special_n_thunder") } else { Hash40::new("special_air_n_thunder") };
         MotionModule::change_motion_inherit_frame(fighter.module_accessor, motion, -1.0, 1.0, 0.0, false, false);

@@ -663,7 +663,7 @@ unsafe fn ken_hado_landcancel(fighter: &mut L2CFighterCommon) {
 // Cloud
 unsafe fn cloud_special_n_hold(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_CLOUD_SPECIAL_N) {
-        if fighter.check_hold_input(0, Some(8), *CONTROL_PAD_BUTTON_SPECIAL) {
+        if fighter.check_hold_input(Some(0), Some(8), *CONTROL_PAD_BUTTON_SPECIAL) {
             VarModule::on_flag(fighter.battle_object, vars::cloud::status::SPECIAL_N_HOLD);
         }
     }

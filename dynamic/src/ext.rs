@@ -433,7 +433,7 @@ pub trait BomaExt {
     unsafe fn prev_right_stick_x(&mut self) -> f32;
     unsafe fn right_stick_y(&mut self) -> f32;
     unsafe fn prev_right_stick_y(&mut self) -> f32;
-    unsafe fn check_hold_input(&mut self, start_frame: i32, end_frame: Option<i32>, input: i32) -> bool;
+    unsafe fn check_hold_input(&mut self, start_frame: Option<i32>, end_frame: Option<i32>, input: i32) -> bool;
 
     // STATE
     unsafe fn is_status(&mut self, kind: i32) -> bool;
@@ -765,19 +765,24 @@ impl BomaExt for BattleObjectModuleAccessor {
     /// Checks if a given input is held and turns off the check if released
     /// 
     /// # Arguments
-    /// * `start_frame` - the status frame to start checking for the held input
+    /// * `start_frame` - the status frame to start checking for the held input. `None` will carry over the variable's state from a preceding status if `KEEP_FLAG_ALL` is enabled in Pre
     /// * `end_frame` - the status frame which to stop checking. `None` will keep checking for the entire status
     /// * `input` - a `CONTROL_PAD` input (ie `*CONTROL_PAD_BUTTON_ATTACK`)
     /// 
     /// Returns true if the end of the hold check has completed, if the end frame has been specified
-    unsafe fn check_hold_input(&mut self, start_frame: i32, end_frame: Option<i32>, input: i32) -> bool {
+    unsafe fn check_hold_input(&mut self, start_frame: Option<i32>, end_frame: Option<i32>, input: i32) -> bool {
+        let continued = start_frame.is_none();
         let persist = end_frame.is_none();
-        if (persist && self.status_frame() < start_frame)
-        || (!persist && !(start_frame..=end_frame.unwrap()).contains(&self.status_frame())) {
+        let start_check_frame = if continued { 0 } else { start_frame.unwrap() };
+
+        // if out of range, return early
+        if (persist && self.status_frame() < start_check_frame)
+        || (!persist && !(start_check_frame..=end_frame.unwrap()).contains(&self.status_frame())) {
             return false;
         }
 
-        if self.status_frame() == start_frame {
+        // start the check once we have reached the starting frame
+        if !continued && self.status_frame() == start_check_frame {
             VarModule::on_flag(self.object(), vars::common::status::CHECK_HOLD_INPUT);
         }
 

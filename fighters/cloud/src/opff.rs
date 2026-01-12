@@ -6,7 +6,7 @@ utils::import_noreturn!(common::opff::fighter_common_opff);
 
 unsafe fn special_n_hold(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_N) {
-        if fighter.check_hold_input(0, Some(8), *CONTROL_PAD_BUTTON_SPECIAL) {
+        if fighter.check_hold_input(Some(0), Some(8), *CONTROL_PAD_BUTTON_SPECIAL) {
             VarModule::on_flag(fighter.battle_object, vars::cloud::status::SPECIAL_N_HOLD);
         }
     }
