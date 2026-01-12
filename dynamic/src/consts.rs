@@ -244,6 +244,7 @@ pub mod vars {
 
             pub const ATTACK_LR_CHECK: i32 = 0x0015;
 
+            // pub const PREVIOUS_FRAME_FRAMES_IN_AIR: i32 = 0x0016;
 
             // floats
 
