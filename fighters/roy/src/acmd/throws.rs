@@ -100,6 +100,37 @@ unsafe extern "C" fn game_throwb(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn sound_throwb(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 3.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_common_throw_01"));
+    }
+    frame(lua_state, 16.0);
+    if is_excute(agent) {
+        PLAY_SEQUENCE(agent, Hash40::new("seq_roy_rnd_attack"));
+        PLAY_SE(agent, Hash40::new("se_common_throw_02"));
+    }
+}
+
+unsafe extern "C" fn expression_throwb(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_R);
+    }
+    frame(lua_state, 16.0);
+    if is_excute(agent) {
+        QUAKE(agent, *CAMERA_QUAKE_KIND_M);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_attackm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(lua_state, 36.0);
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 4);
+    }
+}
+
 unsafe extern "C" fn game_throwhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -142,7 +173,11 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_catchdash", game_catchdash, Priority::Low);
     agent.acmd("game_catchturn", game_catchturn, Priority::Low);
     agent.acmd("game_throwf", game_throwf, Priority::Low);
+
     agent.acmd("game_throwb", game_throwb, Priority::Low);
+    agent.acmd("sound_throwb", sound_throwb, Priority::Low);
+    agent.acmd("expression_throwb", expression_throwb, Priority::Low);
+
     agent.acmd("game_throwhi", game_throwhi, Priority::Low);
     agent.acmd("game_throwlw", game_throwlw, Priority::Low);
 }
