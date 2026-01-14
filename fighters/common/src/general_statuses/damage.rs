@@ -3,9 +3,13 @@ use super::*;
 use globals::*;
 use interpolation::Lerp;
 use utils::game_modes::CustomMode;
+use crate::function_hooks::camera::{REDUCED_CAMERA_TRACKING_SPEED, DEFAULT_TARGET_INTERPOLATION_RATE, ReducedCameraTrackingSpeed};
 
 pub fn install() {
     skyline::nro::add_hook(nro_hook);
+    // NOPs fighter_handle_damage setting the airtime counter to 0 frames on hit in air.
+    // This is so the ECB diamond will not reset when getting hit in the air (same as melee)
+    skyline::patching::Patch::in_text(0x63251c).nop();
 }
 
 fn nro_hook(info: &skyline::nro::NroInfo) {
@@ -487,6 +491,7 @@ unsafe fn sub_DamageFlyCommon_hook(fighter: &mut L2CFighterCommon) -> L2CValue {
             if fighter.sub_DamageFlyChkUniq().get_bool() {
                 return true.into();
             }
+
             if fighter.global_table[CURRENT_FRAME].get_i32() > 3 && !VarModule::is_flag(fighter.battle_object, vars::common::status::DAMAGE_FLY_RESET_TRIGGER) {
                 ControlModule::reset_trigger(fighter.module_accessor);
                 VarModule::on_flag(fighter.battle_object, vars::common::status::DAMAGE_FLY_RESET_TRIGGER);
@@ -746,6 +751,11 @@ unsafe fn status_DamageAir_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
 #[skyline::hook(replace = L2CFighterCommon_sub_damage_uniq_process_exit)]
 unsafe fn sub_damage_uniq_process_exit(fighter: &mut L2CFighterCommon) -> L2CValue {
     InputModule::reset_command_life_count_max(fighter.battle_object);
+
+    if fighter.kind() != *FIGHTER_KIND_NANA {
+        let id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+        REDUCED_CAMERA_TRACKING_SPEED[id] = ReducedCameraTrackingSpeed{target_interpolation_rate: DEFAULT_TARGET_INTERPOLATION_RATE, normalize_increment: 0.0};
+    }
 
     original!()(fighter)
 }

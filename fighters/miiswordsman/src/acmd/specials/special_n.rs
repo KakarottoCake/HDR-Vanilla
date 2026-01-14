@@ -9,9 +9,6 @@ unsafe extern "C" fn game_specialn1(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     FT_MOTION_RATE_RANGE(agent, 1.0, 17.0, 14.0);
-    if is_excute(agent) {
-        VarModule::off_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
-    }
     frame(lua_state, 17.0);
     if is_excute(agent) {
         ArticleModule::generate_article(boma, *FIGHTER_MIISWORDSMAN_GENERATE_ARTICLE_TORNADOSHOT, false, 0);
@@ -38,13 +35,9 @@ unsafe extern "C" fn game_specialn2(agent: &mut L2CAgentBase) {
         }
         else {
             let x_vel = KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-            agent.clear_lua_stack();
-            lua_args!(agent, FIGHTER_KINETIC_ENERGY_ID_CONTROL, ENERGY_CONTROLLER_RESET_TYPE_FALL_ADJUST, x_vel * 0.6, 0.0, 0.0, 0.0, 0.0);
-            app::sv_kinetic_energy::reset_energy(lua_state);
+            sv_kinetic_energy!(reset_energy, agent, FIGHTER_KINETIC_ENERGY_ID_CONTROL, ENERGY_CONTROLLER_RESET_TYPE_FALL_ADJUST, x_vel * 0.6, 0.0, 0.0, 0.0, 0.0);
             let air_speed_x_stable = WorkModule::get_param_float(boma, hash40("air_speed_x_stable"), 0);
-            agent.clear_lua_stack();
-            lua_args!(agent, FIGHTER_KINETIC_ENERGY_ID_CONTROL, air_speed_x_stable * 0.5, 100.0);
-            app::sv_kinetic_energy::set_stable_speed(lua_state);
+            sv_kinetic_energy!(set_stable_speed, agent, FIGHTER_KINETIC_ENERGY_ID_CONTROL, air_speed_x_stable * 0.5, 100.0);
         }
     }
     frame(lua_state, 14.0);
@@ -65,9 +58,7 @@ unsafe extern "C" fn game_specialn2(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         if agent.is_situation(*SITUATION_KIND_AIR) {
             if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK) {
-                agent.clear_lua_stack();
-                lua_args!(agent, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.8);
-                app::sv_kinetic_energy::set_speed(lua_state);
+                sv_kinetic_energy!(set_speed, agent, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.8);
             }
         }
         // light
