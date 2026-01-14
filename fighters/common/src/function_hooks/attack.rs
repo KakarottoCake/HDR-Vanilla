@@ -37,7 +37,11 @@ unsafe fn attack_module_set_attack(module: u64, id: i32, group: i32, data: &mut 
             data.r_eff = 50;
             data.r_add = 70;
             data.sub_shield = 0;
-            data.lr_check = smash_rs::app::AttackLRCheck::Pos;
+
+            // ID 0:
+            // ground-only, cannot reverse hit
+            data.target_situation = smash_rs::app::CollisionSituationMask::Ground;
+            data.lr_check = smash_rs::app::AttackLRCheck::Forward;
         }
         if (*boma).is_status(*FIGHTER_STATUS_KIND_CATCH_ATTACK) {
             if !VarModule::is_flag((*boma).object(), vars::common::status::PUMMEL_OVERRIDE_GLOBAL_STATS) {
@@ -83,6 +87,15 @@ unsafe fn attack_module_set_attack(module: u64, id: i32, group: i32, data: &mut 
     }
 
     call_original!(module, id, group, data);
+
+    if (*boma).is_status(*FIGHTER_STATUS_KIND_CLIFF_ATTACK) {
+        // ID 1:
+        // air-only, can reverse hit
+        data.target_situation = smash_rs::app::CollisionSituationMask::Air;
+        data.lr_check = smash_rs::app::AttackLRCheck::Pos;
+
+        call_original!(module, 1, group, data);
+    }
 }
 
 #[skyline::hook(offset = 0x403c3c, inline)]
@@ -297,6 +310,37 @@ unsafe fn notify_log_event_collision_hit(fighter_manager: u64, attacker_object_i
     && VarModule::is_flag(attacker_boma.object(), vars::common::status::HIT_EFFECT_DROP_ITEM)
     && ItemModule::is_have_item(receiver_boma, 0) {
         ItemModule::drop_item(receiver_boma, 90.0, 0.0, 0);
+    }
+
+    if app::smashball::is_training_mode() {
+        if ControlModule::check_button_on(attacker_boma, *CONTROL_PAD_BUTTON_APPEAL_HI)
+        || ControlModule::check_button_on(attacker_boma, *CONTROL_PAD_BUTTON_APPEAL_LW)
+        || ControlModule::check_button_on(attacker_boma, *CONTROL_PAD_BUTTON_APPEAL_S_L)
+        || ControlModule::check_button_on(attacker_boma, *CONTROL_PAD_BUTTON_APPEAL_S_R) {
+            if VarModule::has_var_module(receiver_boma.object()) {
+                let fighter = utils::util::get_fighter_common_from_accessor(attacker_boma);
+                let prev = VarModule::is_flag(receiver_boma.object(), vars::common::instance::ENABLE_FRAME_DATA_DEBUG);
+                println!("prev: {}", prev);
+                if prev == true {
+                    println!("15 -> 18");
+                    // 15 -> 18
+                    fighter.clear_lua_stack();
+                    lua_args!(fighter, Hash40::new("sys_hit_dead"), Hash40::new("top"), 0, 10, 0, 0, 0, 0, 1, true);
+                    smash::app::sv_animcmd::EFFECT_FOLLOW(fighter.lua_state_agent);
+                    fighter.pop_lua_stack(1);
+                }
+                else {
+                    println!("18 -> 15");
+                    // 18 -> 15
+                    fighter.clear_lua_stack();
+                    lua_args!(fighter, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 10, 0, 0, 0, 0, 1, true);
+                    smash::app::sv_animcmd::EFFECT_FOLLOW(fighter.lua_state_agent);
+                    fighter.pop_lua_stack(1);
+                }
+                println!("setting to {}", !prev);
+                VarModule::set_flag(receiver_boma.object(), vars::common::instance::ENABLE_FRAME_DATA_DEBUG, !prev);
+            }
+        }
     }
 
 	original!()(fighter_manager, attacker_object_id, receiver_object_id, move_type, arg5, move_type_again)

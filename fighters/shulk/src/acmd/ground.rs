@@ -79,7 +79,8 @@ unsafe extern "C" fn effect_attack13(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 5.0);
     if is_excute(agent) {
-        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_sword_jab"), Hash40::new("tex_shulk_sword2"), 10, Hash40::new("haver"), 0, 2.8, 0.9, Hash40::new("haver"), 0, 14, 0.9, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.1, 0.2);
+        let trail_hash = shulk_get_trail(agent).to_hash();
+        AFTER_IMAGE4_ON_arg29(agent, trail_hash, Hash40::new("tex_shulk_sword2"), 8, Hash40::new("haver"), 0, 3, 0.9, Hash40::new("haver"), 0, 19, 1.1, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {
@@ -125,8 +126,9 @@ unsafe extern "C" fn effect_attackdash(agent: &mut L2CAgentBase) {
         LANDING_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
     frame(lua_state, 13.0);
-    if is_excute(agent) {
-        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_shulk_sword_hdr"), Hash40::new("tex_shulk_sword4"), 4, Hash40::new("haver"), 0, 3, 0.9, Hash40::new("haver"), 0, 19.3, 0.9, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.2);
+     if is_excute(agent) {
+        let trail_hash = shulk_get_trail(agent).to_hash();
+        AFTER_IMAGE4_ON_arg29(agent, trail_hash, Hash40::new("tex_shulk_sword2"), 8, Hash40::new("haver"), 0, 3, 0.9, Hash40::new("haver"), 0, 19, 1.1, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {
