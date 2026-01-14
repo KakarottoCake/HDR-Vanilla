@@ -6,8 +6,7 @@ use globals::*;
  
 unsafe fn laser_land_cancel(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_N) {
-        let landing_lag = 6.0;
-        fighter.check_land_cancel(Some(landing_lag));
+        fighter.check_land_cancel(None);
     }
 }
 
