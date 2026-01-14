@@ -32,6 +32,8 @@ unsafe fn status_CliffRobbed(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     MotionModule::change_motion(fighter.module_accessor, motion, 0.0, rate, false, 0.0, false, false);
 
+    // <HDR>
+
     KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_CONTROL, fighter.module_accessor);
 
     let cliff_robbed_speed = ParamModule::get_float(fighter.battle_object, ParamType::Common, "cliff_robbed_speed");
@@ -45,32 +47,37 @@ unsafe fn status_CliffRobbed(fighter: &mut L2CFighterCommon) -> L2CValue {
     let stick_x = fighter.global_table[STICK_X].get_f32();
     let stick_y = fighter.global_table[STICK_Y].get_f32();
 
+    // Derives initial x/y launch speed from base (parameterized) ledge trump values
     let mut cliff_robbed_speed_x = cliff_robbed_true_angle.cos() * cliff_robbed_speed;
     let mut cliff_robbed_speed_y = cliff_robbed_true_angle.sin() * cliff_robbed_speed;
 
     if stick_x != 0.0
     || stick_y != 0.0 {
+        // Performs "DI" on your ledge trump launch angle
+        // This logic is copied from normal DI calculations
         let cliff_robbed_correction_max = ParamModule::get_float(fighter.battle_object, ParamType::Common, "cliff_robbed_correction_max");
         let max_di_radians = cliff_robbed_correction_max.to_radians();
-        let cross = (cliff_robbed_speed_y * stick_x) - (cliff_robbed_speed_x * stick_y);
-        let mut ratio = cross.abs() / cliff_robbed_speed;
-        let cross_2 = (cliff_robbed_speed_x * stick_y) - (cliff_robbed_speed_y * stick_x);
 
-        if cross_2 < 0.0 {
+        let stick_calc = (cliff_robbed_speed_y * stick_x) - (cliff_robbed_speed_x * stick_y);
+        let mut ratio = stick_calc.abs() / cliff_robbed_speed;
+        let stick_calc_2 = (cliff_robbed_speed_x * stick_y) - (cliff_robbed_speed_y * stick_x);
+        if stick_calc_2 < 0.0 {
             ratio *= -1.0;
         }
 
+        // Determines your new launch angle
         cliff_robbed_true_angle += (max_di_radians * ratio);
 
+        // Derives new initial x/y launch speed from your updated launch angle
         cliff_robbed_speed_x = cliff_robbed_true_angle.cos() * cliff_robbed_speed;
         cliff_robbed_speed_y = cliff_robbed_true_angle.sin() * cliff_robbed_speed;
     }
 
-    // 0.11 is HDR's median gravity value
+    // Applies a vertical speed boost to characters with higher gravity
+    // This normalizes the launch distance somewhat
+    // Note: 0.11 is HDR's median gravity value
     let gravity_modifier = (air_accel_y - 0.11) * 17.5;
     cliff_robbed_speed_y += gravity_modifier;
-
-    // println!("init {} {} | {} | {} {}", stick_x, stick_y, cliff_robbed_true_angle.to_degrees(), cliff_robbed_speed_x, cliff_robbed_speed_y);
 
     KineticModule::clear_speed_all(fighter.module_accessor);
 
@@ -87,6 +94,8 @@ unsafe fn status_CliffRobbed(fighter: &mut L2CFighterCommon) -> L2CValue {
     );
 
     KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_DAMAGE);
+
+    // </HDR>
     
     let cliff_release_disable_wall_jump_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("cliff_release_disable_wall_jump_frame"));
     WorkModule::set_int(fighter.module_accessor, cliff_release_disable_wall_jump_frame, *FIGHTER_INSTANCE_WORK_ID_INT_DISABLE_WALL_JUMP_FRAME);
@@ -118,6 +127,9 @@ unsafe extern "C" fn sub_cliff_robbed_uniq(fighter: &mut L2CFighterCommon, param
         let cliff_robbed_no_control_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("cliff_robbed_no_control_frame"));
         
         if cliff_robbed_frame == cliff_robbed_no_control_frame {
+            // <HDR>
+
+            // Enable drift/fastfall once past your cliff_robbed_no_control_frame
             sv_kinetic_energy!(
                 reset_energy,
                 fighter,
@@ -131,12 +143,13 @@ unsafe extern "C" fn sub_cliff_robbed_uniq(fighter: &mut L2CFighterCommon, param
             );
 
             KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+
+            // </HDR>
         
             fighter.sub_air_check_fall_common_pre();
         }
     }
     else {
-        // println!("x: dmg {} {} y: dmg {} {}", KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_DAMAGE), KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN), KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_DAMAGE), KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN));
         WorkModule::inc_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_FRAME_CLIFF_ROBBED);
     }
 
