@@ -134,7 +134,7 @@ special_lw_start:
     move: true
 special_air_lw_rebound:
   extra:
-    cancel_frame: 20
+    cancel_frame: 38
 furafura_end:
   extra:
     cancel_frame: 34

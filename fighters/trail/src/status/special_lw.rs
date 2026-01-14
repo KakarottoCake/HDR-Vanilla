@@ -360,10 +360,10 @@ pub unsafe extern "C" fn speciallw_landing_main(fighter: &mut L2CFighterCommon) 
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FORCE_LOUPE);
     
     //calculate landing frame?
-    let motion = hash40("special_air_lw_rebound");
+    //let motion = hash40();
+    //let landing_rate = fighter.sub_get_landing_motion_rate(motion.into(),AIR_LANDING_LAG.into()).get_f32();
 
-    let landing_rate = fighter.sub_get_landing_motion_rate(motion.into(),AIR_LANDING_LAG.into()).get_f32();
-    MotionModule::change_motion(fighter.module_accessor, Hash40::new_raw(motion), 0.0, landing_rate, false, 0.0, false, false);
+    MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_lw_rebound"), 0.0, 1.0, false, 0.0, false, false);
 
     fighter.sub_shift_status_main(L2CValue::Ptr(speciallw_landing_main_loop as *const () as _))
 }
