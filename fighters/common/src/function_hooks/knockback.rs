@@ -378,12 +378,12 @@ unsafe fn set_damage_lr(ctx: &mut skyline::hooks::InlineCtx) {
             default_lr
         } else {
             // Calculate the half-distance to your ECB's outermost edge
-            let ecb_mid = if opponent_pos_x >= pos_x {
+            let ecb_edge = if opponent_pos_x >= pos_x {
                 let ecb_right = *GroundModule::get_rhombus(boma, true).add(3);
-                ((ecb_right.x - pos_x) * 0.5) + pos_x
+                ecb_right.x
             } else {
                 let ecb_left = *GroundModule::get_rhombus(boma, true).add(2);
-                ((pos_x - ecb_left.x) * 0.5) + ecb_left.x
+                ecb_left.x
             };
 
             let attacker_lr = PostureModule::lr(opponent_boma);
@@ -399,9 +399,9 @@ unsafe fn set_damage_lr(ctx: &mut skyline::hooks::InlineCtx) {
 
             // Determine whether your mid-ECB crosses the attacker's base position
             let mid_ecb_crosses_attacker = if opponent_pos_x >= pos_x {
-                ecb_mid >= opponent_pos_x
+                ecb_edge >= opponent_pos_x
             } else {
-                ecb_mid <= opponent_pos_x
+                ecb_edge <= opponent_pos_x
             };
 
             // If hit behind the attacker,
