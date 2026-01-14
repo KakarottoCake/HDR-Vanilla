@@ -38,6 +38,7 @@ mod lasso;
 mod itemthrow;
 mod fallspecial;
 mod squat;
+mod cliffrobbed;
 
 // [LUA-REPLACE-REBASE]
 // [SHOULD-CHANGE]
@@ -1039,7 +1040,6 @@ pub unsafe fn sub_is_dive(fighter: &mut L2CFighterCommon) -> L2CValue {
         *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_U,
         *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_D,
         *FIGHTER_STATUS_KIND_SAVING_DAMAGE_FLY,
-        *FIGHTER_STATUS_KIND_CLIFF_ROBBED,
     ].contains(&status_kind) {
         return false.into();
     }
@@ -1291,6 +1291,7 @@ pub fn install() {
     itemthrow::install();
     fallspecial::install();
     squat::install();
+    cliffrobbed::install();
 
     skyline::nro::add_hook(nro_hook);
 }

@@ -63,4 +63,7 @@
     <float hash="fall_special_cliff_hangdata_p1x_reduction_dist">4.0</float>
     <int hash="precede">5</int>
     <int hash="guard_off_pass_valid_frame">6</int>
+    <float hash="cliff_robbed_speed">2.5</float>
+    <float hash="cliff_robbed_angle">80.0</float>
+    <float hash="cliff_robbed_correction_max">25.0</float>
 </struct>
