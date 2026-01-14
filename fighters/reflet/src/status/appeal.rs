@@ -58,19 +58,26 @@ pub unsafe fn KILL_RESOURCE(fighter: &mut L2CAgentBase, boma: &mut BattleObjectM
             VarModule::on_flag(fighter.battle_object, vars::reflet::instance::DISCARD_SKIP_STATUS);
             let magic = boma.get_int(*FIGHTER_REFLET_INSTANCE_WORK_ID_INT_LAST_USED_MAGIC_KIND);
             app::FighterSpecializer_Reflet::change_hud_kind(&mut reflet_fighter, magic);
-            if magic >= *FIGHTER_REFLET_MAGIC_KIND_THUNDER {
-                if magic < *FIGHTER_REFLET_MAGIC_KIND_GIGA_FIRE { // thunder
-                    let resource_cap = fighter.get_param_int("param_private", "grimoire_thunder_usage_count_max");
-                    MAGIC_HANDLER(fighter, boma, magic, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_N_CURRENT_POINT, resource_cap);
-                } else if magic < *FIGHTER_REFLET_MAGIC_KIND_EL_WIND { // fire
+            match magic {
+                4 => {
+                    // fire
                     let resource_cap = fighter.get_param_int("param_private", "grimoire_giga_fire_usage_count_max");
                     MAGIC_HANDLER(fighter, boma, magic, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CURRENT_POINT, resource_cap);
-                } else if magic < *FIGHTER_REFLET_MAGIC_KIND_RIZAIA { // wind
+                },
+                5 => {
+                    // wind
                     let resource_cap = fighter.get_param_int("param_private", "grimoire_el_window_usage_count_max");
                     MAGIC_HANDLER(fighter, boma, magic, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_HI_CURRENT_POINT, resource_cap);
-                } else if magic < *FIGHTER_REFLET_MAGIC_KIND_SWORD { // nos
+                },
+                6 => {
+                    // nosferatu
                     let resource_cap = fighter.get_param_int("param_private", "grimoire_rizaia_usage_count_max");
                     MAGIC_HANDLER(fighter, boma, magic, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_LW_CURRENT_POINT, resource_cap);
+                },
+                _ => {
+                    // thunder
+                    let resource_cap = fighter.get_param_int("param_private", "grimoire_thunder_usage_count_max");
+                    MAGIC_HANDLER(fighter, boma, magic, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_N_CURRENT_POINT, resource_cap);
                 }
             }
         }
