@@ -312,6 +312,37 @@ unsafe fn notify_log_event_collision_hit(fighter_manager: u64, attacker_object_i
         ItemModule::drop_item(receiver_boma, 90.0, 0.0, 0);
     }
 
+    if app::smashball::is_training_mode() {
+        if ControlModule::check_button_on(attacker_boma, *CONTROL_PAD_BUTTON_APPEAL_HI)
+        || ControlModule::check_button_on(attacker_boma, *CONTROL_PAD_BUTTON_APPEAL_LW)
+        || ControlModule::check_button_on(attacker_boma, *CONTROL_PAD_BUTTON_APPEAL_S_L)
+        || ControlModule::check_button_on(attacker_boma, *CONTROL_PAD_BUTTON_APPEAL_S_R) {
+            if VarModule::has_var_module(receiver_boma.object()) {
+                let fighter = utils::util::get_fighter_common_from_accessor(attacker_boma);
+                let prev = VarModule::is_flag(receiver_boma.object(), vars::common::instance::ENABLE_FRAME_DATA_DEBUG);
+                println!("prev: {}", prev);
+                if prev == true {
+                    println!("15 -> 18");
+                    // 15 -> 18
+                    fighter.clear_lua_stack();
+                    lua_args!(fighter, Hash40::new("sys_hit_dead"), Hash40::new("top"), 0, 10, 0, 0, 0, 0, 1, true);
+                    smash::app::sv_animcmd::EFFECT_FOLLOW(fighter.lua_state_agent);
+                    fighter.pop_lua_stack(1);
+                }
+                else {
+                    println!("18 -> 15");
+                    // 18 -> 15
+                    fighter.clear_lua_stack();
+                    lua_args!(fighter, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 10, 0, 0, 0, 0, 1, true);
+                    smash::app::sv_animcmd::EFFECT_FOLLOW(fighter.lua_state_agent);
+                    fighter.pop_lua_stack(1);
+                }
+                println!("setting to {}", !prev);
+                VarModule::set_flag(receiver_boma.object(), vars::common::instance::ENABLE_FRAME_DATA_DEBUG, !prev);
+            }
+        }
+    }
+
 	original!()(fighter_manager, attacker_object_id, receiver_object_id, move_type, arg5, move_type_again)
 }
 
@@ -352,8 +383,27 @@ unsafe fn post_spike_check(ctx: &mut skyline::hooks::InlineCtx) {
         ctx.registers_f[11].set_s(kb)
     }
 
-    // Forces tumble for knockdown throws
-    if VarModule::is_flag((*boma).object(), vars::common::instance::IS_KNOCKDOWN_THROW) {
+    // Forces tumble for throws
+    let fighter = util::get_fighter_common_from_accessor(&mut (*boma));
+    if VarModule::is_flag((*boma).object(), vars::common::instance::FORCE_TUMBLE_NO_BOUNCE)
+    || [ // THROWN statuses
+        *FIGHTER_STATUS_KIND_BITTEN_WARIO_END,
+        *FIGHTER_STATUS_KIND_CATCHED_AIR_END_GANON,
+        *FIGHTER_STATUS_KIND_CLUNG_THROWN_BLANK_DIDDY,
+        *FIGHTER_STATUS_KIND_CLUNG_THROWN_DIDDY,
+        *FIGHTER_STATUS_KIND_DEMON_DIVED,
+        *FIGHTER_STATUS_KIND_DRAGGED_RIDLEY,
+        *FIGHTER_STATUS_KIND_MEWTWO_THROWN,
+        *FIGHTER_STATUS_KIND_MIIFIGHTER_COUNTER_THROWN,
+        *FIGHTER_STATUS_KIND_MIIFIGHTER_SUPLEX_THROWN,
+        *FIGHTER_STATUS_KIND_SHOULDERED_DONKEY_THROWN,
+        *FIGHTER_STATUS_KIND_SWALLOWED_THROWN,
+        *FIGHTER_STATUS_KIND_SWALLOWED_THROWN_STAR,
+        // *FIGHTER_STATUS_KIND_SWING_GAOGAEN_FAILURE,
+        *FIGHTER_STATUS_KIND_SWING_GAOGAEN_LARIAT,
+        *FIGHTER_STATUS_KIND_SWING_GAOGAEN_SHOULDER,
+        *FIGHTER_STATUS_KIND_THROWN,
+    ].contains(&(fighter.global_table[STATUS_KIND].get_i32())) {
         // Set damage level to 3 (tumble)
         ctx.registers[24].set_w(3);
     }

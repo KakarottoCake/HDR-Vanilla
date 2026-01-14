@@ -265,30 +265,35 @@ unsafe fn motion_update(energy: &mut FighterKineticEnergyMotion, boma: &mut Batt
 
     let mut is_stop_added = false;
     
-    if !energy.update_flag
-    && boma.is_status_one_of(&[
-        *FIGHTER_STATUS_KIND_ATTACK_HI4_START,
-        *FIGHTER_STATUS_KIND_ATTACK_HI4_HOLD,
-        *FIGHTER_STATUS_KIND_ATTACK_HI4,
-        *FIGHTER_STATUS_KIND_ATTACK_S4_START,
-        *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD,
-        *FIGHTER_STATUS_KIND_ATTACK_S4,
-        *FIGHTER_STATUS_KIND_ATTACK_LW4_START,
-        *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD,
-        *FIGHTER_STATUS_KIND_ATTACK_LW4,
-        *FIGHTER_STATUS_KIND_ATTACK,
-        *FIGHTER_STATUS_KIND_ATTACK_HI3,
-        *FIGHTER_STATUS_KIND_ATTACK_S3,
-        *FIGHTER_STATUS_KIND_ATTACK_LW3])
-    {
-        let mut stop_energy = KineticModule::get_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_STOP) as *mut app::KineticEnergy;
-        let prev_speed = KineticModule::get_sum_speed3f(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        let reset_speed_2f = Vector2f { x: prev_speed.x, y: prev_speed.y };
-        let reset_speed_3f = Vector3f { x: 0.0, y: 0.0, z: 0.0 };
-        lua_bind::KineticEnergy::reset_energy(stop_energy, *ENERGY_STOP_RESET_TYPE_GROUND, &reset_speed_2f, &reset_speed_3f, boma);
-        lua_bind::KineticEnergy::enable(stop_energy);
-        
-        is_stop_added = true;
+    if !energy.update_flag {
+        if boma.is_motion(Hash40::new("attack_12")) {
+            let fighter = util::get_fighter_common_from_accessor(boma);
+            sv_kinetic_energy!(clear_speed_ex, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP);
+        }
+        else if boma.is_status_one_of(&[
+            *FIGHTER_STATUS_KIND_ATTACK_HI4_START,
+            *FIGHTER_STATUS_KIND_ATTACK_HI4_HOLD,
+            *FIGHTER_STATUS_KIND_ATTACK_HI4,
+            *FIGHTER_STATUS_KIND_ATTACK_S4_START,
+            *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD,
+            *FIGHTER_STATUS_KIND_ATTACK_S4,
+            *FIGHTER_STATUS_KIND_ATTACK_LW4_START,
+            *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD,
+            *FIGHTER_STATUS_KIND_ATTACK_LW4,
+            *FIGHTER_STATUS_KIND_ATTACK,
+            *FIGHTER_STATUS_KIND_ATTACK_HI3,
+            *FIGHTER_STATUS_KIND_ATTACK_S3,
+            *FIGHTER_STATUS_KIND_ATTACK_LW3])
+        {
+            let mut stop_energy = KineticModule::get_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_STOP) as *mut app::KineticEnergy;
+            let prev_speed = KineticModule::get_sum_speed3f(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            let reset_speed_2f = Vector2f { x: prev_speed.x, y: prev_speed.y };
+            let reset_speed_3f = Vector3f { x: 0.0, y: 0.0, z: 0.0 };
+            lua_bind::KineticEnergy::reset_energy(stop_energy, *ENERGY_STOP_RESET_TYPE_GROUND, &reset_speed_2f, &reset_speed_3f, boma);
+            lua_bind::KineticEnergy::enable(stop_energy);
+            
+            is_stop_added = true;
+        }
     }
 
     // begin block for calculating move speed based on animation
