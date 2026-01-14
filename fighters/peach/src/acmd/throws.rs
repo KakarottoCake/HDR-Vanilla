@@ -173,6 +173,7 @@ unsafe extern "C" fn game_throwhi(agent: &mut L2CAgentBase) {
         let target_group = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
         let target_no = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
+        AttackModule::set_optional_hit_effect(boma, 0, Hash40::new("peach_attack_heart"));
     }
     frame(lua_state, 40.0);
     if is_excute(agent) {
@@ -189,7 +190,7 @@ unsafe extern "C" fn effect_throwhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("peach_attack_heart"), Hash40::new("handr"), 0, 23.5, 0, 0, 90, 0, 0.5, true);
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("peach_attack_heart"), Hash40::new("handr"), 0, 0.0, 0, 0, 90, 0, 0.5, true);
         EFFECT_FOLLOW(agent, Hash40::new("peach_attack_hi3"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 0.83, true);
         LAST_EFFECT_SET_RATE(agent, 1.33);
     }
