@@ -502,6 +502,7 @@ unsafe extern "C" fn special_s_attack_main_loop(fighter: &mut L2CFighterCommon) 
         }
         else {
             WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_TRAIL_STATUS_SPECIAL_S_INT_TOUCH_GROUND_FRAME);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_TRAIL_STATUS_SPECIAL_S_FLAG_TOUCH_GROUND);
         }
 
         let touch_ground = WorkModule::is_flag(fighter.module_accessor, *FIGHTER_TRAIL_STATUS_SPECIAL_S_FLAG_TOUCH_GROUND);

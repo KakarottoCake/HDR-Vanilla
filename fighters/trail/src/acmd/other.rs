@@ -212,6 +212,9 @@ unsafe extern "C" fn game_cliffjump2(agent: &mut L2CAgentBase) {
             MotionModule::set_rate(boma, 1.65);
             KineticModule::mul_speed(boma, &Vector3f::new(0.0, 0.5, 0.0), *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
         }
+        else {
+            PostureModule::add_pos(boma, &Vector3f::new(0.0, -1.2, 0.0));
+        }
     }
 }
 
