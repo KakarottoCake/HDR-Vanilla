@@ -536,13 +536,16 @@ unsafe extern "C" fn special_s_attack_main_loop(fighter: &mut L2CFighterCommon) 
 // FIGHTER_TRAIL_STATUS_KIND_SPECIAL_S_END
 
 pub unsafe extern "C" fn special_s_end_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_TRAIL_STATUS_SPECIAL_S_FLAG_TOUCH_GROUND) {
+        fighter.set_situation(SITUATION_KIND_GROUND.into());
+    }
+    special_s_search_end_set_kinetic(fighter);
+    special_s_search_end_set_speed(fighter);
     fighter.sub_change_motion_by_situation(
         Hash40::new("special_s_end").into(),
         Hash40::new("special_air_s_end").into(),
         false.into()
     );
-    special_s_search_end_set_kinetic(fighter);
-    special_s_search_end_set_speed(fighter);
 
     let attack_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_TRAIL_STATUS_SPECIAL_S_INT_ATTACK_COUNT);
     let param = match attack_count {
@@ -563,7 +566,7 @@ pub unsafe extern "C" fn special_s_end_main(fighter: &mut L2CFighterCommon) -> L
 }
 
 unsafe extern "C" fn special_s_search_end_set_kinetic(fighter: &mut L2CFighterCommon) {
-    if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+    if fighter.is_situation(*SITUATION_KIND_GROUND) {
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
     }

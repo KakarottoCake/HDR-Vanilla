@@ -64,7 +64,7 @@ unsafe extern "C" fn effect_attackairn(agent: &mut L2CAgentBase) {
         //EFFECT_FOLLOW(agent, Hash40::new("sys_heart"), Hash40::new("haver"), 0, 8.0, 0, 0, 0, 90.0, 0.5, true);
         //LAST_EFFECT_SET_COLOR(agent, 4.0, 5.0, 1.0);
     }
-    frame(lua_state, 15.0);
+    frame(lua_state, 14.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("trail_keyblade_light"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1.0, true);
         EFFECT_FOLLOW(agent, Hash40::new("trail_keyblade_flare"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
