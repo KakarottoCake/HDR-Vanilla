@@ -41,6 +41,8 @@ unsafe extern "C" fn special_lw1_ground_main(fighter: &mut L2CFighterCommon) -> 
         StatusModule::set_situation_kind(fighter.module_accessor, app::SituationKind(*SITUATION_KIND_GROUND), false);
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
     }
+    VarModule::set_int(fighter.battle_object, vars::miifighter::status::SPECIAL_LW1_CHARGE, 0);
+    VarModule::set_float(fighter.battle_object, vars::miifighter::status::SPECIAL_LW1_CHARGE_DISTANCE, 0.0);
 
     fighter.main_shift(special_lw1_ground_main_loop)
 }
@@ -52,50 +54,46 @@ unsafe extern "C" fn special_lw1_ground_main_loop(fighter: &mut L2CFighterCommon
             return 1.into();
         }
     }
-    if MotionModule::end_frame(fighter.module_accessor) - fighter.motion_frame() < 2.0 {
-        // reimpl status
-        StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_WAIT, false);
+    if MotionModule::is_end(fighter.module_accessor) {
+        fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
+        return 1.into();
     }
-    let is_hold = ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL);
-    let charge = VarModule::get_int(fighter.battle_object, vars::miifighter::status::SPECIAL_LW1_CHARGE);
-    let charge_distance = VarModule::get_float(fighter.battle_object, vars::miifighter::status::SPECIAL_LW1_CHARGE_DISTANCE) as f32;
-    let charge_start_frame = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "earthquake_fist_ground.charge_start_frame");
-    let charge_end_frame = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "earthquake_fist_ground.charge_end_frame");
-    let max_charge_frames = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "earthquake_fist_ground.max_charge_frames");
-    let max_charge_distance = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "earthquake_fist_ground.max_charge_distance");
-    let lr = PostureModule::lr(fighter.module_accessor);
-    let is_ground = GroundModule::ray_check(
-        fighter.module_accessor, 
-        &Vector2f{ x: PostureModule::pos_x(fighter.module_accessor) + ((charge_distance + 12.0) * lr), y: PostureModule::pos_y(fighter.module_accessor)}, 
-        &Vector2f{ x: 0.0, y: -6.0}, true
-    ) == 1;
-    //println!("is_hold: {}, charge: {}, charge_distance: {}, is_ground: {}", is_hold, charge, charge_distance, is_ground);
-    if (charge_start_frame..charge_end_frame).contains(&fighter.motion_frame()) && charge < (max_charge_frames as i32) && is_hold {
-        MotionModule::set_rate(fighter.module_accessor, (charge_end_frame - charge_start_frame)/max_charge_frames);
-        let eff_handle = VarModule::get_int64(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW1_QUAKE_EFFECT_HANDLE);
-        let pos_offset = charge_distance + (max_charge_distance/max_charge_frames);
-        let mut eff_pos_offset = (charge as f32/max_charge_frames) + charge_distance + (max_charge_distance/max_charge_frames);
-        if is_ground {
-            VarModule::set_float(fighter.battle_object, vars::miifighter::status::SPECIAL_LW1_CHARGE_DISTANCE, pos_offset);
-            eff_pos_offset = (10.0 - 10.0 * (charge as f32/max_charge_frames)) + charge_distance + (max_charge_distance/max_charge_frames);
+    if VarModule::is_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_LW1_HOLD) {
+        let charge_end_frame = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "earthquake_fist_ground.charge_end_frame");
+        
+        if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+            MotionModule::set_frame_sync_anim_cmd(fighter.module_accessor, charge_end_frame, true, true, false);
         }
-        EffectModule::set_pos(fighter.module_accessor, eff_handle as u32, &Vector3f::new(0.0, 0.0, eff_pos_offset));
-        VarModule::set_int64(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW1_QUAKE_EFFECT_HANDLE, eff_handle as u64);
-        VarModule::set_int(fighter.battle_object, vars::miifighter::status::SPECIAL_LW1_CHARGE, (charge + 1) as i32);
-    } else {
-        MotionModule::set_rate(fighter.module_accessor, 1.0);
-    }
+        if fighter.motion_frame() >= charge_end_frame {
+            VarModule::off_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_LW1_HOLD);
+        }
+        else {
+            let charge = VarModule::get_int(fighter.battle_object, vars::miifighter::status::SPECIAL_LW1_CHARGE);
+            let charge_distance = VarModule::get_float(fighter.battle_object, vars::miifighter::status::SPECIAL_LW1_CHARGE_DISTANCE) as f32;
+            let charge_distance_mod = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "earthquake_fist_ground.charge_distance_mod");
+            let max_charge_distance = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "earthquake_fist_ground.max_charge_distance");
+            let mut eff_pos_offset = (charge as f32/charge_distance_mod) + charge_distance + (max_charge_distance/charge_distance_mod);
+            let lr = PostureModule::lr(fighter.module_accessor);
 
-    // if MotionModule::is_end(fighter.module_accessor) {
-    //     fighter.change_status(FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_LW1_AIR.into(), false.into());
-    // }
-    // if KineticModule::is_enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP) {
-    //     if fighter.stick_x() >= -0.1 && fighter.stick_x() <= 0.1 {
-    //         return 0.into();
-    //     }
-    //     let lw_speed_x = fighter.get_param_float("param_special_lw1", "lw1_speed_x");
-    //     let dir_speed = fighter.lr() * lw_speed_x;
-    // }
+            let is_ground = GroundModule::ray_check(
+                fighter.module_accessor, 
+                &Vector2f{ x: PostureModule::pos_x(fighter.module_accessor) + ((charge_distance + 12.0) * lr), y: PostureModule::pos_y(fighter.module_accessor)}, 
+                &Vector2f{ x: 0.0, y: -6.0}, true
+            ) == 1;
+            if is_ground {
+                let pos_offset = charge_distance + (max_charge_distance/charge_distance_mod);
+
+                VarModule::set_float(fighter.battle_object, vars::miifighter::status::SPECIAL_LW1_CHARGE_DISTANCE, pos_offset);
+                eff_pos_offset = (10.0 - 10.0 * (charge as f32/charge_distance_mod)) + charge_distance + (max_charge_distance/charge_distance_mod);
+            }
+
+            let eff_handle = VarModule::get_int64(fighter.battle_object, vars::miifighter::status::SPECIAL_LW1_QUAKE_EFFECT_HANDLE);
+
+            EffectModule::set_pos(fighter.module_accessor, eff_handle as u32, &Vector3f::new(0.0, 0.0, eff_pos_offset));
+            VarModule::set_int64(fighter.battle_object, vars::miifighter::status::SPECIAL_LW1_QUAKE_EFFECT_HANDLE, eff_handle as u64);
+            VarModule::set_int(fighter.battle_object, vars::miifighter::status::SPECIAL_LW1_CHARGE, (charge + 1) as i32);
+        }
+    }
 
     return 0.into();
 }
@@ -121,14 +119,6 @@ unsafe extern "C" fn special_lw1_air_main(fighter: &mut L2CFighterCommon) -> L2C
 }
 
 unsafe extern "C" fn special_lw1_air_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    // Idk why this has to be done every frame to prevent ledgegrabbing
-    // but it do rn
-    GroundModule::set_cliff_check(fighter.module_accessor, app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE));
-
-    if fighter.sub_transition_group_check_air_cliff().get_bool() {
-        return 1.into();
-    }
-
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
         || fighter.sub_air_check_fall_common().get_bool() {

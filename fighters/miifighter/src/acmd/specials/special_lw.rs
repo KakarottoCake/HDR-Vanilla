@@ -7,11 +7,11 @@ use super::*;
 unsafe extern "C" fn game_speciallw1(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    frame(lua_state, 9.0);
     if is_excute(agent) {
-        VarModule::set_int(agent.object(), vars::miifighter::status::SPECIAL_LW1_CHARGE, 0);
-        VarModule::set_float(agent.object(), vars::miifighter::status::SPECIAL_LW1_CHARGE_DISTANCE, 0.0);
+        VarModule::on_flag(agent.battle_object, vars::miifighter::status::SPECIAL_LW1_HOLD);
     }
-    frame(lua_state, 13.0);
+    frame(lua_state, 40.0);
     if is_excute(agent) {
         let charge_distance = VarModule::get_float(agent.battle_object, vars::miifighter::status::SPECIAL_LW1_CHARGE_DISTANCE);
         ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 90, 54, 0, 45, 2.5, 0.0, 2.0, 10.0 + charge_distance, Some(0.0), Some(2.0), Some(14.0 + charge_distance), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_KICK);
@@ -20,7 +20,7 @@ unsafe extern "C" fn game_speciallw1(agent: &mut L2CAgentBase) {
         ATTACK(agent, 3, 0, Hash40::new("top"), 10.0, 110, 64, 0, 35, 2.5, 0.0, 2.0, 3.0 + charge_distance, Some(0.0), Some(2.0), Some(12.0 + charge_distance), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
         ATTACK(agent, 4, 0, Hash40::new("top"), 8.0, 45, 60, 0, 60, 3.0, 0.0, 3.0, 7.0, Some(0.0), Some(3.0), Some(9.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_KICK);
     }
-    frame(lua_state, 16.0);
+    frame(lua_state, 43.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
@@ -33,26 +33,23 @@ unsafe extern "C" fn effect_speciallw1(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), -3, 12, 5, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, true);
     }
-    frame(lua_state, 4.0);
+    frame(lua_state, 6.0);
     if is_excute(agent) {
         let eff_handle = EffectModule::req_follow(boma, Hash40::new("sys_windwave"), Hash40::new("top"), &Vector3f::new(0.0, 0.0, 10.0), &Vector3f::zero(), 0.4, false, 0, 0, 0, 0, 0, false, false);
         EffectModule::set_rate(boma, eff_handle as u32, 0.4);
-        VarModule::set_int64(agent.battle_object, vars::miifighter::instance::SPECIAL_LW1_QUAKE_EFFECT_HANDLE, eff_handle as u64);
+        VarModule::set_int64(agent.battle_object, vars::miifighter::status::SPECIAL_LW1_QUAKE_EFFECT_HANDLE, eff_handle as u64);
         EFFECT_FOLLOW(agent, Hash40::new("miifighter_sidekick_flash"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 0.6, true);
         EFFECT_FOLLOW(agent, Hash40::new("miifighter_sidekick_hold"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 0.8, true);
         LAST_EFFECT_SET_RATE(agent, 0.4);
     }
-    frame(lua_state, 9.0);
-    if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_ground_shockwave"), Hash40::new("top"), 8.0, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
-    }
-    frame(lua_state, 10.0);
+    frame(lua_state, 35.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("miifighter_sidekick_hold"), true, true);
     }
-    frame(lua_state, 13.0);
-    let charge_distance = VarModule::get_float(agent.battle_object, vars::miifighter::status::SPECIAL_LW1_CHARGE_DISTANCE);
+    frame(lua_state, 40.0);
     if is_excute(agent) {
+        let charge_distance = VarModule::get_float(agent.battle_object, vars::miifighter::status::SPECIAL_LW1_CHARGE_DISTANCE);
+        EFFECT(agent, Hash40::new("sys_ground_shockwave"), Hash40::new("top"), 8.0, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
         EFFECT_OFF_KIND(agent, Hash40::new("miifighter_sidekick_flash"), true, true);
         LANDING_EFFECT(agent, Hash40::new("miifighter_headbut_v_smoke"), Hash40::new("top"), 8.0, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
         LANDING_EFFECT(agent, Hash40::new("miifighter_headbut_v_smoke"), Hash40::new("top"), 12.0 + charge_distance, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
@@ -66,11 +63,11 @@ unsafe extern "C" fn effect_speciallw1(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_speciallw1(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 9.0);
+    frame(lua_state, 37.0);
     if is_excute(agent) {
         PLAY_SEQUENCE(agent, Hash40::new("seq_miifighter_rnd_attack03"));
     }
-    frame(lua_state, 13.0);
+    frame(lua_state, 40.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_miifighter_smash_s03"));
         PLAY_SE(agent, Hash40::new("se_miifighter_special_l03"));
@@ -85,7 +82,11 @@ unsafe extern "C" fn expression_speciallw1(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         ItemModule::set_have_item_visibility(boma, false, 0);
     };
-    frame(lua_state, 13.0);
+    frame(lua_state, 10.0);
+    if is_excute(agent) {
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_smashhold1"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(lua_state, 40.0);
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_NONE);
         QUAKE(agent, *CAMERA_QUAKE_KIND_L);
@@ -93,21 +94,14 @@ unsafe extern "C" fn expression_speciallw1(agent: &mut L2CAgentBase) {
         RUMBLE_HIT(agent, Hash40::new("rbkind_attackl"), 0);
         AREA_WIND_2ND_arg10(agent, 0, 2, 80, 300, 0.8, 4, 8, 44, 16, 50);
     }
-    wait(lua_state, 18.0);
+    frame(lua_state, 55.0);
     if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 3);
         AreaModule::erase_wind(boma, 0);
     }
-    wait(lua_state, 18.0);
-    if is_excute(agent) {
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_L, 3);
-    }
-    wait(lua_state, 3.0);
+    frame(lua_state, 58.0);
     if is_excute(agent) {
         ItemModule::set_have_item_visibility(boma, true, 0);
-    }
-    frame(lua_state, 52.0);
-    if is_excute(agent) {
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 4);
     }
 }
 
@@ -227,7 +221,7 @@ unsafe extern "C" fn game_speciallw2start(agent: &mut L2CAgentBase) {
     frame(lua_state, 27.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_MIIFIGHTER_STATUS_WORK_ID_REVERSAL_KICK_FLAG_WALL_JUMP_ENABLE);
-        if !VarModule::is_flag(agent.battle_object, vars::miifighter::status::SPECIAL_LW2_CHECK_HOLD) {
+        if !VarModule::is_flag(agent.battle_object, vars::common::status::CHECK_HOLD_INPUT) {
             SEARCH(agent, 0, 0, Hash40::new("hip"), 3.5, 1.0, 0.0, 0.0, Some(-3.0), Some(0.0), Some(0.0), *COLLISION_KIND_MASK_HIT, *HIT_STATUS_MASK_ALL, 0, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIEB, *COLLISION_PART_MASK_ALL, false);
         }
     }

@@ -147,7 +147,7 @@ special_air_s1_end:
     cancel_frame: 60
 special_lw1:
   extra:
-    cancel_frame: 42
+    cancel_frame: 70
 special_lw1_landing:
   extra:
     cancel_frame: 33

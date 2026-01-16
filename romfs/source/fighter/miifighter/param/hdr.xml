@@ -33,9 +33,8 @@
         <float hash="fall_acl_y_mul">0.5</float>
     </struct>
     <struct hash="earthquake_fist_ground">
-        <float hash="charge_start_frame">6.0</float>
-        <float hash="charge_end_frame">7.0</float>
-        <float hash="max_charge_frames">25.0</float>
+        <float hash="charge_end_frame">35.0</float>
+        <float hash="charge_distance_mod">25.0</float>
         <float hash="max_charge_distance">80.0</float>
     </struct>
     <struct hash="boiling_punt">
