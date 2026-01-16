@@ -153,9 +153,9 @@ unsafe fn special_lw3_change_stage(fighter: &mut L2CFighterCommon, stage: i32) {
         _ => {
             VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE, 0);
             let handle = VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1) as u32;
-            EffectModule::kill(fighter.module_accessor, handle, false, false);
+            EffectModule::detach(fighter.module_accessor, handle, 0);
             let handle2 = VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2) as u32;
-            EffectModule::kill(fighter.module_accessor, handle2, false, false);
+            EffectModule::detach(fighter.module_accessor, handle2, 0);
             VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1, -1);
             VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, -1);
             if fighter.is_motion(Hash40::new("special_lw3_3g"))
