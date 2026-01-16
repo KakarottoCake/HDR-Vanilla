@@ -239,9 +239,12 @@ pub mod vars {
             pub const RIGHT_STICK_FLICK_Y: i32 = 0x0012;
 
             pub const PREV_STATUS_TRANSITION_FRAME: i32 = 0x0013;
+            pub const PREV_STATUS_INFLICT_STATUS: i32 = 0x0014;
 
-            pub const ATTACK_LR_CHECK: i32 = 0x0014;
-            // pub const PREVIOUS_FRAME_FRAMES_IN_AIR: i32 = 0x0015;
+
+            pub const ATTACK_LR_CHECK: i32 = 0x0015;
+
+            // pub const PREVIOUS_FRAME_FRAMES_IN_AIR: i32 = 0x0016;
 
             // floats
 
@@ -285,6 +288,7 @@ pub mod vars {
             pub const LAST_RECEIVED_ATTACK_HIT_LOCATION_Y: i32 = 0x0024;
             pub const LAST_RECEIVED_ATTACK_HIT_LOCATION_Z: i32 = 0x0025;
             pub const LAND_CANCEL_LAG: i32 = 0x0026;
+            pub const LANDING_LAG_FOR_RIVALS_MODE: i32 = 0x0027;
         }
         pub mod status {
             // flags
