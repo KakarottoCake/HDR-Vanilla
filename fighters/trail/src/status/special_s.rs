@@ -687,12 +687,8 @@ pub unsafe extern "C" fn special_s_end_main_loop(fighter: &mut L2CFighterCommon)
         return 0.into();
     }
 
-    if !StatusModule::is_situation_changed(fighter.module_accessor) {
-        fighter.sub_change_motion_by_situation(
-            Hash40::new("special_s_end").into(),
-            Hash40::new("special_air_s_end").into(),
-            true.into()
-        );
+    if StatusModule::is_situation_changed(fighter.module_accessor) {
+        fighter.change_motion_inherit_frame_by_situation("special_s_end", "special_air_s_end", -1.0, 1.0, 0.0, false, false);
         special_s_search_end_set_kinetic(fighter);
         special_s_search_end_set_speed(fighter);
     }
