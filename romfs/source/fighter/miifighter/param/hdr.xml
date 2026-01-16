@@ -29,7 +29,7 @@
         <float hash="throw_stable_speed_y">0.4</float>
     </struct>
     <struct hash="param_flash_kick">
-        <float hash="fall_x_mul">0.7</float>
+        <float hash="fall_x_mul">0.8</float>
         <float hash="fall_acl_y_mul">0.5</float>
     </struct>
     <struct hash="earthquake_fist_ground">
