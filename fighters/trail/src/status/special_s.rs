@@ -656,14 +656,16 @@ pub unsafe extern "C" fn special_s_end_main_loop(fighter: &mut L2CFighterCommon)
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 0.into();
     }
-
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
         || fighter.sub_air_check_fall_common().get_bool() {
             return 0.into();
         }
     }
-
+    fighter.check_wall_jump_cancel();
+    if fighter.status_frame() > 10 {
+        fighter.sub_air_check_dive();
+    }
     if StatusModule::is_situation_changed(fighter.module_accessor)
     && fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
         let end_landing_fall_special_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_s"), hash40("end_landing_fall_special_frame"));
@@ -676,7 +678,6 @@ pub unsafe extern "C" fn special_s_end_main_loop(fighter: &mut L2CFighterCommon)
             return 0.into();
         }
     }
-
     if MotionModule::is_end(fighter.module_accessor) {
         if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
             fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
@@ -689,7 +690,6 @@ pub unsafe extern "C" fn special_s_end_main_loop(fighter: &mut L2CFighterCommon)
         }
         return 0.into();
     }
-
     if StatusModule::is_situation_changed(fighter.module_accessor) {
         fighter.change_motion_inherit_frame_by_situation("special_s_end", "special_air_s_end", -1.0, 1.0, 0.0, false, false);
         special_s_search_end_set_kinetic(fighter);
