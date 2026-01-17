@@ -495,14 +495,9 @@ unsafe extern "C" fn game_speciallwstart(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE_RANGE(agent, 1.0, 21.0, 13.0);
     frame(lua_state, 21.0);
     FT_MOTION_RATE(agent, 0.5);
-    if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("rot"), 4.0, 75, 130, 100, 0, 3.5, 0.0, 1.0, 0.25, None, None,None, 0.6, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 4.0, 75, 130, 100, 0, 3.2, 0.0, 2.6, -7.2, Some(0.0), Some(2.6), Some(8.2), 0.6, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
-    }
     frame(lua_state, 22.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("rot"), 4.0, 75, 130, 100, 0, 4.5, 0.0, 1.0, 0.25, None, None,None, 0.6, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
-        AttackModule::clear(boma, 1, false);
+        ATTACK(agent, 0, 0, Hash40::new("rot"), 7.0, 75, 100, 100, 0, 4.5, 0.0, 1.0, 0.25, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
     }
     frame(lua_state, 21.0);
     FT_MOTION_RATE(agent, 0.5);
@@ -510,6 +505,7 @@ unsafe extern "C" fn game_speciallwstart(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         CancelModule::enable_cancel(boma);
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+        ATTACK(agent, 0, 0, Hash40::new("rot"), 4.0, 80, 100, 80, 0, 4.5, 0.0, 1.0, 0.25, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
     }
     frame(lua_state, 61.0);
     if is_excute(agent) {
