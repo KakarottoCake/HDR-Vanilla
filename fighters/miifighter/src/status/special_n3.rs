@@ -39,6 +39,8 @@ unsafe extern "C" fn special_n3_catch_main(fighter: &mut L2CFighterCommon) -> L2
     let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     KineticModule::unable_energy_all(fighter.module_accessor);
     if fighter.is_situation(*SITUATION_KIND_GROUND) {
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
         let brake_x = fighter.get_param_float("ground_brake", "");
         let start_limit_speed_ground = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "wild_throw.start_limit_speed_ground");
         let start_brake_x_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "wild_throw.start_brake_x_mul");
@@ -51,6 +53,8 @@ unsafe extern "C" fn special_n3_catch_main(fighter: &mut L2CFighterCommon) -> L2
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_lw3_catch"), 0.0, 1.0, false, 0.0, false, false);
     }
     else {
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
         let air_brake_x = fighter.get_param_float("air_brake_x", "");
         let start_air_speed_x_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "wild_throw.start_air_speed_x_mul");
         let start_air_brake_x_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "wild_throw.start_air_brake_x_mul");
@@ -97,7 +101,7 @@ unsafe extern "C" fn special_n3_catch_main_loop(fighter: &mut L2CFighterCommon) 
     }
     if StatusModule::is_situation_changed(fighter.module_accessor) {
         if fighter.is_situation(*SITUATION_KIND_GROUND) {
-            GroundModule::correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+            GroundModule::correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_lw3_catch"), -1.0, 1.0, 0.0, false, false);
         }
