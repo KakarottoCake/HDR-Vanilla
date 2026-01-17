@@ -478,10 +478,7 @@ unsafe extern "C" fn special_s_attack_main_loop(fighter: &mut L2CFighterCommon) 
     if !StatusModule::is_changing(fighter.module_accessor) {
         let flags = GroundModule::get_touch_flag(fighter.module_accessor) as u32;
         if flags & *GROUND_TOUCH_FLAG_DOWN as u32 != 0 {
-            if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_TRAIL_STATUS_SPECIAL_S_FLAG_TOUCH_GROUND) {
-
-            }
-            else {
+            if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_TRAIL_STATUS_SPECIAL_S_FLAG_TOUCH_GROUND) {
                 if flags & (*GROUND_TOUCH_FLAG_LEFT | *GROUND_TOUCH_FLAG_UP | *GROUND_TOUCH_FLAG_RIGHT) as u32 != 0 {
                     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_TRAIL_STATUS_SPECIAL_S_INT_TOUCH_GROUND_FRAME);
                 }
@@ -499,17 +496,10 @@ unsafe extern "C" fn special_s_attack_main_loop(fighter: &mut L2CFighterCommon) 
                     }
                 }
             }
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_TRAIL_STATUS_SPECIAL_S_FLAG_TOUCH_GROUND);
         }
         else {
             WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_TRAIL_STATUS_SPECIAL_S_INT_TOUCH_GROUND_FRAME);
-            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_TRAIL_STATUS_SPECIAL_S_FLAG_TOUCH_GROUND);
-        }
-
-        let touch_ground = WorkModule::is_flag(fighter.module_accessor, *FIGHTER_TRAIL_STATUS_SPECIAL_S_FLAG_TOUCH_GROUND);
-        if !touch_ground {
-            special_s_attack_set_motion_multiple(fighter, attack_count.into(), true.into(), touch_ground.into());
-            // Why does it do this?
-            WorkModule::set_flag(fighter.module_accessor, touch_ground, *FIGHTER_TRAIL_STATUS_SPECIAL_S_FLAG_TOUCH_GROUND);
         }
     }
 
@@ -537,7 +527,16 @@ unsafe extern "C" fn special_s_attack_main_loop(fighter: &mut L2CFighterCommon) 
 // FIGHTER_TRAIL_STATUS_KIND_SPECIAL_S_END
 
 pub unsafe extern "C" fn special_s_end_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_TRAIL_STATUS_SPECIAL_S_FLAG_TOUCH_GROUND) {
+    // Sora is counted as being airborne when the move is performed horizontally along the ground
+    // If `FIGHTER_TRAIL_STATUS_SPECIAL_S_FLAG_TOUCH_GROUND` is checked instead, it will work properly there but then
+    //  starting the move on the ground and ending in the air screws up his air physics. Ergo, we're using a ray check
+    //  to force him to use his proper grounded landing animation if he is ending right above the ground (and not rising)
+    if KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL) <= 0.0
+    && GroundModule::ray_check(
+        fighter.module_accessor, 
+        &Vector2f{ x: PostureModule::pos_x(fighter.module_accessor), y: PostureModule::pos_y(fighter.module_accessor)}, 
+        &Vector2f{ x: 0.0, y: -2.0}, true
+    ) == 1 {
         fighter.set_situation(SITUATION_KIND_GROUND.into());
     }
     special_s_search_end_set_kinetic(fighter);
@@ -568,6 +567,7 @@ pub unsafe extern "C" fn special_s_end_main(fighter: &mut L2CFighterCommon) -> L
 
 unsafe extern "C" fn special_s_search_end_set_kinetic(fighter: &mut L2CFighterCommon) {
     if fighter.is_situation(*SITUATION_KIND_GROUND) {
+        // Despite what this would have you believe, somehow the cliff stop doesn't stop at the damn cliff so enjoy your edge cancels
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
     }
@@ -667,16 +667,18 @@ pub unsafe extern "C" fn special_s_end_main_loop(fighter: &mut L2CFighterCommon)
     if fighter.status_frame() > 10 {
         fighter.sub_air_check_dive();
     }
-    if StatusModule::is_situation_changed(fighter.module_accessor)
-    && fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
-        let end_landing_fall_special_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_s"), hash40("end_landing_fall_special_frame"));
-        let frame = MotionModule::frame(fighter.module_accessor);
-        if frame >= end_landing_fall_special_frame as f32 {
-            // let attack_landing_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_s"), hash40("attack_landing_frame"));
-            // WorkModule::set_float(fighter.module_accessor, attack_landing_frame as f32, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
-            VarModule::set_float(fighter.battle_object, vars::common::instance::LAND_CANCEL_LAG, 6.0);
-            fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
-            return 0.into();
+    if !StatusModule::is_changing(fighter.module_accessor)
+    && StatusModule::is_situation_changed(fighter.module_accessor) {
+        if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+            let end_landing_fall_special_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_s"), hash40("end_landing_fall_special_frame"));
+            let frame = MotionModule::frame(fighter.module_accessor);
+            if frame >= end_landing_fall_special_frame as f32 {
+                // let attack_landing_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_s"), hash40("attack_landing_frame"));
+                // WorkModule::set_float(fighter.module_accessor, attack_landing_frame as f32, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
+                VarModule::set_float(fighter.battle_object, vars::common::instance::LAND_CANCEL_LAG, 6.0);
+                fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
+                return 0.into();
+            }
         }
     }
     if MotionModule::is_end(fighter.module_accessor) {
