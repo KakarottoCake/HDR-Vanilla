@@ -724,7 +724,9 @@ unsafe extern "C" fn effect_speciallw33a(agent: &mut L2CAgentBase) {
     frame(lua_state, 12.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("miifighter_boiling_air3"), Hash40::new("miifighter_boiling_air3"), Hash40::new("top"), -1, 5, 0, 90, 90, 0, 0.72, true, *EF_FLIP_YZ);
-        EFFECT_FOLLOW(agent, Hash40::new("miifighter_boiling_firearc"), Hash40::new("top"), -1, 5, 0, 90, 180, 0, 0.72, true);
+        EFFECT_FOLLOW(agent, Hash40::new("miifighter_boiling_firearc"), Hash40::new("top"), -1, 5, 0, 90, 0, 0, 0.72, true);
+        LAST_EFFECT_SET_RATE(agent, 0.8);
+        EFFECT_FOLLOW(agent, Hash40::new("miifighter_boiling_firearc"), Hash40::new("top"), -1, 5, 0, 90, 0, 0, 0.72, true);
         LAST_EFFECT_SET_RATE(agent, 0.8);
     }
 }
