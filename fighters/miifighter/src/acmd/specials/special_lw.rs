@@ -7,7 +7,7 @@ use super::*;
 unsafe extern "C" fn game_speciallw1(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 9.0);
+    frame(lua_state, 11.0);
     if is_excute(agent) {
         VarModule::on_flag(agent.battle_object, vars::miifighter::status::SPECIAL_LW1_HOLD);
     }
@@ -31,18 +31,21 @@ unsafe extern "C" fn effect_speciallw1(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), -3, 12, 5, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, true);
+        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), -3, 12, 5, 0, 0, 0, 0.4, 0, 0, 0, 0, 0, 0, true);
     }
-    frame(lua_state, 6.0);
+    frame(lua_state, 4.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("miifighter_sidekick_flash"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 0.6, true);
+    }
+    frame(lua_state, 11.0);
     if is_excute(agent) {
         let eff_handle = EffectModule::req_follow(boma, Hash40::new("sys_windwave"), Hash40::new("top"), &Vector3f::new(0.0, 0.0, 10.0), &Vector3f::zero(), 0.4, false, 0, 0, 0, 0, 0, false, false);
         EffectModule::set_rate(boma, eff_handle as u32, 0.4);
         VarModule::set_int64(agent.battle_object, vars::miifighter::status::SPECIAL_LW1_QUAKE_EFFECT_HANDLE, eff_handle as u64);
-        EFFECT_FOLLOW(agent, Hash40::new("miifighter_sidekick_flash"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 0.6, true);
         EFFECT_FOLLOW(agent, Hash40::new("miifighter_sidekick_hold"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 0.8, true);
         LAST_EFFECT_SET_RATE(agent, 0.4);
     }
-    frame(lua_state, 35.0);
+    frame(lua_state, 38.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("miifighter_sidekick_hold"), true, true);
     }
@@ -63,7 +66,7 @@ unsafe extern "C" fn effect_speciallw1(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_speciallw1(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 37.0);
+    frame(lua_state, 38.0);
     if is_excute(agent) {
         PLAY_SEQUENCE(agent, Hash40::new("seq_miifighter_rnd_attack03"));
     }
