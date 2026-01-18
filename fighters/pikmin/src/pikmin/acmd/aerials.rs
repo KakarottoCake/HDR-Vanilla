@@ -92,6 +92,20 @@ unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn effect_attackairf(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
+    let p = PikminInfo::from(variation);
+    frame(lua_state, 6.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("pikmin_attack_arc_hdr"), Hash40::new("top"), 3, 6, 3.5, 10, -10, -70, 1, true);
+        LAST_EFFECT_SET_COLOR(agent, p.color.x, p.color.y, p.color.z); 
+        EFFECT_FOLLOW(agent, Hash40::new("pikmin_attack_flash"), Hash40::new("waist"), 0, 0, 0.0, 0, 0, 0, 1.0, true);
+        LAST_EFFECT_SET_COLOR(agent, p.color.x, p.color.y, p.color.z);
+    }
+}
+
 unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -112,6 +126,20 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn effect_attackairb(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
+    let p = PikminInfo::from(variation);
+    frame(lua_state, 9.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("pikmin_attack_arc_hdr"), Hash40::new("top"), 1, 7, -1, 180, 0, 60, 1.1, true);
+        LAST_EFFECT_SET_COLOR(agent, p.color.x, p.color.y, p.color.z);
+        EFFECT_FOLLOW(agent, Hash40::new("pikmin_attack_flash"), Hash40::new("waist"), 0, 0, 0.0, 0, 0, 0, 1.0, true);
+        LAST_EFFECT_SET_COLOR(agent, p.color.x, p.color.y, p.color.z);
+    }
+}
+ 
 unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -133,6 +161,30 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
         HitModule::set_status_all(boma, app::HitStatus(*HIT_STATUS_NORMAL), 0);
     }
 }
+
+unsafe extern "C" fn effect_attackairhi(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
+    let p = PikminInfo::from(variation);
+    frame(lua_state, 8.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("pikmin_attack_arc_hdr"), Hash40::new("top"), 0, 12, 1, -110, -90, 0, 0.75, true);
+        LAST_EFFECT_SET_COLOR(agent, p.color.x, p.color.y, p.color.z);
+        EFFECT_FOLLOW(agent, Hash40::new("pikmin_attack_flash"), Hash40::new("waist"), 0, 0, 0.0, 0, 0, 0, 1.0, true);
+        LAST_EFFECT_SET_COLOR(agent, p.color.x, p.color.y, p.color.z);
+    }
+    frame(lua_state, 14.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("pikmin_attack_arc_hdr"), Hash40::new("top"), 0, 11, -1, 0, 90, 90, 0.7, true);
+        LAST_EFFECT_SET_COLOR(agent, p.color.x, p.color.y, p.color.z);
+        LAST_EFFECT_SET_RATE(agent, 1.4);
+        EFFECT_FOLLOW(agent, Hash40::new("pikmin_attack_flash"), Hash40::new("waist"), 0, 0, 0.0, 0, 0, 0, 1.0, true);
+        LAST_EFFECT_SET_COLOR(agent, p.color.x, p.color.y, p.color.z);
+    }
+}
+
+
 
 unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
@@ -159,6 +211,20 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn effect_attackairlw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
+    let p = PikminInfo::from(variation);
+    frame(lua_state, 6.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("pikmin_attack_arc_hdr"), Hash40::new("top"), 0, 1, -1, 260, -180, -250, 1.2, true);
+        LAST_EFFECT_SET_COLOR(agent, p.color.x, p.color.y, p.color.z);
+        EFFECT_FOLLOW(agent, Hash40::new("pikmin_attack_flash"), Hash40::new("waist"), 0, 0, 0.0, 0, 0, 0, 1.0, true);
+        LAST_EFFECT_SET_COLOR(agent, p.color.x, p.color.y, p.color.z);
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_attackairn", game_attackairn, Priority::Low);
     agent.acmd("game_attackairn_y", game_attackairn, Priority::Low);
@@ -176,22 +242,43 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_attackairf_b", game_attackairf, Priority::Low);
     agent.acmd("game_attackairf_w", game_attackairf, Priority::Low);
     agent.acmd("game_attackairf_v", game_attackairf, Priority::Low);
+    agent.acmd("effect_attackairf", effect_attackairf, Priority::Low);
+    agent.acmd("effect_attackairf_y", effect_attackairf, Priority::Low);
+    agent.acmd("effect_attackairf_b", effect_attackairf, Priority::Low);
+    agent.acmd("effect_attackairf_w", effect_attackairf, Priority::Low);
+    agent.acmd("effect_attackairf_v", effect_attackairf, Priority::Low);
 
     agent.acmd("game_attackairb", game_attackairb, Priority::Low);
     agent.acmd("game_attackairb_y", game_attackairb, Priority::Low);
     agent.acmd("game_attackairb_b", game_attackairb, Priority::Low);
     agent.acmd("game_attackairb_w", game_attackairb, Priority::Low);
     agent.acmd("game_attackairb_v", game_attackairb, Priority::Low);
+    agent.acmd("effect_attackairb", effect_attackairb, Priority::Low);
+    agent.acmd("effect_attackairb_y", effect_attackairb, Priority::Low);
+    agent.acmd("effect_attackairb_b", effect_attackairb, Priority::Low);
+    agent.acmd("effect_attackairb_w", effect_attackairb, Priority::Low);
+    agent.acmd("effect_attackairb_v", effect_attackairb, Priority::Low);
 
     agent.acmd("game_attackairhi", game_attackairhi, Priority::Low);
     agent.acmd("game_attackairhi_y", game_attackairhi, Priority::Low);
     agent.acmd("game_attackairhi_b", game_attackairhi, Priority::Low);
     agent.acmd("game_attackairhi_w", game_attackairhi, Priority::Low);
     agent.acmd("game_attackairhi_v", game_attackairhi, Priority::Low);
+    agent.acmd("effect_attackairhi", effect_attackairhi, Priority::Low);
+    agent.acmd("effect_attackairhi_y", effect_attackairhi, Priority::Low);
+    agent.acmd("effect_attackairhi_b", effect_attackairhi, Priority::Low);
+    agent.acmd("effect_attackairhi_w", effect_attackairhi, Priority::Low);
+    agent.acmd("effect_attackairhi_v", effect_attackairhi, Priority::Low);
+    
     
     agent.acmd("game_attackairlw", game_attackairlw, Priority::Low);
     agent.acmd("game_attackairlw_y", game_attackairlw, Priority::Low);
     agent.acmd("game_attackairlw_b", game_attackairlw, Priority::Low);
     agent.acmd("game_attackairlw_w", game_attackairlw, Priority::Low);
     agent.acmd("game_attackairlw_v", game_attackairlw, Priority::Low);
+    agent.acmd("effect_attackairlw", effect_attackairlw, Priority::Low);
+    agent.acmd("effect_attackairlw_y", effect_attackairlw, Priority::Low);
+    agent.acmd("effect_attackairlw_b", effect_attackairlw, Priority::Low);
+    agent.acmd("effect_attackairlw_w", effect_attackairlw, Priority::Low);
+    agent.acmd("effect_attackairlw_v", effect_attackairlw, Priority::Low);
 }
