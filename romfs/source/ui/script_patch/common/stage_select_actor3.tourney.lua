@@ -1387,6 +1387,7 @@ local setup_from_environment = function()
     UiScriptPlayer.invoke("setup_bgm")
 
     change_sub_page(0)
+    set_stage_preview_from_stage_panel(0, 0)
 end
 
 -- Cancels, presumably a part of the exit sequence
