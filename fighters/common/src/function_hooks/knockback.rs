@@ -374,11 +374,12 @@ unsafe fn set_damage_lr(ctx: &mut skyline::hooks::InlineCtx) {
     let damage_lr: f32 = {
         if attack_lr_check != *ATTACK_LR_CHECK_F && attack_lr_check != *ATTACK_LR_CHECK_B {
             // If reverse hits are disabled for a hitbox,
-            // always determine facing direction solely based on attacker base position
+            // always determine facing direction solely based on the attacker's base position
+            // in relation to your base position
             default_lr
         } else {
-            // Calculate the half-distance to your ECB's outermost edge
-            let ecb_edge = if opponent_pos_x >= pos_x {
+            // Get the position of your ECB's forward point
+            let ecb_front = if opponent_pos_x >= pos_x {
                 let ecb_right = *GroundModule::get_rhombus(boma, true).add(3);
                 ecb_right.x
             } else {
@@ -397,16 +398,16 @@ unsafe fn set_damage_lr(ctx: &mut skyline::hooks::InlineCtx) {
                     || (attack_lr_check == *ATTACK_LR_CHECK_B && attacker_lr > 0.0)
             };
 
-            // Determine whether your mid-ECB crosses the attacker's base position
-            let mid_ecb_crosses_attacker = if opponent_pos_x >= pos_x {
-                ecb_edge >= opponent_pos_x
+            // Determine whether your ECB crosses the attacker's base position
+            let ecb_crosses_attacker = if opponent_pos_x >= pos_x {
+                ecb_front >= opponent_pos_x
             } else {
-                ecb_edge <= opponent_pos_x
+                ecb_front <= opponent_pos_x
             };
 
             // If hit behind the attacker,
             // only turn to face them if you are far enough behind them
-            if is_behind_attacker && mid_ecb_crosses_attacker {
+            if is_behind_attacker && ecb_crosses_attacker {
                 -default_lr
             } else {
                 default_lr
