@@ -132,6 +132,22 @@ unsafe extern "C" fn special_hi_end_main_loop(fighter: &mut L2CFighterCommon) ->
             }
         }
     }
+    if fighter.is_motion(Hash40::new("special_hi")) {
+        if StatusModule::is_situation_changed(fighter.module_accessor) {
+            if fighter.is_situation(*SITUATION_KIND_GROUND) {
+                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+            }
+            else {
+                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            }
+        }
+        let stop_add_speed_y_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_hi"), hash40("stop_add_speed_y_frame"));
+        if fighter.is_situation(*SITUATION_KIND_GROUND)
+        && fighter.status_frame() >= stop_add_speed_y_frame {
+            StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_HI_LANDING, false);
+        }
+    }
 
     return 0.into();
 }
