@@ -198,8 +198,8 @@ unsafe extern "C" fn game_appeals(agent: &mut L2CAgentBase) {
     }
     else {
         if app::smashball::is_training_mode()
-        && VarModule::get_int(boma.object(), vars::packun::instance::CURRENT_STANCE) != 2 {
-            VarModule::set_int(boma.object(), vars::packun::instance::CURRENT_STANCE, 2);
+        && VarModule::get_int(agent.battle_object, vars::packun::instance::CURRENT_STANCE) != 2 {
+            VarModule::set_int(agent.battle_object, vars::packun::instance::CURRENT_STANCE, 2);
             VarModule::on_flag(agent.object(), vars::packun::status::STANCE_INIT);
         }
     }
@@ -253,8 +253,8 @@ unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if app::smashball::is_training_mode()
-    && VarModule::get_int(boma.object(), vars::packun::instance::CURRENT_STANCE) != 1 {
-        VarModule::set_int(boma.object(), vars::packun::instance::CURRENT_STANCE, 1);
+    && VarModule::get_int(agent.battle_object, vars::packun::instance::CURRENT_STANCE) != 1 {
+        VarModule::set_int(agent.battle_object, vars::packun::instance::CURRENT_STANCE, 1);
         VarModule::on_flag(agent.object(), vars::packun::status::STANCE_INIT);
     }
     frame(lua_state, 2.0);

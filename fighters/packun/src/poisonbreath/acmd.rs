@@ -53,8 +53,6 @@ unsafe extern "C" fn game_shootmax(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_explode(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-    let stance = VarModule::get_int(owner_module_accessor.object(), vars::packun::instance::CURRENT_STANCE);
 	frame(lua_state, 2.0);
 	if is_excute(agent) {
 		AttackModule::clear_all(boma);
@@ -74,8 +72,6 @@ unsafe extern "C" fn game_explode(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_explode(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-    let stance = VarModule::get_int(owner_module_accessor.object(), vars::packun::instance::CURRENT_STANCE);
 	if is_excute(agent) {
 		EffectModule::kill_kind(boma, Hash40::new("packun_poison_breath"), false, false);
 		EffectModule::kill_kind(boma, Hash40::new("packun_poison_breath2"), false, false);
@@ -92,8 +88,6 @@ unsafe extern "C" fn effect_explode(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_explode(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-    let stance = VarModule::get_int(owner_module_accessor.object(), vars::packun::instance::CURRENT_STANCE);
 	if is_excute(agent) {
 		PLAY_SE(agent, Hash40::new("se_common_bomb_l"));
     }

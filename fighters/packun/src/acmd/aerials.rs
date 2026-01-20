@@ -3,7 +3,7 @@ use super::*;
 unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let stance = StanceInfo::from(VarModule::get_int(boma.object(), vars::packun::instance::CURRENT_STANCE));
+    let stance = StanceInfo::from(VarModule::get_int(agent.battle_object, vars::packun::instance::CURRENT_STANCE));
     frame(lua_state, 1.0);
     if stance.label != 2 {
         FT_MOTION_RATE(agent, 0.5);
@@ -43,7 +43,7 @@ unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let stance = StanceInfo::from(VarModule::get_int(boma.object(), vars::packun::instance::CURRENT_STANCE));
+    let stance = StanceInfo::from(VarModule::get_int(agent.battle_object, vars::packun::instance::CURRENT_STANCE));
     frame(lua_state, 3.0);
     if stance.label != 2 {
         FT_DESIRED_RATE(agent, 6.0, 4.0);
@@ -93,7 +93,7 @@ unsafe extern "C" fn expression_attackairf(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let stance = StanceInfo::from(VarModule::get_int(boma.object(), vars::packun::instance::CURRENT_STANCE));
+    let stance = StanceInfo::from(VarModule::get_int(agent.battle_object, vars::packun::instance::CURRENT_STANCE));
     if stance.label != 1 {
         frame(lua_state, 5.0);
         if is_excute(agent) {
@@ -104,12 +104,10 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
         if is_excute(agent) {
             ATTACK(agent, 0, 0, Hash40::new("top"), 15.0 * stance.damage_other, 50, 108, 0, 25, 9.0, 0.0, 4.0, -10.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BOMB);
             ATTACK(agent, 1, 0, Hash40::new("top"), 15.0 * stance.damage_other, 50, 108, 0, 25, 4.5, 0.0, 8.0, -1.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BOMB);
-            VarModule::on_flag(boma.object(), vars::packun::status::POSION_BREATH_ENABLE_STANDARD_FLAME);
         }
         wait(lua_state, 4.0);
         if is_excute(agent) {
             AttackModule::clear_all(boma);
-            VarModule::off_flag(boma.object(), vars::packun::status::POSION_BREATH_ENABLE_STANDARD_FLAME);
         }
         frame(lua_state, 36.0);
         if is_excute(agent) {
@@ -147,7 +145,7 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_attackairb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let stance = VarModule::get_int(boma.object(), vars::packun::instance::CURRENT_STANCE);
+    let stance = VarModule::get_int(agent.battle_object, vars::packun::instance::CURRENT_STANCE);
     if stance != 1 {
         frame(lua_state, 6.0);
         for _ in 0..3 {
@@ -207,7 +205,7 @@ unsafe extern "C" fn effect_attackairb(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_attackairb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let stance = VarModule::get_int(boma.object(), vars::packun::instance::CURRENT_STANCE);
+    let stance = VarModule::get_int(agent.battle_object, vars::packun::instance::CURRENT_STANCE);
     frame(lua_state, 8.0);
     if is_excute(agent) {
         if stance != 1 {
@@ -303,7 +301,7 @@ unsafe extern "C" fn expression_attackairbs(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let stance = StanceInfo::from(VarModule::get_int(boma.object(), vars::packun::instance::CURRENT_STANCE));
+    let stance = StanceInfo::from(VarModule::get_int(agent.battle_object, vars::packun::instance::CURRENT_STANCE));
     if stance.label != 2 {
         FT_DESIRED_RATE(agent, 6.0, 7.0);
     }
@@ -366,7 +364,7 @@ unsafe extern "C" fn effect_attackairhi(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let stance = StanceInfo::from(VarModule::get_int(boma.object(), vars::packun::instance::CURRENT_STANCE));
+    let stance = StanceInfo::from(VarModule::get_int(agent.battle_object, vars::packun::instance::CURRENT_STANCE));
     if stance.label == 2 {
         FT_MOTION_RATE(agent, (11.0/5.0));
     }
