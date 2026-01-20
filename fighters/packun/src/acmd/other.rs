@@ -70,41 +70,26 @@ unsafe extern "C" fn game_escapeairslide(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_appealhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let cur_stance = VarModule::get_int(boma.object(), vars::packun::instance::CURRENT_STANCE);
-    frame(lua_state, 1.0);
-    if is_excute(agent) {
-        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 10.0);
-        VarModule::on_flag(boma.object(), vars::packun::instance::APPEAL_STANCE_REVERSE);
-    }
-    frame(lua_state, 8.0);
-    if is_excute(agent) {
-        let advance = if VarModule::is_flag(boma.object(), vars::packun::instance::APPEAL_STANCE_REVERSE) {2} else {1};
-        VarModule::set_int(boma.object(), vars::packun::instance::CURRENT_STANCE, (cur_stance + advance) % 3);
-    }
-    wait(lua_state, 1.0);
-    if is_excute(agent) {
-        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
-    }
 }
 
 unsafe extern "C" fn effect_appealhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    if !VarModule::is_flag(agent.object(), vars::packun::status::APPEAL_CLOUD_COVER) {
-        frame(lua_state, 1.0);
-        if is_excute(agent) {
-            EFFECT(agent, Hash40::new("sys_level_up"), Hash40::new("top"), -2, 10, 0, 0, 0, 0, 0.4, 0, 0, 0, 0, 0, 0, true);
-            if VarModule::get_int(agent.object(), vars::packun::instance::CURRENT_STANCE) == 0 {
-                EFFECT_FOLLOW(agent, Hash40::new("sys_grass_landing"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.5, false);
-            }
-            else if VarModule::get_int(agent.object(), vars::packun::instance::CURRENT_STANCE) == 1 {
-                EFFECT_FOLLOW(agent, Hash40::new("packun_poison_max"), Hash40::new("top"), 0, 15.5, 0, 0, 0, 0, 1.2, false);
-            }
-            else if VarModule::get_int(agent.object(), vars::packun::instance::CURRENT_STANCE) == 2 {
-                EFFECT_FOLLOW(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.9, false);
-            }
-        }
-    }
+    // if !VarModule::is_flag(agent.object(), vars::packun::status::APPEAL_CLOUD_COVER) {
+    //     frame(lua_state, 1.0);
+    //     if is_excute(agent) {
+    //         EFFECT(agent, Hash40::new("sys_level_up"), Hash40::new("top"), -2, 10, 0, 0, 0, 0, 0.4, 0, 0, 0, 0, 0, 0, true);
+    //         if VarModule::get_int(agent.object(), vars::packun::instance::CURRENT_STANCE) == 0 {
+    //             EFFECT_FOLLOW(agent, Hash40::new("sys_grass_landing"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.5, false);
+    //         }
+    //         else if VarModule::get_int(agent.object(), vars::packun::instance::CURRENT_STANCE) == 1 {
+    //             EFFECT_FOLLOW(agent, Hash40::new("packun_poison_max"), Hash40::new("top"), 0, 15.5, 0, 0, 0, 0, 1.2, false);
+    //         }
+    //         else if VarModule::get_int(agent.object(), vars::packun::instance::CURRENT_STANCE) == 2 {
+    //             EFFECT_FOLLOW(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.9, false);
+    //         }
+    //     }
+    // }
 }
 
 unsafe extern "C" fn sound_appealhi(agent: &mut L2CAgentBase) {
@@ -125,17 +110,18 @@ unsafe extern "C" fn sound_appealhi(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_appealhi2(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let cur_stance = VarModule::get_int(boma.object(), vars::packun::instance::CURRENT_STANCE);
-    if !(VarModule::get_int(boma.object(), vars::packun::instance::CURRENT_STANCE) == 0) {
-        VarModule::set_int(boma.object(), vars::packun::instance::CURRENT_STANCE, 0);
-        VarModule::on_flag(agent.object(), vars::packun::instance::APPEAL_STANCE_INIT);
+    if app::smashball::is_training_mode() {
+        if !(VarModule::get_int(agent.battle_object, vars::packun::instance::CURRENT_STANCE) == 0) {
+            VarModule::set_int(agent.battle_object, vars::packun::instance::CURRENT_STANCE, 0);
+            VarModule::on_flag(agent.battle_object, vars::packun::status::STANCE_INIT);
+        }
     }
     if is_excute(agent) {
         ModelModule::set_mesh_visibility(agent.boma(), Hash40::new("foot"), true);
     }
     frame(lua_state, 2.0);
     if is_excute(agent) {
-        VarModule::off_flag(agent.object(), vars::packun::instance::APPEAL_STANCE_INIT);
+        VarModule::off_flag(agent.object(), vars::packun::status::STANCE_INIT);
     }
     frame(lua_state, 107.0);
     if is_excute(agent) {
@@ -149,7 +135,7 @@ unsafe extern "C" fn effect_appealhi2(agent: &mut L2CAgentBase) {
     if !VarModule::is_flag(agent.object(), vars::packun::status::APPEAL_CLOUD_COVER) {
         frame(lua_state, 1.0);
         if is_excute(agent) {
-            if VarModule::is_flag(agent.object(), vars::packun::instance::APPEAL_STANCE_INIT) {
+            if VarModule::is_flag(agent.object(), vars::packun::status::STANCE_INIT) {
                 EFFECT(agent, Hash40::new("sys_level_up"), Hash40::new("top"), -2, 10, 0, 0, 0, 0, 0.4, 0, 0, 0, 0, 0, 0, true);
                 EFFECT_FOLLOW(agent, Hash40::new("sys_grass_landing"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.5, false);
             }
@@ -163,7 +149,7 @@ unsafe extern "C" fn sound_appealhi2(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     if !VarModule::is_flag(agent.object(), vars::packun::status::APPEAL_CLOUD_COVER) {
         frame(lua_state, 1.0);
-        if VarModule::is_flag(agent.object(), vars::packun::instance::APPEAL_STANCE_INIT) {
+        if VarModule::is_flag(agent.object(), vars::packun::status::STANCE_INIT) {
             PLAY_SE(agent, Hash40::new("se_packun_special_s02"));
         }
         frame(lua_state, 29.0);
@@ -205,21 +191,21 @@ unsafe extern "C" fn expression_appealhi2(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_appeals(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let cur_stance = VarModule::get_int(boma.object(), vars::packun::instance::CURRENT_STANCE);
     if boma.is_button_on(Buttons::AppealSL) {
         if is_excute(agent) {
             MotionModule::change_motion(boma, Hash40::new("appeal_hi_2"), 0.0, 1.0, false, 0.0, false, false);
         }
     }
     else {
-        if !(cur_stance == 2) {
+        if app::smashball::is_training_mode()
+        && VarModule::get_int(boma.object(), vars::packun::instance::CURRENT_STANCE) != 2 {
             VarModule::set_int(boma.object(), vars::packun::instance::CURRENT_STANCE, 2);
-            VarModule::on_flag(agent.object(), vars::packun::instance::APPEAL_STANCE_INIT);
+            VarModule::on_flag(agent.object(), vars::packun::status::STANCE_INIT);
         }
     }
     frame(lua_state, 2.0);
     if is_excute(agent) {
-        VarModule::off_flag(agent.object(), vars::packun::instance::APPEAL_STANCE_INIT);
+        VarModule::off_flag(agent.object(), vars::packun::status::STANCE_INIT);
     }
 }
 
@@ -229,7 +215,7 @@ unsafe extern "C" fn effect_appeals(agent: &mut L2CAgentBase) {
     if !VarModule::is_flag(agent.object(), vars::packun::status::APPEAL_CLOUD_COVER) {
         frame(lua_state, 1.0);
         if is_excute(agent) {
-            if VarModule::is_flag(agent.object(), vars::packun::instance::APPEAL_STANCE_INIT) {
+            if VarModule::is_flag(agent.object(), vars::packun::status::STANCE_INIT) {
                 EFFECT(agent, Hash40::new("sys_level_up"), Hash40::new("top"), -2, 10, 0, 0, 0, 0, 0.4, 0, 0, 0, 0, 0, 0, true);
                 EFFECT_FOLLOW(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.9, false);
             }
@@ -243,7 +229,7 @@ unsafe extern "C" fn sound_appeals(agent: &mut L2CAgentBase) {
     if !VarModule::is_flag(agent.object(), vars::packun::status::APPEAL_CLOUD_COVER) {
         frame(lua_state, 1.0);
         if is_excute(agent) {
-            if VarModule::is_flag(agent.object(), vars::packun::instance::APPEAL_STANCE_INIT) {
+            if VarModule::is_flag(agent.object(), vars::packun::status::STANCE_INIT) {
                 PLAY_SE(agent, Hash40::new("se_packun_special_s02"));
             }
             PLAY_SE(agent, Hash40::new("se_packun_appeal_s01"));
@@ -266,14 +252,14 @@ unsafe extern "C" fn sound_appeals(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let cur_stance = VarModule::get_int(boma.object(), vars::packun::instance::CURRENT_STANCE);
-    if !(cur_stance == 1) {
+    if app::smashball::is_training_mode()
+    && VarModule::get_int(boma.object(), vars::packun::instance::CURRENT_STANCE) != 1 {
         VarModule::set_int(boma.object(), vars::packun::instance::CURRENT_STANCE, 1);
-        VarModule::on_flag(agent.object(), vars::packun::instance::APPEAL_STANCE_INIT);
+        VarModule::on_flag(agent.object(), vars::packun::status::STANCE_INIT);
     }
     frame(lua_state, 2.0);
     if is_excute(agent) {
-        VarModule::off_flag(agent.object(), vars::packun::instance::APPEAL_STANCE_INIT);
+        VarModule::off_flag(agent.object(), vars::packun::status::STANCE_INIT);
     }
 }
 
@@ -283,7 +269,7 @@ unsafe extern "C" fn effect_appeallw(agent: &mut L2CAgentBase) {
     if !VarModule::is_flag(agent.object(), vars::packun::status::APPEAL_CLOUD_COVER) {
         frame(lua_state, 1.0);
         if is_excute(agent) {
-            if VarModule::is_flag(agent.object(), vars::packun::instance::APPEAL_STANCE_INIT) {
+            if VarModule::is_flag(agent.object(), vars::packun::status::STANCE_INIT) {
                 EFFECT(agent, Hash40::new("sys_level_up"), Hash40::new("top"), -2, 10, 0, 0, 0, 0, 0.4, 0, 0, 0, 0, 0, 0, true);
                 EFFECT_FOLLOW(agent, Hash40::new("packun_poison_max"), Hash40::new("top"), 0, 15.5, 0, 0, 0, 0, 1.2, false);
             }
@@ -301,7 +287,7 @@ unsafe extern "C" fn sound_appeallw(agent: &mut L2CAgentBase) {
     if !VarModule::is_flag(agent.object(), vars::packun::status::APPEAL_CLOUD_COVER) {
         frame(lua_state, 1.0);
         if is_excute(agent) {
-            if VarModule::is_flag(agent.object(), vars::packun::instance::APPEAL_STANCE_INIT) {
+            if VarModule::is_flag(agent.object(), vars::packun::status::STANCE_INIT) {
                 PLAY_SE(agent, Hash40::new("se_packun_special_s02"));
             }
             PLAY_SE(agent, Hash40::new("se_packun_appeal_l01"));
