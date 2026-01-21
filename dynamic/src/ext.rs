@@ -1120,7 +1120,7 @@ impl BomaExt for BattleObjectModuleAccessor {
         let can_snap = !( 
             is_touch_any == 0 as *const *const u64
             || (is_touch_stage != 0 as *const *const u64
-                && WorkModule::get_float(self, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_FLOAT_DIR_Y) > 0.0)
+                && WorkModule::get_float(self, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_FLOAT_DIR_Y) >= 0.0)
         );
         if can_snap { // pretty sure it returns a pointer, at least it defo returns a non-0 value if success
             crate::VarModule::on_flag(self.object(), crate::consts::vars::common::status::DISABLE_ECB_SHIFT);
