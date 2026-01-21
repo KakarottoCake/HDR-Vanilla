@@ -93,6 +93,7 @@ unsafe extern "C" fn special_hi_end_main_loop(fighter: &mut L2CFighterCommon) ->
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
+    fighter.sub_air_check_dive();
     let status_frame = fighter.get_int(*FIGHTER_PACKUN_STATUS_SPECIAL_HI_WORK_INT_STATUS_FRAME);
     let mut start_no_landing_frame = fighter.get_param_int("param_special_hi", "start_no_landing_frame");
     if fighter.is_motion(Hash40::new("special_hi")) && !fighter.is_prev_situation(*SITUATION_KIND_AIR) { start_no_landing_frame = 999; }

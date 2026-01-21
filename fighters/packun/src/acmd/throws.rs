@@ -87,10 +87,7 @@ unsafe extern "C" fn game_throwf(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     FT_MOTION_RATE(agent, (17.0/13.0));
     if is_excute(agent) {
-        if !(VarModule::get_int(agent.battle_object, vars::packun::instance::CURRENT_STANCE) == 2) {
-            VarModule::set_int(agent.battle_object, vars::packun::instance::CURRENT_STANCE, 2);
-            VarModule::on_flag(agent.battle_object, vars::packun::status::STANCE_INIT);
-        }
+        //SET_STANCE(agent, 2);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 10.0, 35, 77, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
     }
@@ -114,13 +111,6 @@ unsafe extern "C" fn game_throwf(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_throwf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 1.0);
-    if is_excute(agent) {
-        if VarModule::is_flag(agent.battle_object, vars::packun::status::STANCE_INIT) {
-            EFFECT(agent, Hash40::new("sys_level_up"), Hash40::new("top"), -2, 10, 0, 0, 0, 0, 0.4, 0, 0, 0, 0, 0, 0, true);
-            EFFECT_FOLLOW(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.9, false);
-        }
-    }
     frame(lua_state, 13.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("packun_atk_impact"), Hash40::new("top"), -1, 12, 22, -20, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
@@ -136,12 +126,6 @@ unsafe extern "C" fn effect_throwf(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_throwf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 1.0);
-    if is_excute(agent) {
-        if VarModule::is_flag(agent.battle_object, vars::packun::status::STANCE_INIT) {
-            PLAY_SE(agent, Hash40::new("se_packun_special_s02"));
-        }
-    }
     frame(lua_state, 4.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_common_throw_01"));
@@ -156,10 +140,6 @@ unsafe extern "C" fn game_throwb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        if !(VarModule::get_int(agent.battle_object, vars::packun::instance::CURRENT_STANCE) == 0) {
-            VarModule::set_int(agent.battle_object, vars::packun::instance::CURRENT_STANCE, 0);
-            VarModule::on_flag(agent.battle_object, vars::packun::status::STANCE_INIT);
-        }
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 11.0, 45, 87, 0, 54, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 40, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
     }
@@ -181,13 +161,6 @@ unsafe extern "C" fn game_throwb(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_throwb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 1.0);
-    if is_excute(agent) {
-        if VarModule::is_flag(agent.battle_object, vars::packun::status::STANCE_INIT) {
-            EFFECT(agent, Hash40::new("sys_level_up"), Hash40::new("top"), -2, 10, 0, 0, 0, 0, 0.4, 0, 0, 0, 0, 0, 0, true);
-            EFFECT_FOLLOW(agent, Hash40::new("sys_grass_landing"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.5, false);
-        }
-    }
     frame(lua_state, 17.0);
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 5, 0, 0, 0, 180, 0, 1, 0, 0, 0, 0, 0, 0, false);
@@ -207,12 +180,6 @@ unsafe extern "C" fn effect_throwb(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_throwb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 1.0);
-    if is_excute(agent) {
-        if VarModule::is_flag(agent.battle_object, vars::packun::status::STANCE_INIT) {
-            PLAY_SE(agent, Hash40::new("se_packun_special_s02"));
-        }
-    }
     frame(lua_state, 4.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_common_throw_01"));
@@ -254,10 +221,6 @@ unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     if is_excute(agent) {
-        if !(VarModule::get_int(agent.battle_object, vars::packun::instance::CURRENT_STANCE) == 1) {
-            VarModule::set_int(agent.battle_object, vars::packun::instance::CURRENT_STANCE, 1);
-            VarModule::on_flag(agent.battle_object, vars::packun::status::STANCE_INIT);
-        }
         FT_LEAVE_NEAR_OTTOTTO(agent, -2.5, 2.5);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 3.0, 68, 75, 0, 80, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 40, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
@@ -291,13 +254,6 @@ unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_throwlw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 1.0);
-    if is_excute(agent) {
-        if VarModule::is_flag(agent.battle_object, vars::packun::status::STANCE_INIT) {
-            EFFECT(agent, Hash40::new("sys_level_up"), Hash40::new("top"), -2, 10, 0, 0, 0, 0, 0.4, 0, 0, 0, 0, 0, 0, true);
-            EFFECT_FOLLOW(agent, Hash40::new("packun_poison_max"), Hash40::new("top"), 0, 15.5, 0, 0, 0, 0, 1.2, false);
-        }
-    }
     frame(lua_state, 3.0);
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
@@ -329,12 +285,6 @@ unsafe extern "C" fn effect_throwlw(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_throwlw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 1.0);
-    if is_excute(agent) {
-        if VarModule::is_flag(agent.battle_object, vars::packun::status::STANCE_INIT) {
-            PLAY_SE(agent, Hash40::new("se_packun_special_s02"));
-        }
-    }
     frame(lua_state, 7.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_common_throw_01"));

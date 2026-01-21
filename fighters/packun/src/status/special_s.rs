@@ -97,6 +97,7 @@ unsafe extern "C" fn special_s_charge_main_loop(fighter: &mut L2CFighterCommon) 
             special_s_charge_set_kinetic(fighter);
         }
     }
+    stance_head(fighter);
     
     return 0.into();
 }
@@ -184,33 +185,11 @@ unsafe extern "C" fn special_s_shoot_main_loop(fighter: &mut L2CFighterCommon) -
                 }
             }
         }
-        // monch
-        if VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE) == 2 {
-            if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) && !fighter.is_in_hitlag()
-            && fighter.is_situation(*SITUATION_KIND_GROUND) {
-                if fighter.is_cat_flag(Cat2::AppealHi) {
-                    let hash = if PostureModule::lr(fighter.module_accessor) < 0.0 { Hash40::new("appeal_hi_l") } else { Hash40::new("appeal_hi_r") };
-                    StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_APPEAL, false);
-                    MotionModule::change_motion(fighter.module_accessor, hash, 0.0, -1.0, false, 0.0, false, false);
-                    return 1.into();
-                }
-                else if fighter.is_cat_flag(Cat2::AppealSL | Cat2::AppealSR) {
-                    StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_APPEAL, false);
-                    MotionModule::change_motion(fighter.module_accessor, Hash40::new("appeal_hi_2"), 0.0, -1.0, false, 0.0, false, false);
-                    return 1.into();
-                }
-                else if fighter.is_cat_flag(Cat2::AppealLw) {
-                    let hash = if PostureModule::lr(fighter.module_accessor) < 0.0 { Hash40::new("appeal_lw_l") } else { Hash40::new("appeal_lw_r") };
-                    StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_APPEAL, false);
-                    MotionModule::change_motion(fighter.module_accessor, Hash40::new("appeal_lw_l"), 0.0, -1.0, false, 0.0, false, false);
-                    return 1.into();
-                }
-            }
-        }
     }
     if !fighter.global_table[IS_STOPPING].get_bool() {
         special_s_shoot_helper(fighter);
     }
+    stance_head(fighter);
     
     return 0.into();
 }
@@ -230,6 +209,27 @@ unsafe fn special_s_shoot_helper(fighter: &mut L2CFighterCommon) {
             sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, sum_x, 0.0);
             KineticModule::enable_energy(fighter.module_accessor,*FIGHTER_KINETIC_ENERGY_ID_STOP);
         }
+    }
+}
+
+unsafe fn stance_head(fighter: &mut L2CFighterCommon) {
+    match VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE) {
+        0 => {
+            ModelModule::set_mesh_visibility(fighter.boma(), Hash40::new("heada"), true);
+            ModelModule::set_mesh_visibility(fighter.boma(), Hash40::new("headb"), false);
+            ModelModule::set_mesh_visibility(fighter.boma(), Hash40::new("heads"), false);
+        },
+        1 => {
+            ModelModule::set_mesh_visibility(fighter.boma(), Hash40::new("headb"), true);
+            ModelModule::set_mesh_visibility(fighter.boma(), Hash40::new("heada"), false);
+            ModelModule::set_mesh_visibility(fighter.boma(), Hash40::new("heads"), false);
+        },
+        2 => {
+            ModelModule::set_mesh_visibility(fighter.boma(), Hash40::new("heads"), true);
+            ModelModule::set_mesh_visibility(fighter.boma(), Hash40::new("headb"), false);
+            ModelModule::set_mesh_visibility(fighter.boma(), Hash40::new("heada"), false);
+        },
+        _ => {}
     }
 }
 

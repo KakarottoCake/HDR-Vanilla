@@ -7,28 +7,6 @@ extern "Rust" {
     fn gimmick_flash(boma: &mut BattleObjectModuleAccessor);
 }
 
-unsafe fn stance_head(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
-    // Enable meshes for stances
-    // HeadA is the normal head
-	// HeadB is the poison head
-	// HeadS is the spike head
-    if VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE) == 0 {
-        ModelModule::set_mesh_visibility(fighter.boma(), Hash40::new("heada"), true);
-        ModelModule::set_mesh_visibility(fighter.boma(), Hash40::new("headb"), false);
-        ModelModule::set_mesh_visibility(fighter.boma(), Hash40::new("heads"), false);
-    }
-    else if VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE) == 1  {
-        ModelModule::set_mesh_visibility(fighter.boma(), Hash40::new("headb"), true);
-        ModelModule::set_mesh_visibility(fighter.boma(), Hash40::new("heada"), false);
-        ModelModule::set_mesh_visibility(fighter.boma(), Hash40::new("heads"), false);
-    }
-    else if VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE) == 2  {
-        ModelModule::set_mesh_visibility(fighter.boma(), Hash40::new("heads"), true);
-        ModelModule::set_mesh_visibility(fighter.boma(), Hash40::new("headb"), false);
-        ModelModule::set_mesh_visibility(fighter.boma(), Hash40::new("heada"), false);
-    }
-}
-
 /// handle speed application
 unsafe fn check_apply_speeds(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
     
@@ -62,30 +40,9 @@ unsafe fn check_apply_speeds(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
     // dash & momentum transfer speeds
     if VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE) == 1 {
         VarModule::set_float(fighter.battle_object, vars::common::instance::JUMP_SPEED_MAX_MUL, 1.0);
-
-        // if you are initial dash, slow them down slightly
-        if fighter.is_status(*FIGHTER_STATUS_KIND_DASH) {
-            let motion_vec = Vector3f {
-                x: -0.15 * PostureModule::lr(fighter.boma()) * (1.0 - (MotionModule::frame(fighter.boma()) / MotionModule::end_frame(fighter.boma()))),
-                y: 0.0, 
-                z: 0.0
-            };
-            //KineticModule::add_speed_outside(fighter.boma(), *KINETIC_OUTSIDE_ENERGY_TYPE_WIND_NO_ADDITION, &motion_vec);
-        }
     }
-
     else if VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE) == 2 {
         VarModule::set_float(fighter.battle_object, vars::common::instance::JUMP_SPEED_MAX_MUL, 0.88);
-
-        // if you are initial dash, slow them down slightly
-        if fighter.is_status(*FIGHTER_STATUS_KIND_DASH) {
-            let motion_vec = Vector3f {
-                x: -0.15 * PostureModule::lr(fighter.boma()) * (1.0 - (MotionModule::frame(fighter.boma()) / MotionModule::end_frame(fighter.boma()))),
-                y: 0.0, 
-                z: 0.0
-            };
-            //KineticModule::add_speed_outside(fighter.boma(), *KINETIC_OUTSIDE_ENERGY_TYPE_WIND_NO_ADDITION, &motion_vec);
-        }
     }
 }
 
@@ -100,10 +57,10 @@ unsafe fn apply_status_speed_mul(fighter: &mut smash::lua2cpp::L2CFighterCommon,
     lua_bind::FighterKineticEnergyMotion::set_speed_mul(fighter.get_motion_energy(), og_speed_mul * mul);
 
     // set the X motion accel multiplier for control energy (used in the air, during walk, fall, etc)
-    lua_bind::FighterKineticEnergyController::mul_x_accel_mul( fighter.get_controller_energy(), mul);
+    lua_bind::FighterKineticEnergyController::mul_x_accel_mul(fighter.get_controller_energy(), mul);
 
     // set the X motion accel multiplier for control energy (used in the air, during walk, fall, etc)
-    lua_bind::FighterKineticEnergyController::mul_x_accel_add( fighter.get_controller_energy(), mul);
+    lua_bind::FighterKineticEnergyController::mul_x_accel_add(fighter.get_controller_energy(), mul);
 
     // set the X speed max multiplier for control energy (used in the air, during walk, fall, etc)
     lua_bind::FighterKineticEnergyController::mul_x_speed_max(fighter.get_controller_energy(), mul);
@@ -143,27 +100,9 @@ unsafe fn game_start_switch(fighter: &mut L2CFighterCommon) {
     }
 }
 
-unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
-    if !fighter.is_in_hitlag()
-    && !StatusModule::is_changing(fighter.module_accessor)
-    && fighter.is_status_one_of(&[
-        *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_N_END,
-        *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_N_FAILURE,
-        *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_N_HIT_END,
-        *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_HI_END,
-        *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_LW_END,
-        *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_LW_FALL_END
-        ]) 
-    && fighter.is_situation(*SITUATION_KIND_AIR) {
-        fighter.sub_air_check_dive();
-    }
-}
-
 pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
-    stance_head(fighter);
     check_apply_speeds(fighter);
     game_start_switch(fighter);
-    fastfall_specials(fighter);
 }
 
 unsafe extern "C" fn plant_meter(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
