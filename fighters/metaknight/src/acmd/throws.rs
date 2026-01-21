@@ -24,6 +24,7 @@ unsafe extern "C" fn game_catch(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_catchdash(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.9);
     frame(lua_state, 10.0);
     if is_excute(agent) {
         GrabModule::set_rebound(boma, true);
