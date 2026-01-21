@@ -48,7 +48,7 @@ unsafe fn process_knockback(ctx: &skyline::hooks::InlineCtx) {
     if let Some((defender, attacker)) = IS_CALCULATING {
         let boma = ctx.registers[20].x() as *mut smash::app::BattleObjectModuleAccessor;
         if (*boma).battle_object_id == defender {
-            process_item_on_collision(defender, attacker);
+            process_item_on_collision(defender, attacker, ctx.registers[19].x() as *const f32);
             calculate_finishing_hit(defender, attacker, ctx.registers[19].x() as *const f32);
         }
     }
@@ -81,11 +81,14 @@ pub unsafe extern "C" fn set_attacker_team_color(attacker:u32) {
     // if LAST_ATTACK_TEAM_COLOR == 9 { LAST_ATTACK_TEAM_COLOR = 0 };
 }
 
-pub unsafe extern "C" fn process_item_on_collision(defender: u32, attacker: u32) {
+pub unsafe extern "C" fn process_item_on_collision(defender: u32, attacker: u32, knockback_info: *const f32) {
     let defender_boma = &mut *(*util::get_battle_object_from_id(defender)).module_accessor;
     let attacker_boma = &mut *(*util::get_battle_object_from_id(attacker)).module_accessor;
     if defender_boma.is_item() {
         if defender_boma.kind() == *ITEM_KIND_DAISYDAIKON {
+            let damage = *knockback_info.add(22);
+            let carrot_dmg = WorkModule::get_int64(defender_boma, *ITEM_DAISYDAIKON_INSTANCE_WORK_INT_ATTACK_POWER) as f32;
+            WorkModule::set_int64(defender_boma, (carrot_dmg + damage) as i64, *ITEM_DAISYDAIKON_INSTANCE_WORK_INT_ATTACK_POWER);
             if attacker_boma.is_fighter() {
                 let attacker_team_no = TeamModule::hit_team_no(attacker_boma) as i32;
                 TeamModule::set_team(defender_boma, attacker_team_no, false);

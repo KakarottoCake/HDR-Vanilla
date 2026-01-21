@@ -197,7 +197,8 @@ unsafe fn pitb_bow_lc(fighter: &mut L2CFighterCommon) {
             *FIGHTER_KIRBY_STATUS_KIND_PIT_SPECIAL_N_TURN
         ]) {
             if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_PIT_SPECIAL_N_SHOOT) {
-                fighter.check_land_cancel(None);
+                let landing_lag = 7.0;
+                fighter.check_land_cancel(Some(landing_lag));
             }
         }
     }
