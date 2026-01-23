@@ -124,7 +124,7 @@ unsafe extern "C" fn game_explode(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     if is_excute(agent) {
         AttackModule::clear_all(boma);
-        ModelModule::set_scale(boma, 0.1);
+        ModelModule::set_scale(boma, 0.001);
         ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 45, 120, 0, 45, 14.0, 0.0, 0.0, 0.0, None, None, None, 1.1, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_poison"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_OBJECT);
         AttackModule::set_poison_param(boma, 0, 151, 30, 3.5, false);
     }
@@ -139,7 +139,7 @@ unsafe extern "C" fn effect_explode(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("sys_flame"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 16.0, false);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_flame"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1600, false);
         LAST_EFFECT_SET_COLOR(agent, 0.1, 0.01, 0.7);
         LAST_EFFECT_SET_RATE(agent, 1.25);
     }
