@@ -114,6 +114,38 @@ pub unsafe fn cliff_xlu_frame_counter(fighter: &mut L2CFighterCommon) {
     }
 }
 
+// TODO: enable if needed
+// Fixes an issue where airtime can be undercounted by 1 frame in certain situations, such as during hitlag
+// pub unsafe fn fighter_frame_in_air_inc_ensure(fighter: &mut L2CFighterCommon) {
+//     let mut current_air_frames: i32 = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_FRAME_IN_AIR);
+//     let previous_air_frames: i32 = VarModule::get_int(fighter.battle_object, vars::common::instance::PREVIOUS_FRAME_FRAMES_IN_AIR);
+//     // println!("[{}] AIRTIME: {}", (*fighter.battle_object).get_player_idx_from_boma(), current_air_frames);
+//     // println!("[{}] PREV AIRTIME: {}", (*fighter.battle_object).get_player_idx_from_boma(), previous_air_frames);
+//     if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_AIR {
+//         // see: fighters/common/src/function_hooks/lua_bind_hook/status.rs
+//         if !(*fighter.module_accessor).is_prev_status_one_of(&[
+//             *FIGHTER_STATUS_KIND_DEMO,
+//             *FIGHTER_STATUS_KIND_ENTRY,
+//             *FIGHTER_STATUS_KIND_CAPTURE_PULLED,
+//             *FIGHTER_STATUS_KIND_CAPTURE_WAIT,
+//             *FIGHTER_STATUS_KIND_CAPTURE_DAMAGE,
+//             *FIGHTER_STATUS_KIND_THROWN,
+//             *FIGHTER_STATUS_KIND_CATCHED_GANON,
+//             *FIGHTER_STATUS_KIND_CATCHED_AIR_GANON,
+//             *FIGHTER_STATUS_KIND_CATCHED_REFLET,
+//             *FIGHTER_STATUS_KIND_CATCHED_RIDLEY,
+//             *FIGHTER_STATUS_KIND_CAPTURE_JACK_WIRE,
+//             *FIGHTER_STATUS_KIND_CAPTURE_MASTER_SWORD]) {
+//             if (previous_air_frames == current_air_frames) {
+//                 current_air_frames += 1;
+//                 // println!("[{}] INCREMENTING MISSED AIRTIME! NEW AIRTIME: {}", (*fighter.battle_object).get_player_idx_from_boma(), current_air_frames);
+//                 WorkModule::set_int(fighter.module_accessor, current_air_frames, *FIGHTER_INSTANCE_WORK_ID_INT_FRAME_IN_AIR);
+//             }
+//         }
+//     }
+//     VarModule::set_int(fighter.battle_object, vars::common::instance::PREVIOUS_FRAME_FRAMES_IN_AIR, current_air_frames);
+// }
+
 pub unsafe fn ecb_shift_disabled_motions(fighter: &mut L2CFighterCommon) {
     if ( (fighter.kind() == *FIGHTER_KIND_KIRBY
             && fighter.is_motion(Hash40::new("throw_f")))
@@ -161,29 +193,34 @@ pub unsafe fn faf_ac_debug(fighter: &mut L2CFighterCommon) {
         let boma = fighter.boma();
         if fighter.is_status(*FIGHTER_STATUS_KIND_APPEAL) && fighter.status_frame() == 10 {
             if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL_RAW) {
-                let prev = VarModule::is_flag(fighter.battle_object, vars::common::instance::ENABLE_FRAME_DATA_DEBUG);
-                if prev == true {
-                    // 15 -> 18
-                    fighter.clear_lua_stack();
-                    lua_args!(fighter, Hash40::new("sys_hit_dead"), Hash40::new("top"), 0, 10, 0, 0, 0, 0, 1, true);
-                    smash::app::sv_animcmd::EFFECT_FOLLOW(fighter.lua_state_agent);
-                    fighter.pop_lua_stack(1);
-                }
-                else {
-                    // 18 -> 15
-                    fighter.clear_lua_stack();
-                    lua_args!(fighter, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 10, 0, 0, 0, 0, 1, true);
-                    smash::app::sv_animcmd::EFFECT_FOLLOW(fighter.lua_state_agent);
-                    fighter.pop_lua_stack(1);
-                }
-                let num_players = smash::app::Fighter::get_fighter_entry_count();
-                for i in 0..num_players {
-                    let opponent_boma = &mut *(smash::app::sv_battle_object::module_accessor(smash::app::Fighter::get_id_from_entry_id(i)));
-                    let object = opponent_boma.object();
-                    if VarModule::has_var_module(object) {
-                        VarModule::set_flag(object, vars::common::instance::ENABLE_FRAME_DATA_DEBUG, !prev);
-                    }
-                }
+                // println!("toggle detected");
+                // let prev = VarModule::is_flag(fighter.battle_object, vars::common::instance::ENABLE_FRAME_DATA_DEBUG);
+                // println!("prev: {}", prev);
+                // if prev == true {
+                //     // 15 -> 18
+                //     fighter.clear_lua_stack();
+                //     lua_args!(fighter, Hash40::new("sys_hit_dead"), Hash40::new("top"), 0, 10, 0, 0, 0, 0, 1, true);
+                //     smash::app::sv_animcmd::EFFECT_FOLLOW(fighter.lua_state_agent);
+                //     fighter.pop_lua_stack(1);
+                // }
+                // else {
+                //     // 18 -> 15
+                //     fighter.clear_lua_stack();
+                //     lua_args!(fighter, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 10, 0, 0, 0, 0, 1, true);
+                //     smash::app::sv_animcmd::EFFECT_FOLLOW(fighter.lua_state_agent);
+                //     fighter.pop_lua_stack(1);
+                // }
+                // let num_players = smash::cpp::root::app::Fighter::get_fighter_entry_count();
+                // println!("num players: {}", num_players);
+                // for i in 0..num_players {
+                //     let entry_id = smash::cpp::root::app::Fighter::get_id_from_entry_id(i);
+                //     let opponent_boma = &mut *(smash::cpp::root::app::sv_battle_object::module_accessor(entry_id));
+                //     let object = opponent_boma.object();
+                //     if VarModule::has_var_module(object) {
+                //         println!("flag for id {} set to {}", i, !prev);
+                //         VarModule::set_flag(object, vars::common::instance::ENABLE_FRAME_DATA_DEBUG, !prev);
+                //     }
+                // }
                 println!("toggling debug");
                 VarModule::set_int(fighter.battle_object, vars::common::instance::FRAME_COUNTER, 1);
                 VarModule::off_flag(fighter.battle_object, vars::common::status::FAF_REACHED);

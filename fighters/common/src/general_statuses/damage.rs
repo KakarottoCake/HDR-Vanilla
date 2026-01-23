@@ -7,6 +7,9 @@ use crate::function_hooks::camera::{REDUCED_CAMERA_TRACKING_SPEED, DEFAULT_TARGE
 
 pub fn install() {
     skyline::nro::add_hook(nro_hook);
+    // NOPs fighter_handle_damage setting the airtime counter to 0 frames on hit in air.
+    // This is so the ECB diamond will not reset when getting hit in the air (same as melee)
+    skyline::patching::Patch::in_text(0x63251c).nop();
 }
 
 fn nro_hook(info: &skyline::nro::NroInfo) {
@@ -175,13 +178,8 @@ pub unsafe fn FighterStatusUniqProcessDamage_leave_stop_hook(fighter: &mut L2CFi
 }
 
 unsafe extern "C" fn check_asdi(fighter: &mut L2CFighterCommon) {
-    match utils::game_modes::get_custom_mode() {
-        Some(modes) => {
-            if modes.contains(&CustomMode::Smash64Mode) {
-                return;
-            }
-        },
-        _ => {}
+    if utils::game_modes::check_custom_mode(CustomMode::Smash64Mode) {
+        return;
     }
     if fighter.global_table[STATUS_KIND] != FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR // prevents ASDI on wall bounces
     && fighter.global_table[STATUS_KIND] != FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_U // prevents ASDI on ceiling bounces
