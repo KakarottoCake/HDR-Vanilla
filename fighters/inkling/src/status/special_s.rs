@@ -35,7 +35,9 @@ unsafe extern "C" fn special_s_walk_main_loop(fighter: &mut L2CFighterCommon) ->
     let enable_finish_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INKLING_STATUS_SPECIAL_S_WORK_INT_ENABLE_FINISH_FRAME);
 
     if current_frame >= enable_finish_frame
-    && ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
+    && (fighter.is_cat_flag(Cat2::CommonGuard)
+        || fighter.is_cat_flag(Cat1::AttackN)
+        || fighter.is_cat_flag(Cat1::SpecialAny)) {
         fighter.change_status(FIGHTER_INKLING_STATUS_KIND_SPECIAL_S_END.into(), false.into());
         return 0.into();
     }
@@ -66,7 +68,9 @@ unsafe extern "C" fn special_s_run_main_loop(fighter: &mut L2CFighterCommon) -> 
     let enable_finish_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INKLING_STATUS_SPECIAL_S_WORK_INT_ENABLE_FINISH_FRAME);
 
     if current_frame >= enable_finish_frame
-    && ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
+    && (fighter.is_cat_flag(Cat2::CommonGuard)
+        || fighter.is_cat_flag(Cat1::AttackN)
+        || fighter.is_cat_flag(Cat1::SpecialAny)) {
         fighter.change_status(FIGHTER_INKLING_STATUS_KIND_SPECIAL_S_END.into(), false.into());
         return 0.into();
     }

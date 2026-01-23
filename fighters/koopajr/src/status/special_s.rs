@@ -20,7 +20,9 @@ pub unsafe extern "C" fn special_s_dash_main(fighter: &mut L2CFighterCommon) -> 
 
 unsafe extern "C" fn special_s_dash_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KOOPAJR_STATUS_SPECIAL_S_FLAG_CLIFF_JUMP)
-    && ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
+    && (fighter.is_cat_flag(Cat2::CommonGuard)
+        || fighter.is_cat_flag(Cat1::AttackN)
+        || fighter.is_cat_flag(Cat1::SpecialAny)) {
         fighter.change_status(FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_S_SPIN_TURN.into(), true.into());
         return 1.into();
     }
