@@ -119,7 +119,6 @@ appeal_s_r:
     cancel_frame: 17
 attack_lw4:
   extra:
-    cancel_frame: 52
     cancel_frame: 48
 appeal_lw_r:
   extra:
@@ -136,6 +135,66 @@ attack_s3_s:
 attack_s3_s2:
   extra:
     cancel_frame: 28
+attack_s3_s_a:
+  game_script: game_attacks3a
+  flags:
+    turn: false
+    loop: false
+    move: true
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+    - name: c01attacks3sa.nuanmb
+      unk: 0
+  scripts:
+    - expression_attacks3a
+    - sound_attacks3a
+    - effect_attacks3a
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 33
+    no_stop_intp: false
+attack_s3_s_s:
+  game_script: game_attacks3ss
+  flags:
+    turn: false
+    loop: false
+    move: true
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+    - name: c01attacks3ss.nuanmb
+      unk: 0
+  scripts:
+    - expression_attacks3ss
+    - sound_attacks3ss
+    - effect_attacks3ss
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 36
+    no_stop_intp: false
 appeal_hi_r:
   extra:
     cancel_frame: 17
@@ -313,41 +372,11 @@ special_air_s_shoot_s:
     xlu_end: 0
     cancel_frame: 56
     no_stop_intp: false
-attack_s3_s_a:
-  game_script: game_attacks3a
-  flags:
-    turn: false
-    loop: false
-    move: true
-    fix_trans: false
-    fix_rot: false
-    fix_scale: false
-    unk_40: false
-    unk_80: true
-    unk_100: false
-    unk_200: false
-    unk_400: false
-    unk_800: false
-    unk_1000: false
-    unk_2000: false
-  blend_frames: 0
-  animations:
-    - name: c01attacks3sa.nuanmb
-      unk: 0
-  scripts:
-    - expression_attacks3
-    - sound_attacks3a
-    - effect_attacks3a
-  extra:
-    xlu_start: 0
-    xlu_end: 0
-    cancel_frame: 33
-    no_stop_intp: false
 furafura_end:
   extra:
     cancel_frame: 34
-appeal_hi_2:
-  game_script: game_appealhi2
+appeal_s_2:
+  game_script: game_appeals2
   flags:
     turn: false
     loop: false
@@ -365,12 +394,12 @@ appeal_hi_2:
     unk_2000: false
   blend_frames: 0
   animations:
-    - name: j01appealhi2.nuanmb
+    - name: j01appeals2.nuanmb
       unk: 0
   scripts:
-    - expression_appealhi2
-    - sound_appealhi2
-    - effect_appealhi2
+    - expression_appeals2
+    - sound_appeals2
+    - effect_appeals2
   extra:
     xlu_start: 0
     xlu_end: 0

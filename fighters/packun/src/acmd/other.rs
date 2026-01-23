@@ -87,7 +87,7 @@ unsafe extern "C" fn sound_appealhi(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn game_appealhi2(agent: &mut L2CAgentBase) {
+unsafe extern "C" fn game_appeals2(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
@@ -103,7 +103,7 @@ unsafe extern "C" fn game_appealhi2(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn effect_appealhi2(agent: &mut L2CAgentBase) {
+unsafe extern "C" fn effect_appeals2(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if !VarModule::is_flag(agent.object(), vars::packun::status::APPEAL_CLOUD_COVER) {
@@ -113,7 +113,7 @@ unsafe extern "C" fn effect_appealhi2(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn sound_appealhi2(agent: &mut L2CAgentBase) {
+unsafe extern "C" fn sound_appeals2(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if !VarModule::is_flag(agent.object(), vars::packun::status::APPEAL_CLOUD_COVER) {
@@ -132,7 +132,7 @@ unsafe extern "C" fn sound_appealhi2(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn expression_appealhi2(agent: &mut L2CAgentBase) {
+unsafe extern "C" fn expression_appeals2(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
@@ -236,6 +236,14 @@ unsafe extern "C" fn game_passivestand(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, 1.0);
 }
 
+unsafe extern "C" fn game_cliffjump2(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        PostureModule::add_pos(boma, &Vector3f::new(0.0, -2.275, 0.0));
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_cliffescape", acmd_stub, Priority::Low);
 
@@ -253,10 +261,10 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("sound_appealhil", sound_appealhi, Priority::Low);
     agent.acmd("sound_appealhir", sound_appealhi, Priority::Low);
 
-    agent.acmd("game_appealhi2", game_appealhi2, Priority::Low);
-    agent.acmd("effect_appealhi2", effect_appealhi2, Priority::Low);
-    agent.acmd("sound_appealhi2", sound_appealhi2, Priority::Low);
-    agent.acmd("expression_appealhi2", expression_appealhi2, Priority::Low);
+    agent.acmd("game_appeals2", game_appeals2, Priority::Low);
+    agent.acmd("effect_appeals2", effect_appeals2, Priority::Low);
+    agent.acmd("sound_appeals2", sound_appeals2, Priority::Low);
+    agent.acmd("expression_appeals2", expression_appeals2, Priority::Low);
 
     agent.acmd("game_appealsl", game_appeals, Priority::Low);
     agent.acmd("game_appealsr", game_appeals, Priority::Low);
@@ -274,4 +282,6 @@ pub fn install(agent: &mut Agent) {
 
     agent.acmd("game_passivestandf", game_passivestand, Priority::Low);
     agent.acmd("game_passivestandb", game_passivestand, Priority::Low);
+
+    agent.acmd("game_cliffjump2", game_cliffjump2, Priority::Low);
 }
