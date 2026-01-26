@@ -43,7 +43,7 @@ pub unsafe extern "C" fn special_n2_main_loop(fighter: &mut L2CFighterCommon) ->
         fighter.sub_air_check_dive();
     }
     if MotionModule::is_end(fighter.module_accessor) {
-        fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_FALL, *FIGHTER_STATUS_KIND_WAIT, false);
+        fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_FALL, false);
     }
 
     return 0.into();

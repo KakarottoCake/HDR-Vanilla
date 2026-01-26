@@ -242,19 +242,19 @@ unsafe extern "C" fn game_speciallw2(agent: &mut L2CAgentBase) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
     }
     frame(lua_state, 6.0);  // f9
-    FT_MOTION_RATE_RANGE(agent, 6.0, 12.0, 18.0);
     if is_excute(agent) {
         if boma.is_button_on(Buttons::Special) {
             VarModule::on_flag(agent.object(), vars::miiswordsman::status::SPECIAL_LW2_HOLD);
         }
     }
+    FT_MOTION_RATE_RANGE(agent, 6.0, 12.0, 16.0);
     frame(lua_state, 7.0);  // f12
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
         VarModule::on_flag(agent.battle_object, vars::miiswordsman::status::SPECIAL_LW2_CHANGE_ARTICLE);
         ArticleModule::generate_article(boma, *FIGHTER_MIISWORDSMAN_GENERATE_ARTICLE_TORNADOSHOT, false, 0);
     }
-    frame(lua_state, 12.0); // f27
+    frame(lua_state, 12.0); // f25
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_MIISWORDSMAN_STATUS_REVERSE_SLASH_FLAG_SPECIAL_FALL);
