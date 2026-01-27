@@ -167,7 +167,7 @@ unsafe extern "C" fn effect_throwb(agent: &mut L2CAgentBase) {
     frame(lua_state, 17.0);
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 5, 0, 0, 0, 180, 0, 1, 0, 0, 0, 0, 0, 0, false);
-        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("packun_atk_arc"), Hash40::new("packun_atk_arc"), Hash40::new("top"), 0, 15, -4, -165, 52, 36, 1.6, true, *EF_FLIP_YZ, 0.5);
+        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("packun_atk_arc"), Hash40::new("packun_atk_arc"), Hash40::new("top"), 0, 15, -4, -165, 42, 36, 1.6, true, *EF_FLIP_YZ, 0.5);
         LAST_EFFECT_SET_RATE(agent, 0.7);
     }
     frame(lua_state, 19.0);

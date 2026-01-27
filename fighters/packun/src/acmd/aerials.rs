@@ -335,8 +335,6 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
                 HIT_NODE(agent, Hash40::new("mouth"), *HIT_STATUS_XLU);
                 HIT_NODE(agent, Hash40::new("lipu3"), *HIT_STATUS_XLU);
                 HIT_NODE(agent, Hash40::new("lipd3"), *HIT_STATUS_XLU);
-                HIT_NODE(agent, Hash40::new("neck6"), *HIT_STATUS_XLU);
-                HIT_NODE(agent, Hash40::new("neck8"), *HIT_STATUS_XLU);
             }
         }
     }
@@ -366,8 +364,6 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
         HIT_NODE(agent, Hash40::new("mouth"), *HIT_STATUS_NORMAL);
         HIT_NODE(agent, Hash40::new("lipu3"), *HIT_STATUS_NORMAL);
         HIT_NODE(agent, Hash40::new("lipd3"), *HIT_STATUS_NORMAL);
-        HIT_NODE(agent, Hash40::new("neck6"), *HIT_STATUS_NORMAL);
-        HIT_NODE(agent, Hash40::new("neck8"), *HIT_STATUS_NORMAL);
     }
     frame(lua_state, 25.0);
     if is_excute(agent) {
