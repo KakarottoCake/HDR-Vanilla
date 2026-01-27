@@ -110,6 +110,41 @@ unsafe extern "C" fn special_s_charge_set_kinetic(fighter: &mut L2CFighterCommon
     KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
 }
 
+unsafe extern "C" fn special_s_shoot_init(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.is_situation(*SITUATION_KIND_GROUND) {
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+    }
+    else {
+        if VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE) != 0 {
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+            let start_air_speed_x_mul = fighter.get_param_float("param_special_s", "start_air_speed_x_mul");
+            let start_air_speed_y = fighter.get_param_float("param_special_s", "start_air_speed_y");
+            let accel_y = fighter.get_param_float("param_special_s", "accel_y");
+            
+            fighter.clear_lua_stack();
+            lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_STOP);
+            let speed_x = sv_kinetic_energy::get_speed_x(fighter.lua_state_agent);
+            sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, speed_x * start_air_speed_x_mul, 0.0);
+            if !fighter.is_flag(*FIGHTER_PACKUN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_LANDING) {
+                sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, start_air_speed_y);
+            }
+            sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -accel_y);
+        }
+        else {
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+        }
+    }
+
+    EffectModule::remove_common(fighter.module_accessor, Hash40::new("charge_max"));
+    let handle = fighter.get_int(*FIGHTER_PACKUN_INSTANCE_WORK_ID_INT_SPECIAL_S_CHARGE_MAX_EFFECT_HANDLE);
+    fighter.clear_lua_stack();
+    lua_args!(fighter, MA_MSC_EFFECT_REMOVE, handle);
+    sv_module_access::effect(fighter.lua_state_agent);
+    fighter.pop_lua_stack(1);
+
+    return 0.into();
+}
+
 unsafe extern "C" fn special_s_shoot_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.is_situation(*SITUATION_KIND_GROUND) {
         CORRECT(fighter, *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP);
@@ -119,9 +154,6 @@ unsafe extern "C" fn special_s_shoot_main(fighter: &mut L2CFighterCommon) -> L2C
     }
     else {
         CORRECT(fighter, *GROUND_CORRECT_KIND_AIR);
-        if VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE) == 0 {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-        }
         let motion = if VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE) == 2 
             { Hash40::new("special_air_s_shoot_s") } else { Hash40::new("special_air_s_shoot") };
         MotionModule::change_motion(fighter.module_accessor, motion, 0.0, 1.0, false, 0.0, false, false);
@@ -156,6 +188,7 @@ unsafe extern "C" fn special_s_shoot_main_loop(fighter: &mut L2CFighterCommon) -
                 GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
                 if VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE) == 0 {
                     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+                    WorkModule::off_flag(fighter.module_accessor,*FIGHTER_PACKUN_STATUS_SPECIAL_S_FLAG_CHANGE_KINETIC);
                 }
                 else {
                     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
@@ -235,5 +268,7 @@ unsafe fn stance_head(fighter: &mut L2CFighterCommon) {
 
 pub fn install(agent: &mut Agent) {
     agent.status(Main, *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_CHARGE, special_s_charge_main);
+
+    agent.status(Init, *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_SHOOT, special_s_shoot_init);
     agent.status(Main, *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_SHOOT, special_s_shoot_main);
 }
