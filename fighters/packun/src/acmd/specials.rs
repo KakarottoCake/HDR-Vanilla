@@ -49,7 +49,7 @@ unsafe extern "C" fn game_specialsshoot(agent: &mut L2CAgentBase) {
         // Fiery Maw
         frame(lua_state, 1.0);
         FT_DESIRED_RATE(agent, 5.0, 6.0);
-        frame(lua_state, 5.0);
+        frame(lua_state, 5.0);  // f16
         FT_MOTION_RATE(agent, 1.0);
         if is_excute(agent) {
             if charged {
@@ -61,10 +61,12 @@ unsafe extern "C" fn game_specialsshoot(agent: &mut L2CAgentBase) {
             }
         }
         frame(lua_state, 10.0);
-        FT_DESIRED_RATE(agent, 40.0, 30.0);
+        FT_MOTION_RATE_RANGE(agent, 10.0, 50.0, 24.0);
         if is_excute(agent) {
             AttackModule::clear_all(boma);
         }
+        frame(lua_state, 50.0); // f45
+        FT_MOTION_RATE(agent, 1.0);
     }
     else if stance == 1 {
         // Poison Breath

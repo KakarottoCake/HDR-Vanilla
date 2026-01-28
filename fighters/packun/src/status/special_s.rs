@@ -245,6 +245,11 @@ unsafe fn special_s_shoot_helper(fighter: &mut L2CFighterCommon) {
     }
 }
 
+unsafe extern "C" fn special_s_end_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
+    stance_head(fighter);
+    return 0.into();
+}
+
 unsafe fn stance_head(fighter: &mut L2CFighterCommon) {
     match VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE) {
         0 => {
@@ -271,4 +276,8 @@ pub fn install(agent: &mut Agent) {
 
     agent.status(Init, *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_SHOOT, special_s_shoot_init);
     agent.status(Main, *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_SHOOT, special_s_shoot_main);
+
+    agent.status(Exec, *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_CANCEL, special_s_end_exec);
+    agent.status(Exec, *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_JUMP_CANCEL, special_s_end_exec);
+    agent.status(Exec, *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_END, special_s_end_exec);
 }

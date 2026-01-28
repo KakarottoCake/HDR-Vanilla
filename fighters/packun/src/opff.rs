@@ -9,7 +9,7 @@ extern "Rust" {
 
 /// handle speed application
 unsafe fn check_apply_speeds(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
-    
+
     // handle speed application once
     if VarModule::is_flag(fighter.battle_object, vars::packun::instance::STANCE_ENABLE_CHANGE_SPEED) {
         if VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE) == 0 {
@@ -100,9 +100,24 @@ unsafe fn game_start_switch(fighter: &mut L2CFighterCommon) {
     }
 }
 
+unsafe fn maw_end_head(fighter: &mut L2CFighterCommon) {
+    // fixes side special forcing normal head somewhere
+    if fighter.is_prev_status_one_of(&[
+        *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_CANCEL,
+        *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_JUMP_CANCEL,
+        *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_SHOOT
+    ])
+    && VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE) == 1 {
+        ModelModule::set_mesh_visibility(fighter.boma(), Hash40::new("headb"), true);
+        ModelModule::set_mesh_visibility(fighter.boma(), Hash40::new("heada"), false);
+        ModelModule::set_mesh_visibility(fighter.boma(), Hash40::new("heads"), false);
+    }
+}
+
 pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     check_apply_speeds(fighter);
     game_start_switch(fighter);
+    maw_end_head(fighter);
 }
 
 unsafe extern "C" fn plant_meter(fighter: &mut smash::lua2cpp::L2CFighterCommon) {

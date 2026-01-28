@@ -76,10 +76,6 @@ unsafe extern "C" fn sound_appealhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if !VarModule::is_flag(agent.object(), vars::packun::status::APPEAL_CLOUD_COVER) {
-        frame(lua_state, 8.0);
-        if is_excute(agent) {
-            PLAY_SE(agent, Hash40::new("se_packun_special_s02"));
-        }
         frame(lua_state, 19.0);
         if is_excute(agent) {
             PLAY_SE(agent, Hash40::new("se_packun_appear01"));
