@@ -131,6 +131,7 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
             ATTACK(agent, 0, 0, Hash40::new("top"), 6.0, 50, 108, 0, 25, 9.0, 0.0, 4.0, -8.5, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_poison"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BOMB);
             ATTACK(agent, 1, 0, Hash40::new("top"), 6.0, 50, 108, 0, 25, 4.5, 0.0, 8.35, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_poison"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BOMB);
             AttackModule::set_poison_param(boma, 0, 121, 30, 1.0, false);
+            AttackModule::set_poison_param(boma, 1, 121, 30, 1.0, false);
         }
         wait(lua_state, 4.0);
         if is_excute(agent) {
