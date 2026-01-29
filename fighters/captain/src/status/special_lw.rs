@@ -103,7 +103,24 @@ unsafe extern "C" fn special_lw_end_init(fighter: &mut L2CFighterCommon) -> L2CV
     && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
         return 0.into();
     }
-    smashline::original_status(Init, fighter, *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_LW_END)(fighter)
+    let ret = smashline::original_status(Init, fighter, *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_LW_END)(fighter);
+
+    let prev_inflict_status = VarModule::get_int(fighter.battle_object, vars::common::instance::PREV_STATUS_INFLICT_STATUS);
+    if start_situation == *SITUATION_KIND_GROUND
+    && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND
+    && prev_inflict_status == *COLLISION_KIND_MASK_SHIELD {
+        let shield_hit_end_speed_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lw.shield_hit_end_speed_x");
+        let lr = PostureModule::lr(fighter.module_accessor);
+        sv_kinetic_energy!(
+            set_speed,
+            fighter,
+            FIGHTER_KINETIC_ENERGY_ID_STOP,
+            shield_hit_end_speed_x * lr,
+            0.0
+        );
+    }
+
+    ret
 }
 
 unsafe extern "C" fn special_lw_end_main(fighter: &mut L2CFighterCommon) -> L2CValue {
