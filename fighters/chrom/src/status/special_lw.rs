@@ -283,7 +283,7 @@ unsafe extern "C" fn special_lw_hit_set_kinetic(fighter: &mut L2CFighterCommon) 
             );
             fighter.on_flag(*FIGHTER_ROY_STATUS_SPECIAL_LW_FLAG_CONTINUE_MOT);
         }
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
     }
     else {
         fighter.set_situation(SITUATION_KIND_GROUND.into());
