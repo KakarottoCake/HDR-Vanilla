@@ -119,9 +119,9 @@ unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
                     VarModule::inc_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE);
                 },
                 1 => {
-                    let handle = EffectModule::req_follow(boma, Hash40::new("sys_steam2"), Hash40::new("head"), &Vector3f::new(3.0, 0.0, 0.0), &Vector3f::zero(), 0.8, false, 0, 0, 0, 0, 0, false, false);
-                    EffectModule::set_alpha(boma, handle as u32, 3.0);
-                    VarModule::set_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, handle as i32);
+                    //let handle = EffectModule::req_follow(boma, Hash40::new("sys_steam2"), Hash40::new("head"), &Vector3f::new(3.0, 0.0, 0.0), &Vector3f::zero(), 0.8, false, 0, 0, 0, 0, 0, false, false);
+                    //EffectModule::set_alpha(boma, handle as u32, 3.0);
+                    //VarModule::set_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, handle as i32);
                     VarModule::inc_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE);
                     VarModule::set_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_TIMER, 300);
                 }
@@ -129,10 +129,10 @@ unsafe extern "C" fn game_appeallw(agent: &mut L2CAgentBase) {
                     VarModule::set_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE, 0);
                     let handle = VarModule::get_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1) as u32;
                     EffectModule::kill(boma, handle, false, false);
-                    let handle2 = VarModule::get_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2) as u32;
-                    EffectModule::kill(boma, handle2, false, false);
+                    //let handle2 = VarModule::get_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2) as u32;
+                    //EffectModule::kill(boma, handle2, false, false);
                     VarModule::set_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1, -1);
-                    VarModule::set_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, -1);
+                    //VarModule::set_int(agent.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, -1);
                     ColorBlendModule::cancel_main_color(boma, 0);
                 }
             }

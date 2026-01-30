@@ -144,9 +144,9 @@ unsafe fn special_lw3_change_stage(fighter: &mut L2CFighterCommon, stage: i32) {
         },
         1 => {
             app::FighterUtil::flash_eye_info(fighter.module_accessor);
-            let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_steam2"), Hash40::new("head"), &Vector3f::new(3.0, 0.0, 0.0), &Vector3f::zero(), 0.8, false, 0, 0, 0, 0, 0, false, false);
-            EffectModule::set_alpha(fighter.module_accessor, handle as u32, 3.0);
-            VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, handle as i32);
+            //let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_steam2"), Hash40::new("head"), &Vector3f::new(3.0, 0.0, 0.0), &Vector3f::zero(), 0.8, false, 0, 0, 0, 0, 0, false, false);
+            //EffectModule::set_alpha(fighter.module_accessor, handle as u32, 3.0);
+            //VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, handle as i32);
             VarModule::inc_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE);
             VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_TIMER, 300);
         }
@@ -154,10 +154,10 @@ unsafe fn special_lw3_change_stage(fighter: &mut L2CFighterCommon, stage: i32) {
             VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE, 0);
             let handle = VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1) as u32;
             EffectModule::detach(fighter.module_accessor, handle, 0);
-            let handle2 = VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2) as u32;
-            EffectModule::detach(fighter.module_accessor, handle2, 0);
+            //let handle2 = VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2) as u32;
+            //EffectModule::detach(fighter.module_accessor, handle2, 0);
             VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1, -1);
-            VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, -1);
+            //VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, -1);
             if fighter.is_motion(Hash40::new("special_lw3_3g"))
             && VarModule::is_flag(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STALL)
             && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT)

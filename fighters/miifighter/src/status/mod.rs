@@ -128,7 +128,7 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE, 0);
     VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_TIMER, 0);
     VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1, -1);
-    VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, -1);
+    //VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, -1);
 }
 
 unsafe extern "C" fn dead_main(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -162,10 +162,10 @@ unsafe fn reset_boiling_punt(fighter: &mut L2CFighterCommon) {
         //EFFECT_FOLLOW(fighter, Hash40::new("sys_flash"), Hash40::new("top"), -3, 13, -2.5, 0, 0, 0, 0.38, false);
         let handle = VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1) as u32;
         EffectModule::kill(fighter.module_accessor, handle, false, false);
-        let handle2 = VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2) as u32;
-        EffectModule::kill(fighter.module_accessor, handle2, false, false);
+        //let handle2 = VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2) as u32;
+        //EffectModule::kill(fighter.module_accessor, handle2, false, false);
         VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1, -1);
-        VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, -1);
+        //VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, -1);
     }
     ColorBlendModule::cancel_main_color(fighter.module_accessor, 0);
 }

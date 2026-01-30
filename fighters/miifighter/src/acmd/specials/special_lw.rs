@@ -440,6 +440,7 @@ unsafe extern "C" fn effect_speciallw32g(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("miifighter_boiling2"), Hash40::new("miifighter_boiling2"), Hash40::new("top"), -2, 4.7, 1.5, -16, -43, 15, 1, true, *EF_FLIP_AXIS_YZ);
         LAST_EFFECT_SET_COLOR(agent, 3.0, 1.0, 0.0);
+        LAST_EFFECT_SET_RATE(agent, 0.8);
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 7, -4, 180, 0, 0, 0.7, true);
         LAST_EFFECT_SET_COLOR(agent, 2.0, 0.5, 0.0);
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 6.5, 10.5, 0, 0, 0, 1, true);
