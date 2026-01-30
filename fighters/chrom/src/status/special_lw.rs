@@ -209,24 +209,9 @@ unsafe extern "C" fn special_lw_hit_main_loop(fighter: &mut L2CFighterCommon) ->
     }
 
     // Reduce speed on shield
-    if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
-        if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-        }
-        else {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-        }
-
-        let shield_hit_end_speed_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lw.shield_hit_end_speed_x");
-        let lr = PostureModule::lr(fighter.module_accessor);
-        sv_kinetic_energy!(
-            set_speed,
-            fighter,
-            FIGHTER_KINETIC_ENERGY_ID_STOP,
-            shield_hit_end_speed_x * lr,
-            0.0
-        );
-        KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
+    if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
+        let shield_hit_speed_x_mul: f32 = 0.1;
+        sv_kinetic_energy!(set_speed_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, shield_hit_speed_x_mul);
     }
 
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
@@ -298,12 +283,7 @@ unsafe extern "C" fn special_lw_hit_set_kinetic(fighter: &mut L2CFighterCommon) 
             );
             fighter.on_flag(*FIGHTER_ROY_STATUS_SPECIAL_LW_FLAG_CONTINUE_MOT);
         }
-        if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-        }
-        else {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
-        }
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
     }
     else {
         fighter.set_situation(SITUATION_KIND_GROUND.into());
@@ -330,12 +310,7 @@ unsafe extern "C" fn special_lw_hit_set_kinetic(fighter: &mut L2CFighterCommon) 
             );
             fighter.on_flag(*FIGHTER_ROY_STATUS_SPECIAL_LW_FLAG_CONTINUE_MOT);
         }
-        if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-        }
-        else {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
-        }
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
     }
 }
 
