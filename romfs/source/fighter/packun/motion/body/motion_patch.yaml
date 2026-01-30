@@ -85,7 +85,7 @@ passive_stand_b:
     xlu_end: 24
 throw_b:
   extra:
-    cancel_frame: 31
+    cancel_frame: 33
 throw_hi:
   extra:
     cancel_frame: 42
@@ -102,6 +102,8 @@ attack_lw3:
   extra:
     cancel_frame: 29
 attack_hi4:
+  extra:
+    cancel_frame: 48
 special_lw_end:
   extra:
     cancel_frame: 19
