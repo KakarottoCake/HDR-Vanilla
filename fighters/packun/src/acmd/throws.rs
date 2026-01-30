@@ -273,6 +273,12 @@ unsafe extern "C" fn effect_throwlw(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("packun_bite_line2"), Hash40::new("top"), 0, 10, -2, 116, -6, -137, 0.9, true);
     }
+    frame(lua_state, 29.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("packun_poison_max"), Hash40::new("top"), -1.2, 5, 0, 0, 0, 0, 0.95, true);
+        LAST_EFFECT_SET_COLOR(agent, 0.5, 0.5, 0.5);
+        EFFECT_FOLLOW(agent, Hash40::new("packun_poison_max"), Hash40::new("top"), -1.2, 5, 0, 0, 0, 0, 0.85, true);
+    }
     frame(lua_state, 30.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("packun_bite_line"), Hash40::new("top"), 0, 8.5, -2, 104, -2, -151, 0.9, true);

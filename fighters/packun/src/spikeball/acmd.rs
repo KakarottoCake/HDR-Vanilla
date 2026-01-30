@@ -37,7 +37,7 @@ unsafe extern "C" fn game_start(agent: &mut L2CAgentBase) {
         // Smoothly increase the size so it doesn't offset the Ptooie as much at the start
         for h in 1..=15 {
             if is_excute(agent) {
-                ModelModule::set_scale(boma, 1.0 + (0.3 * h as f32)/15.0);
+                ModelModule::set_scale(boma, 1.0 + ((scale - 1.0) * h as f32)/15.0);
             }
             wait(lua_state, 1.0);
         }

@@ -3,6 +3,7 @@ use super::*;
 // FIGHTER_STATUS_KIND_SPECIAL_HI
 
 pub unsafe extern "C" fn special_hi_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    VarModule::off_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_hi"), 0.0, 1.0, false, 0.0, false, false);
     }
@@ -19,6 +20,7 @@ pub unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) ->
     if fighter.is_motion(Hash40::new("special_hi")) {
         fighter.set_situation(L2CValue::I32(*SITUATION_KIND_GROUND));
         GroundModule::correct(fighter.module_accessor,GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+        VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
         fighter.change_status(FIGHTER_PACKUN_STATUS_KIND_SPECIAL_HI_END.into(), false.into());
         return 0.into();
     }
@@ -183,7 +185,9 @@ unsafe extern "C" fn special_hi_landing_main_loop(fighter: &mut L2CFighterCommon
     }
     // <HDR>
     if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_AIR {
-        fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL_SPECIAL, false);
+        let status = if VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK)
+            { *FIGHTER_STATUS_KIND_FALL_SPECIAL } else { *FIGHTER_STATUS_KIND_FALL };
+        fighter.change_status_req(status, false);
         return 1.into();
     }
     // </HDR>

@@ -154,7 +154,7 @@ unsafe extern "C" fn game_appeals(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     if boma.is_button_on(Buttons::AppealSL) {
         if is_excute(agent) {
-            MotionModule::change_motion(boma, Hash40::new("appeal_hi_2"), 0.0, 1.0, false, 0.0, false, false);
+            MotionModule::change_motion(boma, Hash40::new("appeal_s_2"), 0.0, 1.0, false, 0.0, false, false);
         }
     }
     frame(lua_state, 2.0);
