@@ -6,18 +6,13 @@ use globals::*;
 pub extern "C" fn spikeball_frame(weapon: &mut L2CFighterBase) {
     unsafe {
         let boma = weapon.boma();
-        let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-        if weapon.is_status(*WEAPON_PACKUN_SPIKEBALL_STATUS_KIND_START) && VarModule::get_int(owner_module_accessor.object(), vars::packun::instance::CURRENT_STANCE) == 1 {
-            VarModule::on_flag(weapon.object(), vars::packun_spikeball::instance::ENABLE_EXPLODE);
-        }
-        else if weapon.is_status(*WEAPON_PACKUN_SPIKEBALL_STATUS_KIND_START) && VarModule::get_int(owner_module_accessor.object(), vars::packun::instance::CURRENT_STANCE) != 1 {
-            VarModule::off_flag(weapon.object(), vars::packun_spikeball::instance::ENABLE_EXPLODE);
-        }
-        let motion_kind = MotionModule::motion_kind(weapon.module_accessor);
+        let owner_module_accessor = weapon.get_owner_boma();
         if [*FIGHTER_KIND_PACKUN, *FIGHTER_KIND_KIRBY].contains(&owner_module_accessor.kind()) {
             if weapon.is_status(*WEAPON_PACKUN_SPIKEBALL_STATUS_KIND_WAIT) || weapon.is_status(*WEAPON_PACKUN_SPIKEBALL_STATUS_KIND_HOP) {
-                if VarModule::is_flag(weapon.object(), vars::packun_spikeball::instance::ENABLE_EXPLODE) && weapon.status_frame() >= 60 && motion_kind != hash40("explode") {
-                    MotionModule::change_motion(weapon.module_accessor, Hash40::new("explode"), 0.0, 1.0, false, 0.0, false, false);
+                if weapon.status_frame() >= 60 && VarModule::is_flag(boma.object(), vars::packun_spikeball::instance::ENABLE_EXPLODE) {
+                    if MotionModule::motion_kind(boma) != hash40("explode") {
+                        MotionModule::change_motion(weapon.module_accessor, Hash40::new("explode"), 0.0, 1.0, false, 0.0, false, false);
+                    }
                 }
             }
         }

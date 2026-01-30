@@ -117,9 +117,9 @@ unsafe extern "C" fn game_attacks32(agent: &mut L2CAgentBase) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 6.0 * stance.damage_bite, 361, 125, 0, 40, 6.5, 0.0, 7.5, 15.0, Some(0.0), Some(10.5), Some(15.0), 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_poison"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BITE);
         ATTACK(agent, 1, 0, Hash40::new("virtualhit3"), 6.0 * stance.damage_bite, 361, 125, 0, 40, 3.5, 0.0, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_poison"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BITE);
         ATTACK(agent, 2, 0, Hash40::new("virtualhit2"), 6.0 * stance.damage_bite, 361, 125, 0, 40, 3.5, 0.0, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_poison"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BITE);
-        AttackModule::set_poison_param(boma, 0, 121, 30, 1.8, false);
-        AttackModule::set_poison_param(boma, 1, 121, 30, 1.8, false);
-        AttackModule::set_poison_param(boma, 2, 121, 30, 1.8, false);
+        AttackModule::set_poison_param(boma, 0, 241, 60, 1.8, false);
+        AttackModule::set_poison_param(boma, 1, 241, 60, 1.8, false);
+        AttackModule::set_poison_param(boma, 2, 241, 60, 1.8, false);
     }
     frame(lua_state, 10.0);
     FT_MOTION_RATE_RANGE(agent, 10.0, 12.0, 6.0);
@@ -242,7 +242,7 @@ unsafe extern "C" fn effect_attacks3ss(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn sound_attacks3ss(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 9.0);
+    frame(lua_state, 7.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_packun_swing_l01"));
         PLAY_SE(agent, Hash40::new("se_packun_attackair_h01"));
