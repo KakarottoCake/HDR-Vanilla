@@ -21,6 +21,7 @@ unsafe extern "C" fn game_start(agent: &mut L2CAgentBase) {
                 // Putrid
                 VarModule::on_flag(agent.battle_object, vars::packun_spikeball::instance::ENABLE_EXPLODE);
                 ATTACK(agent, 0, 0, Hash40::new("trans"), 10.0, 65, 60, 0, 40, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.1, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_poison"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_OBJECT);
+                ATTACK(agent, 1, 1, Hash40::new("trans"), 0.0, 0, 0, 0, 0, 5.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, true, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_OBJECT);
                 AttackModule::set_poison_param(boma, 0, 241, 60, 2.5, false);
             }
             2 => {
@@ -65,6 +66,7 @@ unsafe extern "C" fn game_loopwait(agent: &mut L2CAgentBase) {
                 // Putrid
                 VarModule::on_flag(agent.battle_object, vars::packun_spikeball::instance::ENABLE_EXPLODE);
                 ATTACK(agent, 0, 0, Hash40::new("trans"), 10.0, 65, 60, 0, 40, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.1, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_poison"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_OBJECT);
+                ATTACK(agent, 1, 1, Hash40::new("trans"), 0.0, 0, 0, 0, 0, 5.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, true, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_OBJECT);
                 AttackModule::set_poison_param(boma, 0, 241, 60, 2.5, false);
             }
             2 => {
@@ -83,7 +85,8 @@ unsafe extern "C" fn effect_loop(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-    let stance = if (owner_module_accessor.kind() == *FIGHTER_KIND_PACKUN) || (owner_module_accessor.kind() == *FIGHTER_KIND_KIRBY) {VarModule::get_int(owner_module_accessor.object(), vars::packun::instance::CURRENT_STANCE)} else {0};
+    let stance = if (owner_module_accessor.kind() == *FIGHTER_KIND_PACKUN) || (owner_module_accessor.kind() == *FIGHTER_KIND_KIRBY)
+        { VarModule::get_int(owner_module_accessor.object(), vars::packun::instance::CURRENT_STANCE) } else { 0 };
     if stance == 1 {    
         if is_excute(agent) {
             //EFFECT_BRANCH_SITUATION(agent, Hash40::new("null"), Hash40::new("sys_bound_smoke"), Hash40::new("top"), 0, -4, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
@@ -96,15 +99,14 @@ unsafe extern "C" fn game_shoot(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-    let (stance, scale) = if (owner_module_accessor.kind() == *FIGHTER_KIND_PACKUN) || (owner_module_accessor.kind() == *FIGHTER_KIND_KIRBY) {
-        (VarModule::get_int(owner_module_accessor.object(), vars::packun::instance::CURRENT_STANCE),
-        VarModule::get_float(owner_module_accessor.object(), vars::packun::instance::SPECIAL_N_PTOOIE_SCALE))
-    } else { (0, 1.0) };
+    let stance = if (owner_module_accessor.kind() == *FIGHTER_KIND_PACKUN) || (owner_module_accessor.kind() == *FIGHTER_KIND_KIRBY)
+        { VarModule::get_int(owner_module_accessor.object(), vars::packun::instance::CURRENT_STANCE) } else { 0 };
     if is_excute(agent) {
         match stance {
             1 => {
                 // Putrid
                 ATTACK(agent, 0, 0, Hash40::new("trans"), 12.0, 65, 60, 0, 40, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.1, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_poison"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_OBJECT);
+                ATTACK(agent, 1, 1, Hash40::new("trans"), 0.0, 0, 0, 0, 0, 5.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, true, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_OBJECT);
                 AttackModule::set_poison_param(boma, 0, 241, 60, 2.5, false);
             }
             2 => {
@@ -119,53 +121,23 @@ unsafe extern "C" fn game_shoot(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn effect_shoot(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-    let stance = if (owner_module_accessor.kind() == *FIGHTER_KIND_PACKUN) || (owner_module_accessor.kind() == *FIGHTER_KIND_KIRBY) {VarModule::get_int(owner_module_accessor.object(), vars::packun::instance::CURRENT_STANCE)} else {0};
-    if stance == 1 {
-        for _ in 0..999 {
-            if is_excute(agent) {
-                if boma.is_status(*WEAPON_PACKUN_SPIKEBALL_STATUS_KIND_HOP){
-                    EFFECT_FOLLOW(agent, Hash40::new("packun_poison_mouth"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 3.0, false);
-                }
-            }
-            wait(lua_state, 3.0);
-        }
-    }
-}
-
-unsafe extern "C" fn effect_fall(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-    let stance = if (owner_module_accessor.kind() == *FIGHTER_KIND_PACKUN) || (owner_module_accessor.kind() == *FIGHTER_KIND_KIRBY) {VarModule::get_int(owner_module_accessor.object(), vars::packun::instance::CURRENT_STANCE)} else {0};
-    if stance == 1 {
-        if is_excute(agent) {
-            //EFFECT_BRANCH_SITUATION(agent, Hash40::new("null"), Hash40::new("sys_bound_smoke"), Hash40::new("top"), 0, -4, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
-            EFFECT_FOLLOW(agent, Hash40::new("packun_poison_mouth"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 2.0, false);
-        }
-    }
-}
-
 unsafe extern "C" fn effect_wait(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-    let stance = if (owner_module_accessor.kind() == *FIGHTER_KIND_PACKUN) || (owner_module_accessor.kind() == *FIGHTER_KIND_KIRBY) {VarModule::get_int(owner_module_accessor.object(), vars::packun::instance::CURRENT_STANCE)} else {0};
-    if stance == 1 {
-        if is_excute(agent) {
-            //EFFECT_BRANCH_SITUATION(agent, Hash40::new("null"), Hash40::new("sys_bound_smoke"), Hash40::new("top"), 0, -4, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
-            EFFECT_FOLLOW(agent, Hash40::new("packun_poison_mouth"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 2.0, false);
-        }
-        for _ in 0..30 {
-            if is_excute(agent) {
-                FLASH_FRM(agent, 5, 1.0, 0.5, 0.5, 0);
-            }
-            wait(lua_state, 10.0);
-        }
-    }
+    // let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
+    // let stance = if (owner_module_accessor.kind() == *FIGHTER_KIND_PACKUN) || (owner_module_accessor.kind() == *FIGHTER_KIND_KIRBY) {VarModule::get_int(owner_module_accessor.object(), vars::packun::instance::CURRENT_STANCE)} else {0};
+    // if stance == 1 {
+    //     if is_excute(agent) {
+    //         //EFFECT_BRANCH_SITUATION(agent, Hash40::new("null"), Hash40::new("sys_bound_smoke"), Hash40::new("top"), 0, -4, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+    //         EFFECT_FOLLOW(agent, Hash40::new("packun_poison_mouth"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 2.0, false);
+    //     }
+    //     for _ in 0..30 {
+    //         if is_excute(agent) {
+    //             FLASH_FRM(agent, 5, 1.0, 0.5, 0.5, 0);
+    //         }
+    //         wait(lua_state, 10.0);
+    //     }
+    // }
 }
 
 unsafe extern "C" fn game_explode(agent: &mut L2CAgentBase) {
@@ -175,6 +147,7 @@ unsafe extern "C" fn game_explode(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
         ModelModule::set_scale(boma, 0.001);
         ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 45, 120, 0, 45, 14.0, 0.0, 0.0, 0.0, None, None, None, 1.25, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_poison"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_OBJECT);
+        ATTACK(agent, 1, 1, Hash40::new("top"), 0.0, 0, 0, 0, 0, 14.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, true, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_OBJECT);
         AttackModule::set_poison_param(boma, 0, 241, 60, 3.5, false);
     }
     frame(lua_state, 6.0);
@@ -210,13 +183,13 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("effect_loop", effect_loop, Priority::Low);
 
     agent.acmd("game_shoot", game_shoot, Priority::Low);
-    agent.acmd("effect_shoot", effect_shoot, Priority::Low);
+    agent.acmd("effect_shoot", acmd_stub, Priority::Low);
 
     agent.acmd("game_fall", game_shoot, Priority::Low);
-    agent.acmd("effect_fall", effect_fall, Priority::Low);
+    agent.acmd("effect_fall", acmd_stub, Priority::Low);
 
     agent.acmd("game_wait", game_loopwait, Priority::Low);
-    agent.acmd("effect_wait", effect_wait, Priority::Low);
+    //agent.acmd("effect_wait", effect_wait, Priority::Low);
 
     agent.acmd("game_explode", game_explode, Priority::Low);
     agent.acmd("effect_explode", effect_explode, Priority::Low);

@@ -185,6 +185,7 @@ unsafe extern "C" fn special_hi_landing_main_loop(fighter: &mut L2CFighterCommon
     }
     // <HDR>
     if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_AIR {
+        // edge cancel if started in the air
         let status = if VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK)
             { *FIGHTER_STATUS_KIND_FALL_SPECIAL } else { *FIGHTER_STATUS_KIND_FALL };
         fighter.change_status_req(status, false);
