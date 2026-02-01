@@ -966,7 +966,7 @@ unsafe extern "C" fn fighterstatusdamage_init_damage_camera_tracking(
 
     // calculate target_interpolation_rate
     let base = 0.69;
-    let reduced = 0.1;
+    let reduced = 0.125;
     let ratio = ((speed - speed_start) / (speed_end - speed_start));
     let target_interpolation_rate: f32 = if speed <= speed_end {
         base.lerp(&reduced, &ratio)
