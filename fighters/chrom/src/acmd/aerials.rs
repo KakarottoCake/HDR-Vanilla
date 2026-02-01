@@ -111,6 +111,7 @@ unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 23.0);
     FT_MOTION_RATE_RANGE(agent, 23.0, 35.0, 15.0);
+    frame(lua_state, 27.0);
     if is_excute(agent) {
         WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
