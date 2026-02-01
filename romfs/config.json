@@ -189,6 +189,9 @@
 		],
 		"fighter/metaknight/cmn": [
 			"fighter/metaknight/param/hdr.xml"
+		],
+		"fighter/buddy/cmn": [
+			"fighter/buddy/param/hdr.xml"
 		]
 	}
 }

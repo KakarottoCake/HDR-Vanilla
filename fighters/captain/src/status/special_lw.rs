@@ -105,6 +105,7 @@ unsafe extern "C" fn special_lw_end_init(fighter: &mut L2CFighterCommon) -> L2CV
     }
     let ret = smashline::original_status(Init, fighter, *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_LW_END)(fighter);
 
+    // Reduce speed on shield
     let prev_inflict_status = VarModule::get_int(fighter.battle_object, vars::common::instance::PREV_STATUS_INFLICT_STATUS);
     if start_situation == *SITUATION_KIND_GROUND
     && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND

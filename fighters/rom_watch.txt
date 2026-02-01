@@ -59,3 +59,4 @@ fighter/ridley/param/hdr.xml
 fighter/robot/param/hdr.xml
 fighter/shulk/param/hdr.xml
 fighter/metaknight/param/hdr.xml
+fighter/buddy/param/hdr.xml

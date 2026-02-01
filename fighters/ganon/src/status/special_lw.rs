@@ -120,6 +120,7 @@ unsafe extern "C" fn special_lw_end_main(fighter: &mut L2CFighterCommon) -> L2CV
         WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_GANON_STATUS_WORK_ID_INT_GANON_KICK_START_SITUATION);
     }
 
+    // Reduce speed on shield
     let prev_inflict_status = VarModule::get_int(fighter.battle_object, vars::common::instance::PREV_STATUS_INFLICT_STATUS);
     if start_situation == *SITUATION_KIND_GROUND
     && end_situation == *FIGHTER_GANON_KICK_END_SITUATION_GG
