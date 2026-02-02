@@ -3,6 +3,13 @@ utils::import_noreturn!(common::opff::fighter_common_opff);
 use super::*;
 use globals::*;
 
+unsafe fn bow_charge_fix(fighter: &mut L2CFighterCommon) {
+    // fix bow charge pausing while turning
+    if fighter.is_status_one_of(&[*FIGHTER_PIT_STATUS_KIND_SPECIAL_N_DIR, *FIGHTER_PIT_STATUS_KIND_SPECIAL_N_TURN]) {
+        fighter.inc_int(*FIGHTER_PIT_STATUS_SPECIAL_N_CHARGE_INT_CHARGE);
+    }
+}
+
 unsafe fn bow_lc(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_status(*FIGHTER_PIT_STATUS_KIND_SPECIAL_N_SHOOT) {
         let landing_lag = 7.0;
@@ -36,6 +43,7 @@ extern "Rust" {
 }
 
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
+    bow_charge_fix(fighter);
     bow_lc(boma);
     guardian_orbitar_jc(fighter);
     electroshock_land_cancel_on_hit(fighter);
