@@ -105,6 +105,7 @@ unsafe fn maw_end_head(fighter: &mut L2CFighterCommon) {
     if fighter.is_prev_status_one_of(&[
         *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_CANCEL,
         *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_JUMP_CANCEL,
+        *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_END,
         *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_SHOOT
     ])
     && VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE) == 1 {
