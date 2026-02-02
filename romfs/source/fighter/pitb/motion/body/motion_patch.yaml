@@ -128,7 +128,7 @@ attack_air_hi:
     cancel_frame: 40
 attack_air_lw:
   extra:
-    cancel_frame: 35
+    cancel_frame: 38
 special_air_s_start:
   extra:
     cancel_frame: 0
