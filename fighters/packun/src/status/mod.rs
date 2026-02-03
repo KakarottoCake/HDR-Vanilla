@@ -8,6 +8,7 @@ mod attack_air;
 mod attack_s3;
 mod attack_s4;
 mod special_hi;
+mod special_lw;
 mod special_s;
 mod throw;
 
@@ -49,6 +50,7 @@ pub fn install(agent: &mut Agent) {
     attack_s4::install(agent);
     special_s::install(agent);
     special_hi::install(agent);
+    special_lw::install(agent);
     throw::install(agent);
 
     agent.status(Main, *FIGHTER_STATUS_KIND_ENTRY, entry_main);

@@ -112,7 +112,7 @@ special_lw_end:
     cancel_frame: 19
 special_lw_fall_end:
   extra:
-    cancel_frame: 24
+    cancel_frame: 19
 special_air_lw_end:
   extra:
     cancel_frame: 19
