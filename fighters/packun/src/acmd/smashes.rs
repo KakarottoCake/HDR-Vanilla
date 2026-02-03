@@ -17,7 +17,7 @@ unsafe extern "C" fn game_attacks4(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 16.0);
     if is_excute(agent) {
-        let kbg = if stance.label == 1 { 140 } else { 110 };
+        let kbg = if stance.label == 0 { 110 } else if stance.label == 1 { 140 } else { 100 };
         let (sound_lvl, sound_attr) = if stance.label == 2
             { (*ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY) } else { (*ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH) };
         ATTACK(agent, 0, 0, Hash40::new("virtualhit2"), 14.0 * stance.damage_head, 45, 100, 0, 25, 3.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), sound_lvl, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
