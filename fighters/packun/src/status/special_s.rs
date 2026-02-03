@@ -115,7 +115,8 @@ unsafe extern "C" fn special_s_shoot_init(fighter: &mut L2CFighterCommon) -> L2C
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
     }
     else {
-        if VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE) != 0 {
+        if !(VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE) == 0
+        && fighter.get_int(*FIGHTER_PACKUN_INSTANCE_WORK_ID_INT_SPECIAL_S_COUNT) < 60) {    // do not apply physics to uncharged Fiery Breath
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
             let start_air_speed_x_mul = fighter.get_param_float("param_special_s", "start_air_speed_x_mul");
             let start_air_speed_y = fighter.get_param_float("param_special_s", "start_air_speed_y");
@@ -129,6 +130,14 @@ unsafe extern "C" fn special_s_shoot_init(fighter: &mut L2CFighterCommon) -> L2C
                 sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, start_air_speed_y);
             }
             sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -accel_y);
+
+            sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, ENERGY_CONTROLLER_RESET_TYPE_FALL_ADJUST, 0.0, 0.0, 0.0, 0.0, 0.0);
+            sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.0, 0.0);
+            let stable_speed_x = fighter.get_param_float("air_speed_x_stable", "");
+            sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, stable_speed_x, 0.0);
+            sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, stable_speed_x * 0.5, 0.0);
+            sv_kinetic_energy!(controller_set_accel_x_mul, fighter, 0.03);
+            KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         }
         else {
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
