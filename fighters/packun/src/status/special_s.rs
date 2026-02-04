@@ -8,12 +8,7 @@ unsafe extern "C" fn special_s_charge_main(fighter: &mut L2CFighterCommon) -> L2
     }
     else {
         CORRECT(fighter, *GROUND_CORRECT_KIND_AIR);
-        if VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE) == 0 {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-        }
-        else {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-        }
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_s_charge"), 0.0, 1.0, false, 0.0, false, false);
     }
     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON);
