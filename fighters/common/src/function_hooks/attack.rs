@@ -153,16 +153,11 @@ unsafe fn post_calc_reaction(ctx: &mut skyline::hooks::InlineCtx) {
         let angle = (*attack_data).vector;
         let meteor_vector_min = WorkModule::get_param_int(receiver_boma, hash40("battle_object"), hash40("meteor_vector_min"));
         let meteor_vector_max = WorkModule::get_param_int(receiver_boma, hash40("battle_object"), hash40("meteor_vector_max"));
-        let spike_tumble_threshold = ParamModule::get_float(receiver_boma.object(), ParamType::Common, "spike_tumble_threshold");
-        let damage_frame_mul = WorkModule::get_param_float(receiver_boma, hash40("battle_object"), hash40("damage_frame_mul"));
         let grounded_spike_knockback_mul = ParamModule::get_float(receiver_boma.object(), ParamType::Common, "grounded_spike_knockback_mul");
-
-        let spike_tumble_threshold_kb = spike_tumble_threshold / damage_frame_mul;
 
         if receiver_boma.is_situation(*SITUATION_KIND_GROUND)
         && angle >= meteor_vector_min
-        && angle <= meteor_vector_max
-        && kb >= spike_tumble_threshold_kb {
+        && angle <= meteor_vector_max {
             kb *= grounded_spike_knockback_mul;
         }
 
