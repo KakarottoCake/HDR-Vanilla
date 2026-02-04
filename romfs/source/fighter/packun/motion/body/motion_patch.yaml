@@ -348,7 +348,7 @@ special_s_shoot_s:
   extra:
     xlu_start: 0
     xlu_end: 0
-    cancel_frame: 56
+    cancel_frame: 47
     no_stop_intp: false
 special_air_s_shoot_s:
   game_script: game_specialairsshoots
@@ -378,7 +378,7 @@ special_air_s_shoot_s:
   extra:
     xlu_start: 0
     xlu_end: 0
-    cancel_frame: 56
+    cancel_frame: 47
     no_stop_intp: false
 furafura_end:
   extra:
