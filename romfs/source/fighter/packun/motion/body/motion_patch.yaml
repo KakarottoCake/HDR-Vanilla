@@ -380,6 +380,18 @@ special_air_s_shoot_s:
     xlu_end: 0
     cancel_frame: 47
     no_stop_intp: false
+special_s_cancel:
+  extra:
+    cancel_frame: 9
+special_air_s_cancel:
+  extra:
+    cancel_frame: 9
+special_s_jump_cancel:
+  extra:
+    cancel_frame: 9
+special_air_s_jump_cancel:
+  extra:
+    cancel_frame: 9
 furafura_end:
   extra:
     cancel_frame: 34
