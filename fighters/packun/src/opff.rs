@@ -103,6 +103,8 @@ unsafe fn game_start_switch(fighter: &mut L2CFighterCommon) {
 unsafe fn maw_end_head(fighter: &mut L2CFighterCommon) {
     // fixes side special forcing normal head somewhere
     if fighter.is_prev_status_one_of(&[
+        *FIGHTER_STATUS_KIND_SPECIAL_S,
+        *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_CHARGE,
         *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_CANCEL,
         *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_JUMP_CANCEL,
         *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_S_END,
