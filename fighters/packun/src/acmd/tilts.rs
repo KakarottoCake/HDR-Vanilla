@@ -218,6 +218,10 @@ unsafe extern "C" fn game_attacks3ss(agent: &mut L2CAgentBase) {
         HIT_NODE(agent, Hash40::new("lipu3"), *HIT_STATUS_NORMAL);
         HIT_NODE(agent, Hash40::new("lipd3"), *HIT_STATUS_NORMAL);
     }
+    frame(lua_state, 15.0);
+    FT_MOTION_RATE_RANGE(agent, 15.0, 26.0, 15.0);
+    frame(lua_state, 26.0);
+    FT_MOTION_RATE(agent, 1.0);
 }
 
 unsafe extern "C" fn effect_attacks3ss(agent: &mut L2CAgentBase) {
