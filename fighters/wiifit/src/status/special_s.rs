@@ -24,6 +24,7 @@ unsafe extern "C" fn special_s_init(fighter: &mut L2CFighterCommon) -> L2CValue 
         sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -heading_gravity);
         KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
     }
+    InputModule::set_command_life_count_max(fighter.battle_object, 3);
 
     return 0.into();
 }
