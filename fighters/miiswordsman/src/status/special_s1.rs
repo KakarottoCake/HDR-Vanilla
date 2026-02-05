@@ -234,7 +234,7 @@ pub unsafe extern "C" fn special_s1_end_pre(fighter: &mut L2CFighterCommon) -> L
 }
 
 unsafe extern "C" fn special_s1_end_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    special_s1_end_change_motion(fighter);
+    special_s1_end_change_motion(fighter, false);
     fighter.sub_shift_status_main(L2CValue::Ptr(special_s1_end_main_loop as *const () as _))
 }
 
@@ -252,7 +252,7 @@ unsafe extern "C" fn special_s1_end_main_loop(fighter: &mut L2CFighterCommon) ->
         return 1.into();
     }
     if StatusModule::is_situation_changed(fighter.module_accessor) {
-        special_s1_end_change_motion(fighter);
+        special_s1_end_change_motion(fighter, true);
     }
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_STATUS_HENSOKU_SLASH_WORK_FLAG_END_LANDING) {
         if fighter.global_table[PREV_SITUATION_KIND] != SITUATION_KIND_GROUND {
@@ -266,18 +266,28 @@ unsafe extern "C" fn special_s1_end_main_loop(fighter: &mut L2CFighterCommon) ->
     return 0.into();
 }
 
-unsafe fn special_s1_end_change_motion(fighter: &mut L2CFighterCommon) {
+unsafe fn special_s1_end_change_motion(fighter: &mut L2CFighterCommon, inherit: bool) {
     if fighter.is_situation(*SITUATION_KIND_GROUND) {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
         StatusModule::set_situation_kind(fighter.module_accessor, app::SituationKind(*SITUATION_KIND_GROUND), false);
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s1_end"), 0.0, 1.0, false, 0.0, false, false);
+        if inherit {
+            MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_s1_end"), -1.0, 1.0, 0.0, false, false);
+        }
+        else {
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s1_end"), 0.0, 1.0, false, 0.0, false, false);
+        }
     }
     else {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         StatusModule::set_situation_kind(fighter.module_accessor, app::SituationKind(*SITUATION_KIND_AIR), false);
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_s1_end"), -1.0, 1.0, 0.0, false, false);
+        if inherit {
+            MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_s1_end"), -1.0, 1.0, 0.0, false, false);
+        }
+        else {
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_s1_end"), 0.0, 1.0, false, 0.0, false, false);
+        }
         let s1_control_limit_mul_x = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_s"), hash40("s1_control_limit_mul_x"));
         KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
         KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
