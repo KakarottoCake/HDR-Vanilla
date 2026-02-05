@@ -120,6 +120,12 @@ special_air_n2:
     move: true
   extra:
     cancel_frame: 47
+special_s2_attack:
+  extra:
+    cancel_frame: 30
+special_air_s2_attack:
+  extra:
+    cancel_frame: 40
 # Now maps to special_lw3
 special_n3_end:
   extra:
