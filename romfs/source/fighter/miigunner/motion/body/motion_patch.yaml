@@ -329,10 +329,10 @@ special_air_lw2:
     cancel_frame: 47
 special_lw3_end:
   extra:
-    cancel_frame: 18
+    cancel_frame: 17
 special_air_lw3_end:
   extra:
-    cancel_frame: 18
+    cancel_frame: 17
 catch_dash:
   extra:
     cancel_frame: 41
