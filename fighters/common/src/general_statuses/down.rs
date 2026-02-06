@@ -45,7 +45,7 @@ unsafe fn status_pre_Down(fighter: &mut L2CFighterCommon) -> L2CValue {
         true,
         *FIGHTER_TREADED_KIND_DISABLE,
         false,
-        false,  // false = can be grabbed
+        true,
         false,
         0,
         *FIGHTER_STATUS_ATTR_SLOPE_TOP_UNLIMIT as u32,
