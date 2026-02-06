@@ -102,8 +102,8 @@ brave_special_air_n_jump_cancel:
 brave_special_n_cancel:
   extra:
     cancel_frame: 8
-buddy_attack_s3_hi:
-  game_script: game_buddyattacks3hi
+buddy_special_n_attack_hi:
+  game_script: game_buddyspecialnattack
   flags:
     turn: false
     loop: false
@@ -121,19 +121,47 @@ buddy_attack_s3_hi:
     unk_2000: false
   blend_frames: 0
   animations:
-  - name: buddyc01attacks3hi.nuanmb
-    unk: 0
+    - name: buddyd00specialnattackhi.nuanmb
   scripts:
-  - expression_buddyattacks3hi
-  - sound_buddyattacks3hi
-  - effect_buddyattacks3hi
+  - expression_buddyspecialnattack
+  - sound_buddyspecialnattack
+  - effect_buddyspecialnattack
   extra:
-    xlu_start: 0
-    xlu_end: 0
-    cancel_frame: 38
-    no_stop_intp: false
-buddy_attack_s3_lw:
-  game_script: game_buddyattacks3lw
+    intangible_start_frame: 0
+    intangible_hi_frame: 0
+    cancel_frame: 31
+    freeze_during_hitstop: false
+buddy_special_n_attack_s:
+  game_script: game_buddyspecialnattack
+  flags:
+    turn: false
+    loop: false
+    move: true
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+    - name: buddyd00specialnattacks.nuanmb
+  scripts:
+  - expression_buddyspecialnattack
+  - sound_buddyspecialnattack
+  - effect_buddyspecialnattack
+  extra:
+    intangible_start_frame: 0
+    intangible_s_frame: 0
+    cancel_frame: 31
+    freeze_during_hitstop: false
+buddy_special_n_attack_lw:
+  game_script: game_buddyspecialnattack
   flags:
     turn: false
     loop: false
@@ -192,6 +220,35 @@ buddy_attack_s3_s:
     xlu_end: 0
     cancel_frame: 38
     no_stop_intp: false
+buddy_special_n_attack_end:
+  game_script: game_buddyspecialnattackend
+  flags:
+    turn: false
+    loop: false
+    move: true
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 5
+  animations:
+    - name: buddyd00specialnstart.nuanmb
+  scripts:
+  - expression_buddyspecialnattackend
+  - sound_buddyspecialnattackend
+  - effect_buddyspecialnattackend
+  extra:
+    intangible_start_frame: 0
+    intangible_end_frame: 0
+    cancel_frame: 31
+    freeze_during_hitstop: false
 buddy_special_air_n_shoot_end:
   extra:
     cancel_frame: 8
@@ -585,6 +642,126 @@ koopajr_special_air_n_shoot:
 koopajr_special_n_shoot:
   extra:
     cancel_frame: 32
+krool_special_n_fire_hi:
+  game_script: game_kroolspecialnfirehi
+  flags:
+    turn: false
+    loop: false
+    move: false
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: false
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+    - name: kroold00specialnfirehi.nuanmb
+      unk: 0
+  scripts:
+    - expression_kroolspecialnfirehi
+    - sound_kroolspecialnfirehi
+    - effect_kroolspecialnfirehi
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 45
+    no_stop_intp: false
+krool_special_air_n_fire_hi:
+  game_script: game_kroolspecialairnfirehi
+  flags:
+    turn: false
+    loop: false
+    move: false
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: false
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+    - name: kroold00specialairnfirehi.nuanmb
+      unk: 0
+  scripts:
+    - expression_kroolspecialairnfirehi
+    - sound_kroolspecialairnfirehi
+    - effect_kroolspecialairnfirehi
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 45
+    no_stop_intp: false
+krool_special_n_fire_b:
+  game_script: game_kroolspecialnfireb
+  flags:
+    turn: true
+    loop: false
+    move: false
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+    - name: kroold00specialnfireb.nuanmb
+      unk: 0
+  scripts:
+    - expression_kroolspecialnfireb
+    - sound_kroolspecialnfireb
+    - effect_kroolspecialnfireb
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 50
+    no_stop_intp: false
+krool_special_air_n_fire_b:
+  game_script: game_kroolspecialairnfireb
+  flags:
+    turn: true
+    loop: false
+    move: false
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+    - name: kroold00specialairnfireb.nuanmb
+      unk: 0
+  scripts:
+    - expression_kroolspecialairnfireb
+    - sound_kroolspecialairnfireb
+    - effect_kroolspecialairnfireb
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 50
+    no_stop_intp: false
 link_special_n_start:
   flags:
     move: false
