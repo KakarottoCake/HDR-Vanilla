@@ -54,15 +54,16 @@ unsafe extern "C" fn BA_SHOOTING_ON(agent: &mut L2CAgentBase, hand: bool, joint:
 unsafe extern "C" fn BA_SHOOTING_OFF(agent: &mut L2CAgentBase, hitbox_1_id: i32, hitbox_2_id: i32) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    if !agent.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_DISABLE_ROOT_ATTACK) {
-        if is_excute(agent) {
-            AttackModule::clear(boma, hitbox_1_id, false);
-            AttackModule::clear(boma, hitbox_2_id, false);
-        }
-    }
     if is_excute(agent) {
-        AttackModule::clear(boma, hitbox_1_id + 1, false);
-        AttackModule::clear(boma, hitbox_2_id + 1, false);
+        if AttackModule::is_attack(boma, hitbox_1_id + 1, false)
+        || AttackModule::is_attack(boma, hitbox_2_id + 1, false) {
+            AttackModule::clear(boma, hitbox_1_id + 1, false);
+            AttackModule::clear(boma, hitbox_2_id + 1, false);
+            if agent.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_DISABLE_ROOT_ATTACK) {
+                AttackModule::clear(boma, hitbox_1_id, false);
+                AttackModule::clear(boma, hitbox_2_id, false);
+            }
+        }
     }
 }
 
