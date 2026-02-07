@@ -116,13 +116,20 @@ unsafe extern "C" fn sound_attackairf(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn game_landingairf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    if is_excute(agent) {  }
+    let boma = agent.boma();  
 }
 
 unsafe extern "C" fn effect_attackairf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    frame(lua_state, 6.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), -0.5, 13, 0, 0, 30, -90, 0.65, true);
+      }
+    frame(lua_state, 15.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), -0.5, 13, 0, 0, 30, -90, 0.75, true);
+      }
 }
 
 unsafe extern "C" fn expression_attackairf(agent: &mut L2CAgentBase) {
