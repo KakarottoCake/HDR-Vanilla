@@ -358,7 +358,13 @@ unsafe fn post_spike_check(ctx: &mut skyline::hooks::InlineCtx) {
     if is_spike {
         let mut kb = ctx.registers_f[11].s();
 
-        let spike_tumble_threshold = ParamModule::get_float((*boma).object(), ParamType::Common, "spike_tumble_threshold");
+        let mut spike_tumble_threshold = ParamModule::get_float((*boma).object(), ParamType::Common, "spike_tumble_threshold");
+        // Ensures grounded spikes do not trigger tumble earlier
+        // despite their knockback multiplier
+        if (*boma).is_situation(*SITUATION_KIND_GROUND) {
+            let grounded_spike_knockback_mul = ParamModule::get_float((*boma).object(), ParamType::Common, "grounded_spike_knockback_mul");
+            spike_tumble_threshold /= grounded_spike_knockback_mul;
+        }
 
         if kb >= spike_tumble_threshold {
             // Set damage level to 3 (tumble)
