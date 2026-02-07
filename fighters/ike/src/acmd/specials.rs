@@ -105,10 +105,10 @@ unsafe extern "C" fn sound_specialsdash(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     let rng = app::sv_math::rand(smash::hash40("fighter"), 2);
-    let sound = if rng == 0 { "vc_ike_special_s01" } else { "vc_ike_attack05" };
+    let sound = if rng == 0 { "vc_ike_special_s01" } else { "vc_ike_special_s02" };
     if is_excute(agent) {
         if VarModule::is_flag(boma.object(), vars::ike::status::SPECIAL_S_INSTAKILL){
-            PLAY_SE(agent, Hash40::new("vc_ike_appeal02"));
+            PLAY_SE(agent, Hash40::new("vc_ike_special_s03"));
         }
         else{
             PLAY_SE(agent, Hash40::new(sound));
