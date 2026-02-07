@@ -59,7 +59,7 @@ unsafe extern "C" fn BA_SHOOTING_OFF(agent: &mut L2CAgentBase, hitbox_1_id: i32,
         || AttackModule::is_attack(boma, hitbox_2_id + 1, false) {
             AttackModule::clear(boma, hitbox_1_id + 1, false);
             AttackModule::clear(boma, hitbox_2_id + 1, false);
-            if agent.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_DISABLE_ROOT_ATTACK) {
+            if !agent.is_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_DISABLE_ROOT_ATTACK) {
                 AttackModule::clear(boma, hitbox_1_id, false);
                 AttackModule::clear(boma, hitbox_2_id, false);
             }
