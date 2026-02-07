@@ -11,6 +11,7 @@ pub enum CustomMode {
     Smash64Mode = 4,
     MagicSeriesMode = 5,
     ElementMode = 6,
+    RivalsOfAetherMode = 7,
 }
 
 impl fmt::Display for CustomMode {
@@ -23,6 +24,7 @@ impl fmt::Display for CustomMode {
             CustomMode::Smash64Mode => write!(f, "Smash64"),
             CustomMode::MagicSeriesMode => write!(f, "MagicSeries"),
             CustomMode::ElementMode => write!(f, "Element"),
+            CustomMode::RivalsOfAetherMode => write!(f, "RivalsOfAether"),
         }
     }
 }
@@ -40,6 +42,7 @@ impl FromStr for CustomMode {
             "smash64" => Ok(CustomMode::Smash64Mode),
             "magicseries" => Ok(CustomMode::MagicSeriesMode),
             "element" => Ok(CustomMode::ElementMode),
+            "rivalsofaether" => Ok(CustomMode::RivalsOfAetherMode),
             _      => Err(()),
         }
     }
@@ -62,6 +65,15 @@ extern "Rust" {
 pub fn is_custom_mode() -> bool {
     unsafe {
         _is_custom_mode()
+    }
+}
+
+pub fn check_custom_mode(mode: CustomMode) -> bool {
+    unsafe {
+        match _get_custom_mode() {
+            Some(modes) => modes.contains(&mode),
+            None => false,
+        }
     }
 }
 

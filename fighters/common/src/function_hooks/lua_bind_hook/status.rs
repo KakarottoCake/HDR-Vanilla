@@ -227,27 +227,23 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
     let mut clear_buffer = arg3;
 
     if boma.is_fighter() {
-        match utils::game_modes::get_custom_mode() {
-            Some(modes) => {
-                if modes.contains(&CustomMode::Smash64Mode) {
-                    if [*FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_PASSIVE_CEIL, *FIGHTER_STATUS_KIND_PASSIVE_WALL, *FIGHTER_STATUS_KIND_PASSIVE_WALL_JUMP].contains(&next_status) {
-                        return 0;
-                    }
-                }
-            },
-            _ => {}
+        if utils::game_modes::check_custom_mode(CustomMode::Smash64Mode) {
+            if [
+                *FIGHTER_STATUS_KIND_ESCAPE_AIR,
+                *FIGHTER_STATUS_KIND_PASSIVE_CEIL,
+                *FIGHTER_STATUS_KIND_PASSIVE_WALL,
+                *FIGHTER_STATUS_KIND_PASSIVE_WALL_JUMP
+            ].contains(&next_status) {
+                return 0;
+            }
         }
 
         // Allow buffered wavedashes when Shield is pressed at any time within Jump input's buffer window
         if next_status == *FIGHTER_STATUS_KIND_JUMP_SQUAT {
             if boma.is_cat_flag(Cat1::AirEscape) && !boma.is_cat_flag(Cat1::AttackN) {
-                match utils::game_modes::get_custom_mode() {
-                    Some(modes) => {
-                        if !modes.contains(&CustomMode::Smash64Mode) {
-                            VarModule::on_flag(boma.object(), vars::common::instance::ENABLE_AIR_ESCAPE_JUMPSQUAT);
-                        }
-                    },
-                    _ => { VarModule::on_flag(boma.object(), vars::common::instance::ENABLE_AIR_ESCAPE_JUMPSQUAT); }
+                // not for smash64 mode though
+                if !utils::game_modes::check_custom_mode(CustomMode::Smash64Mode) {
+                    VarModule::on_flag(boma.object(), vars::common::instance::ENABLE_AIR_ESCAPE_JUMPSQUAT);
                 }
             }
         }
@@ -422,6 +418,13 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
             boma.object(),
             vars::common::instance::PREV_STATUS_TRANSITION_FRAME,
             util::get_fighter_common_from_accessor(boma).global_table[CURRENT_FRAME].get_i32()
+        );
+
+        let inflict_status = AttackModule::get_inflict_status(boma);
+        VarModule::set_int(
+            boma.object(),
+            vars::common::instance::PREV_STATUS_INFLICT_STATUS,
+            inflict_status
         );
 
         VarModule::set_flag(
