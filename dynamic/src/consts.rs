@@ -246,7 +246,6 @@ pub mod vars {
 
             // pub const PREVIOUS_FRAME_FRAMES_IN_AIR: i32 = 0x0016;
 
-            pub const PREV_STATUS_INFLICT_STATUS: i32 = 0x0014;
 
             // floats
 
