@@ -124,12 +124,21 @@ unsafe extern "C" fn effect_attackairf(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 6.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), -0.5, 13, 0, 0, 30, -90, 0.65, true);
-      }
+        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), -0.5, 11.0, 2.5, 0, 30, -90, 0.65, true);
+    }
+    frame(lua_state, 12.0);
+    if is_excute(agent) {
+        EffectModule::kill_kind(boma, Hash40::new("sys_attack_arc_d"), false, false);
+    }
     frame(lua_state, 15.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), -0.5, 13, 0, 0, 30, -90, 0.75, true);
-      }
+        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), -0.5, 11.0, 2.5, 0, 40, -90, 0.75, true);
+        LAST_EFFECT_SET_RATE(agent, 1.33);
+    }
+    frame(lua_state, 20.0);
+    if is_excute(agent) {
+        EffectModule::kill_kind(boma, Hash40::new("sys_attack_arc_d"), false, false);
+    }
 }
 
 unsafe extern "C" fn expression_attackairf(agent: &mut L2CAgentBase) {
