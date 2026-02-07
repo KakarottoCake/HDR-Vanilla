@@ -52,9 +52,14 @@ unsafe fn nspecial_cancels(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma:
 // rather than having to wait until the end of the knockback animation
 unsafe fn up_special_knockback_canceling(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
     if fighter.is_status_one_of(&[*FIGHTER_DIDDY_STATUS_KIND_SPECIAL_HI_CHARGE_DAMAGE, *FIGHTER_DIDDY_STATUS_KIND_SPECIAL_HI_UPPER_DAMAGE]) {
+        if StatusModule::is_changing(fighter.module_accessor) {
+            return;
+        }
+
         if MotionModule::frame(fighter.module_accessor) >= (MotionModule::end_frame(fighter.module_accessor) - 1.0) && MotionModule::rate(fighter.module_accessor) != 0.0 {
             MotionModule::set_rate(fighter.module_accessor, 0.0);
         }
+        
         let hitstun = WorkModule::get_float(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DAMAGE_REACTION_FRAME);
         if hitstun <= 0.0 {
             fighter.change_status_req(*FIGHTER_STATUS_KIND_DAMAGE_FALL, false);
