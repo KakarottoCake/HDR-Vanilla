@@ -401,16 +401,10 @@ unsafe fn scene_transition(
     call_original!(list_ptr, key_struct, context_struct, factory);
 }
 
-#[skyline::hook(offset = 0x3ddbb4, inline)]
-unsafe fn set_power_mul_5th_hook(ctx: &skyline::hooks::InlineCtx) {
-    let power_mul_5th = ctx.registers_f[0].s();
-    println!("DEBUG >>>>>> power_mul_5th is currently being set to: {}", power_mul_5th);
-}
-
-#[skyline::hook(offset = 0x3ddbc4, inline)]
-unsafe fn get_power_mul_5th_hook(ctx: &skyline::hooks::InlineCtx) {
-    let power_mul_5th = ctx.registers_f[0].s();
-    println!("DEBUG >>>>>> power_mul_5th is being retrieved and is currently set to: {}", power_mul_5th);
+#[skyline::hook(offset = 0x3dd658, inline)]
+unsafe fn power_mul_5th_damage_calc_read(ctx: &skyline::hooks::InlineCtx) {
+    let power_mul_5th = ctx.registers_f[1].s();
+    println!("DEBUG >>>>>> power_mul_5th is currently set to: {}", power_mul_5th);
 }
 
 #[skyline::main(name = "hdr")]
@@ -434,8 +428,7 @@ pub fn main() {
             sss_to_css,
             css_to_sss,
             scene_transition,
-            set_power_mul_5th_hook,
-            get_power_mul_5th_hook
+            power_mul_5th_damage_calc_read
             //copy_fighter_info,
             //load_ingame_call_sequence_scene,
             //load_melee_scene,
