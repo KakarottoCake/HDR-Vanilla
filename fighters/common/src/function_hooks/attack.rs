@@ -399,6 +399,20 @@ unsafe fn post_spike_check(ctx: &mut skyline::hooks::InlineCtx) {
     }
 }
 
+#[skyline::hook(offset = 0x3dd658, inline)]
+unsafe extern "C" fn attack_module_set_power_hook_5th(ctx: &mut skyline::hooks::InlineCtx) {
+    let attack_module = ctx.registers[19].x() as *mut u64;
+    let mul = *(attack_module as *const f32).add(0x20c / 0x4);
+    // println!("mul: {}", mul);
+    let mul_5th = ctx.registers_f[1].s();
+    ctx.registers_f[1].set_s(mul * mul_5th);
+}
+
+#[skyline::hook(offset = 0x3dd688, inline)]
+unsafe extern "C" fn attack_module_set_power_hook_pattern(ctx: &mut skyline::hooks::InlineCtx) {
+    ctx.registers_f[2].set_s(1.0);
+}
+
 pub fn install() {
     skyline::patching::Patch::in_text(0x641d84).nop();
     skyline::install_hooks!(
@@ -414,6 +428,8 @@ pub fn install() {
         x03df93c,
         notify_log_event_collision_hit,
         disable_attacker_parry_pushback,
-        post_spike_check
+        post_spike_check,
+        attack_module_set_power_hook_5th,
+        attack_module_set_power_hook_pattern
     );
 }
