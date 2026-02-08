@@ -425,6 +425,8 @@ unsafe fn apply_damage(ctx: &mut skyline::hooks::InlineCtx) {
     let stale_damage = current_damage * pattern_mul;
     println!("DEBUG >>>>>> stale_damage is currently set to: {}", stale_damage);
 
+    let defender_boma = *(ctx.registers[20].x() as *mut *mut BattleObjectModuleAccessor).add(1);
+
     // NOTE that this also still affects hitlag
     ctx.registers_f[0].set_s(stale_damage);
 }
