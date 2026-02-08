@@ -417,18 +417,52 @@ unsafe extern "C" fn attack_module_set_power_hook_pattern(ctx: &mut skyline::hoo
 // reimplements staling by directly manipulating the damage value
 #[skyline::hook(offset = 0x46ba9c, inline)]
 unsafe fn apply_damage(ctx: &mut skyline::hooks::InlineCtx) {
+    let attacker_boma = &mut *(*(ctx.registers[19].x() as *mut *mut BattleObjectModuleAccessor).add(1));
+    let defender_boma = &mut *(*(ctx.registers[20].x() as *mut *mut BattleObjectModuleAccessor).add(1));
+
     let current_damage = ctx.registers_f[0].s();
     println!("DEBUG >>>>>> current_damage is currently set to: {}", current_damage);
 
-    let attacker_boma = *(ctx.registers[19].x() as *mut *mut BattleObjectModuleAccessor).add(1);
-    let pattern_mul = AttackModule::get_attack_power_mul_pattern(attacker_boma);
-    let stale_damage = current_damage * pattern_mul;
-    println!("DEBUG >>>>>> stale_damage is currently set to: {}", stale_damage);
-
-    let defender_boma = *(ctx.registers[20].x() as *mut *mut BattleObjectModuleAccessor).add(1);
+    let final_damage = current_damage * calc_non_knockback_damage_mul(attacker_boma, defender_boma);
+    println!("DEBUG >>>>>> final_damage after muls: {}", final_damage);
 
     // NOTE that this also still affects hitlag
-    ctx.registers_f[0].set_s(stale_damage);
+    ctx.registers_f[0].set_s(final_damage);
+}
+
+unsafe fn calc_non_knockback_damage_mul(attacker_boma: &mut BattleObjectModuleAccessor, defender_boma: &mut BattleObjectModuleAccessor) -> f32 {
+    // stale attack multiplier
+    let pattern_mul = AttackModule::get_attack_power_mul_pattern(attacker_boma);
+    dbg!(pattern_mul);
+
+    // aura multiplier for Lucario's attacks
+    let aura_mul = if attacker_boma.is_fighter() && attacker_boma.kind() == *FIGHTER_KIND_LUCARIO
+    && !attacker_boma.is_status_one_of(&[
+        // these statuses still use the old aurapower multiplier
+        *FIGHTER_STATUS_KIND_SPECIAL_N,
+        *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_CANCEL,
+        *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_HOLD,
+        *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_MAX,
+        *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_N_SHOOT,
+        *FIGHTER_STATUS_KIND_SPECIAL_HI,
+        *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_HI_BOUND,
+        *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_HI_RUSH,
+        *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_HI_RUSH_END,
+        *FIGHTER_STATUS_KIND_SPECIAL_S,
+        *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_THROW,
+        *FIGHTER_STATUS_KIND_SPECIAL_LW,
+        *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_LW_APPEAR,
+        *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_LW_END,
+        *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_LW_SPLIT,
+    ]) {
+        WorkModule::get_float(attacker_boma, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLOAT_CURR_AURAPOWER)
+    } else {
+        1.0
+    };
+    dbg!(aura_mul);
+
+    // final multiplier
+    return pattern_mul * aura_mul;
 }
 
 pub fn install() {
