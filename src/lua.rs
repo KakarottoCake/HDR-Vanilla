@@ -634,7 +634,10 @@ extern "C" fn get_page_name(state: *mut lua::lua_State) -> i32 {
 
         let mut mgr = STAGE_MANAGER.lock().unwrap();
         let stages = mgr.stage_pages.as_ref().unwrap();
-        let c_str = CString::new(stages[page_num].name.clone()).expect("String contained null byte");
+        let mut c_str = CString::new("").expect("");
+        if page_num < stages.len() {
+            c_str = CString::new(stages[page_num].name.clone()).expect("String contained null byte");
+        }
 
         lua::lua_pushstring(state, c_str.as_ptr());
 
@@ -689,10 +692,15 @@ extern "C" fn get_bans(state: *mut lua::lua_State) -> i32 {
         let mut mgr = STAGE_MANAGER.lock().unwrap();
 
         if let Some(pages) = &mgr.stage_pages {
-            let page = &pages[page_num];
-            match page.bans {
-                Some(bans) => lua::lua_pushinteger(state, bans as i64),
-                None => lua::lua_pushinteger(state, -1),
+            if page_num < pages.len() {
+                let page = &pages[page_num];
+                match page.bans {
+                    Some(bans) => lua::lua_pushinteger(state, bans as i64),
+                    None => lua::lua_pushinteger(state, -1),
+                }
+            }
+            else {
+                lua::lua_pushinteger(state, -1);
             }
         }
 
@@ -707,16 +715,22 @@ extern "C" fn get_dsr(state: *mut lua::lua_State) -> i32 {
         let mut mgr = STAGE_MANAGER.lock().unwrap();
 
         if let Some(pages) = &mgr.stage_pages {
-            let page = &pages[page_num];
-            match &page.dsr {
-                Some(dsr) => {
-                    let c_str = CString::new(dsr.clone()).expect("String contained null byte");
-                    lua::lua_pushstring(state, c_str.as_ptr());
-                },
-                None => { 
-                    let c_str = CString::new("").expect("");
-                    lua::lua_pushstring(state, c_str.as_ptr()); 
-                },
+            if page_num < pages.len() {
+                let page = &pages[page_num];
+                match &page.dsr {
+                    Some(dsr) => {
+                        let c_str = CString::new(dsr.clone()).expect("String contained null byte");
+                        lua::lua_pushstring(state, c_str.as_ptr());
+                    },
+                    None => { 
+                        let c_str = CString::new("").expect("");
+                        lua::lua_pushstring(state, c_str.as_ptr()); 
+                    },
+                }
+            }
+            else {
+                let c_str = CString::new("").expect("");
+                lua::lua_pushstring(state, c_str.as_ptr()); 
             }
         }
 

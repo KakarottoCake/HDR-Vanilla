@@ -64,7 +64,7 @@ pub enum QuakeKind {
     Invalid,
 }
 
-pub static DEFAULT_TARGET_INTERPOLATION_RATE: f32 = 0.75;
+pub static DEFAULT_TARGET_INTERPOLATION_RATE: f32 = 0.775;
 
 #[derive(Copy, Clone)]
 pub struct ReducedCameraTrackingSpeed {
