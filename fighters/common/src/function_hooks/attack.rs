@@ -421,19 +421,20 @@ unsafe fn apply_damage(ctx: &mut skyline::hooks::InlineCtx) {
     let defender_boma = &mut *(*(ctx.registers[20].x() as *mut *mut BattleObjectModuleAccessor).add(1));
 
     let current_damage = ctx.registers_f[0].s();
-    println!("DEBUG >>>>>> current_damage is currently set to: {}", current_damage);
+    // println!("DEBUG >>>>>> current_damage is currently set to: {}", current_damage);
 
     let final_damage = current_damage * calc_non_knockback_damage_mul(attacker_boma, defender_boma);
-    println!("DEBUG >>>>>> final_damage after muls: {}", final_damage);
+    // println!("DEBUG >>>>>> final_damage after muls: {}", final_damage);
 
-    // NOTE that this also still affects hitlag
+    // NOTE that this also affects hitlag for the DEFENDER ONLY
+    // TODO: store the result of calc_non_knockback_damage_mul, and use it to adjust defender hitlag separately
     ctx.registers_f[0].set_s(final_damage);
 }
 
 unsafe fn calc_non_knockback_damage_mul(attacker_boma: &mut BattleObjectModuleAccessor, defender_boma: &mut BattleObjectModuleAccessor) -> f32 {
     // stale attack multiplier
     let pattern_mul = AttackModule::get_attack_power_mul_pattern(attacker_boma);
-    dbg!(pattern_mul);
+    // dbg!(pattern_mul);
 
     // aura multiplier for Lucario's attacks
     let aura_mul = if attacker_boma.is_fighter() && attacker_boma.kind() == *FIGHTER_KIND_LUCARIO
@@ -459,7 +460,7 @@ unsafe fn calc_non_knockback_damage_mul(attacker_boma: &mut BattleObjectModuleAc
     } else {
         1.0
     };
-    dbg!(aura_mul);
+    // dbg!(aura_mul);
 
     // final multiplier
     return pattern_mul * aura_mul;
