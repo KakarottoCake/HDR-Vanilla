@@ -397,10 +397,13 @@ unsafe fn scene_transition(
         let key_str = skyline::from_c_str(str_ptr);
         println!("Transitioning to scene: '{}'", key_str);
 
-        // Clear perma-strikes when going to main menu or the rules screen
         if key_str == "MeleeRuleScene" || key_str == "MainMenuScene" {
+            // Clear perma-strikes when going to main menu or the rules screen
             let mut mgr = STAGE_MANAGER.lock().unwrap();
             mgr.perma_striked_stages.clear();
+
+            // Make sure new CSS SFX don't carry over to other modes unintentionally
+            NEW_CSS_SFX = false;
         }
     }
 
