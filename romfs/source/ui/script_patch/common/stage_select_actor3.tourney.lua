@@ -1908,9 +1908,13 @@ local handle_panel_decide = function()
         UiScriptPlayer.invoke("play_rumble_input_device")
     end
 
-    UiSoundManager.play_se_label("se_system_plate_off_stageselect")
-    if IS_DECIDE_SE_AUDIENCE == true then
+    if IS_MY_MUSIC == false then
+        -- the CSS used to play these when going to a match, so now
+        -- the SSS does
+        UiSoundManager.play_se_label("se_system_r2f_fixed")
         UiSoundManager.play_se_label("se_audience_suddendeath")
+    else
+        UiSoundManager.play_se_label("se_system_plate_off_stageselect")
     end
 
     if check_all_previews_enabled() == true then

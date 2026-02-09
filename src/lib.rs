@@ -291,12 +291,15 @@ impl HashedString {
     }
 }
 
+pub static mut NEW_CSS_SFX: bool = false;
+
 #[skyline::hook(offset = 0x23357f8, inline)]
 unsafe fn sss_to_css(ctx: &InlineCtx) {
     let hashed_string = ctx.registers[1].x() as *mut HashedString;
     let current_scene = (*hashed_string).as_str();
 
     if current_scene == "StageSelectScene" {
+        NEW_CSS_SFX = true;
         (*hashed_string).set("CharaSelectScene");
     }
 }
@@ -319,6 +322,9 @@ unsafe fn css_to_sss(ctx: &InlineCtx) {
         // add them as they're found.
         if flag == 0 {
             (*hashed_string).set("StageSelectScene");
+        }
+        else {
+            NEW_CSS_SFX = false;
         }
     }
 }

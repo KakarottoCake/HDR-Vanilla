@@ -11,6 +11,7 @@ use smash2::{
 };
 use serde::Deserialize;
 use utils::modules::TourneyConfig;
+use crate::NEW_CSS_SFX;
 
 mod layout;
 mod random;
@@ -218,10 +219,25 @@ unsafe fn update_player_tag(arg1: u64, tag_index: *const u8) {
     call_original!(arg1, tag_index);
 }
 
+#[skyline::hook(offset = 0x1a2d42c, inline)]
+unsafe fn css_advance_sfx_hook(ctx: &mut skyline::hooks::InlineCtx) {
+    if NEW_CSS_SFX {
+        // 0x11f3524d38 = hash40("se_system_fixed_l")
+        let sfx = 0x11f3524d38 as u64;
+
+        ctx.registers[1].set_x(sfx);
+        ctx.registers[22].set_x(sfx);
+    }
+}
+
 pub fn install() {
     skyline::install_hooks!(
-        update_player_tag
+        update_player_tag,
+        css_advance_sfx_hook
     );
+
+    // Don't play the audience sound when using new sfx
+    skyline::patching::Patch::in_text(0x1a2d590).nop();
 
     layout::install();
     random::install();
