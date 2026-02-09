@@ -1809,13 +1809,16 @@ local handle_panel_decide = function()
         UiScriptPlayer.invoke("play_rumble_input_device")
     end
 
-    if IS_MY_MUSIC == false then
+    if IS_MY_MUSIC == false and HDR.is_css_first() then
         -- the CSS used to play these when going to a match, so now
         -- the SSS does
         UiSoundManager.play_se_label("se_system_r2f_fixed")
         UiSoundManager.play_se_label("se_audience_suddendeath")
     else
         UiSoundManager.play_se_label("se_system_plate_off_stageselect")
+        if IS_DECIDE_SE_AUDIENCE then
+            UiSoundManager.play_se_label("se_audience_suddendeath")
+        end
     end
 
     if check_all_previews_enabled() == true then
@@ -2749,6 +2752,7 @@ main = function()
     stage_select_bgm:setup()
     setup_from_environment()
     root_view:play_animation("in", 1.0)
+    IS_SIMPLE_CANCEL = IS_SIMPLE_CANCEL or HDR.is_css_first()
     if IS_SIMPLE_CANCEL == true then
         local parts = root_view:get_parts("set_parts_txt_head_00")
         if IS_RETURN_MENU == false then
