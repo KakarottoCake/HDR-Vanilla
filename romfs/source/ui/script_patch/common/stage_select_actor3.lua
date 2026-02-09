@@ -2639,7 +2639,14 @@ local regular_main_update = function()
                             end
                         end
                         if is_valid_stage == true and prepare_scene_exit() == true then
-                            UiSoundManager.play_se_label("se_system_fixed_s")
+                            if IS_MY_MUSIC == false and HDR.is_css_first() then
+                                -- the CSS used to play these when going to a match, so now
+                                -- the SSS does
+                                UiSoundManager.play_se_label("se_system_r2f_fixed")
+                                UiSoundManager.play_se_label("se_audience_suddendeath")
+                            else
+                                UiSoundManager.play_se_label("se_system_fixed_s")
+                            end
                             local off_preview_index = -1
                             if check_all_previews_enabled() == false then
                                 play_off_preview_animation(current_selected_preview)
