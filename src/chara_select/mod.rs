@@ -221,12 +221,11 @@ unsafe fn update_player_tag(arg1: u64, tag_index: *const u8) {
 
 #[skyline::hook(offset = 0x1a2d440, inline)]
 unsafe fn css_advance_sfx_hook(ctx: &mut skyline::hooks::InlineCtx) {
-    if NEW_CSS_SFX {
-        // 0x11f3524d38 = hash40("se_system_fixed_l")
-        let sfx = 0x11f3524d38 as u64;
-        let param_1 = ctx.registers[0].x() as *mut u32;
-        play_se(param_1, sfx);
-    }
+    // 0x11f3524d38 = hash40("se_system_fixed_l")
+    // 0x13d3b19adc = hash40("se_system_r2f_fixed") // original sound
+    let param_1 = ctx.registers[0].x() as *mut u32;
+    let sfx = if NEW_CSS_SFX { 0x11f3524d38 as u64 } else { 0x13d3b19adc as u64 };
+    play_se(param_1, sfx);
 }
 
 #[skyline::hook(offset = 0x1a2d594, inline)]
