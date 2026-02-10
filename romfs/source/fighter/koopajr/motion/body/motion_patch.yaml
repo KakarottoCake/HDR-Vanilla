@@ -172,6 +172,12 @@ special_n_shoot:
 special_air_n_shoot:
   extra:
     cancel_frame: 32
+special_s_spin:
+  extra:
+    cancel_frame: 40
+special_air_s_spin:
+  extra:
+    cancel_frame: 40
 special_s_wall_clash:
   extra:
     cancel_frame: 1
