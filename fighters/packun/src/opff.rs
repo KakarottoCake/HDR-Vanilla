@@ -119,7 +119,7 @@ unsafe fn maw_end_head(fighter: &mut L2CFighterCommon) {
 
 unsafe fn lss_lc(fighter: &mut L2CFighterCommon) {
     if fighter.is_status_one_of(&[*FIGHTER_PACKUN_STATUS_KIND_SPECIAL_LW_END, *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_LW_FALL_END])
-    || fighter.is_flag(*FIGHTER_PACKUN_STATUS_SPECIAL_LW_FLAG_STALK_SHORTEN) {
+    || (fighter.is_status(*FIGHTER_PACKUN_STATUS_KIND_SPECIAL_LW_BITE) && fighter.is_flag(*FIGHTER_PACKUN_STATUS_SPECIAL_LW_FLAG_STALK_SHORTEN)) {
         fighter.check_land_cancel(Some(6.0));
     }
 }
