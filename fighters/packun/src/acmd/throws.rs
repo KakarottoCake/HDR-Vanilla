@@ -91,10 +91,11 @@ unsafe extern "C" fn game_throwf(agent: &mut L2CAgentBase) {
         let grabbed_boma = agent.get_grabbed_opponent_boma();
         MotionModule::change_motion(grabbed_boma, Hash40::new("thrown_lw_big"), 0.0, 1.0, false, 0.0, false, false);
     }
-    frame(lua_state, 28.0);
+    frame(lua_state, 26.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("mouth"), 10.0, 361, 100, 0, 50, 6.0, 2.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_HEAD);
-        AttackModule::set_catch_only_all(boma, true, false);
+        ATTACK(agent, 1, 0, Hash40::new("mouth"), 14.0, 361, 60, 0, 50, 6.0, 2.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_HEAD);
+        AttackModule::set_catch_only(boma, 0, true, false);
         CHECK_FINISH_CAMERA(agent, 30, 8);
     }
     frame(lua_state, 29.0);

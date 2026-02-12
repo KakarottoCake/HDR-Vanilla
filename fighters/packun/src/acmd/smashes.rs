@@ -28,12 +28,15 @@ unsafe extern "C" fn game_attacks4(agent: &mut L2CAgentBase) {
         HIT_NODE(agent, Hash40::new("lipd3"), *HIT_STATUS_XLU);
     }
     frame(lua_state, 20.0);
+    FT_MOTION_RATE_RANGE(agent, 20.0, 58.0, 34.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
         HIT_NODE(agent, Hash40::new("mouth"), *HIT_STATUS_NORMAL);
         HIT_NODE(agent, Hash40::new("lipu3"), *HIT_STATUS_NORMAL);
         HIT_NODE(agent, Hash40::new("lipd3"), *HIT_STATUS_NORMAL);
     }
+    frame(lua_state, 58.0);
+    FT_MOTION_RATE(agent, 1.0);
 }
 
 unsafe extern "C" fn effect_attacks4(agent: &mut L2CAgentBase) {
