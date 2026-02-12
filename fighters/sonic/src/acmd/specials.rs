@@ -140,7 +140,6 @@ unsafe extern "C" fn game_specialsboostend(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     FT_MOTION_RATE(agent, 0.5);
-    frame(lua_state, 4.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
@@ -186,7 +185,6 @@ unsafe extern "C" fn game_specialairsboostend(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     FT_MOTION_RATE(agent, 0.8);
-    frame(lua_state, 2.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
