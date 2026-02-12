@@ -265,6 +265,13 @@ unsafe extern "C" fn sub_escape_air_uniq(fighter: &mut L2CFighterCommon, arg: L2
             }
             fighter.sub_fall_common_uniq(arg);
         }
+
+        // Handles enabling ledgegrab
+        // Ledgegrab frame varies per character, based on gravity and fallspeed
+        let enable_cliff_catch_frame = fighter.get_escape_air_cliff_catch_frame();
+        if frame == enable_cliff_catch_frame {
+            fighter.sub_fighter_cliff_check(L2CValue::I32(*GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES));
+        }
     }
     0.into()
 }
