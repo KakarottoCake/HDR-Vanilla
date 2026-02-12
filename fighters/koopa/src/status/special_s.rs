@@ -97,7 +97,8 @@ unsafe extern "C" fn special_s_situation_helper(fighter: &mut L2CFighterCommon, 
     fighter.sub_change_kinetic_type_by_situation(FIGHTER_KINETIC_TYPE_GROUND_STOP.into(),FIGHTER_KINETIC_TYPE_AIR_STOP.into());
 
     KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
-    if throw_input == SPECIAL_S_KIND_LW && fighter.is_situation(*SITUATION_KIND_AIR) {
+    if fighter.is_status(*FIGHTER_KOOPA_STATUS_KIND_SPECIAL_S_SQUAT)
+    || (throw_input == SPECIAL_S_KIND_LW && fighter.is_situation(*SITUATION_KIND_AIR)) {
         KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY); 
     }
     else {
@@ -260,14 +261,12 @@ unsafe extern "C" fn special_s_squat_main(fighter: &mut L2CFighterCommon) -> L2C
 }
 
 unsafe extern "C" fn special_s_squat_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.status_frame() >= 10 {
-        //if fighter.is_situation(*SITUATION_KIND_GROUND) {   // TEMPORARY UNTIL CRASHES ARE FIXED
-            if fighter.global_table[CMD_CAT2].get_i32() & *FIGHTER_PAD_CMD_CAT2_FLAG_THROW_LW != 0 {
-                VarModule::set_int(fighter.battle_object, vars::koopa::instance::SPECIAL_S_THROW_TYPE, SPECIAL_S_KIND_LW);
-                fighter.change_status(FIGHTER_KOOPA_STATUS_KIND_SPECIAL_S_LANDING.into(),false.into());
-                return 0.into();
-            }
-        //}
+    if fighter.status_frame() >= 8 {
+        if fighter.global_table[CMD_CAT2].get_i32() & *FIGHTER_PAD_CMD_CAT2_FLAG_THROW_LW != 0 {
+            VarModule::set_int(fighter.battle_object, vars::koopa::instance::SPECIAL_S_THROW_TYPE, SPECIAL_S_KIND_LW);
+            fighter.change_status(FIGHTER_KOOPA_STATUS_KIND_SPECIAL_S_LANDING.into(),false.into());
+            return 0.into();
+        }
         // Uncommenting this will allow early transition into Flying Slam
         // else if fighter.global_table[CMD_CAT2].get_i32() & *FIGHTER_PAD_CMD_CAT2_FLAG_THROW_HI != 0 {
         //     VarModule::set_int(fighter.battle_object, vars::koopa::instance::SPECIAL_S_THROW_TYPE, SPECIAL_S_KIND_HI);
@@ -361,13 +360,6 @@ unsafe extern "C" fn special_s_jump_init(fighter: &mut L2CFighterCommon) -> L2CV
 }
 
 unsafe extern "C" fn special_s_jump_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    // let motion;
-    // if VarModule::get_int(fighter.battle_object, vars::koopa::instance::SPECIAL_S_THROW_TYPE) == SPECIAL_S_KIND_HI {
-    //     motion = Hash40::new("special_s_jump");
-    // }
-    // else {
-    //     motion = Hash40::new("special_s_throw_lw_jump");
-    // }
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s_jump"), 0.0, 1.0, false, 0.0, false, false);
     GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
     CameraModule::set_enable_camera(fighter.module_accessor, true, -1);
@@ -451,13 +443,6 @@ unsafe extern "C" fn special_s_fall_init(fighter: &mut L2CFighterCommon) -> L2CV
 unsafe extern "C" fn special_s_fall_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let dead_offset_y = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_s"), hash40("special_s_fall_check_dead_offset_y"));
     WorkModule::set_float(fighter.module_accessor, dead_offset_y, *FIGHTER_INSTANCE_WORK_ID_FLOAT_CHECK_DEAD_OFFSET_Y);
-    // let motion;
-    // if VarModule::get_int(fighter.battle_object, vars::koopa::instance::SPECIAL_S_THROW_TYPE) == SPECIAL_S_KIND_HI {
-    //     motion = Hash40::new("special_s_fall");
-    // }
-    // else {
-    //     motion = Hash40::new("special_s_throw_lw_fall");
-    // }
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s_fall"), 0.0, 1.0, false, 0.0, false, false);
     fighter.main_shift(special_s_fall_main_loop)
 }
@@ -583,11 +568,19 @@ unsafe extern "C" fn special_s_landing_main_loop(fighter: &mut L2CFighterCommon)
             return 1.into();
         }
     }
-
+    let throw_type = VarModule::get_int(fighter.battle_object, vars::koopa::instance::SPECIAL_S_THROW_TYPE);
+    if throw_type != SPECIAL_S_KIND_HI && fighter.motion_frame() >= 30.0 {
+        fighter.sub_air_check_dive();
+    }
     if !StatusModule::is_changing(fighter.module_accessor)
     && StatusModule::is_situation_changed(fighter.module_accessor) {
-        if VarModule::get_int(fighter.battle_object, vars::koopa::instance::SPECIAL_S_THROW_TYPE) != SPECIAL_S_KIND_HI {
+        if throw_type == SPECIAL_S_KIND_F || throw_type == SPECIAL_S_KIND_B {
             special_s_situation_helper(fighter, false);
+        }
+        else if throw_type == SPECIAL_S_KIND_LW {
+            if fighter.is_situation(*SITUATION_KIND_GROUND) {
+                fighter.check_land_cancel(None);
+            }
         }
     }
 
