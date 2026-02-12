@@ -1629,6 +1629,7 @@ impl BomaExt for BattleObjectModuleAccessor {
     }
 
     unsafe fn get_escape_air_cliff_catch_frame(&mut self) -> f32 {
+        let end_frame = MotionModule::end_frame(self);
         let escape_air_slide_fall_frame = crate::ParamModule::get_int(self.object(), crate::ParamType::Common, "escape_air_slide_fall_frame");
         let escape_air_enable_cliff_catch_fall_distance = crate::ParamModule::get_float(self.object(), crate::ParamType::Common, "escape_air_enable_cliff_catch_fall_distance");
         let escape_air_slide_speed_mul = crate::ParamModule::get_float(self.object(), crate::ParamType::Common, "escape_air_slide_speed_mul");
@@ -1644,7 +1645,7 @@ impl BomaExt for BattleObjectModuleAccessor {
             air_speed_y_stable,
             remaining_y_speed_on_escape_air_fall_frame
         );
-        (escape_air_slide_fall_frame + 1) as f32 + fall_time_to_enable_cliff_catch.ceil()
+        ((escape_air_slide_fall_frame + 1) as f32 + fall_time_to_enable_cliff_catch.ceil()).min(end_frame)
     }
 }
 
