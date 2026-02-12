@@ -1904,6 +1904,7 @@ pub mod vars {
         pub mod instance {
             // flags
             pub const PUMMEL_SKIP_STALE: i32 = 0x0100;
+            pub const SPECIAL_S_CANCEL: i32 = 0x0101;
         }
     }
 
