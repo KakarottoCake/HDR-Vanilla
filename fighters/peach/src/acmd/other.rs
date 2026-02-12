@@ -64,9 +64,7 @@ unsafe extern "C" fn game_turndash(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_escapeair(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let escape_air_cancel_frame = WorkModule::get_param_float(boma, hash40("param_motion"), hash40("escape_air_cancel_frame"));
-    let offset = ParamModule::get_float(boma.object(), ParamType::Common, "escape_air_cliff_catch_frame_offset_from_cancel_frame");
-    let ledgegrab_frame = escape_air_cancel_frame + offset;
+    let ledgegrab_frame = boma.get_escape_air_cliff_catch_frame();
 
     frame(lua_state, 29.0);
     if is_excute(agent) {
@@ -81,9 +79,7 @@ unsafe extern "C" fn game_escapeair(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_escapeairslide(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let escape_air_slide_cancel_frame = WorkModule::get_param_float(boma, hash40("param_motion"), hash40("escape_air_slide_cancel_frame"));
-    let offset = ParamModule::get_float(boma.object(), ParamType::Common, "escape_air_cliff_catch_frame_offset_from_cancel_frame");
-    let ledgegrab_frame = escape_air_slide_cancel_frame + offset;
+    let ledgegrab_frame = boma.get_escape_air_cliff_catch_frame();
 
     frame(lua_state, 29.0);
     if is_excute(agent) {
