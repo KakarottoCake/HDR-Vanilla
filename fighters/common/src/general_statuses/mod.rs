@@ -38,6 +38,7 @@ mod lasso;
 mod itemthrow;
 mod fallspecial;
 mod squat;
+mod mewtwo_thrown;
 
 // [LUA-REPLACE-REBASE]
 // [SHOULD-CHANGE]
@@ -1143,6 +1144,7 @@ pub fn install() {
     itemthrow::install();
     fallspecial::install();
     squat::install();
+    mewtwo_thrown::install();
 
     skyline::nro::add_hook(nro_hook);
 }

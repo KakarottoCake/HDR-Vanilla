@@ -85,7 +85,7 @@ attack_dash:
     cancel_frame: 42
 attack_11:
   extra:
-    cancel_frame: 20
+    cancel_frame: 19
 attack_12:
   game_script: game_attack12
   flags:
@@ -130,7 +130,7 @@ special_lw:
     intangible_end_frame: 0
 attack_hi3:
   extra:
-    cancel_frame: 31
+    cancel_frame: 33
 fall_aerial:
   blend_frames: 3
 attack_s4_s:

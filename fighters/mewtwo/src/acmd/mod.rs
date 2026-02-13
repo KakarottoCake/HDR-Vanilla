@@ -22,15 +22,15 @@ pub unsafe fn GET_COLOR_EFF_NAME(boma: &mut BattleObjectModuleAccessor) -> &str 
     }; //matches glow color
 }
 
-pub unsafe fn TOGGLE_TAIL(agent: &mut L2CAgentBase, toggle: bool) {
-    if toggle {
-        //HIT_NO(agent, 12, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 13, *HIT_STATUS_NORMAL);
-    } else {
-        //HIT_NO(agent, 12, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 13, *HIT_STATUS_OFF);
-    }
-}
+//pub unsafe fn TOGGLE_TAIL(agent: &mut L2CAgentBase, toggle: bool) {
+//    if toggle {
+//        //HIT_NO(agent, 12, *HIT_STATUS_NORMAL);
+//        HIT_NO(agent, 13, *HIT_STATUS_NORMAL);
+//    } else {
+//        //HIT_NO(agent, 12, *HIT_STATUS_NORMAL);
+//        HIT_NO(agent, 13, *HIT_STATUS_OFF);
+//    }
+//}
 
 pub fn install(agent: &mut Agent) {
     ground::install(agent);

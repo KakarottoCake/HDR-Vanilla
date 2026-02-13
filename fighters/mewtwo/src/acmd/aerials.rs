@@ -97,7 +97,6 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     frame(lua_state, 3.0);
     if is_excute(agent) {
         agent.on_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-        //TOGGLE_TAIL(agent, true);
     }
     frame(lua_state, 12.0);
     MotionModule::set_rate(boma, 1.0);
@@ -111,10 +110,6 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     MotionModule::set_rate(boma, (37.0 - 18.0) / 19.0); // 32
     if is_excute(agent) {
         AttackModule::clear_all(boma);
-    }
-    frame(lua_state, 20.5); // 3f after clear
-    if is_excute(agent) {
-        //TOGGLE_TAIL(agent, false);
     }
     frame(lua_state, 31.0);
     if is_excute(agent) {
@@ -141,7 +136,6 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 3.0);
     if is_excute(agent) {
-        //TOGGLE_TAIL(agent, true);
         agent.on_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
     frame(lua_state, 8.0);
@@ -152,9 +146,9 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 10.0);
     if is_excute (agent) {
-        ATTACK(agent, 0, 0, Hash40::new("s_tail1"), 7.0, 67, 111, 0, 0, 4.5, 2.0, 1.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
-        ATTACK(agent, 1, 0, Hash40::new("s_tail5"), 8.0, 67, 111, 0, 0, 4.1, -1.0, 2.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
-        ATTACK(agent, 2, 0, Hash40::new("s_tail7"), 9.0, 67, 111, 0, 0, 3.5, 1.0, 1.2, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
+        ATTACK(agent, 0, 0, Hash40::new("s_tail1"), 7.0, 66, 111, 0, 0, 4.5, 2.0, 1.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
+        ATTACK(agent, 1, 0, Hash40::new("s_tail5"), 8.0, 66, 111, 0, 0, 4.1, -1.0, 2.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
+        ATTACK(agent, 2, 0, Hash40::new("s_tail7"), 9.0, 66, 111, 0, 0, 3.5, 1.0, 1.2, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {
@@ -162,9 +156,6 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 17.0);
     MotionModule::set_rate(boma, (34.0 - 17.0) / 15.0);
-    if is_excute(agent) {
-        //TOGGLE_TAIL(agent, false);
-    }
     frame(lua_state, 30.0); // 29 ingame still
     if is_excute(agent) {
         agent.off_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
