@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <struct>
+    <struct hash="param_special_hi">
+      <float hash="empty_landing">10.0</float>
+      <float hash="landing_attack_air_add">4.0</float>
+    </struct>
     <struct hash="param_float">
       <int hash="float_duration">60</int>
       <float hash="float_stable">1.2</float>
