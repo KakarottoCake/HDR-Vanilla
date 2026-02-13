@@ -74,7 +74,7 @@
   <list hash="param_bindball">
     <struct index="0">
       <int hash="life">7</int>
-      <float hash="speed">2.5</float>
+      <float hash="speed">2.55</float>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>
