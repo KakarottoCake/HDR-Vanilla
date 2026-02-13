@@ -267,12 +267,6 @@ unsafe extern "C" fn special_s_squat_main_loop(fighter: &mut L2CFighterCommon) -
             fighter.change_status(FIGHTER_KOOPA_STATUS_KIND_SPECIAL_S_LANDING.into(),false.into());
             return 0.into();
         }
-        // Uncommenting this will allow early transition into Flying Slam
-        // else if fighter.global_table[CMD_CAT2].get_i32() & *FIGHTER_PAD_CMD_CAT2_FLAG_THROW_HI != 0 {
-        //     VarModule::set_int(fighter.battle_object, vars::koopa::instance::SPECIAL_S_THROW_TYPE, SPECIAL_S_KIND_HI);
-        //     fighter.change_status(FIGHTER_KOOPA_STATUS_KIND_SPECIAL_S_JUMP.into(),false.into());
-        //     return 0.into();
-        // }
         else if fighter.global_table[CMD_CAT2].get_i32() & *FIGHTER_PAD_CMD_CAT2_FLAG_THROW_B != 0 {
             VarModule::set_int(fighter.battle_object, vars::koopa::instance::SPECIAL_S_THROW_TYPE, SPECIAL_S_KIND_B);
             fighter.change_status(FIGHTER_KOOPA_STATUS_KIND_SPECIAL_S_LANDING.into(),false.into());
