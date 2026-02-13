@@ -625,7 +625,8 @@ pub mod vars {
     pub mod edge {
         pub mod status {
             // flags
-            pub const SPECIAL_LW_HOLD: i32 = 0x1100;
+            pub const SPECIAL_LW_CHECK_HOLD: i32 = 0x1100;
+            pub const SPECIAL_LW_HOLD: i32 = 0x1101;
         }
     }
 
@@ -881,6 +882,7 @@ pub mod vars {
             pub use super::super::luigi::status::SPECIAL_N_THUNDERHAND;
             pub use super::super::mario::status::SPECIAL_N_FIREBRAND;
             pub use super::super::mariod::status::SPECIAL_N_CHILL_PILL;
+            pub use super::super::miigunner::status::ATTACK_CHARGE;
         }
     }
 
