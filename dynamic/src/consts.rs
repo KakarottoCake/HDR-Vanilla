@@ -1213,6 +1213,9 @@ pub mod vars {
             pub const SPECIAL_LW2_HOLD: i32 = 0x1104;
             pub const SPECIAL_LW2_CHANGE_ARTICLE: i32 = 0x1105;
             pub const SPECIAL_LW3_CHECK_INPUT: i32 = 0x1106;
+
+            // floats
+            pub const SPECIAL_S2_SPEED_Y: i32 = 0x1100;
         }
     }
 

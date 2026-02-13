@@ -1,5 +1,34 @@
 use super::*;
 
+pub unsafe extern "C" fn special_s2_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    StatusModule::init_settings(
+        fighter.module_accessor,
+        SituationKind(*SITUATION_KIND_NONE),
+        *FIGHTER_KINETIC_TYPE_UNIQ,
+        *GROUND_CORRECT_KIND_KEEP as u32,
+        GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP),
+        true,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT,
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT,
+        0
+    );
+    FighterStatusModuleImpl::set_fighter_status_data(
+        fighter.module_accessor,
+        false,
+        *FIGHTER_TREADED_KIND_NO_REAC,
+        false,
+        false,
+        false,
+        (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_S | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64,
+        *FIGHTER_STATUS_ATTR_START_TURN as u32,
+        *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S as u32,
+        0
+    );
+
+    0.into()
+}
+
 pub unsafe extern "C" fn special_s2_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.off_flag(*FIGHTER_MIISWORDSMAN_STATUS_SHIPPU_SLASH_FLAG_CONTINUE_MOT);
     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x20cbc92683), 1, FIGHTER_LOG_DATA_INT_ATTACK_NUM_KIND, (*FIGHTER_LOG_ATTACK_KIND_ADDITIONS_ATTACK_05) + -1);
@@ -12,6 +41,8 @@ pub unsafe extern "C" fn special_s2_main(fighter: &mut L2CFighterCommon) -> L2CV
 
 unsafe extern "C" fn special_s2_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     if MotionModule::is_end(fighter.module_accessor) {
+        let sum_speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
+        VarModule::set_float(fighter.battle_object, vars::miiswordsman::status::SPECIAL_S2_SPEED_Y, sum_speed_y);
         fighter.change_status(FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_S2_DASH.into(), true.into());
     }
     if StatusModule::is_situation_changed(fighter.module_accessor) {
@@ -53,6 +84,11 @@ unsafe fn sub_special_s2_main(fighter: &mut L2CFighterCommon) {
         sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, ENERGY_MOTION_RESET_TYPE_AIR_TRANS, 0.0, 0.0, 0.0, 0.0, 0.0);
     }
     KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_MOTION);
+}
+
+pub unsafe extern "C" fn special_s2_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    SoundModule::stop_se(fighter.module_accessor, Hash40::new("se_miiswordsman_special_s01"), 0);
+    return 0.into();
 }
 
 // FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_S2_DASH
@@ -100,15 +136,26 @@ unsafe extern "C" fn special_s2_dash_main(fighter: &mut L2CFighterCommon) -> L2C
 }
 
 unsafe extern "C" fn special_s2_dash_change_motion(fighter: &mut L2CFighterCommon) {
-    let mot = if !fighter.is_situation(*SITUATION_KIND_GROUND) {
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        fighter.sub_fighter_cliff_check(GROUND_CLIFF_CHECK_KIND_ON_DROP.into());
-        Hash40::new("special_air_s2_dash")
+    let mot = if fighter.is_situation(*SITUATION_KIND_GROUND) {
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+        Hash40::new("special_s2_dash")
     }
     else {
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
-        fighter.sub_fighter_cliff_check(GROUND_CLIFF_CHECK_KIND_ON_DROP.into());
-        Hash40::new("special_s2_dash")
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        let sum_speed_y = VarModule::get_float(fighter.battle_object, vars::miiswordsman::status::SPECIAL_S2_SPEED_Y);
+        let stable_speed_y = fighter.get_param_float("air_speed_y_stable", "");
+        let accel_y = fighter.get_param_float("air_accel_y", "");
+        let min_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "special_s2.min_speed_y_mul");
+        let max_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "special_s2.max_speed_y_mul");
+        let speed_y = sum_speed_y.clamp(-(sum_speed_y.abs()) * min_mul, stable_speed_y * max_mul);
+        let mul_str = if speed_y >= 0.0 { "special_s2.accel_y_mul_up" } else { "special_s2.accel_y_mul_down" };
+        let accel_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, mul_str);
+        sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, 0.0, 0.0, 0.0, 0.0);
+        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y);
+        sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, stable_speed_y);
+        sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -accel_y * accel_mul);
+        KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+        Hash40::new("special_air_s2_dash")
     };
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_STATUS_SHIPPU_SLASH_FLAG_CONTINUE_MOT) {
         MotionModule::change_motion(fighter.module_accessor, mot, 0.0, 1.0, false, 0.0, false, false);
@@ -153,15 +200,6 @@ unsafe extern "C" fn special_s2_dash_main_loop(fighter: &mut L2CFighterCommon) -
         fighter.change_status(FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_S2_ATTACK.into(), false.into());
         return 0.into();
     }
-    //fighter.check_wall_jump_cancel();
-    // if VarModule::is_flag(fighter.battle_object, vars::miiswordsman::status::SPECIAL_S2_GROUND_START) {
-    //     VarModule::set_float(fighter.battle_object, vars::common::instance::JUMP_SPEED_MAX_MUL, 1.346);  // 1.75 max jump speed out of Quick Draw (copied from Ike)
-    //     //fighter.check_jump_cancel(true, false);
-    // }
-    // attack cancel
-    // if fighter.is_cat_flag(Cat1::SpecialAny) {
-    //     StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_S2_ATTACK, true);
-    // }
 
     if !StatusModule::is_changing(fighter.module_accessor)
     && StatusModule::is_situation_changed(fighter.module_accessor) {
