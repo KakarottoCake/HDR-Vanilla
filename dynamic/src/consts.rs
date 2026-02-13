@@ -193,7 +193,7 @@ pub mod vars {
 
             pub const DOWN_DISABLE_PASSIVE: i32 = 0x006B;
 
-            pub const DOWN_DISABLE_A_LAND: i32 = 0x006C;
+            // pub const DOWN_DISABLE_A_LAND: i32 = 0x006C;
 
             pub const IS_KILLING_BLOW: i32 = 0x006D;
 
@@ -1902,6 +1902,7 @@ pub mod vars {
         pub mod instance {
             // flags
             pub const PUMMEL_SKIP_STALE: i32 = 0x0100;
+            pub const SPECIAL_S_CANCEL: i32 = 0x0101;
         }
     }
 
