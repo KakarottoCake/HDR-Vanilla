@@ -56,24 +56,10 @@ unsafe extern "C" fn special_s_start_momentum(fighter: &mut L2CFighterCommon) ->
     let mut speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let start_y = fighter.get_param_float("param_special_s", "special_s_start_speed_y");
     let max_y = fighter.get_param_float("air_speed_y_stable", "");
-    //MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_s_start"), 0.0, 1.0, false, 0.0, false, false);
     fighter.change_motion_by_situation("special_s_start", "special_air_s_start", 0.0, 1.0, false, 0.0, false, false);
-    //fighter.set_situation(SITUATION_KIND_AIR.into());
     fighter.set_situation_keep(L2CValue::I32(*SITUATION_KIND_AIR), 1.into());
     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
     GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-    // fix gr start instant landing (is_ground doesnt work?)
-    //let pos = *PostureModule::pos(fighter.module_accessor);
-    //let ground = &mut Vector2f{x: 0.0, y: 0.0};
-    //let ray_check = GroundModule::ray_check_hit_pos(fighter.module_accessor, &Vector2f{x: pos.x, y: pos.y + 2.0}, &Vector2f{x: pos.x, y: pos.y - 2.0}, ground, true);
-    //if ray_check {
-    //    let ray_check_y = ground.y;
-    //    PostureModule::set_pos(fighter.module_accessor, &Vector3f{x: pos.x, y: ground.y + 11.0, z: pos.z});
-    //    speed_y = 0.25;
-    //}
-    //let mut gravity_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY) as *mut app::KineticEnergy;
-    //lua_bind::KineticEnergy::reset_energy(gravity_energy, *ENERGY_GRAVITY_RESET_TYPE_GRAVITY, &Vector2f{x: 0.0, y: (speed_y+start_y).min(max_y)}, &Vector3f::zero(), fighter.module_accessor);
-
     sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.0);
     sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, (speed_y+start_y).min(max_y));
     0.into()
