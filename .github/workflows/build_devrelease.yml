@@ -1,43 +1,30 @@
 name: build_devrelease
 on:
   workflow_dispatch:
+    inputs:
+      plugin-ref:
+        description: 'Git ref for the plugin checkout (branch, tag, or sha)'
+        required: false
+        default: 'pre-release'
+        type: string
+      romfs-ref:
+        description: 'Git ref for the hdr-private romfs clone (branch, tag, or sha)'
+        required: false
+        default: 'dev'
+        type: string
 
 jobs:
-  version_check:
-    runs-on: ubuntu-24.04
-    env:
-      GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-    steps:
-      - id: latest_package
-        continue-on-error: true
-        uses: pozetroninc/github-action-get-latest-release@master
-        with:
-          repository: HDR-Development/HDR-DevReleases
-          token: ${{ secrets.RELEASE_TOKEN }}
-    
-      # fail out if there's already a release for this commit
-      - name: ensure one build per sha
-        if: ${{ contains(steps.latest_package.outputs.description, github.sha) }}
-        run: exit 1
-
   plugin_build:
     env:
       PLUGIN_NAME: hdr
     runs-on: ubuntu-24.04
-    needs: version_check
-    container: 
+    container:
       image: wuboyth/skyline-plugin-builder:latest
     steps:
-    # - name: Free Disk Space (Ubuntu)
-    #   uses: jlumbroso/free-disk-space@v1.3.1
-
-    # - name: setup python
-    #   uses: actions/setup-python@v5.1.0
-    #   with:
-    #     python-version: '3.9' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-    
     - name: checkout version
       uses: actions/checkout@v4.1.4
+      with:
+        ref: ${{ github.event.inputs.plugin-ref }}
 
     # get the most recent latest full release
     - id: package_latest
@@ -55,27 +42,22 @@ jobs:
 
     # build the project
     - run: |
-        cd scripts && NO_RUST_NIGHTLY=1 python3 make_dist.py build version=${{ steps.bump-semver.outputs.new_version }}-private name=hdr-private && cd ..
+        cd scripts && NO_RUST_NIGHTLY=1 python3 make_dist.py build version=${{ steps.bump-semver.outputs.new_version }}-private name=hdr && cd ..
         du -sh *
         rm -rf target
         du -sh *
       env:
         HOME: /root
 
-    - id: romfs_version
-      uses: pozetroninc/github-action-get-latest-release@master
-      with:
-        token: ${{ secrets.RELEASE_TOKEN }}
-        repository: HDR-Development/romfs-release
-
-    - name: Download romfs
-      id: get_romfs
-      uses: dsaltares/fetch-gh-release-asset@master
-      with:
-        repo: 'HDR-Development/romfs-release'
-        version: 'tags/${{ steps.romfs_version.outputs.release }}'
-        file: 'romfs.zip'
-        token: ${{ secrets.RELEASE_TOKEN }}
+    - name: clone romfs
+      id: clone_romfs
+      run: |
+        git clone --branch ${{ github.event.inputs.romfs-ref }} --depth 1 \
+          https://x-access-token:${{ secrets.RELEASE_TOKEN }}@github.com/HDR-Development/hdr-private.git hdr-private
+        cd hdr-private/romfs
+        zip -r ../../romfs.zip hdr-assets hdr-stages
+      env:
+        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
 
     - name: make package
       run: |
