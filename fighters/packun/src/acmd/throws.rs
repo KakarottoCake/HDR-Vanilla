@@ -71,7 +71,7 @@ unsafe extern "C" fn game_catchattack(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 1.0);
     if is_excute(agent) {
-        let (damage, effect) = if VarModule::get_int(agent.battle_object, vars::packun::instance::CURRENT_STANCE) != 1
+        let (damage, effect) = if VarModule::get_int(agent.battle_object, vars::packun::instance::CURRENT_STANCE) != STANCE_PUTRID
             { (0.0, Hash40::new("collision_attr_normal")) } else { (0.3, Hash40::new("collision_attr_purple")) };
         ATTACK(agent, 0, 0, Hash40::new("top"), 1.4 + damage, 361, 100, 30, 0, 5.0, 0.0, 10.0, 10.0, None, None, None, 3.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, effect, *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_HEAD);
         AttackModule::set_catch_only_all(boma, true, false);
@@ -239,7 +239,6 @@ unsafe extern "C" fn game_throwhi(agent: &mut L2CAgentBase) {
     frame(lua_state, 19.0);
     if is_excute(agent) {
         ATTACK_IGNORE_THROW(agent, 0, 0, Hash40::new("mouth"), 5.0, 90, 100, 0, 82, 7.0, 2.0, 0.0, 0.0, Some(3.5), Some(0.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_THROW);
-        //AttackModule::set_catch_only_all(boma, true, false);
         FT_CATCH_STOP(agent, 8, 1);
     }
     frame(lua_state, 20.0);

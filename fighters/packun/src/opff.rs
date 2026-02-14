@@ -39,9 +39,11 @@ unsafe fn check_apply_speeds(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
 
     // dash & momentum transfer speeds
     if VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE) == 1 {
+        // Putrid
         VarModule::set_float(fighter.battle_object, vars::common::instance::JUMP_SPEED_MAX_MUL, 1.0);
     }
     else if VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE) == 2 {
+        // Prickly
         VarModule::set_float(fighter.battle_object, vars::common::instance::JUMP_SPEED_MAX_MUL, 0.88);
     }
 }

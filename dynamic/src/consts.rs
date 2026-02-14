@@ -1269,8 +1269,6 @@ pub mod vars {
 
             // floats
             pub const SPECIAL_N_PTOOIE_SCALE: i32 = 0x01BF;
-            pub const FIRE_POS_X: i32 = 0x0101;
-            pub const FIRE_POS_Y: i32 = 0x0102;
 
             // ints
             pub const CURRENT_STANCE: i32 = 0x01BE; // 0 = Normal, 1 = Putrid, 2 = Prickly

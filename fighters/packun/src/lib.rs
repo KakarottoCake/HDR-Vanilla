@@ -63,19 +63,19 @@ pub unsafe fn SET_STANCE(fighter: &mut L2CFighterCommon, stance: i32, follow: bo
         // HeadB is the poison head
         // HeadS is the spike head
         match stance {
-            0 => {
+            0 => {  // STANCE_PIRANHA
                 EFFECT_FOLLOW(fighter, Hash40::new("sys_grass_landing"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.5, false);
                 ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("heada"), true);
                 ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("headb"), false);
                 ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("heads"), false);
             },
-            1 => {
+            1 => {  // STANCE_PUTRID
                 EFFECT_FOLLOW(fighter, Hash40::new("packun_poison_max"), Hash40::new("top"), 0, 15.5, 0, 0, 0, 0, 1.2, false);
                 ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("headb"), true);
                 ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("heada"), false);
                 ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("heads"), false);
             },
-            2 => {
+            2 => {  // STANCE_PRICKLY
                 EFFECT_FOLLOW(fighter, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.9, false);
                 ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("heads"), true);
                 ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("headb"), false);

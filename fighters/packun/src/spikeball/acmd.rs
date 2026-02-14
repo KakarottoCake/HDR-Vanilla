@@ -121,25 +121,6 @@ unsafe extern "C" fn game_shoot(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn effect_wait(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    // let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-    // let stance = if (owner_module_accessor.kind() == *FIGHTER_KIND_PACKUN) || (owner_module_accessor.kind() == *FIGHTER_KIND_KIRBY) {VarModule::get_int(owner_module_accessor.object(), vars::packun::instance::CURRENT_STANCE)} else {0};
-    // if stance == 1 {
-    //     if is_excute(agent) {
-    //         //EFFECT_BRANCH_SITUATION(agent, Hash40::new("null"), Hash40::new("sys_bound_smoke"), Hash40::new("top"), 0, -4, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
-    //         EFFECT_FOLLOW(agent, Hash40::new("packun_poison_mouth"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 2.0, false);
-    //     }
-    //     for _ in 0..30 {
-    //         if is_excute(agent) {
-    //             FLASH_FRM(agent, 5, 1.0, 0.5, 0.5, 0);
-    //         }
-    //         wait(lua_state, 10.0);
-    //     }
-    // }
-}
-
 unsafe extern "C" fn game_explode(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -189,7 +170,6 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("effect_fall", acmd_stub, Priority::Low);
 
     agent.acmd("game_wait", game_loopwait, Priority::Low);
-    //agent.acmd("effect_wait", effect_wait, Priority::Low);
 
     agent.acmd("game_explode", game_explode, Priority::Low);
     agent.acmd("effect_explode", effect_explode, Priority::Low);

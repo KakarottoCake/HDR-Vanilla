@@ -8,6 +8,10 @@ mod specials;
 mod throws;
 mod other;
 
+pub const STANCE_PIRANHA: i32 = 0;
+pub const STANCE_PUTRID: i32 = 1;
+pub const STANCE_PRICKLY: i32 = 2;
+
 #[repr(C)]
 pub struct StanceInfo {
     label: i32,
@@ -19,7 +23,7 @@ pub struct StanceInfo {
 impl From<i32> for StanceInfo {
     fn from(other: i32) -> Self {
         match other {
-            0 => StanceInfo { // Regular
+            0 => StanceInfo { // Piranha
                 label: 0,
                 damage_bite: 1.0,
                 damage_head: 1.0,
@@ -37,7 +41,7 @@ impl From<i32> for StanceInfo {
                 damage_head: 1.3,
                 damage_other: 0.9
             },
-            _ => StanceInfo { // same as regular
+            _ => StanceInfo { // same as Piranha
                 label: 3,
                 damage_bite: 1.0,
                 damage_head: 1.0,
