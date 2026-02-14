@@ -2,11 +2,6 @@ name: build_devrelease
 on:
   workflow_dispatch:
     inputs:
-      plugin-ref:
-        description: 'Git ref for the plugin checkout (branch, tag, or sha)'
-        required: false
-        default: 'pre-release'
-        type: string
       romfs-ref:
         description: 'Git ref for the hdr-private romfs clone (branch, tag, or sha)'
         required: false
@@ -23,8 +18,6 @@ jobs:
     steps:
     - name: checkout version
       uses: actions/checkout@v4.1.4
-      with:
-        ref: ${{ github.event.inputs.plugin-ref }}
 
     # get the most recent latest full release
     - id: package_latest
@@ -40,15 +33,6 @@ jobs:
         current_version: ${{ steps.package_latest.outputs.release }}
         level: patch
 
-    # build the project
-    - run: |
-        cd scripts && NO_RUST_NIGHTLY=1 python3 make_dist.py build version=${{ steps.bump-semver.outputs.new_version }}-private name=hdr && cd ..
-        du -sh *
-        rm -rf target
-        du -sh *
-      env:
-        HOME: /root
-
     - name: clone romfs
       id: clone_romfs
       run: |
@@ -58,6 +42,15 @@ jobs:
         zip -r ../../romfs.zip hdr-assets hdr-stages
       env:
         GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+
+    # build the project
+    - run: |
+        cd scripts && NO_RUST_NIGHTLY=1 python3 make_dist.py build version=${{ steps.bump-semver.outputs.new_version }}-private name=hdr && cd ..
+        du -sh *
+        rm -rf target
+        du -sh *
+      env:
+        HOME: /root
 
     - name: make package
       run: |
