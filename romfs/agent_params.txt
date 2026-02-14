@@ -61,3 +61,4 @@ mewtwo: fighter/mewtwo/param/hdr.xml
 reflet: fighter/reflet/param/hdr.xml
 metaknight: fighter/metaknight/param/hdr.xml
 buddy: fighter/buddy/param/hdr.xml
+trail: fighter/trail/param/hdr.xml

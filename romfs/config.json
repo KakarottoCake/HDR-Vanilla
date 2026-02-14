@@ -192,6 +192,9 @@
 		],
 		"fighter/buddy/cmn": [
 			"fighter/buddy/param/hdr.xml"
+		],
+		"fighter/trail/cmn": [
+			"fighter/trail/param/hdr.xml"
 		]
 	}
 }

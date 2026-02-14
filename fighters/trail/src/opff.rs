@@ -155,9 +155,10 @@ unsafe fn flower_frame(boma: &mut BattleObjectModuleAccessor) {
 }
 
 unsafe fn side_special_actionability(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_status(*FIGHTER_TRAIL_STATUS_KIND_SPECIAL_S_END) {
+    if boma.is_status(*FIGHTER_TRAIL_STATUS_KIND_SPECIAL_S_END)
+    && boma.is_situation(*SITUATION_KIND_AIR) {
         if MotionModule::frame(boma) > MotionModule::end_frame(boma) - 1.0 {
-            boma.change_status_req(*FIGHTER_STATUS_KIND_FALL, true);
+            boma.change_status_req(*FIGHTER_STATUS_KIND_FALL, false);
         }
     }
 }
@@ -175,7 +176,6 @@ unsafe fn side_special_hit_check(fighter: &mut L2CFighterCommon, boma: &mut Batt
         }
         if fighter.global_table[CURRENT_FRAME].get_i32() == 1 {
             VarModule::off_flag(boma.object(), vars::trail::status::SPECIAL_S_HIT);
-            VarModule::off_flag(boma.object(), vars::trail::status::SPECIAL_S_STOP);
         }
         if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT)
         && !fighter.is_in_hitlag()
@@ -187,8 +187,21 @@ unsafe fn side_special_hit_check(fighter: &mut L2CFighterCommon, boma: &mut Batt
                 return;
             }
         }
-        if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
-            VarModule::on_flag(boma.object(), vars::trail::status::SPECIAL_S_STOP);
+
+        // Reduce speed on shield
+        if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD)
+        && !boma.is_in_hitlag() {
+            let shield_hit_end_speed_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.shield_hit_end_speed_x");
+            let lr = PostureModule::lr(fighter.module_accessor);
+            sv_kinetic_energy!(
+                set_speed,
+                fighter,
+                FIGHTER_KINETIC_ENERGY_ID_STOP,
+                shield_hit_end_speed_x * lr,
+                0.0
+            );
+            fighter.change_status(FIGHTER_TRAIL_STATUS_KIND_SPECIAL_S_END.into(), false.into());
+            return;
         }
     }
     if fighter.is_status(*FIGHTER_TRAIL_STATUS_KIND_SPECIAL_S_SEARCH) {
@@ -214,10 +227,8 @@ unsafe fn side_special_hit_check(fighter: &mut L2CFighterCommon, boma: &mut Batt
             return;
         }
 
-        if !VarModule::is_flag(boma.object(), vars::trail::status::SPECIAL_S_STOP)
-        && WorkModule::get_param_int(boma, hash40("param_special_s"), hash40("attack_num")) > WorkModule::get_int(boma, *FIGHTER_TRAIL_STATUS_SPECIAL_S_INT_ATTACK_COUNT)
+        if WorkModule::get_param_int(boma, hash40("param_special_s"), hash40("attack_num")) > WorkModule::get_int(boma, *FIGHTER_TRAIL_STATUS_SPECIAL_S_INT_ATTACK_COUNT)
         && fighter.global_table[CURRENT_FRAME].get_i32() == 15 {
-            VarModule::off_flag(boma.object(), vars::trail::status::SPECIAL_S_STOP);
             if fighter.is_situation(*SITUATION_KIND_GROUND) {
                 fighter.change_status_req(*FIGHTER_STATUS_KIND_WAIT, false);
             }

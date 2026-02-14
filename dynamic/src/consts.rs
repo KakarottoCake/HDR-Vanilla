@@ -1891,7 +1891,6 @@ pub mod vars {
             // flags
             pub const SPECIAL_S_HIT: i32 = 0x1100;
             pub const SPECIAL_S_INPUT_CHECK: i32 = 0x1101;
-            pub const SPECIAL_S_STOP: i32 = 0x1102;
 
             // ints
             pub const ATTACK_LW4_TIMER: i32 = 0x1100;
