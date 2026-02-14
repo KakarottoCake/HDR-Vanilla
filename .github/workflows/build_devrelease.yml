@@ -65,59 +65,59 @@ jobs:
       run: |
         python3 scripts/full_package.py devrelease none
 
-    - name: Download latest switch package
-      id: get_old_switch_package
-      if: steps.package_latest.outcome != 'failure'
-      uses: dsaltares/fetch-gh-release-asset@master
-      with:
-        repo: 'HDR-Development/HDR-DevReleases'
-        version: 'tags/${{ steps.package_latest.outputs.release }}'
-        file: 'switch-package.zip'
-        token: ${{ secrets.RELEASE_TOKEN }}
+    # - name: Download latest switch package
+    #   id: get_old_switch_package
+    #   if: steps.package_latest.outcome != 'failure'
+    #   uses: dsaltares/fetch-gh-release-asset@master
+    #   with:
+    #     repo: 'HDR-Development/HDR-DevReleases'
+    #     version: 'tags/${{ steps.package_latest.outputs.release }}'
+    #     file: 'switch-package.zip'
+    #     token: ${{ secrets.RELEASE_TOKEN }}
 
     # build the upgrade.zip and deletions.json
-    - name: make upgrade artifacts
-      if: steps.package_latest.outcome != 'failure'
-      run: |
-        python3 scripts/make_diff.py devrelease
+    # - name: make upgrade artifacts
+    #   if: steps.package_latest.outcome != 'failure'
+    #   run: |
+    #     python3 scripts/make_diff.py devrelease
 
-    - name: show upgrade artifacts
-      if: steps.package_latest.outcome != 'failure'
-      run: |
-        ls && stat * && echo && ls upgrade_artifacts && stat upgrade_artifacts/*
+    # - name: show upgrade artifacts
+    #   if: steps.package_latest.outcome != 'failure'
+    #   run: |
+    #     ls && stat * && echo && ls upgrade_artifacts && stat upgrade_artifacts/*
 
     # upload the upgrade data to the previous release for auto updater
-    - name: Upload upgrade data to previous release
-      if: steps.package_latest.outcome != 'failure'
-      uses: svenstaro/upload-release-action@v2
-      with:
-        repo_token: ${{ secrets.RELEASE_TOKEN }}
-        file: upgrade_artifacts/upgrade.zip
-        prerelease: true
-        make_latest: false
-        file_glob: true
-        asset_name: upgrade
-        repo_name: HDR-Development/HDR-DevReleases
-        tag: ${{ steps.package_latest.outputs.release }}
-        overwrite: true
+    # - name: Upload upgrade data to previous release
+    #   if: steps.package_latest.outcome != 'failure'
+    #   uses: svenstaro/upload-release-action@v2
+    #   with:
+    #     repo_token: ${{ secrets.RELEASE_TOKEN }}
+    #     file: upgrade_artifacts/upgrade.zip
+    #     prerelease: true
+    #     make_latest: false
+    #     file_glob: true
+    #     asset_name: upgrade
+    #     repo_name: HDR-Development/HDR-DevReleases
+    #     tag: ${{ steps.package_latest.outputs.release }}
+    #     overwrite: true
 
     # upload the upgrade deletions to the previous release for auto updater
-    - name: Upload upgrade deletions to previous release
-      if: steps.package_latest.outcome != 'failure'
-      uses: svenstaro/upload-release-action@v2
-      with:
-        repo_token: ${{ secrets.RELEASE_TOKEN }}
-        file: upgrade_artifacts/deletions.json
-        prerelease: true
-        make_latest: false
-        file_glob: true
-        asset_name: deletions
-        repo_name: HDR-Development/HDR-DevReleases
-        tag: ${{ steps.package_latest.outputs.release }}
-        overwrite: true
+    # - name: Upload upgrade deletions to previous release
+    #   if: steps.package_latest.outcome != 'failure'
+    #   uses: svenstaro/upload-release-action@v2
+    #   with:
+    #     repo_token: ${{ secrets.RELEASE_TOKEN }}
+    #     file: upgrade_artifacts/deletions.json
+    #     prerelease: true
+    #     make_latest: false
+    #     file_glob: true
+    #     asset_name: deletions
+    #     repo_name: HDR-Development/HDR-DevReleases
+    #     tag: ${{ steps.package_latest.outputs.release }}
+    #     overwrite: true
 
-    - name: Display structure of downloaded version
-      run: ls -R && cp hdr_version.txt artifacts
+    # - name: Display structure of downloaded version
+    #   run: ls -R && cp hdr_version.txt artifacts
 
     - name: Upload full package to devreleases
       uses: svenstaro/upload-release-action@v2
