@@ -41,6 +41,7 @@ jobs:
     - name: clone romfs
       id: clone_romfs
       run: |
+        apt-get update && apt-get install -y zip
         git clone --branch ${{ github.event.inputs.romfs-ref }} --depth 1 \
           https://x-access-token:${{ secrets.RELEASE_TOKEN }}@github.com/HDR-Development/hdr-private.git hdr-private
         cd hdr-private/romfs
