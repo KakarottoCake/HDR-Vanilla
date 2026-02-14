@@ -9,7 +9,7 @@ unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue 
         let special_n_attack_speed_y = fighter.get_param_float("param_special_n", "special_n_attack_speed_y");
         sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, special_n_attack_speed_y);
         let special_n_attack_stable_y = fighter.get_param_float("param_special_n", "special_n_attack_stable_y");
-        sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -special_n_attack_stable_y);
+        sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, special_n_attack_stable_y);
         let special_n_attack_accel_y = fighter.get_param_float("param_special_n", "special_n_attack_accel_y");
         sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -special_n_attack_accel_y);
     }
@@ -23,7 +23,7 @@ unsafe extern "C" fn special_n_hit_main(fighter: &mut L2CFighterCommon) -> L2CVa
     // set gravity limits to match first stage of move
     if !fighter.is_situation(*SITUATION_KIND_GROUND) {
         let special_n_attack_stable_y = fighter.get_param_float("param_special_n", "special_n_attack_stable_y");
-        sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -special_n_attack_stable_y);
+        sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, special_n_attack_stable_y);
         let special_n_attack_accel_y = fighter.get_param_float("param_special_n", "special_n_attack_accel_y");
         sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -special_n_attack_accel_y);
     }

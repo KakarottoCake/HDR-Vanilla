@@ -3,7 +3,6 @@ use globals::*;
 // status script import
 
 mod attack_air;
-mod item_throw;
 mod jump_aerial;
 mod special_n;
 mod special_hi;
@@ -32,14 +31,9 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
 
 // Holding Item -> Toss
 unsafe extern "C" fn should_use_special_lw_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
-    //try turnaround but no reverse
-    let turn_stick_x = fighter.get_param_float("common", "turn_stick_x") * fighter.lr();
-    let direc = if fighter.left_stick_x() <= turn_stick_x {-1.0} else {1.0};
     if !ItemModule::is_have_item(fighter.module_accessor, 0) && !fighter.is_situation(*SITUATION_KIND_GROUND) {
         return false.into()
     } else {
-        PostureModule::set_lr(fighter.module_accessor, direc);
-        PostureModule::update_rot_y_lr(fighter.module_accessor);
         return true.into()
     }
 }
@@ -78,7 +72,6 @@ pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
     
     attack_air::install(agent);
-    item_throw::install(agent);
     jump_aerial::install(agent);
     special_n::install(agent);
     special_hi::install(agent);

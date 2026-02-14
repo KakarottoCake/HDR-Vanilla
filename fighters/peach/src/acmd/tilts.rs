@@ -17,13 +17,14 @@ unsafe extern "C" fn game_attacks3(agent: &mut L2CAgentBase) {
         AttackModule::set_offset(boma, 2, &Vector3f{ x: 1.25, y: 0.0, z: 0.0});
     } // reduce below-ledge coverage
     frame(lua_state, 10.0);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("legr"), 6.0, 90, 60, 0, 55, 3.3, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
         ATTACK(agent, 1, 0, Hash40::new("kneer"), 6.0, 90, 60, 0, 55, 3.8, 0.5, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
         ATTACK(agent, 2, 0, Hash40::new("footr"), 6.0, 90, 60, 0, 55, 3.4, 1.25, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
     }
     frame(lua_state, 15.0);
-    FT_MOTION_RATE_RANGE(agent, 15.0, 37.0, 19.0);//34 faf
+    FT_MOTION_RATE_RANGE(agent, 15.0, 37.0, 18.0); // 33 faf
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
@@ -37,7 +38,7 @@ unsafe extern "C" fn effect_attacks3(agent: &mut L2CAgentBase) {
     frame(lua_state, 7.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 10.5, -0.1, 0, 9, 90, 0.9, true, *EF_FLIP_YZ);
-        LAST_EFFECT_SET_RATE(agent, 1.5);
+        LAST_EFFECT_SET_RATE(agent, 1.4);
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 0, 0, false);
     }
 }
