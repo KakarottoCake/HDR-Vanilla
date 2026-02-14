@@ -7,6 +7,11 @@ on:
         required: false
         default: 'dev'
         type: string
+      bundle-stages:
+        description: 'Include hdr-stages in romfs.zip'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   plugin_build:
@@ -39,7 +44,11 @@ jobs:
         git clone --branch ${{ github.event.inputs.romfs-ref }} --depth 1 \
           https://x-access-token:${{ secrets.RELEASE_TOKEN }}@github.com/HDR-Development/hdr-private.git hdr-private
         cd hdr-private/romfs
-        zip -r ../../romfs.zip hdr-assets hdr-stages
+        if [ "${{ github.event.inputs.bundle-stages }}" = "true" ]; then
+          zip -r ../../romfs.zip hdr-assets hdr-stages
+        else
+          zip -r ../../romfs.zip hdr-assets
+        fi
       env:
         GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
 
