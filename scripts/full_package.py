@@ -54,8 +54,8 @@ else:
 
 if hdr_version == "devrelease":
     os.chdir('switch-package/ultimate/mods/')
-    os.rename('hdr-assets', 'hdr-assets-private')
-    os.rename('hdr-stages', 'hdr-stages-private')
+    # os.rename('hdr-assets', 'hdr-assets-private')
+    # os.rename('hdr-stages', 'hdr-stages-private')
     # move hdr files into correct dir
     source_dir = '../../../build/hdr-switch/ultimate/mods/hdr-private/'
     target_dir = 'hdr-private/'
