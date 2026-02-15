@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <struct>
+    <struct hash="param_special_s">
+      <float hash="jump_start">3.33</float>
+      <float hash="jump_min">0.55</float>
+      <float hash="jump_end">1.7</float>
+      <float hash="jump_brake_x">0.3</float>
+      <float hash="jump_accel_x">0.1</float>
+    </struct>
     <struct hash="param_float">
       <float hash="float_stable">1.0</float>
       <float hash="float_accel_add">0.01</float>

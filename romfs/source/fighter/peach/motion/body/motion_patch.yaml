@@ -96,7 +96,7 @@ attack_lw3:
   flags:
     move: false
   extra:
-    cancel_frame: 28
+    cancel_frame: 29
 attack_hi4:
   extra:
     cancel_frame: 47
@@ -163,6 +163,9 @@ special_air_n:
 throw_hi:
   extra:
     cancel_frame: 42
+throw_lw:
+  extra:
+    cancel_frame: 67
 special_n_hit:
   extra:
     cancel_frame: 55

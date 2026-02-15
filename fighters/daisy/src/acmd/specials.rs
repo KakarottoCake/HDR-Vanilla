@@ -552,7 +552,7 @@ unsafe extern "C" fn game_speciallwthrow(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         let have_item = ItemModule::get_have_item_id(boma, 0) as u32;
         let have_item_boma = sv_battle_object::module_accessor(have_item);
-        ItemModule::throw_item(boma, 55.0, 2.25, 1.0, 0, true, agent.get_float(*ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_POWER));
+        ItemModule::throw_item(boma, 60.0, 2.25, 1.0, 0, true, agent.get_float(*ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_POWER));
         PostureModule::add_pos_2d(have_item_boma, &Vector2f {x: (1.25 * agent.lr()), y: 2.25});
     }
 }

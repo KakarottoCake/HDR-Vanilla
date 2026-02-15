@@ -47,7 +47,7 @@ unsafe extern "C" fn effect_specialn(agent: &mut L2CAgentBase) {
     }
     wait(lua_state, 1.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 6.5, 6, 0, 0, 0, 0.85, true);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 2.5*boma.lr(), 6.5, 6, 0, 0, 0, 0.825, true);
         LAST_EFFECT_SET_RATE(agent, 10.0/17.0);
     }
     for _ in 0..4 {
@@ -414,7 +414,7 @@ unsafe extern "C" fn game_speciallwthrow(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         let have_item = ItemModule::get_have_item_id(boma, 0) as u32;
         let have_item_boma = sv_battle_object::module_accessor(have_item);
-        ItemModule::throw_item(boma, 55.0, 2.25, 1.0, 0, true, agent.get_float(*ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_POWER));
+        ItemModule::throw_item(boma, 60.0, 2.25, 1.0, 0, true, agent.get_float(*ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_POWER));
         PostureModule::add_pos_2d(have_item_boma, &Vector2f {x: (1.25 * agent.lr()), y: 2.25});
     }
 }
