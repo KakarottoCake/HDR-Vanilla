@@ -5,6 +5,8 @@ use rlua_lua53_sys as lua;
 use std::ffi::CString;
 use utils::modules::stage_mgr::STAGE_MANAGER;
 
+use crate::NEW_CSS_SFX;
+
 macro_rules! lua_gettop {
     ($state:ident) => {{
         let top = *($state as *const u64).add(2);
@@ -528,6 +530,10 @@ unsafe fn add_to_key_context_hook(ctx: &skyline::hooks::InlineCtx) {
             func: Some(get_dsr),
         },
         lua::luaL_Reg {
+            name: "is_css_first\0".as_ptr() as _,
+            func: Some(is_css_first),
+        },
+        lua::luaL_Reg {
             name: std::ptr::null(),
             func: None,
         },
@@ -734,6 +740,13 @@ extern "C" fn get_dsr(state: *mut lua::lua_State) -> i32 {
             }
         }
 
+        1
+    }
+}
+
+extern "C" fn is_css_first(state: *mut lua::lua_State) -> i32 {
+    unsafe {
+        lua::lua_pushboolean(state, if NEW_CSS_SFX { 1 } else { 0 });
         1
     }
 }
