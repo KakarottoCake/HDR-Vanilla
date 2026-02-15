@@ -241,38 +241,7 @@ unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
             VarModule::set_int(fighter.battle_object, vars::sonic::status::SPECIAL_S_STEP, vars::sonic::SPECIAL_S_STEP_DASH);
         }
         else if step == vars::sonic::SPECIAL_S_STEP_DASH {
-            let mot = if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
-                VarModule::off_flag(fighter.battle_object, vars::sonic::instance::SPECIAL_AIR_ACTION_USED);
-                hash40("special_s_boost_end")
-            }
-            else {
-                hash40("special_air_s_boost_end")
-            };
-            MotionModule::change_motion(
-                fighter.module_accessor,
-                Hash40::new_raw(mot),
-                0.0,
-                1.0,
-                false,
-                0.0,
-                false,
-                false
-            );
-            VarModule::set_int(fighter.battle_object, vars::sonic::status::SPECIAL_S_STEP, vars::sonic::SPECIAL_S_STEP_END);
-            let dash_end_brake_x = if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
-                ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.dash_ground_end_brake_x")
-            } else {
-                ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.dash_air_end_brake_x")
-            };
-            if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
-                sv_kinetic_energy!(
-                    set_brake,
-                    fighter,
-                    FIGHTER_KINETIC_ENERGY_ID_STOP,
-                    dash_end_brake_x,
-                    0.0
-                );
-            }
+            special_s_transition_to_end(fighter);
         }
         else {
             if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
