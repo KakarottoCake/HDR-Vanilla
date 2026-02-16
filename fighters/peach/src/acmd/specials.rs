@@ -438,9 +438,9 @@ unsafe extern "C" fn game_speciallwthrow(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_speciallwthrow(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 3.0);
+    frame(lua_state, 5.0);
     if is_excute(agent) {
-        LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
+        LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
     }
 }
 
