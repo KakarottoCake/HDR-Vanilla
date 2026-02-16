@@ -6,8 +6,7 @@ use globals::*;
 unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
-    let p = PikminInfo::from(variation);
+    let p = PikminInfo::from(agent.boma());
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 2.0);
     FT_MOTION_RATE_RANGE(agent, 2.0, 6.0, 2.0);
@@ -48,8 +47,7 @@ unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_attackairn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
-    let p = PikminInfo::from(variation);
+    let p = PikminInfo::from(agent.boma());
     frame(lua_state, 6.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("pikmin_smash_trail"), Hash40::new("waist"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.5, true);
@@ -67,8 +65,7 @@ unsafe extern "C" fn effect_attackairn(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
-    let p = PikminInfo::from(variation);
+    let p = PikminInfo::from(agent.boma());
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 5.0);
     if is_excute(agent) {
@@ -95,8 +92,7 @@ unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_attackairf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
-    let p = PikminInfo::from(variation);
+    let p = PikminInfo::from(agent.boma());
     frame(lua_state, 6.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("pikmin_attack_arc_hdr"), Hash40::new("top"), 3, 6, 3.5, 10, -10, -70, 1, true);
@@ -109,8 +105,7 @@ unsafe extern "C" fn effect_attackairf(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
-    let p = PikminInfo::from(variation);
+    let p = PikminInfo::from(agent.boma());
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 8.0);
     if is_excute(agent) {
@@ -129,8 +124,7 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_attackairb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
-    let p = PikminInfo::from(variation);
+    let p = PikminInfo::from(agent.boma());
     frame(lua_state, 9.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("pikmin_attack_arc_hdr"), Hash40::new("top"), 1, 7, -1, 180, 0, 60, 1.1, true);
@@ -139,12 +133,11 @@ unsafe extern "C" fn effect_attackairb(agent: &mut L2CAgentBase) {
         LAST_EFFECT_SET_COLOR(agent, p.color.x, p.color.y, p.color.z);
     }
 }
- 
+
 unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
-    let p = PikminInfo::from(variation);
+    let p = PikminInfo::from(agent.boma());
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 7.0);
     if is_excute(agent) {
@@ -165,8 +158,7 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_attackairhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
-    let p = PikminInfo::from(variation);
+    let p = PikminInfo::from(agent.boma());
     frame(lua_state, 8.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("pikmin_attack_arc_hdr"), Hash40::new("top"), 0, 12, 1, -110, -90, 0, 0.75, true);
@@ -189,8 +181,7 @@ unsafe extern "C" fn effect_attackairhi(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
-    let p = PikminInfo::from(variation);
+    let p = PikminInfo::from(agent.boma());
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 9.0);
     if is_excute(agent) {
@@ -214,8 +205,7 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_attackairlw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
-    let p = PikminInfo::from(variation);
+    let p = PikminInfo::from(agent.boma());
     frame(lua_state, 6.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("pikmin_attack_arc_hdr"), Hash40::new("top"), 0, 1, -1, 260, -180, -250, 1.2, true);

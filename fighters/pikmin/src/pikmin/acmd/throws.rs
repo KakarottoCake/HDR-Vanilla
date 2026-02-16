@@ -23,7 +23,7 @@ unsafe extern "C" fn game_throwb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
-    let p = PikminInfo::from(variation);
+    let p = PikminInfo::from(agent.boma());
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         let dmg = if variation == 2 { 7.5 } else { 5.0 };
@@ -44,7 +44,7 @@ unsafe extern "C" fn game_throwf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
-    let p = PikminInfo::from(variation);
+    let p = PikminInfo::from(agent.boma());
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         let dmg = if variation == 2 { 13.0 } else { 8.5 };
@@ -64,7 +64,7 @@ unsafe extern "C" fn game_throwhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
-    let p = PikminInfo::from(variation);
+    let p = PikminInfo::from(agent.boma());
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         let dmg = if variation == 2 { 12.0 } else { 8.0 };
@@ -85,7 +85,7 @@ unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
-    let p = PikminInfo::from(variation);
+    let p = PikminInfo::from(agent.boma());
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 22.0);
     if is_excute(agent) {

@@ -4,7 +4,7 @@ unsafe extern "C" fn game_spsremved(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     let variation = WorkModule::get_int(boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
-    let p = PikminInfo::from(variation);
+    let p = PikminInfo::from(agent.boma());
     FT_MOTION_RATE(agent, 1.0);
     if VarModule::is_flag(agent.battle_object, vars::pikmin::instance::SPECIAL_S_PIKMIN_DETONATE_IS_DETACH_FOR_DETONATE) {
         if is_excute(agent) {
