@@ -17,7 +17,7 @@ unsafe extern "C" fn game_spsremved(agent: &mut L2CAgentBase) {
             } else {
                 1.0
             };
-            ATTACK(agent, 0, 0, Hash40::new("waist"), dmg * p.dmg, 90, 105, 0, 65, 6.0, 0.0, 0.0, 0.0, None, None, None, hitlag * p.hitlag, 0.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, dmg * p.shield_dmg, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, p.attr_special, *ATTACK_SOUND_LEVEL_L, p.sound, *ATTACK_REGION_PIKMIN);
+            ATTACK(agent, 0, 0, Hash40::new("waist"), dmg, 90 + p.angle, 105.mul_f32(p.kbg), 0, 65, 6.0, 0.0, 0.0, 0.0, None, None, None, hitlag * p.hitlag, 0.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, dmg * p.shield_dmg, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, p.attr_special, *ATTACK_SOUND_LEVEL_L, p.sound, *ATTACK_REGION_PIKMIN);
         }
         frame(lua_state, 6.0);
         if is_excute(agent) {

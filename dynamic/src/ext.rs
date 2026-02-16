@@ -8,7 +8,15 @@ use smash::lib::{lua_const::*, *};
 use smash::lua2cpp::*;
 use smash::phx::*;
 use crate::{InputModule, VarModule};
+pub trait I32Ext {
+    fn mul_f32(self, f: f32) -> i32;
+}
 
+impl I32Ext for i32 {
+    fn mul_f32(self, f: f32) -> i32 {
+        (self as f32 * f).round() as i32
+    }
+}
 pub trait Vec2Ext {
     fn new(x: f32, y: f32) -> Self
     where

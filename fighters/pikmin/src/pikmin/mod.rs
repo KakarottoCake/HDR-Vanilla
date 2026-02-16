@@ -4,7 +4,8 @@ pub mod status;
 
 #[repr(C)]
 pub struct PikminInfo {
-    dmg: f32,
+    dmg: f32, // applied in common staling damage hook - does not affect knockback
+    kbg: f32,
     shield_dmg: f32,
     hitlag: f32,
     attr: Hash40,
@@ -24,6 +25,7 @@ impl From<&mut BattleObjectModuleAccessor> for PikminInfo {
             let battle_object = weapon_boma.get_owner_boma().object(); // olimar's battle object
             return PikminInfo {
                 dmg:        ParamModule::get_float(battle_object, ParamType::Agent, &param("damage_mul")),
+                kbg:        ParamModule::get_float(battle_object, ParamType::Agent, &param("kbg_mul")),
                 shield_dmg: ParamModule::get_float(battle_object, ParamType::Agent, &param("shield_damage_mul")),
                 angle:      ParamModule::get_int(battle_object, ParamType::Agent, &param("angle_mod")) as u64,
                 hitlag:     ParamModule::get_float(battle_object, ParamType::Agent, &param("hitlag_mul")),
