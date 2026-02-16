@@ -44,7 +44,7 @@ unsafe extern "C" fn expression_landingheavy(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         ControlModule::set_rumble(boma, Hash40::new("rbkind_landl"), 0, false, 0x50000000 /* default value */);
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-        if !agent.is_prev_status(*FIGHTER_STATUS_KIND_ESCAPE_AIR) {
+        if !agent.is_prev_status_one_of(&[*FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_DAMAGE_AIR]) {
             QUAKE(agent, *CAMERA_QUAKE_KIND_S);
         }
     }
@@ -113,6 +113,14 @@ unsafe extern "C" fn game_escapeairslide(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_cliffjump2(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        PostureModule::add_pos(boma, &Vector3f::new(0.0, -1.0, 0.0));
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_cliffescape", acmd_stub, Priority::Low);
 
@@ -130,4 +138,6 @@ pub fn install(agent: &mut Agent) {
 
     agent.acmd("game_escapeair", game_escapeair, Priority::Low);
     agent.acmd("game_escapeairslide", game_escapeairslide, Priority::Low);
+
+    agent.acmd("game_cliffjump2", game_cliffjump2, Priority::Low);
 }
