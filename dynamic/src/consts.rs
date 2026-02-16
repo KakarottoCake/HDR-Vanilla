@@ -1998,6 +1998,7 @@ pub mod statuses {
 
     pub mod daisy {
         pub const SPECIAL_LW_THROW: i32 = 0x1EB;
+        pub const SPECIAL_AIR_LW: i32 = 0x1EC;
     }
 
     pub mod daisy_kinopio {
@@ -2106,6 +2107,7 @@ pub mod statuses {
 
     pub mod peach {
         pub const SPECIAL_LW_THROW: i32 = 0x1EB;
+        pub const SPECIAL_AIR_LW: i32 = 0x1EC;
     }
 
     pub mod pickel {

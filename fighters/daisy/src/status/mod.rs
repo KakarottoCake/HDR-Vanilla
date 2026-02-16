@@ -33,13 +33,8 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
     true.into()
 }
 
-// Holding Item -> Toss
 unsafe extern "C" fn should_use_special_lw_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if ItemModule::is_have_item(fighter.module_accessor, 0) || fighter.is_situation(*SITUATION_KIND_GROUND) {
-        true.into()
-    } else {
-        false.into()
-    }
+    true.into()
 }
 
 unsafe extern "C" fn float_check_air_jump_aerial(fighter: &mut L2CFighterCommon) -> L2CValue {

@@ -2,10 +2,13 @@
 <struct>
     <struct hash="param_special_s">
       <float hash="jump_start">3.33</float>
-      <float hash="jump_min">0.55</float>
-      <float hash="jump_end">1.7</float>
+      <float hash="jump_min">0.6</float>
+      <float hash="jump_end">1.5</float>
       <float hash="jump_brake_x">0.3</float>
       <float hash="jump_accel_x">0.1</float>
+    </struct>
+    <struct hash="param_special_lw">
+      <float hash="air_start_x_mul">0.67</float>
     </struct>
     <struct hash="param_float">
       <float hash="float_stable">1.0</float>

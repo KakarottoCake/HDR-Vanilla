@@ -56,13 +56,14 @@ unsafe extern "C" fn special_s_start_momentum(fighter: &mut L2CFighterCommon) ->
     let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let start_y = fighter.get_param_float("param_special_s", "special_s_start_speed_y");
     let stable_y = fighter.get_param_float("param_special_s", "special_s_jump_stable_y");
+    let max_y = fighter.get_param_float("air_speed_y_stable", "");
     fighter.change_motion_by_situation("special_s_start", "special_air_s_start", 0.0, 1.0, false, 0.0, false, false);
     fighter.set_situation_keep(L2CValue::I32(*SITUATION_KIND_AIR), 1.into());
     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
     GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
     sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.0);
-    sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, stable_y, 0.0);
-    sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, (speed_y+start_y).clamp(-stable_y, stable_y));
+    sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, stable_y);
+    sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, (speed_y+start_y).clamp(-max_y, max_y));
     0.into()
 }
 
@@ -133,18 +134,23 @@ unsafe extern "C" fn special_s_jump_main_loop(fighter: &mut L2CFighterCommon) ->
         return 1.into();
     }
     if MotionModule::is_end(fighter.module_accessor) || fighter.is_situation(*SITUATION_KIND_GROUND) {
-        special_s_end_momentum(fighter);
         fighter.change_status(FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_AWAY_END.into(), false.into());
         return 1.into();
     }
     if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_PEACH_STATUS_SPECIAL_S_JUMP_ID_TIME_OUT) {
         WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_PEACH_STATUS_SPECIAL_S_JUMP_ID_TIME_OUT);
-        special_s_end_momentum(fighter);
         fighter.change_status(FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_AWAY_END.into(), false.into());
         return 1.into();
     }
     
     return 0.into();
+}
+
+unsafe extern "C" fn special_s_jump_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[globals::STATUS_KIND] == *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_AWAY_END {
+        special_s_end_momentum(fighter);
+    }
+    0.into()
 }
 
 // rapidly decaying speed, drift to change distance
@@ -245,6 +251,7 @@ pub fn install(agent: &mut Agent) {
 
     agent.status(Pre, *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_JUMP, special_s_jump_pre);
     agent.status(Main, *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_JUMP, special_s_jump_main);
+    agent.status(End, *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_JUMP, special_s_jump_end);
 
     agent.status(Pre, *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_AWAY_END, special_s_away_end_pre);
 }
