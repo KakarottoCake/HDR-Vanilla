@@ -354,7 +354,7 @@ unsafe extern "C" fn game_speciallw3end(agent: &mut L2CAgentBase) {
         }
     }
     frame(lua_state, 6.0);
-    let shield_damage = if agent.is_motion_one_of(&[Hash40::new("special_n3_max"), Hash40::new("special_air_n3_max")]) { 4 } else { 1 };
+    let shield_damage = if agent.is_motion_one_of(&[Hash40::new("special_n3_max"), Hash40::new("special_air_n3_max")]) { 3.5 } else { 1.0 };
     if agent.is_situation(*SITUATION_KIND_GROUND) {
         for _ in 0..4 {
             if is_excute(agent) {
@@ -526,7 +526,8 @@ unsafe extern "C" fn game_speciallw3end2(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 7.0);
     if is_excute(agent) {
-        let (shield_damage, sfx) = if agent.is_motion_one_of(&[Hash40::new("special_n3_end2_max"), Hash40::new("special_air_n3_end2_max")]) { (15, *COLLISION_SOUND_ATTR_FIRE) } else { (2, *COLLISION_SOUND_ATTR_KICK) };
+        let (shield_damage, sfx) = if agent.is_motion_one_of(&[Hash40::new("special_n3_end2_max"), Hash40::new("special_air_n3_end2_max")])
+            { (10, *COLLISION_SOUND_ATTR_FIRE) } else { (2, *COLLISION_SOUND_ATTR_KICK) };
         ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 80, 85, 0, 64, 10.0, 0.0, 10.0, 9.5, None, None, None, 1.25, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, shield_damage, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, sfx, *ATTACK_REGION_SWORD);
     }
     frame(lua_state, 11.0);
