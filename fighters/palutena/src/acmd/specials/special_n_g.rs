@@ -33,20 +33,16 @@ unsafe extern "C" fn effect_specialngstart(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 18.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("sys_club_tornado"), Hash40::new("top"), 0.5, 0, 0.5, 0, 0, 0, 1, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.05, 1.5, 0.05);
-        LAST_EFFECT_SET_SCALE_W(agent, 0.6125, 0.925, 0.6125);
-        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("sys_club_tornado"), Hash40::new("top"), 0.5, -0.25, 0.5, 0, 0, 0, 1.2, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.25, 0.75, 0.25);
-        LAST_EFFECT_SET_ALPHA(agent, 0.25);
-        LAST_EFFECT_SET_SCALE_W(agent, 0.8, 0.975, 0.8);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_club_tornado"), Hash40::new("top"), -0.5*boma.lr(), -0.5, 0.5, 0, 0, 0, 0.95, true);
+        LAST_EFFECT_SET_COLOR(agent, 0.05, 1.0, 0.05);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_club_tornado"), Hash40::new("top"), -0.5*boma.lr(), -0.5, 0.5, 0, 0, 0, 0.9, true);
+        LAST_EFFECT_SET_COLOR(agent, 0.05, 0.50, 0.05);
     }
     frame(lua_state, 20.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("sys_club_tornado"), Hash40::new("top"), 0.5, -0.125, 0.5, 0, 0, 0, 0.95, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.05, 0.67, 0.05);
-        LAST_EFFECT_SET_ALPHA(agent, 0.65);
-        LAST_EFFECT_SET_SCALE_W(agent, 0.725, 0.95, 0.725);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_club_tornado"), Hash40::new("top"), -0.5*boma.lr(), -0.5, 0.5, 0, 0, 0, 1.15, true);
+        LAST_EFFECT_SET_COLOR(agent, 0.25, 0.70, 0.25);
+        LAST_EFFECT_SET_ALPHA(agent, 0.3);
     }
 }
 
@@ -83,7 +79,7 @@ unsafe extern "C" fn game_specialngloop(agent: &mut L2CAgentBase) {
     let loop_count = VarModule::get_int(agent.battle_object, vars::palutena::status::SPECIAL_N_GREEN_LOOP) as f32;
     let damage = 1.75 - loop_count/4.0; // 1.5-1.0
     frame(lua_state, 1.0);
-    FT_MOTION_RATE_RANGE(agent, 1.0, 30.0, 30.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 30.0, 19.0);
     if is_excute(agent) {
         HIT_NODE(agent, Hash40::new("bust"), *HIT_STATUS_XLU);
         HIT_NODE(agent, Hash40::new("head"), *HIT_STATUS_XLU);
@@ -92,9 +88,9 @@ unsafe extern "C" fn game_specialngloop(agent: &mut L2CAgentBase) {
         HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_XLU);
         HIT_NODE(agent, Hash40::new("arml"), *HIT_STATUS_XLU);
         // multihit segment
-        ATTACK(agent, 0, 0, Hash40::new("top"), damage, 111, 100, 42, 0, 5.75, 0.0, 6.75, 0.75, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 6, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
-        ATTACK(agent, 1, 0, Hash40::new("top"), damage, 145, 100, 40, 0, 5.75, 0.0, 11.75, -1.25, Some(0.0), Some(11.75), Some(2.0), 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 6, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
-        ATTACK(agent, 2, 0, Hash40::new("top"), damage, 177, 100, 38, 0, 5.75, 0.0, 17.75, -2.25, Some(0.0), Some(17.75), Some(3.0), 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 6, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
+        ATTACK(agent, 0, 0, Hash40::new("top"), damage, 111, 100, 42, 0, 5.75, 0.0, 6.75, 0.75, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 6, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
+        ATTACK(agent, 1, 0, Hash40::new("top"), damage, 145, 100, 40, 0, 5.75, 0.0, 11.75, -1.25, Some(0.0), Some(11.75), Some(2.0), 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 6, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
+        ATTACK(agent, 2, 0, Hash40::new("top"), damage, 177, 100, 38, 0, 5.75, 0.0, 17.75, -2.25, Some(0.0), Some(17.75), Some(3.0), 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 6, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_MAGIC);
     }
 }
 
@@ -155,15 +151,13 @@ unsafe extern "C" fn effect_specialngend(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("palutena_backlight_grey"), Hash40::new("top"), -0.2, 22, -1, 10, 90, 0, 1, true);
         LAST_EFFECT_SET_COLOR(agent, 0.05, 0.50, 0.01);
-        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("sys_club_tornado"), Hash40::new("top"), 0.5, 0, 0.5, 0, 0, 0, 1, true);
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("sys_club_tornado"), Hash40::new("top"), -0.5*boma.lr(), -0.5, 0.5, 0, 0, 0, 1.15, true);
         LAST_EFFECT_SET_COLOR(agent, 0.05, 1.0, 0.05);
         LAST_EFFECT_SET_RATE(agent, 2.0);
-        LAST_EFFECT_SET_SCALE_W(agent, 0.925, 1.1, 0.925);
-        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("sys_club_tornado"), Hash40::new("top"), 0.5, 0, 0.5, 0, 0, 0, 1.2, true);
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("sys_club_tornado"), Hash40::new("top"), -0.5*boma.lr(), -0.5, 0.5, 0, 0, 0, 1.25, true);
         LAST_EFFECT_SET_COLOR(agent, 0.25, 1.0, 0.25);
         LAST_EFFECT_SET_RATE(agent, 2.0);
         LAST_EFFECT_SET_ALPHA(agent, 0.4);
-        LAST_EFFECT_SET_SCALE_W(agent, 1.075, 1.15, 1.075);
     }
     frame(lua_state, 7.0);
     if is_excute(agent) {

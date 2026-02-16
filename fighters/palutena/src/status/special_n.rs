@@ -438,12 +438,6 @@ unsafe extern "C" fn special_n_g_end_main_loop(fighter: &mut L2CFighterCommon) -
         // only fastfall when actionable
         fighter.sub_air_check_dive();
     }
-
-    if StatusModule::is_situation_changed(fighter.module_accessor) {
-        fighter.sub_change_kinetic_type_by_situation(FIGHTER_KINETIC_TYPE_GROUND_STOP.into(), FIGHTER_KINETIC_TYPE_MOTION_FALL.into());
-        fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP, *GROUND_CORRECT_KIND_AIR);
-        fighter.change_motion_inherit_frame_by_situation("special_n_g_end", "special_air_n_g_end", -1.0, 1.0, 0.0, false, false);
-    }
     // cut speed on hitbox clear
     if VarModule::get_int(fighter.battle_object, vars::palutena::status::SPECIAL_N_GREEN_BUTTON_TIMER) == 1 {
         VarModule::set_int(fighter.battle_object, vars::palutena::status::SPECIAL_N_GREEN_BUTTON_TIMER, -1);
@@ -454,9 +448,13 @@ unsafe extern "C" fn special_n_g_end_main_loop(fighter: &mut L2CFighterCommon) -
             sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, ENERGY_CONTROLLER_RESET_TYPE_FALL_ADJUST, speed_x * 0.4, 0.0, 0.0, 0.0, 0.0);
         }
     }
-
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_FALL, false);
+    }
+    if StatusModule::is_situation_changed(fighter.module_accessor) {
+        fighter.sub_change_kinetic_type_by_situation(FIGHTER_KINETIC_TYPE_GROUND_STOP.into(), FIGHTER_KINETIC_TYPE_MOTION_FALL.into());
+        fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP, *GROUND_CORRECT_KIND_AIR);
+        fighter.change_motion_inherit_frame_by_situation("special_n_g_end", "special_air_n_g_end", -1.0, 1.0, 0.0, false, false);
     }
     return 0.into();
 }
