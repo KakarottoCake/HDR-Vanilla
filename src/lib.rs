@@ -430,7 +430,7 @@ pub fn main() {
             title_screen_play,
             sss_to_css,
             css_to_sss,
-            scene_transition
+            scene_transition,
             //copy_fighter_info,
             //load_ingame_call_sequence_scene,
             //load_melee_scene,
