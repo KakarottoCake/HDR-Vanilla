@@ -291,12 +291,15 @@ impl HashedString {
     }
 }
 
+pub static mut NEW_CSS_SFX: bool = false;
+
 #[skyline::hook(offset = 0x23357f8, inline)]
 unsafe fn sss_to_css(ctx: &InlineCtx) {
     let hashed_string = ctx.registers[1].x() as *mut HashedString;
     let current_scene = (*hashed_string).as_str();
 
     if current_scene == "StageSelectScene" {
+        NEW_CSS_SFX = true;
         (*hashed_string).set("CharaSelectScene");
     }
 }
@@ -319,6 +322,9 @@ unsafe fn css_to_sss(ctx: &InlineCtx) {
         // add them as they're found.
         if flag == 0 {
             (*hashed_string).set("StageSelectScene");
+        }
+        else {
+            NEW_CSS_SFX = false;
         }
     }
 }
@@ -391,10 +397,13 @@ unsafe fn scene_transition(
         let key_str = skyline::from_c_str(str_ptr);
         println!("Transitioning to scene: '{}'", key_str);
 
-        // Clear perma-strikes when going to main menu or the rules screen
         if key_str == "MeleeRuleScene" || key_str == "MainMenuScene" {
+            // Clear perma-strikes when going to main menu or the rules screen
             let mut mgr = STAGE_MANAGER.lock().unwrap();
             mgr.perma_striked_stages.clear();
+
+            // Make sure new CSS SFX don't carry over to other modes unintentionally
+            NEW_CSS_SFX = false;
         }
     }
 
@@ -421,7 +430,7 @@ pub fn main() {
             title_screen_play,
             sss_to_css,
             css_to_sss,
-            scene_transition
+            scene_transition,
             //copy_fighter_info,
             //load_ingame_call_sequence_scene,
             //load_melee_scene,
