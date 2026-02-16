@@ -41,10 +41,10 @@ unsafe extern "C" fn game_attackhi4(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         HIT_NODE(agent, Hash40::new("waist"), *HIT_STATUS_XLU);
         let dmg = 18.2;
-        ATTACK(agent, 0, 0, Hash40::new("top"), dmg, 83 + p.angle, 72.mul_f32(p.kbg), 0, 50, 6.0, 0.0, 3.5, 0.0, None, None, None, p.hitlag, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, dmg * p.shield_dmg + 10.0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, p.attr, *ATTACK_SOUND_LEVEL_L, p.sound, *ATTACK_REGION_PIKMIN);
-        ATTACK(agent, 1, 0, Hash40::new("top"), dmg, 83 + p.angle, 72.mul_f32(p.kbg), 0, 50, 6.0, 0.0, 3.5, 0.0, None, None, None, p.hitlag, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, dmg * p.shield_dmg + 10.0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, p.attr, *ATTACK_SOUND_LEVEL_L, p.sound, *ATTACK_REGION_PIKMIN);
+        ATTACK(agent, 0, 0, Hash40::new("top"), dmg, 80 + p.angle, 72.mul_f32(p.kbg), 0, 50, 6.0, 0.0, 3.5, 0.0, None, None, None, p.hitlag, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, dmg * p.shield_dmg + 10.0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, p.attr, *ATTACK_SOUND_LEVEL_L, p.sound, *ATTACK_REGION_PIKMIN);
+        ATTACK(agent, 1, 0, Hash40::new("top"), dmg, 80 + p.angle, 72.mul_f32(p.kbg), 0, 50, 6.0, 0.0, 3.5, 0.0, None, None, None, p.hitlag, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, dmg * p.shield_dmg + 10.0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, p.attr, *ATTACK_SOUND_LEVEL_L, p.sound, *ATTACK_REGION_PIKMIN);
     }
-    frame(lua_state, 4.0);
+    frame(lua_state, 3.0);
     if is_excute(agent) {
         let dmg = 14.0;
         ATTACK(agent, 0, 0, Hash40::new("top"), dmg, 60 + p.angle, 68.mul_f32(p.kbg), 0, 50, 5.0, 0.0, 3.5, 0.0, None, None, None, p.hitlag, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, dmg * p.shield_dmg + 10.0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, p.attr, *ATTACK_SOUND_LEVEL_M, p.sound, *ATTACK_REGION_PIKMIN);
