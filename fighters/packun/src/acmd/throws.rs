@@ -88,8 +88,6 @@ unsafe extern "C" fn game_throwf(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 4.0, 30, 60, 0, 50, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
-        let grabbed_boma = agent.get_grabbed_opponent_boma();
-        MotionModule::change_motion(grabbed_boma, Hash40::new("thrown_lw_big"), 0.0, 1.0, false, 0.0, false, false);
     }
     frame(lua_state, 26.0);
     if is_excute(agent) {
