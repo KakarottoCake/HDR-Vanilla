@@ -32,10 +32,10 @@
             <!-- Less damage, knockback, and shield damage, but a unique electric hit type and higher hitlag -->
             <!-- These properties combine to make Yellow Pikmin strong for combos, but weak for killing -->
             <!-- The Paralyze special hit type makes cling threatening, but it has a very long counter -->
-            <float hash="damage_mul">0.9</float>
+            <float hash="damage_mul">0.8</float>
             <float hash="kbg_mul">0.9</float>
             <float hash="shield_damage_mul">-0.25</float>
-            <int hash="angle_mod">8</int>
+            <int hash="angle_mod">6</int>
             <float hash="hitlag_mul">1.25</float>
             <string hash="attr">collision_attr_elec</string>
             <string hash="attr_special">collision_attr_paralyze</string>
