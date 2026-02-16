@@ -202,6 +202,23 @@ unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, 1.0);
 }
 
+unsafe extern "C" fn sound_throwlw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 1.0);
+    if is_excute(agent) {
+        PLAY_SEQUENCE(agent, Hash40::new("seq_bayonetta_rnd_attack_throw_l"));
+    }
+    frame(lua_state, 16.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_bayonetta_throw_l01"));
+    }
+    frame(lua_state, 20.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_bayonetta_throw_l02"));
+    }
+}
+
 unsafe extern "C" fn game_thrownhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -224,6 +241,7 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_throwhi", game_throwhi, Priority::Low);
 
     agent.acmd("game_throwlw", game_throwlw, Priority::Low);
+    agent.acmd("sound_throwlw", sound_throwlw, Priority::Low);
 
     agent.acmd("game_thrownhi", game_thrownhi, Priority::Low);
 }

@@ -14,7 +14,9 @@ unsafe extern "C" fn attack_s3_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
     }
     if CancelModule::is_enable_cancel(fighter.module_accessor)
     && fighter.sub_wait_ground_check_common(false.into()).get_bool() {
-        VarModule::set_int(fighter.battle_object, vars::bayonetta::instance::ATTACK_S3_COUNT, 0);
+        if VarModule::is_flag(fighter.battle_object, vars::bayonetta::status::ATTACK_INVALID_COMBO_INPUT) {
+            VarModule::set_int(fighter.battle_object, vars::bayonetta::instance::ATTACK_S3_COUNT, 0);
+        }
         return 1.into();
     }
     if fighter.global_table[globals::SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
@@ -103,7 +105,7 @@ unsafe extern "C" fn check_stage(fighter: &mut L2CFighterCommon) {
     let prev_status_0 = StatusModule::prev_status_kind(fighter.module_accessor, 0);
     let mut stage = VarModule::get_int(fighter.battle_object, vars::bayonetta::instance::ATTACK_S3_COUNT);
     let mut motion = Hash40::new("attack_s3_s");
-    // if combo was aborted and somehow wasnt reset, reset stage here
+    // fuck combo module
     if ![*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_S3].contains(&prev_status_0) {
         VarModule::set_int(fighter.battle_object, vars::bayonetta::instance::ATTACK_S3_COUNT, 0);
         stage = 0;
