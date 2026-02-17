@@ -1547,16 +1547,14 @@ pub mod vars {
     }
 
     pub mod reflet {
-        pub mod status {
-            // flags
-            pub const SPECIAL_HI_ELWIND1_CANCEL: i32 = 0x1100;
-        }
         pub mod instance {
             // flags
             pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0100;
+            pub const DISCARD_SKIP_STATUS: i32 = 0x0101;
 
             // ints
             pub const ATTACK_AIR_LEVIN_LENIENCY: i32 = 0x0100;
+            pub const DISCARD_TYPE: i32 = 0x0101;
 
             // floats
             pub const SPECIAL_N_CHARGE: i32 = 0x0100;
