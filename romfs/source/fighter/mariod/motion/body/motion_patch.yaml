@@ -126,13 +126,9 @@ attack_air_lw:
   extra:
     cancel_frame: 43
 special_n:
-  animations:
-  - name: d00specialntoss.nuanmb
   extra:
     cancel_frame: 47
 special_air_n:
-  animations:
-  - name: d00specialairntoss.nuanmb
   extra:
     cancel_frame: 47
 special_n_chill:
