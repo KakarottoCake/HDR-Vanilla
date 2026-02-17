@@ -58,6 +58,25 @@ hitbox_templates!(
     };
     pub PITB_SWORD_HITBOX_L = {
         extends: PITB_SWORD_HITBOX,
+        effect: "collision_attr_sting",
+        sound_level: SoundLevel::L,
+    };
+    pub PITB_KICK_HITBOX = {
+        extends: BASE_HITBOX,
+        effect: "collision_attr_normal",
+        hit_sound: CollisionSound::Kick,
+        region: AttackRegion::Kick,
+    };
+    pub PITB_KICK_HITBOX_S = {
+        extends: PITB_KICK_HITBOX,
+        sound_level: SoundLevel::S,
+    };
+    pub PITB_KICK_HITBOX_M = {
+        extends: PITB_KICK_HITBOX,
+        sound_level: SoundLevel::M,
+    };
+    pub PITB_KICK_HITBOX_L = {
+        extends: PITB_KICK_HITBOX,
         sound_level: SoundLevel::L,
     };
 );
