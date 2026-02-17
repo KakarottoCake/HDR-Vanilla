@@ -8,13 +8,13 @@ unsafe extern "C" fn game_attack11(agent: &mut L2CAgentBase) {
     frame(lua_state, 5.0);
     FT_MOTION_RATE_RANGE(agent, 5.0, 5.5, 1.0);
     if is_excute(agent) {
-        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 0, part: 0, bone: "armr", dmg: 3.0, angle: 80, kbg: 40, bkb: 10, size: 3.0, x: 2.0, y: 0.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::GA_d, });
-        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 1, part: 0, bone: "bowr", dmg: 3.0, angle: 80, kbg: 40, bkb: 10, size: 3.0, x: 0.0, y: 2.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::GA_d, });
-        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 2, part: 0, bone: "bowr", dmg: 3.0, angle: 80, kbg: 40, bkb: 10, size: 3.0, x: 0.0, y: 7.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::GA_d, });
+        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 0, bone: "armr", dmg: 3.0, angle: 80, kbg: 40, bkb: 10, size: 3.0, x: 2.0, y: 0.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::GA_d, });
+        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 1, bone: "bowr", dmg: 3.0, angle: 80, kbg: 40, bkb: 10, size: 3.0, x: 0.0, y: 2.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::GA_d, });
+        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 2, bone: "bowr", dmg: 3.0, angle: 80, kbg: 40, bkb: 10, size: 3.0, x: 0.0, y: 7.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::GA_d, });
         // Locking hitboxes
-        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 3, part: 0, bone: "armr", dmg: 3.0, angle: 361, kbg: 15, bkb: 30, size: 3.0, x: 2.0, y: 0.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::G, });
-        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 4, part: 0, bone: "bowr", dmg: 3.0, angle: 361, kbg: 15, bkb: 30, size: 3.0, x: 0.0, y: 2.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::G, });
-        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 5, part: 0, bone: "bowr", dmg: 3.0, angle: 361, kbg: 15, bkb: 30, size: 3.0, x: 0.0, y: 7.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::G, });
+        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 3, bone: "armr", dmg: 3.0, angle: 361, kbg: 15, bkb: 30, size: 3.0, x: 2.0, y: 0.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::G, });
+        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 4, bone: "bowr", dmg: 3.0, angle: 361, kbg: 15, bkb: 30, size: 3.0, x: 0.0, y: 2.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::G, });
+        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 5, bone: "bowr", dmg: 3.0, angle: 361, kbg: 15, bkb: 30, size: 3.0, x: 0.0, y: 7.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::G, });
     }
     frame(lua_state, 5.5);
     FT_MOTION_RATE_RANGE(agent, 5.5, 7.0, 1.0);
@@ -49,13 +49,13 @@ unsafe extern "C" fn game_attack12(agent: &mut L2CAgentBase) {
     frame(lua_state, 5.0);
     FT_MOTION_RATE_RANGE(agent, 5.0, 5.5, 1.0);
     if is_excute(agent) {
-        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 0, part: 0, bone: "arml", dmg: 3.0, angle:  60, kbg: 40, fkb: 70, bkb: 0, size: 3.0, x: 2.0, y:  0.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::GA_d, });
-        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 1, part: 0, bone: "bowl", dmg: 3.0, angle:  90, kbg: 40, fkb: 70, bkb: 0, size: 3.2, x: 0.0, y: -2.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::GA_d, });
-        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 2, part: 0, bone: "bowl", dmg: 3.0, angle: 145, kbg: 40, fkb: 85, bkb: 0, size: 3.2, x: 0.0, y: -7.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::GA_d, });
+        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 0, bone: "arml", dmg: 3.0, angle:  60, kbg: 40, fkb: 70, bkb: 0, size: 3.0, x: 2.0, y:  0.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::GA_d, });
+        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 1, bone: "bowl", dmg: 3.0, angle:  90, kbg: 40, fkb: 70, bkb: 0, size: 3.2, x: 0.0, y: -2.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::GA_d, });
+        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 2, bone: "bowl", dmg: 3.0, angle: 145, kbg: 40, fkb: 85, bkb: 0, size: 3.2, x: 0.0, y: -7.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::GA_d, });
         // Locking hitboxes
-        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 3, part: 0, bone: "arml", dmg: 3.0, angle: 361, kbg: 15, bkb: 30, size: 3.0, x: 2.0, y:  0.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::G, });
-        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 4, part: 0, bone: "bowl", dmg: 3.0, angle: 361, kbg: 15, bkb: 30, size: 3.2, x: 0.0, y: -2.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::G, });
-        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 5, part: 0, bone: "bowl", dmg: 3.0, angle: 361, kbg: 15, bkb: 30, size: 3.2, x: 0.0, y: -7.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::G, });
+        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 3, bone: "arml", dmg: 3.0, angle: 361, kbg: 15, bkb: 30, size: 3.0, x: 2.0, y:  0.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::G, });
+        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 4, bone: "bowl", dmg: 3.0, angle: 361, kbg: 15, bkb: 30, size: 3.2, x: 0.0, y: -2.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::G, });
+        hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 5, bone: "bowl", dmg: 3.0, angle: 361, kbg: 15, bkb: 30, size: 3.2, x: 0.0, y: -7.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::G, });
     }
     frame(lua_state, 5.5);
     FT_MOTION_RATE_RANGE(agent, 5.5, 7.0, 1.0);
@@ -95,9 +95,9 @@ unsafe extern "C" fn game_attack13(agent: &mut L2CAgentBase) {
     frame(lua_state, 3.0);
     FT_MOTION_RATE_RANGE(agent, 3.0, 4.0, 3.0);
     if is_excute(agent) {
-        hitbox!(agent, { extends: PITB_SWORD_HITBOX_M, id: 0, part: 0, bone: "armr", dmg: 4.0, angle: 70, kbg: 100, bkb: 60, size: 4.0, x: 2.0, y: 0.0, z: 0.0, facing: LrCheck::F, });
-        hitbox!(agent, { extends: PITB_SWORD_HITBOX_M, id: 1, part: 0, bone: "bowr", dmg: 4.0, angle: 70, kbg: 100, bkb: 60, size: 4.0, x: 0.0, y: 2.0, z: 0.0, facing: LrCheck::F, });
-        hitbox!(agent, { extends: PITB_SWORD_HITBOX_M, id: 2, part: 0, bone: "bowr", dmg: 4.0, angle: 70, kbg: 100, bkb: 60, size: 4.0, x: 0.0, y: 6.0, z: 0.0, facing: LrCheck::F, });
+        hitbox!(agent, { extends: PITB_SWORD_HITBOX_M, id: 0, bone: "armr", dmg: 4.0, angle: 70, kbg: 100, bkb: 60, size: 4.0, x: 2.0, y: 0.0, z: 0.0, facing: LrCheck::F, });
+        hitbox!(agent, { extends: PITB_SWORD_HITBOX_M, id: 1, bone: "bowr", dmg: 4.0, angle: 70, kbg: 100, bkb: 60, size: 4.0, x: 0.0, y: 2.0, z: 0.0, facing: LrCheck::F, });
+        hitbox!(agent, { extends: PITB_SWORD_HITBOX_M, id: 2, bone: "bowr", dmg: 4.0, angle: 70, kbg: 100, bkb: 60, size: 4.0, x: 0.0, y: 6.0, z: 0.0, facing: LrCheck::F, });
     }
     frame(lua_state, 4.0);
     FT_MOTION_RATE_RANGE(agent, 4.0, 32.0, 25.0);
