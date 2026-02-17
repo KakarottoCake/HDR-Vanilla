@@ -41,6 +41,27 @@ use utils::{
 use smashline::*;
 #[macro_use] extern crate smash_script;
 
+hitbox_templates!(
+    pub PITB_SWORD_HITBOX = {
+        extends: BASE_HITBOX,
+        effect: "collision_attr_cutup",
+        hit_sound: CollisionSound::Cutup,
+        region: AttackRegion::Palutena,
+    };
+    pub PITB_SWORD_HITBOX_S = {
+        extends: PITB_SWORD_HITBOX,
+        sound_level: SoundLevel::S,
+    };
+    pub PITB_SWORD_HITBOX_M = {
+        extends: PITB_SWORD_HITBOX,
+        sound_level: SoundLevel::M,
+    };
+    pub PITB_SWORD_HITBOX_L = {
+        extends: PITB_SWORD_HITBOX,
+        sound_level: SoundLevel::L,
+    };
+);
+
 pub fn install() {
     let agent = &mut Agent::new("pitb");
     acmd::install(agent);
