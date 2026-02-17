@@ -90,16 +90,24 @@ unsafe extern "C" fn move_customizer(fighter: &mut L2CFighterCommon) -> L2CValue
 
 // Prevents side special from being used if a missile is present
 unsafe extern "C" fn should_use_special_s_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
-    // Grab the stored missile ID
-    let missile_object_id = VarModule::get_int(fighter.battle_object, vars::miigunner::instance::SPECIAL_S3_MISSILE_OBJECT_ID) as u32;
-    // Check if the stored object ID is *actually* a Gunner missile or not.
-    if sv_battle_object::is_active(missile_object_id)
-    && sv_battle_object::category(missile_object_id) == *BATTLE_OBJECT_CATEGORY_WEAPON
-    && sv_battle_object::kind(missile_object_id) == *WEAPON_KIND_MIIGUNNER_SUPERMISSILE {
-        false.into()
-    } else {
-        true.into()
+    if WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_CUSTOMIZE_SPECIAL_S_NO) == 1 {
+        if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_MIIGUNNER_GENERATE_ARTICLE_STEALTHBOMB)
+        || ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_MIIGUNNER_GENERATE_ARTICLE_STEALTHBOMB_S) {
+            return false.into();
+        }
     }
+    if WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_CUSTOMIZE_SPECIAL_S_NO) == 2 {
+        // Grab the stored missile ID
+        let missile_object_id = VarModule::get_int(fighter.battle_object, vars::miigunner::instance::SPECIAL_S3_MISSILE_OBJECT_ID) as u32;
+        // Check if the stored object ID is *actually* a Gunner missile or not.
+        if sv_battle_object::is_active(missile_object_id)
+        && sv_battle_object::category(missile_object_id) == *BATTLE_OBJECT_CATEGORY_WEAPON
+        && sv_battle_object::kind(missile_object_id) == *WEAPON_KIND_MIIGUNNER_SUPERMISSILE {
+            return false.into();
+        }
+    }
+
+    return true.into();
 }
 
 unsafe extern "C" fn should_use_special_lw_callback(fighter: &mut L2CFighterCommon) -> L2CValue {

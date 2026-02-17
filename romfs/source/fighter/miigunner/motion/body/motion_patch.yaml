@@ -313,10 +313,10 @@ special_air_n1_neon:
     no_stop_intp: false
 special_s2_end:
   extra:
-    cancel_frame: 32
+    cancel_frame: 25
 special_air_s2_end:
   extra:
-    cancel_frame: 32
+    cancel_frame: 25
 special_hi2_squat:
   extra:
     xlu_start: 0

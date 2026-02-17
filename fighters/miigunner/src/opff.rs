@@ -66,12 +66,6 @@ unsafe fn reflector_jc(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
-unsafe fn stealth_burst_land_cancel(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S2_END) {
-        boma.check_land_cancel(None);
-    }
-}
-
 unsafe fn vortex_item_grab_ac(fighter: &mut L2CFighterCommon) {
     if fighter.is_status_one_of(&[*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW3_HIT, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW3_END])
     && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
@@ -110,7 +104,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     special_waza_charge_handle(boma);
     reflector_jc(boma);
-    stealth_burst_land_cancel(boma);
     vortex_item_grab_ac(fighter);
     fastfall_specials(fighter);
 }
