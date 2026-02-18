@@ -93,4 +93,19 @@ hitbox_templates! {
         extends: PHYSICAL_PROJECTILE_HITBOX,
         absorbable: true,
     };
+    pub BASE_SEARCHBOX = {
+        extends: BASE_HITBOX,
+        dmg: 0.0,
+        angle: 361,
+        kbg: 0,
+        fkb: 0,
+        bkb: 0,
+        clank: SetOff::Off,
+        direct: false,
+        // category: CollisionCategory::all() & !CollisionCategory::FLOOR,
+        effect: "collision_attr_search",
+        sound_level: SoundLevel::S,
+        hit_sound: CollisionSound::None,
+        region: AttackRegion::None,
+    };
 }

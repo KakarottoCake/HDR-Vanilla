@@ -222,7 +222,7 @@ unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
     frame(lua_state, 13.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
-        hitbox!(agent, { extends: PITB_SWORD_HITBOX_M, id: 0, bone: "top", dmg:  9.0, angle: 75, kbg: 114, bkb: 20, size: 3.5, x: 0.0, y: 11.0, z:  0.0, });
+        hitbox!(agent, { extends: PITB_SWORD_HITBOX_L, id: 0, bone: "top", dmg:  9.0, angle: 75, kbg: 114, bkb: 20, size: 3.5, x: 0.0, y: 11.0, z:  0.0, });
         hitbox!(agent, { extends: PITB_SWORD_HITBOX_L, id: 1, bone: "top", dmg: 11.0, angle: 75, kbg: 114, bkb: 20, size: 4.5, x: 0.0, y: 17.0, z: -5.0, });
         hitbox!(agent, { extends: PITB_SWORD_HITBOX_L, id: 2, bone: "top", dmg: 11.0, angle: 75, kbg: 114, bkb: 20, size: 4.5, x: 0.0, y: 17.0, z:  7.0, });
         hitbox!(agent, { extends: PITB_SWORD_HITBOX_L, id: 3, bone: "top", dmg: 11.0, angle: 75, kbg: 114, bkb: 20, size: 4.5, x: 0.0, y: 17.0, z:  2.0, });
