@@ -431,6 +431,22 @@ unsafe extern "C" fn special_s_attack_main_loop(fighter: &mut L2CFighterCommon) 
         return 0.into();
     }
 
+    // Reduce speed on shield
+    if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD)
+    && !fighter.is_in_hitlag() {
+        let shield_hit_end_speed_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.shield_hit_end_speed_x");
+        let lr = PostureModule::lr(fighter.module_accessor);
+        sv_kinetic_energy!(
+            set_speed,
+            fighter,
+            FIGHTER_KINETIC_ENERGY_ID_STOP,
+            shield_hit_end_speed_x * lr,
+            0.0
+        );
+        fighter.change_status(FIGHTER_TRAIL_STATUS_KIND_SPECIAL_S_END.into(), false.into());
+        return 0.into();
+    }
+
     let attack_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_TRAIL_STATUS_SPECIAL_S_INT_ATTACK_COUNT);
     // let to_search = WorkModule::is_flag(fighter.module_accessor, *FIGHTER_TRAIL_STATUS_SPECIAL_S_FLAG_TO_SEARCH);
     // if !to_search {

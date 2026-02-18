@@ -146,23 +146,6 @@ unsafe fn flower_frame(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
-unsafe fn sonic_blade_stop_on_shield(fighter: &mut L2CFighterCommon) {
-    // Reduce speed on shield
-    if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD)
-    && !fighter.is_in_hitlag() {
-        let shield_hit_end_speed_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.shield_hit_end_speed_x");
-        let lr = PostureModule::lr(fighter.module_accessor);
-        sv_kinetic_energy!(
-            set_speed,
-            fighter,
-            FIGHTER_KINETIC_ENERGY_ID_STOP,
-            shield_hit_end_speed_x * lr,
-            0.0
-        );
-        fighter.change_status(FIGHTER_TRAIL_STATUS_KIND_SPECIAL_S_END.into(), false.into());
-    }
-}
-
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
@@ -194,7 +177,6 @@ pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut
     attack_lw4_rebound(boma);
     magic_handling(fighter, boma);
     flower_frame(boma);
-    sonic_blade_stop_on_shield(fighter);
     fastfall_specials(fighter);
     initialize_magic(fighter);
 }
