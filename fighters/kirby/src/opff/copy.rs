@@ -696,26 +696,11 @@ unsafe fn miigunner_nspecial_cancels(fighter: &mut L2CFighterCommon) {
 // Piranha Plant
 unsafe fn packun_ptooie_stance(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_SWALLOW_WAIT) {
-        let boma = fighter.boma();
-        let opponent_boma = boma.get_grabbed_opponent_boma();
-        let grabbed_fighter = smash::app::utility::get_kind(opponent_boma);
-        if grabbed_fighter == *FIGHTER_KIND_PACKUN {
-            let old_stance = VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE);
+        let opponent_boma = fighter.get_grabbed_opponent_boma();
+        if opponent_boma.kind() == *FIGHTER_KIND_PACKUN {
             let new_stance = VarModule::get_int(opponent_boma.object(), vars::packun::instance::CURRENT_STANCE);
-            if new_stance != old_stance {
-                // println!("Copying Pirahna Plant's Current Stance, which is {}", new_stance);
-                VarModule::set_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE, new_stance);
-            }
+            VarModule::set_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE, new_stance);
         }
-    }
-}
-
-unsafe fn packun_ptooie_scale(fighter: &mut L2CFighterCommon) {
-    if VarModule::get_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE) == 2 {
-        VarModule::set_float(fighter.battle_object, vars::packun::instance::SPECIAL_N_PTOOIE_SCALE, 1.3);
-    }
-    else {
-        VarModule::set_float(fighter.battle_object, vars::packun::instance::SPECIAL_N_PTOOIE_SCALE, 1.0);
     }
 }
 
@@ -1102,7 +1087,6 @@ pub unsafe fn kirby_copy_handler(fighter: &mut L2CFighterCommon) {
         // Piranha Plant
         0x51 => {
             packun_ptooie_stance(fighter);
-            packun_ptooie_scale(fighter);
         },
         // Hero
         0x53 => {
