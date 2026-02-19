@@ -1168,10 +1168,11 @@ pub mod vars {
     pub mod miifighter {
         pub mod instance {
             // ints
-            pub const SPECIAL_LW3_STAGE: i32 = 0x0100;
-            pub const SPECIAL_LW3_TIMER: i32 = 0x0101;
-            pub const SPECIAL_LW3_EFFECT_HANDLE_1: i32 = 0x0102;
-            pub const SPECIAL_LW3_EFFECT_HANDLE_2: i32 = 0x0103;
+            pub const SPECIAL_N2_CHARGE_COUNT: i32 = 0x0100;
+            pub const SPECIAL_LW3_STAGE: i32 = 0x0101;
+            pub const SPECIAL_LW3_TIMER: i32 = 0x0102;
+            pub const SPECIAL_LW3_EFFECT_HANDLE_1: i32 = 0x0103;
+            pub const SPECIAL_LW3_EFFECT_HANDLE_2: i32 = 0x0104;
 
             // flags
             pub const SPECIAL_N3_STALL: i32 = 0x0100;
@@ -1181,8 +1182,9 @@ pub mod vars {
             // ints
             pub const SPECIAL_N1_CHARGE: i32 = 0x1100;
             pub const SPECIAL_N1_EFFECT_HANDLE: i32 = 0x1101;
-            pub const SPECIAL_LW1_CHARGE: i32 = 0x1102;
-            pub const SPECIAL_LW1_QUAKE_EFFECT_HANDLE: i32 = 0x1103;
+            pub const SPECIAL_N2_CANCEL_TYPE: i32 = 0x1102;
+            pub const SPECIAL_LW1_CHARGE: i32 = 0x1103;
+            pub const SPECIAL_LW1_QUAKE_EFFECT_HANDLE: i32 = 0x1104;
 
             // floats
             pub const SPECIAL_N1_ANGLE: i32 = 0x1100;
@@ -2095,6 +2097,11 @@ pub mod statuses {
         pub const FLOAT: i32 = 0x1E9;
     }
 
+    pub mod miifighter {
+        pub const SPECIAL_N2_HOLD: i32 = 0x208;
+        pub const SPECIAL_N2_CANCEL: i32 = 0x209;
+        pub const SPECIAL_N2_JUMP_CANCEL: i32 = 0x20A;
+    }
     pub mod packun_firebreath {
         pub const REGULAR: i32 = 0x0;
     }

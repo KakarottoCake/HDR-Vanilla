@@ -105,7 +105,7 @@ unsafe extern "C" fn expression_specialn1bowl(agent: &mut L2CAgentBase) {
 }
 
 // ================================================================================================
-// ==================================== FLASHING MACH PUNCH =======================================
+// ===================================== ULTIMATE UPPERCUT ========================================
 // ================================================================================================
 
 unsafe extern "C" fn game_specialn2start(agent: &mut L2CAgentBase) {
@@ -387,7 +387,7 @@ unsafe extern "C" fn effect_specialairn3throw(agent: &mut L2CAgentBase) {
     }
 }
 
-pub fn install(agent: &mut Agent) {;
+pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialn1", game_specialn1, Priority::Low);
     agent.acmd("game_specialairn1", game_specialn1, Priority::Low);
     agent.acmd("effect_specialn1", effect_specialn1, Priority::Low);
@@ -402,14 +402,59 @@ pub fn install(agent: &mut Agent) {;
     agent.acmd("expression_specialn1bowl", expression_specialn1bowl, Priority::Low);
     agent.acmd("expression_specialairn1bowl", expression_specialn1bowl, Priority::Low);
 
-    agent.acmd("game_specialn2start", game_specialn2start, Priority::Low);
-    agent.acmd("game_specialairn2start", game_specialn2start, Priority::Low);
+    agent.acmd("game_specialn2start", acmd_stub, Priority::Low);
+    agent.acmd("game_specialairn2start", acmd_stub, Priority::Low);
+    agent.acmd("effect_specialn2start", acmd_stub, Priority::Low);
+    agent.acmd("effect_specialairn2start", acmd_stub, Priority::Low);
+    agent.acmd("sound_specialn2start", acmd_stub, Priority::Low);
+    agent.acmd("sound_specialairn2start", acmd_stub, Priority::Low);
+    agent.acmd("expression_specialn2start", acmd_stub, Priority::Low);
+    agent.acmd("expression_specialairn2start", acmd_stub, Priority::Low);
 
-    agent.acmd("game_specialn2finish", game_specialn2finish, Priority::Low);
-    agent.acmd("game_specialairn2finish", game_specialn2finish, Priority::Low);
-    
-    agent.acmd("game_specialn2miss", game_specialn2miss, Priority::Low);
-    agent.acmd("game_specialairn2miss", game_specialn2miss, Priority::Low);
+    agent.acmd("game_specialn2hold", acmd_stub, Priority::Low);
+    agent.acmd("game_specialairn2hold", acmd_stub, Priority::Low);
+    agent.acmd("effect_specialn2hold", acmd_stub, Priority::Low);
+    agent.acmd("effect_specialairn2hold", acmd_stub, Priority::Low);
+    agent.acmd("sound_specialn2hold", acmd_stub, Priority::Low);
+    agent.acmd("sound_specialairn2hold", acmd_stub, Priority::Low);
+    agent.acmd("expression_specialn2hold", acmd_stub, Priority::Low);
+    agent.acmd("expression_specialairn2hold", acmd_stub, Priority::Low);
+
+    agent.acmd("game_specialn2end", acmd_stub, Priority::Low);
+    agent.acmd("game_specialairn2end", acmd_stub, Priority::Low);
+    agent.acmd("effect_specialn2end", acmd_stub, Priority::Low);
+    agent.acmd("effect_specialairn2end", acmd_stub, Priority::Low);
+    agent.acmd("sound_specialn2end", acmd_stub, Priority::Low);
+    agent.acmd("sound_specialairn2end", acmd_stub, Priority::Low);
+    agent.acmd("expression_specialn2end", acmd_stub, Priority::Low);
+    agent.acmd("expression_specialairn2end", acmd_stub, Priority::Low);
+
+    agent.acmd("game_specialn2attack", acmd_stub, Priority::Low);
+    agent.acmd("game_specialairn2attack", acmd_stub, Priority::Low);
+    agent.acmd("effect_specialn2attack", acmd_stub, Priority::Low);
+    agent.acmd("effect_specialairn2attack", acmd_stub, Priority::Low);
+    agent.acmd("sound_specialn2attack", acmd_stub, Priority::Low);
+    agent.acmd("sound_specialairn2attack", acmd_stub, Priority::Low);
+    agent.acmd("expression_specialn2attack", acmd_stub, Priority::Low);
+    agent.acmd("expression_specialairn2attack", acmd_stub, Priority::Low);
+
+    agent.acmd("game_specialn2max", acmd_stub, Priority::Low);
+    agent.acmd("game_specialairn2max", acmd_stub, Priority::Low);
+    agent.acmd("effect_specialn2max", acmd_stub, Priority::Low);
+    agent.acmd("effect_specialairn2max", acmd_stub, Priority::Low);
+    agent.acmd("sound_specialn2max", acmd_stub, Priority::Low);
+    agent.acmd("sound_specialairn2max", acmd_stub, Priority::Low);
+    agent.acmd("expression_specialn2max", acmd_stub, Priority::Low);
+    agent.acmd("expression_specialairn2max", acmd_stub, Priority::Low);
+
+    agent.acmd("game_specialn2landing", acmd_stub, Priority::Low);
+    agent.acmd("game_specialairn2landing", acmd_stub, Priority::Low);
+    agent.acmd("effect_specialn2landing", acmd_stub, Priority::Low);
+    agent.acmd("effect_specialairn2landing", acmd_stub, Priority::Low);
+    agent.acmd("sound_specialn2landing", acmd_stub, Priority::Low);
+    agent.acmd("sound_specialairn2landing", acmd_stub, Priority::Low);
+    agent.acmd("expression_specialn2landing", acmd_stub, Priority::Low);
+    agent.acmd("expression_specialairn2landing", acmd_stub, Priority::Low);
 
     agent.acmd("game_speciallw3catch", game_specialn3catch, Priority::Low);
     agent.acmd("game_specialairlw3catch", game_specialn3catch, Priority::Low);

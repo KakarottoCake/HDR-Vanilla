@@ -54,6 +54,16 @@ unsafe extern "C" fn move_customizer(fighter: &mut L2CFighterCommon) -> L2CValue
             LUA_SCRIPT_STATUS_FUNC_STATUS_PRE.into(),
             std::mem::transmute(special_n2::special_n2_pre as *const ())
         );
+        fighter.sv_set_status_func(
+            FIGHTER_STATUS_KIND_SPECIAL_N.into(),
+            LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN.into(),
+            std::mem::transmute(special_n2::special_n2_main as *const ())
+        );
+        fighter.sv_set_status_func(
+            FIGHTER_STATUS_KIND_SPECIAL_N.into(),
+            LUA_SCRIPT_STATUS_FUNC_STATUS_END.into(),
+            std::mem::transmute(special_n2::special_n2_end as *const ())
+        );
     } else if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_N_3 {
         fighter.sv_set_status_func(
             FIGHTER_STATUS_KIND_SPECIAL_N.into(),
@@ -125,6 +135,7 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     move_customizer(fighter);
     fighter.global_table[globals::STATUS_CHANGE_CALLBACK].assign(&L2CValue::Ptr(change_status_callback as *const () as _));
 
+    VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_N2_CHARGE_COUNT, 0);
     VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_STAGE, 0);
     VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_TIMER, 0);
     VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1, -1);
@@ -174,6 +185,7 @@ pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
     special_lw1::install(agent);
     special_lw2::install(agent);
+    special_n2::install(agent);
     special_n3::install(agent);
     special_s1::install(agent);
 
