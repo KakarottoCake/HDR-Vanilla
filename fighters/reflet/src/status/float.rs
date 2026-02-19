@@ -164,6 +164,7 @@ unsafe extern "C" fn reflet_float_main_loop(fighter: &mut L2CFighterCommon) -> L
 }
 
 unsafe extern "C" fn float_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    STOP_SE(fighter, Hash40::new("se_common_spirits_wind_loop"));
     EffectModule::kill_kind(fighter.module_accessor, Hash40::new("reflet_catch"), false, true);
     EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_aura_light"), false, true);
     if WorkModule::get_int(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_HI_CURRENT_POINT) <= 0 {

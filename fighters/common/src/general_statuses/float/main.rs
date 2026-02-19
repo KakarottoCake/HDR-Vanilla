@@ -110,7 +110,7 @@ unsafe fn float_main_loop_common(fighter: &mut L2CFighterCommon) -> L2CValue {
     let float_duration = VarModule::get_int(fighter.battle_object, vars::common::instance::FLOAT_DURATION);
     let float_frame = VarModule::get_int(fighter.battle_object, vars::common::status::FLOAT_FRAME); // inc at end of loop
 
-    if (float_frame - float_duration).abs() == 3
+    if (float_frame - float_duration).abs() == 4
     && VarModule::is_flag(fighter.battle_object, vars::common::instance::OMNI_FLOAT) {
         let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         sv_kinetic_energy!(
@@ -134,7 +134,7 @@ unsafe fn float_main_loop_common(fighter: &mut L2CFighterCommon) -> L2CValue {
         float_drift_common(fighter);
     }
 
-    if (float_frame - float_duration).abs() == buffer + 1
+    if (float_frame - float_duration).abs() == buffer
     && mewtwo { // mewtwo jump burn leniency
         fighter.inc_int(*FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
     }
