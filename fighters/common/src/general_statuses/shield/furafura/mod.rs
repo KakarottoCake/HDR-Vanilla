@@ -45,7 +45,7 @@ unsafe fn status_FuraFuraEnd_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let mut rate = 1.0;
     // Separate Disable/Bind Wakeup Framedata
     if StatusModule::prev_status_kind(fighter.module_accessor, 2) != *FIGHTER_STATUS_KIND_SHIELD_BREAK_FLY {
-        let disable_frame = ParamModule::get_float(fighter.battle_object, ParamType::Common, "disable_furafuraend_frame") - 1.0; // FAF not lag
+        let disable_frame = ParamModule::get_float(fighter.battle_object, ParamType::Common, "bind_end_frame") - 1.0; // FAF not lag
         let cancel_frame = FighterMotionModuleImpl::get_cancel_frame(fighter.module_accessor, Hash40::new("furafura_end"), true);
         let end_frame = MotionModule::end_frame(fighter.module_accessor);
         rate = if cancel_frame > 0.0 {cancel_frame/disable_frame} else {end_frame/disable_frame};
