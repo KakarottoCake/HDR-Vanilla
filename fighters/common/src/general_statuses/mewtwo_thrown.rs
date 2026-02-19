@@ -1,7 +1,5 @@
 use super::*;
 
-// This file contains code for item throw
-
 pub fn install() {
     skyline::nro::add_hook(nro_hook);
 }

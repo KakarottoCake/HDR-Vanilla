@@ -232,7 +232,7 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
     frame(lua_state, 15.0);
     if is_excute(agent) {
         agent.on_flag(*FIGHTER_MEWTWO_STATUS_SPECIAL_HI_FLAG_1);
-    } //make use of unused flag to enable drift
+    } // make use of unused flag to enable drift
 }
 
 unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
@@ -248,9 +248,20 @@ unsafe extern "C" fn game_speciallw(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 24.0);
     FT_MOTION_RATE_RANGE(agent, 24.0, 53.0, 21.0);
+    frame(lua_state, 53.0);
+    FT_MOTION_RATE(agent, 1.0);
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.acmd("effect_specialnhold", effect_specialnhold, Priority::Low);
+    agent.acmd("sound_specialnhold", sound_specialnhold, Priority::Low);
+    agent.acmd("effect_specialnmax", effect_specialnmax, Priority::Low);
+    agent.acmd("sound_specialnmax", sound_specialnmax, Priority::Low);
+    agent.acmd("effect_specialairnhold", effect_specialnhold, Priority::Low);
+    agent.acmd("sound_specialairnhold", sound_specialnhold, Priority::Low);
+    agent.acmd("effect_specialairnmax", effect_specialnmax, Priority::Low);
+    agent.acmd("sound_specialairnmax", sound_specialnmax, Priority::Low);
+
     agent.acmd("game_specials", game_specials, Priority::Low);
     agent.acmd("effect_specials", effect_specials, Priority::Low);
 
@@ -264,13 +275,4 @@ pub fn install(agent: &mut Agent) {
 
     agent.acmd("game_speciallw", game_speciallw, Priority::Low);
     agent.acmd("game_specialairlw", game_speciallw, Priority::Low);
-
-    agent.acmd("effect_specialnhold", effect_specialnhold, Priority::Low);
-    agent.acmd("sound_specialnhold", sound_specialnhold, Priority::Low);
-    agent.acmd("effect_specialnmax", effect_specialnmax, Priority::Low);
-    agent.acmd("sound_specialnmax", sound_specialnmax, Priority::Low);
-    agent.acmd("effect_specialairnhold", effect_specialnhold, Priority::Low);
-    agent.acmd("sound_specialairnhold", sound_specialnhold, Priority::Low);
-    agent.acmd("effect_specialairnmax", effect_specialnmax, Priority::Low);
-    agent.acmd("sound_specialairnmax", sound_specialnmax, Priority::Low);
 }

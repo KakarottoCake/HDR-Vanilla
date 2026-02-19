@@ -2,6 +2,7 @@
 <struct>
     <struct hash="param_special_s">
       <float hash="add_per_frame">0.27</float>
+      <float hash="move_end_frame">43.0</float>
       <float hash="angle_max">25.0</float>
     </struct>
     <struct hash="param_float">

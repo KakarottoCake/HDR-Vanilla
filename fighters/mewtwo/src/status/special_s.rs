@@ -7,8 +7,7 @@ unsafe extern "C" fn special_s_throw_main(fighter: &mut L2CFighterCommon) -> L2C
     // kill ref
     shield!(fighter, *MA_MSC_CMD_SHIELD_OFF, *COLLISION_KIND_REFLECTOR, *FIGHTER_MEWTWO_REFLECTOR_KIND_REFLECTOR, *FIGHTER_REFLECTOR_GROUP_EXTEND);
     // fx
-    EffectModule::req_follow(fighter.module_accessor, Hash40::new("mewtwo_final_aura"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.1, true, 0, 0, 0, 0, 0, false, false);
-    let effect_2 = EffectModule::get_last_handle(fighter.module_accessor) as u64;
+    let effect_2 = EffectModule::req_follow(fighter.module_accessor, Hash40::new("mewtwo_final_aura"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.1, true, 0, 0, 0, 0, 0, false, false);
     VarModule::set_int64(fighter.battle_object, vars::mewtwo::status::EFFECT_HANDLER_2, effect_2);
     VarModule::set_vec2(fighter.battle_object, vars::mewtwo::status::SPECIAL_S_THROW_POS, Vector2f{x: 14.3 * fighter.lr(), y: 9.3});
     fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(move_to_center as *const () as _));
@@ -19,7 +18,8 @@ unsafe extern "C" fn move_to_center(fighter: &mut L2CFighterCommon) -> L2CValue 
     let lr = fighter.lr();
     let captured_id = LinkModule::get_node_object_id(fighter.module_accessor, *LINK_NO_CAPTURE) as u32;
     let captured_boma = sv_battle_object::module_accessor(captured_id);
-    if fighter.motion_frame() < 43.0 { // stop moving 6f? the finisher starts
+    let move_end_frame = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.move_end_frame");
+    if fighter.motion_frame() < move_end_frame { // stop moving ~6f? b4 the finisher starts
         let add_per_frame = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.add_per_frame");
         let last_pos = VarModule::get_vec2(fighter.battle_object, vars::mewtwo::status::SPECIAL_S_THROW_POS);
         let mut add_stick = Vector2f{x: last_pos.x + add_per_frame*fighter.left_stick_x(), y: last_pos.y + add_per_frame*fighter.left_stick_y()};
