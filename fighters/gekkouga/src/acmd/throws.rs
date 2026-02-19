@@ -13,7 +13,7 @@ unsafe extern "C" fn game_catch(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {
-        CATCH(agent, 0, Hash40::new("top"), 3.6, 0.0, 6.0, 0.0, Some(0.0), Some(6.0), Some(17.0), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        CATCH(agent, 0, Hash40::new("top"), 3.6, 0.0, 6.0, 3.6, Some(0.0), Some(6.0), Some(16.0), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     game_CaptureCutCommon(agent);
     wait(lua_state, 2.0);
@@ -21,6 +21,15 @@ unsafe extern "C" fn game_catch(agent: &mut L2CAgentBase) {
         grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
         WorkModule::on_flag(boma, *FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT);
         GrabModule::set_rebound(boma, false);
+    }
+}
+
+unsafe extern "C" fn effect_catch(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 10.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("gekkouga_catch"), Hash40::new("top"), 0.0, 2.5, 12, 0, 0, 0, 1, true);
     }
 }
 
@@ -53,7 +62,7 @@ unsafe extern "C" fn game_catchturn(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {
-        CATCH(agent, 0, Hash40::new("top"), 3.6, 0.0, 6.0, -4.0, Some(0.0), Some(6.0), Some(-24.55), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        CATCH(agent, 0, Hash40::new("top"), 3.6, 0.0, 6.0, -4.0, Some(0.0), Some(6.0), Some(-22.0), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     game_CaptureCutCommon(agent);
     wait(lua_state, 2.0);
@@ -125,6 +134,8 @@ unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
 
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_catch", game_catch, Priority::Low);
+    agent.acmd("effect_catch", effect_catch, Priority::Low);
+
     agent.acmd("game_catchdash", game_catchdash, Priority::Low);
     agent.acmd("game_catchturn", game_catchturn, Priority::Low);
 

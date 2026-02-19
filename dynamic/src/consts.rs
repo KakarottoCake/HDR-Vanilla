@@ -193,7 +193,7 @@ pub mod vars {
 
             pub const DOWN_DISABLE_PASSIVE: i32 = 0x006B;
 
-            pub const DOWN_DISABLE_A_LAND: i32 = 0x006C;
+            // pub const DOWN_DISABLE_A_LAND: i32 = 0x006C;
 
             pub const IS_KILLING_BLOW: i32 = 0x006D;
 
@@ -222,7 +222,7 @@ pub mod vars {
 
             pub const CSTICK_LIFE: i32 = 0x0008;
 
-            pub const AGT_USED_COUNTER: i32 = 0x0009;
+            // pub const AGT_USED_COUNTER: i32 = 0x0009;
 
             pub const CLIFF_XLU_FRAME: i32 = 0x000A;
             pub const LAST_ATTACK_HITBOX_ID: i32 = 0x000B;
@@ -382,6 +382,7 @@ pub mod vars {
             pub const PSYCHE_UP_ACTIVE: i32 = 0x0102;
             pub const MENU_TRAINING_MODE_LOCK: i32 = 0x0103;
             pub const SPECIAL_LW_CSTICK_BUFFER: i32 = 0x0104;
+            pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0105;
 
             // ints
             pub const SPELL_SLOT_1: i32 = 0x0100;
@@ -394,10 +395,11 @@ pub mod vars {
             pub const SPELL_SLOT_USED_1_4: i32 = 0x0107;
             pub const SPELL_SLOT_USED_2_1: i32 = 0x0108;
             pub const SPELL_SLOT_USED_2_2: i32 = 0x0109;
-            pub const SPELL_SLOT_USED_2_3: i32 = 0x0110;
-            pub const SPELL_SLOT_USED_2_4: i32 = 0x0111;
-            pub const CURSOR_SLOT: i32 = 0x0112;
-            pub const MENU_TRAINING_MODE_INDEX: i32 = 0x0113;
+            pub const SPELL_SLOT_USED_2_3: i32 = 0x010A;
+            pub const SPELL_SLOT_USED_2_4: i32 = 0x010B;
+            pub const CURSOR_SLOT: i32 = 0x010C;
+            pub const MENU_TRAINING_MODE_INDEX: i32 = 0x010D;
+            pub const MENU_ICON_EFFECT_HANDLE: i32 = 0x010E;
             
             // floats
             pub const SPECIAL_LW_CSTICK_BUFFER_DIR: i32 = 0x0100;
@@ -601,6 +603,7 @@ pub mod vars {
         pub mod instance {
             // flag
             pub const SPECIAL_HI2_ENABLE: i32 = 0x0100;
+            pub const SPECIAL_HI_AERIAL_USED: i32 = 0x0101;
 
             // int
             pub const SPECIAL_LW_GUNMAN_TIMER: i32 = 0x0100;
@@ -1538,16 +1541,14 @@ pub mod vars {
     }
 
     pub mod reflet {
-        pub mod status {
-            // flags
-            pub const SPECIAL_HI_ELWIND1_CANCEL: i32 = 0x1100;
-        }
         pub mod instance {
             // flags
             pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0100;
+            pub const DISCARD_SKIP_STATUS: i32 = 0x0101;
 
             // ints
             pub const ATTACK_AIR_LEVIN_LENIENCY: i32 = 0x0100;
+            pub const DISCARD_TYPE: i32 = 0x0101;
 
             // floats
             pub const SPECIAL_N_CHARGE: i32 = 0x0100;
@@ -1884,6 +1885,10 @@ pub mod vars {
             pub const SPECIAL_S_INPUT_CHECK: i32 = 0x1101;
             pub const SPECIAL_S_STOP: i32 = 0x1102;
 
+            pub const SPECIAL_LW_AIR_FALL: i32 = 0x1100;
+            pub const SPECIAL_LW_ENABLE_CONTROL: i32 = 0x1100;
+            pub const SPECIAL_LW_ENABLE_GRAVITY: i32 = 0x1101;
+
             // ints
             pub const ATTACK_LW4_TIMER: i32 = 0x1100;
 
@@ -1896,6 +1901,7 @@ pub mod vars {
         pub mod instance {
             // flags
             pub const PUMMEL_SKIP_STALE: i32 = 0x0100;
+            pub const SPECIAL_S_CANCEL: i32 = 0x0101;
         }
     }
 
@@ -2134,6 +2140,10 @@ pub mod statuses {
         pub const FLOAT: i32 = 0x1F6;
         pub const SPECIAL_HI_RUSH: i32 = 0x1F7;
         pub const SPECIAL_HI_END: i32 = 0x1F8;
+    }
+
+    pub mod trail {
+        pub const SPECIAL_LW_LANDING: i32 = 0x1F5;
     }
 
     pub mod wolf {
