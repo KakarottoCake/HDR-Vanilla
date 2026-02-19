@@ -102,7 +102,7 @@ hitbox_templates! {
         bkb: 0,
         clank: SetOff::Off,
         direct: false,
-        // category: CollisionCategory::all() & !CollisionCategory::FLOOR,
+        category: CollisionCategory::all().difference(CollisionCategory::FLOOR),
         effect: "collision_attr_search",
         sound_level: SoundLevel::S,
         hit_sound: CollisionSound::None,
