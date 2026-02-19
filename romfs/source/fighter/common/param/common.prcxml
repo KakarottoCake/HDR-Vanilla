@@ -177,7 +177,7 @@
   <float hash="damage_bind_frame">60</float>
   <float hash="damage_bind_frame_bonus_rank">0</float>
   <float hash="damage_bind_frame_bonus_handi">0</float>
-  <int hash="damage_bind_clatter_frame">3</int>
+  <float hash="damage_bind_clatter_frame">3</float>
   <int hash="invalid_bind_frame">45</int>
   <float hash="bury_jump_y_speed_mul">1.15</float>
   <float hash="kirby_swallowedthrown_clatter_recover">1.8</float>
