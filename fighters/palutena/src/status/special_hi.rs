@@ -402,11 +402,10 @@ unsafe extern "C" fn special_hi3_main_loop(fighter: &mut L2CFighterCommon) -> L2
     if StatusModule::is_situation_changed(fighter.module_accessor) {
         if fighter.is_situation(*SITUATION_KIND_GROUND) {
             if fighter.is_motion(Hash40::new("special_air_hi_cancel")) {
-                let landing_lag = 9.0; // matched to actionable frame
-                return fighter.check_land_cancel(Some(landing_lag)).into();
-            } else {
-                fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into())
+                let lag = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.empty_landing");
+                fighter.set_float(lag, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
             }
+            fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into())
         } else {
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into())
         }
@@ -434,7 +433,8 @@ unsafe extern "C" fn reappearance_decel_drift(fighter: &mut L2CFighterCommon) ->
         if !fighter.is_flag(*FIGHTER_PALUTENA_STATUS_SPECIAL_HI_DIVE) {
             let stop_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP) as *mut app::KineticEnergy;
             let speed = Vector2f{x: lua_bind::KineticEnergy::get_speed_x(stop_energy), y: lua_bind::KineticEnergy::get_speed_y(stop_energy)};
-            sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, speed.x, speed.y *0.9);
+            let hi3_brake_y_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.hi3_brake_y_mul");
+            sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, speed.x, speed.y * hi3_brake_y_mul);
         } else {
             if !KineticModule::is_enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY) {
                 let stop_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP) as *mut app::KineticEnergy;
