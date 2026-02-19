@@ -130,40 +130,22 @@ unsafe fn add_more_buttons(ctx: &mut skyline::hooks::InlineCtx) {
     ctx.registers[25].set_x(input_list_vector.len() as u64);
 }
 
-// unsafe fn calc_nnsdk_offset() -> u64 {
-//     let mut symbol = 0usize;
-//     skyline::nn::ro::LookupSymbol(&mut symbol, b"_ZN7android7IBinderD1Ev\0".as_ptr());
-//     (symbol - 0x240) as u64
-// }
-
-// static mut DUMMY_BLOCK: [u8; 0x100] = [0; 0x100];
-
-// #[skyline::hook(offset = 0x3747b7c, inline)]
-// unsafe fn run_scene_update(_: &skyline::hooks::InlineCtx) {
-//     while !RUN.swap(false, Ordering::SeqCst) {
-//         skyline::nn::hid::GetNpadFullKeyState(DUMMY_BLOCK.as_mut_ptr() as _, &0);
-//     }
-// }
-
-// #[skyline::hook(replace = OFFSET1)]
-// unsafe fn set_interval_1(window: u64, _: i32) {
-//     call_original!(window, 0);
-// }
-
-// #[skyline::hook(replace = OFFSET2, inline)]
-// unsafe fn set_interval_2(ctx: &mut InlineCtx) {
-//     ctx.registers[8].set_x(0);
-// }
-
-// static mut RUN: AtomicBool = AtomicBool::new(false);
-
-// #[skyline::hook(offset = 0x3810a64, inline)]
-// unsafe fn vsync_count_thread(_: &skyline::hooks::InlineCtx) {
-//     RUN.store(true, Ordering::SeqCst);
-// }
-
-// static mut OFFSET1: u64 = 0;
-// static mut OFFSET2: u64 = 0;
+// The function this hook replaces gets the number of missing required buttons
+// (or some other type of error code)
+// Returning 0 bypasses the check entirely
+#[skyline::hook(offset = 0x1d2c8d0)] 
+unsafe fn get_missing_button_count_hook(
+    _context: u64,
+    mode: i32,
+    _p3: u64,
+    _p4: u64,
+    _p5: u64,
+    _p6: u64,
+    _p7: u64,
+    _p8: u64
+) -> i32 {
+    0
+}
 
 pub fn install() {
     unsafe {
@@ -191,6 +173,7 @@ pub fn install() {
         add_footstool_to_gc,
         add_footstool_to_fk,
         add_footstool_to_jc,
-        add_more_buttons
+        add_more_buttons,
+        get_missing_button_count_hook
     );
 }
