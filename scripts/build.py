@@ -71,9 +71,6 @@ characters = characters.characters
 current_dir = os.getcwd()
 os.chdir('..')
 
-print("TODO: remove this when std is updated - pinning uuid to 1.20.0 to fix edition2024 build requirement")
-os.system("cargo update uuid --precise 1.20.0")
-
 print("arguments: " + ' '.join(sys.argv))
 
 allow_build_dev = True
