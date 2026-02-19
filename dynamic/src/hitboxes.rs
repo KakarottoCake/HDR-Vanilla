@@ -1,4 +1,4 @@
-pub use json_script::{
+pub use proc_hitbox::{
     CollisionPart,
     CollisionSituation,
     CollisionCategory,
@@ -12,7 +12,7 @@ pub use json_script::{
     HitboxData,
     create_hitbox,
 };
-pub use json_script_macro::{
+pub use proc_hitbox_macro::{
     hitbox_templates,
     decl_hitbox,
     hitbox
