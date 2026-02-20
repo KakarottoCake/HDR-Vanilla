@@ -159,7 +159,7 @@ fn disable_none_unready(ctx: &mut InlineCtx) {
         let num_active_players = ctx.registers[16].w();
         
         // if there's less than 2 active players, the unready_count has incremented
-        if num_ready_players < 2 {
+        if num_active_players < 2 {
             // unready_count must be 0 to advance, so decrement the count
             let unready_count = ctx.registers[9].w();
             ctx.registers[9].set_w(unready_count - 1);
