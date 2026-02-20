@@ -147,6 +147,39 @@ unsafe fn get_missing_button_count_hook(
     0
 }
 
+
+#[skyline::hook(offset = 0x1a2fe84, inline)]
+fn disable_none_unready(ctx: &mut InlineCtx) {
+    let param_1 = ctx.registers[24].x() as *const u8;
+    let game_mode = unsafe { *(param_1.add(0x16c) as *const u32) };
+    let ruleset = unsafe { *(param_1.add(0x158) as *const u8) };
+    
+    // if game mode is Smash and ruleset is Time
+    if game_mode == 0 && ruleset == 0 {
+        let num_active_players = ctx.registers[16].w();
+        
+        // if there's less than 2 active players, the unready_count has incremented
+        if num_ready_players < 2 {
+            // unready_count must be 0 to advance, so decrement the count
+            let unready_count = ctx.registers[9].w();
+            ctx.registers[9].set_w(unready_count - 1);
+        }
+    }
+}
+
+#[skyline::hook(offset = 0x1a2fecc, inline)]
+fn override_min_players(ctx: &mut InlineCtx) {
+    let param_1 = ctx.registers[24].x() as *const u8;
+    let game_mode = unsafe { *(param_1.add(0x16c) as *const u32) };
+    let ruleset = unsafe { *(param_1.add(0x158) as *const u8) };
+    
+    // if game mode is Smash and ruleset is Time
+    // set minimum required "ready" players to 1
+    if game_mode == 0 && ruleset == 0 {
+        ctx.registers[11].set_w(1);
+    }
+}
+
 pub fn install() {
     unsafe {
         skyline::patching::Patch::in_text(0x1D3594C).nop();
@@ -174,6 +207,8 @@ pub fn install() {
         add_footstool_to_fk,
         add_footstool_to_jc,
         add_more_buttons,
-        get_missing_button_count_hook
+        get_missing_button_count_hook,
+        disable_none_unready,
+        override_min_players,
     );
 }
