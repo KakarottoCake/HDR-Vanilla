@@ -199,7 +199,7 @@ unsafe extern "C" fn speciallw_start_gravity(fighter: &mut L2CFighterCommon) {
 }
 
 unsafe extern "C" fn speciallw_ground_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let motion_y: f32 = MotionModule::trans_move_speed(fighter.module_accessor).value[1];
+    let motion_y: f32 = MotionModule::trans_move_speed(fighter.module_accessor).y();
     let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let sit = StatusModule::situation_kind(fighter.module_accessor);
 
