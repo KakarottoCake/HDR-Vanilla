@@ -8,6 +8,9 @@ unsafe extern "C" fn special_hi_exec(fighter: &mut L2CFighterCommon) -> L2CValue
     let jump_max = fighter.get_jump_count_max();
     if fighter.get_num_used_jumps() == jump_max && fighter.is_prev_status(*FIGHTER_STATUS_KIND_JUMP_AERIAL) && fighter.global_table[PREV_STATUS_FRAME].get_i32() <= 3 {
         fighter.set_int(jump_max - 1, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
+        fighter.clear_lua_stack();
+        lua_args!(fighter, Hash40::new("sys_jump_aerial"), true, true);
+        smash::app::sv_animcmd::EFFECT_OFF_KIND(fighter.lua_state_agent);
     }
     // touching ground at any point counts as a grounded start
     if !VarModule::is_flag(fighter.battle_object, vars::mewtwo::instance::SPECIAL_HI_GROUNDED_TELEPORT) && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
