@@ -190,7 +190,7 @@ unsafe extern "C" fn sound_fuwafuwa(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     if is_excute(agent) {
         let sfx_handle = SoundModule::play_status_se(boma, Hash40::new("se_common_spirits_wind_loop"), true, false, false);
-        SoundModule::set_se_vol(boma, sfx_handle as i32, 0.125, 0);
+        SoundModule::set_se_vol(boma, sfx_handle as i32, 0.1325, 0);
     }
 }
 
