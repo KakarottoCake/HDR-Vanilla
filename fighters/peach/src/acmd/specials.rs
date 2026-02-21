@@ -214,7 +214,7 @@ unsafe extern "C" fn game_specialshitend(agent: &mut L2CAgentBase) {
             KineticModule::resume_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         }
     }
-    frame(lua_state, 17.0);
+    frame(lua_state, 16.0);
     if is_excute(agent) {
         KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     }
