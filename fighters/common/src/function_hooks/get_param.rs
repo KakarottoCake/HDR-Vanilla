@@ -379,8 +379,8 @@ pub unsafe fn get_param_float_hook(x0 /*boma*/: u64, x1 /*param_type*/: u64, x2 
                 }
             } 
         }
+        
     }
-
     else if boma_reference.is_weapon() {
 
         // For articles
