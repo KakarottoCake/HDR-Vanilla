@@ -379,6 +379,18 @@ pub unsafe fn get_param_float_hook(x0 /*boma*/: u64, x1 /*param_type*/: u64, x2 
                 }
             } 
         }
+    }
+
+    else if boma_reference.is_weapon() {
+
+        // For articles
+        let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
+
+        if fighter_kind == *WEAPON_KIND_SNAKE_TRENCHMORTAR_BULLET {
+            if x1 == hash40("param_trenchmortarbullet") && x2 == hash40("speed_x") {
+                return ControlModule::get_stick_x(boma) / 1.5 * PostureModule::lr(boma);
+            }
+        }
 
         else if fighter_kind == *WEAPON_KIND_DEDEDE_GORDO {
             if x1 == hash40("param_gordo") && x2 == hash40("shot_start_angle"){
