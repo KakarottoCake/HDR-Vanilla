@@ -233,7 +233,7 @@ pub mod vars {
             pub const LEFT_STICK_FLICK_X: i32 = 0x000E;
             pub const LEFT_STICK_FLICK_Y: i32 = 0x000F;
 
-            pub const LEDGE_ID: i32 = 0x0010;
+            pub const OCCUPIED_LEDGE_ID: i32 = 0x0010;
 
             pub const RIGHT_STICK_FLICK_X: i32 = 0x0011;
             pub const RIGHT_STICK_FLICK_Y: i32 = 0x0012;
@@ -244,7 +244,7 @@ pub mod vars {
 
             pub const ATTACK_LR_CHECK: i32 = 0x0015;
 
-            // pub const PREVIOUS_FRAME_FRAMES_IN_AIR: i32 = 0x0016;
+            pub const OCCUPIED_LEDGE_ID_FOR_TETHERS: i32 = 0x0016;
 
             // floats
 
