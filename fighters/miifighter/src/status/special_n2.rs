@@ -60,6 +60,7 @@ unsafe extern "C" fn special_n2_common_end(fighter: &mut L2CFighterCommon) -> L2
 }
 
 pub unsafe extern "C" fn special_n2_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.sub_status_pre_SpecialNCommon();
     StatusModule::init_settings(
         fighter.module_accessor,
         app::SituationKind(*SITUATION_KIND_NONE),
@@ -89,13 +90,14 @@ pub unsafe extern "C" fn special_n2_pre(fighter: &mut L2CFighterCommon) -> L2CVa
 }
 
 pub unsafe extern "C" fn special_n2_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let charge_frame_max = 132; // parameterize
-    if VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_N2_CHARGE_COUNT) >= charge_frame_max {
-        fighter.change_motion_by_situation("special_n2_attack_max", "special_air_n2_attack_max", 0.0, 1.0, false, 0.0, false, false);
+    let charge_frame = ParamModule::get_int(fighter.battle_object, ParamType::Agent, "special_n2.charge_frame");
+    if VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_N2_CHARGE_COUNT) >= charge_frame {
         fighter.change_status(FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_N2_FINISH.into(), false.into());
         return 1.into();
     }
     special_n2_change_motion(fighter, Hash40::new("special_n2_start"), Hash40::new("special_air_n2_start"), false);
+    let sum_speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
+    sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, sum_speed_x * 0.75, 0.0); // parameterize
 
     fighter.main_shift(special_n2_main_loop)
 }
@@ -171,7 +173,6 @@ unsafe extern "C" fn special_n2_hold_pre(fighter: &mut L2CFighterCommon) -> L2CV
 }
 
 unsafe extern "C" fn special_n2_hold_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    DamageModule::add_damage(fighter.module_accessor, 1.0, 0);
     special_n2_change_motion(fighter, Hash40::new("special_n2_hold"), Hash40::new("special_air_n2_hold"), false);
     fighter.enable_transition_term_many(&[
         *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON,
@@ -192,19 +193,20 @@ unsafe extern "C" fn special_n2_hold_main_loop(fighter: &mut L2CFighterCommon) -
         special_n2_change_motion(fighter, Hash40::new("special_n2_hold"), Hash40::new("special_air_n2_hold"), true);
     }
     if fighter.is_pad_flag(PadFlag::SpecialTrigger) || fighter.is_pad_flag(PadFlag::AttackTrigger) {
-        fighter.change_motion_by_situation("special_n2_attack", "special_air_n2_attack", 0.0, 1.0, false, 0.0, false, false);
         fighter.change_status(FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_N2_FINISH.into(), true.into());
         return 1.into();
     }
     if fighter.is_situation(*SITUATION_KIND_GROUND) {
         if fighter.sub_check_jump_in_charging().get_bool() {
             VarModule::set_int(fighter.battle_object, vars::miifighter::status::SPECIAL_N2_CANCEL_TYPE, SPECIAL_N2_CANCEL_TYPE_GROUND_JUMP);
+            fighter.change_status(statuses::miifighter::SPECIAL_N2_CANCEL.into(), true.into());
+            return 1.into();
         }
         if fighter.sub_check_command_guard().get_bool() || fighter.is_pad_flag(PadFlag::GuardTrigger) {
             VarModule::set_int(fighter.battle_object, vars::miifighter::status::SPECIAL_N2_CANCEL_TYPE, SPECIAL_N2_CANCEL_TYPE_NONE);
+            fighter.change_status(statuses::miifighter::SPECIAL_N2_CANCEL.into(), true.into());
+            return 1.into();
         }
-        fighter.change_status(statuses::miifighter::SPECIAL_N2_CANCEL.into(), true.into());
-        return 1.into();
     }
     else {
         if fighter.sub_check_command_guard().get_bool() || fighter.is_pad_flag(PadFlag::GuardTrigger) {
@@ -220,11 +222,11 @@ unsafe extern "C" fn special_n2_hold_main_loop(fighter: &mut L2CFighterCommon) -
         }
     }
     if !fighter.global_table[IS_STOPPING].get_bool() {
-        fighter.inc_int(*FIGHTER_SAMUS_INSTANCE_WORK_ID_INT_SPECIAL_N_COUNT);
         VarModule::inc_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_N2_CHARGE_COUNT);
         let count = VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_N2_CHARGE_COUNT);
-        let charge_frame = 132; // parameterize
+        let charge_frame = ParamModule::get_int(fighter.battle_object, ParamType::Agent, "special_n2.charge_frame");
         if charge_frame <= count {
+            EffectModule::req_common(fighter.module_accessor, Hash40::new("charge_max"), 0.0);
             app::FighterUtil::flash_eye_info(fighter.module_accessor);
             VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_N2_CHARGE_COUNT, count);
             fighter.change_status(FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_N2_MISS.into(), false.into());
@@ -260,6 +262,12 @@ unsafe extern "C" fn special_n2_end_main_loop(fighter: &mut L2CFighterCommon) ->
 }
 
 pub unsafe extern "C" fn special_n2_attack_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let mut start_attr = 0;
+    let charge_frame = ParamModule::get_int(fighter.battle_object, ParamType::Agent, "special_n2.charge_frame");
+    if VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_N2_CHARGE_COUNT) >= charge_frame {
+        fighter.sub_status_pre_SpecialNCommon();
+        start_attr = *FIGHTER_STATUS_ATTR_START_TURN as u32;
+    }
     StatusModule::init_settings(
         fighter.module_accessor,
         app::SituationKind(*SITUATION_KIND_NONE),
@@ -280,7 +288,7 @@ pub unsafe extern "C" fn special_n2_attack_pre(fighter: &mut L2CFighterCommon) -
         false,
         false,
         (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_N | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64,
-        0,
+        start_attr,
         *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_N as u32,
         0
     );
@@ -289,20 +297,44 @@ pub unsafe extern "C" fn special_n2_attack_pre(fighter: &mut L2CFighterCommon) -
 }
 
 unsafe extern "C" fn special_n2_attack_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    //let sum_spd_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     if fighter.is_situation(*SITUATION_KIND_GROUND) {
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
-        fighter.set_situation(SITUATION_KIND_GROUND.into());
+        // sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_GROUND, 0.0, 0.0, 0.0, 0.0, 0.0);
+        // sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, sum_spd_x * 0.3, 0.0);
+        // sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
+        // sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, ENERGY_MOTION_RESET_TYPE_GROUND_TRANS, 0.0, 0.0, 0.0, 0.0, 0.0);
     }
     else {
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        fighter.set_situation(SITUATION_KIND_AIR.into());
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
+        // sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_AIR, 0.0, 0.0, 0.0, 0.0, 0.0);
+        // sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, sum_spd_x * 0.3, 0.0);
+        // sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
+        // sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, ENERGY_MOTION_RESET_TYPE_AIR_TRANS, 0.0, 0.0, 0.0, 0.0, 0.0);
+
+        // sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, 0.0, 0.0, 0.0, 0.0);
+        // KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
     }
+    // KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
+    // KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_MOTION);
+    let count = VarModule::get_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_N2_CHARGE_COUNT);
+    let charge_frame = ParamModule::get_int(fighter.battle_object, ParamType::Agent, "special_n2.charge_frame");
+    MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_n2_attack"), 0.0, 1.0, false, 0.0, false, false);
+    if charge_frame > count {
+        let motion_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "special_n2.min_motion_mul");
+        sv_kinetic_energy!(set_speed_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, motion_mul);
+    }
+    else if fighter.is_situation(*SITUATION_KIND_AIR) {
+        let motion_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "special_n2.air_motion_mul");
+        sv_kinetic_energy!(set_speed_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, motion_mul);
+    }
+    sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, ENERGY_CONTROLLER_RESET_TYPE_FREE, 0.0, 0.0, 0.0, 0.0, 0.0);
+    KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x20cbc92683), 1, FIGHTER_LOG_DATA_INT_ATTACK_NUM_KIND, (*FIGHTER_LOG_ATTACK_KIND_ADDITIONS_ATTACK_02) + -1);
     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x3a40337e2c), (*FIGHTER_LOG_ATTACK_KIND_ADDITIONS_ATTACK_02) + -1);
     EffectModule::remove_common(fighter.module_accessor, Hash40::new("charge_max"));
-    VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_N2_CHARGE_COUNT, 0);
 
     fighter.main_shift(special_n2_attack_main_loop)
 }
@@ -318,20 +350,29 @@ unsafe extern "C" fn special_n2_attack_main_loop(fighter: &mut L2CFighterCommon)
         }
     }
     fighter.sub_air_check_dive();
-    if StatusModule::is_situation_changed(fighter.module_accessor) {
-        if fighter.is_situation(*SITUATION_KIND_GROUND) {
-            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_n2_landing"), 0.0, 1.0, false, 0.0, false, false);
-        }
-        else {
-            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        }
-    }
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_FALL, false);
         return 1.into();
     }
+    if StatusModule::is_situation_changed(fighter.module_accessor) {
+        if fighter.is_situation(*SITUATION_KIND_GROUND) {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+            fighter.set_situation(SITUATION_KIND_GROUND.into());
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_n2_landing"), 0.0, 1.0, false, 0.0, false, false);
+        }
+        else {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+        }
+    }
 
     return 0.into();
+}
+
+unsafe extern "C" fn special_n2_attack_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_N2_CHARGE_COUNT, 0);
+    return 0.into()
 }
 
 unsafe extern "C" fn special_n2_cancel_main(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -373,7 +414,7 @@ unsafe extern "C" fn special_n2_cancel_main_loop(fighter: &mut L2CFighterCommon)
     if shift_cancel_status {
         match VarModule::get_int(fighter.battle_object, vars::miifighter::status::SPECIAL_N2_CANCEL_TYPE) {
             SPECIAL_N2_CANCEL_TYPE_GROUND_JUMP => fighter.change_status(FIGHTER_STATUS_KIND_JUMP_SQUAT.into(), false.into()),
-            SPECIAL_N2_CANCEL_TYPE_NONE => fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into()),
+            SPECIAL_N2_CANCEL_TYPE_NONE => { fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_FALL, false); },
             _ => {},
         }
         return 1.into();
@@ -386,20 +427,6 @@ unsafe extern "C" fn special_n2_cancel_main_loop(fighter: &mut L2CFighterCommon)
     }
 
     return 0.into();
-}
-
-// unsafe extern "C" fn special_n2_cancel_helper(fighter: &mut L2CFighterCommon) -> L2CValue {
-//     match VarModule::get_int(fighter.battle_object, vars::miifighter::status::SPECIAL_N2_CANCEL_TYPE) {
-//         SPECIAL_N2_CANCEL_TYPE_GROUND_JUMP => fighter.change_status(FIGHTER_STATUS_KIND_JUMP_SQUAT.into(), false.into()),
-//         SPECIAL_N2_CANCEL_TYPE_NONE => fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into()),
-//         _ => {},
-//     }
-
-//     return 1.into();
-// }
-
-unsafe extern "C" fn special_n2_cancel_end(fighter: &mut L2CFighterCommon) -> L2CValue {
-    return 0.into()
 }
 
 unsafe extern "C" fn special_n2_jump_cancel_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -435,10 +462,10 @@ unsafe extern "C" fn special_n2_jump_cancel_main(fighter: &mut L2CFighterCommon)
     GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
     if fighter.is_situation(*SITUATION_KIND_GROUND) {
-        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_n2_cancel"), 0.0, 1.0, false, 0.0, false, false);
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_n2_end"), 0.0, 1.0, false, 0.0, false, false);
     }
     else {
-        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_n2_cancel"), 0.0, 1.0, false, 0.0, false, false);
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_n2_end"), 0.0, 1.0, false, 0.0, false, false);
     }
 
     fighter.main_shift(special_n2_jump_cancel_main_loop)
@@ -475,9 +502,9 @@ pub fn install(agent: &mut Agent) {
     agent.status(Main, *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_N2_MISS, special_n2_end_main);
     agent.status(End, *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_N2_MISS, special_n2_common_end);
 
-    agent.status(Pre, *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_N2_FINISH, special_n2_common_pre);
+    agent.status(Pre, *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_N2_FINISH, special_n2_attack_pre);
     agent.status(Main, *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_N2_FINISH, special_n2_attack_main);
-    agent.status(End, *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_N2_FINISH, special_n2_common_end);
+    agent.status(End, *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_N2_FINISH, special_n2_attack_end);
 
     agent.status(Pre, statuses::miifighter::SPECIAL_N2_CANCEL, special_n2_common_pre);
     agent.status(Main, statuses::miifighter::SPECIAL_N2_CANCEL, special_n2_cancel_main);

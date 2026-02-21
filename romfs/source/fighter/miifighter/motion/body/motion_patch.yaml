@@ -384,7 +384,7 @@ special_n2_attack:
   flags:
     turn: false
     loop: false
-    move: false
+    move: true
     fix_trans: false
     fix_rot: false
     fix_scale: false
@@ -404,96 +404,6 @@ special_n2_attack:
     - expression_specialn2attack
     - sound_specialn2attack
     - effect_specialn2attack
-  extra:
-    xlu_start: 0
-    xlu_end: 0
-    cancel_frame: 0
-    no_stop_intp: false
-special_air_n2_attack:
-  game_script: game_specialairn2attack
-  flags:
-    turn: false
-    loop: false
-    move: false
-    fix_trans: false
-    fix_rot: false
-    fix_scale: false
-    unk_40: false
-    unk_80: true
-    unk_100: false
-    unk_200: false
-    unk_400: false
-    unk_800: false
-    unk_1000: false
-    unk_2000: false
-  blend_frames: 0
-  animations:
-    - name: d00specialairn2attack.nuanmb
-      unk: 0
-  scripts:
-    - expression_specialairn2attack
-    - sound_specialairn2attack
-    - effect_specialairn2attack
-  extra:
-    xlu_start: 0
-    xlu_end: 0
-    cancel_frame: 0
-    no_stop_intp: false
-special_n2_max:
-  game_script: game_specialn2max
-  flags:
-    turn: false
-    loop: false
-    move: false
-    fix_trans: false
-    fix_rot: false
-    fix_scale: false
-    unk_40: false
-    unk_80: true
-    unk_100: false
-    unk_200: false
-    unk_400: false
-    unk_800: false
-    unk_1000: false
-    unk_2000: false
-  blend_frames: 0
-  animations:
-    - name: d00specialn2max.nuanmb
-      unk: 0
-  scripts:
-    - expression_specialn2max
-    - sound_specialn2max
-    - effect_specialn2max
-  extra:
-    xlu_start: 0
-    xlu_end: 0
-    cancel_frame: 0
-    no_stop_intp: false
-special_air_n2_max:
-  game_script: game_specialairn2max
-  flags:
-    turn: false
-    loop: false
-    move: false
-    fix_trans: false
-    fix_rot: false
-    fix_scale: false
-    unk_40: false
-    unk_80: true
-    unk_100: false
-    unk_200: false
-    unk_400: false
-    unk_800: false
-    unk_1000: false
-    unk_2000: false
-  blend_frames: 0
-  animations:
-    - name: d00specialairn2max.nuanmb
-      unk: 0
-  scripts:
-    - expression_specialairn2max
-    - sound_specialairn2max
-    - effect_specialairn2max
   extra:
     xlu_start: 0
     xlu_end: 0
@@ -527,7 +437,7 @@ special_n2_landing:
   extra:
     xlu_start: 0
     xlu_end: 0
-    cancel_frame: 0
+    cancel_frame: 18
     no_stop_intp: false
 # moved to special_n3
 special_air_lw3_throw:

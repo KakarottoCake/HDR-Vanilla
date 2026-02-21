@@ -19,6 +19,11 @@
         <float hash="bowl_speed_air">2.25</float>
         <float hash="bowl_angle">30.0</float>
     </struct>
+    <struct hash="special_n2">
+        <int hash="charge_frame">150</int>
+        <float hash="min_motion_mul">0.7</float>
+        <float hash="air_motion_mul">0.85</float>
+    </struct>
     <struct hash="wild_throw">
         <float hash="start_limit_speed_ground">1.8</float>
         <float hash="start_brake_x_mul">1.2</float>
