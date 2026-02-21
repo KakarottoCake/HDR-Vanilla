@@ -139,6 +139,7 @@ unsafe extern "C" fn special_air_lw_main(fighter: &mut L2CFighterCommon) -> L2CV
 }
 
 unsafe extern "C" fn special_air_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.sub_air_check_dive();
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
         || fighter.sub_air_check_fall_common().get_bool() {
@@ -200,6 +201,7 @@ unsafe extern "C" fn special_lw_throw_main(fighter: &mut L2CFighterCommon) -> L2
 }
 
 unsafe extern "C" fn special_lw_throw_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.sub_air_check_dive();
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
         || fighter.sub_air_check_fall_common().get_bool() {
