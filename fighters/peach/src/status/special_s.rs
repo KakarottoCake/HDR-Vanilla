@@ -146,35 +146,28 @@ unsafe extern "C" fn special_s_jump_main_loop(fighter: &mut L2CFighterCommon) ->
     return 0.into();
 }
 
-unsafe extern "C" fn special_s_jump_end(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[globals::STATUS_KIND] == *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_AWAY_END {
-        special_s_end_momentum(fighter);
-    }
-    0.into()
-}
-
 // rapidly decaying speed, drift to change distance
 unsafe extern "C" fn special_s_jump_momentum(fighter: &mut L2CFighterCommon) -> L2CValue {
     let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let lr = fighter.lr();
-    let start_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.jump_start");
-    let min_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.jump_min");
+    let start_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.jump_start_x");
+    let min_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.jump_min_x");
     let brake_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.jump_brake_x");
     let accel_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.jump_accel_x");
     let start_y = fighter.get_param_float("param_special_s", "special_s_jump_speed_y");
     let stable_y = fighter.get_param_float("param_special_s", "special_s_jump_stable_y");
-    let max_y = fighter.get_param_float("air_speed_y_stable", "");
+    let jump_max_y = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.jump_max_y");
     if StatusModule::is_changing(fighter.module_accessor) {
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
         sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, start_x, 0.0);
         sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, start_x, 0.0);
         sv_kinetic_energy!(set_accel_x_add, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0);
         sv_kinetic_energy!(set_accel_x_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0);
-        sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0, 0.0);
+        sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.0, 0.0);
         sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, start_x*lr, 0.0);
         sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, stable_y);
-        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, (speed_y+start_y).clamp(-stable_y, stable_y));
+        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, (speed_y+start_y).clamp(-jump_max_y, jump_max_y));
         return 1.into();
     }
     // speed cannot go below minimum, cannot exceed starting value due to higher brake value
@@ -310,7 +303,6 @@ pub fn install(agent: &mut Agent) {
 
     agent.status(Pre, *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_JUMP, special_s_jump_pre);
     agent.status(Main, *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_JUMP, special_s_jump_main);
-    //agent.status(End, *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_JUMP, special_s_jump_end);
 
     agent.status(Pre, *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_AWAY_END, special_s_away_end_pre);
     agent.status(Main, *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_AWAY_END, special_s_away_end_main);

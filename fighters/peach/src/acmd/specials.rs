@@ -158,6 +158,14 @@ unsafe extern "C" fn effect_specialnhit(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn effect_specialsstart(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        LANDING_EFFECT(agent, Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, -0.85, 0, 0, 0, 0, 0.85, 0, 0, 0, 0, 0, 0, false);
+    }
+}
+
 unsafe extern "C" fn game_specialsjump(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -168,7 +176,7 @@ unsafe extern "C" fn game_specialsjump(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 4.0);
     if is_excute(agent) {
-        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_PEACH_SPECIAL_S_BRAKE);
+        //KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_PEACH_SPECIAL_S_BRAKE);
     }
     frame(lua_state, 25.0);
     if is_excute(agent) {
@@ -231,7 +239,7 @@ unsafe extern "C" fn game_specialshitend(agent: &mut L2CAgentBase) {
             KineticModule::resume_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         }
     }
-    frame(lua_state, 14.0);
+    frame(lua_state, 10.0);
     if is_excute(agent) {
         KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     }
@@ -495,6 +503,7 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("effect_specialnhit", effect_specialnhit, Priority::Low);
     agent.acmd("effect_specialairnhit", effect_specialnhit, Priority::Low);
 
+    agent.acmd("effect_specialsstart", effect_specialsstart, Priority::Low);
     agent.acmd("game_specialsjump", game_specialsjump, Priority::Low);
     agent.acmd("game_specialsend", game_specialsend, Priority::Low);
     agent.acmd("game_specialairsend", game_specialairsend, Priority::Low);

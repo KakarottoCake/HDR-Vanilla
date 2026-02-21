@@ -475,7 +475,6 @@ pub mod vars {
         pub mod instance {   
             // flag
             pub const DISABLE_SPECIAL_S: i32 = 0x0100;
-            pub const SPECIAL_S_GROUND_START: i32 = 0x0101;
         }
         pub mod status {
             // flags
