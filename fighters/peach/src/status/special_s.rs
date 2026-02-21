@@ -180,21 +180,8 @@ unsafe extern "C" fn special_s_jump_momentum(fighter: &mut L2CFighterCommon) -> 
     // speed cannot go below minimum, cannot exceed starting value due to higher brake value
     let add_speed = (fighter.left_stick_x() * lr * accel_x) - brake_x;
     let mut new_speed = (add_speed*lr) + speed_x;
-    new_speed = if speed_x > 0.0 {new_speed.clamp(min_x, start_x)} else {new_speed.clamp(-start_x, -min_x)};
+    new_speed = if lr > 0.0 {new_speed.clamp(min_x, start_x)} else {new_speed.clamp(-start_x, -min_x)};
     sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, new_speed, 0.0);
-    0.into()
-}
-
-
-// prevent excessive speed transfer?
-unsafe extern "C" fn special_s_end_momentum(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let lr = fighter.lr();
-    let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-    let min_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.jump_min");
-    let jump_end = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.jump_end");
-    let new_speed = if speed_x > 0.0 {speed_x.clamp(min_x, jump_end)} else {speed_x.clamp(-jump_end, -min_x)};
-    let control = if fighter.is_situation(*SITUATION_KIND_GROUND) {FIGHTER_KINETIC_ENERGY_ID_STOP} else {FIGHTER_KINETIC_ENERGY_ID_CONTROL};
-    sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, new_speed, 0.0);
     0.into()
 }
 
@@ -218,7 +205,7 @@ unsafe extern "C" fn special_s_away_end_pre(fighter: &mut L2CFighterCommon) -> L
     StatusModule::init_settings(
         fighter.module_accessor,
         app::SituationKind(*SITUATION_KIND_NONE),
-        *FIGHTER_KINETIC_TYPE_PEACH_SPECIAL_S_BRAKE,
+        *FIGHTER_KINETIC_TYPE_UNIQ,
         *GROUND_CORRECT_KIND_KEEP as u32,
         app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
         true,
@@ -244,6 +231,78 @@ unsafe extern "C" fn special_s_away_end_pre(fighter: &mut L2CFighterCommon) -> L
     return 0.into();
 }
 
+unsafe extern "C" fn special_s_away_end_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.change_motion_by_situation("special_s_end", "special_air_s_end", 1.0, 1.0, false, 0.0, false, false);
+    fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND, *GROUND_CORRECT_KIND_AIR);
+    special_s_end_momentum(fighter);
+    
+    fighter.main_shift(special_s_away_end_main_loop)
+}
+
+unsafe extern "C" fn special_s_away_end_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.sub_transition_group_check_air_cliff().get_bool() {
+        return 1.into();
+    }
+    if CancelModule::is_enable_cancel(fighter.module_accessor) {
+        if fighter.sub_wait_ground_check_common(false.into()).get_bool()
+        || fighter.sub_air_check_fall_common().get_bool() {
+            return 1.into();
+        }
+    }
+    if MotionModule::is_end(fighter.module_accessor) {
+        fighter.change_status_by_situation(*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_FALL, false);
+        return 1.into();
+    }
+    if !StatusModule::is_changing(fighter.module_accessor)
+    && StatusModule::is_situation_changed(fighter.module_accessor) {
+        // if returning to fall anim, cancel into heavy landing
+        if fighter.is_flag(*FIGHTER_PEACH_STATUS_SPECIAL_S_JUMP_FLAG_DONE_CONTROLLER_MOVE) {
+            // special landing lag if not actionable
+            let end_landing_frame = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.end_landing_frame");
+            let mut lag = Some(end_landing_frame);
+            if CancelModule::is_enable_cancel(fighter.module_accessor) {
+                lag = None;
+            }
+            fighter.check_land_cancel(lag);
+            return 1.into();
+        }
+        // cancel into full lag ground slide if still in jump pose, ledge cancel
+        fighter.change_status_by_situation(*FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_AWAY_END, *FIGHTER_STATUS_KIND_FALL, false);
+    }
+    // enable drift frame
+    if fighter.is_flag(*FIGHTER_PEACH_STATUS_SPECIAL_S_JUMP_FLAG_START_CONTROLLER_MOVE) {
+        let control_accel_x = fighter.get_param_float("param_special_s", "special_air_s_end_control_accel_x");
+        sv_kinetic_energy!(set_accel_x_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, control_accel_x);
+        fighter.off_flag(*FIGHTER_PEACH_STATUS_SPECIAL_S_JUMP_FLAG_START_CONTROLLER_MOVE);
+    }
+
+    return 0.into();
+}
+
+// prevent excessive speed transfer? drift limits
+unsafe extern "C" fn special_s_end_momentum(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let lr = fighter.lr();
+    let mut end_landing_x_min = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.end_landing_x_min");
+    let end_landing_x_max = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.end_landing_x_max");
+    let end_x_stable = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.end_x_stable");
+    let end_y_stable = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.end_y_stable");
+    if fighter.is_situation(*SITUATION_KIND_GROUND) {
+        // a2g speed transfer, clamped values if landed during dash to prevent broken looking speed
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+        let mut new_speed = if lr > 0.0 {speed_x.clamp(end_landing_x_min, end_landing_x_max)} else {speed_x.clamp(-end_landing_x_max, -end_landing_x_min)};
+        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.0, 0.0);
+        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, new_speed);
+        return 1.into();
+    }
+    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
+    sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, end_x_stable, 0.0);
+    sv_kinetic_energy!(set_accel_x_add, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0);
+    sv_kinetic_energy!(set_accel_x_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0);
+    sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, end_y_stable);
+    0.into()
+}
+
 pub fn install(agent: &mut Agent) {
     agent.status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_S, special_s_pre);
     agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_S, special_s_main);
@@ -251,7 +310,8 @@ pub fn install(agent: &mut Agent) {
 
     agent.status(Pre, *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_JUMP, special_s_jump_pre);
     agent.status(Main, *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_JUMP, special_s_jump_main);
-    agent.status(End, *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_JUMP, special_s_jump_end);
+    //agent.status(End, *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_JUMP, special_s_jump_end);
 
     agent.status(Pre, *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_AWAY_END, special_s_away_end_pre);
+    agent.status(Main, *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_AWAY_END, special_s_away_end_main);
 }

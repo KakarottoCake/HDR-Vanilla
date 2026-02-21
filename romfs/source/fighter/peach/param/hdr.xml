@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <struct>
     <struct hash="param_special_s">
-      <float hash="jump_start">3.33</float>
-      <float hash="jump_min">0.6</float>
-      <float hash="jump_end">1.5</float>
-      <float hash="jump_brake_x">0.3</float>
-      <float hash="jump_accel_x">0.1</float>
+      <float hash="jump_start">3.0</float>
+      <float hash="jump_min">0.75</float>
+      <float hash="jump_brake_x">0.2</float>
+      <float hash="jump_accel_x">0.0675</float>
+      <float hash="end_landing_x_min">0.5</float>
+      <float hash="end_landing_x_max">1.5</float>
+      <float hash="end_x_stable">0.45</float>
+      <float hash="end_y_stable">1.25</float>
+      <float hash="end_landing_frame">29.0</float>
     </struct>
     <struct hash="param_special_lw">
       <float hash="air_start_x_mul">0.67</float>

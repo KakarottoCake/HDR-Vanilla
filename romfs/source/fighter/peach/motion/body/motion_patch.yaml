@@ -181,10 +181,10 @@ special_s_hit_end:
     cancel_frame: 29
 special_s_end:
   extra:
-    cancel_frame: 31
+    cancel_frame: 32
 special_air_s_end:
   extra:
-    cancel_frame: 49
+    cancel_frame: 48
 special_air_lw:
   game_script: game_specialairlw
   flags:

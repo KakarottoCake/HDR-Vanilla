@@ -179,16 +179,29 @@ unsafe extern "C" fn game_specialsjump(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 1.0);
-    FT_MOTION_RATE_RANGE(agent, 1.0, 31.0, 29.0);
-    frame(lua_state, 31.0); // 32 -> 30
+    frame(lua_state, 1.0); // starts f1 instead of 0
+    FT_MOTION_RATE_RANGE(agent, 1.0, 32.0, 30.0);
+    frame(lua_state, 32.0); // 32 -> 30
     FT_MOTION_RATE(agent, 1.0);
+}
+
+unsafe extern "C" fn effect_specialsend(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 2.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0, 0, 1.25, 0, 0, 0, 0.6, false);
+    }
+    frame(lua_state, 7.0);
+    if is_excute(agent) {
+        EFFECT_DETACH_KIND(agent, Hash40::new("sys_landing_smoke"), -1);
+    }
 }
 
 unsafe extern "C" fn game_specialairsend(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 2.0);
+    frame(lua_state, 3.0);
     if is_excute(agent) {
         agent.on_flag(*FIGHTER_PEACH_STATUS_SPECIAL_S_JUMP_FLAG_START_CONTROLLER_MOVE);
     }
@@ -196,6 +209,10 @@ unsafe extern "C" fn game_specialairsend(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
     }
+    frame(lua_state, 12.0);
+    if is_excute(agent) {
+        agent.on_flag(*FIGHTER_PEACH_STATUS_SPECIAL_S_JUMP_FLAG_DONE_CONTROLLER_MOVE);
+    } // cancel into special landing frame
 }
 
 unsafe extern "C" fn game_specialshitend(agent: &mut L2CAgentBase) {
@@ -214,7 +231,7 @@ unsafe extern "C" fn game_specialshitend(agent: &mut L2CAgentBase) {
             KineticModule::resume_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         }
     }
-    frame(lua_state, 16.0);
+    frame(lua_state, 14.0);
     if is_excute(agent) {
         KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     }
