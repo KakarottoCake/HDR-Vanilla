@@ -15,13 +15,13 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 }
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_air_lasso_hang_uniq)]
-pub unsafe fn sub_air_lasso_hang_uniq(fighter: &mut L2CFighterCommon, arg1: L2CValue) -> L2CValue {
+pub unsafe fn sub_air_lasso_hang_uniq(fighter: &mut L2CFighterCommon, arg: L2CValue) -> L2CValue {
     if arg.get_bool() {
         WorkModule::dec_int(fighter.module_accessor, *FIGHTER_STATUS_AIR_LASSO_HANG_WORK_INT_FRAME);
         WorkModule::count_down_int(fighter.module_accessor, *FIGHTER_STATUS_AIR_LASSO_HANG_WORK_INT_BODY_ANGLE_INTP, 0);
     }
     else {
-        // Disable tether canceling for non-upB-tether characters
+        // Disable tether canceling for non-tether-upB characters
         if fighter.global_table[FIGHTER_KIND] == FIGHTER_KIND_LUCAS
         || fighter.global_table[FIGHTER_KIND] == FIGHTER_KIND_RICHTER
         || fighter.global_table[FIGHTER_KIND] == FIGHTER_KIND_SAMUS
