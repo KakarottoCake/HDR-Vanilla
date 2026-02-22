@@ -129,6 +129,7 @@ unsafe extern "C" fn special_s_jump_main(fighter: &mut L2CFighterCommon) -> L2CV
 
 unsafe extern "C" fn special_s_jump_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     special_s_jump_momentum(fighter);
+    hit_check(fighter);
     wall_check(fighter);
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
@@ -178,6 +179,33 @@ unsafe extern "C" fn special_s_jump_momentum(fighter: &mut L2CFighterCommon) -> 
     0.into()
 }
 
+// hit check
+unsafe extern "C" fn hit_check(fighter: &mut L2CFighterCommon) -> L2CValue {
+    // bounce on-hit
+    if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+        fighter.change_status(FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_HIT_END.into(), false.into());
+        return 1.into();
+    }
+    // end on-shield
+    if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
+        let hit_shield_x_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.hit_shield_x_mul");
+        sv_kinetic_energy!(mul_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, hit_shield_x_mul, 0.0);
+        fighter.change_status(FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_AWAY_END.into(), false.into());
+        return 1.into();
+    }
+    // kill hitbox if minimum speed
+    let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let min_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.jump_min_x");
+    let lr = fighter.lr();
+    if speed_x.abs() <= min_x
+    && AttackModule::is_attack(fighter.module_accessor, 0, false) {
+        AttackModule::clear_all(fighter.module_accessor);
+        EFFECT_OFF_KIND(fighter, Hash40::new("daisy_bomber_jamp"), false, false);
+        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_PEACH_STATUS_SPECIAL_S_JUMP_ID_TIME_OUT);
+    }
+    0.into()
+}
+
 // wall bounce
 unsafe extern "C" fn wall_check(fighter: &mut L2CFighterCommon) -> L2CValue {
     let mut touch_wall = false;
@@ -215,7 +243,7 @@ unsafe extern "C" fn special_s_away_end_pre(fighter: &mut L2CFighterCommon) -> L
         false,
         false,
         false,
-        (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_S | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK) as u64,
+        (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_S | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64,
         0,
         *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S as u32,
         0
@@ -266,6 +294,13 @@ unsafe extern "C" fn special_s_away_end_main_loop(fighter: &mut L2CFighterCommon
     if fighter.is_flag(*FIGHTER_PEACH_STATUS_SPECIAL_S_JUMP_FLAG_START_CONTROLLER_MOVE) {
         let control_accel_x = fighter.get_param_float("param_special_s", "special_air_s_end_control_accel_x");
         sv_kinetic_energy!(set_accel_x_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, control_accel_x);
+        // uncap speed frame (transition better to fall?)
+        if fighter.is_flag(*FIGHTER_PEACH_STATUS_SPECIAL_S_JUMP_FLAG_DONE_CONTROLLER_MOVE) {
+            let max_x = fighter.get_param_float("air_speed_x_stable", "");
+            let max_y = fighter.get_param_float("air_speed_y_stable", "");
+            sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, max_x, 0.0);
+            sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, max_y);
+        }
         fighter.off_flag(*FIGHTER_PEACH_STATUS_SPECIAL_S_JUMP_FLAG_START_CONTROLLER_MOVE);
     }
 

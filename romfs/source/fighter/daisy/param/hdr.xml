@@ -26,6 +26,7 @@
       <float hash="end_x_stable">0.5</float>
       <float hash="end_y_stable">1.6</float>
       <float hash="end_landing_frame">24.0</float>
+      <float hash="hit_shield_x_mul">0.35</float>
     </struct>
     <struct hash="param_special_hi">
       <float hash="fall_special_accel_x_mul">1</float>

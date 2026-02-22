@@ -181,7 +181,7 @@ special_s_hit_end:
     cancel_frame: 29
 special_s_end:
   extra:
-    cancel_frame: 32
+    cancel_frame: 30
 special_air_s_end:
   extra:
     cancel_frame: 47
