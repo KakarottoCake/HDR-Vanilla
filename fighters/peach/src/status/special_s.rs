@@ -206,15 +206,17 @@ unsafe extern "C" fn hit_check(fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-// wall bounce
+// wall bounce if moving forward
 unsafe extern "C" fn wall_check(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let mut touch_wall = false;
     if fighter.lr() > 0.0 {
         touch_wall = GroundModule::is_wall_touch_line(fighter.module_accessor, *GROUND_TOUCH_FLAG_RIGHT as u32);
     } else {
         touch_wall = GroundModule::is_wall_touch_line(fighter.module_accessor, *GROUND_TOUCH_FLAG_LEFT as u32);
     }
-    if touch_wall {
+    if touch_wall
+    && speed_x.abs() >= 0.0 {
         fighter.change_status(FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_HIT_END.into(), true.into());
     }
     0.into()
@@ -261,6 +263,11 @@ unsafe extern "C" fn special_s_away_end_main(fighter: &mut L2CFighterCommon) -> 
 }
 
 unsafe extern "C" fn special_s_away_end_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    // wall bounce first 4 frames
+    let end_wall_frame = ParamModule::get_int(fighter.battle_object, ParamType::Agent, "param_special_s.end_wall_frame");
+    if fighter.status_frame() < end_wall_frame {
+        wall_check(fighter);
+    }
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }

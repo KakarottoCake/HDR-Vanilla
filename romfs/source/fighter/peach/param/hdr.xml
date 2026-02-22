@@ -10,6 +10,7 @@
       <float hash="end_landing_x_max">1.5</float>
       <float hash="end_x_stable">0.3</float>
       <float hash="end_y_stable">1.2</float>
+      <int hash="end_wall_frame">4</int>
       <float hash="end_landing_frame">28.0</float>
       <float hash="hit_shield_x_mul">0.35</float>
     </struct>
