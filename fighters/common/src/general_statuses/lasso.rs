@@ -9,9 +9,17 @@ pub fn install() {
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
         skyline::install_hooks!(
+            status_air_lasso_main,
             sub_air_lasso_hang_uniq
         );
     }
+
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_air_lasso_main)]
+pub unsafe fn status_air_lasso_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    VarModule::on_flag(fighter.battle_object, vars::common::instance::DISABLE_AIR_LASSO);
+
+    original!()(fighter)
+}
 }
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_air_lasso_hang_uniq)]

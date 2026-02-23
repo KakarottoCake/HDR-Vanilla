@@ -76,6 +76,10 @@ unsafe fn is_enable_transition_term_hook(boma: &mut BattleObjectModuleAccessor, 
             return false;
         }
 
+        if flag == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_AIR_LASSO && VarModule::is_flag(boma.object(), vars::common::instance::DISABLE_AIR_LASSO) {
+            return false;
+        }
+
         if fighter_kind == *FIGHTER_KIND_PEACH {
             if status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL {
                 if flag == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL || flag == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL_BUTTON {
