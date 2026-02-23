@@ -2076,7 +2076,7 @@
       <float hash="mini_jump_y">14.52</float>
       <float hash="air_accel_x_mul">0.04</float>
       <float hash="air_accel_x_add">0.01</float>
-      <float hash="air_speed_x_stable">1.03</float>
+      <float hash="air_speed_x_stable">1.009</float>
       <float hash="air_brake_x">0.008</float>
       <float hash="air_accel_y">0.099</float>
       <float hash="air_speed_y_stable">2.25</float>
@@ -2159,7 +2159,7 @@
       <float hash="air_speed_y_stable">2.238</float>
       <float hash="dive_speed_y">3.007</float>
       <float hash="weight">110</float>
-      <float hash="landing_attack_air_frame_n">8</float>
+      <float hash="landing_attack_air_frame_n">9</float>
       <float hash="landing_attack_air_frame_f">10</float>
       <float hash="landing_attack_air_frame_b">10</float>
       <float hash="landing_attack_air_frame_hi">7</float>
@@ -2636,7 +2636,7 @@
       <float hash="landing_attack_air_frame_n">8</float>
       <float hash="landing_attack_air_frame_f">8</float>
       <float hash="landing_attack_air_frame_b">14</float>
-      <float hash="landing_attack_air_frame_hi">7</float>
+      <float hash="landing_attack_air_frame_hi">8</float>
       <float hash="landing_attack_air_frame_lw">11</float>
       <float hash="landing_frame">5</float>
       <int hash="attack_100_enable_cnt">2</int>
@@ -3394,15 +3394,15 @@
       <float hash="jump_initial_y">11.0825</float>
       <float hash="jump_y">33</float>
       <float hash="mini_jump_y">13.96</float>
-      <float hash="air_accel_x_mul">0.06</float>
+      <float hash="air_accel_x_mul">0.05</float>
       <float hash="air_speed_x_stable">0.96</float>
       <float hash="air_brake_x">0.015</float>
       <float hash="air_accel_y">0.11</float>
       <float hash="air_speed_y_stable">2.42</float>
       <float hash="dive_speed_y">3.146</float>
-      <float hash="weight">82</float>
+      <float hash="weight">78</float>
       <float hash="landing_attack_air_frame_n">9</float>
-      <float hash="landing_attack_air_frame_f">11</float>
+      <float hash="landing_attack_air_frame_f">12</float>
       <float hash="landing_attack_air_frame_b">10</float>
       <float hash="landing_attack_air_frame_hi">11</float>
       <float hash="landing_attack_air_frame_lw">10</float>

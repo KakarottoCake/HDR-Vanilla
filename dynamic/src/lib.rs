@@ -1,4 +1,5 @@
 #![allow(non_upper_case_globals)]
+#![allow(integer_to_ptr_transmutes)]
 #![allow(unused)]
 pub mod offsets;
 pub mod util;
@@ -10,6 +11,7 @@ pub mod frame_info;
 pub mod game_modes;
 pub mod ui;
 pub mod se;
+pub mod hitboxes;
 
 #[macro_use]
 extern crate modular_bitfield;
@@ -25,3 +27,4 @@ pub use hdr_macros as macros;
 
 pub use modules::*;
 pub use frame_info::*;
+pub use hitboxes::*;

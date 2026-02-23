@@ -45,7 +45,7 @@ impl FighterKineticEnergyStop {
         unsafe {
             let func: extern "C" fn(&mut BattleObjectModuleAccessor, i32, i32) -> smash_rs::cpp::simd::Vector3 = std::mem::transmute(LinkModule::get_parent_sum_speed as *const ());
             let vec = func(boma, link_no, arg);
-            PaddedVec2::new(vec.vec[0], vec.vec[1])
+            PaddedVec2::new(vec.x(), vec.y())
         }
     }
 }
