@@ -162,7 +162,7 @@ unsafe fn training_reset_music1(ctx: &skyline::hooks::InlineCtx) {
 
 #[skyline::hook(offset = 0x235cad0, inline)]
 unsafe fn main_menu_quick(ctx: &skyline::hooks::InlineCtx) {
-    let sp = (ctx as *const skyline::hooks::InlineCtx as *mut u8).add(0x300);
+    let sp = ctx.sp.x() as *mut u8;
     *(sp.add(0x60) as *mut u64) = 0x1100000000;
     let mut slice = std::slice::from_raw_parts_mut(sp.add(0x68), 18);
     slice.copy_from_slice(b"MenuSequenceScene\0");
@@ -430,7 +430,7 @@ pub fn main() {
             title_screen_play,
             sss_to_css,
             css_to_sss,
-            scene_transition
+            scene_transition,
             //copy_fighter_info,
             //load_ingame_call_sequence_scene,
             //load_melee_scene,

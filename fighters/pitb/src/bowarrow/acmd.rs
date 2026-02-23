@@ -1,10 +1,20 @@
 use super::*;
 
+hitbox_templates!(
+    pub PITB_BOWARROW_HITBOX = {
+        extends: ENERGY_PROJECTILE_HITBOX,
+        effect: "collision_attr_sting",
+        sound_level: SoundLevel::S,
+        hit_sound: CollisionSound::Cutup,
+        region: AttackRegion::Palutena,
+    };
+);
+
 unsafe extern "C" fn game_fly(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 1.0, 45, 100, 0, 4, 1.3, 0.0, 0.0, -1.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, -2.2, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PALUTENA);
+        hitbox!(agent, { extends: PITB_BOWARROW_HITBOX, id: 0, bone: "top", dmg: 1.0, angle: 45, kbg: 100, bkb: 4, size: 1.3, x: 0.0, y: 0.0, z: -1.5, });
         AttackModule::enable_safe_pos(boma);
     }
 }

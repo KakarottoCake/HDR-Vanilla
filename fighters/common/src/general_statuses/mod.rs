@@ -38,6 +38,7 @@ mod lasso;
 mod itemthrow;
 mod fallspecial;
 mod squat;
+mod dived;
 
 // [LUA-REPLACE-REBASE]
 // [SHOULD-CHANGE]
@@ -621,7 +622,7 @@ pub unsafe fn super_jump_punch_main_hook(fighter: &mut L2CFighterCommon) {
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_MOVE_TRANS) {
             if fighter.global_table[PREV_SITUATION_KIND] == SITUATION_KIND_AIR
             && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND
-            && MotionModule::trans_move_speed(fighter.module_accessor).value[1] < 0.0
+            && MotionModule::trans_move_speed(fighter.module_accessor).y() < 0.0
             {
                 fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
             }
@@ -1143,6 +1144,7 @@ pub fn install() {
     itemthrow::install();
     fallspecial::install();
     squat::install();
+    dived::install();
 
     skyline::nro::add_hook(nro_hook);
 }

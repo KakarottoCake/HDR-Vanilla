@@ -892,6 +892,7 @@ pub mod vars {
         pub mod instance {
             // flags
             pub const ATTACK_S4_EXCELLENT_PUNCH: i32 = 0x0100; // determines if forward smash is an excellent punch
+            pub const SPECIAL_S_DISABLE_STALL: i32 = 0x0101;
 
             // ints
             pub const SPECIAL_N_FIREBALL_COOLDOWN: i32 = 0x0100;
@@ -1269,13 +1270,9 @@ pub mod vars {
         pub mod instance {
             // flags
             pub const STANCE_ENABLE_CHANGE_SPEED: i32 = 0x0100;
-            pub const APPEAL_STANCE_INIT: i32 = 0x0101;
-            pub const APPEAL_STANCE_REVERSE: i32 = 0x0102;
 
             // floats
             pub const SPECIAL_N_PTOOIE_SCALE: i32 = 0x01BF;
-            pub const FIRE_POS_X: i32 = 0x0101;
-            pub const FIRE_POS_Y: i32 = 0x0102;
 
             // ints
             pub const CURRENT_STANCE: i32 = 0x01BE; // 0 = Normal, 1 = Putrid, 2 = Prickly
@@ -1283,10 +1280,8 @@ pub mod vars {
         }
         pub mod status {
             // flags
-            pub const POSION_BREATH_ENABLE_STANDARD_FLAME: i32 = 0x1100;
-            pub const APPEAL_CLOUD_COVER: i32 = 0x1101;
-            pub const POISON_BREATH_ENABLE_PRICKLY_BITE: i32 = 0x1102;
-            pub const POISON_BREATH_BURST: i32 = 0x1103;
+            pub const STANCE_INIT: i32 = 0x1100;
+            pub const APPEAL_CLOUD_COVER: i32 = 0x1100;
         }
     }
 
@@ -1547,16 +1542,14 @@ pub mod vars {
     }
 
     pub mod reflet {
-        pub mod status {
-            // flags
-            pub const SPECIAL_HI_ELWIND1_CANCEL: i32 = 0x1100;
-        }
         pub mod instance {
             // flags
             pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0100;
+            pub const DISCARD_SKIP_STATUS: i32 = 0x0101;
 
             // ints
             pub const ATTACK_AIR_LEVIN_LENIENCY: i32 = 0x0100;
+            pub const DISCARD_TYPE: i32 = 0x0101;
 
             // floats
             pub const SPECIAL_N_CHARGE: i32 = 0x0100;
@@ -1893,6 +1886,10 @@ pub mod vars {
             pub const SPECIAL_S_INPUT_CHECK: i32 = 0x1101;
             pub const SPECIAL_S_STOP: i32 = 0x1102;
 
+            pub const SPECIAL_LW_AIR_FALL: i32 = 0x1100;
+            pub const SPECIAL_LW_ENABLE_CONTROL: i32 = 0x1100;
+            pub const SPECIAL_LW_ENABLE_GRAVITY: i32 = 0x1101;
+
             // ints
             pub const ATTACK_LW4_TIMER: i32 = 0x1100;
 
@@ -2144,6 +2141,10 @@ pub mod statuses {
         pub const FLOAT: i32 = 0x1F6;
         pub const SPECIAL_HI_RUSH: i32 = 0x1F7;
         pub const SPECIAL_HI_END: i32 = 0x1F8;
+    }
+
+    pub mod trail {
+        pub const SPECIAL_LW_LANDING: i32 = 0x1F5;
     }
 
     pub mod wolf {
