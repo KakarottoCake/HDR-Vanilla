@@ -267,12 +267,18 @@ pub unsafe extern "C" fn special_hi_exit(fighter: &mut L2CFighterCommon) -> L2CV
 }
 
 pub unsafe extern "C" fn special_hi_2_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let cliff_check_kind = if fighter.is_status(statuses::chrom::SPECIAL_HI_DIVE) {
+        *GROUND_CLIFF_CHECK_KIND_NONE
+    } else {
+        *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES
+    };
+
     StatusModule::init_settings(
         fighter.module_accessor,
         app::SituationKind(*SITUATION_KIND_AIR),
         *FIGHTER_KINETIC_TYPE_UNIQ,
         *GROUND_CORRECT_KIND_AIR as u32,
-        app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES),
+        app::GroundCliffCheckKind(cliff_check_kind),
         true,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT,
@@ -332,7 +338,7 @@ pub unsafe extern "C" fn special_hi_2_main_loop(fighter: &mut L2CFighterCommon) 
         // }
 
         // HI_DIVE check
-        if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+        if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_3_start"), 0.0, 1.0, false, 0.0, false, false);
             VarModule::off_flag(fighter.battle_object, vars::chrom::status::SPECIAL_HI_DIVE_ENABLE);
             VarModule::on_flag(fighter.battle_object, vars::chrom::status::SPECIAL_HI_DIVE_START);
