@@ -219,7 +219,7 @@ special_s:
       turn: false
       loop: false
       move: false
-    blend_frames: 5
+    blend_frames: 0
     animations:
       - name: d01specials.nuanmb
     scripts:
@@ -234,7 +234,7 @@ special_air_s:
       turn: false
       loop: false
       move: false
-    blend_frames: 5
+    blend_frames: 0
     animations:
       - name: d01specialairs.nuanmb
     scripts:
