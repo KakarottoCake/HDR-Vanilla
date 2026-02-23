@@ -44,6 +44,7 @@ use std::os::raw::c_void;
 #[cfg(feature = "main_nro")]
 use skyline_web::*;
 use std::{fs, path::Path};
+use smash2::app::FighterManager;
 use utils::STAGE_MANAGER;
 
 #[cfg(not(feature = "main_nro"))]
@@ -410,6 +411,41 @@ unsafe fn scene_transition(
     call_original!(list_ptr, key_struct, context_struct, factory);
 }
 
+// Don't play the match end sequence for one player matches
+#[skyline::hook(offset = 0x1587270)]
+unsafe fn bypass_match_end_sequence(param_1: u64) {
+    call_original!(param_1);
+
+    if let Some(fighter_manager) = FighterManager::instance() {
+        if fighter_manager.entry_count() == 1 {
+            
+            let base_address = skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as u64;
+            let game_ending_state = base_address + 0x1587990;
+            let finished_state = base_address + 0x1581260;
+            
+            let state_ptr = (param_1 + 0x150) as *mut u64;
+            
+            // If the game ending state was added to the sequence queue,
+            // change it to the finished (do nothing) state
+            if *state_ptr == game_ending_state {
+                *state_ptr = finished_state;
+            }
+        }
+    }
+}
+
+// Don't immediately end a one player match
+#[skyline::hook(offset = 0x14f9420)]
+unsafe fn match_over_reader(param_1: u64) -> u32 {
+    if let Some(fighter_manager) = FighterManager::instance() {
+        if fighter_manager.entry_count() == 1 {
+            return 0;
+        }
+    }
+
+    return call_original!(param_1);
+}
+
 #[skyline::main(name = "hdr")]
 pub fn main() {
     #[cfg(feature = "main_nro")]
@@ -431,6 +467,8 @@ pub fn main() {
             sss_to_css,
             css_to_sss,
             scene_transition,
+            bypass_match_end_sequence,
+            match_over_reader,
             //copy_fighter_info,
             //load_ingame_call_sequence_scene,
             //load_melee_scene,

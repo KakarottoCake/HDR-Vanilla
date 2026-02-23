@@ -154,8 +154,8 @@ fn disable_none_unready(ctx: &mut InlineCtx) {
     let game_mode = unsafe { *(param_1.add(0x16c) as *const u32) };
     let ruleset = unsafe { *(param_1.add(0x158) as *const u8) };
     
-    // if game mode is Smash and ruleset is Time
-    if game_mode == 0 && ruleset == 0 {
+    // if game mode is Smash
+    if game_mode == 0 {
         let num_active_players = ctx.registers[16].w();
         
         // if there's less than 2 active players, the unready_count has incremented
@@ -173,9 +173,9 @@ fn override_min_players(ctx: &mut InlineCtx) {
     let game_mode = unsafe { *(param_1.add(0x16c) as *const u32) };
     let ruleset = unsafe { *(param_1.add(0x158) as *const u8) };
     
-    // if game mode is Smash and ruleset is Time
+    // if game mode is Smash
     // set minimum required "ready" players to 1
-    if game_mode == 0 && ruleset == 0 {
+    if game_mode == 0 {
         ctx.registers[11].set_w(1);
     }
 }
