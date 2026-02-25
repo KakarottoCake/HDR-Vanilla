@@ -4,7 +4,6 @@ use crate::offsets;
 use crate::ext::*;
 use std::sync::atomic::AtomicBool;
 use smash::phx::Vector2f;
-use std::sync::atomic::Ordering;
 
 // Flag for if salty quit was triggered. Reset every scene transition.
 pub static MATCH_EXITING: AtomicBool = AtomicBool::new(false);
@@ -264,8 +263,6 @@ pub unsafe fn get_controller_from_id(player: usize) -> &'static Controller {
 /// Triggers a match exit (all the way back to the stage select screen) by entering into the `StateExit` game state.
 /// Note: Calling this function otuside of a match shouldn't crash but it has undefined behavior. If you do that, don't
 pub fn trigger_match_exit() {
-    MATCH_EXITING.store(true, Ordering::Relaxed);
-
     unsafe {
         let p_game_state = get_game_state();
         if p_game_state.is_null() {
