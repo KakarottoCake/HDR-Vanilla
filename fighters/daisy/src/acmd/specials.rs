@@ -424,12 +424,14 @@ unsafe extern "C" fn game_specialhistart(agent: &mut L2CAgentBase) {
         ArticleModule::remove_exist(boma, *FIGHTER_DAISY_GENERATE_ARTICLE_KASSAR, ArticleOperationTarget(0));
     }
     frame(lua_state, 36.0);
+    FT_MOTION_RATE_RANGE(agent, 36.0, 41.0, 10.0);
     if is_excute(agent) {
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
         KineticModule::suspend_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
     }
-    frame(lua_state, 46.0);
+    frame(lua_state, 41.0);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         KineticModule::resume_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     }
