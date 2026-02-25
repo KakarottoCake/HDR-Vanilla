@@ -36,7 +36,7 @@ unsafe fn special_lw_set_kinetic(fighter: &mut L2CFighterCommon, param_1: L2CVal
 unsafe extern "C" fn special_lw_hit_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
     // we are in exec, so this will pass on status frame 6
     if VarModule::is_flag(fighter.battle_object, vars::edge::status::SPECIAL_LW_CHECK_HOLD)
-    && fighter.check_hold_input(None, Some(5), Buttons::SpecialAll) {
+    && fighter.check_hold_input(0, 5, Buttons::SpecialAll) {
         VarModule::off_flag(fighter.battle_object, vars::edge::status::SPECIAL_LW_CHECK_HOLD);
         VarModule::on_flag(fighter.battle_object, vars::edge::status::SPECIAL_LW_HOLD);
     }

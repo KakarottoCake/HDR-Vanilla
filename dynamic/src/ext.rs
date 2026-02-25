@@ -433,7 +433,7 @@ pub trait BomaExt {
     unsafe fn prev_right_stick_x(&mut self) -> f32;
     unsafe fn right_stick_y(&mut self) -> f32;
     unsafe fn prev_right_stick_y(&mut self) -> f32;
-    unsafe fn check_hold_input(&mut self, start_frame: Option<i32>, end_frame: Option<i32>, input: Buttons) -> bool;
+    unsafe fn check_hold_input(&mut self, start_frame: i32, end_frame: i32, input: Buttons) -> bool;
 
     // STATE
     unsafe fn is_status(&mut self, kind: i32) -> bool;
@@ -765,28 +765,25 @@ impl BomaExt for BattleObjectModuleAccessor {
     /// Checks if a given input is held and turns off the check if released
     /// 
     /// # Arguments
-    /// * `start_frame` - the status frame to start checking for the held input. `None` equates to frame 0
-    /// * `end_frame` - the status frame which to stop checking. `None` will keep checking for the entire status
+    /// * `start_frame` - the status frame to start checking for the held input
+    /// * `end_frame` - the status frame which to stop checking
     /// * `input` - a Button input (ie Buttons::Special)
     /// 
     /// Returns true if the end of the hold check has completed, if the end frame has been specified
-    unsafe fn check_hold_input(&mut self, start_frame: Option<i32>, end_frame: Option<i32>, input: Buttons) -> bool {
-        let start_check_frame = if start_frame.is_none() { 0 } else { start_frame.unwrap() };
-        let end_check_frame = if end_frame.is_none() { i32::MAX } else { end_frame.unwrap() };
-
+    unsafe fn check_hold_input(&mut self, start_frame: i32, end_frame: i32, input: Buttons) -> bool {
         // if out of range, return early
-        if !(start_check_frame..=end_check_frame).contains(&self.status_frame()) {
+        if !(start_frame..=end_frame).contains(&self.status_frame()) {
             return false;
         }
 
         // start the check once we have reached the starting frame
-        if self.status_frame() == start_check_frame {
+        if self.status_frame() == start_frame {
             VarModule::on_flag(self.object(), vars::common::status::CHECK_HOLD_INPUT);
         }
 
         if VarModule::is_flag(self.object(), vars::common::status::CHECK_HOLD_INPUT) {
             // if we are still checking for the hold and we are ready to end the check
-            if self.status_frame() == end_check_frame {
+            if self.status_frame() == end_frame {
                 VarModule::off_flag(self.object(), vars::common::status::CHECK_HOLD_INPUT);
                 return true;
             }

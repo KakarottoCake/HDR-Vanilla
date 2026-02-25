@@ -288,6 +288,7 @@ pub mod vars {
         }
         pub mod status {
             // flags
+            pub const CHECK_HOLD_INPUT: i32 = 0x10FC;
             pub const FAF_REACHED: i32 = 0x10FD;
             pub const PREV_AUTOCANCEL_FLAG: i32 = 0x10FE;
             pub const DISABLE_ECB_SHIFT: i32 = 0x10FF;
@@ -330,8 +331,6 @@ pub mod vars {
             pub const NO_POCKET: i32 = 0x1052;
 
             pub const IS_DASH_CANCEL: i32 = 0x1055;
-
-            pub const CHECK_HOLD_INPUT: i32 = 0x1056;
 
             // ints
 
