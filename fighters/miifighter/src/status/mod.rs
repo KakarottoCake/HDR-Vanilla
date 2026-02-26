@@ -2,6 +2,8 @@ use super::*;
 use globals::*;
 // status script import
 
+mod special_hi1;
+mod special_hi3;
 mod special_lw1;
 mod special_lw2;
 mod special_lw3;
@@ -9,7 +11,6 @@ mod special_n1;
 mod special_n2;
 mod special_n3;
 mod special_s1;
-mod special_hi3;
 
 unsafe fn set_move_customizer(fighter: &mut L2CFighterCommon, customizer: unsafe extern "C" fn(&mut L2CFighterCommon) -> L2CValue) {
     if fighter.global_table["move_customizer_set"].get_bool() {
@@ -183,6 +184,7 @@ unsafe fn reset_boiling_punt(fighter: &mut L2CFighterCommon) {
 
 pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
+    special_hi1::install(agent);
     special_lw1::install(agent);
     special_lw2::install(agent);
     special_n2::install(agent);
