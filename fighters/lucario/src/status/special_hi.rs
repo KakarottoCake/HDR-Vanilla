@@ -178,11 +178,11 @@ unsafe extern "C" fn special_hi_rush_main_loop(fighter: &mut L2CFighterCommon) -
             fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND, *GROUND_CORRECT_KIND_AIR);
         }
         // metered attack cancel
-        if !CancelModule::is_enable_cancel(fighter.module_accessor) 
-        && !fighter.is_in_hitlag() 
+        if !CancelModule::is_enable_cancel(fighter.module_accessor)
+        && !fighter.is_in_hitlag()
         && !VarModule::is_flag(fighter.object(), vars::lucario::instance::METER_BURNOUT)
         && VarModule::is_flag(fighter.battle_object, vars::lucario::status::HIT_CANCEL)
-        && fighter.is_situation(*SITUATION_KIND_AIR) 
+        && fighter.is_situation(*SITUATION_KIND_AIR)
         && fighter.get_aerial() != None {
             fighter.on_flag(*FIGHTER_LUCARIO_MACH_STATUS_WORK_ID_FLAG_STATUS_TRANS);
             fighter.set_int(*FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_HI_RUSH_END, *FIGHTER_LUCARIO_MACH_STATUS_WORK_ID_INT_NEXT_STATUS);
@@ -312,11 +312,11 @@ unsafe extern "C" fn special_hi_rush_end_main_loop(fighter: &mut L2CFighterCommo
     if !StatusModule::is_changing(fighter.module_accessor) {
         // metered attack cancel
         if VarModule::is_flag(fighter.object(), vars::lucario::instance::SPECIAL_HI_ATTACK_CANCEL) || (
-            !CancelModule::is_enable_cancel(fighter.module_accessor) 
-            && !fighter.is_in_hitlag() 
+            !CancelModule::is_enable_cancel(fighter.module_accessor)
+            && !fighter.is_in_hitlag()
             && !VarModule::is_flag(fighter.object(), vars::lucario::instance::METER_BURNOUT)
             && VarModule::is_flag(fighter.battle_object, vars::lucario::status::HIT_CANCEL)
-            && fighter.is_situation(*SITUATION_KIND_AIR) 
+            && fighter.is_situation(*SITUATION_KIND_AIR)
             && fighter.get_aerial() != None
         ) {
             fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_AIR.into(), false.into());

@@ -62,7 +62,7 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         *FIGHTER_GEKKOUGA_STATUS_KIND_SPECIAL_LW_ATTACK,
         *FIGHTER_GEKKOUGA_STATUS_KIND_SPECIAL_LW_HIT,
         *FIGHTER_GEKKOUGA_STATUS_KIND_SPECIAL_LW_BOUND
-        ]) 
+        ])
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
     }
@@ -123,7 +123,7 @@ pub unsafe fn substitute_teleport_check(fighter: &mut L2CFighterCommon) {
                 EffectModule::set_pos(fighter.module_accessor, eff_handle, &Vector3f{x: guide_pos.x, y: guide_pos.y, z: 0.0});
             }
             EffectModule::set_rot(fighter.module_accessor, eff_handle, &Vector3f{x: 0.0, y: 0.0, z: angle - 90.0});
-    
+
             if can_teleport {
                 let team_color = FighterUtil::get_team_color(fighter.module_accessor);
                 let effect_team_color = FighterUtil::get_effect_team_color(EColorKind(team_color as i32), Hash40::new("direction_effect_color"));
