@@ -172,7 +172,7 @@ unsafe extern "C" fn speciallw_start_control(fighter: &mut L2CFighterCommon) {
 }
 
 unsafe extern "C" fn speciallw_start_gravity(fighter: &mut L2CFighterCommon) {
-    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
+    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
     let air_speed_y_stable = WorkModule::get_param_float(fighter.module_accessor, hash40("air_speed_y_stable"), 0);
     let fall_speed_y = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_y"), 0);
     sv_kinetic_energy!(
@@ -218,8 +218,6 @@ unsafe extern "C" fn speciallw_ground_main_loop(fighter: &mut L2CFighterCommon) 
         return 0.into();
     }
     //Jumping loop...
-    let control_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL) as *mut smash::app::KineticEnergy;
-    let control_x = lua_bind::KineticEnergy::get_speed_x(control_energy);
 
     if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_TRAIL_STATUS_SPECIAL_LW_FLAG_IS_CONTROL_ENABLED) {
         //speciallw_handle_angle(fighter);
@@ -240,9 +238,9 @@ unsafe extern "C" fn speciallw_ground_main_loop(fighter: &mut L2CFighterCommon) 
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
         || fighter.sub_air_check_fall_common().get_bool() {
-            if KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) > 0.0 {
-                KineticModule::mul_speed(fighter.module_accessor, &Vector3f::new(1.0, 0.8, 1.0), *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-            }
+            // if KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) > 0.0 {
+            //     KineticModule::mul_speed(fighter.module_accessor, &Vector3f::new(1.0, 0.8, 1.0), *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+            // }
             return 1.into();
         }
     }
