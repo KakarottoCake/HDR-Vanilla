@@ -86,7 +86,7 @@ unsafe extern "C" fn game_build(agent: &mut L2CAgentBase) {
 		} else {
 			boma.change_status_req(*WEAPON_ZELDA_PHANTOM_STATUS_KIND_ATTACK, true);
 		}
-	}   
+	}
 }
 
 unsafe extern "C" fn effect_build(agent: &mut L2CAgentBase) {
@@ -331,7 +331,7 @@ unsafe extern "C" fn effect_attacks(agent: &mut L2CAgentBase) {
 			EFFECT_FOLLOW(agent, Hash40::new("zelda_phantom_line"), Hash40::new("top"), -5, 10, -5, 0, 0, 0, 1, true);
 		}
 		else{
-			EFFECT_FOLLOW(agent, Hash40::new("zelda_phantom_line"), Hash40::new("top"), 5, 10, -5, 0, 0, 0, 1, true);		
+			EFFECT_FOLLOW(agent, Hash40::new("zelda_phantom_line"), Hash40::new("top"), 5, 10, -5, 0, 0, 0, 1, true);
 		}
 		AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_zelda_phantomsword_flame"), Hash40::new("tex_zelda_phantomsword2"), 6, Hash40::new("handr"), 1.5, 0.4, -1.0, Hash40::new("handr"), 1.5, 0.4, 24.4, true, Hash40::new("zelda_phantom_sword_fire"), Hash40::new("handr"), 1.85, 0.35, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.5, 0.5);
 
@@ -529,7 +529,7 @@ unsafe extern "C" fn game_attackmax(agent: &mut L2CAgentBase) {
 		agent.clear_lua_stack();
 		lua_args!(agent, WEAPON_ZELDA_PHANTOM_KINETIC_ENERGY_ID_NORMAL, rush_speed * PostureModule::lr(boma));
 		app::sv_kinetic_energy::set_speed(lua_state);
-		agent.clear_lua_stack();  
+		agent.clear_lua_stack();
 	}
 	frame(lua_state, 11.0);
 	if is_excute(agent) {
@@ -575,7 +575,7 @@ unsafe extern "C" fn effect_attackmax(agent: &mut L2CAgentBase) {
 		else{
 			EFFECT_FOLLOW(agent, Hash40::new("zelda_phantom_line"), Hash40::new("top"), 5, 10, -7, 0, 0, 0, 1, true);
 		}
-		
+
 		EFFECT_FOLLOW(agent, Hash40::new("zelda_atk_hi_flash"), Hash40::new("handr"), 0, 0, 16.0, 0, 0, 0, 2.0, true);
 	}
 	frame(lua_state, 4.0);
