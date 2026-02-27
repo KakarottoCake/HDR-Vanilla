@@ -284,6 +284,9 @@ special_s_end:
 special_s_hit_end:
   extra:
     cancel_frame: 23
+special_air_hi_end:
+  flags:
+    move: true
 special_air_lw:
   game_script: game_specialairlw
   flags:
