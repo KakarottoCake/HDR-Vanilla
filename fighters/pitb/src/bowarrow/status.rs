@@ -5,26 +5,29 @@ unsafe extern "C" fn fly_exec(weapon: &mut L2CWeaponCommon) -> L2CValue {
         return false.into();
     }
 
-    let stick_x = weapon.stick_x();
-    let stick_y = weapon.stick_y();
+    let team_owner_id = TeamModule::team_owner_id(weapon.module_accessor) as u32;
+    let owner = util::get_battle_object_from_id(team_owner_id);
+    let mut owner_boma = &mut *(*owner).module_accessor;
+    let stick_x = owner_boma.stick_x();
+    let stick_y = owner_boma.stick_y();
     let magnitude = (stick_x.powi(2) + stick_y.powi(2)).sqrt();
     let angle = weapon.get_float(*WEAPON_PIT_BOWARROW_INSTANCE_WORK_ID_FLOAT_ANGLE);
     let mut new_angle = angle;
 
-    // when parried, snap the arrow to one of 8 directions
-    if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_REFLECTOR | *COLLISION_KIND_MASK_PARRY) {
-        new_angle = (angle / 45.0).round() * 45.0;
-        AttackModule::clear_inflict_kind_status(weapon.module_accessor);
-    }
-    // else, control the arrow direction with the stick
-    else if magnitude > 1e-5 {
+    if magnitude > 1e-5 {
         let stick_angle_deg = stick_y.atan2(stick_x).to_degrees();
         let mut delta = angle - stick_angle_deg;
 
         while delta > 180.0  { delta -= 360.0; }
         while delta < -180.0 { delta += 360.0; }
 
-        let control_angle = weapon.get_param_float("param_bowarrow", "control_angle");
+        // when reflected, new owner has increased control over angle
+        let control_angle_mul = if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_REFLECTOR | *COLLISION_KIND_MASK_PARRY) {
+            2.0
+        } else {
+            1.0
+        };
+        let control_angle = weapon.get_param_float("param_bowarrow", "control_angle") * control_angle_mul;
         let max_turn = control_angle * magnitude;
         let clamped_delta = delta.clamp(-max_turn, max_turn);
         new_angle = angle - clamped_delta;
