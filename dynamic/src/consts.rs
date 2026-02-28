@@ -1308,7 +1308,8 @@ pub mod vars {
         }
         pub mod status {
             // flags
-            pub const SPECIAL_HI_AERIAL: i32 = 0x1100;
+            pub const SPECIAL_S_HIT: i32 = 0x1100;
+            pub const SPECIAL_HI_AERIAL: i32 = 0x1101;
         }
     }
 

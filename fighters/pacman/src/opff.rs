@@ -4,23 +4,39 @@ use super::*;
 use globals::*;
 
 unsafe fn side_special_freefall(fighter: &mut L2CFighterCommon) {
-    if fighter.is_prev_status(*FIGHTER_PACMAN_STATUS_KIND_SPECIAL_S_DASH)
-    && fighter.is_status(*FIGHTER_PACMAN_STATUS_KIND_SPECIAL_S_RETURN)
-    && fighter.is_situation(*SITUATION_KIND_AIR)
-    && CancelModule::is_enable_cancel(fighter.module_accessor)
-    && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_PACMAN_STATUS_SPECIAL_S_WORK_FLAG_EAT_POWER_ESA)
-    && !VarModule::is_flag(fighter.battle_object, vars::pacman::instance::SPECIAL_S_GROUND_START) {
-        fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL_SPECIAL, true);
-        let cancel_module = *(fighter.module_accessor as *mut BattleObjectModuleAccessor as *mut u64).add(0x128 / 8) as *const u64;
-        *(((cancel_module as u64) + 0x1c) as *mut bool) = false;  // CancelModule::is_enable_cancel = false
+    if fighter.is_status_one_of(&[*FIGHTER_PACMAN_STATUS_KIND_SPECIAL_S_DASH, *FIGHTER_PACMAN_STATUS_KIND_SPECIAL_S_DASH]) {
+        if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+            VarModule::on_flag(fighter.battle_object, vars::pacman::status::SPECIAL_S_HIT);
+        }
     }
+    if fighter.is_status(*FIGHTER_PACMAN_STATUS_KIND_SPECIAL_S_RETURN) {
+        if fighter.is_prev_status(*FIGHTER_PACMAN_STATUS_KIND_SPECIAL_S_DASH)
+        && fighter.is_situation(*SITUATION_KIND_AIR)
+        && CancelModule::is_enable_cancel(fighter.module_accessor)
+        && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_PACMAN_STATUS_SPECIAL_S_WORK_FLAG_EAT_POWER_ESA)
+        && !VarModule::is_flag(fighter.battle_object, vars::pacman::instance::SPECIAL_S_GROUND_START) {
+            fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL_SPECIAL, true);
+            let cancel_module = *(fighter.module_accessor as *mut BattleObjectModuleAccessor as *mut u64).add(0x128 / 8) as *const u64;
+            *(((cancel_module as u64) + 0x1c) as *mut bool) = false;  // CancelModule::is_enable_cancel = false
+        }
 
-    if fighter.is_status(*FIGHTER_PACMAN_STATUS_KIND_SPECIAL_S_RETURN)
-    && !StatusModule::is_changing(fighter.module_accessor)
-    && fighter.is_prev_situation(*SITUATION_KIND_AIR)
-    && fighter.is_situation(*SITUATION_KIND_GROUND) {
-        if fighter.status_frame() < 30 && VarModule::is_flag(fighter.battle_object, vars::pacman::instance::SPECIAL_S_GROUND_START) { return; }
-        fighter.change_status_req(*FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, true);
+        if !StatusModule::is_changing(fighter.module_accessor)
+        && fighter.is_prev_situation(*SITUATION_KIND_AIR)
+        && fighter.is_situation(*SITUATION_KIND_GROUND) {
+            if VarModule::is_flag(fighter.battle_object, vars::pacman::instance::SPECIAL_S_GROUND_START) {
+                // prevent special landing from grounded version before transitioning into normal fall
+                if fighter.status_frame() < 30 { return; }
+            }
+            else {
+                // land cancel air version
+                if VarModule::is_flag(fighter.battle_object, vars::pacman::status::SPECIAL_S_HIT) {
+                    fighter.check_land_cancel(None);
+                    return;
+                }
+            }
+            
+            fighter.change_status_req(*FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, true);
+        } 
     }
 }
 
