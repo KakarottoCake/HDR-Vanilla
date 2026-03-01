@@ -892,6 +892,7 @@ pub mod vars {
         pub mod instance {
             // flags
             pub const ATTACK_S4_EXCELLENT_PUNCH: i32 = 0x0100; // determines if forward smash is an excellent punch
+            pub const SPECIAL_S_DISABLE_STALL: i32 = 0x0101;
 
             // ints
             pub const SPECIAL_N_FIREBALL_COOLDOWN: i32 = 0x0100;
@@ -1269,13 +1270,9 @@ pub mod vars {
         pub mod instance {
             // flags
             pub const STANCE_ENABLE_CHANGE_SPEED: i32 = 0x0100;
-            pub const APPEAL_STANCE_INIT: i32 = 0x0101;
-            pub const APPEAL_STANCE_REVERSE: i32 = 0x0102;
 
             // floats
             pub const SPECIAL_N_PTOOIE_SCALE: i32 = 0x01BF;
-            pub const FIRE_POS_X: i32 = 0x0101;
-            pub const FIRE_POS_Y: i32 = 0x0102;
 
             // ints
             pub const CURRENT_STANCE: i32 = 0x01BE; // 0 = Normal, 1 = Putrid, 2 = Prickly
@@ -1283,10 +1280,8 @@ pub mod vars {
         }
         pub mod status {
             // flags
-            pub const POSION_BREATH_ENABLE_STANDARD_FLAME: i32 = 0x1100;
-            pub const APPEAL_CLOUD_COVER: i32 = 0x1101;
-            pub const POISON_BREATH_ENABLE_PRICKLY_BITE: i32 = 0x1102;
-            pub const POISON_BREATH_BURST: i32 = 0x1103;
+            pub const STANCE_INIT: i32 = 0x1100;
+            pub const APPEAL_CLOUD_COVER: i32 = 0x1100;
         }
     }
 
