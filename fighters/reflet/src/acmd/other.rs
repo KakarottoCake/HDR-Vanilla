@@ -53,7 +53,7 @@ unsafe extern "C" fn game_turndash(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 3.0);
     if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
+        agent.on_flag(*FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
     }
     frame(lua_state, 17.0);
     if is_excute(agent) {
@@ -80,11 +80,19 @@ unsafe extern "C" fn game_escapeairslide(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 29.0);
     if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
+        agent.on_flag(*FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
     }
     frame(lua_state, 39.0);
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+    }
+}
+
+unsafe extern "C" fn game_cliffjump2(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        PostureModule::add_pos(boma, &Vector3f::new(0.0, -2.0, 0.0));
     }
 }
 
@@ -190,6 +198,8 @@ pub fn install(agent: &mut Agent) {
 
     agent.acmd("game_escapeair", game_escapeair, Priority::Low);
     agent.acmd("game_escapeairslide", game_escapeairslide, Priority::Low);
+
+    agent.acmd("game_cliffjump2", game_cliffjump2, Priority::Low);
 
     agent.acmd("effect_downattackd", effect_downattackd, Priority::Low);
     agent.acmd("effect_downattacku", effect_downattacku, Priority::Low);
