@@ -72,6 +72,25 @@ unsafe extern "C" fn special_s3_check_attack(fighter: &mut L2CFighterCommon, par
     return false.into();
 }
 
+pub unsafe extern "C" fn special_s4_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    // Allows the dash to transition into run instead of walk forward
+    let lr =  PostureModule::lr(fighter.module_accessor);
+    let run_stick_x = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("run_stick_x"));
+    let next_status = fighter.global_table[STATUS_KIND].get_i32();
+    if fighter.is_situation(*SITUATION_KIND_GROUND)
+    && fighter.is_motion(Hash40::new("special_s4_lw"))
+    && fighter.left_stick_x() * lr >= run_stick_x
+    && [
+        *FIGHTER_STATUS_KIND_WALK,
+        *FIGHTER_STATUS_KIND_DASH,
+    ].contains(&next_status) {
+        let dash_speed = WorkModule::get_param_float(fighter.module_accessor, hash40("dash_speed"), 0);
+        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, dash_speed * lr);
+        fighter.change_status(FIGHTER_STATUS_KIND_RUN.into(), false.into());
+    }
+    smashline::original_status(End, fighter, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4)(fighter)
+}
+
 pub fn install(agent: &mut Agent) {
     agent.status(Pre, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S2, special_s_pre);
     agent.status(Init, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S2, special_s_init);
@@ -85,4 +104,5 @@ pub fn install(agent: &mut Agent) {
     agent.status(Pre, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4, special_s_pre);
     agent.status(Init, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4, special_s_init);
     agent.status(Exec, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4, special_s_exec);
+    agent.status(End, *FIGHTER_ROY_STATUS_KIND_SPECIAL_S4, special_s4_end);
 }
