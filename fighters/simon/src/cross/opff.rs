@@ -3,7 +3,7 @@ utils::import_noreturn!(common::opff::fighter_common_opff);
 use super::*;
 use globals::*;
 
-unsafe fn boomerang_reflect_fix(weapon: &mut smash::lua2cpp::L2CFighterBase) {
+unsafe fn cross_reflect_fix(weapon: &mut smash::lua2cpp::L2CFighterBase) {
     // this opff runs once after reflection
     let boma = weapon.module_accessor;
     if !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_REFLECTOR | *COLLISION_KIND_MASK_PARRY) {
@@ -20,22 +20,29 @@ unsafe fn boomerang_reflect_fix(weapon: &mut smash::lua2cpp::L2CFighterBase) {
     // update facing direction depending on whether it is traveling forwards or backwards
     let lr = PostureModule::lr(boma);
     let speed_x = KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
-    if weapon.is_status(*WN_LINK_BOOMERANG_STATUS_KIND_FLY) {
+    if weapon.is_status(*WEAPON_SIMON_CROSS_STATUS_KIND_TURN) {
         PostureModule::reverse_lr(boma);
         PostureModule::update_rot_y_lr(boma);
     }
 
     // lifetime fix
-    weapon.set_int_from_param(*WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_LIFE, "boomerang", "life");
+    let param_name = if weapon.is_flag(*WEAPON_SIMON_CROSS_INSTANCE_WORK_ID_FLAG_FLICK) {
+        "life_flick"
+    } else {
+        "life"
+    };
+    let life = weapon.get_param_int("cross", param_name);
+    weapon.set_int(life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    weapon.set_int(life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
 
     // restart status
-    weapon.change_status(WN_LINK_BOOMERANG_STATUS_KIND_FLY.into(), false.into());
+    weapon.change_status(WEAPON_SIMON_CROSS_STATUS_KIND_TURN.into(), false.into());
 }
 
-pub unsafe extern "C" fn link_boomerang_frame(weapon: &mut smash::lua2cpp::L2CFighterBase) {
-    boomerang_reflect_fix(weapon);
+pub unsafe extern "C" fn simon_cross_frame(weapon: &mut smash::lua2cpp::L2CFighterBase) {
+    cross_reflect_fix(weapon);
 }
 
 pub fn install(agent: &mut Agent) {
-    agent.on_line(Main, link_boomerang_frame);
+    agent.on_line(Main, simon_cross_frame);
 }

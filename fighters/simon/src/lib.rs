@@ -10,6 +10,7 @@ pub mod status;
 // articles
 
 mod axe;
+mod cross;
 mod whip;
 
 use smash::{
@@ -52,5 +53,6 @@ pub fn install() {
     agent.install();
 
     axe::install();
+    cross::install();
     whip::install();
 }

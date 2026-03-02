@@ -11,7 +11,7 @@ unsafe fn boomerang_reflect_fix(weapon: &mut smash::lua2cpp::L2CFighterBase) {
     }
     AttackModule::clear_inflict_kind_status(boma);
 
-    // update position, because krown uses an animation that moves the rot bone but not top
+    // update position, accounting for boomerang-weirdness
     let top_pos = *PostureModule::pos(boma);
     let rot_pos = &mut Vector3f{ x: 0.0, y: 0.0, z: 0.0 };
     ModelModule::joint_global_position(boma, Hash40::new("rot"), rot_pos, false);
