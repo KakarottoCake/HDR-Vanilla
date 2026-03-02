@@ -137,8 +137,8 @@ pub mod vars {
 
             pub const SHOULD_TRUMP_TETHER: i32 = 0x0022;
 
-            pub const UP_SPECIAL_INTERRUPT: i32 = 0x0023; // Ness and Lucas use this
-            pub const UP_SPECIAL_INTERRUPT_AIRTIME: i32 = 0x0024; // Ness and Lucas use this
+            pub const UP_SPECIAL_LAG: i32 = 0x0023; // Mewtwo and Palutena (actionable teleports)
+            pub const UP_SPECIAL_INTERRUPT_AIRTIME: i32 = 0x0024; // Unused
 
             pub const SPECIAL_PROJECTILE_SPAWNED: i32 = 0x0025; // Luigi, Ivysaur, and Young Link use this
 
@@ -355,6 +355,7 @@ pub mod vars {
 
             pub const TELEPORT_INITIAL_SPEED_X: i32 = 0x1000;
             pub const TELEPORT_INITIAL_SPEED_Y: i32 = 0x1001;
+            pub const TELEPORT_FLOOR_SPEED_X: i32 = 0x1002;
         }
     }
 
@@ -1172,9 +1173,9 @@ pub mod vars {
     pub mod mewtwo {
         pub mod instance {
             // flags
-            pub const SPECIAL_HI_TELEPORT_CANCEL: i32 = 0x0100;
-            pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0101;
-            pub const SPECIAL_HI_GROUNDED_TELEPORT: i32 = 0x0102;
+            pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0100;
+            pub const SPECIAL_HI_GROUNDED_TELEPORT: i32 = 0x0101;
+            pub const SPECIAL_HI_LANDING: i32 = 0x0102;
         }
     }
 
@@ -1324,8 +1325,7 @@ pub mod vars {
         pub mod status {
             // flags
             pub const ENABLE_COLOR_INCREMENT: i32 = 0x1100;
-            pub const SPECIAL_HI_TELEPORT_AIR_START: i32 = 0x1101;
-            pub const SPECIAL_N_PRIMARY_POWERED: i32 = 0x1102;
+            pub const SPECIAL_N_PRIMARY_POWERED: i32 = 0x1101;
             pub const POWER_BOARD_FLUSHED: i32 = 0x1150;
 
             // floats
@@ -1336,7 +1336,8 @@ pub mod vars {
             pub const SPECIAL_HI_TELEPORT_GROUND_START: i32 = 0x0100;
             pub const SPECIAL_HI_JUMP_REFRESH: i32 = 0x0101;
             pub const SPECIAL_N_FLUSH_BOARD: i32 = 0x0102;
-            pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0104;
+            pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0103;
+            pub const SPECIAL_HI_LANDING: i32 = 0x0104;
 
             // ints
             pub const POWER_BOARD_SLOT_1: i32 = 0x0100;
