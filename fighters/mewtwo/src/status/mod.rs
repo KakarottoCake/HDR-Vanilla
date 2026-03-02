@@ -6,6 +6,7 @@ mod attack_air;
 mod fall;
 mod float;
 mod jump_aerial;
+mod landing;
 mod special_n;
 mod special_s;
 mod special_hi;
@@ -54,8 +55,9 @@ pub fn install(agent: &mut Agent) {
     fall::install(agent);
     float::install(agent);
     jump_aerial::install(agent);
+    landing::install(agent);
     special_n::install(agent);
     special_s::install(agent);
-    special_lw::install(agent);
     special_hi::install(agent);
+    special_lw::install(agent);
 }
