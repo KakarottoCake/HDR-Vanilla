@@ -246,6 +246,7 @@ pub mod vars {
 
             // pub const PREVIOUS_FRAME_FRAMES_IN_AIR: i32 = 0x0016;
 
+
             // floats
 
             pub const LAST_ATTACK_DAMAGE_DEALT: i32 = 0x0000;
@@ -364,13 +365,26 @@ pub mod vars {
 
             // ints
             pub const RECOVERY_RESOURCE_COUNT: i32 = 0x0100;
-            pub const ATTACK_AIR_F_COUNT: i32 = 0x0101;
-            pub const SPECIAL_N_CANCEL_TYPE: i32 = 0x0102; //used for both cancel and firing
-            pub const SPECIAL_S_DABK_COUNT: i32 = 0x0103;
+            pub const ATTACK_S3_COUNT: i32 = 0x0101;
+            pub const ATTACK_AIR_F_COUNT: i32 = 0x0102;
+            pub const SPECIAL_N_CANCEL_TYPE: i32 = 0x0103; // used for both cancel and firing
+            pub const SPECIAL_S_DABK_COUNT: i32 = 0x0104;
+            pub const SPECIAL_BULLET_ARTS_COUNT: i32 = 0x0105; // held variant added lag
         }
         pub mod status {
+            // flags
+            pub const RECOVERY_RESOURCE_BYPASS_CHECK: i32 = 0x1100;
+            pub const RECOVERY_RESOURCE_INVALID_INPUT: i32 = 0x1101;
+            pub const SPECIAL_1F_CHECK: i32 = 0x1102;
+            pub const SPECIAL_HIT_NO_BULLET: i32 = 0x1103;
+            pub const BULLET_FIRST_FIRE: i32 = 0x1104; // used for slotting bullet arts
+            pub const ATTACK_INVALID_COMBO_INPUT: i32 = 0x1105;
+            // ints
+            pub const EFFECT_HANDLE: i32 = 0x1100;
+            pub const SPECIAL_S_BULLET_STAGE: i32 = 0x1101; // used for weird vanilla movement calc
             // floats
             pub const SPECIAL_S_ABK_ANGLE: i32 = 0x1100;
+            pub const SPECIAL_S_MOTION_XY: i32 = 0x0101; // Vec2
         }
     }
 
@@ -1982,7 +1996,8 @@ pub mod vars {
 pub mod statuses {
     pub mod bayonetta {
         pub const SPECIAL_S_KICK: i32 = 0x1F2;
-        pub const SPECIAL_N_CANCEL: i32 = 0x1F3;
+        pub const SPECIAL_S_EDGE: i32 = 0x1F3;
+        pub const SPECIAL_N_CANCEL: i32 = 0x1F4;
     }
 
     pub mod chrom {
