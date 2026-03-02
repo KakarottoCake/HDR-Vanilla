@@ -1832,12 +1832,12 @@
     </struct>
     <!-- WII FIT TRAINER -->
     <struct index="47">
-      <float hash="walk_speed_max">1.244</float>
-      <float hash="ground_brake">0.0835</float>
-      <float hash="dash_speed">1.815</float>
+      <float hash="walk_speed_max">1.3995</float>
+      <float hash="ground_brake">0.087</float>
+      <float hash="dash_speed">1.88</float>
       <float hash="run_accel_mul">0.08584</float>
       <float hash="run_accel_add">0.02</float>
-      <float hash="run_speed_max">1.89</float>
+      <float hash="run_speed_max">1.97</float>
       <int hash="jump_squat_frame">3</int>
       <float hash="jump_speed_x">1</float>
       <float hash="jump_speed_x_max">1.45</float>
@@ -1845,10 +1845,10 @@
       <float hash="mini_jump_y">13.18</float>
       <float hash="air_accel_x_mul">0.066</float>
       <float hash="air_accel_x_add">0.01</float>
-      <float hash="air_speed_x_stable">0.977</float>
-      <float hash="air_accel_y">0.113</float>
-      <float hash="air_speed_y_stable">1.816</float>
-      <float hash="dive_speed_y">2.414</float>
+      <float hash="air_speed_x_stable">1.04</float>
+      <float hash="air_accel_y">0.1215</float>
+      <float hash="air_speed_y_stable">1.953</float>
+      <float hash="dive_speed_y">2.596</float>
       <float hash="weight">96</float>
       <float hash="landing_attack_air_frame_n">7</float>
       <float hash="landing_attack_air_frame_f">9</float>
