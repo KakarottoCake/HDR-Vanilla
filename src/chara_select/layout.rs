@@ -48,6 +48,10 @@ impl Default for CharaSchema {
 
 #[skyline::hook(offset = 0x19eb840, inline)]
 pub unsafe fn init_css_hook(ctx: &InlineCtx) {
+    // Change "stacked" CSS flag to "separate"
+    let param_4 = ctx.registers[3].x() as *mut u8;
+    *param_4.add(1) = 1;
+
     // reset all stored data to default
     let mut chara_data = CHARA_DATA.write().unwrap();
     *chara_data = CharaData::default();
@@ -83,8 +87,13 @@ pub unsafe fn init_css_hook(ctx: &InlineCtx) {
         return;
     }
 
+    // If the game loaded the "stacked" fighter list, it contains ui_chara_mii_all
+    // instead of the 3 individual Miis.
+    let mii_all_hash = hash40("ui_chara_miiall").0;
+    let has_mii_all = chara_vec.iter().any(|x| (*x & !KEY_MASK) == mii_all_hash);
+
     let (mut whitelist, mut blacklist) = (Vec::new(), Vec::new());
-    
+
     let schema: CharaSchema = config.schemas.get(&config.order).cloned().unwrap_or_default();
     let mut chara_order = if is_tourney_mode() { CharaSchema::default().order } else { schema.order.clone() };
     // aegis is a special case and is loaded with two entries
@@ -94,6 +103,7 @@ pub unsafe fn init_css_hook(ctx: &InlineCtx) {
         chara_order.insert(idx + 1, "light_first".to_string());
     }
 
+    let mii_names = ["miifighter", "miiswordsman", "miigunner"];
     for idx in 0..chara_order.len() {
         let chara = match chara_order.get(idx) {
             Some(string) => string.as_str(),
@@ -101,7 +111,7 @@ pub unsafe fn init_css_hook(ctx: &InlineCtx) {
         };
         let should_load = chara_vec.iter().any(|x|
             (*x & !KEY_MASK) == hash40(&format!("ui_chara_{}", chara)).0
-        );
+        ) || (has_mii_all && mii_names.contains(&chara));
 
         let dest = if should_load { &mut whitelist } else { &mut blacklist };
         dest.push(chara.to_string());
