@@ -1171,6 +1171,14 @@ pub mod vars {
     }
 
     pub mod mewtwo {
+        pub mod status {
+            // ints
+            pub const EFFECT_HANDLER: i32 = 0x1100;
+            pub const EFFECT_HANDLER_2: i32 = 0x1101;
+            // floats
+            pub const SPECIAL_S_THROW_POS: i32 = 0x1100; // vec2
+            pub const SPECIAL_S_THROW_CAPTURED_POS_OFFSET: i32 = 0x1102; // vec2
+        }
         pub mod instance {
             // flags
             pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0100;
