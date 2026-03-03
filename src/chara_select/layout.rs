@@ -49,6 +49,7 @@ impl Default for CharaSchema {
 #[skyline::hook(offset = 0x19eb840, inline)]
 pub unsafe fn init_css_hook(ctx: &InlineCtx) {
     // Change "stacked" CSS flag to "separate"
+    // This unstacks echo fighters
     let param_4 = ctx.registers[3].x() as *mut u8;
     *param_4.add(1) = 1;
 
@@ -87,11 +88,6 @@ pub unsafe fn init_css_hook(ctx: &InlineCtx) {
         return;
     }
 
-    // If the game loaded the "stacked" fighter list, it contains ui_chara_mii_all
-    // instead of the 3 individual Miis.
-    let mii_all_hash = hash40("ui_chara_miiall").0;
-    let has_mii_all = chara_vec.iter().any(|x| (*x & !KEY_MASK) == mii_all_hash);
-
     let (mut whitelist, mut blacklist) = (Vec::new(), Vec::new());
 
     let schema: CharaSchema = config.schemas.get(&config.order).cloned().unwrap_or_default();
@@ -103,7 +99,6 @@ pub unsafe fn init_css_hook(ctx: &InlineCtx) {
         chara_order.insert(idx + 1, "light_first".to_string());
     }
 
-    let mii_names = ["miifighter", "miiswordsman", "miigunner"];
     for idx in 0..chara_order.len() {
         let chara = match chara_order.get(idx) {
             Some(string) => string.as_str(),
@@ -111,11 +106,10 @@ pub unsafe fn init_css_hook(ctx: &InlineCtx) {
         };
         let should_load = chara_vec.iter().any(|x|
             (*x & !KEY_MASK) == hash40(&format!("ui_chara_{}", chara)).0
-        ) || (has_mii_all && mii_names.contains(&chara));
+        );
 
         let dest = if should_load { &mut whitelist } else { &mut blacklist };
         dest.push(chara.to_string());
-        // println!("Fighter {chara} will{} be loaded", if should_load { "" } else { " not" });
     }
 
     let mut icon_count = chara_order.len();
@@ -125,16 +119,16 @@ pub unsafe fn init_css_hook(ctx: &InlineCtx) {
     let kill_mythra = if whitelist.contains(&"light_first".to_string()) { 1 } else { 0 }; // die
     let random_idx = get_random_idx(dbg!(icon_count - kill_mythra));
     // println!(
-    //     "{icon_count} icons to load ({} out of {} blacklisted).\nRandom will be placed in slot {random_idx}", 
+    //     "{icon_count} icons to load ({} out of {} blacklisted).\nRandom will be placed in slot {random_idx}",
     //     blacklist.len(), chara_order.len() + if schema.centered_random { 1 } else { 0 }
     // );
-    
+
     let mut fighters = chara_order.clone();
     fighters.reverse(); // convert into a stack
 
     let mut new_order = Vec::new();
     let mut push = false;
-    let use_general_all = chara_vec.iter().any(|x| (*x & !KEY_MASK) == hash40("ui_chara_general_all").0);    
+    let use_general_all = chara_vec.iter().any(|x| (*x & !KEY_MASK) == hash40("ui_chara_general_all").0);
     for i in 0..icon_count {
         if i == random_idx && schema.centered_random && !push {
             let entry = if use_general_all { "general_all" } else { "random" };
@@ -151,7 +145,7 @@ pub unsafe fn init_css_hook(ctx: &InlineCtx) {
             };
             if whitelist.contains(&next) { fighter = next };
         }
-        
+
         let num = i - if push { 1 } else { 0 };
         if fighter == "random" && use_general_all {
             new_order.push(ui_chara("general_all", num));

@@ -264,10 +264,20 @@ pub fn install() {
     skyline::patching::Patch::in_text(0x1a2d43c).nop();
     skyline::patching::Patch::in_text(0x1a2d590).nop();
 
-    // Disable Y-button echo fighter swapping on the CSS.
-    skyline::patching::Patch::in_text(0x1a1414c).data(0x14000360u32);
 
     layout::install();
     random::install();
     player_port::install();
+
+    // All of these patches are required to "undo" a stacked CSS
+    // 1. Disable Y-button echo fighter swapping on the CSS.
+    skyline::patching::Patch::in_text(0x1a1414c).data(0x14000360u32);
+
+    // 2. Force the CSS to always use the "separate" fighter list instead of "stacked".
+    // This fixes the echo portraits on the character cards.
+    skyline::patching::Patch::in_text(0x1a20260).data(0x52800028u32);
+
+    // 3. Force the singleton character vector builder (0x1a0a3e0) to always store separate=1
+    // into inner_data+0x258. This fixes the miis.
+    skyline::patching::Patch::in_text(0x1a0a410).data(0x52800028u32);
 }
