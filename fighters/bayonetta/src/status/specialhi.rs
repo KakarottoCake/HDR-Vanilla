@@ -94,7 +94,7 @@ unsafe extern "C" fn special_hi_jump_main_loop(fighter: &mut L2CFighterCommon) -
     }
     fighter.sub_air_check_dive();
     // vanilla land before move ends during fall portion
-    let motion_y: f32 = MotionModule::trans_move_speed(fighter.module_accessor).value[1];
+    let motion_y: f32 = MotionModule::trans_move_speed(fighter.module_accessor).x();
     if motion_y < 0.0 
     && fighter.global_table[globals::SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
         fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into())
