@@ -243,16 +243,29 @@ unsafe fn play_se(
     param_1: *mut u32,
     sfx_hash_id: u64);
 
+// Tells any callers to this function that no echos are available
+#[skyline::hook(offset = 0x1a1fa30)]
+unsafe fn echo_swap_hook(
+    _param_1: i32, _param_2: u64, _param_3: u64, _param_4: u64,
+    _param_5: u64, _param_6: u64, _param_7: u64, _param_8: u64
+) -> u64 {
+    1
+}
+
 pub fn install() {
     skyline::install_hooks!(
         update_player_tag,
         css_advance_sfx_hook,
         css_advance_sfx2_hook,
+        echo_swap_hook,
     );
 
     // Prevent the game from playing any CSS advance sound effects by default
     skyline::patching::Patch::in_text(0x1a2d43c).nop();
     skyline::patching::Patch::in_text(0x1a2d590).nop();
+
+    // Disable Y-button echo fighter swapping on the CSS.
+    skyline::patching::Patch::in_text(0x1a1414c).data(0x14000360u32);
 
     layout::install();
     random::install();
