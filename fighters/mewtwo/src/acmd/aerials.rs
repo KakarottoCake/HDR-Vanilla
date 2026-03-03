@@ -317,7 +317,7 @@ pub fn install(agent: &mut Agent) {
 
     agent.acmd("game_attackairb", game_attackairb, Priority::Low);
 	agent.acmd("effect_attackairb", effect_attackairb, Priority::Low);
-    gent.acmd("game_landingairb", game_landingairb, Priority::Low);
+    agent.acmd("game_landingairb", game_landingairb, Priority::Low);
     agent.acmd("effect_landingairb", effect_landingairhi, Priority::Low);
 
     agent.acmd("game_attackairhi", game_attackairhi, Priority::Low);
