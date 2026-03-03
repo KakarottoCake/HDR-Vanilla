@@ -4,7 +4,7 @@ unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        agent.on_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
     frame(lua_state, 7.0);
     for _ in 0..5 {
@@ -30,7 +30,17 @@ unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 41.0);
     if is_excute(agent) {
-        WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        agent.off_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+    }
+}
+
+unsafe extern "C" fn game_landingairn(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if VarModule::is_flag(agent.battle_object, vars::common::instance::UP_SPECIAL_LAG) {
+        let base = agent.get_param_float("landing_attack_air_frame_n", "");
+        let add = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_hi.landing_attack_air_add");
+        FT_MOTION_RATE(agent, (base + add)/base);
     }
 }
 
@@ -39,22 +49,22 @@ unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 3.0);
     if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        agent.on_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
     frame(lua_state, 6.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 13.0, 84, 96, 0, 43, 4.0, 0.0, 7.2, 6.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 13.0, 84, 96, 0, 43, 5.0, 0.0, 4.2, 9.8, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 13.0, 84, 101, 0, 41, 4.0, 0.0, 7.2, 6.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 13.0, 84, 101, 0, 41, 5.0, 0.0, 4.2, 9.8, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
     }
     frame(lua_state, 7.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 13.0, 84, 96, 0, 43, 4.0, 0.0, 7.2, 7.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 13.0, 84, 96, 0, 43, 5.0, 0.0, 5.0, 10.9, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 13.0, 84, 101, 0, 41, 4.0, 0.0, 7.2, 7.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 13.0, 84, 101, 0, 41, 5.0, 0.0, 5.0, 10.9, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 13.0, 84, 96, 0, 43, 4.0, 0.0, 7.7, 8.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 13.0, 84, 96, 0, 43, 5.0, 0.0, 7.7, 9.8, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 13.0, 84, 101, 0, 41, 4.0, 0.0, 7.7, 8.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 13.0, 84, 101, 0, 41, 5.0, 0.0, 7.7, 9.8, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
     }
     frame(lua_state, 9.0);
     if is_excute(agent) {
@@ -62,7 +72,7 @@ unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 35.0);
     if is_excute(agent) {
-        WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        agent.off_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     } 
 }
 
@@ -89,6 +99,16 @@ unsafe extern "C" fn effect_attackairf(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_landingairf(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if VarModule::is_flag(agent.battle_object, vars::common::instance::UP_SPECIAL_LAG) {
+        let base = agent.get_param_float("landing_attack_air_frame_f", "");
+        let add = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_hi.landing_attack_air_add");
+        FT_MOTION_RATE(agent, (base + add)/base);
+    }
+}
+
 unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -96,31 +116,24 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     MotionModule::set_rate(boma, (12.0 - 1.0) / 7.3);
     frame(lua_state, 3.0);
     if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-        HIT_NO(agent, 12, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 13, *HIT_STATUS_NORMAL);
+        agent.on_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
     frame(lua_state, 12.0);
     MotionModule::set_rate(boma, 1.0);
     frame(lua_state, 13.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("s_tail1"), 13.0, 361, 105, 0, 5, 4.5, 2.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
-        ATTACK(agent, 1, 0, Hash40::new("s_tail5"), 12.0, 361, 95, 0, 5, 4.1, -1.0, -2.0, -1.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
-        ATTACK(agent, 2, 0, Hash40::new("s_tail7"), 11.0, 361, 95, 0, 5, 3.8, 1.0, -1.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
+        ATTACK(agent, 1, 0, Hash40::new("s_tail5"), 12.0, 50, 105, 0, 5, 4.1, -1.0, -2.0, -1.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
+        ATTACK(agent, 2, 0, Hash40::new("s_tail7"), 11.0, 50, 105, 0, 5, 3.8, 1.0, -1.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
     }
     frame(lua_state, 18.0);
-    MotionModule::set_rate(boma, (37.0 - 18.0) / 19.0);//32
+    MotionModule::set_rate(boma, (37.0 - 18.0) / 19.0); // 32
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
-    frame(lua_state, 20.5);//3f after clear
-    if is_excute(agent) {
-        HIT_NO(agent, 12, *HIT_STATUS_OFF);
-        HIT_NO(agent, 13, *HIT_STATUS_OFF);
-    }
     frame(lua_state, 31.0);
     if is_excute(agent) {
-        WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        agent.off_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
 }
 
@@ -129,100 +142,70 @@ unsafe extern "C" fn effect_attackairb(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 13.0);
     if is_excute(agent) {
-        let color = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR);
-        match color {
-            0 => EFFECT_FOLLOW_FLIP(agent, Hash40::new("mewtwo_tail_attack_a_01"), Hash40::new("mewtwo_tail_attack_a_01"), Hash40::new("top"), 0, 13, -5.8, 180, 45, 90, 1.05, true, *EF_FLIP_YZ),
-            1 => EFFECT_FOLLOW_FLIP(agent, Hash40::new("mewtwo_tail_attack_a_02"), Hash40::new("mewtwo_tail_attack_a_02"), Hash40::new("top"), 0, 13, -5.8, 180, 45, 90, 1.05, true, *EF_FLIP_YZ),
-            2 => EFFECT_FOLLOW_FLIP(agent, Hash40::new("mewtwo_tail_attack_a_03"), Hash40::new("mewtwo_tail_attack_a_03"), Hash40::new("top"), 0, 13, -5.8, 180, 45, 90, 1.05, true, *EF_FLIP_YZ),
-            3 => EFFECT_FOLLOW_FLIP(agent, Hash40::new("mewtwo_tail_attack_a_04"), Hash40::new("mewtwo_tail_attack_a_04"), Hash40::new("top"), 0, 13, -5.8, 180, 45, 90, 1.05, true, *EF_FLIP_YZ),
-            4 => EFFECT_FOLLOW_FLIP(agent, Hash40::new("mewtwo_tail_attack_a_05"), Hash40::new("mewtwo_tail_attack_a_05"), Hash40::new("top"), 0, 13, -5.8, 180, 45, 90, 1.05, true, *EF_FLIP_YZ),
-            5 => EFFECT_FOLLOW_FLIP(agent, Hash40::new("mewtwo_tail_attack_a_06"), Hash40::new("mewtwo_tail_attack_a_06"), Hash40::new("top"), 0, 13, -5.8, 180, 45, 90, 1.05, true, *EF_FLIP_YZ),
-            6 => EFFECT_FOLLOW_FLIP(agent, Hash40::new("mewtwo_tail_attack_a_07"), Hash40::new("mewtwo_tail_attack_a_07"), Hash40::new("top"), 0, 13, -5.8, 180, 45, 90, 1.05, true, *EF_FLIP_YZ),
-            7 => EFFECT_FOLLOW_FLIP(agent, Hash40::new("mewtwo_tail_attack_a_08"), Hash40::new("mewtwo_tail_attack_a_08"), Hash40::new("top"), 0, 13, -5.8, 180, 45, 90, 1.05, true, *EF_FLIP_YZ),
-            _ => EFFECT_FOLLOW_FLIP(agent, Hash40::new("mewtwo_tail_attack_a_01"), Hash40::new("mewtwo_tail_attack_a_01"), Hash40::new("top"), 0, 13, -5.8, 180, 45, 90, 1.05, true, *EF_FLIP_YZ),
-        };
+        EFFECT_FOLLOW_FLIP(agent, Hash40::new(GET_COLOR_EFF_NAME(boma)), Hash40::new(GET_COLOR_EFF_NAME(boma)), Hash40::new("top"), 0, 13, -5.8, 180, 45, 90, 1.05, true, *EF_FLIP_YZ);
+        LAST_EFFECT_SET_RATE(agent, 1.15);
     }
     frame(lua_state, 18.5);
     if is_excute(agent) {
-        EffectModule::kill_kind(boma, Hash40::new("mewtwo_tail_attack_a_01"), true, true);
-        EffectModule::kill_kind(boma, Hash40::new("mewtwo_tail_attack_a_02"), true, true);
-        EffectModule::kill_kind(boma, Hash40::new("mewtwo_tail_attack_a_03"), true, true);
-        EffectModule::kill_kind(boma, Hash40::new("mewtwo_tail_attack_a_04"), true, true);
-        EffectModule::kill_kind(boma, Hash40::new("mewtwo_tail_attack_a_05"), true, true);
-        EffectModule::kill_kind(boma, Hash40::new("mewtwo_tail_attack_a_06"), true, true);
-        EffectModule::kill_kind(boma, Hash40::new("mewtwo_tail_attack_a_07"), true, true);
-        EffectModule::kill_kind(boma, Hash40::new("mewtwo_tail_attack_a_08"), true, true);
+        EffectModule::kill_kind(boma, Hash40::new(GET_COLOR_EFF_NAME(boma)), true, true);
+    }
+}
+
+unsafe extern "C" fn game_landingairb(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if VarModule::is_flag(agent.battle_object, vars::common::instance::UP_SPECIAL_LAG) {
+        let base = agent.get_param_float("landing_attack_air_frame_b", "");
+        let add = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_hi.landing_attack_air_add");
+        FT_MOTION_RATE(agent, (base + add)/base);
     }
 }
 
 unsafe extern "C" fn game_attackairhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 1.0);
-    MotionModule::set_rate(boma, (9.0 - 1.0) / 7.0);
     frame(lua_state, 3.0);
     if is_excute(agent) {
-        HIT_NO(agent, 12, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 13, *HIT_STATUS_NORMAL);
-        WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        agent.on_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
-    frame(lua_state, 9.0);
-    MotionModule::set_rate(boma, 1.0);
+    frame(lua_state, 8.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("s_tail2"), 10.0, 55, 100, 0, 0, 4.5, 1.0, 1.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
-        ATTACK(agent, 1, 0, Hash40::new("s_tail5"), 11.0, 55, 100, 0, 0, 4.1, 0.3, 2.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
-        ATTACK(agent, 2, 0, Hash40::new("s_tail7"), 12.0, 55, 114, 0, 0, 3.5, 1.0, 1.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
+        ATTACK(agent, 0, 0, Hash40::new("s_tail1"), 10.0, 50, 105, 0, 0, 4.5, 2.0, 1.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
+        ATTACK(agent, 1, 0, Hash40::new("s_tail5"), 11.0, 50, 105, 0, 0, 4.1, -1.0, 2.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
+        ATTACK(agent, 2, 0, Hash40::new("s_tail7"), 12.0, 50, 111, 0, 0, 3.5, 1.0, 1.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
     }
-    frame(lua_state, 11.0);
+    frame(lua_state, 10.0);
     if is_excute (agent) {
-        ATTACK(agent, 0, 0, Hash40::new("s_tail2"), 7.0, 65, 100, 0, 0, 4.5, 1.0, 1.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
-        ATTACK(agent, 1, 0, Hash40::new("s_tail5"), 8.0, 65, 100, 0, 0, 4.1, 0.3, 2.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
-        ATTACK(agent, 2, 0, Hash40::new("s_tail7"), 9.0, 65, 100, 0, 0, 3.5, 1.0, 1.2, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
+        ATTACK(agent, 0, 0, Hash40::new("s_tail1"), 7.0, 66, 111, 0, 0, 4.5, 2.0, 1.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
+        ATTACK(agent, 1, 0, Hash40::new("s_tail5"), 8.0, 66, 111, 0, 0, 4.1, -1.0, 2.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
+        ATTACK(agent, 2, 0, Hash40::new("s_tail7"), 9.0, 66, 111, 0, 0, 3.5, 1.0, 1.2, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_TAIL);
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
-    frame(lua_state, 16.0);
+    frame(lua_state, 17.0);
+    MotionModule::set_rate(boma, (34.0 - 17.0) / 15.0);
+    frame(lua_state, 30.0); // 29 ingame still
     if is_excute(agent) {
-        HIT_NO(agent, 12, *HIT_STATUS_OFF);
-        HIT_NO(agent, 13, *HIT_STATUS_OFF);
+        agent.off_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
-    frame(lua_state, 30.0);
-    if is_excute(agent) {
-        WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-    }
+    frame(lua_state, 34.0);
+    MotionModule::set_rate(boma, 1.0); // 32
 }
 
 unsafe extern "C" fn effect_attackairhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 9.0);
+    frame(lua_state, 8.0);
     if is_excute(agent) {
-        let color = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR);
-        match color {
-            0 => EFFECT_FOLLOW_FLIP(agent, Hash40::new("mewtwo_tail_attack_a_01"), Hash40::new("mewtwo_tail_attack_a_01"), Hash40::new("top"), -1.5, 9.1, -2.1, 0, 7, 90, 1.12, true, *EF_FLIP_YZ),
-            1 => EFFECT_FOLLOW_FLIP(agent, Hash40::new("mewtwo_tail_attack_a_02"), Hash40::new("mewtwo_tail_attack_a_02"), Hash40::new("top"), -1.5, 9.1, -2.1, 0, 7, 90, 1.12, true, *EF_FLIP_YZ),
-            2 => EFFECT_FOLLOW_FLIP(agent, Hash40::new("mewtwo_tail_attack_a_03"), Hash40::new("mewtwo_tail_attack_a_03"), Hash40::new("top"), -1.5, 9.1, -2.1, 0, 7, 90, 1.12, true, *EF_FLIP_YZ),
-            3 => EFFECT_FOLLOW_FLIP(agent, Hash40::new("mewtwo_tail_attack_a_04"), Hash40::new("mewtwo_tail_attack_a_04"), Hash40::new("top"), -1.5, 9.1, -2.1, 0, 7, 90, 1.12, true, *EF_FLIP_YZ),
-            4 => EFFECT_FOLLOW_FLIP(agent, Hash40::new("mewtwo_tail_attack_a_05"), Hash40::new("mewtwo_tail_attack_a_05"), Hash40::new("top"), -1.5, 9.1, -2.1, 0, 7, 90, 1.12, true, *EF_FLIP_YZ),
-            5 => EFFECT_FOLLOW_FLIP(agent, Hash40::new("mewtwo_tail_attack_a_06"), Hash40::new("mewtwo_tail_attack_a_06"), Hash40::new("top"), -1.5, 9.1, -2.1, 0, 7, 90, 1.12, true, *EF_FLIP_YZ),
-            6 => EFFECT_FOLLOW_FLIP(agent, Hash40::new("mewtwo_tail_attack_a_07"), Hash40::new("mewtwo_tail_attack_a_07"), Hash40::new("top"), -1.5, 9.1, -2.1, 0, 7, 90, 1.12, true, *EF_FLIP_YZ),
-            7 => EFFECT_FOLLOW_FLIP(agent, Hash40::new("mewtwo_tail_attack_a_08"), Hash40::new("mewtwo_tail_attack_a_08"), Hash40::new("top"), -1.5, 9.1, -2.1, 0, 7, 90, 1.12, true, *EF_FLIP_YZ),
-            _ => EFFECT_FOLLOW_FLIP(agent, Hash40::new("mewtwo_tail_attack_a_01"), Hash40::new("mewtwo_tail_attack_a_01"), Hash40::new("top"), -1.5, 9.1, -2.1, 0, 7, 90, 1.12, true, *EF_FLIP_YZ),
-        };
+        EFFECT_FOLLOW(agent, Hash40::new(GET_COLOR_EFF_NAME(boma)), Hash40::new("top"), -1.5, 8.4, -1.9, 0, 20, 90.0, 1.21, true);
         LAST_EFFECT_SET_RATE(agent, 1.27);
+        LAST_EFFECT_SET_SCALE_W(agent, 1.28, 1.28, 1.17);
     }
     frame(lua_state, 15.0);
     if is_excute(agent) {
-        EffectModule::kill_kind(boma, Hash40::new("mewtwo_tail_attack_a_01"), true, true);
-        EffectModule::kill_kind(boma, Hash40::new("mewtwo_tail_attack_a_02"), true, true);
-        EffectModule::kill_kind(boma, Hash40::new("mewtwo_tail_attack_a_03"), true, true);
-        EffectModule::kill_kind(boma, Hash40::new("mewtwo_tail_attack_a_04"), true, true);
-        EffectModule::kill_kind(boma, Hash40::new("mewtwo_tail_attack_a_05"), true, true);
-        EffectModule::kill_kind(boma, Hash40::new("mewtwo_tail_attack_a_06"), true, true);
-        EffectModule::kill_kind(boma, Hash40::new("mewtwo_tail_attack_a_07"), true, true);
-        EffectModule::kill_kind(boma, Hash40::new("mewtwo_tail_attack_a_08"), true, true);
+        EffectModule::kill_kind(boma, Hash40::new(GET_COLOR_EFF_NAME(boma)), true, true);
     }
 }
 
@@ -239,6 +222,26 @@ unsafe extern "C" fn expression_attackairhi(agent: &mut L2CAgentBase) {
     }
 }
 
+
+unsafe extern "C" fn game_landingairhi(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if VarModule::is_flag(agent.battle_object, vars::common::instance::UP_SPECIAL_LAG) {
+        let base = agent.get_param_float("landing_attack_air_frame_hi", "");
+        let add = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_hi.landing_attack_air_add");
+        FT_MOTION_RATE(agent, (base + add)/base);
+    }
+}
+
+unsafe extern "C" fn effect_landingairhi(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        EffectModule::kill_kind(boma, Hash40::new(GET_COLOR_EFF_NAME(boma)), true, true);
+    }
+}
+
 unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -246,36 +249,85 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     MotionModule::set_rate(boma, (19.0 - 1.0) / 14.0);
     frame(lua_state, 4.0);
     if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        agent.on_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
     frame(lua_state, 19.0);
     MotionModule::set_rate(boma, 1.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 16.0, 270, 62, 0, 11, 5.5, 0.0, -7.7, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 13.0, 70, 105, 0, 20, 7.5, 0.0, -5.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        ATTACK(agent, 0, 0, Hash40::new("kneel"), 13.0, 70, 107, 0, 17, 3.75, -0.75, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        ATTACK(agent, 2, 0, Hash40::new("footl"), 13.0, 70, 107, 0, 17, 4.0, -1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        ATTACK(agent, 1, 0, Hash40::new("toel"), 16.0, 270, 61, 0, 11, 4.25, 0.75, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
     }
-    frame(lua_state, 23.0);
+    frame(lua_state, 24.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
     frame(lua_state, 46.0);
     if is_excute(agent) {
-        WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        agent.off_flag(*FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+    }
+}
+
+unsafe extern "C" fn effect_attackairlw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 4.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, -8, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+        LAST_EFFECT_SET_RATE(agent, 1.8);
+    }
+    frame(lua_state, 18.0);
+    if is_excute(agent) {
+        EFFECT_FLW_POS(agent, Hash40::new("mewtwo_pk_attack_e"), Hash40::new("toel"), 1.25, -0.75, 0, 0, 0, 0, 0.75, true);
+        EffectModule::enable_sync_init_pos_last(boma);
+        LAST_EFFECT_SET_RATE(agent, 1.25);
+    }
+    frame(lua_state, 27.0);
+    if is_excute(agent) {
+        EffectModule::kill_kind(boma, Hash40::new("mewtwo_pk_attack_e"), true, true);
+    }
+}
+
+unsafe extern "C" fn effect_landingairlw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        EffectModule::kill_kind(boma, Hash40::new("mewtwo_pk_attack_e"), true, true);
+    }
+}
+
+unsafe extern "C" fn game_landingairlw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if VarModule::is_flag(agent.battle_object, vars::common::instance::UP_SPECIAL_LAG) {
+        let base = agent.get_param_float("landing_attack_air_frame_lw", "");
+        let add = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_hi.landing_attack_air_add");
+        FT_MOTION_RATE(agent, (base + add)/base);
     }
 }
 
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_attackairn", game_attackairn, Priority::Low);
+    agent.acmd("game_landingairn", game_landingairn, Priority::Low);
 
     agent.acmd("game_attackairf", game_attackairf, Priority::Low);
     agent.acmd("effect_attackairf", effect_attackairf, Priority::Low);
+    agent.acmd("game_landingairf", game_landingairf, Priority::Low);
 
     agent.acmd("game_attackairb", game_attackairb, Priority::Low);
 	agent.acmd("effect_attackairb", effect_attackairb, Priority::Low);
+    agent.acmd("game_landingairb", game_landingairb, Priority::Low);
+    agent.acmd("effect_landingairb", effect_landingairhi, Priority::Low);
 
     agent.acmd("game_attackairhi", game_attackairhi, Priority::Low);
 	agent.acmd("effect_attackairhi", effect_attackairhi, Priority::Low);
     agent.acmd("expression_attackairhi", expression_attackairhi, Priority::Low);
+    agent.acmd("game_landingairhi", game_landingairhi, Priority::Low);
+    agent.acmd("effect_landingairhi", effect_landingairhi, Priority::Low);
     
     agent.acmd("game_attackairlw", game_attackairlw, Priority::Low);
+    agent.acmd("effect_attackairlw", effect_attackairlw, Priority::Low);
+    agent.acmd("game_landingairlw", game_landingairlw, Priority::Low);
+    agent.acmd("effect_landingairlw", effect_landingairlw, Priority::Low);
 }

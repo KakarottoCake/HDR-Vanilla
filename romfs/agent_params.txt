@@ -60,3 +60,4 @@ peach: fighter/peach/param/hdr.xml
 mewtwo: fighter/mewtwo/param/hdr.xml
 reflet: fighter/reflet/param/hdr.xml
 metaknight: fighter/metaknight/param/hdr.xml
+palutena: fighter/palutena/param/hdr.xml
