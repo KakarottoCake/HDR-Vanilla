@@ -11,6 +11,7 @@ use smash2::{
 };
 use serde::Deserialize;
 use utils::modules::TourneyConfig;
+use crate::NEW_CSS_SFX;
 
 mod layout;
 mod random;
@@ -218,10 +219,40 @@ unsafe fn update_player_tag(arg1: u64, tag_index: *const u8) {
     call_original!(arg1, tag_index);
 }
 
+#[skyline::hook(offset = 0x1a2d440, inline)]
+unsafe fn css_advance_sfx_hook(ctx: &mut skyline::hooks::InlineCtx) {
+    // 0x1d581ede79 = hash40("se_common_spirits_reduction_s") // originally empty, replaced with se_campaign_all_encount_fighter
+    // 0x13d3b19adc = hash40("se_system_r2f_fixed") // original sound
+    let param_1 = ctx.registers[0].x() as *mut u32;
+    let sfx = if NEW_CSS_SFX { 0x1d581ede79 as u64 } else { 0x13d3b19adc as u64 };
+    play_se(param_1, sfx);
+}
+
+#[skyline::hook(offset = 0x1a2d594, inline)]
+unsafe fn css_advance_sfx2_hook(ctx: &mut skyline::hooks::InlineCtx) {
+    if !NEW_CSS_SFX {
+        // 0x17a3061361 = hash40("se_audience_suddendeath")
+        let sfx = 0x17a3061361 as u64;
+        let param_1 = ctx.registers[0].x() as *mut u32;
+        play_se(param_1, sfx);
+    }
+}
+
+#[skyline::from_offset(0x2407280)]
+unsafe fn play_se(
+    param_1: *mut u32,
+    sfx_hash_id: u64);
+
 pub fn install() {
     skyline::install_hooks!(
-        update_player_tag
+        update_player_tag,
+        css_advance_sfx_hook,
+        css_advance_sfx2_hook,
     );
+
+    // Prevent the game from playing any CSS advance sound effects by default
+    skyline::patching::Patch::in_text(0x1a2d43c).nop();
+    skyline::patching::Patch::in_text(0x1a2d590).nop();
 
     layout::install();
     random::install();

@@ -12,7 +12,7 @@ unsafe extern "C" fn game_catch(agent: &mut L2CAgentBase) {
     frame(lua_state, 8.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
-        CATCH(agent, 0, Hash40::new("top"), 4.5, 0.0, 8.0, 4.0, Some(0.0), Some(8.0), Some(17.0), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        CATCH(agent, 0, Hash40::new("top"), 4.5, 0.0, 8.0, 7.0, Some(0.0), Some(8.0), Some(17.0), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     game_CaptureCutCommon(agent);
     wait(lua_state, 3.0);
