@@ -75,17 +75,14 @@ pub unsafe fn status_end_SquatWait(fighter: &mut L2CFighterCommon) -> L2CValue {
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_SquatRv_Main)]
 pub unsafe fn status_squatrv_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if StatusModule::is_changing(fighter.module_accessor) {
-        // Prevent dashback from being buffered from crouch
-        ControlModule::reset_flick_x(fighter.module_accessor);
-    }
-    else {
+    if !StatusModule::is_changing(fighter.module_accessor) {
         // Dashback out of uncrouch
         let lr = PostureModule::lr(fighter.module_accessor);
         let dashback_stick_x = ParamModule::get_float(fighter.object(), ParamType::Common, "dashback_stick_x");
         let dash_flick_x = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("dash_flick_x"));
         let is_backdash_input =
-            fighter.global_table[STICK_X].get_f32() * lr <= dashback_stick_x
+            fighter.prev_stick_x() * lr > dashback_stick_x
+            && fighter.global_table[STICK_X].get_f32() * lr <= dashback_stick_x
             && fighter.global_table[FLICK_X].get_i32() <= dash_flick_x;
         if is_backdash_input {
             VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_SMASH_TURN);
