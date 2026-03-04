@@ -354,10 +354,10 @@ pub unsafe extern "C" fn rampage_mode(fighter: &mut L2CFighterCommon) {
     let scale_min = 1.0;
     let scale_max = 5.0;
     let dmg_min = 0.0;
-    let dmg_max = 300.0;
+    let dmg_max = 400.0;
     let dmg = VarModule::get_float(fighter.battle_object, vars::common::instance::DAMAGE_DEALT_THIS_STOCK);
     let ratio = ((dmg - dmg_min) / (dmg_max - dmg_min));
-    let scale = util::nlerp(scale_min, scale_max, 3.0, ratio);
+    let scale = util::nlerp(scale_min, scale_max, 2.0, ratio);
     PostureModule::set_scale(fighter.module_accessor, scale, false);
 }
 
