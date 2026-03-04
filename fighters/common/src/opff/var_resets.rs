@@ -9,6 +9,7 @@ use smash::app::lua_bind::*;
 use smash::lib::lua_const::*;
 use smash::hash40;
 
+// TODO: this has got to be expensive?
 unsafe fn var_resets(boma: &mut BattleObjectModuleAccessor) {
     let death_statuses = &[*FIGHTER_STATUS_KIND_DEAD,
                                         *FIGHTER_STATUS_KIND_REBIRTH,
@@ -105,6 +106,11 @@ unsafe fn var_resets(boma: &mut BattleObjectModuleAccessor) {
     // Successive aerial jump timer for multijump characters
     if VarModule::get_int(boma.object(), vars::common::instance::FLY_NEXT_FRAME) > 0 {
         VarModule::dec_int(boma.object(), vars::common::instance::FLY_NEXT_FRAME);
+    }
+
+    // Reset total damage dealt this stock
+    if boma.is_status_one_of(death_statuses) {
+        VarModule::set_float(boma.object(), vars::common::instance::DAMAGE_DEALT_THIS_STOCK, 0.0);
     }
 }
 

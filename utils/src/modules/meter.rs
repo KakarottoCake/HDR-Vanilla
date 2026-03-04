@@ -438,6 +438,10 @@ unsafe fn fighter_handle_damage_hook(fighter: *mut smash::app::BattleObject, arg
         if let Some(object_id) = crate::util::get_active_battle_object_id_from_entry_id(x) {
             let object = crate::util::get_battle_object_from_id(object_id);
             if !object.is_null() && super::is_hdr_object((*object).vtable as _) {
+
+                let damage_dealt_this_stock = VarModule::get_float(object, vars::common::instance::DAMAGE_DEALT_THIS_STOCK);
+                VarModule::set_float(object, vars::common::instance::DAMAGE_DEALT_THIS_STOCK, damage_dealt_this_stock + damage_received);
+
                 VarModule::set_float(object, vars::common::instance::LAST_ATTACK_DAMAGE_DEALT, damage_received);
                 VarModule::set_int(object, vars::common::instance::LAST_ATTACK_RECEIVER_ENTRY_ID, (*fighter).battle_object_id as i32);
                 MeterModule::signal_hit(object);
