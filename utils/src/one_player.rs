@@ -1,28 +1,27 @@
 use skyline::hooks::InlineCtx;
 use smash2::app::FighterManager;
+use smash::{app::{BattleObject, lua_bind::{PostureModule, StatusModule}}, lib::lua_const::{FIGHTER_STATUS_KIND_REBIRTH,FIGHTER_STATUS_KIND_DEAD}};
 use std::sync::atomic::{AtomicBool, Ordering};
 use utils_dyn::util::MATCH_EXITING;
 
 pub static IS_RULE_TIME: AtomicBool = AtomicBool::new(false);
+pub static SPAWN_POS_CAPTURED: AtomicBool = AtomicBool::new(false);
 
-#[repr(C)]
-struct PaneResult {
-    data: [u64; 4],
-}
+static mut SPAWN_POS: smash::phx::Vector3f = smash::phx::Vector3f { x: 0.0, y: 0.0, z: 0.0 };
 
-// Hide timer for 1P matches
-unsafe fn hide_timer(result: &PaneResult, name: *const u8) {
-    let Some(fighter_manager) = FighterManager::instance() else {
-        return;
-    };
-
-    let len = skyline::libc::strlen(name);
-    let name_str = std::str::from_utf8_unchecked(std::slice::from_raw_parts(name, len));
-    if name_str != "set_rep_time_pil_s" {
+#[skyline::hook(offset = 0x1b7b814, inline)]
+unsafe fn match_load(ctx: &mut InlineCtx) {
+    if !one_player_entry() {
         return;
     }
 
-    let internal = *(result.data[1] as *const u64);
+    let result_ptr = ctx.registers[22].x() as *const u64;
+    let pane = *result_ptr.add(1);
+    if pane == 0 {
+        return;
+    }
+
+    let internal = *(pane as *const u64);
     if internal == 0 {
         return;
     }
@@ -34,23 +33,23 @@ unsafe fn hide_timer(result: &PaneResult, name: *const u8) {
 
     // hide timer
     *(parent as *mut u8).add(0x58) &= 0xFE;
-}
 
-// Hide timer for 1P matches
-#[skyline::hook(offset = 0x3776360)]
-unsafe fn match_load(layout_view: u64, name: *const u8) -> PaneResult {
-    let result = call_original!(layout_view, name);
-    if result.data[1] == 0 || !one_player_entry() {
-        return result;
+    // Capture the player's spawn position while still in the loading phase
+    if !SPAWN_POS_CAPTURED.load(Ordering::Relaxed) {
+        use smash::app::lua_bind::*;
+        if let Some(object) = crate::util::get_battle_object_from_entry_id(0) {
+            let object = &*object;
+            SPAWN_POS.x = PostureModule::pos_x(object.module_accessor);
+            SPAWN_POS.y = PostureModule::pos_y(object.module_accessor);
+            SPAWN_POS.z = PostureModule::pos_z(object.module_accessor);
+            SPAWN_POS_CAPTURED.store(true, Ordering::Relaxed);
+        }
     }
-
-    hide_timer(&result, name);
-    result
 }
 
 // Set the match timer to 99 minutes every frame in 1P mode so it never expires.
 #[skyline::hook(offset = 0x15812b8, inline)]
-unsafe fn set_infinite_time(ctx: &mut InlineCtx) {
+unsafe fn once_per_frame(ctx: &mut InlineCtx) {
     if !one_player_entry() {
         return;
     }
@@ -98,31 +97,43 @@ unsafe fn bypass_match_end_sequence(param_1: u64) {
 // Also forces respawn at center stage when the fighter dies.
 #[skyline::hook(offset = 0x14f9420)]
 unsafe fn match_over_reader(param_1: u64) -> u32 {
-    if MATCH_EXITING.load(Ordering::Relaxed) || !one_player_entry() || IS_RULE_TIME.load(Ordering::Relaxed) {
+    if MATCH_EXITING.load(Ordering::Relaxed) || !one_player_entry() {
         return call_original!(param_1);
+    }
+
+    if IS_RULE_TIME.load(Ordering::Relaxed) {
+        return 0;
     }
 
     // Force respawn in stock mode if fighter is stuck in dead status
     // Not needed in timed mode because the match is technically never "over"
-    use smash::app::lua_bind::*;
-    use smash::lib::lua_const::*;
     if let Some(object) = crate::util::get_battle_object_from_entry_id(0) {
-        let object = &mut *object;
-        let status = StatusModule::status_kind(object.module_accessor);
+        let boma = &mut *object;
+        let status = StatusModule::status_kind(boma.module_accessor);
         if status == *FIGHTER_STATUS_KIND_DEAD {
-            // This is an estimation of a good angel platform height
-            // Might not be great for certain stages, didn't test all of them
-            let pos = smash::phx::Vector3f {
-                x: 0.0,
-                y: 75.0,
-                z: 0.0,
-            };
-            PostureModule::set_pos(object.module_accessor, &pos);
-            StatusModule::change_status_force(object.module_accessor, *FIGHTER_STATUS_KIND_REBIRTH, true);
+            respawn_fighter(boma);
         }
     }
 
     return 0;
+}
+
+unsafe fn respawn_fighter(boma: &mut BattleObject) {
+    let pos = if SPAWN_POS_CAPTURED.load(Ordering::Relaxed) {
+        smash::phx::Vector3f {
+            x: SPAWN_POS.x,
+            y: SPAWN_POS.y,
+            z: SPAWN_POS.z,
+        }
+    } else {
+        smash::phx::Vector3f {
+            x: 0.0,
+            y: 75.0,
+            z: 0.0,
+        }
+    };
+    PostureModule::set_pos(boma.module_accessor, &pos);
+    StatusModule::change_status_force(boma.module_accessor, *FIGHTER_STATUS_KIND_REBIRTH, true);
 }
 
 fn one_player_entry() -> bool {
@@ -137,7 +148,7 @@ pub fn install() {
         match_over_reader,
         bypass_match_end_sequence,
         prevent_match_end_transition,
-        set_infinite_time,
+        once_per_frame,
         match_load,
     );
 }
