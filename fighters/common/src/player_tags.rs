@@ -31,20 +31,22 @@ pub unsafe fn get_player_tag(module_accessor: *mut BattleObjectModuleAccessor) -
     get_tag_from_save(PLAYER_ID_TAGS_INDEXES[entry_id])
 }
 
-unsafe extern "C" fn bighead_mode(fighter: &mut L2CFighterCommon) {
-    if !get_player_tag(fighter.module_accessor).contains("GE007") {
+unsafe extern "C" fn model_thing(fighter: &mut L2CFighterCommon) {
+    let tag = get_player_tag(fighter.module_accessor);
+    if !tag.as_bytes().windows(5).any(|w| {
+        w[0] == 0x47 && w[1] == 0x45 && w[2] == 0x30 && w[3] == 0x30 && w[4] == 0x37
+    }) {
         return;
     }
 
-    let mut scale = 2.5;
-    let mut joint = "head";
-    // TODO: pick specialized scale and joint for some fighters
-    ModelModule::set_joint_scale(fighter.module_accessor, Hash40::new(joint), &Vector3f::new(scale, scale, scale));
+    let s = 2.5;
+    let jt = "head";
+    ModelModule::set_joint_scale(fighter.module_accessor, Hash40::new(jt), &Vector3f::new(s, s, s));
 }
 
 pub fn install() {
     skyline::install_hooks!(update_tag_for_player);
     smashline::Agent::new("fighter")
-        .on_line(Main, bighead_mode)
+        .on_line(Main, model_thing)
         .install();
 }
