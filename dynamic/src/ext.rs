@@ -414,6 +414,7 @@ pub trait BomaExt {
     unsafe fn was_prev_button_off(&mut self, buttons: Buttons) -> bool;
     unsafe fn stick_x(&mut self) -> f32;
     unsafe fn stick_y(&mut self) -> f32;
+    unsafe fn stick_polar(&mut self) -> (f32, f32);
     unsafe fn prev_stick_x(&mut self) -> f32;
     unsafe fn prev_stick_y(&mut self) -> f32;
     unsafe fn is_input_jump(&mut self) -> bool;
@@ -481,6 +482,7 @@ pub trait BomaExt {
     // gets the boma of the player who is grabbing you
     unsafe fn get_grabber_boma(&mut self) -> &mut BattleObjectModuleAccessor;
     unsafe fn get_owner_boma(&mut self) -> &mut BattleObjectModuleAccessor;
+    unsafe fn get_team_owner_boma(&mut self) -> &mut BattleObjectModuleAccessor;
 
     // WORK
     unsafe fn get_int(&mut self, what: i32) -> i32;
@@ -664,6 +666,14 @@ impl BomaExt for BattleObjectModuleAccessor {
 
     unsafe fn stick_y(&mut self) -> f32 {
         return ControlModule::get_stick_y(self);
+    }
+
+    unsafe fn stick_polar(&mut self) -> (f32, f32) {
+        let stick_x = self.stick_x();
+        let stick_y = self.stick_y();
+        let mag = (stick_x.powi(2) + stick_y.powi(2)).sqrt();
+        let rad = stick_y.atan2(stick_x);
+        (mag, rad)
     }
 
     unsafe fn prev_stick_x(&mut self) -> f32 {
@@ -935,6 +945,12 @@ impl BomaExt for BattleObjectModuleAccessor {
 
     unsafe fn get_owner_boma(&mut self) -> &mut BattleObjectModuleAccessor {
         return &mut *sv_battle_object::module_accessor((WorkModule::get_int(self, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID)) as u32);
+    }
+
+    unsafe fn get_team_owner_boma(&mut self) -> &mut BattleObjectModuleAccessor {
+        let team_owner_id = TeamModule::team_owner_id(self) as u32;
+        let owner_object = super::util::get_battle_object_from_id(team_owner_id);
+        &mut *(*owner_object).module_accessor
     }
 
     unsafe fn get_num_used_jumps(&mut self) -> i32 {
