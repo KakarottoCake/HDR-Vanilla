@@ -402,6 +402,7 @@ pub trait BomaExt {
     // INPUTS
     unsafe fn clear_commands<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T);
     unsafe fn get_command_life<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T) -> u8;
+    unsafe fn set_command_life<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T, life: u8);
     unsafe fn is_cat_flag<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T) -> bool;
     unsafe fn is_cat_flag_all<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T) -> bool;
     unsafe fn is_pad_flag(&mut self, pad_flag: PadFlag) -> bool;
@@ -594,6 +595,19 @@ impl BomaExt for BattleObjectModuleAccessor {
         };
 
         return crate::modules::InputModule::get_command_life(self.object(), cat, bits);
+    }
+
+    unsafe fn set_command_life<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T, life: u8) {
+        let cat = fighter_pad_cmd_flag.into();
+        let (cat, bits) = match cat {
+            CommandCat::Cat1(cat) => (0, cat.bits()),
+            CommandCat::Cat2(cat) => (1, cat.bits()),
+            CommandCat::Cat3(cat) => (2, cat.bits()),
+            CommandCat::Cat4(cat) => (3, cat.bits()),
+            CommandCat::CatHdr(cat) => (4, cat.bits()),
+        };
+
+        crate::modules::InputModule::set_command_life(self.object(), cat, bits, life);
     }
 
     unsafe fn is_cat_flag<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T) -> bool {
