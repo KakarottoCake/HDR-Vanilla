@@ -174,6 +174,11 @@
   <float hash="furafura_frame">150</float>
   <float hash="furafura_clatter_frame">0</float>
   <float hash="damage_song_frame_bonus_damage">0.5</float>
+  <float hash="damage_bind_frame">60</float>
+  <float hash="damage_bind_frame_bonus_rank">0</float>
+  <float hash="damage_bind_frame_bonus_handi">0</float>
+  <float hash="damage_bind_clatter_frame">3</float>
+  <int hash="invalid_bind_frame">45</int>
   <float hash="bury_jump_y_speed_mul">1.15</float>
   <float hash="kirby_swallowedthrown_clatter_recover">1.8</float>
   <float hash="mewtwo_thrown_reaction_frame_mul">1</float>

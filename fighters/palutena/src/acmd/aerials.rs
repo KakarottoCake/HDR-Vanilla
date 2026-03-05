@@ -46,6 +46,16 @@ unsafe extern "C" fn game_attackairn(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_landingairn(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if VarModule::is_flag(agent.battle_object, vars::common::instance::UP_SPECIAL_LAG) {
+        let base = agent.get_param_float("landing_attack_air_frame_n", "");
+        let add = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_hi.landing_attack_air_add");
+        FT_MOTION_RATE(agent, (base + add)/base);
+    }
+}
+
 unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -106,6 +116,16 @@ unsafe extern "C" fn effect_attackairf(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_landingairf(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if VarModule::is_flag(agent.battle_object, vars::common::instance::UP_SPECIAL_LAG) {
+        let base = agent.get_param_float("landing_attack_air_frame_f", "");
+        let add = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_hi.landing_attack_air_add");
+        FT_MOTION_RATE(agent, (base + add)/base);
+    }
+}
+
 unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -158,6 +178,16 @@ unsafe extern "C" fn effect_attackairb(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("palutena_wand_light_trace"), false, false);
         EFFECT_OFF_KIND(agent, Hash40::new("palutena_wand_light2"), false, false);
+    }
+}
+
+unsafe extern "C" fn game_landingairb(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if VarModule::is_flag(agent.battle_object, vars::common::instance::UP_SPECIAL_LAG) {
+        let base = agent.get_param_float("landing_attack_air_frame_b", "");
+        let add = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_hi.landing_attack_air_add");
+        FT_MOTION_RATE(agent, (base + add)/base);
     }
 }
 
@@ -221,6 +251,16 @@ unsafe extern "C" fn effect_attackairhi(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("palutena_wand_light_trace"), false, false);
         EFFECT_OFF_KIND(agent, Hash40::new("palutena_wand_light2"), false, false);
+    }
+}
+
+unsafe extern "C" fn game_landingairhi(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if VarModule::is_flag(agent.battle_object, vars::common::instance::UP_SPECIAL_LAG) {
+        let base = agent.get_param_float("landing_attack_air_frame_hi", "");
+        let add = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_hi.landing_attack_air_add");
+        FT_MOTION_RATE(agent, (base + add)/base);
     }
 }
 
@@ -318,19 +358,34 @@ unsafe extern "C" fn expression_attackairlw(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_landingairlw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if VarModule::is_flag(agent.battle_object, vars::common::instance::UP_SPECIAL_LAG) {
+        let base = agent.get_param_float("landing_attack_air_frame_lw", "");
+        let add = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_special_hi.landing_attack_air_add");
+        FT_MOTION_RATE(agent, (base + add)/base);
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_attackairn", game_attackairn, Priority::Low);
+    agent.acmd("game_landingairn", game_landingairn, Priority::Low);
 
     agent.acmd("game_attackairf", game_attackairf, Priority::Low);
     agent.acmd("effect_attackairf", effect_attackairf, Priority::Low);
+    agent.acmd("game_landingairf", game_landingairf, Priority::Low);
 
     agent.acmd("game_attackairb", game_attackairb, Priority::Low);
     agent.acmd("effect_attackairb", effect_attackairb, Priority::Low);
+    agent.acmd("game_landingairb", game_landingairb, Priority::Low);
 
     agent.acmd("game_attackairhi", game_attackairhi, Priority::Low);
     agent.acmd("effect_attackairhi", effect_attackairhi, Priority::Low);
+    agent.acmd("game_landingairhi", game_landingairhi, Priority::Low);
 
     agent.acmd("game_attackairlw", game_attackairlw, Priority::Low);
     agent.acmd("effect_attackairlw", effect_attackairlw, Priority::Low);
     agent.acmd("expression_attackairlw", expression_attackairlw, Priority::Low);
+    agent.acmd("game_landingairlw", game_landingairlw, Priority::Low);
 }

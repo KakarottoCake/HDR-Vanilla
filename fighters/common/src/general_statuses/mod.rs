@@ -39,6 +39,7 @@ mod itemthrow;
 mod fallspecial;
 mod squat;
 mod cliffrobbed;
+mod mewtwo_thrown;
 mod dived;
 
 // [LUA-REPLACE-REBASE]
@@ -1146,6 +1147,7 @@ pub fn install() {
     fallspecial::install();
     squat::install();
     cliffrobbed::install();
+    mewtwo_thrown::install();
     dived::install();
 
     skyline::nro::add_hook(nro_hook);

@@ -1,6 +1,6 @@
 landing_fall_special:
   animations:
-  - name: a05landingheavy.nuanmb
+  - name: a04landingfallspecial.nuanmb
 landing_heavy:
   animations:
   - name: a04landingfallspecial.nuanmb
@@ -133,6 +133,35 @@ special_n:
 special_air_n:
   extra:
     cancel_frame: 26
+special_air_hi_cancel:
+  game_script: game_specialairhi
+  flags:
+    turn: false
+    loop: false
+    move: false
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+  - name: d02specialairhicancel.nuanmb
+  scripts:
+  - expression_specialairhi
+  - sound_specialairhi
+  - effect_specialairhi
+  extra:
+    intangible_start_frame: 0
+    intangible_end_frame: 0
+    cancel_frame: 9
+    freeze_during_hitstop: false
 special_lw_l:
   extra:
     xlu_start: 0

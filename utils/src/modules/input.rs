@@ -417,6 +417,21 @@ impl InputModule {
         return cats[category as usize].lifetimes_mut()[flag.trailing_zeros() as usize];
     }
 
+    #[export_name = "InputModule__set_command_life"]
+    pub fn set_command_life(object: *mut BattleObject, category: i32, flag: i32, life: u8) {
+        if category == 4 {
+            require_input_module!(object).hdr_cat.valid_frames[(flag.trailing_zeros() as usize)] = life;
+            return;
+        }
+
+        let cats = unsafe {
+            let control_module = *((*object).module_accessor as *const u64).add(0x48 / 8);
+            std::slice::from_raw_parts_mut((control_module + 0x568) as *mut CommandFlagCat, 4)
+        };
+        cats[category as usize].lifetimes_mut()[flag.trailing_zeros() as usize] = life;
+        return
+    }
+
     /// Sets the global tap buffer lifetime
     /// # Arguments
     /// * `object` - Owning `BattleObject` instance
