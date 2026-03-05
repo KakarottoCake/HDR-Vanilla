@@ -32,7 +32,7 @@ pub unsafe fn get_player_tag(module_accessor: *mut BattleObjectModuleAccessor) -
 }
 
 unsafe extern "C" fn bighead_mode(fighter: &mut L2CFighterCommon) {
-    if get_player_tag(fighter.module_accessor) != "bighead" {
+    if !get_player_tag(fighter.module_accessor).contains("GE007") {
         return;
     }
 
