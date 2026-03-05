@@ -312,7 +312,7 @@ unsafe fn can_entry_cliff_hook(boma: &mut BattleObjectModuleAccessor) -> u64 {
                 continue;
             }
 
-            if VarModule::get_int(object, vars::common::instance::LEDGE_ID) == cliff_id as i32 {
+            if VarModule::get_int(object, vars::common::instance::OCCUPIED_LEDGE_ID) == cliff_id as i32 {
                 if !((tether_zair || tether_special || tether_aerial) && WorkModule::is_flag(boma, *FIGHTER_STATUS_AIR_LASSO_FLAG_CHECK)) {
                     return 0;
                 }
