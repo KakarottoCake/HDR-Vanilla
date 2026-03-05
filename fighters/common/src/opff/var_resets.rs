@@ -106,6 +106,15 @@ unsafe fn var_resets(boma: &mut BattleObjectModuleAccessor) {
     if VarModule::get_int(boma.object(), vars::common::instance::FLY_NEXT_FRAME) > 0 {
         VarModule::dec_int(boma.object(), vars::common::instance::FLY_NEXT_FRAME);
     }
+
+    // Zair once-per-airtime reset
+    if VarModule::is_flag(boma.object(), vars::common::instance::DISABLE_AIR_LASSO)
+    && (!boma.is_situation(*SITUATION_KIND_AIR)
+    || boma.is_status_one_of(death_statuses))
+    || boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_GIMMICK_SPRING_JUMP])
+    {
+        VarModule::off_flag(boma.object(), vars::common::instance::DISABLE_AIR_LASSO);
+    }
 }
 
 pub unsafe fn run(boma: &mut BattleObjectModuleAccessor, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, fighter_kind: i32, stick_x: f32, stick_y: f32, facing: f32) {

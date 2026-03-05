@@ -201,6 +201,8 @@ pub mod vars {
 
             pub const IGNORE_REDUCED_SCREENSHAKE: i32 = 0x006F;
 
+            pub const DISABLE_AIR_LASSO: i32 = 0x0070;
+
             // ints
 
             pub const LAST_ATTACK_RECEIVER_ENTRY_ID: i32 = 0x0000;
