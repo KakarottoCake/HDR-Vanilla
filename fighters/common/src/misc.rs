@@ -335,17 +335,6 @@ unsafe fn rivals_parry_stun(fighter: &mut L2CFighterCommon) {
     }
 }
 
-pub unsafe extern "C" fn bighead_mode(fighter: &mut L2CFighterCommon) {
-    if !utils::game_modes::check_custom_mode(CustomMode::BigHeadMode) {
-        return;
-    }
-
-    let mut scale = 3.0;
-    let mut joint = "head";
-    // TODO: pick specialized scale and joint for some fighters
-    ModelModule::set_joint_scale(fighter.module_accessor, Hash40::new(joint), &Vector3f::new(scale, scale, scale));
-}
-
 pub unsafe extern "C" fn rampage_mode(fighter: &mut L2CFighterCommon) {
     if !utils::game_modes::check_custom_mode(CustomMode::RampageMode) {
         return;
@@ -369,7 +358,6 @@ pub fn install() {
         .on_line(Main, airdash_mode)
         .on_line(Main, magicseries_mode)
         .on_line(Main, rivals_mode)
-        .on_line(Main, bighead_mode)
         .on_line(Main, rampage_mode)
         .install();
     skyline::install_hooks!(

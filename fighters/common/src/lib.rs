@@ -33,6 +33,7 @@ pub mod function_hooks;
 pub mod shoto_status;
 // pub mod tag;
 pub mod acmd;
+pub mod player_tags;
 
 // for storing what team color the last attacker had. used in a couple different common files
 pub static mut LAST_ATTACK_TEAM_COLOR: i32 = 0;
@@ -51,6 +52,7 @@ pub fn install() {
     function_hooks::install();
     opff::install();
     acmd::install();
+    player_tags::install();
 
     Agent::new("fighter")
         .on_start(common_init)

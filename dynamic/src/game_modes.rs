@@ -12,8 +12,7 @@ pub enum CustomMode {
     MagicSeriesMode = 5,
     ElementMode = 6,
     RivalsOfAetherMode = 7,
-    BigHeadMode = 8,
-    RampageMode = 9,
+    RampageMode = 8,
 }
 
 impl fmt::Display for CustomMode {
@@ -27,7 +26,6 @@ impl fmt::Display for CustomMode {
             CustomMode::MagicSeriesMode => write!(f, "MagicSeries"),
             CustomMode::ElementMode => write!(f, "Element"),
             CustomMode::RivalsOfAetherMode => write!(f, "RivalsOfAether"),
-            CustomMode::BigHeadMode => write!(f, "BigHead"),
             CustomMode::RampageMode => write!(f, "Rampage"),
         }
     }
@@ -47,7 +45,6 @@ impl FromStr for CustomMode {
             "magicseries" => Ok(CustomMode::MagicSeriesMode),
             "element" => Ok(CustomMode::ElementMode),
             "rivalsofaether" => Ok(CustomMode::RivalsOfAetherMode),
-            "bighead" => Ok(CustomMode::BigHeadMode),
             "rampage" => Ok(CustomMode::RampageMode),
             _      => Err(()),
         }
