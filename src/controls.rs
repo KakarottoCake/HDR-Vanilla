@@ -1,6 +1,7 @@
 use skyline::hooks::InlineCtx;
 use std::sync::atomic::Ordering;
 use utils::consts::{melee_mode, smash_mode};
+use ssbusync::*;
 
 mod css;
 mod submenu;
@@ -166,23 +167,8 @@ fn override_min_players(ctx: &mut InlineCtx) {
 pub fn install() {
     unsafe {
         skyline::patching::Patch::in_text(0x1D3594C).nop();
+        css::install();
     }
-
-    css::install();
-
-    // if !super::is_on_ryujinx() {
-    //     unsafe {
-    //         OFFSET1 = calc_nnsdk_offset() + 0x429d60;
-    //         OFFSET2 = calc_nnsdk_offset() + 0x26e94;
-    //     }
-
-    //     skyline::install_hooks!(
-    //         set_interval_1,
-    //         set_interval_2,
-    //         run_scene_update,
-    //         vsync_count_thread,
-    //     );
-    // }
 
     skyline::install_hooks!(
         get_button_label_by_operation_kind,
