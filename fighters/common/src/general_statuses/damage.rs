@@ -29,7 +29,9 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
             ftStatusUniqProcessDamageAir_init,
             status_DamageAir_Main,
             sub_damage_uniq_process_exit,
-            sub_thrown_uniq_process_init
+            sub_thrown_uniq_process_init,
+            sub_FighterStatusDamage_correctDamageVectorExecStop,
+            sub_damage_uniq_process_init
         );
     }
 }
@@ -760,4 +762,33 @@ unsafe fn sub_thrown_uniq_process_init(fighter: &mut L2CFighterCommon) -> L2CVal
     ControlModule::reset_trigger(fighter.module_accessor);
 
     original!()(fighter)
+}
+
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_FighterStatusDamage_correctDamageVectorExecStop)]
+pub unsafe fn sub_FighterStatusDamage_correctDamageVectorExecStop(fighter: &mut L2CFighterCommon) {
+    if !FighterStopModuleImpl::is_damage_stop(fighter.module_accessor)
+    || !FighterControlModuleImpl::is_enable_hit_stop_delay_life(fighter.module_accessor) {
+        return;
+    }
+
+    // Prevents C-stick from overriding your DI angle
+    // on hits
+    let stick_x = fighter.left_stick_x();
+    let stick_y = fighter.left_stick_y();
+    WorkModule::set_float(fighter.module_accessor, stick_x, *FIGHTER_STATUS_DAMAGE_WORK_FLOAT_VECOR_CORRECT_STICK_X);
+    WorkModule::set_float(fighter.module_accessor, stick_y, *FIGHTER_STATUS_DAMAGE_WORK_FLOAT_VECOR_CORRECT_STICK_Y);
+}
+
+#[skyline::hook(replace = L2CFighterCommon_sub_damage_uniq_process_init)]
+unsafe fn sub_damage_uniq_process_init(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let ret = original!()(fighter);
+
+    // Prevents C-stick from overriding your DI angle
+    // on throws
+    let stick_x = fighter.left_stick_x();
+    let stick_y = fighter.left_stick_y();
+    WorkModule::set_float(fighter.module_accessor, stick_x, *FIGHTER_STATUS_DAMAGE_WORK_FLOAT_VECOR_CORRECT_STICK_X);
+    WorkModule::set_float(fighter.module_accessor, stick_y, *FIGHTER_STATUS_DAMAGE_WORK_FLOAT_VECOR_CORRECT_STICK_Y);
+
+    ret
 }

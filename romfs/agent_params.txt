@@ -62,3 +62,4 @@ reflet: fighter/reflet/param/hdr.xml
 metaknight: fighter/metaknight/param/hdr.xml
 buddy: fighter/buddy/param/hdr.xml
 trail: fighter/trail/param/hdr.xml
+palutena: fighter/palutena/param/hdr.xml

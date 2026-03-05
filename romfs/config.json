@@ -195,6 +195,9 @@
 		],
 		"fighter/trail/cmn": [
 			"fighter/trail/param/hdr.xml"
+		],
+		"fighter/palutena/cmn": [
+			"fighter/palutena/param/hdr.xml"
 		]
 	}
 }

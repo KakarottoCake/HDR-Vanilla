@@ -169,6 +169,24 @@ unsafe extern "C" fn effect_downattacku(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn sound_fuwafuwa(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 1.0);
+    if is_excute(agent) {
+        let sfx_handle = SoundModule::play_status_se(boma, Hash40::new("se_common_spirits_floor_fire_loop"), true, false, false);
+        SoundModule::set_se_vol(boma, sfx_handle as i32, 1.075, 0);
+    }
+}
+
+unsafe extern "C" fn expression_fuwafuwa(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_13_floating"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+}
+
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_cliffescape", acmd_stub, Priority::Low);
 
@@ -187,10 +205,10 @@ pub fn install(agent: &mut Agent) {
 
     agent.acmd("game_fuwafuwastart", acmd_stub, Priority::Low);
     agent.acmd("effect_fuwafuwastart", acmd_stub, Priority::Low);
-    agent.acmd("sound_fuwafuwastart", acmd_stub, Priority::Low);
-    agent.acmd("expression_fuwafuwastart", acmd_stub, Priority::Low);
+    agent.acmd("sound_fuwafuwastart", sound_fuwafuwa, Priority::Low);
+    agent.acmd("expression_fuwafuwastart", expression_fuwafuwa, Priority::Low);
     agent.acmd("game_fuwafuwa", acmd_stub, Priority::Low);
     agent.acmd("effect_fuwafuwa", acmd_stub, Priority::Low);
-    agent.acmd("sound_fuwafuwa", acmd_stub, Priority::Low);
-    agent.acmd("expression_fuwafuwa", acmd_stub, Priority::Low);
+    agent.acmd("sound_fuwafuwa", sound_fuwafuwa, Priority::Low);
+    agent.acmd("expression_fuwafuwa", expression_fuwafuwa, Priority::Low);
 }
