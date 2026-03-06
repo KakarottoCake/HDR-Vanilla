@@ -13,20 +13,20 @@ unsafe extern "C" fn game_attacks4(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE_RANGE(agent, 20.0, 22.0, 3.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 15.0, 361, 84, 0, 40, 4.2, 0.0, 4.8, 7.8, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_SLAP, *ATTACK_REGION_WATER);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 15.0, 361, 84, 0, 40, 3.6, 0.0, 4.4, 12.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_SLAP, *ATTACK_REGION_WATER);
-        ATTACK(agent, 2, 0, Hash40::new("top"), 15.0, 361, 84, 0, 40, 3.4, 0.0, 2.6, 18.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_SLAP, *ATTACK_REGION_WATER);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 15.0, 361, 84, 0, 40, 3.6, 0.0, 4.4, 14.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_SLAP, *ATTACK_REGION_WATER);
+        ATTACK(agent, 2, 0, Hash40::new("top"), 15.0, 361, 84, 0, 40, 3.4, 0.0, 2.8, 20.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_SLAP, *ATTACK_REGION_WATER);
     }
     frame(lua_state, 20.6);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 15.0, 361, 84, 0, 40, 4.2, 0.0, 4.8, 7.8, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_SLAP, *ATTACK_REGION_WATER);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 15.0, 361, 84, 0, 40, 3.6, 0.0, 5.4, 12.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_SLAP, *ATTACK_REGION_WATER);
-        ATTACK(agent, 2, 0, Hash40::new("top"), 15.0, 361, 84, 0, 40, 3.4, 0.0, 5.6, 18.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_SLAP, *ATTACK_REGION_WATER);
+        AttackModule::set_offset(boma, 0, &Vector3f::new(0.0, 4.8, 7.8));
+        AttackModule::set_offset(boma, 1, &Vector3f::new(0.0, 5.4, 14.0));
+        AttackModule::set_offset(boma, 2, &Vector3f::new(0.0, 5.6, 20.0));
     }
     frame(lua_state, 21.2);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 15.0, 361, 84, 0, 40, 4.2, 0.0, 4.8, 7.8, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_SLAP, *ATTACK_REGION_WATER);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 15.0, 361, 84, 0, 40, 3.6, 0.0, 6.4, 12.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_SLAP, *ATTACK_REGION_WATER);
-        ATTACK(agent, 2, 0, Hash40::new("top"), 15.0, 361, 84, 0, 40, 3.4, 0.0, 8.6, 18.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_SLAP, *ATTACK_REGION_WATER);
+        AttackModule::set_offset(boma, 0, &Vector3f::new(0.0, 4.8, 7.8));
+        AttackModule::set_offset(boma, 1, &Vector3f::new(0.0, 7.4, 14.0));
+        AttackModule::set_offset(boma, 2, &Vector3f::new(0.0, 10.6, 20.0));
     }
     frame(lua_state, 22.0);
     FT_MOTION_RATE(agent, 1.0);
@@ -45,21 +45,21 @@ unsafe extern "C" fn effect_attacks4(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 5, 12, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
     }
-    frame(lua_state, 18.0);
+    frame(lua_state, 17.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("pzenigame_mouth_water"), Hash40::new("head"), -0.5, 3, 0, -80, 0, 0, 1, true);
         if agent.lr() < 0.0 {
-            EFFECT_FOLLOW(agent, Hash40::new("pzenigame_water_smash"), Hash40::new("top"), 0, 0, 0, 3, 180, 20, 0.8, true);
+            EFFECT_FOLLOW(agent, Hash40::new("pzenigame_water_smash"), Hash40::new("top"), 0, 0, 0, 3, 160, 20, 0.8, true);
         }
         else {
-            EFFECT_FOLLOW(agent, Hash40::new("pzenigame_water_smash_r"), Hash40::new("top"), 0, 0, 0, 3, 180, -20, 0.8, true);
+            EFFECT_FOLLOW(agent, Hash40::new("pzenigame_water_smash_r"), Hash40::new("top"), 0, 0, 0, 3, 160, -20, 0.8, true);
         }
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), -4, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
     }
-    frame(lua_state, 23.0);
+    frame(lua_state, 21.2);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("pzenigame_mouth_water"), false, false);
     }
