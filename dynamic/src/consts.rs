@@ -2220,6 +2220,11 @@ pub mod melee_mode {
     pub const TIPS: i32 = 0x1b;
 }
 
+pub mod smash_mode {
+    pub const TIME: i32 = 0x0;
+    pub const STOCK: i32 = 0x1;
+}
+
 // extra lua_consts
 pub const COLLISION_KIND_MASK_PARRY: smash::lib::LuaConst = smash::lib::LuaConst::new(0x80);
 
