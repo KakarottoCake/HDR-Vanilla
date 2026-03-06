@@ -183,7 +183,7 @@ unsafe fn change_status_request_hook(boma: &mut BattleObjectModuleAccessor, stat
 
     if boma.is_fighter() {
         // Tether trump logic
-        if boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_AIR_LASSO, *FIGHTER_STATUS_KIND_AIR_LASSO_REACH, *FIGHTER_STATUS_KIND_AIR_LASSO_HANG, *FIGHTER_STATUS_KIND_AIR_LASSO_REWIND])
+        if boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_AIR_LASSO_REWIND])
         && [*FIGHTER_STATUS_KIND_CLIFF_CATCH, *FIGHTER_STATUS_KIND_CLIFF_CATCH_MOVE, *FIGHTER_STATUS_KIND_CLIFF_WAIT].contains(&next_status) {
             let player_number = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
             let cliff_id = GroundModule::get_cliff_id_uint32(boma);
@@ -285,7 +285,7 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
         }
 
         // Tether trump logic
-        if boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_AIR_LASSO, *FIGHTER_STATUS_KIND_AIR_LASSO_REACH, *FIGHTER_STATUS_KIND_AIR_LASSO_HANG, *FIGHTER_STATUS_KIND_AIR_LASSO_REWIND])
+        if boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_AIR_LASSO_HANG, *FIGHTER_STATUS_KIND_AIR_LASSO_REWIND])
         && [*FIGHTER_STATUS_KIND_CLIFF_CATCH, *FIGHTER_STATUS_KIND_CLIFF_CATCH_MOVE, *FIGHTER_STATUS_KIND_CLIFF_WAIT].contains(&next_status) {
             let player_number = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
             let cliff_id = GroundModule::get_cliff_id_uint32(boma);
@@ -296,8 +296,11 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
                     if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) == WorkModule::get_int(&mut *(*object).module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) {
                         continue;
                     }
-    
                     if VarModule::get_int(object, vars::common::instance::OCCUPIED_LEDGE_ID_FOR_TETHERS) == cliff_id as i32 {
+                        // Prevent trumps while moving downward from sending the opponent downward
+                        if KineticModule::get_sum_speed_y(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) < 0.0 {
+                            KineticModule::mul_speed(boma, &Vector3f::new(1.0, 0.0, 1.0), *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
+                        }
                         next_status = *FIGHTER_STATUS_KIND_CLIFF_ROBBED;
                     }
                 }
