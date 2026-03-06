@@ -370,6 +370,15 @@ unsafe extern "C" fn expression_specialnstart(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn game_specialsstart(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 1.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 21.0, 17.0);
+    frame(lua_state, 21.0);
+    FT_MOTION_RATE(agent, 1.0);
+}
+
 unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -384,6 +393,7 @@ unsafe extern "C" fn game_specialairs(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
+        KineticModule::mul_speed(boma, &Vector3f::new(0.8, 1.0, 1.0), *FIGHTER_KINETIC_ENERGY_ID_STOP);
         DamageModule::set_no_reaction_mode_status(boma, DamageNoReactionMode{_address: *DAMAGE_NO_REACTION_MODE_NORMAL as u8}, -1.0, -1.0, -1);
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
         JostleModule::set_status(boma, false);
@@ -533,6 +543,9 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("sound_specialairnstart", sound_specialnstart, Priority::Low);
     agent.acmd("expression_specialnstart", expression_specialnstart, Priority::Low);
     agent.acmd("expression_specialairnstart", expression_specialnstart, Priority::Low);
+
+    agent.acmd("game_specialsstart", game_specialsstart, Priority::Low);
+    agent.acmd("game_specialairsstart", game_specialsstart, Priority::Low);
 
     agent.acmd("game_specials", game_specials, Priority::Low);
     agent.acmd("game_specialairs", game_specialairs, Priority::Low);
