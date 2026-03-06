@@ -28,7 +28,7 @@ unsafe extern "C" fn effect_attacks3(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("gekkouga_water_impact"), Hash40::new("top"), 0.0, 8.5, 18.5, 0, 0, 0, 1.0, true);
+        EFFECT_FOLLOW(agent, Hash40::new("gekkouga_water_impact"), Hash40::new("top"), 0.0, 8.5, 18.5, 0, 0, 0, 0.9, true);
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
 }
@@ -61,7 +61,7 @@ unsafe extern "C" fn effect_attacks3hi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("gekkouga_water_impact"), Hash40::new("top"), 0.0, 13.5, 15.5, 0, 0, 0, 1.0, true);
+        EFFECT_FOLLOW(agent, Hash40::new("gekkouga_water_impact"), Hash40::new("top"), 0.0, 13.5, 15.5, 0, 0, 0, 0.9, true);
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
 }
@@ -95,7 +95,7 @@ unsafe extern "C" fn effect_attacks3lw(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("gekkouga_water_impact"), Hash40::new("top"), 0.0, 3.5, 15.5, 0, 0, 0, 1.0, true);
+        EFFECT_FOLLOW(agent, Hash40::new("gekkouga_water_impact"), Hash40::new("top"), 0.0, 3.5, 15.5, 0, 0, 0, 0.9, true);
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
 }
@@ -196,7 +196,7 @@ unsafe extern "C" fn effect_attacklw3(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 5.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("gekkouga_water_impact"), Hash40::new("top"), 0.0, 2.0, 15.0, 0, 0, 0, 1.0, true);
+        EFFECT_FOLLOW(agent, Hash40::new("gekkouga_water_impact"), Hash40::new("top"), 0.0, 2.0, 15.0, 0, 0, 0, 0.9, true);
     }
 }
 
