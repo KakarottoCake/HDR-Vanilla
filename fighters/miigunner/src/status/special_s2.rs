@@ -83,3 +83,16 @@ unsafe extern "C" fn special_s2_main_loop(fighter: &mut L2CFighterCommon) -> L2C
 
     return 0.into();
 }
+
+pub unsafe extern "C" fn special_s2_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let status_next = StatusModule::status_kind_next(fighter.module_accessor);
+    if ![*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S2_LOOP, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S2_END].contains(&status_next) {
+        ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_MIIGUNNER_GENERATE_ARTICLE_STEALTHBOMB, ArticleOperationTarget(0));
+    }
+
+    return 0.into();
+}
+
+pub fn install(agent: &mut Agent) {
+    agent.status(End, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S2_LOOP, special_s2_end);
+}

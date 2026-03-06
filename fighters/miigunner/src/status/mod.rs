@@ -55,6 +55,11 @@ unsafe extern "C" fn move_customizer(fighter: &mut L2CFighterCommon) -> L2CValue
             LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN.into(),
             std::mem::transmute(special_s2::special_s2_main as *const ())
         );
+        fighter.sv_set_status_func(
+            FIGHTER_STATUS_KIND_SPECIAL_S.into(),
+            LUA_SCRIPT_STATUS_FUNC_STATUS_END.into(),
+            std::mem::transmute(special_s2::special_s2_end as *const ())
+        );
     }
     else if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_S_3 {
         fighter.sv_set_status_func(
@@ -153,4 +158,5 @@ pub fn install(agent: &mut Agent) {
     special_n1::install(agent);
     special_n3::install(agent);
     special_s3::install(agent);
+    special_s2::install(agent);
 }

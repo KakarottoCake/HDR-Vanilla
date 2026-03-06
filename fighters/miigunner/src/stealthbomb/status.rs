@@ -2,6 +2,7 @@ use super::*;
 
 // vars since ParamModule does not work with articles
 const FOLLOW_FRAME: i32 = 256;
+//const TURN_INERTIA_FRAME: i32 = 50;
 const ROT_SPEED: f32 = 22.0;
 const ANGLE_X_BACK: f32 = -16.0;
 const ACCEL: f32 = 0.047;
@@ -47,6 +48,7 @@ unsafe extern "C" fn move_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
 }
 
 unsafe extern "C" fn move_end(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    EffectModule::req_on_joint(weapon.module_accessor, Hash40::new("sys_misfire"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.0, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
     let angle = weapon.get_float(*WEAPON_MIIGUNNER_STEALTHBOMB_STATUS_WORK_FLOAT_ANGLE);
     VarModule::set_float(weapon.battle_object, vars::miigunner_stealthbomb::instance::ANGLE, angle);
 
@@ -67,6 +69,7 @@ unsafe extern "C" fn tame_exec(weapon: &mut L2CWeaponCommon) -> L2CValue {
 }
 
 unsafe extern "C" fn tame_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    EffectModule::kill_kind(weapon.module_accessor, Hash40::new("sys_misfire"), false, false);
     MotionModule::change_motion(weapon.module_accessor, Hash40::new("tame"), 0.0, 1.0, false, 0.0, false, false);
     if !StopModule::is_stop(weapon.module_accessor) {
         tame_substatus(weapon, false.into());
@@ -256,6 +259,7 @@ unsafe extern "C" fn turn_exec(weapon: &mut L2CWeaponCommon) -> L2CValue {
 
 unsafe extern "C" fn turn_exec_inner(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let mut angle = VarModule::get_float(weapon.battle_object, vars::miigunner_stealthbomb::instance::ANGLE);
+    //let prev_angle = angle;
     if LinkModule::is_link(weapon.module_accessor, *LINK_NO_ARTICLE) {
         if !WorkModule::is_flag(weapon.module_accessor, *WEAPON_MIIGUNNER_STEALTHBOMB_STATUS_WORK_FLAG_REFLECT)
         && VarModule::get_int(weapon.battle_object, vars::miigunner_stealthbomb::status::FOLLOW_FRAME) > 0 {
@@ -316,6 +320,10 @@ unsafe extern "C" fn turn_exec_inner(weapon: &mut L2CWeaponCommon) -> L2CValue {
             };
 
             angle += atan;
+
+            // let frame = weapon.status_frame();
+            // let angle_mul = if frame > TURN_INERTIA_FRAME { 1.0 } else { (1.0 + frame as f32) / TURN_INERTIA_FRAME as f32 };
+            // let angle -= prev_angle - prev_angle * angle_mul;
 
             VarModule::set_float(weapon.battle_object, vars::miigunner_stealthbomb::instance::ANGLE, angle);
             VarModule::dec_int(weapon.battle_object, vars::miigunner_stealthbomb::status::FOLLOW_FRAME);
