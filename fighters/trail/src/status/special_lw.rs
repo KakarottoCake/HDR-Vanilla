@@ -4,7 +4,6 @@ const FIGHTER_TRAIL_STATUS_SPECIAL_AIR_LW_FLAG_FALLING: i32 = 0x21000014;
 
 const FIGHTER_TRAIL_STATUS_SPECIAL_LW_FLAG_IS_JUMPING: i32 = 0x21000016;
 const FIGHTER_TRAIL_STATUS_SPECIAL_LW_FLAG_IS_CONTROL_ENABLED: i32 = 0x21000018;
-const FIGHTER_TRAIL_STATUS_SPECIAL_LW_FLAG_IS_GRAVITY_ENABLED: i32 = 0x2100001A;
 
 const JUMP_MUL: f32 = 1.0;
 const JUMP_ANGLE: f32 = 0.0;
@@ -12,8 +11,8 @@ const JUMP_STICK_BASE: f32 = 0.75;
 const JUMP_STICK_MUL: f32 = 0.75;
 const JUMP_CONTROL_ACCEL_MUL: f32 =  0.25;
 const JUMP_CONTROL_MAX_MUL: f32 = 1.0;
-const JUMP_FALL_GRAVITY_MUL: f32 =  0.1;
-const JUMP_FALL_STABLE_MUL: f32 = 0.25;
+const JUMP_FALL_GRAVITY_MUL: f32 =  0.5;
+const JUMP_FALL_STABLE_MUL: f32 = 1.0;
 
 const AIR_FALL_SPEED_X: f32 = 0.0;
 const AIR_FALL_SPEED_Y: f32 = -3.5;
@@ -173,9 +172,7 @@ unsafe extern "C" fn speciallw_start_control(fighter: &mut L2CFighterCommon) {
 }
 
 unsafe extern "C" fn speciallw_start_gravity(fighter: &mut L2CFighterCommon) {
-    WorkModule::on_flag(fighter.module_accessor, FIGHTER_TRAIL_STATUS_SPECIAL_LW_FLAG_IS_GRAVITY_ENABLED);
-    KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-    
+    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
     let air_speed_y_stable = WorkModule::get_param_float(fighter.module_accessor, hash40("air_speed_y_stable"), 0);
     let fall_speed_y = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_y"), 0);
     sv_kinetic_energy!(
@@ -186,12 +183,6 @@ unsafe extern "C" fn speciallw_start_gravity(fighter: &mut L2CFighterCommon) {
     );
     sv_kinetic_energy!(
         set_stable_speed,
-        fighter,
-        FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
-        air_speed_y_stable*JUMP_FALL_STABLE_MUL
-    );
-    sv_kinetic_energy!(
-        set_limit_speed,
         fighter,
         FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
         air_speed_y_stable*JUMP_FALL_STABLE_MUL
@@ -227,8 +218,6 @@ unsafe extern "C" fn speciallw_ground_main_loop(fighter: &mut L2CFighterCommon) 
         return 0.into();
     }
     //Jumping loop...
-    let control_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL) as *mut smash::app::KineticEnergy;
-    let control_x = lua_bind::KineticEnergy::get_speed_x(control_energy);
 
     if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_TRAIL_STATUS_SPECIAL_LW_FLAG_IS_CONTROL_ENABLED) {
         //speciallw_handle_angle(fighter);
@@ -236,8 +225,9 @@ unsafe extern "C" fn speciallw_ground_main_loop(fighter: &mut L2CFighterCommon) 
             speciallw_start_control(fighter);
         }
     }
-    if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_TRAIL_STATUS_SPECIAL_LW_FLAG_IS_GRAVITY_ENABLED) {
+    if VarModule::is_flag(fighter.battle_object, vars::trail::status::SPECIAL_LW_ENABLE_GRAVITY) {
         if VarModule::is_flag(fighter.battle_object,vars::trail::status::SPECIAL_LW_ENABLE_CONTROL) {
+            VarModule::off_flag(fighter.battle_object, vars::trail::status::SPECIAL_LW_ENABLE_GRAVITY);
             speciallw_start_gravity(fighter);
         }
     }
@@ -248,9 +238,9 @@ unsafe extern "C" fn speciallw_ground_main_loop(fighter: &mut L2CFighterCommon) 
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
         || fighter.sub_air_check_fall_common().get_bool() {
-            if KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) > 0.0 {
-                KineticModule::mul_speed(fighter.module_accessor, &Vector3f::new(1.0, 0.8, 1.0), *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-            }
+            // if KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) > 0.0 {
+            //     KineticModule::mul_speed(fighter.module_accessor, &Vector3f::new(1.0, 0.8, 1.0), *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+            // }
             return 1.into();
         }
     }

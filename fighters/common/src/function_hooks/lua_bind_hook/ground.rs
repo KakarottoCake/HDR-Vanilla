@@ -72,8 +72,6 @@ pub unsafe fn init_settings_edges(boma: &mut BattleObjectModuleAccessor, situati
                                                            *FIGHTER_SZEROSUIT_STATUS_KIND_SPECIAL_LW_KICK,
                                                            *FIGHTER_SZEROSUIT_STATUS_KIND_SPECIAL_LW_LANDING,
                                                            *FIGHTER_SZEROSUIT_STATUS_KIND_SPECIAL_LW_KICK_LANDING].contains(&status_kind))
-           || (fighter_kind == *FIGHTER_KIND_BAYONETTA && [*FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_D,
-                                                           *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_D_LANDING].contains(&status_kind))
            || (fighter_kind == *FIGHTER_KIND_DOLLY && [*FIGHTER_DOLLY_STATUS_KIND_SPECIAL_LW_ATTACK,
                                                        *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_LW_LANDING,
                                                        *FIGHTER_DOLLY_STATUS_KIND_SPECIAL_B_LANDING,

@@ -191,9 +191,10 @@ unsafe extern "C" fn cancel_check(fighter: &mut L2CFighterCommon) -> bool {
 
 pub unsafe extern "C" fn air_charge_stall(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
+        let air_accel_y = fighter.get_param_float("air_accel_y", "");
         let special_n_air_invoke_fall_speed_mul = fighter.get_param_float("param_special_n", "special_n_air_invoke_fall_speed_mul");
         let special_n_air_invoke_speed_y_limit = fighter.get_param_float("param_special_n", "special_n_air_invoke_speed_y_limit");
-        sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.089);//why is this hardcoded
+        sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -air_accel_y * special_n_air_invoke_fall_speed_mul);
         let mut speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         if -special_n_air_invoke_speed_y_limit > speed_y {
             sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -special_n_air_invoke_speed_y_limit);
