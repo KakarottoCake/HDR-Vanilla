@@ -14,7 +14,7 @@ unsafe fn float_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
     let float_duration = VarModule::get_int(fighter.battle_object, vars::common::instance::FLOAT_DURATION);
     VarModule::set_int(fighter.battle_object, vars::common::status::FLOAT_FRAME, float_duration);
     VarModule::set_int(fighter.battle_object, vars::common::status::FLOAT_ENABLE_UNIQ, 1);
-    VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_FLOAT);
+    VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_FLOATING);
 
     if !VarModule::is_flag(fighter.battle_object, vars::common::status::FLOAT_INHERIT_AERIAL) {
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("fuwafuwa_start"), 0.0, 1.0, false, 0.0, false, false);
@@ -108,7 +108,7 @@ unsafe fn float_main_loop_common(fighter: &mut L2CFighterCommon) -> L2CValue {
     let mewtwo = fighter.global_table[0x2].get_i32() == *FIGHTER_KIND_MEWTWO;
     let buffer = ControlModule::get_command_life_count_max(fighter.module_accessor) as i32;
     let float_duration = VarModule::get_int(fighter.battle_object, vars::common::instance::FLOAT_DURATION);
-    let float_frame = VarModule::get_int(fighter.battle_object, vars::common::status::FLOAT_FRAME); // inc at end of loop
+    let float_frame = VarModule::get_int(fighter.battle_object, vars::common::status::FLOAT_FRAME); // dec at end of loop
 
     if (float_frame - float_duration).abs() == 4
     && VarModule::is_flag(fighter.battle_object, vars::common::instance::OMNI_FLOAT) {

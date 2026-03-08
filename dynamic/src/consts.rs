@@ -181,7 +181,7 @@ pub mod vars {
 
             pub const IS_INIT: i32 = 0x0065;
 
-            pub const IS_FLOAT: i32 = 0x0066;
+            pub const IS_FLOATING: i32 = 0x0066;
 
             pub const WEIRD_ASS_TURN_RUN_ANIMATION: i32 = 0x0067;
 
@@ -200,6 +200,8 @@ pub mod vars {
             pub const IS_DITCIT: i32 = 0x006E;
 
             pub const IGNORE_REDUCED_SCREENSHAKE: i32 = 0x006F;
+
+            pub const DISABLE_FLOAT: i32 = 0x0070;
 
             // ints
 
