@@ -62,8 +62,8 @@ unsafe extern "C" fn game_specialn1neon(agent: &mut L2CAgentBase) {
 	if is_excute(agent) {
 		ArticleModule::remove_exist(boma, *FIGHTER_MIIGUNNER_GENERATE_ARTICLE_GUNNERCHARGE, app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
 		WorkModule::on_flag(boma, *FIGHTER_MIIGUNNER_STATUS_GUNNER_CHARGE_FLAG_SHOOT);
-		ATTACK(agent, 0, 0, Hash40::new("top"), 25.0, 361, 70, 0, 60, 5.5, 0.0, 7.5, 8.0, Some(0.0), Some(7.5), Some(9.0), 0.9, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_LL, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_ENERGY);
-		ATTACK(agent, 1, 0, Hash40::new("top"), 22.0, 361, 70, 0, 60, 4.0, 0.0, 7.5, 8.0, Some(0.0), Some(7.5), Some(21.5), 0.9, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_ENERGY);
+		ATTACK(agent, 0, 0, Hash40::new("top"), 25.0, 361, 76, 0, 45, 5.5, 0.0, 7.5, 8.0, Some(0.0), Some(7.5), Some(9.0), 0.9, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_LL, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_ENERGY);
+		ATTACK(agent, 1, 0, Hash40::new("top"), 22.0, 361, 76, 0, 45, 4.0, 0.0, 7.5, 8.0, Some(0.0), Some(7.5), Some(21.5), 0.9, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_ENERGY);
 	}
 	frame(lua_state, 5.0);
 	FT_MOTION_RATE_RANGE(agent, 8.0, 40.0, 37.0);

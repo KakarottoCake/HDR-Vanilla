@@ -342,6 +342,9 @@ catch_attack:
 throw_b:
   extra:
     cancel_frame: 52
+throw_hi:
+  extra:
+    cancel_frame: 53
 furafura_end:
   extra:
     cancel_frame: 34

@@ -10,6 +10,12 @@
       <int hash="life">15</int>
     </struct>
   </list>
+  <list hash="param_gunnercharge">
+    <struct index="0">
+      <float hash="max_speed">2.75</float>
+      <float hash="max_scale">0.85</float>
+    </struct>
+  </list>
   <list size="1" hash="param_grenadelauncher">
     <struct index="0">
       <float hash="angle">64.0</float>
@@ -22,7 +28,7 @@
     <struct index="1">
       <float hash="s2_accel_y">0.08</float>
       <float hash="s2_landing_frame">20</float>
-      <int hash="s2_no_bang">6</int>
+      <int hash="s2_no_bang">12</int>
     </struct>
     <hash40 index="2">dummy</hash40>
     <hash40 index="3">dummy</hash40>

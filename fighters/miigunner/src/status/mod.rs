@@ -147,6 +147,21 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     fighter.global_table[globals::STATUS_CHANGE_CALLBACK].assign(&L2CValue::Ptr(change_status_callback as *const () as _));   
 }
 
+unsafe extern "C" fn damage_fly_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_MIIGUNNER_GENERATE_ARTICLE_STEALTHBOMB, ArticleOperationTarget(0));
+    smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_DAMAGE_FLY)(fighter)
+}
+
+unsafe extern "C" fn damage_fly_roll_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_MIIGUNNER_GENERATE_ARTICLE_STEALTHBOMB, ArticleOperationTarget(0));
+    smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL)(fighter)
+}
+
+unsafe extern "C" fn damage_fly_meteor_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_MIIGUNNER_GENERATE_ARTICLE_STEALTHBOMB, ArticleOperationTarget(0));
+    smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR)(fighter)
+}
+
 pub fn install(agent: &mut Agent) {
     agent.on_start(on_start);
 
@@ -159,4 +174,8 @@ pub fn install(agent: &mut Agent) {
     special_n3::install(agent);
     special_s3::install(agent);
     special_s2::install(agent);
+
+    agent.status(Main, *FIGHTER_STATUS_KIND_DAMAGE_FLY, damage_fly_main);
+    agent.status(Main, *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL, damage_fly_roll_main);
+    agent.status(Main, *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR, damage_fly_meteor_main);
 }
