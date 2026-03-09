@@ -47,6 +47,9 @@ use std::os::raw::c_void;
 use skyline_web::*;
 use std::{fs, path::Path};
 use utils::STAGE_MANAGER;
+use std::sync::atomic::Ordering;
+use dynamic::util::MATCH_EXITING;
+use utils::one_player::SPAWN_POS_CAPTURED;
 
 #[cfg(not(feature = "main_nro"))]
 #[no_mangle]
@@ -408,6 +411,9 @@ unsafe fn scene_transition(
             NEW_CSS_SFX = false;
         }
     }
+
+    MATCH_EXITING.store(false, Ordering::Relaxed);
+    SPAWN_POS_CAPTURED.store(false, Ordering::Relaxed);
 
     call_original!(list_ptr, key_struct, context_struct, factory);
 }
