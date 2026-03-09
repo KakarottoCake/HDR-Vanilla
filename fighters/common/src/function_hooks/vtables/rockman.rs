@@ -136,7 +136,14 @@ unsafe fn rockman_valid_charging_state(module_accessor: *mut BattleObjectModuleA
     let status = StatusModule::status_kind(module_accessor);
     // explicitly disabled statuses
     if [
-        *FIGHTER_STATUS_KIND_REBIRTH
+        *FIGHTER_STATUS_KIND_ESCAPE,
+        *FIGHTER_STATUS_KIND_ESCAPE_B,
+        *FIGHTER_STATUS_KIND_ESCAPE_F,
+        *FIGHTER_STATUS_KIND_GUARD,
+        *FIGHTER_STATUS_KIND_GUARD_DAMAGE,
+        *FIGHTER_STATUS_KIND_GUARD_OFF,
+        *FIGHTER_STATUS_KIND_GUARD_ON,
+        *FIGHTER_STATUS_KIND_REBIRTH,
     ].contains(&status) {
         return false;
     }
