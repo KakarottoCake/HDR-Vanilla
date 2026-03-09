@@ -88,10 +88,10 @@ unsafe extern "C" fn special_s_main(fighter: &mut L2CFighterCommon) -> L2CValue 
     sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, 0.0, 0.0, 0.0, 0.0);
     KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
     let facing = fighter.lr();
-    let speed_x = fighter.get_param_float("param_special_s", "speed_x_") * facing * 0.1;
+    let speed_x = fighter.get_param_float("param_special_s", "speed_x_") * facing;
     sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, ENERGY_STOP_RESET_TYPE_GROUND, speed_x, 0.0, 0.0, 0.0, 0.0);
     let brake_x = fighter.get_param_float("param_special_s", "brake_x_") * facing;
-    sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, brake_x * 2.5, 0.0);
+    sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, -brake_x, 0.0);  // the vanilla script does this, don't look at me
     sv_kinetic_energy!(set_brake, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
     sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, -1.0, -1.0);
     KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
@@ -131,14 +131,6 @@ unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
-    if !StopModule::is_stop(fighter.module_accessor) {
-        if fighter.is_flag(*FIGHTER_PLIZARDON_STATUS_SPECIAL_S_FLAG_IS_STATUS_CHANGE_BLOWN) {
-            if !fighter.is_flag(*FIGHTER_PLIZARDON_STATUS_SPECIAL_S_FLAG_IS_DISABLE_FIGHTER_HIT_EXPLOSION) {
-                fighter.change_status(FIGHTER_PLIZARDON_STATUS_KIND_SPECIAL_S_BLOWN.into(), true.into());
-                return 0.into();
-            }
-        }
-    }
     if (fighter.lr() > 0.0 && GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_RIGHT as u32))
     || (fighter.lr() < 0.0 && GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_LEFT as u32))
     || AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD | *COLLISION_KIND_MASK_PARRY) {
@@ -153,14 +145,13 @@ unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
     if MotionModule::frame(fighter.module_accessor) >= end_frame - 1.0 {
         fighter.inc_int(*FIGHTER_PLIZARDON_STATUS_SPECIAL_S_WORK_INT_SPECIAL_S_ROTATE_COUNT);
         let rotate_count = fighter.get_int(*FIGHTER_PLIZARDON_STATUS_SPECIAL_S_WORK_INT_SPECIAL_S_ROTATE_COUNT);
-        DamageModule::add_damage(fighter.module_accessor, rotate_count as f32, 0);
         let rush_rotate_count = fighter.get_param_float("param_special_s", "rush_rotate_count_");
-        //if rush_rotate_count - 0.1 >= rotate_count as f32 {
+        if rush_rotate_count - 0.1 >= rotate_count as f32 {
             fighter.change_motion_inherit_frame_by_situation("special_s", "special_air_s", -1.0, 1.0, 0.0, false, false);
             MotionModule::set_frame(fighter.module_accessor, 0.0, true);
             MotionModule::set_rate(fighter.module_accessor, rate);
             return 0.into();
-        //}
+        }
     }
     else {
         if StatusModule::is_situation_changed(fighter.module_accessor) {
@@ -182,17 +173,8 @@ unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
 }
 
 unsafe extern "C" fn special_s_rush_check_attack(fighter: &mut L2CFighterCommon, param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
-    let rotate_count = fighter.get_int(*FIGHTER_PLIZARDON_STATUS_SPECIAL_S_WORK_INT_SPECIAL_S_ROTATE_COUNT);
-    AttackModule::add_power(fighter.module_accessor, 0, rotate_count as f32 * 10.0, false);
-    AttackModule::add_power(fighter.module_accessor, 1, rotate_count as f32 * 10.0, false);
-    if rotate_count >= 2 {
-        if (&param_3["object_category_"]).get_i32() == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-            let object_id = (&param_3["object_id_"]).get_u32();
-            let opponent_boma = &mut *(sv_battle_object::module_accessor(object_id));
-            opponent_boma.change_status_req(FIGHTER_STATUS_KIND_DEAD.into(), false.into());
-            fighter.change_status(FIGHTER_STATUS_KIND_DEAD.into(), false.into());
-        }
-    }
+    EFFECT(fighter, Hash40::new("sys_bomb_a"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 0, 0, true);
+    
     return 0.into();
 }
 
