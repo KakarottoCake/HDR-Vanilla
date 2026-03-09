@@ -432,6 +432,7 @@ pub fn main() {
         matchup::install();
         skyline::patching::Patch::in_text(0x14f99cc).nop().unwrap();
         skyline::patching::Patch::in_text(0x1509fd4).nop().unwrap();
+        unlock_menu_music();
         skyline::install_hooks!(
             training_reset_music1,
             training_reset_music2,
@@ -614,4 +615,12 @@ pub fn quick_validate_install() {
     }
 
     println!("simple validation complete.");
+}
+
+fn unlock_menu_music() {
+    if std::path::Path::new("sd:/ultimate/hdr-config/unlock_menu_music").exists() {
+        println!("WARNING: potentially bannable operation in effect!");
+        skyline::patching::Patch::in_text(0x184de0c).nop().unwrap();
+        skyline::patching::Patch::in_text(0x184de10).data(0x390bbb9fu32).unwrap();
+    }
 }
