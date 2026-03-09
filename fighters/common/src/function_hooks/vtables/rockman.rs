@@ -5,6 +5,8 @@ pub const CHARGE_SHOT_CLEAR_INPUT_FRAME : i32 = 6;
 pub const CHARGE_SHOT_DELAY_CHARGE_FRAME : i32 = 50;
 pub const CHARGE_SHOT_MAX_FRAME : i32 = 180;
 pub const CHARGE_SHOT_RELEASE_FRAME : i32 = 6;
+pub const CHARGE_SHOT_HOLD_DAMAGE_RATE: i32 = 120;
+pub const CHARGE_SHOT_HOLD_DAMAGE: f32 = 1.0;
 
 #[skyline::hook(offset = 0x107e970)]
 pub unsafe extern "C" fn rockman_vtable_func(vtable: u64, fighter: &mut smash::app::Fighter) {
@@ -73,11 +75,12 @@ pub unsafe extern "C" fn rockman_vtable_func(vtable: u64, fighter: &mut smash::a
             }
         }
         if VarModule::is_flag(object, vars::rockman::instance::SPECIAL_N_CHARGE_SHOT_CHARGING) {
+            VarModule::inc_int(object, vars::rockman::instance::SPECIAL_N_CHARGE_SHOT_FRAME);
             let charge_frame = VarModule::get_int(object, vars::rockman::instance::SPECIAL_N_CHARGE_SHOT_FRAME);
-            if charge_frame < CHARGE_SHOT_MAX_FRAME + 1 {
-                VarModule::inc_int(object, vars::rockman::instance::SPECIAL_N_CHARGE_SHOT_FRAME);
+            if charge_frame > CHARGE_SHOT_MAX_FRAME 
+            && charge_frame % CHARGE_SHOT_HOLD_DAMAGE_RATE == 0 {
+                DamageModule::add_damage(module_accessor, CHARGE_SHOT_HOLD_DAMAGE, 0);
             }
-            let charge_frame = VarModule::get_int(object, vars::rockman::instance::SPECIAL_N_CHARGE_SHOT_FRAME);
             if charge_frame == CHARGE_SHOT_MAX_FRAME {
                 FighterUtil::flash_eye_info(module_accessor);
                 EffectModule::req_follow(
