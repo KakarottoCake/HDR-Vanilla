@@ -418,6 +418,14 @@ unsafe fn scene_transition(
     call_original!(list_ptr, key_struct, context_struct, factory);
 }
 
+extern "C" {
+    #[link_name = "_ZN2nn5prepo10PlayReport4SaveERKNS_7account3UidE"]
+    fn save_report(uid: *mut u8);
+}
+
+#[skyline::hook(replace = save_report)]
+fn save_report_stub(uid: *mut u8) { }
+
 #[skyline::main(name = "hdr")]
 pub fn main() {
     #[cfg(feature = "main_nro")]
@@ -432,7 +440,6 @@ pub fn main() {
         matchup::install();
         skyline::patching::Patch::in_text(0x14f99cc).nop().unwrap();
         skyline::patching::Patch::in_text(0x1509fd4).nop().unwrap();
-        skyline::patching::Patch::in_text(0x39c5a0c).nop().unwrap();
         unlock_menu_music();
         skyline::install_hooks!(
             training_reset_music1,
@@ -442,6 +449,7 @@ pub fn main() {
             sss_to_css,
             css_to_sss,
             scene_transition,
+            save_report_stub,
             //copy_fighter_info,
             //load_ingame_call_sequence_scene,
             //load_melee_scene,
