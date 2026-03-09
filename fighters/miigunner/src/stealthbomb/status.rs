@@ -173,6 +173,13 @@ unsafe extern "C" fn turn_substatus_inner(weapon: &mut L2CWeaponCommon) {
 }
 
 unsafe extern "C" fn turn_fastshift(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    if GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_ALL as u32) {
+        weapon.clear_lua_stack();
+        lua_args!(weapon, MA_MSC_CMD_ARTICLE_GENERATE_ARTICLE_LINK_PARENTS, WEAPON_LINK_NO_CONSTRAINT, FIGHTER_MIIGUNNER_GENERATE_ARTICLE_STEALTHBOMB_S);
+        sv_module_access::article(weapon.lua_state_agent);
+        weapon.pop_lua_stack(1);
+        notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
+    }
     if AttackModule::is_infliction(weapon.module_accessor, *COLLISION_KIND_MASK_HIT) {
         weapon.clear_lua_stack();
         lua_args!(weapon, MA_MSC_CMD_ARTICLE_GENERATE_ARTICLE_LINK_PARENTS, WEAPON_LINK_NO_CONSTRAINT, FIGHTER_MIIGUNNER_GENERATE_ARTICLE_STEALTHBOMB_S);
@@ -242,10 +249,7 @@ unsafe extern "C" fn turn_fastshift_inner(weapon: &mut L2CWeaponCommon) -> L2CVa
         notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
         return 1.into();
     }
-
-    if GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_ALL as u32) {
-        notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
-    }
+    
     if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_PARRY | *COLLISION_KIND_MASK_REFLECTOR) {
         WorkModule::on_flag(weapon.module_accessor, *WEAPON_MIIGUNNER_STEALTHBOMB_STATUS_WORK_FLAG_REFLECT);
     }
@@ -370,6 +374,7 @@ unsafe extern "C" fn turn_end(weapon: &mut L2CWeaponCommon) -> L2CValue {
         sv_module_access::article(weapon.lua_state_agent);
         weapon.pop_lua_stack(1);
     }
+
     return 0.into();
 }
 
