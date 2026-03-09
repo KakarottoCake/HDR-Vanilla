@@ -432,6 +432,7 @@ pub fn main() {
         matchup::install();
         skyline::patching::Patch::in_text(0x14f99cc).nop().unwrap();
         skyline::patching::Patch::in_text(0x1509fd4).nop().unwrap();
+        skyline::patching::Patch::in_text(0x39c5a0c).nop().unwrap();
         unlock_menu_music();
         skyline::install_hooks!(
             training_reset_music1,
