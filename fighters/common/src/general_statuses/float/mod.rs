@@ -6,7 +6,8 @@ mod end;
 
 #[no_mangle]
 unsafe fn float_check_air_jump(fighter: &mut L2CFighterCommon, float_status: L2CValue) -> L2CValue {
-    if VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_FLOATING) {
+    if VarModule::is_flag(fighter.battle_object, vars::common::instance::DISABLE_FLOAT)
+    || VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_FLOATING) {
         return 0.into();
     }
 
