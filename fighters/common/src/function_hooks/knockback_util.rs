@@ -102,12 +102,6 @@ pub unsafe fn rotate_vector2f(
     );
 }
 
-// number of DI angles checked
-const NUM_ANGLES_CHECKED: i32 = 12;
-const NUM_ANGLES_CHECKED_FINAL: i32 = 12;
-// maximum number of survivable DI angles in a finishing hit
-const SURVIVABLE_ANGLES_ALLOWED: i32 = 0;
-const SURVIVABLE_ANGLES_ALLOWED_FINAL: i32 = 1;
 // how many units into the blastzone a fighter will be declared dead
 const DEAD_AREA_LENIENCY: f32 = 7.5;
 const DEAD_AREA_LENIENCY_FINAL: f32 = 2.5;
@@ -194,7 +188,7 @@ impl KnockbackCalcContext {
         let defender_boma = self.defender_boma;
 
         // check left wall tech
-        if true // TODO: check launch speed vs ASDI
+        if -1.0 * self.launch_speed.x <= self.base_asdi * self.sdi_mul
         && GroundModule::ray_check(
             defender_boma,
             &Vector2f::new(self.ecb_left.x, self.ecb_left.y),
@@ -207,7 +201,7 @@ impl KnockbackCalcContext {
         }
 
         // check right wall tech
-        if true // TODO: check launch speed vs ASDI
+        if self.launch_speed.x <= self.base_asdi * self.sdi_mul
         && GroundModule::ray_check(
             defender_boma,
             &Vector2f::new(self.ecb_right.x, self.ecb_right.y),
