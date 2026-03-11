@@ -331,13 +331,16 @@ impl KnockbackCalcContext {
         let base_radians = self.launch_speed.y.atan2(self.launch_speed.x);
         let di_radians = WorkModule::get_param_float(defender_boma, hash40("common"), hash40("damage_fly_correction_max")).to_radians();
         let angles = [
-            base_radians - (di_radians * 1.00),
-            base_radians - (di_radians * 0.66),
-            base_radians - (di_radians * 0.33),
+            // check max DI angles first, since theyre more likely to be surviveable
+            // and if any angle is surviveable, we skip the others angle checks
+            base_radians + (di_radians * 1.00), // max left
+            base_radians - (di_radians * 1.00), // max right
             base_radians,
-            base_radians + (di_radians * 0.33),
+            // check precise angles later
             base_radians + (di_radians * 0.66),
-            base_radians + (di_radians * 1.00),
+            base_radians + (di_radians * 0.33),
+            base_radians - (di_radians * 0.33),
+            base_radians - (di_radians * 0.66),
         ];
 
         // perform the trajectory check over each angle
