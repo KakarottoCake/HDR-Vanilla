@@ -8,8 +8,9 @@ unsafe extern "C" fn special_hi_main(fighter: &mut L2CFighterCommon) -> L2CValue
     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x20cbc92683), 1, FIGHTER_LOG_DATA_INT_ATTACK_NUM_KIND, (*FIGHTER_LOG_ATTACK_KIND_ADDITIONS_ATTACK_01) + -1);
 
     // dj leniency window
+    let teleport_jump_aerial_refresh_frame = ParamModule::get_int(fighter.battle_object, ParamType::Common, "teleport_jump_aerial_refresh_frame");
     let jump_max = fighter.get_jump_count_max();
-    if fighter.get_num_used_jumps() == jump_max && fighter.is_prev_status(*FIGHTER_STATUS_KIND_JUMP_AERIAL) && fighter.global_table[PREV_STATUS_FRAME].get_i32() <= 3 {
+    if fighter.get_num_used_jumps() == jump_max && fighter.is_prev_status(*FIGHTER_STATUS_KIND_JUMP_AERIAL) && fighter.global_table[PREV_STATUS_FRAME].get_i32() <= teleport_jump_aerial_refresh_frame {
         fighter.set_int(jump_max - 1, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
         fighter.clear_lua_stack();
         lua_args!(fighter, Hash40::new("sys_jump_aerial"), true, true);

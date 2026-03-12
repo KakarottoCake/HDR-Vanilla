@@ -105,7 +105,7 @@ unsafe fn float_set_aerial(fighter: &mut L2CFighterCommon) {
 
 #[no_mangle]
 unsafe fn float_main_loop_common(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let mewtwo = fighter.global_table[0x2].get_i32() == *FIGHTER_KIND_MEWTWO;
+    let is_mewtwo = fighter.global_table[FIGHTER_KIND].get_i32() == *FIGHTER_KIND_MEWTWO;
     let buffer = ControlModule::get_command_life_count_max(fighter.module_accessor) as i32;
     let float_duration = VarModule::get_int(fighter.battle_object, vars::common::instance::FLOAT_DURATION);
     let float_frame = VarModule::get_int(fighter.battle_object, vars::common::status::FLOAT_FRAME); // dec at end of loop
@@ -134,8 +134,9 @@ unsafe fn float_main_loop_common(fighter: &mut L2CFighterCommon) -> L2CValue {
         float_drift_common(fighter);
     }
 
+    // Mewtwo jump burn
     if (float_frame - float_duration).abs() == buffer
-    && mewtwo { // mewtwo jump burn leniency
+    && is_mewtwo {
         fighter.inc_int(*FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
     }
 
@@ -254,9 +255,9 @@ unsafe fn float_drift_common(fighter: &mut L2CFighterCommon) -> L2CValue {
 
 #[no_mangle]
 unsafe fn float_jump_leniency(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let buffer = ControlModule::get_command_life_count_max(fighter.module_accessor);
+    let float_jump_aerial_refresh_frame = ParamModule::get_int(fighter.battle_object, ParamType::Common, "float_jump_aerial_refresh_frame");
     if fighter.global_table[PREV_STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_JUMP_AERIAL
-    && fighter.global_table[PREV_STATUS_FRAME].get_i32() <= buffer as i32 {
+    && fighter.global_table[PREV_STATUS_FRAME].get_i32() <= float_jump_aerial_refresh_frame {
         fighter.dec_int(*FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
         fighter.clear_lua_stack();
         lua_args!(fighter, Hash40::new("sys_jump_aerial"), true, true);

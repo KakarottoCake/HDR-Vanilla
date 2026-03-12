@@ -63,4 +63,6 @@
     <int hash="precede">3</int>
     <int hash="guard_off_pass_valid_frame">6</int>
     <float hash="bind_end_frame">15.0</float>
+    <int hash="teleport_jump_aerial_refresh_frame">3</int>
+    <int hash="float_jump_aerial_refresh_frame">3</int>
 </struct>
