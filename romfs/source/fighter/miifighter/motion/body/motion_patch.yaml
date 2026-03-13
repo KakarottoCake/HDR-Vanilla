@@ -437,7 +437,7 @@ special_n2_landing:
   extra:
     xlu_start: 0
     xlu_end: 0
-    cancel_frame: 18
+    cancel_frame: 13
     no_stop_intp: false
 # moved to special_n3
 special_air_lw3_throw:

@@ -55,6 +55,7 @@ unsafe extern "C" fn special_n2_common_end(fighter: &mut L2CFighterCommon) -> L2
         EffectModule::remove_common(fighter.module_accessor, Hash40::new("charge_max"));
         VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_N2_CHARGE_COUNT, 0);
     }
+    SoundModule::stop_se(fighter.module_accessor, Hash40::new("se_miifighter_special_n2_charge"), 0);
 
     return 0.into();
 }
@@ -239,6 +240,9 @@ unsafe extern "C" fn special_n2_hold_main_loop(fighter: &mut L2CFighterCommon) -
 
 unsafe extern "C" fn special_n2_end_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     special_n2_change_motion(fighter, Hash40::new("special_n2_end"), Hash40::new("special_air_n2_end"), false);
+    EFFECT_FOLLOW_FLIP(fighter, Hash40::new("sys_smash_flash"), Hash40::new("sys_smash_flash"), Hash40::new("top"), 2, 12, -3, 0, 0, 0, 0.5, false, *EF_FLIP_AXIS_YZ);
+    SoundModule::play_se(fighter.module_accessor, Hash40::new("se_miifighter_special_n2_ready"), true, false, false, false, app::enSEType(0));
+    ControlModule::set_rumble(fighter.module_accessor, Hash40::new("rbkind_attackm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
 
     fighter.main_shift(special_n2_end_main_loop)
 }

@@ -20,7 +20,7 @@
         <float hash="bowl_angle">30.0</float>
     </struct>
     <struct hash="special_n2">
-        <int hash="charge_frame">150</int>
+        <int hash="charge_frame">140</int>
         <float hash="min_motion_mul">0.7</float>
         <float hash="air_motion_mul">0.85</float>
     </struct>
