@@ -80,7 +80,7 @@ unsafe extern "C" fn special_s_end_pre(fighter: &mut L2CFighterCommon) -> L2CVal
     return 0.into();
 }
 
-unsafe extern "C" fn special_s_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn special_s_rush_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.off_flag(*FIGHTER_PLIZARDON_INSTANCE_WORK_ID_FLAG_SPECIAL_S_IS_HIT_SLOPE);
     fighter.off_flag(*FIGHTER_PLIZARDON_STATUS_SPECIAL_S_FLAG_IS_STATUS_CHANGE_BLOWN);
     fighter.set_int(0, *FIGHTER_PLIZARDON_INSTANCE_WORK_ID_INT_EXPLOSION_DELAY_FRAME);
@@ -173,7 +173,7 @@ unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
 }
 
 unsafe extern "C" fn special_s_rush_check_attack(fighter: &mut L2CFighterCommon, param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
-    EFFECT(fighter, Hash40::new("sys_bomb_a"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 0, 0, true);
+    EFFECT(fighter, Hash40::new("sys_bomb_a"), Hash40::new("bust"), 0, 0, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 0, 0, true);
     
     return 0.into();
 }
@@ -182,7 +182,7 @@ pub fn install(agent: &mut Agent) {
     agent.status(Init, *FIGHTER_STATUS_KIND_SPECIAL_S, special_s_init);
     agent.status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_S, special_s_pre);
 
-    agent.status(Main, *FIGHTER_PLIZARDON_STATUS_KIND_SPECIAL_S_RUSH, special_s_main);
+    agent.status(Main, *FIGHTER_PLIZARDON_STATUS_KIND_SPECIAL_S_RUSH, special_s_rush_main);
     agent.status(CheckAttack, *FIGHTER_PLIZARDON_STATUS_KIND_SPECIAL_S_RUSH, special_s_rush_check_attack);
     
     agent.status(Pre, *FIGHTER_PLIZARDON_STATUS_KIND_SPECIAL_S_END, special_s_end_pre);
