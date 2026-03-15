@@ -1527,7 +1527,7 @@ special_air_hi_h:
     freeze_during_hitstop: false
 special_air_lw2:
   extra:
-    cancel_frame: 28
+    cancel_frame: 32
 special_hi_h:
   game_script: game_specialhih
   flags:
@@ -1559,7 +1559,7 @@ special_hi_h:
     freeze_during_hitstop: false
 special_lw2:
   extra:
-    cancel_frame: 28
+    cancel_frame: 32
 special_s:
   extra:
     cancel_frame: 60
