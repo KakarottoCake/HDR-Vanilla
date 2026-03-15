@@ -143,14 +143,30 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     //VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, -1);
 }
 
+unsafe extern "C" fn entry_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    reset_boiling_punt(fighter);
+    VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_N2_CHARGE_COUNT, 0);
+    smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_ENTRY)(fighter)
+}
+
+
 unsafe extern "C" fn dead_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     reset_boiling_punt(fighter);
+    VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_N2_CHARGE_COUNT, 0);
+    EffectModule::remove_common(fighter.module_accessor, Hash40::new("charge_max"));
     smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_DEAD)(fighter)
 }
 
 unsafe extern "C" fn rebirth_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     reset_boiling_punt(fighter);
+    VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_N2_CHARGE_COUNT, 0);
+    EffectModule::remove_common(fighter.module_accessor, Hash40::new("charge_max"));
     smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_REBIRTH)(fighter)
+}
+
+unsafe extern "C" fn win_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    EffectModule::remove_common(fighter.module_accessor, Hash40::new("charge_max"));
+    smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_WIN)(fighter)
 }
 
 unsafe extern "C" fn damage_fly_main(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -178,8 +194,8 @@ unsafe fn reset_boiling_punt(fighter: &mut L2CFighterCommon) {
         //EffectModule::kill(fighter.module_accessor, handle2, false, false);
         VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_1, -1);
         //VarModule::set_int(fighter.battle_object, vars::miifighter::instance::SPECIAL_LW3_EFFECT_HANDLE_2, -1);
+        ColorBlendModule::cancel_main_color(fighter.module_accessor, 0);
     }
-    ColorBlendModule::cancel_main_color(fighter.module_accessor, 0);
 }
 
 pub fn install(agent: &mut Agent) {
@@ -191,8 +207,10 @@ pub fn install(agent: &mut Agent) {
     special_n3::install(agent);
     special_s1::install(agent);
 
+    agent.status(Main, *FIGHTER_STATUS_KIND_ENTRY, entry_main);
     agent.status(Main, *FIGHTER_STATUS_KIND_DEAD, dead_main);
     agent.status(Main, *FIGHTER_STATUS_KIND_REBIRTH, rebirth_main);
+    agent.status(Main, *FIGHTER_STATUS_KIND_WIN, win_main);
     agent.status(Main, *FIGHTER_STATUS_KIND_DAMAGE_FLY, damage_fly_main);
     agent.status(Main, *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL, damage_fly_roll_main);
     agent.status(Main, *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR, damage_fly_meteor_main);
