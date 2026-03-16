@@ -88,7 +88,7 @@ unsafe extern "C" fn game_specialn2attack(agent: &mut L2CAgentBase) {
         HIT_NODE(agent, Hash40::new("handr"), *HIT_STATUS_XLU);
         HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_XLU);
         let damage = 10.0 + (0.1 * charge as f32);
-        let kbg = if ground_start { 58 } else { 44 };
+        let kbg = if ground_start { 58 } else { 50 };
         let sound_lvl = if charge <= 100 { *ATTACK_SOUND_LEVEL_M } else { *ATTACK_SOUND_LEVEL_L };
         ATTACK(agent, 0, 0, Hash40::new("handr"), damage, 90, kbg, 0, 57, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), sound_lvl, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("shoulderr"), damage, 90, kbg, 0, 57, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), sound_lvl, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
@@ -97,7 +97,7 @@ unsafe extern "C" fn game_specialn2attack(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         let charge = VarModule::get_int(agent.battle_object, vars::miifighter::instance::SPECIAL_N2_CHARGE_COUNT);
         let damage = 8.0 + (0.05 * charge as f32);
-        let kbg = if ground_start { 58 } else { 44 };
+        let kbg = if ground_start { 58 } else { 50 };
         ATTACK(agent, 0, 0, Hash40::new("handr"), damage, 90, kbg, 0, 57, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("shoulderr"), damage, 90, kbg, 0, 57, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
     }
