@@ -114,9 +114,9 @@ impl FighterKineticEnergyMotion {
             let func: extern "C" fn(&mut BattleObjectModuleAccessor) -> smash_rs::cpp::simd::Vector3 = std::mem::transmute(MotionModule::trans_move_speed as *const ());
             let vec = func(boma);
             Vector3f {
-                x: vec.vec[0],
-                y: vec.vec[1],
-                z: vec.vec[2]
+                x: vec.x(),
+                y: vec.y(),
+                z: vec.z()
             }
         }
     }
@@ -126,9 +126,9 @@ impl FighterKineticEnergyMotion {
             let func: extern "C" fn(&mut BattleObjectModuleAccessor) -> smash_rs::cpp::simd::Vector3 = std::mem::transmute(MotionModule::trans_move_speed_2nd as *const ());
             let vec = func(boma);
             Vector3f {
-                x: vec.vec[0],
-                y: vec.vec[1],
-                z: vec.vec[2]
+                x: vec.x(),
+                y: vec.y(),
+                z: vec.z()
             }
         }
     }
@@ -191,7 +191,7 @@ unsafe fn motion_update(energy: &mut FighterKineticEnergyMotion, boma: &mut Batt
     energy.active_flag = true;
     if !FighterKineticEnergyMotion::is_motion_updating_energy(boma, reset_type) {
         let backup_brake = energy.speed_brake;
-        
+
         if reset_type == LadderMove {
             // If we are on a ladder, we need to **immediately** stop moving if the MotionModule is no longer updating our position
             // By setting the acceleration to negative of our speed, we are immediately stopping our movement. This should not be applied
@@ -227,12 +227,12 @@ unsafe fn motion_update(energy: &mut FighterKineticEnergyMotion, boma: &mut Batt
             let damage_speed_x = app::lua_bind::KineticEnergy::get_speed_x(damage_energy);
             // If our speed is being influenced by knockback, we handle double traction elsewhere
             if damage_speed_x == 0.0 {
-                let walk_speed_max =  WorkModule::get_param_float(boma, smash::hash40("walk_speed_max"), 0);
+                let walk_speed_max = WorkModule::get_param_float(boma, smash::hash40("walk_speed_max"), 0);
                 let speed = &mut energy.speed;
                 let adjusted_speed = energy::KineticEnergy::adjust_speed_for_ground_normal(speed, boma);
 
                 let magnitude = (adjusted_speed.x.powi(2) + adjusted_speed.y.powi(2)).sqrt();
-                
+
                 if magnitude >= walk_speed_max {
                     energy.speed_brake.x *= 2.0;
                 }
@@ -264,7 +264,7 @@ unsafe fn motion_update(energy: &mut FighterKineticEnergyMotion, boma: &mut Batt
     // Allows all grounded attacks to retain sliding momentum by default
 
     let mut is_stop_added = false;
-    
+
     if !energy.update_flag {
         if boma.is_motion(Hash40::new("attack_12")) {
             let fighter = util::get_fighter_common_from_accessor(boma);
@@ -291,7 +291,7 @@ unsafe fn motion_update(energy: &mut FighterKineticEnergyMotion, boma: &mut Batt
             let reset_speed_3f = Vector3f { x: 0.0, y: 0.0, z: 0.0 };
             lua_bind::KineticEnergy::reset_energy(stop_energy, *ENERGY_STOP_RESET_TYPE_GROUND, &reset_speed_2f, &reset_speed_3f, boma);
             lua_bind::KineticEnergy::enable(stop_energy);
-            
+
             is_stop_added = true;
         }
     }
@@ -353,7 +353,7 @@ unsafe fn motion_update(energy: &mut FighterKineticEnergyMotion, boma: &mut Batt
             energy.speed_limit = PaddedVec2::new(-1.0, 0.0);
             move_speed
         },
-        
+
         GroundTransIgnoreNorm => {
             energy.speed_limit = PaddedVec2::new(-1.0, 0.0);
             move_speed
@@ -387,12 +387,10 @@ unsafe fn motion_update(energy: &mut FighterKineticEnergyMotion, boma: &mut Batt
 
         // This multiplies by the angle set with (afaik) app::sv_kinetic_energy::set_angle
         // Set angle whole is used regardless of the energy reset type
-        AirTransAngle => {
-            PaddedVec2::new(
-                move_speed.x * energy.angle.cos() - move_speed.y * energy.angle.sin(),
-                move_speed.y * energy.angle.cos() + move_speed.x * energy.angle.sin()
-            )
-        },
+        AirTransAngle => PaddedVec2::new(
+            move_speed.x * energy.angle.cos() - move_speed.y * energy.angle.sin(),
+            move_speed.y * energy.angle.cos() + move_speed.x * energy.angle.sin()
+        ),
 
         // Here we zero out the X speed and literally only use the Y speed. Epic!
         AirTransY => PaddedVec2::new(0.0, move_speed.y),
@@ -427,16 +425,15 @@ unsafe fn motion_update(energy: &mut FighterKineticEnergyMotion, boma: &mut Batt
         // to in order to complete the cliff catch
         // These likely happen in a very brief, perhaps only 1 frame, window
         CliffTransIntp | CliffTrans | CliffTransGround => {
-
             let motion_module = *(boma as *const BattleObjectModuleAccessor as *const u64).add(0x88 / 0x8);
             let motion_vtable = *(motion_module as *const *const u64);
             let some_func: extern "C" fn(u64) -> smash_rs::cpp::simd::Vector4 = std::mem::transmute(*motion_vtable.add(0x230 / 0x8));
             let vec = some_func(motion_module);
             let vec = Vector4f {
-                x: vec.vec[0],
-                y: vec.vec[1],
-                z: vec.vec[2],
-                w: vec.vec[3]
+                x: vec.x(),
+                y: vec.y(),
+                z: vec.z(),
+                w: vec.w()
             };
             if reset_type == CliffTransGround {
                 energy.active_flag = true;
@@ -445,9 +442,9 @@ unsafe fn motion_update(energy: &mut FighterKineticEnergyMotion, boma: &mut Batt
             if reset_type == CliffTransIntp {
                 let frame = WorkModule::get_int(boma, 0x11000005);
                 let interpolated = 1.0 / (frame + 1) as f32;
-                PaddedVec2::new(vec.vec[0] * interpolated, vec.vec[1] * interpolated)
+                PaddedVec2::new(vec.x() * interpolated, vec.y() * interpolated)
             } else {
-                PaddedVec2::new(vec.vec[0], vec.vec[1])
+                PaddedVec2::new(vec.x(), vec.y())
             }
         },
 
@@ -469,7 +466,7 @@ unsafe fn motion_update(energy: &mut FighterKineticEnergyMotion, boma: &mut Batt
         },
 
         // As opposed to LadderMove, LadderTrans is likely for when you are getting on/off the ladder
-        // 
+        //
         // The reason I say this, is due to a bug in reimplementation, when you would get off the ladder you
         // would meet god in the top blastzone
         LadderTrans => {
@@ -510,7 +507,7 @@ unsafe fn motion_update(energy: &mut FighterKineticEnergyMotion, boma: &mut Batt
         energy.speed
     };
 
-    // Since acceleration is just the difference in speed between two frames, just subtract where we want to be 
+    // Since acceleration is just the difference in speed between two frames, just subtract where we want to be
     // and where we were/are
     energy.set_values_and_process(
         PaddedVec2::new(speed.x - speed_to_change_from.x, speed.y - speed_to_change_from.y),

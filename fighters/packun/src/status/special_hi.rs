@@ -3,6 +3,7 @@ use super::*;
 // FIGHTER_STATUS_KIND_SPECIAL_HI
 
 pub unsafe extern "C" fn special_hi_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    VarModule::off_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_hi"), 0.0, 1.0, false, 0.0, false, false);
     }
@@ -19,6 +20,7 @@ pub unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) ->
     if fighter.is_motion(Hash40::new("special_hi")) {
         fighter.set_situation(L2CValue::I32(*SITUATION_KIND_GROUND));
         GroundModule::correct(fighter.module_accessor,GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+        VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
         fighter.change_status(FIGHTER_PACKUN_STATUS_KIND_SPECIAL_HI_END.into(), false.into());
         return 0.into();
     }
@@ -72,6 +74,16 @@ pub unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) ->
     }
 }
 
+pub unsafe extern "C" fn special_hi_end_init(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let ret = smashline::original_status(Init, fighter, *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_HI_END)(fighter);
+    if fighter.is_situation(*SITUATION_KIND_GROUND) {
+        sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.75, 0.0);
+    }
+
+    ret
+}
+
+// FIGHTER_PACKUN_STATUS_KIND_SPECIAL_HI_LANDING
 unsafe extern "C" fn special_hi_end_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     GroundModule::select_cliff_hangdata(fighter.module_accessor, *FIGHTER_PACKUN_CLIFF_HANG_DATA_SPECIAL_HI as u32);
     ItemModule::set_have_item_visibility(fighter.module_accessor, false, 0);
@@ -83,6 +95,7 @@ unsafe extern "C" fn special_hi_end_main_loop(fighter: &mut L2CFighterCommon) ->
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
+    fighter.sub_air_check_dive();
     let status_frame = fighter.get_int(*FIGHTER_PACKUN_STATUS_SPECIAL_HI_WORK_INT_STATUS_FRAME);
     let mut start_no_landing_frame = fighter.get_param_int("param_special_hi", "start_no_landing_frame");
     if fighter.is_motion(Hash40::new("special_hi")) && !fighter.is_prev_situation(*SITUATION_KIND_AIR) { start_no_landing_frame = 999; }
@@ -122,6 +135,22 @@ unsafe extern "C" fn special_hi_end_main_loop(fighter: &mut L2CFighterCommon) ->
             }
         }
     }
+    if fighter.is_motion(Hash40::new("special_hi")) {
+        if StatusModule::is_situation_changed(fighter.module_accessor) {
+            if fighter.is_situation(*SITUATION_KIND_GROUND) {
+                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+            }
+            else {
+                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            }
+        }
+        let stop_add_speed_y_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_hi"), hash40("stop_add_speed_y_frame"));
+        if fighter.is_situation(*SITUATION_KIND_GROUND)
+        && fighter.status_frame() >= stop_add_speed_y_frame {
+            StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_HI_LANDING, false);
+        }
+    }
 
     return 0.into();
 }
@@ -150,13 +179,16 @@ unsafe extern "C" fn special_hi_landing_main_loop(fighter: &mut L2CFighterCommon
             fighter.change_status_req(*FIGHTER_STATUS_KIND_WAIT, false);
         }
         else {
-            fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL, false);
+            fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL_SPECIAL, false);
         }
         return 1.into();
     }
     // <HDR>
     if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_AIR {
-        fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL, false);
+        // edge cancel if started in the air
+        let status = if VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK)
+            { *FIGHTER_STATUS_KIND_FALL_SPECIAL } else { *FIGHTER_STATUS_KIND_FALL };
+        fighter.change_status_req(status, false);
         return 1.into();
     }
     // </HDR>
@@ -165,6 +197,9 @@ unsafe extern "C" fn special_hi_landing_main_loop(fighter: &mut L2CFighterCommon
 
 pub fn install(agent: &mut Agent) {
     agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_HI, special_hi_main);
+
+    agent.status(Init, *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_HI_END, special_hi_end_init);
+    
     agent.status(Main, *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_HI_END, special_hi_end_main);
     agent.status(Main, *FIGHTER_PACKUN_STATUS_KIND_SPECIAL_HI_LANDING, special_hi_landing_main);
 }

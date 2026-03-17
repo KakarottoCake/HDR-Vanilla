@@ -50,5 +50,5 @@ pub fn install() {
     status::install(agent);
     agent.install();
 
-    wariobike::install();
+    // wariobike::install();
 }
