@@ -801,7 +801,7 @@ impl BomaExt for BattleObjectModuleAccessor {
         }
 
         // start the check once we have reached the starting frame
-        if self.status_frame() == start_frame {
+        if self.status_frame() == start_frame && !self.is_button_off(input) {
             VarModule::on_flag(self.object(), vars::common::status::CHECK_HOLD_INPUT);
         }
 
