@@ -970,12 +970,10 @@ pub mod vars {
 
             // flags
             pub const SPECIAL_N_GRAB: i32 = 0x01CF;
-            pub const SPECIAL_LW_DISABLE_STALL: i32 = 0x01D0;
         }
         pub mod status {
             // ints
             pub const ATTACK_CHARGE: i32 = 0x1100;
-            pub const SPECIAL_LW_STOP_Y_FRAME: i32 = 0x1101;
 
             // flags
             pub const SPECIAL_N_ANGLED: i32 = 0x1100;
