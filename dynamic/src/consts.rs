@@ -907,7 +907,6 @@ pub mod vars {
             pub use super::super::miifighter::status::SPECIAL_N1_SPEED;
             pub use super::super::miifighter::status::SPECIAL_N1_EFFECT_HANDLE;
             pub use super::super::miifighter::status::SPECIAL_N1_CHARGE;
-            pub use super::super::miigunner::status::ATTACK_CHARGE;
 
             // flags
             pub const SPECIAL_N_PICKEL_MINING_TIMER: i32 = 0x11F4;
@@ -929,6 +928,7 @@ pub mod vars {
             pub use super::super::mariod::status::SPECIAL_N_CHILL_PILL;
             pub use super::super::miifighter::status::SPECIAL_N1_START_HOLD;
             pub use super::super::miifighter::status::SPECIAL_N1_END_HOLD;
+            pub use super::super::miigunner::status::ATTACK_CHARGE;
         }
     }
 
