@@ -45,7 +45,7 @@ impl FighterKineticEnergyStop {
         unsafe {
             let func: extern "C" fn(&mut BattleObjectModuleAccessor, i32, i32) -> smash_rs::cpp::simd::Vector3 = std::mem::transmute(LinkModule::get_parent_sum_speed as *const ());
             let vec = func(boma, link_no, arg);
-            PaddedVec2::new(vec.vec[0], vec.vec[1])
+            PaddedVec2::new(vec.x(), vec.y())
         }
     }
 }
@@ -101,7 +101,7 @@ unsafe fn update_stop(energy: &mut FighterKineticEnergyStop, boma: &mut BattleOb
         let damage_speed_x = app::lua_bind::KineticEnergy::get_speed_x(damage_energy);
         // If our speed is being influenced by knockback, we handle double traction elsewhere
         if damage_speed_x == 0.0 {
-            let walk_speed_max =  WorkModule::get_param_float(boma, smash::hash40("walk_speed_max"), 0);
+            let walk_speed_max = WorkModule::get_param_float(boma, smash::hash40("walk_speed_max"), 0);
             if matches!(energy.reset_type, Ground | CatchDash | DamageGround | GuardDamage | DamageGroundOrbit | ShieldRebound) {
                 let speed = energy.get_speed();
                 let adjusted_speed = energy::KineticEnergy::adjust_speed_for_ground_normal(speed, boma);
@@ -113,13 +113,12 @@ unsafe fn update_stop(energy: &mut FighterKineticEnergyStop, boma: &mut BattleOb
                 }
             }
         }
-        
     }
 
     // </HDR>
 
     call_original!(energy, boma);
-    
+
     energy.speed_brake = backup_brake;
 }
 

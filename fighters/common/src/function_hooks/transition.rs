@@ -15,6 +15,23 @@ unsafe fn is_enable_transition_term_hook(boma: &mut BattleObjectModuleAccessor, 
         let status_kind = StatusModule::status_kind(boma);
         let id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
 
+        // disabled transitions for RoA mode
+        if utils::game_modes::check_custom_mode(game_modes::CustomMode::RivalsOfAetherMode)
+        && [
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CLIFF_CATCH,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_DASH,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_TURN,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_ATTACK,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_ESCAPE,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_JUMP,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_JUMP_BUTTON,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CLIFF_SPEICAL,
+            *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE,
+        ].contains(&flag) {
+            return false;
+        }
+
         // Disallow airdodge out of tumble until you reach your stable fall speed
         if flag == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_AIR
         && [*FIGHTER_STATUS_KIND_DAMAGE_FLY, *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL, *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR].contains(&status_kind) {
