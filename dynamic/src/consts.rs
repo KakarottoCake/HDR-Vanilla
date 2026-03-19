@@ -1900,7 +1900,6 @@ pub mod vars {
         pub mod status {
             // flags
             pub const ATTACK_S4_CLEAR_CRIT: i32 = 0x1100;
-            pub const SPECIAL_HI_CHECK_HOLD: i32 = 0x1101;
         }
     }
 

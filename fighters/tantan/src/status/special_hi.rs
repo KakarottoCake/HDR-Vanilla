@@ -240,19 +240,9 @@ unsafe extern "C" fn special_hi_air_pre(fighter: &mut L2CFighterCommon) -> L2CVa
     return 0.into();
 }
 
-unsafe extern "C" fn special_hi_air_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    VarModule::on_flag(fighter.battle_object, vars::tantan::status::SPECIAL_HI_CHECK_HOLD);
-
-    return smashline::original_status(Main, fighter, *FIGHTER_TANTAN_STATUS_KIND_SPECIAL_HI_AIR)(fighter);
-}
-
 unsafe extern "C" fn special_hi_air_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if ControlModule::check_button_release(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-        VarModule::off_flag(fighter.battle_object, vars::tantan::status::SPECIAL_HI_CHECK_HOLD);
-    }
-    if fighter.status_frame() == 9 {
-        if VarModule::is_flag(fighter.battle_object, vars::tantan::status::SPECIAL_HI_CHECK_HOLD)
-        && !VarModule::is_flag(fighter.battle_object, vars::tantan::instance::SPECIAL_HI_GROUND_START)
+    if fighter.check_hold_input(0, 9, Buttons::SpecialAll) {  // this is in exec, so it will pass on frame 10 of the status
+        if !VarModule::is_flag(fighter.battle_object, vars::tantan::instance::SPECIAL_HI_GROUND_START)
         && !VarModule::is_flag(fighter.battle_object, vars::tantan::instance::SPECIAL_HI_AIR_JUMP) {
             // start charging, but only if we haven't already used Arm Jump yet
             VarModule::on_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
@@ -261,12 +251,13 @@ unsafe extern "C" fn special_hi_air_exec(fighter: &mut L2CFighterCommon) -> L2CV
             notify_event_msc_cmd!(fighter, Hash40::new_raw(0x20cbc92683), 1, FIGHTER_LOG_DATA_INT_ATTACK_NUM_KIND, (*FIGHTER_LOG_ATTACK_KIND_ADDITIONS_ATTACK_09) + -1);
             return 1.into();
         }
-        else {
+    }
+    else {
+        if fighter.status_frame() == 9 {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_AIR_LASSO_FLAG_CHECK);
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_AIR_LASSO_FLAG_HANG_IMMIDIATE);
             GroundModule::select_cliff_hangdata(fighter.module_accessor, *FIGHTER_TANTAN_CLIFF_HANG_DATA_AIR_LASSO as u32);
         }
-        VarModule::off_flag(fighter.battle_object, vars::tantan::status::SPECIAL_HI_CHECK_HOLD);
     }
     
     let angle = (fighter.stick_x() * -10.0 * PostureModule::lr(fighter.module_accessor)) - 5.0;
@@ -299,7 +290,7 @@ pub fn install(agent: &mut Agent) {
     agent.status(Main, *FIGHTER_TANTAN_STATUS_KIND_SPECIAL_HI_GROUND_END, special_hi_ground_end_main);
     
     agent.status(Pre, *FIGHTER_TANTAN_STATUS_KIND_SPECIAL_HI_AIR, special_hi_air_pre);
-    agent.status(Main, *FIGHTER_TANTAN_STATUS_KIND_SPECIAL_HI_AIR, special_hi_air_main);
+    //agent.status(Main, *FIGHTER_TANTAN_STATUS_KIND_SPECIAL_HI_AIR, special_hi_air_main);
     agent.status(Exec, *FIGHTER_TANTAN_STATUS_KIND_SPECIAL_HI_AIR, special_hi_air_exec);
 
     agent.status(Exec, *FIGHTER_TANTAN_STATUS_KIND_SPECIAL_HI_AIR_REACH, special_hi_air_reach_exec);
