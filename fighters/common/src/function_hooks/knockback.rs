@@ -48,7 +48,7 @@ unsafe fn process_knockback(ctx: &skyline::hooks::InlineCtx) {
     if let Some((defender, attacker)) = IS_CALCULATING {
         let boma = ctx.registers[20].x() as *mut smash::app::BattleObjectModuleAccessor;
         if (*boma).battle_object_id == defender {
-            process_item_on_collision(defender, attacker);
+            process_item_on_collision(defender, attacker, ctx.registers[19].x() as *const f32);
             calculate_finishing_hit(defender, attacker, ctx.registers[19].x() as *const f32);
         }
     }
@@ -81,11 +81,14 @@ pub unsafe extern "C" fn set_attacker_team_color(attacker:u32) {
     // if LAST_ATTACK_TEAM_COLOR == 9 { LAST_ATTACK_TEAM_COLOR = 0 };
 }
 
-pub unsafe extern "C" fn process_item_on_collision(defender: u32, attacker: u32) {
+pub unsafe extern "C" fn process_item_on_collision(defender: u32, attacker: u32, knockback_info: *const f32) {
     let defender_boma = &mut *(*util::get_battle_object_from_id(defender)).module_accessor;
     let attacker_boma = &mut *(*util::get_battle_object_from_id(attacker)).module_accessor;
     if defender_boma.is_item() {
         if defender_boma.kind() == *ITEM_KIND_DAISYDAIKON {
+            let damage = *knockback_info.add(22);
+            let carrot_dmg = WorkModule::get_int64(defender_boma, *ITEM_DAISYDAIKON_INSTANCE_WORK_INT_ATTACK_POWER) as f32;
+            WorkModule::set_int64(defender_boma, (carrot_dmg + damage) as i64, *ITEM_DAISYDAIKON_INSTANCE_WORK_INT_ATTACK_POWER);
             if attacker_boma.is_fighter() {
                 let attacker_team_no = TeamModule::hit_team_no(attacker_boma) as i32;
                 TeamModule::set_team(defender_boma, attacker_team_no, false);
@@ -371,16 +374,17 @@ unsafe fn set_damage_lr(ctx: &mut skyline::hooks::InlineCtx) {
     let damage_lr: f32 = {
         if attack_lr_check != *ATTACK_LR_CHECK_F && attack_lr_check != *ATTACK_LR_CHECK_B {
             // If reverse hits are disabled for a hitbox,
-            // always determine facing direction solely based on attacker base position
+            // always determine facing direction solely based on the attacker's base position
+            // in relation to your base position
             default_lr
         } else {
-            // Calculate the half-distance to your ECB's outermost edge
-            let ecb_mid = if opponent_pos_x >= pos_x {
+            // Get the position of your ECB's forward point
+            let ecb_front = if opponent_pos_x >= pos_x {
                 let ecb_right = *GroundModule::get_rhombus(boma, true).add(3);
-                ((ecb_right.x - pos_x) * 0.5) + pos_x
+                ecb_right.x
             } else {
                 let ecb_left = *GroundModule::get_rhombus(boma, true).add(2);
-                ((pos_x - ecb_left.x) * 0.5) + ecb_left.x
+                ecb_left.x
             };
 
             let attacker_lr = PostureModule::lr(opponent_boma);
@@ -394,16 +398,16 @@ unsafe fn set_damage_lr(ctx: &mut skyline::hooks::InlineCtx) {
                     || (attack_lr_check == *ATTACK_LR_CHECK_B && attacker_lr > 0.0)
             };
 
-            // Determine whether your mid-ECB crosses the attacker's base position
-            let mid_ecb_crosses_attacker = if opponent_pos_x >= pos_x {
-                ecb_mid >= opponent_pos_x
+            // Determine whether your ECB crosses the attacker's base position
+            let ecb_crosses_attacker = if opponent_pos_x >= pos_x {
+                ecb_front >= opponent_pos_x
             } else {
-                ecb_mid <= opponent_pos_x
+                ecb_front <= opponent_pos_x
             };
 
             // If hit behind the attacker,
             // only turn to face them if you are far enough behind them
-            if is_behind_attacker && mid_ecb_crosses_attacker {
+            if is_behind_attacker && ecb_crosses_attacker {
                 -default_lr
             } else {
                 default_lr

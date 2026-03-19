@@ -487,7 +487,6 @@ local set_tab_form_text = function(stage_form)
     }
 
     tab_layout:play_animation(string.format("stage_%s", form_names[stage_form + 1]), 1.0)
-    tab_form_button_pane:set_text_message(string.format("mel_stage_select_%s", form_names[stage_form + 1]))
 end
 
 -- Plays the looping long-cancel sound effect (when you are holding B to exit)
@@ -1036,6 +1035,8 @@ local change_sub_page = function(target_page)
         page_back = #pages
     end
 
+    local page_current = target_page + 1
+
     local page_forward = target_page + 2
     if page_forward > #pages then
         page_forward = 1
@@ -1043,6 +1044,7 @@ local change_sub_page = function(target_page)
 
     root_view:get_pane("txt_page_back"):set_text_string("Page " .. page_back)
     root_view:get_pane("txt_page_forward"):set_text_string("Page " .. page_forward)
+    tab_form_button_pane:set_text_string("Page " .. page_current)
 
     local positions = {}
 
@@ -1807,9 +1809,16 @@ local handle_panel_decide = function()
         UiScriptPlayer.invoke("play_rumble_input_device")
     end
 
-    UiSoundManager.play_se_label("se_system_plate_off_stageselect")
-    if IS_DECIDE_SE_AUDIENCE == true then
+    if IS_MY_MUSIC == false and HDR.is_css_first() then
+        -- the CSS used to play these when going to a match, so now
+        -- the SSS does
+        UiSoundManager.play_se_label("se_system_r2f_fixed")
         UiSoundManager.play_se_label("se_audience_suddendeath")
+    else
+        UiSoundManager.play_se_label("se_system_plate_off_stageselect")
+        if IS_DECIDE_SE_AUDIENCE then
+            UiSoundManager.play_se_label("se_audience_suddendeath")
+        end
     end
 
     if check_all_previews_enabled() == true then
@@ -2062,6 +2071,7 @@ end
 
 -- CLOSURE_74, R134
 local update_stage_previews = function()
+    ENABLE_STAGE_FORM_TYPE = false
     prev_highlighed_preview = highlighed_preview
 
     highlighed_preview = UiScriptPlayer.invoke("get_hand_on_stage_preview_id")
@@ -2629,7 +2639,14 @@ local regular_main_update = function()
                             end
                         end
                         if is_valid_stage == true and prepare_scene_exit() == true then
-                            UiSoundManager.play_se_label("se_system_fixed_s")
+                            if IS_MY_MUSIC == false and HDR.is_css_first() then
+                                -- the CSS used to play these when going to a match, so now
+                                -- the SSS does
+                                UiSoundManager.play_se_label("se_system_r2f_fixed")
+                                UiSoundManager.play_se_label("se_audience_suddendeath")
+                            else
+                                UiSoundManager.play_se_label("se_system_fixed_s")
+                            end
                             local off_preview_index = -1
                             if check_all_previews_enabled() == false then
                                 play_off_preview_animation(current_selected_preview)
@@ -2742,6 +2759,7 @@ main = function()
     stage_select_bgm:setup()
     setup_from_environment()
     root_view:play_animation("in", 1.0)
+    IS_SIMPLE_CANCEL = IS_SIMPLE_CANCEL or HDR.is_css_first()
     if IS_SIMPLE_CANCEL == true then
         local parts = root_view:get_parts("set_parts_txt_head_00")
         if IS_RETURN_MENU == false then
@@ -2821,4 +2839,4 @@ end
 -- here begins The Great Buffer of empty string data, so that
 -- arcropolis will correctly allocate the necessary space for
 -- loading the (larger) tourney mode version of this file.
--- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding --
+-- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding -- padding --

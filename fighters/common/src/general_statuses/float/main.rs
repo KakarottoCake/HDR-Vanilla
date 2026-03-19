@@ -4,14 +4,15 @@ use super::*;
 unsafe fn float_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
     sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, 0.0, 0.0, 0.0, 0.0);
     KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+    float_jump_leniency(fighter);
     float_drift_common(fighter);
     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING_ATTACK_AIR);
     WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_LANDING);
     WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_SPECIAL);
     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_AIR_LASSO);
 
-    let float_frame = VarModule::get_int(fighter.battle_object, vars::common::instance::FLOAT_DURATION);
-    VarModule::set_int(fighter.battle_object, vars::common::status::FLOAT_FRAME, float_frame);
+    let float_duration = VarModule::get_int(fighter.battle_object, vars::common::instance::FLOAT_DURATION);
+    VarModule::set_int(fighter.battle_object, vars::common::status::FLOAT_FRAME, float_duration);
     VarModule::set_int(fighter.battle_object, vars::common::status::FLOAT_ENABLE_UNIQ, 1);
     VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_FLOAT);
 
@@ -104,7 +105,12 @@ unsafe fn float_set_aerial(fighter: &mut L2CFighterCommon) {
 
 #[no_mangle]
 unsafe fn float_main_loop_common(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[CURRENT_FRAME].get_f32() == 3.0
+    let mewtwo = fighter.global_table[0x2].get_i32() == *FIGHTER_KIND_MEWTWO;
+    let buffer = ControlModule::get_command_life_count_max(fighter.module_accessor) as i32;
+    let float_duration = VarModule::get_int(fighter.battle_object, vars::common::instance::FLOAT_DURATION);
+    let float_frame = VarModule::get_int(fighter.battle_object, vars::common::status::FLOAT_FRAME); // inc at end of loop
+
+    if (float_frame - float_duration).abs() == 4
     && VarModule::is_flag(fighter.battle_object, vars::common::instance::OMNI_FLOAT) {
         let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         sv_kinetic_energy!(
@@ -126,6 +132,11 @@ unsafe fn float_main_loop_common(fighter: &mut L2CFighterCommon) -> L2CValue {
             0.0
         );
         float_drift_common(fighter);
+    }
+
+    if (float_frame - float_duration).abs() == buffer
+    && mewtwo { // mewtwo jump burn leniency
+        fighter.inc_int(*FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
     }
 
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
@@ -163,7 +174,7 @@ unsafe fn float_main_loop_common(fighter: &mut L2CFighterCommon) -> L2CValue {
     }
 
     if VarModule::get_int(fighter.battle_object, vars::common::status::FLOAT_MTRANS) == 2
-    && VarModule::get_int(fighter.battle_object, vars::common::status::FLOAT_FRAME) <= 0 {
+    && float_frame <= 0 {
         ControlModule::clear_command_one(fighter.module_accessor, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N);
         let cat1 = ControlModule::get_command_flag_cat(fighter.module_accessor, 0);
         fighter.global_table[CMD_CAT1].assign(&L2CValue::I32(cat1));
@@ -172,7 +183,7 @@ unsafe fn float_main_loop_common(fighter: &mut L2CFighterCommon) -> L2CValue {
     }
 
     if VarModule::get_int(fighter.battle_object, vars::common::status::FLOAT_MTRANS) == 1
-    && VarModule::get_int(fighter.battle_object, vars::common::status::FLOAT_FRAME) <= 0 {
+    && float_frame <= 0 {
         fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_AIR.into(), true.into());
         return 0.into();
     }
@@ -180,7 +191,7 @@ unsafe fn float_main_loop_common(fighter: &mut L2CFighterCommon) -> L2CValue {
     // Unique Down Special stuff is usually here but we don't want it
 
     if VarModule::get_int(fighter.battle_object, vars::common::status::FLOAT_ENABLE_UNIQ) == 1 {
-        if VarModule::get_int(fighter.battle_object, vars::common::status::FLOAT_FRAME) > 0 {
+        if float_frame > 0 {
             VarModule::dec_int(fighter.battle_object, vars::common::status::FLOAT_FRAME);
             if VarModule::get_int(fighter.battle_object, vars::common::status::FLOAT_FRAME) == 0 {
                 VarModule::set_int(fighter.battle_object, vars::common::status::FLOAT_ENABLE_UNIQ, 0);
@@ -238,6 +249,19 @@ unsafe fn float_drift_common(fighter: &mut L2CFighterCommon) -> L2CValue {
     lua_bind::FighterKineticEnergyController::set_accel_x_mul(fighter.get_controller_energy(), float_accel_mul);
     lua_bind::FighterKineticEnergyController::set_accel_y_add(fighter.get_controller_energy(), float_accel_add);
     lua_bind::FighterKineticEnergyController::set_accel_y_mul(fighter.get_controller_energy(), float_accel_mul);
+    0.into()
+}
+
+#[no_mangle]
+unsafe fn float_jump_leniency(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let buffer = ControlModule::get_command_life_count_max(fighter.module_accessor);
+    if fighter.global_table[PREV_STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_JUMP_AERIAL
+    && fighter.global_table[PREV_STATUS_FRAME].get_i32() <= buffer as i32 {
+        fighter.dec_int(*FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
+        fighter.clear_lua_stack();
+        lua_args!(fighter, Hash40::new("sys_jump_aerial"), true, true);
+        smash::app::sv_animcmd::EFFECT_OFF_KIND(fighter.lua_state_agent);
+    }
     0.into()
 }
 

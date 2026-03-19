@@ -39,12 +39,17 @@ mod online;
 #[cfg(feature = "main_nro")]
 mod matchup;
 
+pub mod vsync;
+
 use skyline::libc::c_char;
 use std::os::raw::c_void;
 #[cfg(feature = "main_nro")]
 use skyline_web::*;
 use std::{fs, path::Path};
 use utils::STAGE_MANAGER;
+use std::sync::atomic::Ordering;
+use dynamic::util::MATCH_EXITING;
+use utils::one_player::SPAWN_POS_CAPTURED;
 
 #[cfg(not(feature = "main_nro"))]
 #[no_mangle]
@@ -162,7 +167,7 @@ unsafe fn training_reset_music1(ctx: &skyline::hooks::InlineCtx) {
 
 #[skyline::hook(offset = 0x235cad0, inline)]
 unsafe fn main_menu_quick(ctx: &skyline::hooks::InlineCtx) {
-    let sp = (ctx as *const skyline::hooks::InlineCtx as *mut u8).add(0x300);
+    let sp = ctx.sp.x() as *mut u8;
     *(sp.add(0x60) as *mut u64) = 0x1100000000;
     let mut slice = std::slice::from_raw_parts_mut(sp.add(0x68), 18);
     slice.copy_from_slice(b"MenuSequenceScene\0");
@@ -291,12 +296,15 @@ impl HashedString {
     }
 }
 
+pub static mut NEW_CSS_SFX: bool = false;
+
 #[skyline::hook(offset = 0x23357f8, inline)]
 unsafe fn sss_to_css(ctx: &InlineCtx) {
     let hashed_string = ctx.registers[1].x() as *mut HashedString;
     let current_scene = (*hashed_string).as_str();
 
     if current_scene == "StageSelectScene" {
+        NEW_CSS_SFX = true;
         (*hashed_string).set("CharaSelectScene");
     }
 }
@@ -319,6 +327,9 @@ unsafe fn css_to_sss(ctx: &InlineCtx) {
         // add them as they're found.
         if flag == 0 {
             (*hashed_string).set("StageSelectScene");
+        }
+        else {
+            NEW_CSS_SFX = false;
         }
     }
 }
@@ -391,12 +402,18 @@ unsafe fn scene_transition(
         let key_str = skyline::from_c_str(str_ptr);
         println!("Transitioning to scene: '{}'", key_str);
 
-        // Clear perma-strikes when going to main menu or the rules screen
         if key_str == "MeleeRuleScene" || key_str == "MainMenuScene" {
+            // Clear perma-strikes when going to main menu or the rules screen
             let mut mgr = STAGE_MANAGER.lock().unwrap();
             mgr.perma_striked_stages.clear();
+
+            // Make sure new CSS SFX don't carry over to other modes unintentionally
+            NEW_CSS_SFX = false;
         }
     }
+
+    MATCH_EXITING.store(false, Ordering::Relaxed);
+    SPAWN_POS_CAPTURED.store(false, Ordering::Relaxed);
 
     call_original!(list_ptr, key_struct, context_struct, factory);
 }
@@ -405,6 +422,7 @@ unsafe fn scene_transition(
 pub fn main() {
     #[cfg(feature = "main_nro")]
     {
+        vsync::setup_ssbu_sync();
         quick_validate_install();
         skyline::install_hooks!(change_version_string_hook);
         chara_select::install();
@@ -421,7 +439,7 @@ pub fn main() {
             title_screen_play,
             sss_to_css,
             css_to_sss,
-            scene_transition
+            scene_transition,
             //copy_fighter_info,
             //load_ingame_call_sequence_scene,
             //load_melee_scene,

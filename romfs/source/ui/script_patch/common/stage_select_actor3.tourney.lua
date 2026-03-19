@@ -406,7 +406,6 @@ local set_tab_form_text = function(stage_form)
     }
 
     tab_layout:play_animation(string.format("stage_%s", form_names[stage_form + 1]), 1.0)
-    tab_form_button_pane:set_text_message(string.format("mel_stage_select_%s", form_names[stage_form + 1]))
 end
 
 -- Plays the looping long-cancel sound effect (when you are holding B to exit)
@@ -1053,9 +1052,22 @@ local change_page = function(should_play_page_change)
 end
 
 local change_sub_page = function(target_page)
-    local page_name = HDR.get_page_name(target_page)
-    root_view:get_pane("txt_page_back"):set_text_string(page_name)
-    root_view:get_pane("txt_page_forward"):set_text_string(page_name)
+    local back_page = target_page - 1
+    if back_page < 0 then
+        back_page = total_pages - 1
+    end
+
+    local forward_page = target_page + 1
+    if forward_page >= total_pages then
+        forward_page = 0
+    end
+
+    local back_page_name = HDR.get_page_name(back_page)
+    local forward_page_name = HDR.get_page_name(forward_page)
+    local current_page_name = HDR.get_page_name(target_page)
+    root_view:get_pane("txt_page_back"):set_text_string(back_page_name)
+    root_view:get_pane("txt_page_forward"):set_text_string(forward_page_name)
+    tab_form_button_pane:set_text_string(current_page_name)
     
     local bans = HDR.get_bans(target_page)
     local dsr = HDR.get_dsr(target_page)
@@ -1300,6 +1312,8 @@ local setup_from_environment = function()
         current_id = i - 1
         local preview = stage_previews[i]
         preview.enable_ = UiScriptPlayer.invoke("is_valid_entrance_param", current_id)
+        set_alt_texture(true, nil, current_id)
+        set_alt_texture(false, nil, current_id)
         if preview.enable_ == true then
             last_enabled_preview = i
             preview.form_type_ = UiScriptPlayer.invoke("get_stage_form_type_entrance_param", current_id)
@@ -1443,6 +1457,7 @@ local setup_from_environment = function()
 
     change_sub_page(page)
     set_stage_preview_from_stage_panel(preview, panel)
+    set_alt_panel_textures(nil)
 end
 
 -- Cancels, presumably a part of the exit sequence
@@ -1896,9 +1911,16 @@ local handle_panel_decide = function()
         UiScriptPlayer.invoke("play_rumble_input_device")
     end
 
-    UiSoundManager.play_se_label("se_system_plate_off_stageselect")
-    if IS_DECIDE_SE_AUDIENCE == true then
+    if IS_MY_MUSIC == false and HDR.is_css_first() then
+        -- the CSS used to play these when going to a match, so now
+        -- the SSS does
+        UiSoundManager.play_se_label("se_system_r2f_fixed")
         UiSoundManager.play_se_label("se_audience_suddendeath")
+    else
+        UiSoundManager.play_se_label("se_system_plate_off_stageselect")
+        if IS_DECIDE_SE_AUDIENCE then
+            UiSoundManager.play_se_label("se_audience_suddendeath")
+        end
     end
 
     if check_all_previews_enabled() == true then
@@ -2151,6 +2173,7 @@ end
 
 -- CLOSURE_74, R134
 local update_stage_previews = function()
+    ENABLE_STAGE_FORM_TYPE = false
     prev_highlighed_preview = highlighed_preview
 
     highlighed_preview = UiScriptPlayer.invoke("get_hand_on_stage_preview_id")
@@ -2769,7 +2792,14 @@ local regular_main_update = function()
                             end
                         end
                         if is_valid_stage == true and prepare_scene_exit() == true then
-                            UiSoundManager.play_se_label("se_system_fixed_s")
+                            if IS_MY_MUSIC == false and HDR.is_css_first() then
+                                -- the CSS used to play these when going to a match, so now
+                                -- the SSS does
+                                UiSoundManager.play_se_label("se_system_r2f_fixed")
+                                UiSoundManager.play_se_label("se_audience_suddendeath")
+                            else
+                                UiSoundManager.play_se_label("se_system_fixed_s")
+                            end
                             local off_preview_index = -1
                             if check_all_previews_enabled() == false then
                                 play_off_preview_animation(current_selected_preview)
@@ -2783,7 +2813,6 @@ local regular_main_update = function()
                             end
                         end
                     elseif virtual_input:is_decide() == true and get_page_button_dir() == 0 then
-                        -- possible
                         handle_panel_decide()
                     elseif virtual_input:is_pressed(INPUT_BGM_SELECT) == true then
                         local index = current_selected_preview
@@ -2884,6 +2913,7 @@ main = function()
     stage_select_bgm:setup()
     xpcall(setup_from_environment, print_error_handler)
     root_view:play_animation("in", 1.0)
+    IS_SIMPLE_CANCEL = IS_SIMPLE_CANCEL or HDR.is_css_first()
     if IS_SIMPLE_CANCEL == true then
         local parts = root_view:get_parts("set_parts_txt_head_00")
         if IS_RETURN_MENU == false then

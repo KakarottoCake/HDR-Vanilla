@@ -37,4 +37,7 @@
         <float hash="fall_special_accel_x_mul">1</float>
         <float hash="fall_special_speed_x_max_mul">0.6</float>
     </struct>
+    <struct hash="param_special_lw">
+      <float hash="shield_hit_speed_x_mul">0.1</float>
+    </struct>
 </struct>
