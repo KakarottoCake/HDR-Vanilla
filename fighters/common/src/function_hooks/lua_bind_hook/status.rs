@@ -227,27 +227,23 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
     let mut clear_buffer = arg3;
 
     if boma.is_fighter() {
-        match utils::game_modes::get_custom_mode() {
-            Some(modes) => {
-                if modes.contains(&CustomMode::Smash64Mode) {
-                    if [*FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_PASSIVE_CEIL, *FIGHTER_STATUS_KIND_PASSIVE_WALL, *FIGHTER_STATUS_KIND_PASSIVE_WALL_JUMP].contains(&next_status) {
-                        return 0;
-                    }
-                }
-            },
-            _ => {}
+        if utils::game_modes::check_custom_mode(CustomMode::Smash64Mode) {
+            if [
+                *FIGHTER_STATUS_KIND_ESCAPE_AIR,
+                *FIGHTER_STATUS_KIND_PASSIVE_CEIL,
+                *FIGHTER_STATUS_KIND_PASSIVE_WALL,
+                *FIGHTER_STATUS_KIND_PASSIVE_WALL_JUMP
+            ].contains(&next_status) {
+                return 0;
+            }
         }
 
         // Allow buffered wavedashes when Shield is pressed at any time within Jump input's buffer window
         if next_status == *FIGHTER_STATUS_KIND_JUMP_SQUAT {
             if boma.is_cat_flag(Cat1::AirEscape) && !boma.is_cat_flag(Cat1::AttackN) {
-                match utils::game_modes::get_custom_mode() {
-                    Some(modes) => {
-                        if !modes.contains(&CustomMode::Smash64Mode) {
-                            VarModule::on_flag(boma.object(), vars::common::instance::ENABLE_AIR_ESCAPE_JUMPSQUAT);
-                        }
-                    },
-                    _ => { VarModule::on_flag(boma.object(), vars::common::instance::ENABLE_AIR_ESCAPE_JUMPSQUAT); }
+                // not for smash64 mode though
+                if !utils::game_modes::check_custom_mode(CustomMode::Smash64Mode) {
+                    VarModule::on_flag(boma.object(), vars::common::instance::ENABLE_AIR_ESCAPE_JUMPSQUAT);
                 }
             }
         }
@@ -284,11 +280,6 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
             || WorkModule::is_flag(boma, *FIGHTER_STATUS_DAMAGE_FLAG_FLY_DISABLE_PASSIVE)
             || StatusModule::prev_status_kind(boma, 0) == *FIGHTER_STATUS_KIND_CATCHED_AIR_END_GANON {   
                 VarModule::on_flag(boma.object(), vars::common::instance::DOWN_DISABLE_PASSIVE);
-            }
-
-            if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_GANON_SPECIAL_S_DAMAGE_FALL_GROUND)
-            || WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_GANON_SPECIAL_S_DAMAGE_FALL_AIR) {
-                VarModule::on_flag(boma.object(), vars::common::instance::DOWN_DISABLE_A_LAND);
             }
         }
 
@@ -341,34 +332,40 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
             }
         }
 
-        if boma.kind() == *FIGHTER_KIND_KOOPAJR
-        && StatusModule::status_kind(boma) == *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_S_DASH
-        && StatusModule::situation_kind(boma) == *SITUATION_KIND_GROUND
-        && next_status == *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_S_JUMP {
-            next_status = *FIGHTER_STATUS_KIND_JUMP_SQUAT;
+        if boma.kind() == *FIGHTER_KIND_KOOPAJR {
+            if StatusModule::status_kind(boma) == *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_S_DASH
+            && StatusModule::situation_kind(boma) == *SITUATION_KIND_GROUND
+            && next_status == *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_S_JUMP {
+                next_status = *FIGHTER_STATUS_KIND_JUMP_SQUAT;
+            }
+
+            // Prevent jumping out of Clown Kart Dash when out of jumps
+            if boma.is_status_one_of(&[*FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_S_DASH, *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_S_SPIN_TURN])
+            && next_status == *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_S_JUMP
+            && boma.get_num_used_jumps() >= boma.get_jump_count_max() {
+                return 0;
+            }
         }
 
-        if boma.kind() == *FIGHTER_KIND_REFLET
-        && StatusModule::status_kind(boma) == *FIGHTER_STATUS_KIND_SPECIAL_HI
-        && next_status == *FIGHTER_STATUS_KIND_FALL_SPECIAL
-        && !VarModule::is_flag(boma.object(), vars::reflet::instance::SPECIAL_HI_ENABLE_FREEFALL) {
-            next_status = *FIGHTER_STATUS_KIND_FALL;
+        // Prevent jumping out of Splat Roller when out of jumps
+        if boma.kind() == *FIGHTER_KIND_INKLING
+        && boma.is_status_one_of(&[*FIGHTER_INKLING_STATUS_KIND_SPECIAL_S_RUN, *FIGHTER_INKLING_STATUS_KIND_SPECIAL_S_WALK])
+        && next_status == *FIGHTER_INKLING_STATUS_KIND_SPECIAL_S_JUMP_END
+        && boma.get_num_used_jumps() >= boma.get_jump_count_max() {
+            WorkModule::off_flag(boma, *FIGHTER_INKLING_STATUS_SPECIAL_S_FLAG_JUMP_END);
+            return 0;
         }
 
-        if boma.kind() == *FIGHTER_KIND_MEWTWO 
-        && StatusModule::status_kind(boma) == *FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_HI_3
-        && next_status == *FIGHTER_STATUS_KIND_FALL_SPECIAL
-        && VarModule::is_flag(boma.object(), vars::common::instance::UP_SPECIAL_CANCEL)
-        && !VarModule::is_flag(boma.object(), vars::mewtwo::instance::SPECIAL_HI_ENABLE_FREEFALL) {
-            next_status = *FIGHTER_STATUS_KIND_FALL;
-        }
-
-        if boma.kind() == *FIGHTER_KIND_PALUTENA 
-        && StatusModule::status_kind(boma) == *FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_3
-        && next_status == *FIGHTER_STATUS_KIND_FALL_SPECIAL
-        && VarModule::is_flag(boma.object(), vars::common::instance::UP_SPECIAL_CANCEL)
-        && !VarModule::is_flag(boma.object(), vars::palutena::instance::SPECIAL_HI_ENABLE_FREEFALL) {
-            next_status = *FIGHTER_STATUS_KIND_FALL;
+        if boma.kind() == *FIGHTER_KIND_REFLET {
+            if StatusModule::status_kind(boma) == *FIGHTER_STATUS_KIND_SPECIAL_HI
+            && next_status == *FIGHTER_STATUS_KIND_FALL_SPECIAL
+            && !VarModule::is_flag(boma.object(), vars::reflet::instance::SPECIAL_HI_ENABLE_FREEFALL) {
+                next_status = *FIGHTER_STATUS_KIND_FALL;
+            }
+            if boma.is_status_one_of(&[*FIGHTER_REFLET_STATUS_KIND_SPECIAL_LW_CAPTURE, *FIGHTER_REFLET_STATUS_KIND_SPECIAL_LW_END])
+            && next_status == *FIGHTER_STATUS_KIND_FALL_SPECIAL {
+                next_status = *FIGHTER_STATUS_KIND_FALL;
+            }
         }
 
         if boma.kind() == *FIGHTER_KIND_KOOPAJR {
@@ -417,6 +414,13 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
             boma.object(),
             vars::common::instance::PREV_STATUS_TRANSITION_FRAME,
             util::get_fighter_common_from_accessor(boma).global_table[CURRENT_FRAME].get_i32()
+        );
+
+        let inflict_status = AttackModule::get_inflict_status(boma);
+        VarModule::set_int(
+            boma.object(),
+            vars::common::instance::PREV_STATUS_INFLICT_STATUS,
+            inflict_status
         );
 
         VarModule::set_flag(

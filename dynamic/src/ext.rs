@@ -402,6 +402,7 @@ pub trait BomaExt {
     // INPUTS
     unsafe fn clear_commands<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T);
     unsafe fn get_command_life<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T) -> u8;
+    unsafe fn set_command_life<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T, life: u8);
     unsafe fn is_cat_flag<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T) -> bool;
     unsafe fn is_cat_flag_all<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T) -> bool;
     unsafe fn is_pad_flag(&mut self, pad_flag: PadFlag) -> bool;
@@ -413,6 +414,7 @@ pub trait BomaExt {
     unsafe fn was_prev_button_off(&mut self, buttons: Buttons) -> bool;
     unsafe fn stick_x(&mut self) -> f32;
     unsafe fn stick_y(&mut self) -> f32;
+    unsafe fn stick_polar(&mut self) -> (f32, f32);
     unsafe fn prev_stick_x(&mut self) -> f32;
     unsafe fn prev_stick_y(&mut self) -> f32;
     unsafe fn is_input_jump(&mut self) -> bool;
@@ -480,6 +482,7 @@ pub trait BomaExt {
     // gets the boma of the player who is grabbing you
     unsafe fn get_grabber_boma(&mut self) -> &mut BattleObjectModuleAccessor;
     unsafe fn get_owner_boma(&mut self) -> &mut BattleObjectModuleAccessor;
+    unsafe fn get_team_owner_boma(&mut self) -> &mut BattleObjectModuleAccessor;
 
     // WORK
     unsafe fn get_int(&mut self, what: i32) -> i32;
@@ -594,6 +597,19 @@ impl BomaExt for BattleObjectModuleAccessor {
         return crate::modules::InputModule::get_command_life(self.object(), cat, bits);
     }
 
+    unsafe fn set_command_life<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T, life: u8) {
+        let cat = fighter_pad_cmd_flag.into();
+        let (cat, bits) = match cat {
+            CommandCat::Cat1(cat) => (0, cat.bits()),
+            CommandCat::Cat2(cat) => (1, cat.bits()),
+            CommandCat::Cat3(cat) => (2, cat.bits()),
+            CommandCat::Cat4(cat) => (3, cat.bits()),
+            CommandCat::CatHdr(cat) => (4, cat.bits()),
+        };
+
+        crate::modules::InputModule::set_command_life(self.object(), cat, bits, life);
+    }
+
     unsafe fn is_cat_flag<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T) -> bool {
         let cat = fighter_pad_cmd_flag.into();
         match cat {
@@ -650,6 +666,14 @@ impl BomaExt for BattleObjectModuleAccessor {
 
     unsafe fn stick_y(&mut self) -> f32 {
         return ControlModule::get_stick_y(self);
+    }
+
+    unsafe fn stick_polar(&mut self) -> (f32, f32) {
+        let stick_x = self.stick_x();
+        let stick_y = self.stick_y();
+        let mag = (stick_x.powi(2) + stick_y.powi(2)).sqrt();
+        let rad = stick_y.atan2(stick_x);
+        (mag, rad)
     }
 
     unsafe fn prev_stick_x(&mut self) -> f32 {
@@ -923,6 +947,12 @@ impl BomaExt for BattleObjectModuleAccessor {
         return &mut *sv_battle_object::module_accessor((WorkModule::get_int(self, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID)) as u32);
     }
 
+    unsafe fn get_team_owner_boma(&mut self) -> &mut BattleObjectModuleAccessor {
+        let team_owner_id = TeamModule::team_owner_id(self) as u32;
+        let owner_object = super::util::get_battle_object_from_id(team_owner_id);
+        &mut *(*owner_object).module_accessor
+    }
+
     unsafe fn get_num_used_jumps(&mut self) -> i32 {
         return WorkModule::get_int(self, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
     }
@@ -1107,7 +1137,8 @@ impl BomaExt for BattleObjectModuleAccessor {
         let upper_bound_y = pos.y + upper_bound_offset_y;
         let snap_leniency = if WorkModule::get_float(self, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_FLOAT_DIR_Y) <= 0.0 {
                 // For a downwards/horizontal airdodge, waveland snap threshold = the distance from your ECB center to your base position
-                upper_bound_offset_y
+                // plus 0.01 so an ECB perfectly parallel with ground can still snap
+                upper_bound_offset_y + 0.01
             } else {
                 // For an upwards airdodge, waveland snap threshold = 6 units below ECB center, if the distance from your ECB center to your base position is less than 6 units long
                 (upper_bound_offset_y).max(crate::ParamModule::get_float(self.object(), crate::ParamType::Common, "waveland_distance_threshold"))
@@ -1535,6 +1566,13 @@ impl BomaExt for BattleObjectModuleAccessor {
             if self.is_cat_flag(Cat1::SpecialLw) {
                 StatusModule::change_status_request_from_script(self, *FIGHTER_STATUS_KIND_SPECIAL_LW,false);
             }
+        }
+
+        // Airdodge cancels
+        if [
+            *FIGHTER_STATUS_KIND_ATTACK_AIR
+        ].contains(&status_kind) {
+            self.check_airdodge_cancel();
         }
     }
 
