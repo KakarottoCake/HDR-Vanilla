@@ -361,6 +361,10 @@ unsafe extern "C" fn sub_escape_air_common_strans_main(fighter: &mut L2CFighterC
                     L2CValue::I32(*FIGHTER_STATUS_KIND_ITEM_THROW),
                     L2CValue::Bool(false)
                 );
+                let staling_mul = (1.0 - 0.1 * (VarModule::get_int(fighter.object(), vars::common::instance::AGT_USED_COUNTER) as f32)).max(0.0);
+                KineticModule::mul_speed(fighter.module_accessor, &Vector3f{x: staling_mul, y: staling_mul, z: staling_mul}, *FIGHTER_KINETIC_ENERGY_ID_STOP);
+                WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_ESCAPE_AIR);
+                VarModule::inc_int(fighter.object(), vars::common::instance::AGT_USED_COUNTER);
                 return 1.into();
         }
     }

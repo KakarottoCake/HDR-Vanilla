@@ -222,7 +222,7 @@ pub mod vars {
 
             pub const CSTICK_LIFE: i32 = 0x0008;
 
-            // pub const AGT_USED_COUNTER: i32 = 0x0009;
+            pub const AGT_USED_COUNTER: i32 = 0x0009;
 
             pub const CLIFF_XLU_FRAME: i32 = 0x000A;
             pub const LAST_ATTACK_HITBOX_ID: i32 = 0x000B;
