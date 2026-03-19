@@ -663,6 +663,15 @@ unsafe fn ken_hado_landcancel(fighter: &mut L2CFighterCommon) {
     fighter.check_land_cancel(Some(landing_lag));
 }
 
+// Cloud
+unsafe fn cloud_special_n_hold(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_CLOUD_SPECIAL_N) {
+        if fighter.check_hold_input(0, 8, Buttons::SpecialAll) {
+            VarModule::on_flag(fighter.battle_object, vars::cloud::status::SPECIAL_N_HOLD);
+        }
+    }
+}
+
 // Simon
 unsafe fn axe_drift(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_SIMON_SPECIAL_N) {
@@ -1068,6 +1077,10 @@ pub unsafe fn kirby_copy_handler(fighter: &mut L2CFighterCommon) {
             ken_air_hado_distinguish(fighter);
             ken_hado_landcancel(fighter)
         },
+        // Cloud
+        0x3E => {
+            cloud_special_n_hold(fighter);
+        }
         // Simon
         0x43 => axe_drift(fighter),
         // Incineroar
