@@ -99,6 +99,11 @@ unsafe extern "C" fn move_customizer(fighter: &mut L2CFighterCommon) -> L2CValue
             LUA_SCRIPT_STATUS_FUNC_STATUS_END.into(),
             std::mem::transmute(special_s3::special_s3_end as *const ())
         );
+        fighter.sv_set_status_func(
+            FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_LW3_END.into(),
+            LUA_SCRIPT_STATUS_FUNC_INIT_STATUS.into(),
+            std::mem::transmute(special_s3::special_s3_end_init as *const ())
+        );
     }
     else if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_1 {
         fighter.sv_set_status_func(
