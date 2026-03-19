@@ -1,7 +1,5 @@
 use super::*;
 
-// FIGHTER_STATUS_KIND_SPECIAL_LW
-
 pub unsafe extern "C" fn special_lw3_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(
         fighter.module_accessor,
@@ -34,78 +32,6 @@ pub unsafe extern "C" fn special_lw3_pre(fighter: &mut L2CFighterCommon) -> L2CV
         *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW as u32,
         0
     );
-    0.into()
-}
-
-// FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_LW3_END
-
-pub unsafe extern "C" fn special_lw3_end_init(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let start_situation = WorkModule::get_int(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_STATUS_WORK_ID_INT_JET_STUB_START_SITUATION);
-    
-    if start_situation == *SITUATION_KIND_AIR
-    && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_AIR {
-        let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-
-        KineticModule::unable_energy_all(fighter.module_accessor);
-        sv_kinetic_energy!(
-            reset_energy,
-            fighter,
-            FIGHTER_KINETIC_ENERGY_ID_GRAVITY,
-            ENERGY_GRAVITY_RESET_TYPE_GRAVITY,
-            0.0,
-            speed_y,
-            0.0,
-            0.0,
-            0.0
-        );
-        sv_kinetic_energy!(
-            reset_energy,
-            fighter,
-            FIGHTER_KINETIC_ENERGY_ID_STOP,
-            ENERGY_STOP_RESET_TYPE_AIR_BRAKE,
-            speed_x,
-            0.0,
-            0.0,
-            0.0,
-            0.0
-        );
-        KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-        KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
-    } else if start_situation == *SITUATION_KIND_GROUND
-    && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
-        let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-
-        sv_kinetic_energy!(
-            reset_energy,
-            fighter,
-            FIGHTER_KINETIC_ENERGY_ID_STOP,
-            ENERGY_STOP_RESET_TYPE_GROUND,
-            speed_x,
-            0.0,
-            0.0,
-            0.0,
-            0.0
-        );
-
-        // Reduce speed on shield
-        let prev_inflict_status = VarModule::get_int(fighter.battle_object, vars::common::instance::PREV_STATUS_INFLICT_STATUS);
-        if prev_inflict_status == *COLLISION_KIND_MASK_SHIELD {
-            let shield_hit_end_speed_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lw3.shield_hit_end_speed_x");
-            let lr = PostureModule::lr(fighter.module_accessor);
-            sv_kinetic_energy!(
-                set_speed,
-                fighter,
-                FIGHTER_KINETIC_ENERGY_ID_STOP,
-                shield_hit_end_speed_x * lr,
-                0.0
-            );
-        }
-
-        KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
-        KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_MOTION);
-    }
-
     0.into()
 }
 
@@ -198,7 +124,7 @@ unsafe extern "C" fn special_lw3_end_main_loop_air(fighter: &mut L2CFighterCommo
         return 0.into();
     }
     if WorkModule::get_int(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_STATUS_WORK_ID_INT_JET_STUB_START_SITUATION) == *SITUATION_KIND_GROUND {
-        if fighter.status_frame() == 20 {
+        if fighter.status_frame() >= 20 {
             CancelModule::enable_cancel(fighter.module_accessor);
         }
     }
@@ -219,10 +145,20 @@ unsafe extern "C" fn special_lw3_end_main_loop(fighter: &mut L2CFighterCommon) -
             return 0.into();
         }
         if fighter.is_situation(*SITUATION_KIND_GROUND) {
-            let landing_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_lw"), hash40("lw3_landing_frame"));
-            WorkModule::set_float(fighter.module_accessor,landing_frame as f32, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
-            fighter.change_status(FIGHTER_STATUS_KIND_FALL_SPECIAL.into(), false.into());
-            return 1.into();
+            if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_STATUS_WORK_ID_FLAG_JET_STUB_LANDING_FALL_SPECIAL) {
+                let landing_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_lw"), hash40("lw3_landing_frame"));
+                WorkModule::set_float(fighter.module_accessor,landing_frame as f32, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
+                fighter.change_status(FIGHTER_STATUS_KIND_FALL_SPECIAL.into(), false.into());
+                return 1.into();
+            }
+            fighter.set_situation(SITUATION_KIND_GROUND.into());
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_lw3_end"), 0.0, 1.0, false, 0.0, false, false);
+            WorkModule::unable_transition_term(fighter.module_accessor,*FIGHTER_MIISWORDSMAN_JET_STUB_AA_TRANSITION_TERM_ID_INHERIT_FALL);
+            WorkModule::enable_transition_term(fighter.module_accessor,*FIGHTER_MIISWORDSMAN_JET_STUB_AA_TRANSITION_TERM_ID_LANDING_WAIT);
+            WorkModule::enable_transition_term(fighter.module_accessor,*FIGHTER_MIISWORDSMAN_JET_STUB_AA_TRANSITION_TERM_ID_LANDING_FALL);
+            return 0.into();
         }
     }
     else {

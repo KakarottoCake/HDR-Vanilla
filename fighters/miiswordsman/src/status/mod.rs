@@ -59,11 +59,6 @@ unsafe extern "C" fn move_customizer(fighter: &mut L2CFighterCommon) -> L2CValue
             LUA_SCRIPT_STATUS_FUNC_STATUS_PRE.into(),
             std::mem::transmute(special_lw3::special_lw3_pre as *const ())
         );
-        fighter.sv_set_status_func(
-            FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_LW3_END.into(),
-            LUA_SCRIPT_STATUS_FUNC_INIT_STATUS.into(),
-            std::mem::transmute(special_lw3::special_lw3_end_init as *const ())
-        );
     }
     0.into()
 }
