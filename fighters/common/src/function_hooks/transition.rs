@@ -76,16 +76,6 @@ unsafe fn is_enable_transition_term_hook(boma: &mut BattleObjectModuleAccessor, 
             return false;
         }
 
-        if fighter_kind == *FIGHTER_KIND_PEACH {
-            if status_kind == *FIGHTER_STATUS_KIND_JUMP_AERIAL {
-                if flag == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL || flag == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL_BUTTON {
-                    if KineticModule::get_sum_speed_y(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) < 0.0 {
-                        return false;
-                    }
-                }
-            }
-        }
-
         if fighter_kind == *FIGHTER_KIND_NANA {
             if ([*FIGHTER_STATUS_KIND_WAIT, 
                 *FIGHTER_STATUS_KIND_TURN, 
