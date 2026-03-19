@@ -270,8 +270,8 @@ pub unsafe fn get_param_float_hook(x0 /*boma*/: u64, x1 /*param_type*/: u64, x2 
         }
         
         else if fighter_kind == *FIGHTER_KIND_MIISWORDSMAN {
-            if x1 == hash40("param_special_hi"){
-                //if heavy_attack[hdr::get_player_number(owner_module_accessor)]{
+            // not found within the special_hi status scripts
+            if x1 == hash40("param_special_hi") {
                 if VarModule::is_flag(boma_reference.object(), vars::common::instance::IS_HEAVY_ATTACK){
                     if x2 == hash40("hi2_rush_speed") {
                         return 3.0;
