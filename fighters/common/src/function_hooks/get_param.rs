@@ -257,86 +257,6 @@ pub unsafe fn get_param_float_hook(x0 /*boma*/: u64, x1 /*param_type*/: u64, x2 
                 }
             }
         }
-        
-        else if fighter_kind == *FIGHTER_KIND_MIISWORDSMAN {
-            //if MotionModule::motion_kind(&mut *boma) == hash40("special_hi1") || MotionModule::motion_kind(&mut *boma) == hash40("special_hi1_start"){
-            if StatusModule::situation_kind(&mut *boma) == *SITUATION_KIND_GROUND{
-                //println!("Stone");
-                if x1 == hash40("param_special_hi") && x2 == hash40("hi1_jump_speed_mul") {
-                    //println!("Scabbard");
-                    return 0.65;
-                }
-            }
-            if x1 == hash40("param_special_hi"){
-                //if heavy_attack[hdr::get_player_number(owner_module_accessor)]{
-                if VarModule::is_flag(boma_reference.object(), vars::common::instance::IS_HEAVY_ATTACK){
-                    if x2 == hash40("hi2_rush_speed") {
-                        return 3.0;
-                    }
-                }
-            }
-            else if x1 == hash40("param_private") {
-                if x2 == hash40("final_wave_speed") {
-                    if VarModule::is_flag(boma_reference.object(), vars::miiswordsman::status::SPECIAL_N1_WAVE) {
-                        return 2.0;
-                    }
-                }
-                else if x2 == hash40("final_wave_scale_max") {
-                    if VarModule::is_flag(boma_reference.object(), vars::miiswordsman::status::SPECIAL_N1_WAVE) {
-                        return 0.5;
-                    }
-                }
-            }
-        }
-        	
-        else if fighter_kind == *FIGHTER_KIND_PFUSHIGISOU {
-            //println!("Ivysaur");
-            if x1 == hash40("param_special_s") && x2 == hash40("shoot_angle") {
-                //println!("Razor angle");
-                return ControlModule::get_stick_y(boma) * 25.0;
-            }
-        }
-        
-        else if fighter_kind == *FIGHTER_KIND_MIIGUNNER {
-            // not found within the special_hi status scripts
-            if x1 == hash40("param_special_hi") && x2 == hash40("hi1_first_jump_y_speed") {
-                let charge = VarModule::get_float(boma_reference.object(), vars::miigunner::status::ATTACK_CHARGE);
-                let base_y_speed = ParamModule::get_float(boma_reference.object(), ParamType::Agent, "param_special_hi1.base_y_speed");
-                let charge_y_speed_mul = ParamModule::get_float(boma_reference.object(), ParamType::Agent, "param_special_hi1.charge_y_speed_mul");
-                let charge_y_speed_div = ParamModule::get_float(boma_reference.object(), ParamType::Agent, "param_special_hi1.charge_y_speed_div");
-                return base_y_speed + (charge_y_speed_mul * charge) / charge_y_speed_div;
-            }
-        }
-
-        else if fighter_kind == *FIGHTER_KIND_SHEIK {
-            if x1 == hash40("param_special_s") {
-                if x2 == hash40("throw_angle") {
-                    return 30.0 + ControlModule::get_stick_y(boma) * 20.0;
-                }
-                if x2 == hash40("throw_speed") {
-                    return 3.5 - ControlModule::get_stick_y(boma) * 0.5;
-                }
-            }
-        }
-
-        else if fighter_kind == *FIGHTER_KIND_DAISY {
-            if x1 == hash40("param_special_s") {
-                if x2 == hash40("special_s_jump_dec_accel_y")
-                && VarModule::is_flag(boma_reference.object(), vars::daisy::instance::SPECIAL_S_GROUND_START) {
-                    return 0.05;
-                }
-            }
-        }
-        
-        else if fighter_kind == *FIGHTER_KIND_DIDDY {
-            if x1 == hash40("param_special_hi") {
-                if x2 == hash40("special_hi_jet_ang_f_max") {
-                    if WorkModule::get_int(boma, *FIGHTER_DIDDY_STATUS_SPECIAL_HI_WORK_INT_SITUATION) == *SITUATION_KIND_GROUND {
-                        return 5.0;
-                    }
-                }
-            }
-        }
 
         else if fighter_kind == *FIGHTER_KIND_LUCARIO {
             if x1 == hash40("param_special_hi")
@@ -347,6 +267,36 @@ pub unsafe fn get_param_float_hook(x0 /*boma*/: u64, x1 /*param_type*/: u64, x2 
                     return original * rate;
                 }
             } 
+        }
+        
+        else if fighter_kind == *FIGHTER_KIND_MIISWORDSMAN {
+            if x1 == hash40("param_special_hi"){
+                //if heavy_attack[hdr::get_player_number(owner_module_accessor)]{
+                if VarModule::is_flag(boma_reference.object(), vars::common::instance::IS_HEAVY_ATTACK){
+                    if x2 == hash40("hi2_rush_speed") {
+                        return 3.0;
+                    }
+                }
+            }
+        }
+
+        else if fighter_kind == *FIGHTER_KIND_MIIGUNNER {
+            // not found within the special_hi status scripts
+            if x1 == hash40("param_special_hi") && x2 == hash40("hi1_first_jump_y_speed") {
+                let charge = VarModule::get_float(boma_reference.object(), vars::miigunner::status::ATTACK_CHARGE);
+                let base_y_speed = ParamModule::get_float(boma_reference.object(), ParamType::Agent, "param_special_hi1.base_y_speed");
+                let charge_y_speed_mul = ParamModule::get_float(boma_reference.object(), ParamType::Agent, "param_special_hi1.charge_y_speed_mul");
+                let charge_y_speed_div = ParamModule::get_float(boma_reference.object(), ParamType::Agent, "param_special_hi1.charge_y_speed_div");
+                return base_y_speed + (charge_y_speed_mul * charge) / charge_y_speed_div;
+            }
+        }
+        	
+        else if fighter_kind == *FIGHTER_KIND_PFUSHIGISOU {
+            //println!("Ivysaur");
+            if x1 == hash40("param_special_s") && x2 == hash40("shoot_angle") {
+                //println!("Razor angle");
+                return ControlModule::get_stick_y(boma) * 25.0;
+            }
         }
         
     }
