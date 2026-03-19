@@ -242,11 +242,6 @@ unsafe extern "C" fn game_speciallw2(agent: &mut L2CAgentBase) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
     }
     frame(lua_state, 6.0);  // f9
-    if is_excute(agent) {
-        if boma.is_button_on(Buttons::Special) {
-            VarModule::on_flag(agent.object(), vars::miiswordsman::status::SPECIAL_LW2_HOLD);
-        }
-    }
     FT_MOTION_RATE_RANGE(agent, 6.0, 12.0, 16.0);
     frame(lua_state, 7.0);  // f12
     if is_excute(agent) {

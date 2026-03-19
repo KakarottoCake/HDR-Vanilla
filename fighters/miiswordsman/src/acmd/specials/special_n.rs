@@ -42,22 +42,17 @@ unsafe extern "C" fn game_specialn2(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 14.0);
     FT_MOTION_RATE(agent, 1.0);
-    if boma.is_button_on(Buttons::Special) {
+    if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK) {
         FT_MOTION_RATE_RANGE(agent, 14.0, 17.75, 13.0);
     }
     else {
         FT_MOTION_RATE_RANGE(agent, 14.0, 17.75, 3.0);
     }
-    if is_excute(agent) {
-        if boma.is_button_on(Buttons::Special) {
-            VarModule::on_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
-        }
-    }
     frame(lua_state, 17.75);
     FT_MOTION_RATE_RANGE(agent, 17.75, 18.0, 1.0);
     if is_excute(agent) {
-        if agent.is_situation(*SITUATION_KIND_AIR) {
-            if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK) {
+        if VarModule::is_flag(agent.battle_object, vars::common::instance::IS_HEAVY_ATTACK) {
+            if agent.is_situation(*SITUATION_KIND_AIR) {
                 sv_kinetic_energy!(set_speed, agent, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.8);
             }
         }

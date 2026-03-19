@@ -14,6 +14,7 @@ mod special_hi2;
 mod special_hi3;
 
 mod special_lw1;
+mod special_lw2;
 mod special_lw3;
 
 unsafe fn set_move_customizer(fighter: &mut L2CFighterCommon, customizer: unsafe extern "C" fn(&mut L2CFighterCommon) -> L2CValue) {
@@ -119,6 +120,13 @@ unsafe extern "C" fn move_customizer(fighter: &mut L2CFighterCommon) -> L2CValue
             FIGHTER_STATUS_KIND_SPECIAL_LW.into(),
             LUA_SCRIPT_STATUS_FUNC_STATUS_END.into(),
             std::mem::transmute(special_lw1::special_lw1_end as *const ())
+        );
+    }
+    else if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_2 {
+        fighter.sv_set_status_func(
+            FIGHTER_STATUS_KIND_SPECIAL_LW.into(),
+            LUA_SCRIPT_STATUS_FUNC_EXEC_STATUS.into(),
+            std::mem::transmute(special_lw2::special_lw2_exec as *const ())
         );
     }
     else if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_3 {

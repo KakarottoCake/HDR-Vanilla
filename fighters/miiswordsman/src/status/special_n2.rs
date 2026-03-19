@@ -3,6 +3,7 @@ use super::*;
 pub unsafe extern "C" fn special_n2_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x20cbc92683), 1, FIGHTER_LOG_DATA_INT_ATTACK_NUM_KIND, (*FIGHTER_LOG_ATTACK_KIND_ADDITIONS_ATTACK_02) - 1);
     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x3a40337e2c), FIGHTER_LOG_DATA_INT_ATTACK_NUM_KIND, (*FIGHTER_LOG_ATTACK_KIND_ADDITIONS_ATTACK_02) - 1);
+    VarModule::on_flag(fighter.battle_object, vars::common::status::CHECK_HOLD_INPUT);
 
     fighter.main_shift(special_n2_main_loop)
 }
@@ -38,6 +39,9 @@ pub unsafe extern "C" fn special_n2_main_loop(fighter: &mut L2CFighterCommon) ->
         || fighter.sub_air_check_fall_common().get_bool() {
             return 0.into();
         }
+    }
+    if fighter.check_hold_input(0, 8, Buttons::SpecialAll) {
+        VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
     }
     if fighter.motion_frame() >= 27.0 {
         fighter.sub_air_check_dive();
