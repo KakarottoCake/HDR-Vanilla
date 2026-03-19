@@ -3,6 +3,5 @@
     <struct hash="param_special_hi">
       <float hash="hi3_brake_y_mul">0.9</float>
       <float hash="empty_landing">10.0</float>
-      <float hash="landing_attack_air_add">4.0</float>
     </struct>
 </struct>
