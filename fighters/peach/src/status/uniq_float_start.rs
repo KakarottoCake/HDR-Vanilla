@@ -2,6 +2,7 @@ use super::*;
 
 #[no_mangle]
 unsafe fn peach_float_start_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
+    float_jump_leniency(fighter);
     float_drift_common(fighter);
     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING_ATTACK_AIR);
     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_PEACH_STATUS_UNIQ_FLOAT_TRANS_ID_FALL_CONTROL);
@@ -16,6 +17,7 @@ unsafe fn peach_float_start_main_common(fighter: &mut L2CFighterCommon) -> L2CVa
     WorkModule::set_int(fighter.module_accessor, uniq_float_float_frame, *FIGHTER_PEACH_STATUS_UNIQ_FLOAT_WORK_INT_FLOAT_FRAME);
     WorkModule::set_int(fighter.module_accessor, 1, *FIGHTER_PEACH_STATUS_UNIQ_FLOAT_WORK_INT_ENABLE_UNIQ);
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_PEACH_INSTANCE_WORK_ID_FLAG_UNIQ_FLOAT);
+    VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_FLOAT);
 
     MotionModule::change_motion(
         fighter.module_accessor,
@@ -234,6 +236,8 @@ unsafe extern "C" fn uniq_float_start_main(fighter: &mut L2CFighterCommon) -> L2
 }
 
 extern "Rust" {
+    #[link_name = "float_jump_leniency"]
+    fn float_jump_leniency(fighter: &mut L2CFighterCommon) -> L2CValue;
     #[link_name = "float_drift_common"]
     fn float_drift_common(fighter: &mut L2CFighterCommon) -> L2CValue;
 }
