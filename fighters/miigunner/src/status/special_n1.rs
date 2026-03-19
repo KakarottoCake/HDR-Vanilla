@@ -1,5 +1,53 @@
 use super::*;
 
+pub unsafe extern "C" fn special_n1_start_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.is_situation(*SITUATION_KIND_GROUND) {
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_n1_start"), 0.0, 1.0, false, 0.0, false, false);
+    }
+    else {
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_n1_start"), 0.0, 1.0, false, 0.0, false, false);
+    }
+    VarModule::on_flag(fighter.battle_object, vars::miigunner::status::ATTACK_CHARGE);
+    ControlModule::set_add_jump_mini_button_life(fighter.module_accessor, 8);
+
+    fighter.main_shift(special_n1_start_main_loop)
+}
+
+pub unsafe extern "C" fn special_n1_start_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if ControlModule::check_button_release(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+        VarModule::off_flag(fighter.battle_object, vars::miigunner::status::ATTACK_CHARGE);
+    }
+    if MotionModule::is_end(fighter.module_accessor) {
+        let charge_count = fighter.get_int(*FIGHTER_MIIGUNNER_INSTANCE_WORK_ID_INT_GUNNER_CHARGE_COUNT);
+        let cshot_charge_frame = fighter.get_param_float("param_special_n", "n1_cshot_charge_frame");
+        if charge_count as f32 >= cshot_charge_frame {
+            fighter.change_status(FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_FIRE.into(), false.into());
+        }
+        else {
+            fighter.change_status(FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_HOLD.into(), false.into());
+        }
+        return 1.into();
+    }
+    if StatusModule::is_situation_changed(fighter.module_accessor) {
+        if fighter.is_situation(*SITUATION_KIND_GROUND) {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+            MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_n1_start"), -1.0, 1.0, 0.0, false, false);
+        }
+        else {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+            MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_n1_start"), -1.0, 1.0, 0.0, false, false);
+        }
+    }
+
+    return 0.into();
+}
+
 pub unsafe extern "C" fn special_n1_hold_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK, *GROUND_CORRECT_KIND_AIR);
     fighter.sub_change_kinetic_type_by_situation(FIGHTER_KINETIC_TYPE_GROUND_STOP.into(), FIGHTER_KINETIC_TYPE_AIR_STOP.into());
@@ -88,7 +136,7 @@ pub unsafe extern "C" fn special_n1_fire_main(fighter: &mut L2CFighterCommon) ->
         MotionModule::change_motion(fighter.module_accessor, motion, 0.0, 1.0, false, 0.0, false, false);
     }
     else {
-        let motion = if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+        let motion = if VarModule::is_flag(fighter.battle_object, vars::miigunner::status::ATTACK_CHARGE) {
             if fighter.is_situation(*SITUATION_KIND_GROUND) {
                 Hash40::new("special_n1_neon")
             }
@@ -170,7 +218,10 @@ pub unsafe extern "C" fn special_n1_fire_end(fighter: &mut L2CFighterCommon) -> 
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.status(Main, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_START, special_n1_start_main);
+
     agent.status(Main, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_HOLD, special_n1_hold_main);
+
     agent.status(Main, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_FIRE, special_n1_fire_main);
     agent.status(End, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_FIRE, special_n1_fire_end);
 }
