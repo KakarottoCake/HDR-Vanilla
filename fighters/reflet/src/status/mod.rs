@@ -9,6 +9,7 @@ mod float;
 mod special_n;
 mod special_hi;
 mod special_lw;
+mod landing;
 
 extern "Rust" {
     #[link_name = "float_check_air_jump"]
@@ -122,4 +123,5 @@ pub fn install(agent: &mut Agent) {
     special_n::install(agent);
     special_hi::install(agent);
     special_lw::install(agent);
+    landing::install(agent);
 }
