@@ -111,8 +111,9 @@ unsafe extern "C" fn special_s3_main_loop(fighter: &mut L2CFighterCommon) -> L2C
                 }
             }
         }
-        if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
-            sv_kinetic_energy!(set_speed_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.4);
+        if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD | *COLLISION_KIND_MASK_PARRY) {
+            fighter.change_status(FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_LW3_END.into(), false.into());
+            return 1.into();
         }
 
         return 0.into();
@@ -237,8 +238,18 @@ unsafe extern "C" fn special_s3_end_main(fighter: &mut L2CFighterCommon) -> L2CV
         if fighter.is_situation(*SITUATION_KIND_GROUND) {
             // ending grounded thrust on the ground
             GroundModule::correct(fighter.module_accessor,GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
-            let rate = WorkModule::get_param_float(fighter.module_accessor,hash40("param_special_lw"),hash40("lw3_end_ground_to_ground_rate"));
+            let rate = WorkModule::get_param_float(fighter.module_accessor,hash40("param_special_lw"), hash40("lw3_end_ground_to_ground_rate"));
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_lw3_end"), 0.0, rate, false, 0.0, false, false);
+
+            // Reduce speed on shield
+            let prev_inflict_status = VarModule::get_int(fighter.battle_object, vars::common::instance::PREV_STATUS_INFLICT_STATUS);
+            if prev_inflict_status == *COLLISION_KIND_MASK_SHIELD {
+                let shield_hit_end_speed_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s3.shield_hit_end_speed_x");
+                let lr = PostureModule::lr(fighter.module_accessor);
+                sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, shield_hit_end_speed_x * lr, 0.0);
+                MotionModule::set_rate(fighter.module_accessor, 26.0/34.0);
+            }
+
             fighter.main_shift(special_s3_end_main_loop_ground)
         }
         else {

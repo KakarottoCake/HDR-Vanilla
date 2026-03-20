@@ -173,6 +173,32 @@ unsafe extern "C" fn special_s2_dash_substatus(fighter: &mut L2CFighterCommon, u
     return 0.into();
 }
 
+unsafe extern "C" fn special_s2_dash_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.sub_transition_group_check_air_cliff().get_bool()
+    || fighter.sub_ground_check_stop_wall().get_bool() {
+        return 0.into();
+    }
+    let dash_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_STATUS_SHIPPU_SLASH_WORK_INT_DASH_COUNT);
+    if dash_count <= 0 {
+        fighter.change_status(FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_S2_ATTACK.into(), false.into());
+        return 0.into();
+    }
+    if !StatusModule::is_changing(fighter.module_accessor)
+    && StatusModule::is_situation_changed(fighter.module_accessor) {
+        special_s2_dash_change_motion(fighter);
+    }
+    special_s2_main_loop_helper(fighter);
+    if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD | *COLLISION_KIND_MASK_PARRY) {
+        let shield_hit_end_speed_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "special_s2.shield_hit_end_speed_x");
+        let lr = PostureModule::lr(fighter.module_accessor);
+        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, shield_hit_end_speed_x * lr, 0.0);
+        fighter.change_status(FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_S2_ATTACK.into(), false.into());
+        return 0.into();
+    }
+
+    return 0.into();
+}
+
 unsafe extern "C" fn special_s2_main_loop_helper(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[STATUS_KIND_INTERRUPT].get_i32() == *FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_S2_DASH {
         let cont = if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND
@@ -188,25 +214,6 @@ unsafe extern "C" fn special_s2_main_loop_helper(fighter: &mut L2CFighterCommon)
         }
     }
     1.into()
-}
-
-unsafe extern "C" fn special_s2_dash_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.sub_transition_group_check_air_cliff().get_bool()
-    || fighter.sub_ground_check_stop_wall().get_bool() {
-        return 0.into();
-    }
-    let dash_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_STATUS_SHIPPU_SLASH_WORK_INT_DASH_COUNT);
-    if dash_count <= 0 {
-        fighter.change_status(FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_S2_ATTACK.into(), false.into());
-        return 0.into();
-    }
-
-    if !StatusModule::is_changing(fighter.module_accessor)
-    && StatusModule::is_situation_changed(fighter.module_accessor) {
-        special_s2_dash_change_motion(fighter);
-    }
-    special_s2_main_loop_helper(fighter);
-    return 0.into();
 }
 
 // FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_S2_ATTACK
