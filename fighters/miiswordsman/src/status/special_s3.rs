@@ -247,7 +247,6 @@ unsafe extern "C" fn special_s3_end_main(fighter: &mut L2CFighterCommon) -> L2CV
                 let shield_hit_end_speed_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s3.shield_hit_end_speed_x");
                 let lr = PostureModule::lr(fighter.module_accessor);
                 sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, shield_hit_end_speed_x * lr, 0.0);
-                MotionModule::set_rate(fighter.module_accessor, 26.0/34.0);
             }
 
             fighter.main_shift(special_s3_end_main_loop_ground)
