@@ -146,5 +146,6 @@ pub unsafe extern "C" fn special_n1_end(fighter: &mut L2CFighterCommon) -> L2CVa
     //     EffectModule::kill(fighter.module_accessor, eff_handle, true, true);
     //     VarModule::set_int(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_EFFECT_HANDLE, -1);
     // }
+    
     return 0.into();
 }
