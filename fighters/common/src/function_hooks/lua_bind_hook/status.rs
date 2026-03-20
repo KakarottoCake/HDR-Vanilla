@@ -298,9 +298,7 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
                     }
                     if VarModule::get_int(object, vars::common::instance::OCCUPIED_LEDGE_ID_FOR_TETHERS) == cliff_id as i32 {
                         // Prevent trumps while moving downward from sending the opponent downward
-                        if KineticModule::get_sum_speed_y(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) < 0.0 {
-                            KineticModule::mul_speed(boma, &Vector3f::new(1.0, 0.0, 1.0), *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
-                        }
+                        KineticModule::clear_speed_all(boma);
                         next_status = *FIGHTER_STATUS_KIND_CLIFF_ROBBED;
                     }
                 }
