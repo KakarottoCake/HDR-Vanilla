@@ -281,6 +281,7 @@ unsafe fn get_ground_correct_kind_air_trans_hook(boma: &mut BattleObjectModuleAc
 //=================================================================
 #[skyline::hook(replace=GroundModule::can_entry_cliff)]
 unsafe fn can_entry_cliff_hook(boma: &mut BattleObjectModuleAccessor) -> u64 {
+    println!("can_entry_cliff hook");
     let situation_kind = StatusModule::situation_kind(boma);
     let status_kind = StatusModule::status_kind(boma);
     let fighter_kind = boma.kind();
@@ -300,9 +301,9 @@ unsafe fn can_entry_cliff_hook(boma: &mut BattleObjectModuleAccessor) -> u64 {
                           || (fighter_kind == *FIGHTER_KIND_PFUSHIGISOU && status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI) );
 
     let tether_aerial = boma.is_fighter()
-                        && ( (fighter_kind == *FIGHTER_KIND_SIMON   && status_kind == *FIGHTER_STATUS_KIND_ATTACK_AIR) );
+                        && ( fighter_kind == *FIGHTER_KIND_SIMON && WorkModule::is_flag(boma, *FIGHTER_SIMON_INSTANCE_WORK_ID_FLAG_ATTACK_AIR_LASSO_FLAG_CHECK) );
 
-    let lasso_check = WorkModule::is_flag(boma, *FIGHTER_STATUS_AIR_LASSO_FLAG_CHECK);    
+    let lasso_check = WorkModule::is_flag(boma, *FIGHTER_STATUS_AIR_LASSO_FLAG_CHECK);
 
     // Ledgehog code
     let cliff_id = GroundModule::get_cliff_id_uint32(boma);
@@ -326,7 +327,7 @@ unsafe fn can_entry_cliff_hook(boma: &mut BattleObjectModuleAccessor) -> u64 {
         if !run_vanilla_check(boma) {
             // Disable grabbing ledge while rising during an airborne state
             if situation_kind == *SITUATION_KIND_AIR {
-                if rising && !((tether_zair || tether_special || tether_aerial) && lasso_check) {
+                if !tether_aerial && (rising && !((tether_zair || tether_special) && lasso_check)) {
                     return 0;
                 }
             }
