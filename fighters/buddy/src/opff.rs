@@ -15,14 +15,6 @@ unsafe fn blue_eggs_land_cancels(fighter: &mut L2CFighterCommon) {
     }
 }
 
-// Banjo Grenade Airdodge Cancel
-unsafe fn grenade_ac(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status_one_of(&[*FIGHTER_BUDDY_STATUS_KIND_SPECIAL_LW_SHOOT, *FIGHTER_STATUS_KIND_SPECIAL_LW])
-    && fighter.motion_frame() > 16.0 {
-        fighter.check_airdodge_cancel();
-    }
-}
-
 // Banjo Dair bounce
 unsafe fn dair_bounce(fighter: &mut L2CFighterCommon) {
     if fighter.is_motion(Hash40::new("attack_air_lw"))
@@ -195,7 +187,7 @@ unsafe fn breegull_bayonet(fighter: &mut L2CFighterCommon) {
         }
         let is_csticking = ControlModule::get_command_flag_cat(fighter.module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S4 != 0;
         if (is_csticking && !VarModule::is_flag(fighter.battle_object, vars::buddy::instance::SPECIAL_N_BAYONET_DISABLE)) {
-            println!("Bayonet");
+            //println!("Bayonet");
             //VarModule::on_flag(fighter.battle_object, vars::buddy::instance::SPECIAL_N_BAYONET_DISABLE);
             //VarModule::set_int(fighter.battle_object, vars::buddy::instance::SPECIAL_N_BAYONET_EGGS_FIRED,*FIGHTER_BUDDY_INSTANCE_WORK_ID_INT_SPECIAL_N_BAKYUN_BULLET_SHOOT_COUNT);
             fighter.change_status(statuses::buddy::SPECIAL_N_BAYONET.into(), false.into());
@@ -255,12 +247,11 @@ unsafe fn buddy_meter_controller(fighter: &mut L2CFighterCommon) {
         }
     }
     // Refund cooldown if immediately caught ledge
-    if fighter.motion_frame() <= 3.0 && in_Air {
-        if fighter.is_status(*FIGHTER_STATUS_KIND_CLIFF_CATCH)
-        && VarModule::get_float(fighter.battle_object, vars::buddy::instance::SPECIAL_S_RED_FEATHER_COOLDOWN) > FEATHERS_RED_COOLDOWN_MAX - 5.0 {
-            VarModule::set_float(fighter.battle_object, vars::buddy::instance::SPECIAL_S_RED_FEATHER_COOLDOWN, 1.0);
-        }
-	}
+    if fighter.is_status(*FIGHTER_STATUS_KIND_CLIFF_CATCH)
+    && fighter.motion_frame() <= 3.0
+    && VarModule::get_float(fighter.battle_object, vars::buddy::instance::SPECIAL_S_RED_FEATHER_COOLDOWN) > FEATHERS_RED_COOLDOWN_MAX - 5.0 {
+        VarModule::set_float(fighter.battle_object, vars::buddy::instance::SPECIAL_S_RED_FEATHER_COOLDOWN, 1.0);
+    }
 
 	buddy_meter_display(fighter, in_Air);
 }
@@ -405,7 +396,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon) {
     blue_eggs_land_cancels(fighter);
     dair_bounce(fighter);
-    grenade_ac(fighter);
     dash_attack_jump_cancels(fighter);
     indicator_breegull_fatigue(fighter);
     beakbomb_update(fighter);
