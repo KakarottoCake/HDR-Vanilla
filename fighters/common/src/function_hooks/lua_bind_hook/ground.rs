@@ -281,7 +281,6 @@ unsafe fn get_ground_correct_kind_air_trans_hook(boma: &mut BattleObjectModuleAc
 //=================================================================
 #[skyline::hook(replace=GroundModule::can_entry_cliff)]
 unsafe fn can_entry_cliff_hook(boma: &mut BattleObjectModuleAccessor) -> u64 {
-    println!("can_entry_cliff hook");
     let situation_kind = StatusModule::situation_kind(boma);
     let status_kind = StatusModule::status_kind(boma);
     let fighter_kind = boma.kind();
