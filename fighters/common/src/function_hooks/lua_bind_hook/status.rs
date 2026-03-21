@@ -183,7 +183,7 @@ unsafe fn change_status_request_hook(boma: &mut BattleObjectModuleAccessor, stat
 
     if boma.is_fighter() {
         // Tether trump logic
-        if boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_AIR_LASSO_REWIND])
+        if boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_AIR_LASSO, *FIGHTER_STATUS_KIND_AIR_LASSO_REACH, *FIGHTER_STATUS_KIND_AIR_LASSO_HANG, *FIGHTER_STATUS_KIND_AIR_LASSO_REWIND])
         && [*FIGHTER_STATUS_KIND_CLIFF_CATCH, *FIGHTER_STATUS_KIND_CLIFF_CATCH_MOVE, *FIGHTER_STATUS_KIND_CLIFF_WAIT].contains(&next_status) {
             let player_number = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
             let cliff_id = GroundModule::get_cliff_id_uint32(boma);
@@ -285,7 +285,7 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
         }
 
         // Tether trump logic
-        if boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_AIR_LASSO_HANG, *FIGHTER_STATUS_KIND_AIR_LASSO_REWIND])
+        if boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_AIR_LASSO, *FIGHTER_STATUS_KIND_AIR_LASSO_REACH, *FIGHTER_STATUS_KIND_AIR_LASSO_HANG, *FIGHTER_STATUS_KIND_AIR_LASSO_REWIND])
         && [*FIGHTER_STATUS_KIND_CLIFF_CATCH, *FIGHTER_STATUS_KIND_CLIFF_CATCH_MOVE, *FIGHTER_STATUS_KIND_CLIFF_WAIT].contains(&next_status) {
             let player_number = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
             let cliff_id = GroundModule::get_cliff_id_uint32(boma);
