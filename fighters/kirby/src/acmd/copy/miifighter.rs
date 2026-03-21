@@ -6,7 +6,7 @@ unsafe extern "C" fn game_miifighterspecialn1(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         ArticleModule::generate_article_enable(boma, *FIGHTER_MIIFIGHTER_GENERATE_ARTICLE_IRONBALL, false, -1);
     }
-    frame(lua_state, 10.0);
+    frame(lua_state, 15.0);
     if is_excute(agent) {
         VarModule::on_flag(agent.battle_object, vars::miifighter::status::SPECIAL_N1_START_HOLD);
     }

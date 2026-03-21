@@ -48,7 +48,7 @@ unsafe extern "C" fn miifighter_special_n_main_loop(fighter: &mut L2CFighterComm
         }
     }
     let charge = VarModule::get_int(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_CHARGE) as f32;
-    let angle = 45.0 - charge;
+    let angle = 45.0 - charge * 0.75;
     let guide_pos = arrow_guide_pos(fighter, angle);
     if VarModule::is_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_START_HOLD) {
         let mut eff_handle = VarModule::get_int(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_EFFECT_HANDLE) as u32;
@@ -62,18 +62,24 @@ unsafe extern "C" fn miifighter_special_n_main_loop(fighter: &mut L2CFighterComm
 
         if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
             VarModule::inc_int(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_CHARGE);
+            if charge == 1.0 {
+                MotionModule::set_rate(fighter.module_accessor, 0.5);
+                EFFECT_FOLLOW_FLIP(fighter, Hash40::new("sys_smash_flash"), Hash40::new("sys_smash_flash"), Hash40::new("top"), 2, 12, -3, 0, 0, 0, 0.3, false, *EF_FLIP_AXIS_YZ);
+            }
             if charge == 10.0 {
-                fighter.change_motion_inherit_frame_by_situation("miifighter_special_n1_bowl", "miifighter_special_air_n1_bowl", -1.0, 1.0, 0.0, false, false);
+                fighter.change_motion_inherit_frame_keep_rate_by_situation("special_n1_bowl", "special_air_n1_bowl", -1.0, 1.0, 0.0);
             }
         }
         else {
+            MotionModule::set_rate(fighter.module_accessor, 1.0);
             VarModule::on_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_END_HOLD);
         }
     }
     if VarModule::is_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_END_HOLD) {
         VarModule::off_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_START_HOLD);
         VarModule::off_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_END_HOLD);
-        let throw_speed = if fighter.is_situation(*SITUATION_KIND_GROUND) { 2.75 } else { 2.75 - (charge * 0.03333) };
+        MotionModule::set_rate(fighter.module_accessor, 1.0);
+        let throw_speed = if fighter.is_situation(*SITUATION_KIND_GROUND) { 2.75 } else { 2.75 - (charge * 0.025) };
         VarModule::set_float(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_ANGLE, angle);
         VarModule::set_float(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_SPEED, throw_speed);
     }
