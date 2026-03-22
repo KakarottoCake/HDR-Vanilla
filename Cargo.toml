@@ -238,7 +238,7 @@ skyline-web = { workspace = true, optional = true }
 utils.workspace = true
 hash40 = "1.2.0"
 smash-arc = { version = "0.6.0", features = ["rust-zstd", "smash-runtime"] }
-smash2 = { git = "https://github.com/HDR-Development/smash-rs", package = "smash"}
+smash2 = { git = "https://github.com/WuBoytH/smash-rs", package = "smash"}
 rlua-lua53-sys = { git = "https://github.com/HDR-Development/rlua", branch = "smash" }
 
 [patch.crates-io]
