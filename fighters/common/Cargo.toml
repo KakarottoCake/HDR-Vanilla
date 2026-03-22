@@ -8,7 +8,7 @@ edition = "2018"
 [dependencies]
 skyline = { git = "https://github.com/ultimate-research/skyline-rs" }
 skyline_smash = { git = "https://github.com/ultimate-research/skyline-smash", features = ["weak_l2cvalue"] }
-smash_script = { git = "https://github.com/HDR-Development/smash-script.git", branch = "development" }
+smash_script = { git = "https://github.com/WuBoytH/smash-script.git", branch = "development" }
 smashline = { git = "https://github.com/HDR-Development/smashline.git" }
 utils = { package = "dynamic", path = "../../dynamic" }
 ninput = { git = "https://github.com/HDR-Development/ninput" }
