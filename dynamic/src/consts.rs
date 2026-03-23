@@ -359,6 +359,9 @@ pub mod vars {
             pub const FLOAT_ENABLE_UNIQ: i32 = 0x1001;
             pub const FLOAT_MTRANS: i32 = 0x1002;
 
+            /// FIGHTER_STATUS_KIND_ESCAPE_AIR
+            pub const ESCAPE_AIR_CLIFF_CATCH_FRAME: i32 = 0x1000;
+
             
             // floats
 
