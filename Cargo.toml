@@ -229,7 +229,7 @@ rand = { git = "https://github.com/skyline-rs/rand" }
 serde = { version = "1", features = ["derive"] }
 toml = "0.8.20"
 parking_lot = "0.12.3"
-runtime-motion-patcher.git = "https://github.com/HDR-Development/runtime-motion-patcher"
+runtime-motion-patcher.git = "https://github.com/WuBoytH/runtime-motion-patcher"
 skyline.workspace = true
 skyline_smash.workspace = true
 smashline.workspace = true
