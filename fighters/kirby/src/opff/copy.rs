@@ -663,6 +663,15 @@ unsafe fn ken_hado_landcancel(fighter: &mut L2CFighterCommon) {
     fighter.check_land_cancel(Some(landing_lag));
 }
 
+// Cloud
+unsafe fn cloud_special_n_hold(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_CLOUD_SPECIAL_N) {
+        if fighter.check_hold_input(0, 8, Buttons::SpecialAll) {
+            VarModule::on_flag(fighter.battle_object, vars::cloud::status::SPECIAL_N_HOLD);
+        }
+    }
+}
+
 // Simon
 unsafe fn axe_drift(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_SIMON_SPECIAL_N) {
@@ -955,26 +964,16 @@ unsafe extern "C" fn plant_meter(fighter: &mut L2CFighterCommon) {
 
 
 unsafe fn bayo_air_special_cancels(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status(*FIGHTER_STATUS_KIND_ATTACK_AIR)
-    && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) //dont cancel on shield
-    && !fighter.is_in_hitlag() { //dont cancel during hitstop
-        let mut new_status = 0;
-        if fighter.is_cat_flag(Cat1::SpecialN) {
-            new_status = *FIGHTER_STATUS_KIND_SPECIAL_N;
-            VarModule::on_flag(fighter.battle_object, vars::bayonetta::instance::WAS_CANCEL);
-        } else if fighter.is_cat_flag(Cat1::SpecialHi) {
-            if !VarModule::is_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_CANCEL) {
-                new_status = *FIGHTER_STATUS_KIND_SPECIAL_HI;
-            }
-        } else if fighter.is_cat_flag(Cat1::SpecialS) {
-            new_status = *FIGHTER_STATUS_KIND_SPECIAL_S;
-        } else if fighter.is_cat_flag(Cat1::SpecialLw) {
-            new_status = *FIGHTER_STATUS_KIND_SPECIAL_LW;
+    if fighter.is_status(*FIGHTER_STATUS_KIND_ATTACK_AIR) {
+        if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+            WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_SPECIAL);
+            WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_ESCAPE);
         }
-        fighter.check_airdodge_cancel();
-        if new_status != 0 {
-            StatusModule::change_status_force(fighter.module_accessor, new_status, true);
-        } //special cancel
+        if !fighter.is_in_hitlag() 
+        && !StopModule::is_stop(fighter.module_accessor) {
+            fighter.sub_transition_group_check_air_special();
+            fighter.sub_transition_group_check_air_escape();
+        }
     }
 }
 
@@ -1078,6 +1077,10 @@ pub unsafe fn kirby_copy_handler(fighter: &mut L2CFighterCommon) {
             ken_air_hado_distinguish(fighter);
             ken_hado_landcancel(fighter)
         },
+        // Cloud
+        0x3E => {
+            cloud_special_n_hold(fighter);
+        }
         // Simon
         0x43 => axe_drift(fighter),
         // Incineroar

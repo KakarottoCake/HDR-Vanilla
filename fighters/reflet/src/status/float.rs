@@ -9,6 +9,8 @@ extern "Rust" {
     fn float_set_aerial(fighter: &mut L2CFighterCommon);
     #[link_name = "float_drift_common"]
     fn float_drift_common(fighter: &mut L2CFighterCommon) -> L2CValue;
+    #[link_name = "float_jump_leniency"]
+    fn float_jump_leniency(fighter: &mut L2CFighterCommon) -> L2CValue;
     #[link_name = "float_end_common"]
     fn float_end_common(fighter: &mut L2CFighterCommon) -> L2CValue;
 }
@@ -27,6 +29,7 @@ unsafe extern "C" fn float_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, 0.0, 0.0, 0.0, 0.0);
     KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
     float_drift_common(fighter);
+    float_jump_leniency(fighter);
 
     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING_ATTACK_AIR);
     WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_LANDING);
@@ -165,6 +168,7 @@ unsafe extern "C" fn reflet_float_main_loop(fighter: &mut L2CFighterCommon) -> L
 }
 
 unsafe extern "C" fn float_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    STOP_SE(fighter, Hash40::new("se_common_spirits_wind_loop"));
     EffectModule::kill_kind(fighter.module_accessor, Hash40::new("reflet_catch"), true, true);
     EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_aura_light"), true, true);
     float_end_common(fighter)
