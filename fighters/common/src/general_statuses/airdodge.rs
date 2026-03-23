@@ -178,6 +178,10 @@ unsafe fn sub_escape_air_common(fighter: &mut L2CFighterCommon) {
         fighter.sub_escape_air_uniq(L2CValue::Bool(false));
     }
     fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(sub_escape_air_uniq as *const () as _));
+    // Calculates/sets ledgegrab enable frame
+    // Ledgegrab frame varies per character, based on gravity and fallspeed
+    let enable_cliff_catch_frame = fighter.get_escape_air_cliff_catch_frame();
+    VarModule::set_int(fighter.battle_object, vars::common::status::ESCAPE_AIR_CLIFF_CATCH_FRAME, enable_cliff_catch_frame);
 }
 
 // custom substatus for airdodges
@@ -267,8 +271,7 @@ unsafe extern "C" fn sub_escape_air_uniq(fighter: &mut L2CFighterCommon, arg: L2
         }
 
         // Handles enabling ledgegrab
-        // Ledgegrab frame varies per character, based on gravity and fallspeed
-        let enable_cliff_catch_frame = fighter.get_escape_air_cliff_catch_frame();
+        let enable_cliff_catch_frame = VarModule::get_int(fighter.battle_object, vars::common::status::ESCAPE_AIR_CLIFF_CATCH_FRAME);
         if frame == enable_cliff_catch_frame {
             fighter.sub_fighter_cliff_check(L2CValue::I32(*GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES));
         }
