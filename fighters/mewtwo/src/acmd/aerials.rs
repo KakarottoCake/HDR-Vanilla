@@ -276,24 +276,15 @@ unsafe extern "C" fn effect_attackairlw(agent: &mut L2CAgentBase) {
         EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, -8, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         LAST_EFFECT_SET_RATE(agent, 1.8);
     }
-    frame(lua_state, 18.0);
+    frame(lua_state, 17.0);
     if is_excute(agent) {
-        EFFECT_FLW_POS(agent, Hash40::new("mewtwo_pk_attack_e"), Hash40::new("toel"), 1.25, -0.75, 0, 0, 0, 0, 0.75, true);
-        EffectModule::enable_sync_init_pos_last(boma);
-        LAST_EFFECT_SET_RATE(agent, 1.25);
+        EFFECT_FOLLOW_FLIP(agent, Hash40::new("mewtwo_pk_hand"), Hash40::new("mewtwo_pk_hand"), Hash40::new("toel"), 2.5, 0, 0, 0, 0, 0, 1.0, true, *EF_FLIP_NONE);
     }
-    frame(lua_state, 27.0);
+    frame(lua_state, 19.0);
     if is_excute(agent) {
-        EffectModule::kill_kind(boma, Hash40::new("mewtwo_pk_attack_e"), true, true);
-    }
-}
-
-unsafe extern "C" fn effect_landingairlw(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    if is_excute(agent) {
-        LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-        EffectModule::kill_kind(boma, Hash40::new("mewtwo_pk_attack_e"), true, true);
+        EFFECT_FLIP(agent, Hash40::new("mewtwo_pk_attack_b"), Hash40::new("mewtwo_pk_attack_b"), Hash40::new("top"), 3, -4.5, 0, 90, 0, 0, 1, 0, 0, 0, 0, 0, 0, true, *EF_FLIP_YZ);
+        LAST_EFFECT_SET_RATE(agent, 1.5);
+        EFFECT_OFF_KIND(agent, Hash40::new("mewtwo_pk_hand"), false, false);
     }
 }
 
@@ -329,5 +320,4 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_attackairlw", game_attackairlw, Priority::Low);
     agent.acmd("effect_attackairlw", effect_attackairlw, Priority::Low);
     agent.acmd("game_landingairlw", game_landingairlw, Priority::Low);
-    agent.acmd("effect_landingairlw", effect_landingairlw, Priority::Low);
 }
