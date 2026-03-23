@@ -293,14 +293,25 @@ pub mod vars {
         }
         pub mod status {
             // flags
+
+            /// global
+            /// can be used in any status
+            pub const CHECK_HOLD_INPUT: i32 = 0x10F9;
+            pub const NO_POCKET: i32 = 0x10FA;
+            pub const HIT_EFFECT_DROP_ITEM: i32 = 0x10FB;
+            pub const ENABLE_SPECIAL_WALLJUMP: i32 = 0x10FC;
             pub const FAF_REACHED: i32 = 0x10FD;
             pub const PREV_AUTOCANCEL_FLAG: i32 = 0x10FE;
             pub const DISABLE_ECB_SHIFT: i32 = 0x10FF;
 
+            /// dash statuses
+            /// e.g. FIGHTER_STATUS_KIND_DASH, FIGHTER_RYU_STATUS_KIND_DASH_BACK, etc.
             pub const IS_DASH_TO_RUN_FRAME: i32 = 0x1000;
             pub const IS_AFTER_DASH_TO_RUN_FRAME: i32 = 0x1001;
             pub const APPLY_DASH_END_SPEED_MUL: i32 = 0x1002;
+            pub const IS_DASH_CANCEL: i32 = 0x1003;
 
+            /// FIGHTER_STATUS_KIND_ATTACK_DASH
             pub const ATTACK_DASH_CANCEL_DISABLE: i32 = 0x1000;
             pub const ATTACK_DASH_ENABLE_AIR_FALL: i32 = 0x1001;
             pub const ATTACK_DASH_ENABLE_AIR_CONTINUE: i32 = 0x1002;
@@ -308,51 +319,58 @@ pub mod vars {
             pub const ATTACK_DASH_AIR_DRIFT_ENABLED: i32 = 0x1004;
             pub const ATTACK_DASH_ENABLE_AIR_LANDING: i32 = 0x1005;
 
+            /// FIGHTER_STATUS_KIND_ESCAPE_AIR
             pub const SHOULD_WAVELAND: i32 = 0x1000;
 
+            /// damage statuses
             pub const IS_JAB_LOCK_ROLL: i32 = 0x1000;
             pub const IS_SPIKE: i32 = 0x1001;
             pub const DAMAGE_FLY_RESET_TRIGGER: i32 = 0x1002;
 
+            /// FIGHTER_STATUS_KIND_THROWN
             pub const SUICIDE_THROW_CAN_CLATTER: i32 = 0x1000;
 
-            pub const ENABLE_UCF: i32 = 0x1000;
-
+            /// FIGHTER_STATUS_KIND_CATCH_ATTACK
             pub const PUMMEL_OVERRIDE_GLOBAL_STATS: i32 = 0x1000;
 
+            /// FIGHTER_STATUS_KIND_JUMP_SQUAT
             pub const CSTICK_IRAR: i32 = 0x1000;
 
+            /// FLOAT statuses
+            /// e.g. FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT, statuses::mewtwo::FLOAT, etc.
             pub const FLOAT_INHERIT_AERIAL: i32 = 0x1000;
 
+            /// teleport up special statuses
+            /// e.g. FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_2, FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_HI_2, etc.
             pub const IS_TELEPORT_WALL_RIDE: i32 = 0x1000; // Mewtwo, Palutena, Sheik, and Zelda use this
 
-            pub const ENABLE_SPECIAL_WALLJUMP: i32 = 0x1050;
-
-            pub const HIT_EFFECT_DROP_ITEM: i32 = 0x1051;
-
+            /// FIGHTER_STATUS_KIND_ATTACK_AIR
             pub const SHOULD_HITFALL: i32 = 0x1006;
 
-            pub const NO_POCKET: i32 = 0x1052;
-
-            pub const IS_DASH_CANCEL: i32 = 0x1055;
 
             // ints
 
+            /// FIGHTER_STATUS_KIND_DOWN_DAMAGE
             pub const DOWN_STAND_FB_KIND: i32 = 0x1000;
 
+            /// FLOAT statuses
+            /// e.g. FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT, statuses::mewtwo::FLOAT, etc.
             pub const FLOAT_FRAME: i32 = 0x1000;
             pub const FLOAT_ENABLE_UNIQ: i32 = 0x1001;
             pub const FLOAT_MTRANS: i32 = 0x1002;
 
-            pub const WARP_EFF_HANDLER: i32 = 0x1000;
-
+            
             // floats
 
+            /// damage statuses
             pub const INITIAL_KNOCKBACK_VEL_X: i32 = 0x1000;
             pub const INITIAL_KNOCKBACK_VEL_Y: i32 = 0x1001;
 
+            /// FIGHTER_STATUS_KIND_DOWN
             pub const RESTING_HIP_OFFSET_Y: i32 = 0x1000;
 
+            /// teleport up special statuses
+            /// e.g. FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_2, FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_HI_2, etc.
             pub const TELEPORT_INITIAL_SPEED_X: i32 = 0x1000;
             pub const TELEPORT_INITIAL_SPEED_Y: i32 = 0x1001;
             pub const TELEPORT_FLOOR_SPEED_X: i32 = 0x1002;
@@ -645,7 +663,8 @@ pub mod vars {
     pub mod edge {
         pub mod status {
             // flags
-            pub const FLASH_HOLD: i32 = 0x1100;
+            pub const SPECIAL_LW_CHECK_HOLD: i32 = 0x1100;
+            pub const SPECIAL_LW_HOLD: i32 = 0x1101;
         }
     }
 
@@ -892,6 +911,7 @@ pub mod vars {
             pub const PURIN_SPECIAL_N_HIT_CANCEL_OK: i32 = 0x11F9;
             pub const PALUTENA_SPECIAL_N_HOLD: i32 = 0x11FA;
 
+            pub use super::super::cloud::status::SPECIAL_N_HOLD;
             pub use super::super::daisy::status::SPECIAL_N_CRYSTAL_ACTIVE;
             pub use super::super::daisy::status::SPECIAL_N_AIR_START;
             pub use super::super::daisy::status::SPECIAL_N_DIVE;
@@ -900,6 +920,7 @@ pub mod vars {
             pub use super::super::luigi::status::SPECIAL_N_THUNDERHAND;
             pub use super::super::mario::status::SPECIAL_N_FIREBRAND;
             pub use super::super::mariod::status::SPECIAL_N_CHILL_PILL;
+            pub use super::super::miigunner::status::ATTACK_CHARGE;
         }
     }
 
@@ -2201,6 +2222,11 @@ pub mod melee_mode {
     pub const ARENA: i32 = 0x13;
 
     pub const TIPS: i32 = 0x1b;
+}
+
+pub mod smash_mode {
+    pub const TIME: i32 = 0x0;
+    pub const STOCK: i32 = 0x1;
 }
 
 // extra lua_consts

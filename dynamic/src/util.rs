@@ -2,9 +2,11 @@ use smash::app::{BattleObject, BattleObjectModuleAccessor};
 use smash::lua2cpp::L2CFighterCommon;
 use crate::offsets;
 use crate::ext::*;
-// use std::arch::asm;
+use std::sync::atomic::AtomicBool;
 use smash::phx::Vector2f;
-// use crate::se;
+
+// Flag for if salty quit was triggered. Reset every scene transition.
+pub static MATCH_EXITING: AtomicBool = AtomicBool::new(false);
 
 #[macro_export]
 macro_rules! dump_trace {
