@@ -6,7 +6,7 @@ use globals::*;
 unsafe fn krown_reflect_fix(weapon: &mut smash::lua2cpp::L2CFighterBase) {
     // this opff runs once after reflection
     let boma = weapon.module_accessor;
-    if !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_REFLECTOR | *COLLISION_KIND_MASK_PARRY) {
+    if !weapon.is_status(*WEAPON_KROOL_CROWN_STATUS_KIND_THROW) || !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_REFLECTOR | *COLLISION_KIND_MASK_PARRY) {
         return;
     }
     AttackModule::clear_inflict_kind_status(boma);
