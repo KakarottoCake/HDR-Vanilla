@@ -298,6 +298,7 @@ pub mod vars {
 
             /// global
             /// can be used in any status
+            pub const CHECK_HOLD_INPUT: i32 = 0x10F9;
             pub const NO_POCKET: i32 = 0x10FA;
             pub const HIT_EFFECT_DROP_ITEM: i32 = 0x10FB;
             pub const ENABLE_SPECIAL_WALLJUMP: i32 = 0x10FC;
@@ -359,6 +360,9 @@ pub mod vars {
             pub const FLOAT_FRAME: i32 = 0x1000;
             pub const FLOAT_ENABLE_UNIQ: i32 = 0x1001;
             pub const FLOAT_MTRANS: i32 = 0x1002;
+
+            /// FIGHTER_STATUS_KIND_ESCAPE_AIR
+            pub const ESCAPE_AIR_CLIFF_CATCH_FRAME: i32 = 0x1000;
 
             
             // floats
@@ -664,7 +668,8 @@ pub mod vars {
     pub mod edge {
         pub mod status {
             // flags
-            pub const FLASH_HOLD: i32 = 0x1100;
+            pub const SPECIAL_LW_CHECK_HOLD: i32 = 0x1100;
+            pub const SPECIAL_LW_HOLD: i32 = 0x1101;
         }
     }
 
@@ -911,6 +916,7 @@ pub mod vars {
             pub const PURIN_SPECIAL_N_HIT_CANCEL_OK: i32 = 0x11F9;
             pub const PALUTENA_SPECIAL_N_HOLD: i32 = 0x11FA;
 
+            pub use super::super::cloud::status::SPECIAL_N_HOLD;
             pub use super::super::daisy::status::SPECIAL_N_CRYSTAL_ACTIVE;
             pub use super::super::daisy::status::SPECIAL_N_AIR_START;
             pub use super::super::daisy::status::SPECIAL_N_DIVE;
@@ -919,6 +925,7 @@ pub mod vars {
             pub use super::super::luigi::status::SPECIAL_N_THUNDERHAND;
             pub use super::super::mario::status::SPECIAL_N_FIREBRAND;
             pub use super::super::mariod::status::SPECIAL_N_CHILL_PILL;
+            pub use super::super::miigunner::status::ATTACK_CHARGE;
         }
     }
 
@@ -2220,6 +2227,11 @@ pub mod melee_mode {
     pub const ARENA: i32 = 0x13;
 
     pub const TIPS: i32 = 0x1b;
+}
+
+pub mod smash_mode {
+    pub const TIME: i32 = 0x0;
+    pub const STOCK: i32 = 0x1;
 }
 
 // extra lua_consts
