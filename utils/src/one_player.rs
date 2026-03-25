@@ -151,4 +151,12 @@ pub fn install() {
         once_per_frame,
         match_load,
     );
+
+    // Allow 0 CPUs in Training Mode menu
+    // Allow UI to decrement to 0
+    skyline::patching::Patch::in_text(0x1bb46a4).data(0xb907fa7fu32).unwrap();
+    // Change set-value handler clamp to 0
+    skyline::patching::Patch::in_text(0x1bbad14).data(0x7100011fu32).unwrap();
+    // Fix clamp logic to clamp underflow to 0 instead of 1
+    skyline::patching::Patch::in_text(0x1bbad18).data(0x1a9fa114u32).unwrap();
 }
