@@ -2866,10 +2866,10 @@
       <float hash="air_brake_x">0.012</float>
       <float hash="air_speed_y_stable">1.815</float>
       <float hash="weight">100</float>
-      <float hash="landing_attack_air_frame_n">8</float>
+      <float hash="landing_attack_air_frame_n">9</float>
       <float hash="landing_attack_air_frame_f">11</float>
       <float hash="landing_attack_air_frame_b">10</float>
-      <float hash="landing_attack_air_frame_hi">7</float>
+      <float hash="landing_attack_air_frame_hi">8</float>
       <float hash="landing_attack_air_frame_lw">13</float>
       <float hash="landing_frame">4</float>
       <int hash="attack_100_enable_cnt">2</int>
