@@ -182,7 +182,7 @@ special_n_start:
     cancel_frame: 60
 special_s_end:
   extra:
-    cancel_frame: 53
+    cancel_frame: 44
 step_pose_back:
   extra:
     cancel_frame: 6
