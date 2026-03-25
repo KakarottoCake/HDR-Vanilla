@@ -6,7 +6,7 @@ unsafe extern "C" fn landing_light_pre(fighter: &mut L2CFighterCommon) -> L2CVal
     if VarModule::is_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_LAG) {
         let lag = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.empty_landing");
         fighter.set_float(lag, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
-        StatusModule::set_status_kind_interrupt(fighter.module_accessor, *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL);
+        fighter.set_status_kind_interrupt(*FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL);
         return 1.into();
     }
     smashline::original_status(Pre, fighter, *FIGHTER_STATUS_KIND_LANDING_LIGHT)(fighter)
@@ -18,7 +18,7 @@ unsafe extern "C" fn landing_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     if VarModule::is_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_LAG) {
         let lag = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.empty_landing");
         fighter.set_float(lag, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
-        StatusModule::set_status_kind_interrupt(fighter.module_accessor, *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL);
+        fighter.set_status_kind_interrupt(*FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL);
         return 1.into();
     }
     smashline::original_status(Pre, fighter, *FIGHTER_STATUS_KIND_LANDING)(fighter)

@@ -74,7 +74,7 @@ unsafe fn var_resets(boma: &mut BattleObjectModuleAccessor) {
         *FIGHTER_STATUS_KIND_LANDING_LIGHT,
         *FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR,
         *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL])
-        {
+    {
         if !boma.is_situation(*SITUATION_KIND_AIR)
         || boma.is_status_one_of(damage_statuses)
         || boma.is_status_one_of(death_statuses)
