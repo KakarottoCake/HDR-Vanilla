@@ -268,6 +268,19 @@ pub unsafe fn get_param_float_hook(x0 /*boma*/: u64, x1 /*param_type*/: u64, x2 
                 }
             } 
         }
+
+        // Ironball uses a custom kinetic type and I can't find the offset where these values are set
+        else if fighter_kind == *FIGHTER_KIND_MIIFIGHTER
+        || (fighter_kind == *FIGHTER_KIND_KIRBY && WorkModule::get_int(boma, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_COPY_CHARA) == 0x48) {
+            if x1 == hash40("param_special_n") {
+                if x2 == hash40("n1_throw_angle") {
+                    return VarModule::get_float(boma_reference.object(), vars::miifighter::status::SPECIAL_N1_ANGLE);
+                }
+                if x2 == hash40("n1_start_speed_x") {
+                    return VarModule::get_float(boma_reference.object(), vars::miifighter::status::SPECIAL_N1_SPEED);
+                }
+            }
+        }
         
         else if fighter_kind == *FIGHTER_KIND_MIISWORDSMAN {
             // not found within the special_hi status scripts
