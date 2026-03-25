@@ -49,10 +49,10 @@ unsafe extern "C" fn effect_attacks4(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("pzenigame_mouth_water"), Hash40::new("head"), -0.5, 3, 0, -80, 0, 0, 1, true);
         if agent.lr() < 0.0 {
-            EFFECT_FOLLOW(agent, Hash40::new("pzenigame_water_smash"), Hash40::new("top"), 0, 0, 0, 3, 160, 20, 0.8, true);
+            EFFECT_FOLLOW(agent, Hash40::new("pzenigame_water_smash"), Hash40::new("top"), 0, 0, -1, 13, 160, 10, 0.8, true);
         }
         else {
-            EFFECT_FOLLOW(agent, Hash40::new("pzenigame_water_smash_r"), Hash40::new("top"), 0, 0, 0, 3, 160, -20, 0.8, true);
+            EFFECT_FOLLOW(agent, Hash40::new("pzenigame_water_smash_r"), Hash40::new("top"), 0, 0, 1, 3, 160, -10, 0.8, true);
         }
     }
     frame(lua_state, 19.0);
