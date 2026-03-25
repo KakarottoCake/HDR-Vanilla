@@ -1295,14 +1295,27 @@ pub mod vars {
     pub mod miiswordsman {
         pub mod instance {
             // flags
-            pub const SPECIAL_S3_CHAKRAM_STICK: i32 = 0x0100;
-            pub const SPECIAL_HI2_DASH_HIT: i32 = 0x0101;
+            pub const SPECIAL_HI2_DASH_HIT: i32 = 0x0100;
         }
         pub mod status {
             // flags
-            pub const SPECIAL_S2_EDGE_CANCEL: i32 = 0x1100;
-            pub const SPECIAL_LW2_SHOCK_SPELL_HOLD: i32 = 0x1101;
-            pub const SPECIAL_S2_GROUND_START: i32 = 0x1102;
+            pub const SPECIAL_S2_GROUND_START: i32 = 0x1100;
+            pub const SPECIAL_S2_EDGE_CANCEL: i32 = 0x1101;
+            pub const SPECIAL_LW1_CHECK_INPUT: i32 = 0x1102;
+            pub const SPECIAL_LW1_CHANGE_KINETIC: i32 = 0x1103;
+            pub const SPECIAL_LW2_HOLD: i32 = 0x1104;
+            pub const SPECIAL_LW2_CHANGE_ARTICLE: i32 = 0x1105;
+            pub const SPECIAL_LW3_CHECK_INPUT: i32 = 0x1106;
+
+            // floats
+            pub const SPECIAL_S2_SPEED_Y: i32 = 0x1100;
+        }
+    }
+
+    pub mod miiswordsman_shockspell {
+        pub mod status {
+            // flags
+            pub const SHOCK_SPELL_HOLD: i32 = 0x1100;
         }
     }
 
@@ -2132,12 +2145,17 @@ pub mod statuses {
     pub mod mewtwo {
         pub const FLOAT: i32 = 0x1E9;
     }
-
+    
     pub mod miifighter {
         pub const SPECIAL_N2_HOLD: i32 = 0x208;
         pub const SPECIAL_N2_CANCEL: i32 = 0x209;
         pub const SPECIAL_N2_JUMP_CANCEL: i32 = 0x20A;
     }
+
+    pub mod miiswordsman_tornadoshot {
+        pub const SHOCK_SPELL: i32 = 0x1;
+    }
+
     pub mod packun_firebreath {
         pub const REGULAR: i32 = 0x0;
     }
