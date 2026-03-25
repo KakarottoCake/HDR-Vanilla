@@ -8,7 +8,7 @@
       <float hash="dash_air_brake_x">0.1</float>
       <float hash="dash_ground_end_brake_x">0.1</float>
       <float hash="dash_air_end_brake_x">0.05</float>
-      <float hash="shield_hit_end_speed_x">0.4</float>
+      <float hash="shield_hit_end_speed_x">0.75</float>
     </struct>
     <struct hash="param_special_hi">
       <float hash="fall_special_accel_x_mul">1</float>
