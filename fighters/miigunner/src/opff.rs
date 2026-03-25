@@ -66,47 +66,6 @@ unsafe fn reflector_jc(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
-unsafe fn laser_blaze_ff_land_cancel(fighter: &mut L2CFighterCommon) {
-    if fighter.is_motion_one_of(&[
-        Hash40::new("special_air_n2_start"),
-        Hash40::new("special_air_n2_loop"),
-        Hash40::new("special_air_n2_end"),
-        Hash40::new("special_n2_start"),
-        Hash40::new("special_n2_loop"),
-        Hash40::new("special_n2_end") ]) {
-        let landing_lag = 6.0;
-        fighter.check_land_cancel(Some(landing_lag));
-
-        if StatusModule::is_changing(fighter.module_accessor)
-        && fighter.is_situation(*SITUATION_KIND_AIR) {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-        }
-    }
-}
-
-unsafe fn remove_homing_missiles(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_1_GROUND) {
-        StatusModule::change_status_request_from_script(boma, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_2_GROUND, false);
-    }
-    else if boma.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_1_AIR) {
-        StatusModule::change_status_request_from_script(boma, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_2_AIR, false);
-    }
-}
-
-unsafe fn missile_land_cancel(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_status_one_of(&[
-        *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_1_AIR,
-        *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S3_2_AIR ]) {
-        boma.check_land_cancel(None);
-    }
-}
-
-unsafe fn stealth_burst_land_cancel(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S2_END) {
-        boma.check_land_cancel(None);
-    }
-}
-
 unsafe fn vortex_item_grab_ac(fighter: &mut L2CFighterCommon) {
     if fighter.is_status_one_of(&[*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW3_HIT, *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW3_END])
     && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
@@ -121,61 +80,22 @@ unsafe fn vortex_item_grab_ac(fighter: &mut L2CFighterCommon) {
 }
 
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
-    if !fighter.is_in_hitlag()
-    && !StatusModule::is_changing(fighter.module_accessor)
-    && (
-        fighter.is_status_one_of(&[
-            *FIGHTER_STATUS_KIND_SPECIAL_N,
-            *FIGHTER_STATUS_KIND_SPECIAL_S,
-            *FIGHTER_STATUS_KIND_SPECIAL_HI,
-            *FIGHTER_STATUS_KIND_SPECIAL_LW,
-        ])
-        || ([*FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_N_1,
-            *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_S_1,
-            *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_HI_1,
-            *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_1
+    if (
+        ([*FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_2
             ].contains(&WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_WAZA_CUSTOMIZE_TO))
             && fighter.is_status_one_of(&[
-                *FIGHTER_STATUS_KIND_SPECIAL_N,
-                *FIGHTER_STATUS_KIND_SPECIAL_S,
-                *FIGHTER_STATUS_KIND_SPECIAL_HI,
                 *FIGHTER_STATUS_KIND_SPECIAL_LW,
-                *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_FIRE,
-                *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_HOLD,
-                *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_START,
-                *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_N1_CANCEL,
-                *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW1_END,
-                *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW1_HIT,
-                *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW1_LOOP
-            ])
-        )
-        || ([*FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_N_2,
-            *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_S_2,
-            *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_HI_2,
-            *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_2
-            ].contains(&WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_WAZA_CUSTOMIZE_TO))
-            && fighter.is_status_one_of(&[
-                *FIGHTER_STATUS_KIND_SPECIAL_N,
-                *FIGHTER_STATUS_KIND_SPECIAL_LW,
-                *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_S2_END,
-                *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI2_JUMP,
             ])
         )
         || ([*FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_N_3,
-            *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_S_3,
-            *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_HI_3,
-            *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_3
             ].contains(&WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_WAZA_CUSTOMIZE_TO))
             && fighter.is_status_one_of(&[
                 *FIGHTER_STATUS_KIND_SPECIAL_N,
-                *FIGHTER_STATUS_KIND_SPECIAL_LW,
-                *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_HI3_RUSH_END,
-                *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW3_END,
-                *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW3_HIT,
-                *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW3_HOLD
             ])
         )
     )
+    && !fighter.is_in_hitlag()
+    && !StatusModule::is_changing(fighter.module_accessor)
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
     }
@@ -184,10 +104,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     special_waza_charge_handle(boma);
     reflector_jc(boma);
-    laser_blaze_ff_land_cancel(fighter);
-    remove_homing_missiles(boma);
-    missile_land_cancel(boma);
-    stealth_burst_land_cancel(boma);
     vortex_item_grab_ac(fighter);
     fastfall_specials(fighter);
 }

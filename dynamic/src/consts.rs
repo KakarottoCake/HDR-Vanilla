@@ -886,6 +886,7 @@ pub mod vars {
             pub const SPECIAL_LW_USED_JUMPS: i32 = 0x01F5;
             pub const DISABLE_SPECIAL_LW: i32 = 0x01F8;
             pub use super::super::bayonetta::instance::WAS_CANCEL;
+            pub use super::super::miigunner::status::SPECIAL_N1_CLEAR_CRIT;
             pub const BUDDY_SPECIAL_N_BAYONET_ACTIVE: i32 = 0x01F6;
             pub use super::super::ridley::instance::SPECIAL_N_EXPLODE;
             pub use super::super::buddy::instance::SPECIAL_N_LAND_CANCEL;
@@ -1260,6 +1261,8 @@ pub mod vars {
         pub mod status {
             // flags
             pub const BOOSTED_AERIAL: i32 = 0x1100;
+            pub const CHECK_BOOSTED_AERIAL: i32 = 0x1101;
+            pub const SPECIAL_N1_CLEAR_CRIT: i32 = 0x1102;
 
             // floats
             pub const ATTACK_CHARGE: i32 = 0x1100;
@@ -1268,15 +1271,16 @@ pub mod vars {
             // flags
             pub const BOOSTED_AERIAL_LANDING: i32 = 0x0100;
             pub const BOOSTED_ATTACK_AIR_LW_AIRTIME: i32 = 0x0101;
-            pub const SPECIAL_HI1_LAUNCH_AIR_USED: i32 = 0x0102;
-
+            pub const SPECIAL_HI1_AIR_USED: i32 = 0x0102;
+            
             // ints
             pub const SPECIAL_S2_STEALTHBOMB_EFFECT_HANDLE: i32 = 0x0100;
             pub const SPECIAL_S3_MISSILE_OBJECT_ID: i32 = 0x0101;
             pub const SPECIAL_HI1_LAUNCH_EFFECT_HANDLE: i32 = 0x0102;
-
+            
             // floats
             pub const SPECIAL_N3_CHARGE: i32 = 0x0102;
+            pub const SPECIAL_HI3_ROT: i32 = 0x0103;
         }
     }
 
@@ -1289,6 +1293,24 @@ pub mod vars {
         pub mod status {
             // ints
             pub const PULSE_TIMER: i32 = 0x1100;
+        }
+    }
+
+    pub mod miigunner_stealthbomb {
+        pub mod instance {
+            // floats
+            pub const ANGLE: i32 = 0x0100;
+        }
+        pub mod status {
+            // flags
+            pub const REFLECT: i32 = 0x1100;    // remove if not needed
+
+            // ints
+            pub const FOLLOW_FRAME: i32 = 0x1100;
+            pub const BACK_ROT_FRAME: i32 = 0x1101;
+
+            // floats
+            pub const TURN_DIST: i32 = 0x1100;
         }
     }
 
@@ -2156,6 +2178,9 @@ pub mod statuses {
         pub const SHOCK_SPELL: i32 = 0x1;
     }
 
+    pub mod miigunner_stealthbomb {
+        pub const TURN: i32 = 0x2;
+    }
     pub mod packun_firebreath {
         pub const REGULAR: i32 = 0x0;
     }
