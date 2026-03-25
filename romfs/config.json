@@ -175,6 +175,9 @@
 		"fighter/robot/cmn": [
 			"fighter/robot/param/hdr.xml"
 		],
+		"fighter/rockman/cmn": [
+			"fighter/rockman/param/hdr.xml"
+		],
 		"fighter/shulk/cmn": [
 			"fighter/shulk/param/hdr.xml"
 		],

@@ -31,11 +31,10 @@ unsafe extern "C" fn special_hi2_pre(fighter: &mut L2CFighterCommon) -> L2CValue
     return 0.into();
 }
 
-// Wuboy translated this at WuBoytH/vanilla_status
 unsafe extern "C" fn angler(fighter: &mut L2CFighterCommon) -> L2CValue {
     let stick_x = fighter.left_stick_x();
     let stick_y = fighter.left_stick_y();
-    let mut length = sv_math::vec2_length(stick_x, stick_y);//.min(1.0);
+    let mut length = sv_math::vec2_length(stick_x, stick_y);
     let wrap_stick = fighter.get_param_float("param_special_hi", "wrap_stick");
 
     PostureModule::set_stick_lr(fighter.module_accessor, 0.0);
@@ -66,7 +65,8 @@ unsafe extern "C" fn angler(fighter: &mut L2CFighterCommon) -> L2CValue {
         let sin = angle.sin();
         speed_y = speed * sin;
     }
-    // force into air if non-horizontal angle or already not on floor
+    // If teleport angle is upwards or you are already in air
+    // force airborne state
     if detach || fighter.global_table[SITUATION_KIND] != SITUATION_KIND_GROUND {
         fighter.set_situation(SITUATION_KIND_AIR.into());
         GroundModule::set_attach_ground(fighter.module_accessor, false);
@@ -99,8 +99,9 @@ unsafe extern "C" fn special_hi2_main_loop(fighter: &mut L2CFighterCommon) -> L2
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into()
     }
-    let move_time = fighter.get_param_int("param_special_hi", "move_time"); //time spent moving
-    if move_time <= fighter.get_int(*FIGHTER_ZELDA_STATUS_SPECIAL_HI_WORK_INT_FRAME) {
+    let frame = fighter.get_int(*FIGHTER_ZELDA_STATUS_SPECIAL_HI_WORK_INT_FRAME);
+    let move_time = fighter.get_param_int("param_special_hi", "move_time");
+    if frame >= move_time {
         fighter.change_status(FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_3.into(), true.into())
     }
     if StatusModule::is_changing(fighter.module_accessor)
@@ -117,11 +118,10 @@ unsafe extern "C" fn special_hi2_main_loop(fighter: &mut L2CFighterCommon) -> L2
         VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
         fighter.change_status(FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_3.into(), true.into())
     }
-    //subsatus
+    //substatus
     if !StatusModule::is_changing(fighter.module_accessor) {
         WorkModule::inc_int(fighter.module_accessor, *FIGHTER_ZELDA_STATUS_SPECIAL_HI_WORK_INT_FRAME);
-        let frame: i32 = fighter.get_int(*FIGHTER_ZELDA_STATUS_SPECIAL_HI_WORK_INT_FRAME);
-        let move_xlu: i32 = fighter.get_param_int("param_special_hi", "move_xlu"); //time ignoring platforms
+        let move_xlu = fighter.get_param_int("param_special_hi", "move_xlu"); // travel frame to begin ignoring platforms
         let cliff_check_frame = fighter.get_param_int("param_special_hi", "move_cliff_check");
         if frame == move_xlu {
             GroundModule::set_passable_check(fighter.module_accessor, false);
@@ -129,38 +129,48 @@ unsafe extern "C" fn special_hi2_main_loop(fighter: &mut L2CFighterCommon) -> L2
         if frame == cliff_check_frame {
             fighter.sub_fighter_cliff_check(GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES.into());
         }
-        if frame < 2 {fighter.on_flag(*FIGHTER_ZELDA_STATUS_SPECIAL_HI_FLAG_CHECK_GROUND);}
+        if frame < 2 {
+            fighter.on_flag(*FIGHTER_ZELDA_STATUS_SPECIAL_HI_FLAG_CHECK_GROUND);
+        }
     }
     0.into()
 }
 
-// copy nasty vanilla math and add checks
+// Copies nasty vanilla math
+// with adjusted logic to control wall-ride/floor-ride behavior
 unsafe extern "C" fn special_hi_2_check_ground(fighter: &mut L2CFighterCommon) {
-    // reset momentum (bypass wallride)
     let init_speed_x = VarModule::get_float(fighter.battle_object, vars::common::status::TELEPORT_INITIAL_SPEED_X);
     let init_speed_y = VarModule::get_float(fighter.battle_object, vars::common::status::TELEPORT_INITIAL_SPEED_Y);
     let floor_speed_x = VarModule::get_float(fighter.battle_object, vars::common::status::TELEPORT_FLOOR_SPEED_X);
     if floor_speed_x.abs() > 0.0 && init_speed_y < 0.0 && init_speed_x.abs() > 0.0 
     && (GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) && !GroundModule::is_passable_ground(fighter.module_accessor)) {
+        // Travel speed for diagonally-down floor-rides
         sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, floor_speed_x, 0.0, 0.0);
     } else {
+        // Travel speed for all other scenarios
         sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, init_speed_x, init_speed_y, 0.0);
     }
-    // make it not mess up platform teleports
+    // If on a platform,
+    // skip floor-ride speed redirection
     if GroundModule::is_passable_check(fighter.module_accessor) && GroundModule::is_passable_ground(fighter.module_accessor) {
         return;
     }
     let stop_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP) as *mut app::KineticEnergy;
     let speed = Vector2f {x: lua_bind::KineticEnergy::get_speed_x(stop_energy), y: lua_bind::KineticEnergy::get_speed_y(stop_energy)};
-    // only apply to diagonal landing teleport floorrides (fix grounded angling / a2g straight down tele)
+    // If not a diagonally-down teleport,
+    // or if already grounded,
+    // skip floor-ride speed redirection
     if !GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32)
     || (speed.x.abs() < 0.001 || speed.y > -0.001)
     || fighter.global_table[PREV_SITUATION_KIND] != SITUATION_KIND_AIR {
         return;
     }
-    // if moving at all (when wld this be relevant?)
+    // Compute a new ground-aligned velocity vector
+    // for intended floor-ride speed redirection
+    // 
+    // Only intended to run on the first frame you land during the travel
     let mut length = sv_math::vec3_length(speed.x, speed.y, 0.0);
-    if 0.0 < length {
+    if length > 0.0 {
         let touch_x = GroundModule::get_touch_normal_x(fighter.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32);
         let touch_y = GroundModule::get_touch_normal_y(fighter.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32);
 
@@ -195,23 +205,22 @@ unsafe extern "C" fn special_hi_2_check_ground(fighter: &mut L2CFighterCommon) {
 
 unsafe extern "C" fn special_hi2_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[STATUS_KIND].get_i32() == *FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_3 {
-        // turnaround
+        // Reappearance turnaround
         if fighter.left_stick_x() * fighter.lr()
         <= fighter.get_param_float("common", "turn_stick_x") {
-            // prevents turning around with buffered attacks
             PostureModule::reverse_lr(fighter.module_accessor);
             PostureModule::update_rot_y_lr(fighter.module_accessor);
         }
-        //re-uses waveland window logic, similar window to p+ but lower speed per frame makes it more lenient overall
-        let init_speed_y = VarModule::get_float(fighter.battle_object, vars::common::status::TELEPORT_INITIAL_SPEED_Y); //teleport direction
-        let pos = *PostureModule::pos(fighter.module_accessor); //top bone (bottom of ecb w/o shifting)
+        // Use a waveland-esque snap threshold to determine whether to snap to ground
+        let init_speed_y = VarModule::get_float(fighter.battle_object, vars::common::status::TELEPORT_INITIAL_SPEED_Y);
+        let pos = *PostureModule::pos(fighter.module_accessor);
         let bot_snap = &Vector2f::new(pos.x, pos.y - 1.0);
-        let top_snap = &Vector2f::new(pos.x, pos.y + 11.0);//around chest level
+        let top_snap = &Vector2f::new(pos.x, pos.y + 11.0); // around chest level
         let ground_pos_any = &mut Vector2f::zero();
         let ground_pos_stage = &mut Vector2f::zero();
         let is_touch_any = GroundModule::line_segment_check(fighter.module_accessor, top_snap, bot_snap, &Vector2f::zero(), ground_pos_any, true);
         let is_touch_stage = GroundModule::line_segment_check(fighter.module_accessor, top_snap, bot_snap, &Vector2f::zero(), ground_pos_stage, false);
-        let can_snap = !(is_touch_any == 0 as *const *const u64 || (is_touch_stage != 0 as *const *const u64 && init_speed_y > 0.0)); //avoid snapping to stage from below
+        let can_snap = !(is_touch_any == 0 as *const *const u64 || (is_touch_stage != 0 as *const *const u64 && init_speed_y > 0.0)); // avoid snapping to stage during rising teleport
         if can_snap {
             PostureModule::set_pos(fighter.module_accessor, &Vector3f::new(pos.x, ground_pos_any.y + 0.1, pos.z));
             GroundModule::attach_ground(fighter.module_accessor, false);
@@ -222,11 +231,11 @@ unsafe extern "C" fn special_hi2_end(fighter: &mut L2CFighterCommon) -> L2CValue
                 let stop_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP) as *mut app::KineticEnergy;
                 let speed = Vector2f{ x: lua_bind::KineticEnergy::get_speed_x(stop_energy), y: lua_bind::KineticEnergy::get_speed_y(stop_energy)};
                 sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, speed.x.abs() * lr * 1.05, speed.y); //b-reverse telecancel reverses momentum on ground
-                // telecancel flash
+                // telecancel gfx
                 EffectModule::req_follow(fighter.module_accessor, Hash40::new("zelda_atk"), Hash40::new("top"), &Vector3f::new(5.5 * lr, 8.0, -2.1), &Vector3f::zero(), 1.65, true, 0, 0, 0, 0, 0, false, false);
                 LAST_EFFECT_SET_COLOR(fighter, 0.95, 3.0, 0.6);
                 LAST_EFFECT_SET_ALPHA(fighter, 0.75);
-                LAST_EFFECT_SET_RATE(fighter, 1.10); //spawn gr cancel eff frame 0
+                LAST_EFFECT_SET_RATE(fighter, 1.10);
                 // telecancel sound
                 PLAY_SE(fighter, Hash40::new("se_zelda_appear02"));
             }
@@ -295,7 +304,7 @@ unsafe extern "C" fn special_hi3_main_loop(fighter: &mut L2CFighterCommon) -> L2
             }
             return 1.into();
         } else {
-            //clear buffer
+            // clear buffer
             ControlModule::reset_trigger(fighter.module_accessor);
             ControlModule::clear_command(fighter.module_accessor, true);
             ControlModule::reset_special_command(fighter.module_accessor, true);
@@ -306,24 +315,26 @@ unsafe extern "C" fn special_hi3_main_loop(fighter: &mut L2CFighterCommon) -> L2
     if fighter.global_table[SITUATION_KIND] != SITUATION_KIND_GROUND {
         if fighter.is_flag(*FIGHTER_ZELDA_STATUS_SPECIAL_HI_FLAG_DIVE) {
             fighter.sub_air_check_dive();
-        }  //bypass manual fastfall
+        }
         if fighter.is_flag(*FIGHTER_ZELDA_STATUS_SPECIAL_HI_FLAG_CONTROL) {
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
             fighter.off_flag(*FIGHTER_ZELDA_STATUS_SPECIAL_HI_FLAG_CONTROL);
-        } //bypass manual drift code
-        if !fighter.global_table[IS_STOPPING].get_bool() && KineticModule::get_kinetic_type(fighter.module_accessor) != *FIGHTER_KINETIC_TYPE_MOTION_FALL { //only runs t he capping stuff before she can drift and fastfall
+        }
+        if !fighter.global_table[IS_STOPPING].get_bool() && KineticModule::get_kinetic_type(fighter.module_accessor) != *FIGHTER_KINETIC_TYPE_MOTION_FALL {
             if !fighter.is_flag(*FIGHTER_ZELDA_STATUS_SPECIAL_HI_FLAG_1) {
                 let stop_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP) as *mut app::KineticEnergy;
-                let speed = Vector2f{x: lua_bind::KineticEnergy::get_speed_x(stop_energy), y: lua_bind::KineticEnergy::get_speed_y(stop_energy)};//pretty sure code subtracts 1/10th of y speed every frame before normal fall is enabled
-                sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, speed.x, speed.y *0.9);
+                let speed = Vector2f{x: lua_bind::KineticEnergy::get_speed_x(stop_energy), y: lua_bind::KineticEnergy::get_speed_y(stop_energy)};
+                // Gradually reduce y speed by 10% every frame
+                // until you change to MOTION_FALL energy
+                sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, speed.x, speed.y * 0.9);
             } else {
                 if !KineticModule::is_enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY) {
                     let stop_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP) as *mut app::KineticEnergy;
                     let speed_y = lua_bind::KineticEnergy::get_speed_y(stop_energy);
                     sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y);
                     KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-                    let air_speed_x_stable: f32 = fighter.get_param_float("air_speed_x_stable", "");
-                    let fall_x_mul: f32 = fighter.get_param_float("param_special_hi", "fall_x_mull_value");
+                    let air_speed_x_stable = fighter.get_param_float("air_speed_x_stable", "");
+                    let fall_x_mul = fighter.get_param_float("param_special_hi", "fall_x_mull_value");
                     let mut x_cap = air_speed_x_stable * fall_x_mul;
                     sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, x_cap, 0.0);
                 } // only set limits and enable gravity once

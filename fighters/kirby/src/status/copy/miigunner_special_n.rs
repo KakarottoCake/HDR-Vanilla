@@ -122,7 +122,25 @@ pub unsafe extern "C" fn special_n1_fire_main_loop(fighter: &mut L2CFighterCommo
             MotionModule::change_motion_inherit_frame_keep_rate(fighter.module_accessor, motion, -1.0, 1.0, 0.0);
         }
     }
+    if fighter.is_motion_one_of(&[Hash40::new("miigunner_special_n1_neon"), Hash40::new("miigunner_special_air_n1_neon")]) {
+        if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT)
+        && !VarModule::is_flag(fighter.battle_object, vars::miigunner::status::SPECIAL_N1_CLEAR_CRIT) {
+            VarModule::on_flag(fighter.battle_object, vars::miigunner::status::SPECIAL_N1_CLEAR_CRIT);
+            SlowModule::set_whole(fighter.module_accessor, 4, 25);
+            EffectModule::req_screen(fighter.module_accessor, Hash40::new("bg_criticalhit"), false, true, true);
+        }
+    }
 
+    return 0.into();
+}
+
+unsafe extern "C" fn special_n1_fire_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if VarModule::is_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_LW3_CLEAR_CRIT) {
+        SlowModule::clear_whole(fighter.module_accessor);
+        CameraModule::reset_all(fighter.module_accessor);
+        EffectModule::remove_screen(fighter.module_accessor, Hash40::new("bg_criticalhit"), 0);
+    }
+    
     return 0.into();
 }
 
@@ -130,4 +148,5 @@ pub fn install(agent: &mut Agent) {
     agent.status(Main, *FIGHTER_KIRBY_STATUS_KIND_MIIGUNNER_SPECIAL_N1_START, special_n1_start_main);
 
     agent.status(Main, *FIGHTER_KIRBY_STATUS_KIND_MIIGUNNER_SPECIAL_N1_FIRE, special_n1_fire_main);
+    agent.status(End, *FIGHTER_KIRBY_STATUS_KIND_MIIGUNNER_SPECIAL_N1_FIRE, special_n1_fire_end);
 }
