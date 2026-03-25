@@ -108,6 +108,15 @@ unsafe extern "C" fn game_attackhi4(agent: &mut L2CAgentBase) {
         KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
         sv_kinetic_energy!(reset_energy, agent, FIGHTER_KINETIC_ENERGY_ID_CONTROL, ENERGY_CONTROLLER_RESET_TYPE_FALL_ADJUST, 0.0, 0.0, 0.0, 0.0, 0.0);
         KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+        let air_speed_x_stable = agent.get_param_float("air_speed_x_stable", "");
+        let jump_stable_speed_x_mul = ParamModule::get_float(agent.battle_object, ParamType::Agent, "param_attack_hi4.jump_stable_speed_x_mul");
+        sv_kinetic_energy!(
+            set_stable_speed,
+            agent,
+            FIGHTER_KINETIC_ENERGY_ID_CONTROL,
+            air_speed_x_stable * jump_stable_speed_x_mul,
+            0.0
+        );
     }
 }
 

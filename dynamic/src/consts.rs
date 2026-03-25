@@ -359,6 +359,9 @@ pub mod vars {
             pub const FLOAT_ENABLE_UNIQ: i32 = 0x1001;
             pub const FLOAT_MTRANS: i32 = 0x1002;
 
+            /// FIGHTER_STATUS_KIND_ESCAPE_AIR
+            pub const ESCAPE_AIR_CLIFF_CATCH_FRAME: i32 = 0x1000;
+
             
             // floats
 
@@ -1918,17 +1921,17 @@ pub mod vars {
     pub mod tantan {
         pub mod instance {
             // flags
-            pub const SPECIAL_HI_GROUND_START: i32 = 0x0100;
-            pub const SPECIAL_HI_AIR_JUMP: i32 = 0x0101;
-            pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0102;
+            pub const ARMS_ATTACK_CANCEL: i32 = 0x0100;
+            pub const SPECIAL_HI_GROUND_START: i32 = 0x0101;
+            pub const SPECIAL_HI_AIR_JUMP: i32 = 0x0102;
+            pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0103;
 
             // ints
             pub const ARMR_DRAGONIZE_EFFECT_HANDLE: i32 = 0x0100;
         }
         pub mod status {
             // flags
-            pub const ARMS_ATTACK_CANCEL: i32 = 0x1100;
-            pub const ATTACK_S4_CLEAR_CRIT: i32 = 0x1101;
+            pub const ATTACK_S4_CLEAR_CRIT: i32 = 0x1100;
         }
     }
 
