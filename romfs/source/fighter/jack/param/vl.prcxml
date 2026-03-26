@@ -2,6 +2,7 @@
 <struct>
   <list hash="cliff_hang_data">
     <struct index="0">
+      <float hash="p2_x">-9.6</float>
       <float hash="p1_y">24</float>
     </struct>
     <!-- UP SPECIAL TETHER (LATE) -->
@@ -17,7 +18,7 @@
     <struct index="3">
       <float hash="p1_x">20</float>
       <float hash="p1_y">85</float>
-      <float hash="p2_x">-5</float>
+      <float hash="p2_x">-11.6</float>
       <float hash="p2_y">18</float>
     </struct>
   </list>
