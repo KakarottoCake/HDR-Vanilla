@@ -451,7 +451,6 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         FighterAreaModuleImpl::enable_fix_jostle_area(boma, 2.0, 6.0);
         ArticleModule::generate_article(boma, *FIGHTER_MASTER_GENERATE_ARTICLE_SWORD, false, 0);
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
     }
     frame(lua_state, 5.0);
     if is_excute(agent) {

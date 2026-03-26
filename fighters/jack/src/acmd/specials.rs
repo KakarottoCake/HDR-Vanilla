@@ -114,7 +114,6 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         boma.off_flag(*FIGHTER_JACK_INSTANCE_WORK_ID_FLAG_SPECIAL_AIR_HI_HOP);
         ArticleModule::generate_article(boma, *FIGHTER_JACK_GENERATE_ARTICLE_WIREROPE, false, 0);
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {
