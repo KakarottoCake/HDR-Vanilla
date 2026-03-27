@@ -11,6 +11,7 @@ pub mod status;
 
 mod attackairf_bullet;
 mod bottomshoot;
+mod flamepillar;
 mod fullthrottle;
 mod grenadelauncher;
 mod groundbomb;
@@ -43,6 +44,7 @@ use smash_script::{
     *,
     macros::*
 };
+use smash_script::macros::ATTACK_ABS;
 use utils::{
     *,
     util::*,
@@ -61,6 +63,7 @@ pub fn install() {
 
     attackairf_bullet::install();
     bottomshoot::install();
+    flamepillar::install();
     fullthrottle::install();
     grenadelauncher::install();
     groundbomb::install();

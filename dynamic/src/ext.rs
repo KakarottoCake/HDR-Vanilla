@@ -435,6 +435,7 @@ pub trait BomaExt {
     unsafe fn prev_right_stick_x(&mut self) -> f32;
     unsafe fn right_stick_y(&mut self) -> f32;
     unsafe fn prev_right_stick_y(&mut self) -> f32;
+    unsafe fn check_hold_input(&mut self, start_frame: i32, end_frame: i32, input: Buttons) -> bool;
 
     // STATE
     unsafe fn is_status(&mut self, kind: i32) -> bool;
@@ -567,6 +568,8 @@ pub trait BomaExt {
     unsafe fn set_command_input_button(&mut self, command: usize, buttons: u8);
 
     unsafe fn clone_command_input(&mut self, command: usize, replace_command: usize);
+
+    unsafe fn get_escape_air_cliff_catch_frame(&mut self) -> i32;
 
 }
 
@@ -783,6 +786,42 @@ impl BomaExt for BattleObjectModuleAccessor {
         } else {
             return ControlModule::get_sub_stick_prev_y(self);
         }
+    }
+
+    /// Checks if a given input is held and turns off the check if released
+    /// 
+    /// # Arguments
+    /// * `start_frame` - the status frame to start checking for the held input
+    /// * `end_frame` - the status frame which to stop checking
+    /// * `input` - a Button input (ie Buttons::Special)
+    /// 
+    /// Returns true if the end of the hold check has completed, if the end frame has been specified
+    unsafe fn check_hold_input(&mut self, start_frame: i32, end_frame: i32, input: Buttons) -> bool {
+        // if out of range, return early
+        if !(start_frame..=end_frame).contains(&self.status_frame()) {
+            return false;
+        }
+
+        // start the check once we have reached the starting frame
+        if self.status_frame() == start_frame && !self.is_button_off(input) {
+            VarModule::on_flag(self.object(), vars::common::status::CHECK_HOLD_INPUT);
+        }
+
+        if VarModule::is_flag(self.object(), vars::common::status::CHECK_HOLD_INPUT) {
+            // if we are still checking for the hold and we are ready to end the check
+            if self.status_frame() == end_frame {
+                VarModule::off_flag(self.object(), vars::common::status::CHECK_HOLD_INPUT);
+                return true;
+            }
+
+            // check for the input being released, in which case we disable the check
+            if self.is_button_release(input) {
+                VarModule::off_flag(self.object(), vars::common::status::CHECK_HOLD_INPUT);
+                return false;
+            }
+        }
+
+        return false;
     }
 
     unsafe fn get_aerial(&mut self) -> Option<AerialKind> {
@@ -1654,6 +1693,25 @@ impl BomaExt for BattleObjectModuleAccessor {
         let original = *control_module.add((0x7f0 + (command * 8)) / 8) as *mut CommandInputState;
         let replace = *control_module.add((0x7f0 + (replace_command * 8)) / 8) as *mut CommandInputState;
         *replace = *original.clone();
+    }
+
+    unsafe fn get_escape_air_cliff_catch_frame(&mut self) -> i32 {
+        let escape_air_slide_fall_frame = crate::ParamModule::get_int(self.object(), crate::ParamType::Common, "escape_air_slide_fall_frame");
+        let escape_air_enable_cliff_catch_fall_distance = crate::ParamModule::get_float(self.object(), crate::ParamType::Common, "escape_air_enable_cliff_catch_fall_distance");
+        let escape_air_slide_speed_mul = crate::ParamModule::get_float(self.object(), crate::ParamType::Common, "escape_air_slide_speed_mul");
+        let air_accel_y = WorkModule::get_param_float(self, Hash40::new("air_accel_y").hash, 0);
+        let air_speed_y_stable = WorkModule::get_param_float(self, Hash40::new("air_speed_y_stable").hash, 0);
+        let escape_air_slide_speed = WorkModule::get_param_float(self, Hash40::new("param_motion").hash, Hash40::new("escape_air_slide_speed").hash);
+        let escape_air_stick_vec_y = 0.707;  // Simulate a 45º airdodge
+        let adjusted_escape_air_slide_speed = escape_air_slide_speed * escape_air_stick_vec_y;
+        let remaining_y_speed_on_escape_air_fall_frame = adjusted_escape_air_slide_speed * escape_air_slide_speed_mul.powi(escape_air_slide_fall_frame + 1);
+        let fall_time_to_enable_cliff_catch = super::util::get_time_to_fall_distance(
+            escape_air_enable_cliff_catch_fall_distance,
+            air_accel_y,
+            air_speed_y_stable,
+            remaining_y_speed_on_escape_air_fall_frame
+        );
+        (escape_air_slide_fall_frame + 1) + fall_time_to_enable_cliff_catch.ceil() as i32
     }
 }
 

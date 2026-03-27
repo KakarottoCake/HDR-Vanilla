@@ -313,6 +313,12 @@ cliff_jump_quick1:
     xlu_end: 17
 cliff_wait:
   blend_frames: 2
+cloud_special_n:
+  extra:
+    cancel_frame: 45
+cloud_special_air_n:
+  extra:
+    cancel_frame: 45
 daisy_special_air_n:
   extra:
     xlu_start: 0
@@ -1054,6 +1060,66 @@ mewtwo_special_n_cancel:
 mewtwo_special_n_shoot:
   extra:
     cancel_frame: 28
+miifighter_special_n1_bowl:
+  game_script: game_miifighterspecialn1bowl
+  flags:
+    turn: false
+    loop: false
+    move: true
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+    - name: miifighterd00specialn1bowl.nuanmb
+      unk: 0
+  scripts:
+    - expression_miifighterspecialn1bowl
+    - sound_miifighterspecialn1bowl
+    - effect_miifighterspecialn1bowl
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 80
+    no_stop_intp: false
+miifighter_special_air_n1_bowl:
+  game_script: game_miifighterspecialairn1bowl
+  flags:
+    turn: false
+    loop: false
+    move: false
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+    - name: miifighterd00specialairn1bowl.nuanmb
+      unk: 0
+  scripts:
+    - expression_miifighterspecialairn1bowl
+    - sound_miifighterspecialairn1bowl
+    - effect_miifighterspecialairn1bowl
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 67
+    no_stop_intp: false
 miigunner_special_air_n1_cancel:
   extra:
     cancel_frame: 9
