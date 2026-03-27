@@ -62,5 +62,6 @@
     </struct>
     <int hash="precede">3</int>
     <int hash="guard_off_pass_valid_frame">6</int>
+    <float hash="escape_air_enable_cliff_catch_fall_distance">20.0</float>
     <float hash="bind_end_frame">15.0</float>
 </struct>
