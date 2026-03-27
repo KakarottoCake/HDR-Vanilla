@@ -175,6 +175,9 @@
 		"fighter/robot/cmn": [
 			"fighter/robot/param/hdr.xml"
 		],
+		"fighter/rockman/cmn": [
+			"fighter/rockman/param/hdr.xml"
+		],
 		"fighter/shulk/cmn": [
 			"fighter/shulk/param/hdr.xml"
 		],
@@ -189,6 +192,9 @@
 		],
 		"fighter/metaknight/cmn": [
 			"fighter/metaknight/param/hdr.xml"
+		],
+		"fighter/palutena/cmn": [
+			"fighter/palutena/param/hdr.xml"
 		]
 	}
 }

@@ -110,16 +110,65 @@ unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    frame(lua_state, 5.0);
     if is_excute(agent) {
         if agent.is_situation(*SITUATION_KIND_AIR) {
-            WorkModule::on_flag(boma, *FIGHTER_PALUTENA_STATUS_SPECIAL_HI_DIVE);
+            agent.on_flag(*FIGHTER_PALUTENA_STATUS_SPECIAL_HI_DIVE);
         }
     }
-    frame(lua_state, 8.0);
+    frame(lua_state, 10.0);
     if is_excute(agent) {
         if agent.is_situation(*SITUATION_KIND_AIR) {
-            WorkModule::on_flag(boma, *FIGHTER_PALUTENA_STATUS_SPECIAL_HI_CONTROL_ON);
+            agent.on_flag(*FIGHTER_PALUTENA_STATUS_SPECIAL_HI_CONTROL_ON);
         }
+    }
+}
+
+unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("palutena_teleport_end"), Hash40::new("rot"), 0, 4, 0, 0, 0, 0, 0.9, false);
+        LAST_EFFECT_SET_RATE(agent, 1.1);
+        FLASH(agent, 1, 1, 1, 1);
+    }
+    wait(lua_state, 1.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("palutena_backlight"), Hash40::new("top"), 0, 21.5, 0, 0, 90, 0, 1, true);
+        LAST_EFFECT_SET_RATE(agent, 4);
+    }
+    wait(lua_state, 1.0);
+    if is_excute(agent) {
+        FLASH(agent, 1, 1, 1, 0.3);
+    }
+    wait(lua_state, 1.0);
+    if is_excute(agent) {
+        FLASH(agent, 0.25, 1, 1, 0.2);
+    }
+    wait(lua_state, 6.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("palutena_backlight"), false, true);
+    }
+    wait(lua_state, 1.0);
+    if is_excute(agent) {
+        FLASH(agent, 1, 1, 1, 0.15);
+        if agent.is_motion(Hash40::new("special_air_hi_cancel")) {
+            EFFECT_FOLLOW(agent, Hash40::new("palutena_teleport_feather"), Hash40::new("rot"), 0, 4, 0, 0, 0, 0, 1, true);
+        }
+    }
+    wait(lua_state, 2.0);
+    if is_excute(agent) {
+        COL_NORMAL(agent);
+    }
+    wait(lua_state, 5.0);
+    if is_excute(agent) {
+        if agent.is_situation(*SITUATION_KIND_GROUND) {
+            LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.6, 0, 0, 0, 0, 0, 0, false);
+        }
+    }
+    frame(lua_state, 15.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("palutena_teleport_feather"), Hash40::new("rot"), 0, 4, 0, 0, 0, 0, 1, true);
     }
 }
 
@@ -252,6 +301,8 @@ pub fn install(agent: &mut Agent) {
 
     agent.acmd("game_specialhi", game_specialhi, Priority::Low);
     agent.acmd("game_specialairhi", game_specialhi, Priority::Low);
+    agent.acmd("effect_specialhi", effect_specialhi, Priority::Low);
+    agent.acmd("effect_specialairhi", effect_specialhi, Priority::Low);
 
     agent.acmd("game_speciallw", game_speciallw, Priority::Low);
     agent.acmd("game_specialairlw", game_speciallw, Priority::Low);
