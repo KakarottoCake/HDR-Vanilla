@@ -28,7 +28,7 @@ unsafe extern "C" fn move_init(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let owner_pos_z = PostureModule::pos_z(palutena_boma);
     WorkModule::set_int(weapon.module_accessor, life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
     WorkModule::set_int(weapon.module_accessor, life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    ModelModule::set_scale(weapon.module_accessor, 1.7);
+    ModelModule::set_scale(weapon.module_accessor, 2.65);
     PostureModule::set_pos(weapon.module_accessor, &Vector3f::new(owner_pos_x + 5.0 * lr, owner_pos_y + 40.0, owner_pos_z));
     speed_reset(weapon);
 
