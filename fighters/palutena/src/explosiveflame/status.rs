@@ -32,9 +32,7 @@ unsafe extern "C" fn check_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
 unsafe extern "C" fn check_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
     weapon.dec_int(*WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     let life = weapon.get_int(*WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    // if interrupted before GFX spawn, kill it
-    if life > 19 
-    && LinkModule::is_parent_damage_reaction(weapon.module_accessor, *WEAPON_LINK_NO_CONSTRAINT) {
+    if LinkModule::is_parent_damage_reaction(weapon.module_accessor, *WEAPON_LINK_NO_CONSTRAINT) {
         weapon.on_flag(*WEAPON_PALUTENA_EXPLOSIVEFLAME_INSTANCE_WORK_ID_FLAG_RESERVE_MISS);
     }
     if life == 19 {
