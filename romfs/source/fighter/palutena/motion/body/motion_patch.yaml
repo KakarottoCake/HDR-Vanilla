@@ -97,7 +97,7 @@ throw_hi:
     cancel_frame: 44
 special_s:
   extra:
-    cancel_frame: 63
+    cancel_frame: 64
 attack_lw3:
   flags:
     move: false
@@ -123,7 +123,7 @@ attack_air_n:
     cancel_frame: 48
 special_air_s:
   extra:
-    cancel_frame: 63
+    cancel_frame: 64
 attack_air_lw:
   extra:
     cancel_frame: 43
@@ -132,7 +132,7 @@ special_n:
     cancel_frame: 54
 special_air_n:
   extra:
-    cancel_frame: 26
+    cancel_frame: 54
 special_air_hi_cancel:
   game_script: game_specialairhi
   flags:

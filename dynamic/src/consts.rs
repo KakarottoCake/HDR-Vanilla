@@ -2199,8 +2199,6 @@ pub mod statuses {
     }
 
     pub mod palutena_explosiveflame {
-        pub const CHECK_KIRBY: i32 = 0x4;
-        pub const EXPLODE_KIRBY: i32 = 0x5;
     }
 
     pub mod palutena_meteor {

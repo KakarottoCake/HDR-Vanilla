@@ -30,14 +30,10 @@ unsafe extern "C" fn game_specialn(agent: &mut L2CAgentBase) {
         //FT_MOTION_RATE(agent, 1.0);
     }
     else {
-        FT_MOTION_RATE(agent, 1.2);
-        //frame(lua_state, 5.0);
-        if is_excute(agent) {
-            //if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
-            //    VarModule::on_flag(agent.battle_object, vars::kirby::status::PALUTENA_SPECIAL_N_HOLD);
-            //}
-            //ArticleModule::generate_article(boma, *FIGHTER_PALUTENA_GENERATE_ARTICLE_EXPLOSIVEFLAME, false, -1);
-        }
+        frame(lua_state, 1.0);
+        FT_MOTION_RATE_RANGE(agent, 1.0, 63.0, 70.0);
+        frame(lua_state, 63.0);
+        FT_MOTION_RATE(agent, 1.0);
     }
 }
 
@@ -100,11 +96,14 @@ unsafe extern "C" fn expression_specialn(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specials(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    FT_MOTION_RATE(agent, 1.2);
-    frame(lua_state, 22.0);
-    if is_excute(agent) {
-        //ArticleModule::generate_article(boma, *FIGHTER_PALUTENA_GENERATE_ARTICLE_EXPLOSIVEFLAME, false, -1);
-    }
+    frame(lua_state, 1.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 11.0, 9.0);
+    frame(lua_state, 11.0);
+    FT_MOTION_RATE_RANGE(agent, 11.0, 21.0, 22.0);
+    frame(lua_state, 21.0);
+    FT_MOTION_RATE_RANGE(agent, 21.0, 64.0, 40.0);
+    frame(lua_state, 64.0);
+    FT_MOTION_RATE(agent, 1.0);
 }
 
 unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
