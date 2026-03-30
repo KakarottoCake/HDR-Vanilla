@@ -14,10 +14,10 @@ unsafe extern "C" fn special_hi_pre(fighter: &mut L2CFighterCommon) -> L2CValue 
         *FIGHTER_KINETIC_TYPE_UNIQ,
         *GROUND_CORRECT_KIND_KEEP as u32,
         GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
-        true, 
+        true,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT,
-        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT,
         0
     );
     FighterStatusModuleImpl::set_fighter_status_data(
@@ -94,6 +94,7 @@ unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2C
     } else {
         VarModule::inc_int(fighter.battle_object, SPECIAL_HI_CHARGE_FRAME);
     }
+
     let charge_frame = VarModule::get_int(fighter.battle_object, SPECIAL_HI_CHARGE_FRAME) as f32;
     let charge_frame_max = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.charge_frame_max");
 
@@ -259,7 +260,7 @@ pub unsafe fn special_hi_guide_handler(fighter: &mut L2CFighterCommon) {
 
     let team_color = FighterUtil::get_team_color(fighter.module_accessor);
     let effect_team_color = FighterUtil::get_effect_team_color(EColorKind(team_color as i32), Hash40::new("direction_effect_color"));
-    EffectModule::set_rgb(fighter.module_accessor, eff_handle, effect_team_color.value[0], effect_team_color.value[1], effect_team_color.value[2]);
+    EffectModule::set_rgb(fighter.module_accessor, eff_handle, effect_team_color.x(), effect_team_color.y(), effect_team_color.z());
 }
 
 // FIGHTER_ROBOT_STATUS_KIND_SPECIAL_HI_KEEP
@@ -271,10 +272,10 @@ unsafe extern "C" fn special_hi_keep_pre(fighter: &mut L2CFighterCommon) -> L2CV
         *FIGHTER_KINETIC_TYPE_UNIQ,
         *GROUND_CORRECT_KIND_AIR as u32,
         GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
-        true, 
+        true,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT,
-        *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT, 
+        *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT,
         0
     );
     FighterStatusModuleImpl::set_fighter_status_data(
@@ -341,7 +342,7 @@ unsafe extern "C" fn special_hi_keep_main_loop(fighter: &mut L2CFighterCommon) -
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
-    
+
     // act out
     fighter.sub_transition_group_check_air_attack();
 
@@ -446,7 +447,7 @@ pub fn install(agent: &mut Agent) {
     agent.status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_HI, special_hi_pre);
     agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_HI, special_hi_main);
     agent.status(End, *FIGHTER_STATUS_KIND_SPECIAL_HI, special_hi_end);
-    
+
     agent.status(Pre, *FIGHTER_ROBOT_STATUS_KIND_SPECIAL_HI_KEEP, special_hi_keep_pre);
     agent.status(Main, *FIGHTER_ROBOT_STATUS_KIND_SPECIAL_HI_KEEP, special_hi_keep_main);
     agent.status(End, *FIGHTER_ROBOT_STATUS_KIND_SPECIAL_HI_KEEP, special_hi_keep_end);

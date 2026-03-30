@@ -1,5 +1,6 @@
 use super::*;
 
+mod bayonetta;
 mod brave;
 mod demon;
 mod donkey;
@@ -26,6 +27,7 @@ mod dolly_burst;
 mod weapon;
 
 pub fn install() {
+    bayonetta::install();
     brave::install();
     demon::install();
     donkey::install();

@@ -2,7 +2,7 @@ use super::*;
 use globals::*;
 
 pub unsafe extern "C" fn move_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    GroundModule::set_passable_check(weapon.module_accessor, true);
+    GroundModule::set_passable_check(weapon.module_accessor, false);
     MotionModule::change_motion(weapon.module_accessor, Hash40::new("move"), 0.0, 1.0, false, 0.0, false, false);
     if !StopModule::is_stop(weapon.module_accessor) {
         WorkModule::dec_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);

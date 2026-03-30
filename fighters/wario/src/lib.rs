@@ -34,6 +34,7 @@ use smash_script::{
     *,
     macros::*
 };
+use smash_script::macros::ATTACK_ABS;
 use utils::{
     *,
     util::*,
@@ -50,5 +51,5 @@ pub fn install() {
     status::install(agent);
     agent.install();
 
-    wariobike::install();
+    // wariobike::install();
 }
