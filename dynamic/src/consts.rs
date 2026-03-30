@@ -896,6 +896,7 @@ pub mod vars {
             pub const SPECIAL_N_PICKEL_MATERIAL_INDEX: i32 = 0x01F5;
             pub const SPECIAL_N_PTRAINER_PLEDGE_STATE: i32 = 0x01F6;    // Unique var as it doesn't like borrowing from ptrainer
             pub const SPECIAL_N_PTRAINER_PLEDGE_EFFECT_HANDLE: i32 = 0x01F7;
+            pub const SPECIAL_N_PFUSHIGISOU_SEED_COUNT: i32 = 0x01F8;   // Same as above
             
             pub use super::super::bayonetta::instance::SPECIAL_N_CANCEL_TYPE;
             pub use super::super::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER;
@@ -1456,6 +1457,7 @@ pub mod vars {
         pub mod instance {
             // ints
             pub const SPECIAL_N_PLEDGE_EFFECT_HANDLE: i32 = 0x0100;
+            pub const SPECIAL_N_SEED_COUNT: i32 = 0x0101;
         }
     }
 
