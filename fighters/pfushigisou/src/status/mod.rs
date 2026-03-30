@@ -6,6 +6,10 @@ mod special_lw;
 mod special_n;
 mod special_s;
 
+unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
+    VarModule::set_int(fighter.battle_object, vars::pfushigisou::instance::SPECIAL_N_SEED_COUNT, 0);
+}
+
 unsafe extern "C" fn entry_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     reset_ptrainer_vars(fighter);
     smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_ENTRY)(fighter)
@@ -33,6 +37,8 @@ unsafe extern "C" fn reset_ptrainer_vars(fighter: &mut L2CFighterCommon) {
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.on_start(on_start);
+    
     agent.status(Main, *FIGHTER_STATUS_KIND_ENTRY, entry_main);
     agent.status(Main, *FIGHTER_STATUS_KIND_DEAD, dead_main);
     agent.status(Main, *FIGHTER_STATUS_KIND_REBIRTH, rebirth_main);
