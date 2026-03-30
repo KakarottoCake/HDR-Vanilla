@@ -1967,6 +1967,9 @@ pub mod vars {
         pub mod status {
             // flags
             pub const ATTACK_S4_CLEAR_CRIT: i32 = 0x1100;
+
+            // ints
+            pub const RECOIL_CANCEL_STATUS: i32 = 0x1100;
         }
     }
 

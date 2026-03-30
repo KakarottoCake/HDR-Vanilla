@@ -64,7 +64,7 @@ unsafe fn check_recoil_cancel(fighter: &mut L2CFighterCommon) {
         else {
             new_status = *FIGHTER_STATUS_KIND_ATTACK_AIR;
         }
-        VarModule::set_int(fighter.battle_object, vars::common::status::WARP_EFF_HANDLER, new_status);
+        VarModule::set_int(fighter.battle_object, vars::tantan::status::RECOIL_CANCEL_STATUS, new_status);
         VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
     }
 }
