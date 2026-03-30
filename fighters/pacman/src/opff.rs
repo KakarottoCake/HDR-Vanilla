@@ -30,7 +30,7 @@ unsafe fn side_special_freefall(fighter: &mut L2CFighterCommon) {
             else {
                 // land cancel air version
                 if VarModule::is_flag(fighter.battle_object, vars::pacman::status::SPECIAL_S_HIT) {
-                    fighter.check_land_cancel(None);
+                    fighter.check_land_cancel(Some(10.0));
                     return;
                 }
             }
