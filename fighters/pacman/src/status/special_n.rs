@@ -34,7 +34,8 @@ unsafe extern "C" fn special_n_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
 
 pub unsafe extern "C" fn special_n_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let ret = smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_SPECIAL_N)(fighter);
-    InputModule::set_command_life_count_max(fighter.battle_object, 3);
+    let precede = ParamModule::get_int(fighter.battle_object, ParamType::Common, "precede") as u32;
+    InputModule::set_command_life_count_max(fighter.battle_object, precede);
 
     return ret;
 }
