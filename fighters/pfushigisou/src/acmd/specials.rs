@@ -19,7 +19,6 @@ unsafe extern "C" fn game_specialnend(agent: &mut L2CAgentBase) {
                 let timer = VarModule::get_int(agent.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER);
                 VarModule::set_int(agent.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer - 90);
             }
-            ArticleModule::generate_article(boma, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SEED, false, -1);
         }
         else {
             if LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
@@ -31,8 +30,8 @@ unsafe extern "C" fn game_specialnend(agent: &mut L2CAgentBase) {
                     VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer - (pledge_use_cost_frame / 2));
                 }
             }  
-            ArticleModule::generate_article(boma, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SEED, false, -1);
         }
+        ArticleModule::generate_article(boma, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SEED, false, -1);
     }
     frame(lua_state, 2.0);
     FT_MOTION_RATE_RANGE(agent, 2.0, 5.0, 5.0);
@@ -45,7 +44,6 @@ unsafe extern "C" fn game_specialnend(agent: &mut L2CAgentBase) {
                 let timer = VarModule::get_int(agent.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER);
                 VarModule::set_int(agent.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer - 90);
             }
-            ArticleModule::generate_article(boma, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SEED, false, -1);
         }
         else {
             if LinkModule::is_link(boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
@@ -57,8 +55,8 @@ unsafe extern "C" fn game_specialnend(agent: &mut L2CAgentBase) {
                     VarModule::set_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, timer - (pledge_use_cost_frame / 2));
                 }
             }  
-            ArticleModule::generate_article(boma, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SEED, false, -1);
         }
+        ArticleModule::generate_article(boma, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SEED, false, -1);
     }
 }
 
