@@ -95,10 +95,10 @@ pub unsafe extern "C" fn update_rot(weapon: &mut L2CWeaponCommon) {
 unsafe extern "C" fn move_end(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let owner_boma = weapon.get_owner_boma();
     if owner_boma.kind() == *FIGHTER_KIND_PFUSHIGISOU {
-        VarModule::countdown_int(owner_boma.object(), vars::pfushigisou::instance::SPECIAL_N_SEED_COUNT, 0);
+        VarModule::off_flag(owner_boma.object(), vars::pfushigisou::instance::SPECIAL_N_SEED_FIRED);
     }
     else if owner_boma.kind() == *FIGHTER_KIND_KIRBY {
-        VarModule::countdown_int(owner_boma.object(), vars::kirby::instance::SPECIAL_N_PFUSHIGISOU_SEED_COUNT, 0);
+        VarModule::off_flag(owner_boma.object(), vars::kirby::instance::SPECIAL_N_PFUSHIGISOU_SEED_FIRED);
     }
 
     return 0.into();

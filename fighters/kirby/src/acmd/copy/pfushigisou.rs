@@ -20,9 +20,7 @@ unsafe extern "C" fn effect_pfushigisouspecialnend(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 2.0);
     if is_excute(agent) {
-        if VarModule::get_int(agent.battle_object, vars::kirby::instance::SPECIAL_N_PFUSHIGISOU_SEED_COUNT) <= 1 {
-            EFFECT_FLW_POS(agent, Hash40::new("pfushigisou_tanemg"), Hash40::new("top"), 0, 12, 1, 0, 0, 0, 1.3, true);
-        }
+        EFFECT_FLW_POS(agent, Hash40::new("pfushigisou_tanemg"), Hash40::new("top"), 0, 12, 1, 0, 0, 0, 1.3, true);
         if agent.is_situation(*SITUATION_KIND_GROUND) {
             FOOT_EFFECT(agent, Hash40::new("sys_v_smoke_b"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
             LAST_EFFECT_SET_ALPHA(agent, 0.8);
@@ -34,9 +32,7 @@ unsafe extern "C" fn effect_pfushigisouspecialnend(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 5.0);
     if is_excute(agent) {
-        if VarModule::get_int(agent.battle_object, vars::kirby::instance::SPECIAL_N_PFUSHIGISOU_SEED_COUNT) <= 1 {
-            EFFECT_FLW_POS(agent, Hash40::new("pfushigisou_tanemg"), Hash40::new("top"), 0, 12, 1, 0, 0, 0, 1.3, true);
-        }
+        EFFECT_FLW_POS(agent, Hash40::new("pfushigisou_tanemg"), Hash40::new("top"), 0, 12, 1, 0, 0, 0, 1.3, true);
         if agent.is_situation(*SITUATION_KIND_GROUND) {
             FOOT_EFFECT(agent, Hash40::new("sys_v_smoke_b"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
             LAST_EFFECT_SET_ALPHA(agent, 0.8);

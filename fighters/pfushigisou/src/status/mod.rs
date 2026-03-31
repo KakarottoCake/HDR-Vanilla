@@ -6,8 +6,18 @@ mod special_lw;
 mod special_n;
 mod special_s;
 
+unsafe extern "C" fn should_use_special_n_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if VarModule::is_flag(fighter.battle_object, vars::pfushigisou::instance::SPECIAL_N_SEED_FIRED) {
+        false.into()
+    } else {
+        true.into()
+    }
+}
+
 unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
-    VarModule::set_int(fighter.battle_object, vars::pfushigisou::instance::SPECIAL_N_SEED_COUNT, 0);
+    fighter.global_table[globals::USE_SPECIAL_N_CALLBACK].assign(&L2CValue::Ptr(should_use_special_n_callback as *const () as _));
+
+    VarModule::off_flag(fighter.battle_object, vars::pfushigisou::instance::SPECIAL_N_SEED_FIRED);
 }
 
 unsafe extern "C" fn entry_main(fighter: &mut L2CFighterCommon) -> L2CValue {

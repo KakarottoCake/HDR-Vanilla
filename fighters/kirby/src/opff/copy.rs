@@ -923,7 +923,7 @@ unsafe extern "C" fn pledge_init(fighter: &mut L2CFighterCommon) {
             if LinkModule::is_link(opponent_boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER) {
                 let parent_id = LinkModule::get_parent_id(opponent_boma, *FIGHTER_POKEMON_LINK_NO_PTRAINER, true) as u32;
                 let object = utils::util::get_battle_object_from_id(parent_id);
-                VarModule::set_int(fighter.battle_object, vars::pfushigisou::instance::SPECIAL_N_SEED_COUNT, 0);
+                VarModule::off_flag(fighter.battle_object, vars::pfushigisou::instance::SPECIAL_N_SEED_FIRED);
                 let pledge = VarModule::get_int(object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE);
                 if pledge != *PLEDGE_STATE_NONE {
                     VarModule::set_int(fighter.battle_object, vars::kirby::instance::SPECIAL_N_PTRAINER_PLEDGE_STATE, pledge);
@@ -935,7 +935,7 @@ unsafe extern "C" fn pledge_init(fighter: &mut L2CFighterCommon) {
             // The pokemon has no active pledge or the trainer was somehow not found, so Kirby will not get a pledge
             VarModule::set_int(fighter.battle_object, vars::kirby::instance::SPECIAL_N_PTRAINER_PLEDGE_STATE, *PLEDGE_STATE_NONE);
             VarModule::set_int(fighter.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
-            VarModule::set_int(fighter.battle_object, vars::pfushigisou::instance::SPECIAL_N_SEED_COUNT, 0);
+            VarModule::off_flag(fighter.battle_object, vars::pfushigisou::instance::SPECIAL_N_SEED_FIRED);
         }
     }
 }
