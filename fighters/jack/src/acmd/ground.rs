@@ -122,14 +122,14 @@ unsafe extern "C" fn effect_attackdash(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 7.0);
     if is_excute(agent) {
-        if !WorkModule::is_flag(boma, *FIGHTER_JACK_INSTANCE_WORK_ID_FLAG_DOYLE){
+        if !WorkModule::is_flag(boma, *FIGHTER_JACK_INSTANCE_WORK_ID_FLAG_DOYLE) {
             LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, -1.5, 0, 0, 0, 0.8, 0, 0, 1.5, 0, 0, 0, false);
             LAST_EFFECT_SET_RATE(agent, 1);
         }
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {
-        if WorkModule::is_flag(boma, *FIGHTER_JACK_INSTANCE_WORK_ID_FLAG_DOYLE){
+        if WorkModule::is_flag(boma, *FIGHTER_JACK_INSTANCE_WORK_ID_FLAG_DOYLE) {
             EFFECT_FOLLOW(agent, Hash40::new("jack_doyle_attack_line"), Hash40::new("top"), 0, 4, -2, 0, 0, 0, 0.8, true);
             LAST_EFFECT_SET_RATE(agent, 0.8);
             if sv_animcmd::get_value_float(lua_state, *SO_VAR_FLOAT_LR) < 0.0 {
@@ -144,26 +144,26 @@ unsafe extern "C" fn effect_attackdash(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {
-        if !WorkModule::is_flag(boma, *FIGHTER_JACK_INSTANCE_WORK_ID_FLAG_DOYLE){
+        if !WorkModule::is_flag(boma, *FIGHTER_JACK_INSTANCE_WORK_ID_FLAG_DOYLE) {
             LANDING_EFFECT(agent, Hash40::new("sys_sliding_smoke"), Hash40::new("top"), 6, 0, -2.5, 0, 0, 0, 0.6, 0, 0, 0, 0, 0, 0, false);
             LAST_EFFECT_SET_RATE(agent, 1.2);
         }
     }
     frame(lua_state, 12.0);
     if is_excute(agent) {
-        if !WorkModule::is_flag(boma, *FIGHTER_JACK_INSTANCE_WORK_ID_FLAG_DOYLE){
+        if !WorkModule::is_flag(boma, *FIGHTER_JACK_INSTANCE_WORK_ID_FLAG_DOYLE) {
             LANDING_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), 8, 0, -2.5, 0, 0, 0, 0.45, 0, 0, 1.5, 0, 0, 0, false);
         }
     }
     frame(lua_state, 15.0);
     if is_excute(agent) {
-        if !WorkModule::is_flag(boma, *FIGHTER_JACK_INSTANCE_WORK_ID_FLAG_DOYLE){
+        if !WorkModule::is_flag(boma, *FIGHTER_JACK_INSTANCE_WORK_ID_FLAG_DOYLE) {
             LANDING_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), 7, 0, -2.5, 0, 0, 0, 0.35, 0, 0, 1.5, 0, 0, 0, false);
         }
     }
     frame(lua_state, 22.0);
     if is_excute(agent) {
-        if !WorkModule::is_flag(boma, *FIGHTER_JACK_INSTANCE_WORK_ID_FLAG_DOYLE){
+        if !WorkModule::is_flag(boma, *FIGHTER_JACK_INSTANCE_WORK_ID_FLAG_DOYLE) {
             LANDING_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), 5, 0, -2.5, 0, 0, 0, 0.35, 0, 0, 1.5, 0, 0, 0, false);
         }
     }
