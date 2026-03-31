@@ -363,11 +363,11 @@ unsafe extern "C" fn effect_attackairhi(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 6.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 11.5, 1.5, 0, 60, 90, 0.85, true);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 14.5, 1.5, 0, 80, 90, 0.85, true);
         LAST_EFFECT_SET_COLOR(agent, 0.902, 0.784, 0.333);
-        LAST_EFFECT_SET_RATE(agent, 1.0);
+        LAST_EFFECT_SET_RATE(agent, 0.85);
     }
-    frame(lua_state, 14.0);
+    frame(lua_state, 16.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("sys_attack_arc_d"), false, true);
     }
