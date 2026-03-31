@@ -178,7 +178,8 @@
   </list>
   <list hash="param_special_hi">
     <struct index="0">
-      <float hash="rush_angle_max_front_g">5</float>
+      <int hash="0x15c81d2557">13</int>
+      <float hash="rush_angle_max_front_g">10</float>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>

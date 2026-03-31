@@ -422,7 +422,7 @@ unsafe fn scene_transition(
 pub fn main() {
     #[cfg(feature = "main_nro")]
     {
-        vsync::setup_ssbu_sync();
+        // vsync::setup_ssbu_sync();
         quick_validate_install();
         skyline::install_hooks!(change_version_string_hook);
         chara_select::install();
