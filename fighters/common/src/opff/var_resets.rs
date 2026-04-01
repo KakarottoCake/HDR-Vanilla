@@ -92,14 +92,6 @@ unsafe fn var_resets(boma: &mut BattleObjectModuleAccessor) {
         VarModule::off_flag(boma.object(), vars::common::instance::SPECIAL_STALL_USED);
     }
 
-    // Aerial Glide Toss Reset
-    if !boma.is_situation(*SITUATION_KIND_AIR)
-    || boma.is_status_one_of(death_statuses)
-    || boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_GIMMICK_SPRING_JUMP])
-    {
-        VarModule::set_int(boma.object(), vars::common::instance::AGT_USED_COUNTER, 0);
-    }
-
     // Wall Jump Reset
     if !boma.is_situation(*SITUATION_KIND_AIR)
     || AttackModule::is_infliction(boma, *COLLISION_KIND_MASK_HIT)
