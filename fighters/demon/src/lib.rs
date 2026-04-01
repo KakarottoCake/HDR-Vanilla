@@ -7,6 +7,8 @@ pub mod acmd;
 pub mod opff;
 pub mod status;
 
+pub mod agent_init;
+
 // articles
 
 mod blaster;
@@ -34,6 +36,7 @@ use smash_script::{
     *,
     macros::*
 };
+use smash_script::macros::ATTACK_ABS;
 use utils::{
     *,
     util::*,
@@ -48,6 +51,7 @@ pub fn install() {
     acmd::install(agent);
     opff::install(agent);
     status::install(agent);
+    agent_init::install(agent);
     agent.install();
 
     blaster::install();
