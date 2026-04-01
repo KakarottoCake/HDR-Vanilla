@@ -55,6 +55,7 @@ zelda: fighter/zelda/param/hdr.xml
 pikachu: fighter/pikachu/param/hdr.xml
 ridley: fighter/ridley/param/hdr.xml
 robot: fighter/robot/param/hdr.xml
+rockman: fighter/rockman/param/hdr.xml
 shulk: fighter/shulk/param/hdr.xml
 peach: fighter/peach/param/hdr.xml
 mewtwo: fighter/mewtwo/param/hdr.xml

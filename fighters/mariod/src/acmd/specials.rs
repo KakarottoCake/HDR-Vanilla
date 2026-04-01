@@ -328,11 +328,11 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
+        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("handl"), 1.2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("mariod_smash_aura"), Hash40::new("mariod_smash_aura"), Hash40::new("havel"), -1.5, 0, 0, 0, 0, 0, 0.5, true, *EF_FLIP_YZ);
     }
     frame(lua_state, 4.0);
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("handl"), 1.2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         if PostureModule::lr(boma) > 0.0 {
             EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("mariod_superjump_fnish"), Hash40::new("handl"), 2.5, 0, 1, 0, 0, 0, 1.05, true);
         }
@@ -344,15 +344,8 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("mariod_superjump_power"), Hash40::new("handl"), 1.2, 0, 0, 0, 0, 0, 1.45, true);
         LAST_EFFECT_SET_RATE(agent, 2.0);
     }
-    frame(lua_state, 5.0);
-    if is_excute(agent) {
-        if boma.is_stick_backward() {
-            EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("handr"), 0, 0, 1, 0, 0, 0, 0.65, 0, 0, 0, 0, 0, 0, false);
-        }
-    }
     frame(lua_state, 6.0);
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("handl"), 0, -0.4, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         EFFECT_DETACH_KIND(agent, Hash40::new("mariod_superjump_fnish"), -1);
         EFFECT_DETACH_KIND(agent, Hash40::new("mariod_smash_impact"), -1);
         EFFECT_DETACH_KIND(agent, Hash40::new("mariod_smash_aura"), -1);
@@ -413,11 +406,11 @@ unsafe extern "C" fn effect_specialairhi(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
+        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("handl"), 1.2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("mariod_smash_aura"), Hash40::new("mariod_smash_aura"), Hash40::new("havel"), -1.5, 0, 0, 0, 0, 0, 0.5, true, *EF_FLIP_YZ);
     }
     frame(lua_state, 4.0);
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("handl"), 1.2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         if PostureModule::lr(boma) > 0.0 {
             EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("mariod_superjump_fnish"), Hash40::new("handl"), 2.5, 0, 1, 0, 0, 0, 1.05, true);
         }
@@ -431,7 +424,6 @@ unsafe extern "C" fn effect_specialairhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 6.0);
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("handl"), 0, -0.4, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         EFFECT_DETACH_KIND(agent, Hash40::new("mariod_superjump_fnish"), -1);
         EFFECT_DETACH_KIND(agent, Hash40::new("mariod_smash_impact"), -1);
         EFFECT_DETACH_KIND(agent, Hash40::new("mariod_smash_aura"), -1);
