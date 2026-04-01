@@ -7,8 +7,7 @@ unsafe fn recoil_cancel(fighter: &mut L2CFighterCommon) {
     // Since we check for the recoil cancel in exec, we need to transition in main or our acmd lags a frame behind
     if VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK) {
         VarModule::off_flag(fighter.battle_object, vars::common::instance::IS_HEAVY_ATTACK);
-        // Just hijacking this to save reload time, I'll replace it later
-        let new_status = VarModule::get_int(fighter.battle_object, vars::common::status::WARP_EFF_HANDLER);
+        let new_status = VarModule::get_int(fighter.battle_object, vars::tantan::status::RECOIL_CANCEL_STATUS);
         StatusModule::change_status_force(fighter.module_accessor, new_status, false);
     }
 }

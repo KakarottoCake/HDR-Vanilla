@@ -1625,7 +1625,7 @@ special_hi_h:
     freeze_during_hitstop: false
 special_lw2:
   extra:
-    cancel_frame: 28
+    cancel_frame: 32
 special_s:
   extra:
     cancel_frame: 60
