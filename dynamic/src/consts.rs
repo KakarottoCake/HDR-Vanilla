@@ -361,6 +361,7 @@ pub mod vars {
 
             /// FIGHTER_STATUS_KIND_ESCAPE_AIR
             pub const ESCAPE_AIR_CLIFF_CATCH_FRAME: i32 = 0x1000;
+            pub const ESCAPE_AIR_CANCEL_FRAME: i32 = 0x1001;
 
             
             // floats
