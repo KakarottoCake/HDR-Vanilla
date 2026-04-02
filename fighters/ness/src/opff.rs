@@ -84,13 +84,13 @@ unsafe fn pk_thunder_cancel(fighter: &mut L2CFighterCommon) {
         && StatusModule::is_situation_changed(fighter.module_accessor) {
             fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), true.into());
         }
-        if MotionModule::is_end(fighter.module_accessor) {
-            if (fighter.is_prev_status(*FIGHTER_NESS_STATUS_KIND_SPECIAL_HI_HOLD) && VarModule::is_flag(fighter.object(), vars::ness::instance::DISABLE_SPECIAL_HI))
-            || !fighter.is_prev_status_one_of(&[*FIGHTER_NESS_STATUS_KIND_SPECIAL_HI_ATTACK, *FIGHTER_NESS_STATUS_KIND_SPECIAL_HI_AGAIN, *FIGHTER_NESS_STATUS_KIND_SPECIAL_HI_HOLD]) {
-                let status = if fighter.is_situation(*SITUATION_KIND_GROUND) { *FIGHTER_STATUS_KIND_WAIT } else { *FIGHTER_STATUS_KIND_FALL };
-                fighter.change_status(status.into(), false.into());
-            }
-        }
+        // if MotionModule::is_end(fighter.module_accessor) {
+        //     if (fighter.is_prev_status(*FIGHTER_NESS_STATUS_KIND_SPECIAL_HI_HOLD) && VarModule::is_flag(fighter.object(), vars::ness::instance::DISABLE_SPECIAL_HI))
+        //     || !fighter.is_prev_status_one_of(&[*FIGHTER_NESS_STATUS_KIND_SPECIAL_HI_ATTACK, *FIGHTER_NESS_STATUS_KIND_SPECIAL_HI_AGAIN, *FIGHTER_NESS_STATUS_KIND_SPECIAL_HI_HOLD]) {
+        //         let status = if fighter.is_situation(*SITUATION_KIND_GROUND) { *FIGHTER_STATUS_KIND_WAIT } else { *FIGHTER_STATUS_KIND_FALL };
+        //         fighter.change_status(status.into(), false.into());
+        //     }
+        // }
     }
 }
 
