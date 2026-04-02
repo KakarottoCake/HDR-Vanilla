@@ -127,7 +127,7 @@ unsafe fn hit_cancel_timer(fighter: &mut L2CFighterCommon, boma: &mut BattleObje
 unsafe fn burn_knuckle_end_on_shield(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_DOLLY_STATUS_KIND_SPECIAL_F_ATTACK) {
         // Skip to end on shield
-        if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD)
+        if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD | *COLLISION_KIND_MASK_PARRY)
         && !fighter.is_in_hitlag() {
             fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SPECIAL_F_END.into(), false.into());
         }

@@ -255,7 +255,7 @@ unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
     else {
         if step == vars::sonic::SPECIAL_S_STEP_DASH {
             // Reduce speed on shield
-            if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD)
+            if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD | *COLLISION_KIND_MASK_PARRY)
             && !VarModule::is_flag(fighter.battle_object, vars::sonic::status::SPECIAL_S_HIT_SHIELD) {
                 VarModule::on_flag(fighter.battle_object, vars::sonic::status::SPECIAL_S_HIT_SHIELD);
 

@@ -144,7 +144,7 @@ unsafe extern "C" fn special_s_dash_exec(fighter: &mut L2CFighterCommon) -> L2CV
     }
 
     // Skip to end on shield
-    if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
+    if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD | *COLLISION_KIND_MASK_PARRY) {
         fighter.change_status(FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_END.into(), false.into());
         return 1.into();
     }
@@ -216,7 +216,7 @@ unsafe extern "C" fn special_s_end_pre(fighter: &mut L2CFighterCommon) -> L2CVal
 unsafe extern "C" fn special_s_end_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     // Reduce speed on shield
     let prev_inflict_status = VarModule::get_int(fighter.battle_object, vars::common::instance::PREV_STATUS_INFLICT_STATUS);
-    if prev_inflict_status == *COLLISION_KIND_MASK_SHIELD {
+    if prev_inflict_status == *COLLISION_KIND_MASK_SHIELD | *COLLISION_KIND_MASK_PARRY {
         let shield_hit_end_speed_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.shield_hit_end_speed_x");
         let lr = PostureModule::lr(fighter.module_accessor);
         sv_kinetic_energy!(

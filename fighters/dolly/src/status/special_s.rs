@@ -89,7 +89,7 @@ pub unsafe extern "C" fn special_f_attack_pre(fighter: &mut L2CFighterCommon) ->
 unsafe extern "C" fn special_f_end_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     // Reduce speed on shield
     let prev_inflict_status = VarModule::get_int(fighter.battle_object, vars::common::instance::PREV_STATUS_INFLICT_STATUS);
-    if prev_inflict_status == *COLLISION_KIND_MASK_SHIELD {
+    if prev_inflict_status == *COLLISION_KIND_MASK_SHIELD | *COLLISION_KIND_MASK_PARRY {
         let shield_hit_end_speed_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_f.shield_hit_end_speed_x");
         let lr = PostureModule::lr(fighter.module_accessor);
         sv_kinetic_energy!(

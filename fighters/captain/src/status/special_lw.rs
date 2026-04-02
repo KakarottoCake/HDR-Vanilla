@@ -61,7 +61,8 @@ unsafe extern "C" fn special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2C
         return 0.into();
     }
     if fighter.get_int(*FIGHTER_CAPTAIN_STATUS_WORK_ID_INT_FALCON_KICK_START_SITUATION) == *SITUATION_KIND_GROUND {
-        if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
+        // Skip to end on shield
+        if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD | *COLLISION_KIND_MASK_PARRY) {
             fighter.change_status(FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_LW_END.into(), false.into());
             return 0.into();
         }
@@ -109,7 +110,7 @@ unsafe extern "C" fn special_lw_end_init(fighter: &mut L2CFighterCommon) -> L2CV
     let prev_inflict_status = VarModule::get_int(fighter.battle_object, vars::common::instance::PREV_STATUS_INFLICT_STATUS);
     if start_situation == *SITUATION_KIND_GROUND
     && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND
-    && prev_inflict_status == *COLLISION_KIND_MASK_SHIELD {
+    && prev_inflict_status == *COLLISION_KIND_MASK_SHIELD | *COLLISION_KIND_MASK_PARRY {
         let shield_hit_end_speed_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lw.shield_hit_end_speed_x");
         let lr = PostureModule::lr(fighter.module_accessor);
         sv_kinetic_energy!(
