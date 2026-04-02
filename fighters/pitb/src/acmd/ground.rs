@@ -11,7 +11,7 @@ unsafe extern "C" fn game_attack11(agent: &mut L2CAgentBase) {
         hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 0, bone: "armr", dmg: 3.0, angle: 80, kbg: 40, bkb: 10, size: 3.0, x: 2.0, y: 0.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::GA_d, });
         hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 1, bone: "bowr", dmg: 3.0, angle: 80, kbg: 40, bkb: 10, size: 3.0, x: 0.0, y: 2.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::GA_d, });
         hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 2, bone: "bowr", dmg: 3.0, angle: 80, kbg: 40, bkb: 10, size: 3.0, x: 0.0, y: 7.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::GA_d, });
-        // Locking hitboxes
+        // Jab lock hitboxes
         hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 3, bone: "armr", dmg: 3.0, angle: 361, kbg: 15, bkb: 30, size: 3.0, x: 2.0, y: 0.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::G, });
         hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 4, bone: "bowr", dmg: 3.0, angle: 361, kbg: 15, bkb: 30, size: 3.0, x: 0.0, y: 2.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::G, });
         hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 5, bone: "bowr", dmg: 3.0, angle: 361, kbg: 15, bkb: 30, size: 3.0, x: 0.0, y: 7.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::G, });
@@ -52,7 +52,7 @@ unsafe extern "C" fn game_attack12(agent: &mut L2CAgentBase) {
         hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 0, bone: "arml", dmg: 3.0, angle:  60, kbg: 40, fkb: 70, bkb: 0, size: 3.0, x: 2.0, y:  0.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::GA_d, });
         hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 1, bone: "bowl", dmg: 3.0, angle:  90, kbg: 40, fkb: 70, bkb: 0, size: 3.2, x: 0.0, y: -2.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::GA_d, });
         hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 2, bone: "bowl", dmg: 3.0, angle: 145, kbg: 40, fkb: 85, bkb: 0, size: 3.2, x: 0.0, y: -7.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::GA_d, });
-        // Locking hitboxes
+        // Jab lock hitboxes
         hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 3, bone: "arml", dmg: 3.0, angle: 361, kbg: 15, bkb: 30, size: 3.0, x: 2.0, y:  0.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::G, });
         hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 4, bone: "bowl", dmg: 3.0, angle: 361, kbg: 15, bkb: 30, size: 3.2, x: 0.0, y: -2.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::G, });
         hitbox!(agent, { extends: PITB_SWORD_HITBOX_S, id: 5, bone: "bowl", dmg: 3.0, angle: 361, kbg: 15, bkb: 30, size: 3.2, x: 0.0, y: -7.0, z: 0.0, facing: LrCheck::F, situation: CollisionSituation::G, });
