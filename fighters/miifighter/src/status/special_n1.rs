@@ -18,7 +18,6 @@ pub unsafe extern "C" fn special_n1_main(fighter: &mut L2CFighterCommon) -> L2CV
     // don't ask why I have to hardcode these
     VarModule::set_float(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_ANGLE, 45.0);
     VarModule::set_float(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_SPEED, 2.25);
-    //VarModule::set_int(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_EFFECT_HANDLE, -1);
 
     fighter.main_shift(special_n1_main_loop)
 }
@@ -52,17 +51,7 @@ unsafe extern "C" fn special_n1_main_loop(fighter: &mut L2CFighterCommon) -> L2C
     fighter.sub_air_check_dive();
     let charge = VarModule::get_int(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_CHARGE) as f32;
     let angle = 45.0 - charge * 0.75;
-    //let guide_pos = arrow_guide_pos(fighter, angle);
     if VarModule::is_flag(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_START_HOLD) {
-        // let mut eff_handle = VarModule::get_int(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_EFFECT_HANDLE) as u32;
-        // if !EffectModule::is_exist_effect(fighter.module_accessor, eff_handle) {
-        //     eff_handle = EffectModule::req(fighter.module_accessor, Hash40::new("sys_direction2"), &Vector3f{x: guide_pos.x, y: guide_pos.y, z: 0.0}, &Vector3f{x: 0.0, y: 0.0, z: 0.0}, 1.0, 0, -1, false, 0) as u32;
-        //     let team_color = FighterUtil::get_team_color(fighter.module_accessor);
-        //     let mut effect_team_color = FighterUtil::get_effect_team_color(EColorKind(team_color as i32), Hash40::new("direction_effect_color"));
-        //     EffectModule::set_rgb(fighter.module_accessor, eff_handle, effect_team_color.value[0], effect_team_color.value[1], effect_team_color.value[2]);
-        //     VarModule::set_int(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_EFFECT_HANDLE, eff_handle as i32);
-        // }
-
         if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
             VarModule::inc_int(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_CHARGE);
             if charge == 1.0 {
@@ -87,16 +76,6 @@ unsafe extern "C" fn special_n1_main_loop(fighter: &mut L2CFighterCommon) -> L2C
         VarModule::set_float(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_ANGLE, angle);
         VarModule::set_float(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_SPEED, throw_speed);
     }
-    // let eff_handle = VarModule::get_int(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_EFFECT_HANDLE) as u32;
-    // if EffectModule::is_exist_effect(fighter.module_accessor, eff_handle) {
-    //     EffectModule::set_pos(fighter.module_accessor, eff_handle, &Vector3f{x: guide_pos.x, y: guide_pos.y, z: 0.0});
-    //     if fighter.lr() >= 0.0 {
-    //         EffectModule::set_rot(fighter.module_accessor, eff_handle, &Vector3f{x: 0.0, y: 0.0, z: angle - 90.0});
-    //     }
-    //     else {
-    //         EffectModule::set_rot(fighter.module_accessor, eff_handle, &Vector3f{x: 0.0, y: 0.0, z: -270.0 - angle});
-    //     }
-    // }
     if MotionModule::is_end(fighter.module_accessor) {
         let status = if fighter.is_situation(*SITUATION_KIND_GROUND) { FIGHTER_STATUS_KIND_WAIT } else { FIGHTER_STATUS_KIND_FALL };
         fighter.change_status(status.into(), false.into());
@@ -126,26 +105,8 @@ unsafe fn special_n_change_motion(fighter: &mut L2CFighterCommon, motion: Hash40
     }
 }
 
-unsafe fn arrow_guide_pos(fighter: &mut L2CFighterCommon, angle: f32) -> Vector2f {
-    let pos = PostureModule::pos(fighter.module_accessor);
-    let angle_rad = angle.to_radians();
-    let scale = PostureModule::scale(fighter.module_accessor);
-    let dist = 10.0;
-    let dist_scaled = dist * scale;
-    let x_pos = angle_rad.cos() * dist_scaled * fighter.lr() + (*pos).x;
-    let y_pos = angle_rad.sin() * dist_scaled + (*pos).y;
-    let y_offset = 6.0;
-    let y_pos = y_offset * scale + y_pos;
-    Vector2f{x: x_pos, y: y_pos}
-}
-
 pub unsafe extern "C" fn special_n1_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_MIIFIGHTER_GENERATE_ARTICLE_IRONBALL, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-    // let eff_handle = VarModule::get_int(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_EFFECT_HANDLE) as u32;
-    // if EffectModule::is_exist_effect(fighter.module_accessor, eff_handle) {
-    //     EffectModule::kill(fighter.module_accessor, eff_handle, true, true);
-    //     VarModule::set_int(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_EFFECT_HANDLE, -1);
-    // }
     
     return 0.into();
 }

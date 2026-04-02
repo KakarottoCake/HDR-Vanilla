@@ -361,6 +361,7 @@ pub mod vars {
 
             /// FIGHTER_STATUS_KIND_ESCAPE_AIR
             pub const ESCAPE_AIR_CLIFF_CATCH_FRAME: i32 = 0x1000;
+            pub const ESCAPE_AIR_CANCEL_FRAME: i32 = 0x1001;
 
             
             // floats
@@ -570,6 +571,11 @@ pub mod vars {
 
             // ints
             pub const CAMERA_LOCKOUT_TIMER: i32 = 0x0105;
+        }
+        pub mod status {
+            // flags
+            pub const CHECK_STEP_CANCEL: i32 = 0x1100;
+            pub const ENABLE_STEP_CANCEL: i32 = 0x1101;
         }
     }
 
@@ -891,6 +897,7 @@ pub mod vars {
             pub use super::super::ridley::instance::SPECIAL_N_EXPLODE;
             pub use super::super::buddy::instance::SPECIAL_N_LAND_CANCEL;
             pub use super::super::buddy::instance::SPECIAL_N_BAYONET_DISABLE;
+            pub const SPECIAL_N_PFUSHIGISOU_SEED_FIRED: i32 = 0x01F7;   // Unique var as it doesn't like borrowing from pfushigisou
 
             // ints
             pub const SPECIAL_N_PICKEL_MATERIAL_INDEX: i32 = 0x01F5;
@@ -1454,6 +1461,9 @@ pub mod vars {
 
     pub mod pfushigisou {
         pub mod instance {
+            // flags
+            pub const SPECIAL_N_SEED_FIRED: i32 = 0x0100;
+
             // ints
             pub const SPECIAL_N_PLEDGE_EFFECT_HANDLE: i32 = 0x0100;
         }
@@ -1968,6 +1978,9 @@ pub mod vars {
         pub mod status {
             // flags
             pub const ATTACK_S4_CLEAR_CRIT: i32 = 0x1100;
+
+            // ints
+            pub const RECOIL_CANCEL_STATUS: i32 = 0x1100;
         }
     }
 
@@ -2088,6 +2101,10 @@ pub mod statuses {
 
     pub mod daisy_kinopio {
         pub const YAP: i32 = 0x1;
+    }
+
+    pub mod demon {
+        pub const CANCEL_STEP: i32 = 0x213;
     }
 
     pub mod diddy {

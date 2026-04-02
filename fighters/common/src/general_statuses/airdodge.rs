@@ -159,6 +159,17 @@ pub unsafe fn status_end_EscapeAir(fighter: &mut L2CFighterCommon) -> L2CValue {
 unsafe fn sub_escape_air_common(fighter: &mut L2CFighterCommon) {
     ControlModule::reset_trigger(fighter.module_accessor);
     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_STATUS_ESCAPE_WORK_INT_FRAME);
+
+    // Calculates/sets ledgegrab enable frame
+    // Ledgegrab frame varies per character, based on gravity and fallspeed
+    let enable_cliff_catch_frame = fighter.get_escape_air_cliff_catch_frame();
+    VarModule::set_int(fighter.battle_object, vars::common::status::ESCAPE_AIR_CLIFF_CATCH_FRAME, enable_cliff_catch_frame);
+
+    // Calculates/sets FAF
+    // FAF varies per character, based on gravity and fallspeed
+    let enable_cancel_frame = fighter.get_escape_air_cancel_frame();
+    VarModule::set_int(fighter.battle_object, vars::common::status::ESCAPE_AIR_CANCEL_FRAME, enable_cancel_frame);
+    
     WorkModule::unable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_LANDING);
     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW);
     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_AIR_LASSO);
@@ -178,10 +189,6 @@ unsafe fn sub_escape_air_common(fighter: &mut L2CFighterCommon) {
         fighter.sub_escape_air_uniq(L2CValue::Bool(false));
     }
     fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(sub_escape_air_uniq as *const () as _));
-    // Calculates/sets ledgegrab enable frame
-    // Ledgegrab frame varies per character, based on gravity and fallspeed
-    let enable_cliff_catch_frame = fighter.get_escape_air_cliff_catch_frame();
-    VarModule::set_int(fighter.battle_object, vars::common::status::ESCAPE_AIR_CLIFF_CATCH_FRAME, enable_cliff_catch_frame);
 }
 
 // custom substatus for airdodges
@@ -240,11 +247,7 @@ unsafe extern "C" fn sub_escape_air_uniq(fighter: &mut L2CFighterCommon, arg: L2
                 let frame = MotionModule::frame(fighter.module_accessor);
                 let end_frame = MotionModule::end_frame(fighter.module_accessor);
                 if 0.0 <= start_frame && start_frame <= frame {
-                    let mut cancel_frame = if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE) {
-                        WorkModule::get_param_float(fighter.module_accessor, hash40("param_motion"), hash40("escape_air_slide_cancel_frame"))
-                    } else {
-                        WorkModule::get_param_float(fighter.module_accessor, hash40("param_motion"), hash40("escape_air_cancel_frame"))
-                    };
+                    let mut cancel_frame = VarModule::get_int(fighter.battle_object, vars::common::status::ESCAPE_AIR_CANCEL_FRAME) as f32;
                     if cancel_frame < 0.0 {
                         cancel_frame = end_frame;
                     }
@@ -283,7 +286,7 @@ unsafe extern "C" fn sub_escape_air_uniq(fighter: &mut L2CFighterCommon, arg: L2
 unsafe extern "C" fn sub_escape_air_common_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let id = VarModule::get_int(fighter.battle_object, vars::common::instance::COSTUME_SLOT_NUMBER) as usize;
     let curr_frame = fighter.global_table[CURRENT_FRAME].get_i32();
-    let cancel_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("param_motion"), hash40("escape_air_cancel_frame")) - 1.0;  // subtract 1 because curr_frame is 0 indexed
+    let cancel_frame = (VarModule::get_int(fighter.battle_object, vars::common::status::ESCAPE_AIR_CANCEL_FRAME) - 1) as f32;  // subtract 1 because curr_frame is 0 indexed
 
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return L2CValue::Bool(true);

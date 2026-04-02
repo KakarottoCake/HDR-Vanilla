@@ -807,6 +807,28 @@ unsafe fn phantom_hit_check(ctx: &mut skyline::hooks::InlineCtx) {
     ctx.registers_f[9].set_s(phantom_threshold)
 }
 
+// Runs within FighterMotionModuleImpl::get_cancel_frame
+// inside the special block for "escape_air" motion kind
+#[skyline::hook(offset = 0x6e1ff8, inline)]
+unsafe fn get_escape_air_cancel_frame(ctx: &mut skyline::hooks::InlineCtx) {
+    let motion_module = ctx.registers[20].x();
+    let boma = *(motion_module as *mut *mut BattleObjectModuleAccessor).add(1);
+    let cancel_frame = VarModule::get_int((*boma).object(), vars::common::status::ESCAPE_AIR_CANCEL_FRAME);
+
+    *(ctx.registers[8].x() as *mut f32).add(0x60 / 4) = cancel_frame as f32;
+}
+
+// Runs within FighterMotionModuleImpl::get_cancel_frame
+// inside the special block for "escape_air_slide" motion kind
+#[skyline::hook(offset = 0x6e1fa0, inline)]
+unsafe fn get_escape_air_slide_cancel_frame(ctx: &mut skyline::hooks::InlineCtx) {
+    let motion_module = ctx.registers[20].x();
+    let boma = *(motion_module as *mut *mut BattleObjectModuleAccessor).add(1);
+    let cancel_frame = VarModule::get_int((*boma).object(), vars::common::status::ESCAPE_AIR_CANCEL_FRAME);
+
+    *(ctx.registers[8].x() as *mut f32).add(0x94 / 4) = cancel_frame as f32;
+}
+
 pub fn install() {
     energy::install();
     effect::install();
@@ -871,6 +893,8 @@ pub fn install() {
         status_module__change_status,
         change_elec_hitlag_for_attacker,
         set_uniform_buffer,
-        phantom_hit_check
+        phantom_hit_check,
+        get_escape_air_cancel_frame,
+        get_escape_air_slide_cancel_frame
     );
 }
