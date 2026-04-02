@@ -95,7 +95,7 @@ unsafe extern "C" fn effect_jumpaerialfront(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     for _ in 0..4 {
         if is_excute(agent) {
-            EFFECT(agent, Hash40::new("sys_flash"), Hash40::new("waist"), 0, 0, 0, 0, 0, 0, 0.6, 10, 10, 10, 0, 0, 0, false);
+            EFFECT(agent, Hash40::new("sys_flash"), Hash40::new("waist"), 0, 0, 0, 0, 0, 0, 0.75, 10, 10, 10, 0, 0, 0, false);
         }
         wait(lua_state, 6.0);
     }
@@ -107,7 +107,7 @@ unsafe extern "C" fn effect_jumpaerialback(agent: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
     for _ in 0..4 {
         if is_excute(agent) {
-            EFFECT(agent, Hash40::new("sys_flash"), Hash40::new("waist"), 0, 0, 0, 0, 0, 0, 0.6, 10, 10, 10, 0, 0, 0, false);
+            EFFECT(agent, Hash40::new("sys_flash"), Hash40::new("waist"), 0, 0, 0, 0, 0, 0, 0.75, 10, 10, 10, 0, 0, 0, false);
         }
         wait(lua_state, 6.0);
     }
