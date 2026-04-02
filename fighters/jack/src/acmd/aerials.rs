@@ -68,7 +68,7 @@ unsafe extern "C" fn effect_attackairn(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 16.0);
     if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("jack_knife_front"), true, true);
+        EFFECT_OFF_KIND(agent, Hash40::new("jack_knife_front"), false, false);
     }
     frame(lua_state, 21.0);
     if is_excute(agent) {
