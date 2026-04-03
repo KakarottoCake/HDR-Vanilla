@@ -11,7 +11,7 @@
         </struct>
     </struct>
     <struct hash="param_special_f">
-        <float hash="shield_hit_end_speed_x">1.75</float>
+        <float hash="shield_hit_end_speed_x">1.6</float>
     </struct>
     <struct hash="param_special_b">
         <float hash="start_speed_x_max">0.9</float>
