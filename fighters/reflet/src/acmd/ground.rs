@@ -17,7 +17,7 @@ unsafe extern "C" fn game_attack11(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }
-    frame(lua_state, 6.0);
+    frame(lua_state, 10.0);
     FT_MOTION_RATE_RANGE(agent, 6.0, 19.0, 10.0);
     if is_excute(agent) {
         agent.on_flag(*FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
@@ -79,11 +79,14 @@ unsafe extern "C" fn game_attack12(agent: &mut L2CAgentBase) {
     frame(lua_state, 6.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
+    }
+    frame(lua_state, 9.0);
+    if is_excute(agent) {
         if agent.get_int(*FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_HI_CURRENT_POINT) > 0 {
             agent.on_flag(*FIGHTER_STATUS_ATTACK_FLAG_ENABLE_100);
         }
     }
-    frame(lua_state, 7.0);
+    frame(lua_state, 10.0);
     if is_excute(agent) {
         if agent.get_float(*FIGHTER_REFLET_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CURRENT_POINT) > 0.1 {
             agent.on_flag(*FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
@@ -91,8 +94,8 @@ unsafe extern "C" fn game_attack12(agent: &mut L2CAgentBase) {
             ComboModule::reset(boma);
         }
     }
-    frame(lua_state, 9.0);
-    FT_MOTION_RATE_RANGE(agent, 9.0, 22.0, 11.0);//21f
+    frame(lua_state, 16.0);
+    FT_MOTION_RATE_RANGE(agent, 16.0, 22.0, 4.0);
     if is_excute(agent) {
         agent.off_flag(*FIGHTER_STATUS_ATTACK_FLAG_ENABLE_100);
     }
