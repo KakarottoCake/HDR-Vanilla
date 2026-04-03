@@ -87,6 +87,19 @@ unsafe extern "C" fn game_throwf(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn sound_throwf(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 3.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_jack_throw_f01"));
+    }
+    frame(lua_state, 10.0);
+    if is_excute(agent) {
+        PLAY_SEQUENCE(agent, Hash40::new("seq_jack_rnd_attack_s"));
+    }
+}
+
 unsafe extern "C" fn game_throwb(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -161,6 +174,8 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_catchturn", game_catchturn, Priority::Low);
     
     agent.acmd("game_throwf", game_throwf, Priority::Low);
+    agent.acmd("sound_throwf", sound_throwf, Priority::Low);
+
     agent.acmd("game_throwb", game_throwb, Priority::Low);
     agent.acmd("game_throwhi", game_throwhi, Priority::Low);
     agent.acmd("game_throwlw", game_throwlw, Priority::Low);
