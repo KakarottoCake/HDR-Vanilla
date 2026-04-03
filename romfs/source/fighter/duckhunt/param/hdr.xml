@@ -6,7 +6,7 @@
     <float hash="hi1_limit_speed_x">0.8</float>
     <float hash="hi1_start_speed_y">0.25</float>
     <float hash="hi1_start_accel_y">0.044</float>
-    <float hash="hi1_jump_speed_y">1.75</float>
+    <float hash="hi1_jump_speed_y">2.25</float>
     <float hash="hi1_jump_accel_y">0.088</float>
     <float hash="hi2_limit_speed_x">0.9</float>
     <float hash="hi2_start_speed_y">0.25</float>
