@@ -92,13 +92,13 @@ throw_f:
     cancel_frame: 26
 throw_b:
   extra:
-    cancel_frame: 33
+    cancel_frame: 36
 throw_lw:
   extra:
     cancel_frame: 44
 throw_hi:
   extra:
-    cancel_frame: 35
+    cancel_frame: 38
 attack_12:
   extra:
     cancel_frame: 18
