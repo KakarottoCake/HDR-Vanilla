@@ -243,18 +243,39 @@ unsafe fn play_se(
     param_1: *mut u32,
     sfx_hash_id: u64);
 
+// Tells any callers to this function that no echos are available
+#[skyline::hook(offset = 0x1a1fa30)]
+unsafe fn echo_swap_hook(
+    _param_1: i32, _param_2: u64, _param_3: u64, _param_4: u64,
+    _param_5: u64, _param_6: u64, _param_7: u64, _param_8: u64
+) -> u64 {
+    1
+}
+
 pub fn install() {
     skyline::install_hooks!(
         update_player_tag,
         css_advance_sfx_hook,
         css_advance_sfx2_hook,
+        echo_swap_hook,
     );
 
     // Prevent the game from playing any CSS advance sound effects by default
     skyline::patching::Patch::in_text(0x1a2d43c).nop();
     skyline::patching::Patch::in_text(0x1a2d590).nop();
 
+
     layout::install();
     random::install();
     player_port::install();
+
+    // These patches are required to "undo" a stacked CSS
+
+    // 1. Force the CSS to always use the "separate" fighter list instead of "stacked".
+    // This fixes the echo portraits on the character cards.
+    skyline::patching::Patch::in_text(0x1a20260).data(0x52800028u32);
+
+    // 2. Force the singleton character vector builder (0x1a0a3e0) to always store separate=1
+    // into inner_data+0x258. This fixes the miis.
+    skyline::patching::Patch::in_text(0x1a0a410).data(0x52800028u32);
 }
