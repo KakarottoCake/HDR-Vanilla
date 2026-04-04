@@ -428,7 +428,9 @@ unsafe extern "C" fn game_fallspecial(agent: &mut L2CAgentBase) {
 
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialnstart", game_specialnstart, Priority::Low);
+    agent.acmd("effect_specialnstart", acmd_stub, Priority::Low);
     agent.acmd("game_specialairnstart", game_specialnstart, Priority::Low);
+    agent.acmd("effect_specialairnstart", acmd_stub, Priority::Low);
     agent.acmd("sound_specialnstart", sound_specialnstart, Priority::Low);
     agent.acmd("sound_specialairnstart", sound_specialnstart, Priority::Low);
     agent.acmd("game_specialnhold", game_specialnhold, Priority::Low);
