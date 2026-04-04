@@ -3,7 +3,7 @@ use utils::ext::*;
 
 // thanks wuboy
 
-static mut BURST_BOMA_PTR : u64 = 0;
+static mut BURST_BOMA_PTR: u64 = 0;
 
 #[skyline::hook(offset = 0x97569c, inline)]
 unsafe extern "C" fn burst_check_status(ctx: &mut skyline::hooks::InlineCtx) {
@@ -52,11 +52,11 @@ unsafe extern "C" fn burst_init(_vtable: u64, weapon: *mut app::Weapon, somethin
         hash40("final2"),
         hash40("final3"),
         hash40("super_special_triple_2"),
-        hash40("super_special_triple_3"),
+        hash40("super_special_triple_3")
     ].contains(&motion) {
         let pos = &mut *(something as *mut smash_rs::cpp::simd::Vector2).add(0x98 / 0x8);
-        // println!("pos: {}, {}", pos.vec[0], pos.vec[1]);
-        GroundModule::set_shape_safe_pos(module_accessor, &Vector2f{x: pos.vec[0], y: pos.vec[1]});
+        // println!("pos: {}, {}", pos.x(), pos.y());
+        GroundModule::set_shape_safe_pos(module_accessor, &Vector2f{x: pos.x(), y: pos.y()});
     }
 
     let atack_mul = *(something as *const f32).add(0xa8 / 0x4);
@@ -87,9 +87,10 @@ unsafe extern "C" fn burst_on_hit(_vtable: u64, weapon: *mut app::Weapon) -> u64
     }
     else if [
         hash40("super_special"),
-        hash40("super_special_triple_3"),
+        hash40("super_special_triple_3")
     ].contains(&motion) {
-        if WorkModule::is_flag(module_accessor, 0x20000006) { // WEAPON_DOLLY_BURST_INSTANCE_WORK_ID_FLAG_HIT_SUPER_SPECIAL
+        if WorkModule::is_flag(module_accessor, 0x20000006) {
+            // WEAPON_DOLLY_BURST_INSTANCE_WORK_ID_FLAG_HIT_SUPER_SPECIAL
             return 0;
         }
 
@@ -103,10 +104,10 @@ unsafe extern "C" fn burst_on_hit(_vtable: u64, weapon: *mut app::Weapon) -> u64
     else {
         0
     };
-    
+
     LinkModule::send_event_parents(module_accessor, 3, Hash40::new_raw(event));
 
-    return 0
+    return 0;
 }
 
 pub fn install() {

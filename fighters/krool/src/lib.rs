@@ -13,7 +13,6 @@ mod backpack;
 mod crown;
 mod ironball;
 
-//pub mod vtable_hook;
 pub use status::krool_belly_damage_hook_impl;
 
 use smash::{
@@ -39,6 +38,7 @@ use smash_script::{
     *,
     macros::*
 };
+use smash_script::macros::ATTACK_ABS;
 use utils::{
     *,
     util::*,

@@ -158,7 +158,8 @@ pub unsafe extern "C" fn special_s_loop_init(fighter: &mut L2CFighterCommon) -> 
     }
 
     // use hashes to get loop num and speed_x
-    let loop_num = fighter.get_param_int("param_special_s", loop_count_hash);
+    let mut loop_num = fighter.get_param_int("param_special_s", loop_count_hash);
+    if VarModule::is_flag(fighter.battle_object, vars::shotos::instance::EX_SPECIAL_USED) { loop_num = 3; }
     fighter.set_int(loop_num, *FIGHTER_RYU_STATUS_WORK_ID_SPECIAL_S_INT_LOOP_COUNT);
     let speed_x = if VarModule::is_flag(fighter.battle_object, vars::shotos::instance::EX_SPECIAL_USED) {
         if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND { 1.8 } else { 1.5 }
