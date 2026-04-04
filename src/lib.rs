@@ -47,6 +47,9 @@ use std::os::raw::c_void;
 use skyline_web::*;
 use std::{fs, path::Path};
 use utils::STAGE_MANAGER;
+use std::sync::atomic::Ordering;
+use dynamic::util::MATCH_EXITING;
+use utils::one_player::SPAWN_POS_CAPTURED;
 
 #[cfg(not(feature = "main_nro"))]
 #[no_mangle]
@@ -409,6 +412,9 @@ unsafe fn scene_transition(
         }
     }
 
+    MATCH_EXITING.store(false, Ordering::Relaxed);
+    SPAWN_POS_CAPTURED.store(false, Ordering::Relaxed);
+
     call_original!(list_ptr, key_struct, context_struct, factory);
 }
 
@@ -416,7 +422,7 @@ unsafe fn scene_transition(
 pub fn main() {
     #[cfg(feature = "main_nro")]
     {
-        vsync::setup_ssbu_sync();
+        // vsync::setup_ssbu_sync();
         quick_validate_install();
         skyline::install_hooks!(change_version_string_hook);
         chara_select::install();

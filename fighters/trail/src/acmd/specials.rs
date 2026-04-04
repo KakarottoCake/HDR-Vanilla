@@ -515,7 +515,7 @@ unsafe extern "C" fn game_speciallwstart(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
     }
     FT_MOTION_RATE(agent, 0.875);
-    frame(lua_state, 75.0);
+    frame(lua_state, 80.0);
     if is_excute(agent) {
         VarModule::on_flag(agent.battle_object, vars::trail::status::SPECIAL_LW_ENABLE_GRAVITY);
     }
@@ -687,7 +687,7 @@ unsafe extern "C" fn game_specialairlwrebound(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     if is_excute(agent) {
-        QUAKE(agent, *CAMERA_QUAKE_KIND_M);
+        QUAKE(agent, *CAMERA_QUAKE_KIND_L);
         ATTACK(agent, 0, 0, Hash40::new("top"), 6.0, 38, 82, 0, 54, 4.7, 0.0, 3.6, -9.2, Some(0.0), Some(3.6), Some(13.2), 0.6, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
     }
     frame(lua_state, 3.0);
