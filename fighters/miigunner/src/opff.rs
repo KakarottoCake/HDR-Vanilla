@@ -60,7 +60,7 @@ unsafe fn reflector_jc(boma: &mut BattleObjectModuleAccessor) {
         *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW1_LOOP]) {
         if !boma.is_in_hitlag() {
             if (boma.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW1_LOOP) && boma.status_frame() > 1) {
-                boma.check_jump_cancel(false, false);
+                boma.check_jump_cancel(false, false, false);
             }
         }
     }

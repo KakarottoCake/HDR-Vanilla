@@ -40,7 +40,7 @@ unsafe fn dash_attack_jump_cancels(fighter: &mut L2CFighterCommon) {
             fighter.change_status_req(*FIGHTER_STATUS_KIND_FALL, true);
         }
         else if MotionModule::frame(fighter.module_accessor) >= 27.0 {
-            fighter.check_jump_cancel(false, false);
+            fighter.check_jump_cancel(false, false, true);
         }
     }
 }

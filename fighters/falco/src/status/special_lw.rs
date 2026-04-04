@@ -90,7 +90,7 @@ pub unsafe extern "C" fn special_lw_main(fighter: &mut L2CFighterCommon) -> L2CV
 unsafe extern "C" fn special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[CURRENT_FRAME].get_i32() > 2  // Allows for jump cancel on frame 4 in game
     && !fighter.is_in_hitlag()
-    && fighter.check_jump_cancel(false, false) {
+    && fighter.check_jump_cancel(false, false, false) {
         return 0.into();
     }
 
@@ -246,7 +246,7 @@ unsafe extern "C" fn special_lw_loop_main(fighter: &mut L2CFighterCommon) -> L2C
 
 unsafe extern "C" fn special_lw_loop_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
 
-    if fighter.check_jump_cancel(false, false) {
+    if fighter.check_jump_cancel(false, false, false) {
         return 0.into();
     }
 
@@ -394,7 +394,7 @@ unsafe extern "C" fn special_lw_end_main(fighter: &mut L2CFighterCommon) -> L2CV
 
 unsafe extern "C" fn special_lw_end_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     
-    if fighter.check_jump_cancel(false, false) {
+    if fighter.check_jump_cancel(false, false, false) {
         return 0.into();
     }
 
@@ -476,7 +476,7 @@ pub unsafe extern "C" fn special_lw_hit_main(fighter: &mut L2CFighterCommon) -> 
 
 unsafe extern "C" fn special_lw_hit_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     if MotionModule::is_end(fighter.module_accessor) {
-        if fighter.check_jump_cancel(false, false) {
+        if fighter.check_jump_cancel(false, false, false) {
             return 0.into();
         }
         if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {

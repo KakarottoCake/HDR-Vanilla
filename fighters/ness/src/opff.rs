@@ -11,7 +11,7 @@ unsafe fn psi_magnet_jump_cancel(fighter: &mut L2CFighterCommon) {
         *FIGHTER_NESS_STATUS_KIND_SPECIAL_LW_END]) {
         if fighter.status_frame() > 0 { // Allows for jump cancel on frame 6 in game (this is dictated by how long game_speciallw_start takes)
             if !fighter.is_in_hitlag() {
-                fighter.check_jump_cancel(false, false);
+                fighter.check_jump_cancel(false, false, false);
             }
         }
     }

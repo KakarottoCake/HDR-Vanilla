@@ -14,7 +14,7 @@ unsafe fn bow_lc(boma: &mut BattleObjectModuleAccessor) {
 unsafe fn guardian_orbitar_jc(fighter: &mut L2CFighterCommon) {
     if fighter.is_status_one_of(&[*FIGHTER_PIT_STATUS_KIND_SPECIAL_LW_HOLD, *FIGHTER_PIT_STATUS_KIND_SPECIAL_LW_END])
     && !fighter.is_in_hitlag() {
-        fighter.check_jump_cancel(false, false);
+        fighter.check_jump_cancel(false, false, false);
     }
 }
 

@@ -7,7 +7,7 @@ unsafe fn psi_magnet_jc(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_status_one_of(&[*FIGHTER_LUCAS_STATUS_KIND_SPECIAL_LW_HIT, *FIGHTER_LUCAS_STATUS_KIND_SPECIAL_LW_END]) {
         if boma.status_frame() > 0 {
             if !AttackModule::is_attack(boma, 0, false) { //jc if hitbox clear
-                boma.check_jump_cancel(false, false);
+                boma.check_jump_cancel(false, false, false);
             }
         }
     }
