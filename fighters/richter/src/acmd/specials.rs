@@ -64,7 +64,7 @@ unsafe extern "C" fn expression_specialn(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specials1(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_STOP, 0.8);
+    sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.8);
     frame(lua_state, 1.0);
     if is_excute(agent) {
         VarModule::on_flag(agent.object(), vars::common::instance::SIDE_SPECIAL_CANCEL_NO_HIT);
