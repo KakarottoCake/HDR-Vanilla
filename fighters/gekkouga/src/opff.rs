@@ -73,7 +73,7 @@ pub unsafe fn substitute_teleport_check(fighter: &mut L2CFighterCommon) {
             eff_handle = EffectModule::req(
                 fighter.module_accessor,
                 Hash40::new("sys_direction"),
-                &Vector3f{x: doll_top_pos_x, y: doll_top_pos_y + 6.0, z: 0.0},
+                &Vector3f{x: doll_top_pos_x, y: doll_top_pos_y + 5.0, z: 0.0},
                 &Vector3f::new(180.0, 0.0, 0.0),
                 0.5,
                 0,
@@ -84,7 +84,7 @@ pub unsafe fn substitute_teleport_check(fighter: &mut L2CFighterCommon) {
             VarModule::set_int(fighter.battle_object, vars::gekkouga::instance::SPECIAL_LW_MARKER_EFF_HANDLE, eff_handle as i32);
         }
         else {
-            EffectModule::set_pos(fighter.module_accessor, eff_handle, &Vector3f{x: doll_top_pos_x, y: doll_top_pos_y + 6.0, z: 0.0});
+            EffectModule::set_pos(fighter.module_accessor, eff_handle, &Vector3f{x: doll_top_pos_x, y: doll_top_pos_y + 5.0, z: 0.0});
         }
         let team_color = FighterUtil::get_team_color(fighter.module_accessor);
         let mut effect_team_color = FighterUtil::get_effect_team_color(EColorKind(team_color as i32), Hash40::new("direction_effect_color"));
