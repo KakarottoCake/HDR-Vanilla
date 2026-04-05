@@ -71,7 +71,7 @@ unsafe extern "C" fn game_specials1(agent: &mut L2CAgentBase) {
             app::sv_kinetic_energy::reset_energy(agent.lua_state_agent);
             boma.select_cliff_hangdata_from_name("special_s1");
         }
-        sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.8);
+        sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.9);
     }
     frame(lua_state, 13.0);
     if is_excute(agent) {
