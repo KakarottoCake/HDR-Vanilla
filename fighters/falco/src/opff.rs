@@ -32,6 +32,10 @@ unsafe fn check_special_lw_parried(fighter: &mut L2CFighterCommon) {
     ]) 
     && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_PARRY) {
         VarModule::on_flag(fighter.battle_object, vars::falco::instance::SPECIAL_LW_DISABLE_JC);
+        if !fighter.is_status(statuses::falco::SPECIAL_LW_END)
+        && !fighter.is_in_hitlag() {
+            fighter.change_status(statuses::falco::SPECIAL_LW_END.into(), false.into());
+        }
     }
 }
 

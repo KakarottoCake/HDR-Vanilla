@@ -50,7 +50,8 @@ unsafe fn special_waza_charge_handle(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
-unsafe fn reflector_jc(boma: &mut BattleObjectModuleAccessor) {
+unsafe fn reflector_jc(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
+    let boma = fighter.boma();
     if boma.is_motion_one_of(&[Hash40::new("special_lw1_start"), Hash40::new("special_air_lw1_start")]) && WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FRAME_IN_AIR) <= 1 {
         GroundModule::correct(boma, app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
     }
@@ -72,6 +73,10 @@ unsafe fn reflector_jc(boma: &mut BattleObjectModuleAccessor) {
     ])
     && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_PARRY) {
         VarModule::on_flag(boma.object(), vars::miigunner::instance::SPECIAL_LW_DISABLE_JC);
+        if !fighter.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW1_END)
+        && !fighter.is_in_hitlag() {
+            fighter.change_status(FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW1_END.into(), false.into());
+        }
     }
 
     if boma.is_status_one_of(&[
@@ -123,7 +128,7 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     special_waza_charge_handle(boma);
-    reflector_jc(boma);
+    reflector_jc(fighter);
     vortex_item_grab_ac(fighter);
     fastfall_specials(fighter);
 }

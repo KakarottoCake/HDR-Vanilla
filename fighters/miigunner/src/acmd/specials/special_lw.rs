@@ -18,7 +18,7 @@ unsafe extern "C" fn game_speciallw1start(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, 1.0);
 	if is_excute(agent) {
 		let offset = if agent.is_situation(*SITUATION_KIND_GROUND) { 0.0 } else { 2.0 };
-		ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 69, 92, 0, 70, 8.0, 0.0, 6.5 + offset, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_ENERGY);
+		ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 69, 92, 0, 70, 8.0, 0.0, 6.5 + offset, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_ENERGY);
     }
 }
 
