@@ -96,7 +96,23 @@ pub unsafe fn check_burnout(agent: &mut L2CAgentBase) {
     if meter <= 0.0
     && !VarModule::is_flag(agent.battle_object, vars::lucario::instance::METER_BURNOUT) {
         VarModule::on_flag(agent.battle_object, vars::lucario::instance::METER_BURNOUT);
-        PLAY_SE(agent, Hash40::new("se_common_spirits_critical_l_tail"));
+        EffectModule::req_follow(
+            agent.module_accessor,
+            Hash40::new("sys_flash"),
+            Hash40::new("bust"),
+            &Vector3f::zero(),
+            &Vector3f::zero(),
+            2.0,
+            true,
+            0,
+            0,
+            0,
+            0,
+            0,
+            false,
+            false
+        );
+        LAST_EFFECT_SET_COLOR(agent, 0.0, 0.37, 0.9);
         MeterModule::drain_direct(agent.battle_object, meter);
     }
 }
@@ -256,6 +272,7 @@ unsafe fn meter_module(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMo
     && VarModule::is_flag(fighter.battle_object, vars::lucario::instance::METER_BURNOUT) {
         VarModule::off_flag(fighter.battle_object, vars::lucario::instance::METER_BURNOUT);
         PLAY_SE(fighter, Hash40::new("se_system_favorite_on"));
+        app::FighterUtil::flash_eye_info(fighter.module_accessor);
         MeterModule::drain_direct(fighter.battle_object, meter);
     }
     
