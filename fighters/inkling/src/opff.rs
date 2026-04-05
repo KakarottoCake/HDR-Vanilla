@@ -51,7 +51,7 @@ unsafe fn roller_jump_cancel(boma: &mut BattleObjectModuleAccessor) {
     if boma.is_status(*FIGHTER_INKLING_STATUS_KIND_SPECIAL_S_END)
         && boma.is_situation(*SITUATION_KIND_GROUND)
         && boma.status_frame() > 10 {
-        boma.check_jump_cancel(true, false, false);
+        boma.check_jump_cancel(true, false, true);
     }
     if boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_S)
     && boma.is_situation(*SITUATION_KIND_AIR)
