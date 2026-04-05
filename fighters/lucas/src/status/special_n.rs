@@ -143,6 +143,7 @@ unsafe extern "C" fn special_n_hold_main_loop(fighter: &mut L2CFighterCommon) ->
             VarModule::set_int(fighter.object(), vars::lucas::instance::SPECIAL_N_OFFENSE_UP_CHARGE_LEVEL, charge_time);
             VarModule::on_flag(fighter.object(), vars::lucas::instance::SPECIAL_N_OFFENSE_UP_ACTIVE);
             VarModule::on_flag(fighter.object(), vars::lucas::instance::SPECIAL_N_OFFENSE_UP_INIT);
+            app::FighterUtil::flash_eye_info(fighter.module_accessor);
             fighter.change_status(FIGHTER_LUCAS_STATUS_KIND_SPECIAL_N_FIRE.into(), false.into());
             return 1.into();
         }
