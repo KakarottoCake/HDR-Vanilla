@@ -317,7 +317,7 @@ unsafe fn css_to_sss(ctx: &InlineCtx) {
     if current_scene == "CharaSelectScene" {
         let text = skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as u64;
         let flag_ptr = (text + 0x530996c) as *const u8;
-        
+
         let flag = *flag_ptr.add(3);
 
         // This is something to pay attention to when this goes to prerelease
@@ -390,14 +390,14 @@ unsafe fn copy_fighter_info(
 #[skyline::hook(offset = 0x3726120)]
 unsafe fn scene_transition(
     list_ptr: *mut c_void,
-    key_struct: *const HashedString, 
-    context_struct: *const HashedString, 
+    key_struct: *const HashedString,
+    context_struct: *const HashedString,
     factory: *mut c_void
 ) {
     if !key_struct.is_null() {
         let len = (*key_struct).length;
         let hash = (*key_struct).hash;
-        
+
         let str_ptr = (key_struct as *const u8).add(8) as *const c_char;
         let key_str = skyline::from_c_str(str_ptr);
         println!("Transitioning to scene: '{}'", key_str);
@@ -453,12 +453,12 @@ pub fn main() {
         utils::init();
     }
 
-    #[cfg(feature = "main_nro")]
-    {
-        if !is_on_ryujinx() {
-            setup_hid_hdr();
-        }
-    }
+    // #[cfg(feature = "main_nro")]
+    // {
+    //     if !is_on_ryujinx() {
+    //         setup_hid_hdr();
+    //     }
+    // }
 
     fighters::install();
 
@@ -474,34 +474,34 @@ pub fn main() {
     }
 }
 
-#[cfg(feature = "main_nro")]
-pub fn setup_hid_hdr() {
-    let status = hid_hdr::get_hid_hdr_status().unwrap();
-    match status {
-        hid_hdr::Status::NotConnected => {
-            if !hid_hdr::connect_to_hid_hdr() {
-                hid_hdr::warn_unable_to_connect("troubleshooting", "HDR", "discord.gg/hdr");
-                return;
-            }
+// #[cfg(feature = "main_nro")]
+// pub fn setup_hid_hdr() {
+//     let status = hid_hdr::get_hid_hdr_status().unwrap();
+//     match status {
+//         hid_hdr::Status::NotConnected => {
+//             if !hid_hdr::connect_to_hid_hdr() {
+//                 hid_hdr::warn_unable_to_connect("troubleshooting", "HDR", "discord.gg/hdr");
+//                 return;
+//             }
 
-            let status = hid_hdr::get_hid_hdr_status().unwrap();
-            match status {
-                hid_hdr::Status::Ok => {
-                    hid_hdr::configure_stick_gate_changes(true).unwrap();
-                }
-                other => {
-                    hid_hdr::warn_status(other, "troubleshooting", "HDR", "discord.gg/hdr");
-                }
-            }
-        }
-        hid_hdr::Status::Ok => {
-            panic!("Should not be possible yet");
-        }
-        other => {
-            hid_hdr::warn_status(other, "troubleshooting", "HDR", "discord.gg/hdr");
-        }
-    }
-}
+//             let status = hid_hdr::get_hid_hdr_status().unwrap();
+//             match status {
+//                 hid_hdr::Status::Ok => {
+//                     hid_hdr::configure_stick_gate_changes(true).unwrap();
+//                 }
+//                 other => {
+//                     hid_hdr::warn_status(other, "troubleshooting", "HDR", "discord.gg/hdr");
+//                 }
+//             }
+//         }
+//         hid_hdr::Status::Ok => {
+//             panic!("Should not be possible yet");
+//         }
+//         other => {
+//             hid_hdr::warn_status(other, "troubleshooting", "HDR", "discord.gg/hdr");
+//         }
+//     }
+// }
 
 #[cfg(feature = "main_nro")]
 pub fn quick_validate_install() {
