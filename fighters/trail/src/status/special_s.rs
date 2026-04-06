@@ -434,7 +434,11 @@ unsafe extern "C" fn special_s_attack_main_loop(fighter: &mut L2CFighterCommon) 
     // Reduce speed on shield
     if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD | *COLLISION_KIND_MASK_PARRY)
     && !fighter.is_in_hitlag() {
-        let shield_hit_end_speed_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.shield_hit_end_speed_x");
+        let shield_hit_end_speed_x = if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
+            ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.shield_hit_ground_end_speed_x")
+        } else {
+            ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.shield_hit_air_end_speed_x")
+        };
         let lr = PostureModule::lr(fighter.module_accessor);
         sv_kinetic_energy!(
             set_speed,
