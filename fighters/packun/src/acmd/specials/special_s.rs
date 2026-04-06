@@ -248,6 +248,9 @@ unsafe extern "C" fn sound_specialsshoots(agent: &mut L2CAgentBase) {
     }
     wait(lua_state, 3.0);
     if is_excute(agent) {
+        if WorkModule::get_int(boma, *FIGHTER_PACKUN_INSTANCE_WORK_ID_INT_SPECIAL_S_COUNT) == 60 {
+            PLAY_SE(agent, Hash40::new("se_packun_smash_h02"));
+        }
         PLAY_SE(agent, Hash40::new("se_packun_attackhard_s04"));
     }
 }
