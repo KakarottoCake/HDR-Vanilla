@@ -418,6 +418,14 @@ unsafe fn scene_transition(
     call_original!(list_ptr, key_struct, context_struct, factory);
 }
 
+extern "C" {
+    #[link_name = "_ZN2nn5prepo10PlayReport4SaveERKNS_7account3UidE"]
+    fn save_report(uid: *mut u8);
+}
+
+#[skyline::hook(replace = save_report)]
+fn save_report_stub(uid: *mut u8) { }
+
 #[skyline::main(name = "hdr")]
 pub fn main() {
     #[cfg(feature = "main_nro")]
@@ -432,6 +440,7 @@ pub fn main() {
         matchup::install();
         skyline::patching::Patch::in_text(0x14f99cc).nop().unwrap();
         skyline::patching::Patch::in_text(0x1509fd4).nop().unwrap();
+        unlock_menu_music();
         skyline::install_hooks!(
             training_reset_music1,
             training_reset_music2,
@@ -440,6 +449,7 @@ pub fn main() {
             sss_to_css,
             css_to_sss,
             scene_transition,
+            save_report_stub,
             //copy_fighter_info,
             //load_ingame_call_sequence_scene,
             //load_melee_scene,
@@ -614,4 +624,12 @@ pub fn quick_validate_install() {
     }
 
     println!("simple validation complete.");
+}
+
+fn unlock_menu_music() {
+    if std::path::Path::new("sd:/ultimate/hdr-config/unlock_menu_music").exists() {
+        println!("WARNING: potentially bannable operation in effect!");
+        skyline::patching::Patch::in_text(0x184de0c).nop().unwrap();
+        skyline::patching::Patch::in_text(0x184de10).data(0x390bbb9fu32).unwrap();
+    }
 }
