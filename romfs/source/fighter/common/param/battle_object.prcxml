@@ -25,7 +25,8 @@
   <float hash="just_shield_reflect_attack_mul">1.0</float>
   <float hash="just_shield_reflect_speed_mul">1.0</float>
   <float hash="just_shield_reflect_life_mul">1</float>
-  <int hash="just_shield_reflect_count_max">999</int>
+  <int hash="just_shield_reflect_count_max">99</int>
+  <int hash="reflect_count_max">99</int>
   <float hash="rebound_reaction_mul">0.3</float>
   <float hash="rebound_reaction_add">2.0</float>
   <float hash="rebound_power_diff">6.0</float>

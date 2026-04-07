@@ -85,9 +85,6 @@ unsafe extern "C" fn game_appealsr(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     FT_MOTION_RATE_RANGE(agent, 1.0, 18.0, 11.0);
-    if is_excute(agent) {
-        JostleModule::set_team(boma, 1);
-    }
     frame(lua_state, 18.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
@@ -144,9 +141,6 @@ unsafe extern "C" fn game_appealsl(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     FT_MOTION_RATE_RANGE(agent, 1.0, 18.0, 11.0);
-    if is_excute(agent) {
-        JostleModule::set_team(boma, 1);
-    }
     frame(lua_state, 18.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {

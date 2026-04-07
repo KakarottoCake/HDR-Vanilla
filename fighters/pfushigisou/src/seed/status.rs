@@ -92,6 +92,18 @@ pub unsafe extern "C" fn update_rot(weapon: &mut L2CWeaponCommon) {
     PostureModule::set_rot(weapon.module_accessor, &Vector3f::new(0.0, 0.0, angle - 90.0), 0);
 }
 
+unsafe extern "C" fn move_end(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    let owner_boma = weapon.get_owner_boma();
+    if owner_boma.kind() == *FIGHTER_KIND_PFUSHIGISOU {
+        VarModule::off_flag(owner_boma.object(), vars::pfushigisou::instance::SPECIAL_N_SEED_FIRED);
+    }
+    else if owner_boma.kind() == *FIGHTER_KIND_KIRBY {
+        VarModule::off_flag(owner_boma.object(), vars::kirby::instance::SPECIAL_N_PFUSHIGISOU_SEED_FIRED);
+    }
+
+    return 0.into();
+}
+
 // unsafe extern "C" fn clash_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
 //     StatusModule::init_settings(
 //         weapon.module_accessor,
@@ -156,6 +168,7 @@ pub unsafe extern "C" fn clash_ground_main_loop(weapon: &mut L2CWeaponCommon) ->
 pub fn install(agent: &mut Agent) {
     agent.status(Main, *WEAPON_PFUSHIGISOU_SEED_STATUS_KIND_MOVE, move_main);
     agent.status(Init, *WEAPON_PFUSHIGISOU_SEED_STATUS_KIND_MOVE, move_init);
+    agent.status(End, *WEAPON_PFUSHIGISOU_SEED_STATUS_KIND_MOVE, move_end);
 
     agent.status(Main, *WEAPON_PFUSHIGISOU_SEED_STATUS_KIND_CLASH, clash_main);
 

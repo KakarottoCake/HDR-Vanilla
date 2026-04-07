@@ -93,19 +93,26 @@ hitbox_templates! {
         extends: PHYSICAL_PROJECTILE_HITBOX,
         absorbable: true,
     };
-    pub BASE_SEARCHBOX = {
+    pub BASE_WINDBOX = {
         extends: BASE_HITBOX,
+        clank: SetOff::Off,
+        facing: LrCheck::F,
+        flinchless: true,
+        disable_hitlag: true,
+        direct: false,
+        category: CollisionCategory::all().difference(CollisionCategory::FLOOR),
+        effect: "collision_attr_normal",
+        sound_level: SoundLevel::S,
+        hit_sound: CollisionSound::None,
+        region: AttackRegion::None,
+    };
+    pub BASE_SEARCHBOX = {
+        extends: BASE_WINDBOX,
         dmg: 0.0,
         angle: 361,
         kbg: 0,
         fkb: 0,
         bkb: 0,
-        clank: SetOff::Off,
-        direct: false,
-        category: CollisionCategory::all().difference(CollisionCategory::FLOOR),
         effect: "collision_attr_search",
-        sound_level: SoundLevel::S,
-        hit_sound: CollisionSound::None,
-        region: AttackRegion::None,
     };
 }
