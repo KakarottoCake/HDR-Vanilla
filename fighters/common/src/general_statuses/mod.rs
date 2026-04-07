@@ -38,6 +38,7 @@ mod lasso;
 mod itemthrow;
 mod fallspecial;
 mod squat;
+mod cliffrobbed;
 mod mewtwo_thrown;
 mod dived;
 
@@ -1145,6 +1146,7 @@ pub fn install() {
     itemthrow::install();
     fallspecial::install();
     squat::install();
+    cliffrobbed::install();
     mewtwo_thrown::install();
     dived::install();
 
