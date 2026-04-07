@@ -227,6 +227,9 @@ unsafe extern "C" fn effect_specialsshoots(agent: &mut L2CAgentBase) {
         if agent.is_situation(*SITUATION_KIND_GROUND) {
             LANDING_EFFECT(agent, Hash40::new("sys_action_smoke_h"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         }
+        if WorkModule::get_int(boma, *FIGHTER_PACKUN_INSTANCE_WORK_ID_INT_SPECIAL_S_COUNT) == 60 {
+            EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_unblockable_flash"), Hash40::new("sys_unblockable_flash"), Hash40::new("top"), 7, 18, -5, 0, 0, 0, 0.8, true, *EF_FLIP_YZ);
+        }
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {
