@@ -601,14 +601,13 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 22.0); // 37, stall for a bit
     if is_excute(agent) {
-        KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY); // fall 2f before drift
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_STOP);
     }
     frame(lua_state, 24.0); // 40
     if is_excute(agent) {
         agent.off_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_KEEP);
         agent.on_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_CHECK_END);
         agent.set_int(*FIGHTER_BAYONETTA_SHOOTING_STEP_WAIT_END, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SHOOTING_STEP);
-        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
     }
     frame(lua_state, 24.66); // 41
     if is_excute(agent) {
@@ -620,6 +619,7 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 26.0); // 43
     if is_excute(agent) {
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES); //  (12 after)
     }
     frame(lua_state, 28.0); // 49 FAF
