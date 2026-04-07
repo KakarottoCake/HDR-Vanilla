@@ -7,6 +7,7 @@ mod attacks3;
 mod special_hi;
 mod special_n;
 mod special_s;
+mod landing;
 
 unsafe extern "C" fn use_special_lw_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
     if VarModule::get_int(fighter.battle_object, vars::duckhunt::instance::SPECIAL_LW_GUNMAN_TIMER) != 0 {
@@ -39,4 +40,5 @@ pub fn install(agent: &mut Agent) {
     special_hi::install(agent);
     special_n::install(agent);
     special_s::install(agent);
+    landing::install(agent);
 }

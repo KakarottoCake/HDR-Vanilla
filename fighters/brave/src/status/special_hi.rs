@@ -99,6 +99,7 @@ unsafe extern "C" fn special_hi_jump_end(fighter: &mut L2CFighterCommon) -> L2CV
     if fighter.is_motion_one_of(&[Hash40::new("special_hi1"), Hash40::new("special_air_hi1")]) {
         VarModule::on_flag(fighter.battle_object, vars::brave::instance::SPECIAL_HI_ENABLE_FREEFALL);
         VarModule::on_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_CANCEL);
+        VarModule::on_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_LAG);
     }
 
     ret
