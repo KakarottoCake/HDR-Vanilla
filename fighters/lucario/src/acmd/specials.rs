@@ -361,9 +361,6 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 8.0);
     FT_MOTION_RATE_RANGE(agent, 8.0, 21.0, 16.0);
-    if is_excute(agent) {
-        boma.on_flag(*FIGHTER_LUCARIO_MACH_STATUS_WORK_ID_FLAG_GRAVITY_ONOFF);
-    }
     frame(lua_state, 21.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
