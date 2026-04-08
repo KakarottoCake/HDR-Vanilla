@@ -117,13 +117,13 @@ unsafe fn command_grab_joint_rotate(boma: &mut BattleObjectModuleAccessor, rotat
 
 unsafe fn alolan_whip_special_grabs(fighter: &mut L2CFighterCommon) {
     if fighter.is_motion_one_of(&[Hash40::new("special_s_start"), Hash40::new("special_air_s_start")]) {
-        if VarModule::is_flag(fighter.object(), vars::gaogaen::instance::SPECIAL_S_ALTERNATE_GRAB) {
+        if VarModule::is_flag(fighter.object(), vars::gaogaen::status::SPECIAL_S_ALTERNATE_GRAB) {
             // OTG Grab
-            if VarModule::is_flag(fighter.object(), vars::gaogaen::instance::SPECIAL_S_LOW_GRAB) {
+            if VarModule::is_flag(fighter.object(), vars::gaogaen::status::SPECIAL_S_LOW_GRAB) {
                 command_grab_joint_rotate(fighter.boma(), 20.0, 14.0, 19.0, 31.0, 46.0);
             }
             // Anti-air grab
-            else if VarModule::is_flag(fighter.object(), vars::gaogaen::instance::SPECIAL_S_HIGH_GRAB) {
+            else if VarModule::is_flag(fighter.object(), vars::gaogaen::status::SPECIAL_S_HIGH_GRAB) {
                 command_grab_joint_rotate(fighter.boma(), -50.0, 14.0, 19.0, 31.0, 46.0);
             }
         }
