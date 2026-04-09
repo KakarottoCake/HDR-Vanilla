@@ -30,7 +30,8 @@ unsafe extern "C" fn game_specialsstart(agent: &mut L2CAgentBase) {
         if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_ALTERNATE_GRAB) {
             // Spawn the special windboxes if performing OTG grab
             if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_LOW_GRAB) {
-                ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 70, 100, 1, 0, 4.0, 0.0, 4.0, 2.0, Some(0.0), Some(4.0), Some(5.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, true, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
+                let offset = if agent.is_situation(*SITUATION_KIND_GROUND) { 4.0 } else { 3.0 };
+                ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 70, 100, 1, 0, 4.0, 0.0, offset, 2.0, Some(0.0), Some(offset), Some(5.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, true, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
                 AttackModule::set_down_only(boma, 0, true);
             }
         }
@@ -45,10 +46,10 @@ unsafe extern "C" fn game_specialsstart(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_ALTERNATE_GRAB) {
             // Spawn the air grab/OTG grab box
-            let (size_high, size_low, collision_mask) = if agent.is_situation(*SITUATION_KIND_GROUND)
-                { (5.5, 4.0, *COLLISION_SITUATION_MASK_GA) } else { (3.5, 3.5, *COLLISION_SITUATION_MASK_G) };
+            let (low_offset, size_high, collision_mask) = if agent.is_situation(*SITUATION_KIND_GROUND)
+                { (4.0, 5.5, *COLLISION_SITUATION_MASK_GA) } else { (3.0, 3.5, *COLLISION_SITUATION_MASK_G) };
             if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_LOW_GRAB) {
-                CATCH(agent, 0, Hash40::new("top"), size_low, 0.0, 4.0, 2.0, Some(0.0), Some(4.0), Some(8.0), *FIGHTER_STATUS_KIND_SWING_GAOGAEN_CATCHED, collision_mask);
+                CATCH(agent, 0, Hash40::new("top"), 4.0, 0.0, low_offset, 2.0, Some(0.0), Some(low_offset), Some(8.0), *FIGHTER_STATUS_KIND_SWING_GAOGAEN_CATCHED, collision_mask);
             }
             else if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_HIGH_GRAB) {
                 CATCH(agent, 0, Hash40::new("top"), size_high, 0.0, 15.0, 0.0, Some(0.0), Some(15.0), Some(6.0), *FIGHTER_STATUS_KIND_SWING_GAOGAEN_CATCHED, *COLLISION_SITUATION_MASK_A);
@@ -114,39 +115,14 @@ unsafe extern "C" fn effect_specialsstart(agent: &mut L2CAgentBase) {
         if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_ALTERNATE_GRAB) {
             // OTG grab
             if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_LOW_GRAB) {
-                EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("bust"), 0.0, 0, 0, 0, 0, 0, 0.25, true);
-                LAST_EFFECT_SET_RATE(agent, 0.5);
-                
-                EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("arml"), 1.0, 0, 0, 0, 0, 0, 0.3, true);
-                LAST_EFFECT_SET_RATE(agent, 0.5);
-                EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("arml"), 7.0, 0, 0, 0, 0, 0, 0.35, true);
-                LAST_EFFECT_SET_RATE(agent, 0.5);
-
-                EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("armr"), 1.0, 0, 0, 0, 0, 0, 0.3, true);
-                LAST_EFFECT_SET_RATE(agent, 0.5);
-                EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("armr"), 7.0, 0, 0, 0, 0, 0, 0.35, true);
-                LAST_EFFECT_SET_RATE(agent, 0.5);
-
-                EFFECT_FOLLOW(agent, Hash40::new("gaogaen_belt_fire_appeal"), Hash40::new("feeler"), 0, 3, 0, 0, 0, 0, 0.7, true);
-                LAST_EFFECT_SET_RATE(agent, 1.1);
+                EFFECT_FOLLOW(agent, Hash40::new("gaogaen_belt_fire_appeal"), Hash40::new("feeler"), 0, 3, 0, 0, 0, 0, 0.6, true);
+                LAST_EFFECT_SET_RATE(agent, 1.5);
             }
             // Anti-air grab
             else if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_HIGH_GRAB) {
-                EFFECT_FOLLOW(agent, Hash40::new("sys_damage_aura"), Hash40::new("bust"), 0.0, 0, 0, 0, 0, 0, 0.25, true);
-                LAST_EFFECT_SET_RATE(agent, 0.5);
-                EFFECT_FOLLOW(agent, Hash40::new("sys_damage_aura"), Hash40::new("arml"), 1.0, 0, 0, 0, 0, 0, 0.3, true);
-                LAST_EFFECT_SET_RATE(agent, 0.5);
-                EFFECT_FOLLOW(agent, Hash40::new("sys_damage_aura"), Hash40::new("arml"), 7.0, 0, 0, 0, 0, 0, 0.35, true);
-                LAST_EFFECT_SET_RATE(agent, 0.5);
-
-                EFFECT_FOLLOW(agent, Hash40::new("sys_damage_aura"), Hash40::new("armr"), 1.0, 0, 0, 0, 0, 0, 0.3, true);
-                LAST_EFFECT_SET_RATE(agent, 0.5);
-                EFFECT_FOLLOW(agent, Hash40::new("sys_damage_aura"), Hash40::new("armr"), 7.0, 0, 0, 0, 0, 0, 0.35, true);
-                LAST_EFFECT_SET_RATE(agent, 0.5);
-
-                EFFECT_FOLLOW(agent, Hash40::new("gaogaen_belt_fire_appeal"), Hash40::new("feeler"), 0, 3, 0, 0, 0, 0, 0.7, true);
+                EFFECT_FOLLOW(agent, Hash40::new("gaogaen_belt_fire_appeal"), Hash40::new("feeler"), 0, 3, 0, 0, 0, 0, 0.6, true);
                 LAST_EFFECT_SET_COLOR(agent, 0.25, 0.5, 3.0);
-                LAST_EFFECT_SET_RATE(agent, 1.1);
+                LAST_EFFECT_SET_RATE(agent, 1.5);
             }
         }
     }
@@ -159,29 +135,6 @@ unsafe extern "C" fn effect_specialsstart(agent: &mut L2CAgentBase) {
         if is_excute(agent) {
             if agent.is_situation(*SITUATION_KIND_GROUND) {
                 FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-            }
-            // OTG/Anti-air grab effects
-            if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_ALTERNATE_GRAB) {
-                // OTG grab
-                if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_LOW_GRAB) {
-                    EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("bust"), 0.0, 0, 0, 0, 0, 0, 0.25, true);
-                    
-                    EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("arml"), 1.0, 0, 0, 0, 0, 0, 0.3, true);
-                    EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("arml"), 7.0, 0, 0, 0, 0, 0, 0.35, true);
-
-                    EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("armr"), 1.0, 0, 0, 0, 0, 0, 0.3, true);
-                    EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("armr"), 7.0, 0, 0, 0, 0, 0, 0.35, true);
-                }
-                // Anti-air grab
-                else if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_HIGH_GRAB) {
-                    EFFECT_FOLLOW(agent, Hash40::new("sys_damage_aura"), Hash40::new("bust"), 0.0, 0, 0, 0, 0, 0, 0.3, true);
-
-                    EFFECT_FOLLOW(agent, Hash40::new("sys_damage_aura"), Hash40::new("arml"), 1.0, 0, 0, 0, 0, 0, 0.35, true);
-                    EFFECT_FOLLOW(agent, Hash40::new("sys_damage_aura"), Hash40::new("arml"), 7.0, 0, 0, 0, 0, 0, 0.4, true);
-        
-                    EFFECT_FOLLOW(agent, Hash40::new("sys_damage_aura"), Hash40::new("armr"), 1.0, 0, 0, 0, 0, 0, 0.35, true);
-                    EFFECT_FOLLOW(agent, Hash40::new("sys_damage_aura"), Hash40::new("armr"), 7.0, 0, 0, 0, 0, 0, 0.4, true);
-                }
             }
         }
         wait(lua_state, 2.0);
@@ -214,78 +167,10 @@ unsafe extern "C" fn effect_specialsthrow(agent: &mut L2CAgentBase) {
     frame(lua_state, 4.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_catch"), Hash40::new("sys_catch"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.9, true, *EF_FLIP_YZ);
-        // OTG/Anti-air grab effects
-        if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_ALTERNATE_GRAB) {
-            // OTG grab
-            if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_LOW_GRAB) {
-                EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("bust"), 0.0, 0, 0, 0, 0, 0, 0.25, true);
-                
-                EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("arml"), 1.0, 0, 0, 0, 0, 0, 0.3, true);
-                EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("arml"), 7.0, 0, 0, 0, 0, 0, 0.35, true);
-
-                EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("armr"), 1.0, 0, 0, 0, 0, 0, 0.3, true);
-                EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("armr"), 7.0, 0, 0, 0, 0, 0, 0.35, true);
-            }
-            // Anti-air grab
-            else if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_HIGH_GRAB) {
-                EFFECT_FOLLOW(agent, Hash40::new("sys_damage_aura"), Hash40::new("bust"), 0.0, 0, 0, 0, 0, 0, 0.3, true);
-
-                EFFECT_FOLLOW(agent, Hash40::new("sys_damage_aura"), Hash40::new("arml"), 1.0, 0, 0, 0, 0, 0, 0.35, true);
-                EFFECT_FOLLOW(agent, Hash40::new("sys_damage_aura"), Hash40::new("arml"), 7.0, 0, 0, 0, 0, 0, 0.4, true);
-    
-                EFFECT_FOLLOW(agent, Hash40::new("sys_damage_aura"), Hash40::new("armr"), 1.0, 0, 0, 0, 0, 0, 0.35, true);
-                EFFECT_FOLLOW(agent, Hash40::new("sys_damage_aura"), Hash40::new("armr"), 7.0, 0, 0, 0, 0, 0, 0.4, true);
-            }
-        }
-    }
-    frame(lua_state, 22.0);
-    if is_excute(agent) {
-        if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_ALTERNATE_GRAB) {
-            // OTG grab
-            if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_LOW_GRAB) {
-                EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 14, -8, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, true);
-                LAST_EFFECT_SET_RATE(agent, 0.6);
-                LAST_EFFECT_SET_COLOR(agent, 3.0, 0.5, 0.5);
-            }
-            else {
-                EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 14, -8, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, true);
-                LAST_EFFECT_SET_RATE(agent, 0.6);
-                LAST_EFFECT_SET_COLOR(agent, 0.5, 1.0, 3.0);
-            }
-        }
     }
     frame(lua_state, 31.0);
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), -2, 0, 0, 0, 180, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
-    }
-    frame(lua_state, 32.0);
-    for _ in 0..4 {
-        if is_excute(agent) {
-            // OTG/Anti-air grab effects
-            if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_ALTERNATE_GRAB) {
-                // OTG grab
-                if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_LOW_GRAB) {
-                    EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("bust"), 0.0, 0, 0, 0, 0, 0, 0.25, true);
-                    
-                    EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("arml"), 1.0, 0, 0, 0, 0, 0, 0.3, true);
-                    EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("arml"), 7.0, 0, 0, 0, 0, 0, 0.35, true);
-
-                    EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("armr"), 1.0, 0, 0, 0, 0, 0, 0.3, true);
-                    EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("armr"), 7.0, 0, 0, 0, 0, 0, 0.35, true);
-                }
-                // Anti-air grab
-                else if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_HIGH_GRAB) {
-                    EFFECT_FOLLOW(agent, Hash40::new("sys_damage_aura"), Hash40::new("bust"), 0.0, 0, 0, 0, 0, 0, 0.3, true);
-
-                    EFFECT_FOLLOW(agent, Hash40::new("sys_damage_aura"), Hash40::new("arml"), 1.0, 0, 0, 0, 0, 0, 0.35, true);
-                    EFFECT_FOLLOW(agent, Hash40::new("sys_damage_aura"), Hash40::new("arml"), 7.0, 0, 0, 0, 0, 0, 0.4, true);
-        
-                    EFFECT_FOLLOW(agent, Hash40::new("sys_damage_aura"), Hash40::new("armr"), 1.0, 0, 0, 0, 0, 0, 0.35, true);
-                    EFFECT_FOLLOW(agent, Hash40::new("sys_damage_aura"), Hash40::new("armr"), 7.0, 0, 0, 0, 0, 0, 0.4, true);
-                }
-            }
-        }
-        wait(lua_state, 4.0);
     }
 }
 
@@ -294,40 +179,24 @@ unsafe extern "C" fn game_specialslariat(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     if is_excute(agent) {
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 11.99);
-        // OTG/Anti-air grab throw boxes
-        if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_ALTERNATE_GRAB) {
-            // OTG grab
-            if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_LOW_GRAB) {
-                ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 0.0, 15, 0, 0, 80, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
-            }
-            // Anti-air grab
-            else if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_HIGH_GRAB) {
-                ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 0.0, 80, 10, 0, 100, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
-            }
+        if agent.is_flag(*FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_IS_REVENGE) 
+        || agent.is_situation(*SITUATION_KIND_AIR) {
+            ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 0.0, 145, 474, 0, 20, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         }
-        // Regular grab
-        else{
-            ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 0.0, 145, 474, 0, 20, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        else {
+            ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 0.0, 179, 0, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         }
         AttackModule::set_force_reaction(boma, 0, true, true);
         WorkModule::set_float(boma, 9.0, *FIGHTER_GAOGAEN_STATUS_SPECIAL_S_FLOAT_LARIAT_HIT_FRAME);
     }
     frame(lua_state, 9.0);
     if is_excute(agent) {
-        // OTG/Anti-air grab hitboxes
-        if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_ALTERNATE_GRAB) {
-            // OTG grab
-            if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_LOW_GRAB) {
-                ATTACK(agent, 0, 0, Hash40::new("arml"), 15.0, 15, 0, 0, 80, 7.0, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, true, 2, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
-            }
-            // Anti-air grab
-            else if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_HIGH_GRAB) {
-                ATTACK(agent, 0, 0, Hash40::new("arml"), 15.0, 105, 35, 0, 88, 7.0, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 2, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
-            }
+        if agent.is_flag(*FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_IS_REVENGE)
+        || agent.is_situation(*SITUATION_KIND_AIR) {
+            ATTACK(agent, 0, 0, Hash40::new("top"), 20.0, 145, 40, 0, 88, 7.0, 0.0, 8.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 50, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
         }
-        // Regular grab
-        else{
-            ATTACK(agent, 0, 0, Hash40::new("arml"), 20.0, 145, 40, 0, 88, 7.0, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 2, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
+        else {
+            ATTACK(agent, 0, 0, Hash40::new("top"), 17.0, 105, 34, 0, 88, 7.0, 0.0, 8.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 10, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
         }
     }
     frame(lua_state, 14.0);
@@ -335,76 +204,7 @@ unsafe extern "C" fn game_specialslariat(agent: &mut L2CAgentBase) {
         WorkModule::on_flag(boma, *FIGHTER_GAOGAEN_STATUS_SPECIAL_S_FLAG_DAMAGE_CUT);
     }
     frame(lua_state, 20.0);
-    if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_LOW_GRAB)
-    || VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_HIGH_GRAB) {
-        FT_MOTION_RATE_RANGE(agent, 20.0, 50.0, 26.0);
-    }
-    if is_excute(agent) {
-        AttackModule::clear_all(boma);
-        REVERSE_LR(agent);
-    }
-    frame(lua_state, 50.0);
-    FT_MOTION_RATE(agent, 1.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_GAOGAEN_STATUS_SPECIAL_S_FLAG_ENABLE_GRAVITY);
-    }
-    frame(lua_state, 58.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_GAOGAEN_STATUS_SPECIAL_S_WORK_ID_FLAG_AIR_CONTROL);
-        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
-    }
-}
-
-unsafe extern "C" fn game_specialairslariat(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    if is_excute(agent) {
-        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 11.99);
-        // OTG/Anti-air grab throw boxes
-        if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_ALTERNATE_GRAB) {
-            // OTG grab
-            if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_LOW_GRAB) {
-                ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 0.0, 15, 0, 0, 80, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
-            }
-            // Anti-air grab
-            else if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_HIGH_GRAB) {
-                ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 0.0, 80, 10, 0, 100, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
-            }
-        }
-        // Regular grab
-        else{
-            ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 0.0, 145, 474, 0, 20, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
-        }
-        AttackModule::set_force_reaction(boma, 0, true, true);
-        WorkModule::set_float(boma, 9.0, *FIGHTER_GAOGAEN_STATUS_SPECIAL_S_FLOAT_LARIAT_HIT_FRAME);
-    }
-    frame(lua_state, 9.0);
-    if is_excute(agent) {
-        // OTG/Anti-air grab hitboxes
-        if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_ALTERNATE_GRAB) {
-            // OTG grab
-            if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_LOW_GRAB) {
-                ATTACK(agent, 0, 0, Hash40::new("arml"), 15.0, 15, 0, 0, 80, 7.0, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, true, 2, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
-            }
-            // Anti-air grab
-            else if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_HIGH_GRAB) {
-                ATTACK(agent, 0, 0, Hash40::new("arml"), 15.0, 105, 35, 0, 88, 7.0, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 2, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
-            }
-        }
-        // Regular grab
-        else{
-            ATTACK(agent, 0, 0, Hash40::new("arml"), 20.0, 145, 40, 0, 88, 7.0, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 2, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
-        }
-    }
-    frame(lua_state, 14.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_GAOGAEN_STATUS_SPECIAL_S_FLAG_DAMAGE_CUT);
-    }
-    frame(lua_state, 20.0);
-    if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_LOW_GRAB)
-    || VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_HIGH_GRAB) {
-        FT_MOTION_RATE_RANGE(agent, 20.0, 50.0, 26.0);
-    }
+    FT_MOTION_RATE_RANGE(agent, 20.0, 50.0, 23.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
         REVERSE_LR(agent);
@@ -426,20 +226,7 @@ unsafe extern "C" fn game_specialsshoulder(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     if is_excute(agent) {
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 11.99);
-        if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_ALTERNATE_GRAB) {
-            // OTG grab
-            if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_LOW_GRAB) {
-                ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 0.0, 179, 0, 0, 80, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
-            }
-            // Anti-air grab
-            else if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_HIGH_GRAB) {
-                ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 0.0, 103, 10, 0, 90, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
-            }
-        }
-        // Regular grab
-        else{
-            ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 0.0, 100, 100, 0, 72, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
-        }
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 0.0, 98, 68, 0, 68, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         AttackModule::set_force_reaction(boma, 0, true, true);
     }
     frame(lua_state, 1.0);
@@ -447,21 +234,7 @@ unsafe extern "C" fn game_specialsshoulder(agent: &mut L2CAgentBase) {
     frame(lua_state, 10.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
-        // OTG/Anti-air grab hitboxes
-        if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_ALTERNATE_GRAB) {
-            // OTG grab
-            if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_LOW_GRAB) {
-                ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 105, 34, 0, 128, 6.0, 0.0, 6.0, 0.0, None, None, None, 0.4, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 1, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BODY);
-            }
-            // Anti-air grab
-            else if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_HIGH_GRAB) {
-                ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 105, 34, 0, 128, 6.0, 0.0, 6.0, 0.0, None, None, None, 0.4, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 1, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BODY);
-            }
-        }
-        // Regular grab
-        else{
-            ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 105, 34, 0, 128, 6.0, 0.0, 6.0, 0.0, None, None, None, 0.4, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 1, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
-        }
+        ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 98, 34, 0, 128, 9.0, 0.0, 10.0, -5.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 10, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BODY);
     }
     frame(lua_state, 18.0);
     if is_excute(agent) {
@@ -476,72 +249,7 @@ unsafe extern "C" fn game_specialsshoulder(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_GAOGAEN_STATUS_SPECIAL_S_FLAG_ENABLE_GRAVITY);
     }
-    frame(lua_state, 45.0);
-    if is_excute(agent) {
-        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
-    }
-    frame(lua_state, 52.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_GAOGAEN_STATUS_SPECIAL_S_WORK_ID_FLAG_AIR_CONTROL);
-    }
-}
-
-unsafe extern "C" fn game_specialairsshoulder(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    if is_excute(agent) {
-        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 11.99);
-        if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_ALTERNATE_GRAB) {
-            // OTG grab
-            if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_LOW_GRAB) {
-                ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 0.0, 179, 0, 0, 80, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
-            }
-            // Anti-air grab
-            else if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_HIGH_GRAB) {
-                ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 0.0, 103, 10, 0, 90, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
-            }
-        }
-        // Regular grab
-        else{
-            ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 0.0, 100, 100, 0, 72, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
-        }
-        AttackModule::set_force_reaction(boma, 0, true, true);
-    }
-    frame(lua_state, 1.0);
-    FT_MOTION_RATE(agent, 0.75);
-    frame(lua_state, 10.0);
-    FT_MOTION_RATE(agent, 1.0);
-    if is_excute(agent) {
-        // OTG/Anti-air grab hitboxes
-        if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_ALTERNATE_GRAB) {
-            // OTG grab
-            if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_LOW_GRAB) {
-                ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 105, 34, 0, 128, 6.0, 0.0, 6.0, 0.0, None, None, None, 0.4, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 1, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BODY);
-            }
-            // Anti-air grab
-            else if VarModule::is_flag(boma.object(), vars::gaogaen::instance::SPECIAL_S_HIGH_GRAB) {
-                ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 105, 34, 0, 128, 6.0, 0.0, 6.0, 0.0, None, None, None, 0.4, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 1, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_aura"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BODY);
-            }
-        }
-        // Regular grab
-        else{
-            ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 105, 34, 0, 128, 6.0, 0.0, 6.0, 0.0, None, None, None, 0.4, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 1, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
-        }
-    }
-    frame(lua_state, 18.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_GAOGAEN_STATUS_SPECIAL_S_FLAG_DAMAGE_CUT);
-    }
-    frame(lua_state, 20.0);
-    if is_excute(agent) {
-        AttackModule::clear_all(boma);
-        REVERSE_LR(agent);
-    }
-    frame(lua_state, 42.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_GAOGAEN_STATUS_SPECIAL_S_FLAG_ENABLE_GRAVITY);
-    }
-    frame(lua_state, 45.0);
+    frame(lua_state, 43.0);
     if is_excute(agent) {
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
     }
@@ -563,8 +271,8 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("effect_specialairsthrow", effect_specialsthrow, Priority::Low);
 
     agent.acmd("game_specialslariat", game_specialslariat, Priority::Low);
-    agent.acmd("game_specialairslariat", game_specialairslariat, Priority::Low);
+    agent.acmd("game_specialairslariat", game_specialslariat, Priority::Low);
     
     agent.acmd("game_specialsshoulder", game_specialsshoulder, Priority::Low);
-    agent.acmd("game_specialairsshoulder", game_specialairsshoulder, Priority::Low);
+    agent.acmd("game_specialairsshoulder", game_specialsshoulder, Priority::Low);
 }
