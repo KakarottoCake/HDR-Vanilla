@@ -721,6 +721,13 @@ unsafe fn status_module__change_status(status_module: *const u64, status_kind_ne
 
     if (*boma).is_fighter() {
         JostleModule::set_overlap_rate_mul(boma, 1.0);
+
+        let inflict_status = AttackModule::get_inflict_status(boma);
+        VarModule::set_int(
+            (*boma).object(),
+            vars::common::instance::PREV_STATUS_INFLICT_STATUS,
+            inflict_status
+        );
     }
 
     if (*boma).is_fighter()

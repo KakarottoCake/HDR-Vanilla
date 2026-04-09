@@ -142,10 +142,18 @@ unsafe extern "C" fn special_s_dash_exec(fighter: &mut L2CFighterCommon) -> L2CV
             fighter.change_status(FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_WALL.into(), false.into());
         }
     }
+
+    // Skip to end on shield
+    if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD | *COLLISION_KIND_MASK_PARRY) {
+        fighter.change_status(FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_END.into(), false.into());
+        return 1.into();
+    }
+
     return smashline::original_status(Exec, fighter, *FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_DASH)(fighter);
 }
 
 // FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_FAIL
+
 pub unsafe extern "C" fn special_s_fail_init(fighter: &mut L2CFighterCommon) -> L2CValue {
     if (fighter.is_situation(*SITUATION_KIND_AIR))
     {
@@ -172,6 +180,7 @@ pub unsafe extern "C" fn special_s_fail_init(fighter: &mut L2CFighterCommon) -> 
     }
     0.into()
 }
+
 // FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_END
 
 unsafe extern "C" fn special_s_end_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -202,6 +211,24 @@ unsafe extern "C" fn special_s_end_pre(fighter: &mut L2CFighterCommon) -> L2CVal
     );
     
     0.into()
+}
+
+unsafe extern "C" fn special_s_end_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    // Reduce speed on shield
+    let prev_inflict_status = VarModule::get_int(fighter.battle_object, vars::common::instance::PREV_STATUS_INFLICT_STATUS);
+    if prev_inflict_status & *COLLISION_KIND_MASK_SHIELD | *COLLISION_KIND_MASK_PARRY != 0 {
+        let shield_hit_end_speed_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.shield_hit_end_speed_x");
+        let lr = PostureModule::lr(fighter.module_accessor);
+        sv_kinetic_energy!(
+            set_speed,
+            fighter,
+            FIGHTER_KINETIC_ENERGY_ID_STOP,
+            shield_hit_end_speed_x * lr,
+            0.0
+        );
+    }
+    
+    smashline::original_status(Main, fighter, *FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_END)(fighter)
 }
 
 // FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_WALL
@@ -372,6 +399,7 @@ pub fn install(agent: &mut Agent) {
     agent.status(Init, *FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_FAIL, special_s_fail_init);
 
     agent.status(Pre, *FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_END, special_s_end_pre);
+    agent.status(Main, *FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_END, special_s_end_main);
 
     agent.status(Pre, *FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_WALL, special_s_wall_pre);
     agent.status(Main, *FIGHTER_BUDDY_STATUS_KIND_SPECIAL_S_WALL, special_s_wall_main);
