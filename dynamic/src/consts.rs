@@ -801,12 +801,14 @@ pub mod vars {
     }
 
     pub mod gaogaen {
+        pub mod instance {
+            pub const SPECIAL_S_ALTERNATE_GRAB: i32 = 0x0100;
+            pub const SPECIAL_S_LOW_GRAB: i32 = 0x0101;
+            pub const SPECIAL_S_HIGH_GRAB: i32 = 0x0102;
+        }
         pub mod status {
             // flags
-            pub const SPECIAL_S_ALTERNATE_GRAB: i32 = 0x1100;
-            pub const SPECIAL_S_LOW_GRAB: i32 = 0x1101;
-            pub const SPECIAL_S_HIGH_GRAB: i32 = 0x1102;
-            pub const SPECIAL_HI_RISE_END: i32 = 0x1103;
+            pub const SPECIAL_HI_RISE_END: i32 = 0x1100;
 
             // floats
             pub const GRAB_STICK_Y: i32 = 0x1100;

@@ -117,13 +117,13 @@ unsafe fn command_grab_joint_rotate(boma: &mut BattleObjectModuleAccessor, rotat
 
 unsafe fn alolan_whip_special_grabs(fighter: &mut L2CFighterCommon) {
     if fighter.is_motion_one_of(&[Hash40::new("special_s_start"), Hash40::new("special_air_s_start")]) {
-        if VarModule::is_flag(fighter.object(), vars::gaogaen::status::SPECIAL_S_ALTERNATE_GRAB) {
+        if VarModule::is_flag(fighter.object(), vars::gaogaen::instance::SPECIAL_S_ALTERNATE_GRAB) {
             // OTG Grab
-            if VarModule::is_flag(fighter.object(), vars::gaogaen::status::SPECIAL_S_LOW_GRAB) {
+            if VarModule::is_flag(fighter.object(), vars::gaogaen::instance::SPECIAL_S_LOW_GRAB) {
                 command_grab_joint_rotate(fighter.boma(), 20.0, 14.0, 19.0, 31.0, 46.0);
             }
             // Anti-air grab
-            else if VarModule::is_flag(fighter.object(), vars::gaogaen::status::SPECIAL_S_HIGH_GRAB) {
+            else if VarModule::is_flag(fighter.object(), vars::gaogaen::instance::SPECIAL_S_HIGH_GRAB) {
                 command_grab_joint_rotate(fighter.boma(), -50.0, 14.0, 19.0, 31.0, 46.0);
             }
         }
@@ -193,24 +193,24 @@ unsafe fn cross_chop_ledgegrab(fighter: &mut L2CFighterCommon) {
 }
 
 unsafe fn jab_tilt_cancels(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
-    if CancelModule::is_enable_cancel(boma) 
-    || boma.is_in_hitlag() {
-        return;
+    if fighter.is_status(*FIGHTER_STATUS_KIND_ATTACK) {
+        if CancelModule::is_enable_cancel(boma)
+        || boma.is_in_hitlag() {
+            return;
+        }
+        if fighter.is_flag(*FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO)
+        && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) {
+            if boma.is_cat_flag(Cat1::AttackS3) && !boma.is_cat_flag(Cat1::AttackS4) {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_S3, false);
+            }
+            if boma.is_cat_flag(Cat1::AttackHi3) && !boma.is_cat_flag(Cat1::AttackHi4) {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_HI3, false);
+            }
+            if boma.is_cat_flag(Cat1::AttackLw3) && !boma.is_cat_flag(Cat1::AttackLw4) {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_LW3, false);
+            }
+        }
     }
-
-    if StatusModule::status_kind(boma) == *FIGHTER_STATUS_KIND_ATTACK 
-    && fighter.is_flag(*FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO) {
-        if boma.is_cat_flag(Cat1::AttackS3) && !boma.is_cat_flag(Cat1::AttackS4) {
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_S3,false);
-        }
-        if boma.is_cat_flag(Cat1::AttackHi3) && !boma.is_cat_flag(Cat1::AttackHi4) {
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_HI3,false);
-        }
-        if boma.is_cat_flag(Cat1::AttackLw3) && !boma.is_cat_flag(Cat1::AttackLw4) {
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_LW3,false);
-        }
-    }
-
 }
 
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
