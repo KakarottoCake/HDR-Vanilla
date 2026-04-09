@@ -201,6 +201,18 @@
 		],
 		"fighter/palutena/cmn": [
 			"fighter/palutena/param/hdr.xml"
+		],
+		"fighter/brave/cmn": [
+			"fighter/brave/param/hdr.xml"
+		],
+		"fighter/elight/cmn": [
+			"fighter/elight/param/hdr.xml"
+		],
+		"fighter/murabito/cmn": [
+			"fighter/murabito/param/hdr.xml"
+		],
+		"fighter/shizue/cmn": [
+			"fighter/shizue/param/hdr.xml"
 		]
 	}
 }

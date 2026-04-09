@@ -221,10 +221,10 @@ unsafe fn update_player_tag(arg1: u64, tag_index: *const u8) {
 
 #[skyline::hook(offset = 0x1a2d440, inline)]
 unsafe fn css_advance_sfx_hook(ctx: &mut skyline::hooks::InlineCtx) {
-    // 0x1d581ede79 = hash40("se_common_spirits_reduction_s") // originally empty, replaced with se_campaign_all_encount_fighter
+    // 0x18d72a665a = hash40("se_system_amiibo_write_2") // original sound
     // 0x13d3b19adc = hash40("se_system_r2f_fixed") // original sound
     let param_1 = ctx.registers[0].x() as *mut u32;
-    let sfx = if NEW_CSS_SFX { 0x1d581ede79 as u64 } else { 0x13d3b19adc as u64 };
+    let sfx = if NEW_CSS_SFX { 0x18d72a665a as u64 } else { 0x13d3b19adc as u64 };
     play_se(param_1, sfx);
 }
 

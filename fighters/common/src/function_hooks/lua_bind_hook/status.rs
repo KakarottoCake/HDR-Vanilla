@@ -72,7 +72,8 @@ unsafe fn init_settings_hook(boma: &mut BattleObjectModuleAccessor, mut situatio
             *FIGHTER_STATUS_KIND_CLIFF_WAIT]
         ) {
             let cliff_id = GroundModule::get_cliff_id_uint32(boma);
-            VarModule::set_int(boma.object(), vars::common::instance::LEDGE_ID, cliff_id as i32);
+            VarModule::set_int(boma.object(), vars::common::instance::OCCUPIED_LEDGE_ID, cliff_id as i32);
+            VarModule::set_int(boma.object(), vars::common::instance::OCCUPIED_LEDGE_ID_FOR_TETHERS, cliff_id as i32);
         }
 
         // heavy item pickup should keep momentum and be affected by gravity in the air
@@ -194,7 +195,7 @@ unsafe fn change_status_request_hook(boma: &mut BattleObjectModuleAccessor, stat
                         continue;
                     }
     
-                    if VarModule::get_int(object, vars::common::instance::LEDGE_ID) == cliff_id as i32 {
+                    if VarModule::get_int(object, vars::common::instance::OCCUPIED_LEDGE_ID_FOR_TETHERS) == cliff_id as i32 {
                         next_status = *FIGHTER_STATUS_KIND_CLIFF_ROBBED;
                     }
                 }
@@ -295,8 +296,9 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
                     if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) == WorkModule::get_int(&mut *(*object).module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) {
                         continue;
                     }
-    
-                    if VarModule::get_int(object, vars::common::instance::LEDGE_ID) == cliff_id as i32 {
+                    if VarModule::get_int(object, vars::common::instance::OCCUPIED_LEDGE_ID_FOR_TETHERS) == cliff_id as i32 {
+                        // Prevent trumps while moving downward from sending the opponent downward
+                        KineticModule::clear_speed_all(boma);
                         next_status = *FIGHTER_STATUS_KIND_CLIFF_ROBBED;
                     }
                 }

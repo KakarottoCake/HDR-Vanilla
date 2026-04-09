@@ -484,8 +484,19 @@ unsafe fn calc_non_knockback_damage_mul(attacker_boma: &mut BattleObjectModuleAc
     };
     // dbg!(aura_mul);
 
+    // damage multiplier for pikmin
+    let pikmin_mul = if attacker_boma.is_weapon() && attacker_boma.kind() == *WEAPON_KIND_PIKMIN_PIKMIN {
+        let variation = WorkModule::get_int(attacker_boma, *WEAPON_PIKMIN_PIKMIN_INSTANCE_WORK_ID_INT_VARIATION);
+        let param = format!("param_pikmin_particular.{}.damage_mul", variation);
+        let battle_object = attacker_boma.get_owner_boma().object(); // olimar's battle object
+        ParamModule::get_float(battle_object, ParamType::Agent, &param)
+    } else {
+        1.0
+    };
+    // dbg!(pikmin_mul);
+
     // final multiplier
-    return pattern_mul * aura_mul;
+    return pattern_mul * aura_mul * pikmin_mul;
 }
 
 pub fn install() {

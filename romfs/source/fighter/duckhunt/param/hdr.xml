@@ -20,5 +20,6 @@
     <float hash="hi3_end_accel_x_mul">0.8</float>
     <int hash="hi1_can_angle">72</int>
     <int hash="hi2_can_angle">80</int>
+    <float hash="actionable_landing_frame">14</float>
   </struct>
 </struct>
