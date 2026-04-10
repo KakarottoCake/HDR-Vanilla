@@ -3,6 +3,7 @@ use super::*;
 use globals::*;
 use interpolation::Lerp;
 use utils::game_modes::CustomMode;
+use crate::function_hooks::camera::{REDUCED_CAMERA_TRACKING_SPEED, DEFAULT_TARGET_INTERPOLATION_RATE, ReducedCameraTrackingSpeed};
 
 macro_rules! interrupt {
     () => { return L2CValue::I32(1); };
@@ -37,6 +38,9 @@ mod lasso;
 mod itemthrow;
 mod fallspecial;
 mod squat;
+mod cliffrobbed;
+mod mewtwo_thrown;
+mod dived;
 
 // [LUA-REPLACE-REBASE]
 // [SHOULD-CHANGE]
@@ -83,11 +87,10 @@ pub unsafe fn status_pre_DamageAir(fighter: &mut L2CFighterCommon) -> L2CValue {
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_DamageFlyCommon_init)]
 pub unsafe fn damage_fly_common_init(fighter: &mut L2CFighterCommon) {
-    // ControlModule::set_command_life_extend(fighter.module_accessor, 5);
-    if VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_KNOCKDOWN_THROW) {
+    if VarModule::is_flag(fighter.battle_object, vars::common::instance::FORCE_TUMBLE_NO_BOUNCE) {
         WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DAMAGE_FLY_REFLECT_D);
     }
-    VarModule::off_flag(fighter.battle_object, vars::common::instance::IS_KNOCKDOWN_THROW);
+    VarModule::off_flag(fighter.battle_object, vars::common::instance::FORCE_TUMBLE_NO_BOUNCE);
     original!()(fighter)
 }
 
@@ -126,22 +129,38 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
             sub_fighter_pre_end_status,
             sub_is_dive,
             sub_calc_landing_motion_rate,
-            sub_landing_cancel_damage_face,
-            sub_air_check_fall_common,
-            check_damage_fall_transition
+            sub_landing_uniq_process_exit
         );
     }
 }
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_LandingStiffness)]
 pub unsafe fn status_LandingStiffness(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[PREV_STATUS_KIND] == FIGHTER_STATUS_KIND_DAMAGE_AIR
-    && VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_CC_NON_TUMBLE) {
-        // halve hitstun on non-tumble landing if CC'd
-        // if halved hitstun is less than your heavy landing lag value, use your heavy landing lag value
-        let hitstun = WorkModule::get_float(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DAMAGE_REACTION_FRAME);
-        WorkModule::set_float(fighter.module_accessor, hitstun * 0.5, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DAMAGE_REACTION_FRAME);
+    if fighter.global_table[PREV_STATUS_KIND] == FIGHTER_STATUS_KIND_DAMAGE_AIR {
+
+        // special conditions for RoA mode
+        if utils::game_modes::check_custom_mode(CustomMode::RivalsOfAetherMode) {
+            if !VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_CC_NON_TUMBLE) {
+                // Reduce buffer out of non-CCd non-tumble hitstun landing
+                let damage_level3_precede = ParamModule::get_int(fighter.battle_object, ParamType::Common, "damage_level3_precede");
+                InputModule::set_command_life_count_max(fighter.battle_object, damage_level3_precede as u32);
+            }
+            return original!()(fighter);
+        }
+
+        if VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_CC_NON_TUMBLE) {
+            // halve hitstun on non-tumble landing if CC'd
+            // if halved hitstun is less than your heavy landing lag value, use your heavy landing lag value
+            let hitstun = WorkModule::get_float(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DAMAGE_REACTION_FRAME);
+            WorkModule::set_float(fighter.module_accessor, hitstun * 0.5, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DAMAGE_REACTION_FRAME);
+        }
+        else {
+            // Reduce buffer out of non-CCd non-tumble hitstun landing
+            let damage_level3_precede = ParamModule::get_int(fighter.battle_object, ParamType::Common, "damage_level3_precede");
+            InputModule::set_command_life_count_max(fighter.battle_object, damage_level3_precede as u32);
+        }
     }
+
     original!()(fighter)
 }
 
@@ -150,7 +169,7 @@ pub unsafe fn FL_get_LandingStiffness(fighter: &mut L2CFighterCommon) -> L2CValu
     let land_cancel_lag = VarModule::get_float(fighter.battle_object, vars::common::instance::LAND_CANCEL_LAG);
     if land_cancel_lag != 0.0 {
         VarModule::set_float(fighter.battle_object, vars::common::instance::LAND_CANCEL_LAG, 0.0);
-        
+
         // "landing stiffness" logic does not support values greater than your landing_heavy animation length
         // so we must manually extend your landing animation
         // if our defined landing lag value > landing_heavy animation length
@@ -164,7 +183,7 @@ pub unsafe fn FL_get_LandingStiffness(fighter: &mut L2CFighterCommon) -> L2CValu
         // Coupled with "landing_heavy" change in change_motion hook
         // Because we start heavy landing anims on f3 rather than f1, we need to increase this value by 2 frames so it is accurate to the defined landing lag value
         let landing_lag = land_cancel_lag + 2.0;
-        
+
         return landing_lag.into();
     }
 
@@ -208,9 +227,7 @@ pub unsafe fn sub_landing_fall_special_init(fighter: &mut L2CFighterCommon, arg2
     // When a special fall LL value isn't defined
     // the game puts you in 30f of LL
     if landing_frame == 0.0 {
-        // Increase this default value to 32f
-        // to account for input lag
-        WorkModule::set_float(fighter.module_accessor, 32.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
+        WorkModule::set_float(fighter.module_accessor, 30.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
     }
 
     original!()(fighter, arg2)
@@ -226,36 +243,6 @@ pub unsafe fn status_Landing_MainSub(fighter: &mut L2CFighterCommon) -> L2CValue
         ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE);
         ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE_F);
         ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE_B);
-    }
-
-
-    if fighter.global_table[PREV_STATUS_KIND] == FIGHTER_STATUS_KIND_DAMAGE_AIR {
-        let cancel_frame = WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_LANDING_WORK_FLOAT_STIFFNESS_FRAME);
-        if !VarModule::is_flag(fighter.battle_object, vars::common::instance::IS_CC_NON_TUMBLE)
-        && MotionModule::frame(fighter.module_accessor) >= cancel_frame - 1.0 {
-            // Reduce buffer out of non-CCd non-tumble hitstun landing
-            let precede = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("precede"));
-            let damage_level3_precede = ParamModule::get_int(fighter.battle_object, ParamType::Common, "damage_level3_precede");
-            let dif = precede - damage_level3_precede;
-            ControlModule::set_command_life_extend(fighter.module_accessor, u8::MAX - dif as u8);
-        }
-    }
-
-    if fighter.global_table[PREV_STATUS_KIND] == FIGHTER_STATUS_KIND_DOWN {
-        let down_sfx = [
-            Hash40::new("se_common_down_soil_s"),
-            Hash40::new("se_common_down_m_01"),
-            Hash40::new("se_common_down_l_01"),
-            Hash40::new("se_demon_down"),
-            Hash40::new("se_dolly_down01"),
-    
-        ];
-    
-        for x in down_sfx.iter() {
-            if SoundModule::is_playing(fighter.module_accessor, *x) {
-                SoundModule::stop_se(fighter.module_accessor, *x, 3);
-            }
-        }
     }
 
     // </HDR>
@@ -422,16 +409,6 @@ unsafe fn sub_transition_group_check_air_escape(fighter: &mut L2CFighterCommon) 
         }
     }
 
-    // Input lag forgiveness mechanic:
-    // Ignore airdodge inputs during your first 2 airborne frames
-    // after slipping off an edge within the first 2 frames of knockdown
-    let prev_status_transition_frame = VarModule::get_int(fighter.battle_object, vars::common::instance::PREV_STATUS_TRANSITION_FRAME);
-    if fighter.global_table[PREV_STATUS_KIND] == FIGHTER_STATUS_KIND_DOWN
-    && prev_status_transition_frame + fighter.global_table[CURRENT_FRAME].get_i32() <= 2 {
-        ControlModule::clear_command_one(fighter.module_accessor, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_AIR_ESCAPE);
-        return false.into();
-    }
-
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
         let cat1 = fighter.global_table[CMD_CAT1].get_i32();
 
@@ -483,6 +460,29 @@ unsafe fn sub_transition_group_check_ground_guard(fighter: &mut L2CFighterCommon
         if callable(fighter).get_bool() {
             return true.into();
         }
+    }
+
+    // special conditions for RoA mode
+    if utils::game_modes::check_custom_mode(CustomMode::RivalsOfAetherMode) {
+        // Cannot parry if using shield lock (for convenience)
+        let guard_hold = fighter.check_guard_hold().get_bool();
+        if guard_hold {
+            return false.into();
+        }
+        // Parry input
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON) {
+            if fighter.sub_check_command_parry().get_bool()  {
+                VarModule::on_flag(fighter.object(), vars::common::instance::IS_PARRY_FOR_GUARD_OFF);
+                fighter.change_status(FIGHTER_STATUS_KIND_GUARD_OFF.into(), false.into());
+                return true.into();
+            }
+            // C-Stick rolls
+            if fighter.sub_check_command_guard().get_bool()
+            && shield::misc::check_cstick_escape_oos(fighter, true).get_bool() {
+                return true.into();
+            }
+        }
+        return false.into();
     }
 
     if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON) {
@@ -624,7 +624,7 @@ pub unsafe fn super_jump_punch_main_hook(fighter: &mut L2CFighterCommon) {
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_MOVE_TRANS) {
             if fighter.global_table[PREV_SITUATION_KIND] == SITUATION_KIND_AIR
             && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND
-            && MotionModule::trans_move_speed(fighter.module_accessor).value[1] < 0.0
+            && MotionModule::trans_move_speed(fighter.module_accessor).y() < 0.0
             {
                 fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
             }
@@ -657,7 +657,7 @@ pub unsafe fn super_jump_punch_uniq(fighter: &mut L2CFighterCommon, arg2: L2CVal
                 if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_MOVE_TRANS)
                 && KineticModule::get_kinetic_type(fighter.module_accessor) != *FIGHTER_KINETIC_TYPE_AIR_STOP {
                     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-                    
+
                     let speed_x_mul = WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_MOVE_TRANS_END_SPEED_X_MUL);
                     let speed_y_mul = WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_MOVE_TRANS_END_SPEED_Y_MUL);
 
@@ -836,17 +836,19 @@ unsafe extern "C" fn get_gravity_factor(fighter: &mut L2CFighterCommon) -> f32 {
     0.8.lerp(&1.0, &scalar)
 }
 
-// calculates launch angle factor
-// "compares the length of the vector to the corner of the screen, to the length of the kb vector" -JOB
-unsafe extern "C" fn get_angle_factor(angle_threshold: f32, angle: f32) -> f32 {
-    let angle_threshold = angle_threshold.to_radians();
-    let angle = (90.0 - ((angle % 180.0).abs() - 90.0).abs()).to_radians();
-    if angle <= angle_threshold { return 1.0; }
+// Calculates launch angle ratio
+// Needed to determine your launch-angle-dependent threshold at which
+// knockback speedup begins
+unsafe extern "C" fn get_angle_ratio(angle_threshold: f32, angle: f32) -> f32 {
+    let angle_relative = (90.0 - ((angle % 180.0).abs() - 90.0).abs());
 
-    // magic JOB math
-    let angle_factor = ((angle_threshold.cos().powf(2.0) / 640.0_f32.powf(2.0)) + (angle_threshold.sin().powf(2.0) / 360.0_f32.powf(2.0))).sqrt()
-        / ((angle.cos().powf(2.0) / 640.0_f32.powf(2.0)) + (angle.sin().powf(2.0) / 360.0_f32.powf(2.0))).sqrt();
-    return angle_factor;
+    let ratio = if angle_relative <= angle_threshold {
+        0.0
+    } else {
+        (angle_relative - angle_threshold) / (90.0 - angle_threshold)
+    };
+
+    return ratio
 }
 
 unsafe extern "C" fn check_damage_speed_up_fail(fighter: &mut L2CFighterCommon) -> bool {
@@ -855,9 +857,9 @@ unsafe extern "C" fn check_damage_speed_up_fail(fighter: &mut L2CFighterCommon) 
         return true;
     }
     let log = log as *mut u8;
-    return *log.add(0x8f) != 0 
+    return *log.add(0x8f) != 0
         || *log.add(0x92) != 0
-        || *log.add(0x93) != 0 
+        || *log.add(0x93) != 0
         || *log.add(0x98) != 0;
 }
 
@@ -869,16 +871,16 @@ unsafe extern "C" fn fighterstatusdamage_init_damage_speed_up_by_speed(
 ) {
     let angle = angle.get_f32();
     let angle_threshold = 29.358;
-    let speed_start_horizontal = 3.8; // the start of scaling at angles below the angle_threshold
+    let speed_start_horizontal = 3.1; // the start of scaling at angles below the angle_threshold
     let gravity_factor = get_gravity_factor(fighter);
-    let speed_start_vertical = 6.2 * gravity_factor; // the start of scaling at completely vertical angles
-    let speed_end = 7.2; // the end of scaling
+    let speed_start_vertical = 5.7 * gravity_factor; // the start of scaling at completely vertical angles
+    let speed_end_horizontal = 6.2; // the end of scaling at angles below the angle_threshold
+    let speed_end_vertical = speed_end_horizontal + (speed_start_vertical - speed_start_horizontal); // the end of scaling at completely vertical angles
 
-    // calculate true speed_start using angle
-    let angle_factor = get_angle_factor(angle_threshold, angle); // the actual angle factor
-    let ratio_base = get_angle_factor(angle_threshold, 90.0); // the max angle factor
-    let ratio = (1.0 - angle_factor) / (1.0 - ratio_base);
-    let speed_start = speed_start_horizontal.lerp(&speed_start_vertical, &ratio);
+    let angle_ratio = get_angle_ratio(angle_threshold, angle);
+
+    let speed_start = speed_start_horizontal.lerp(&speed_start_vertical, &angle_ratio);
+    let speed_end = speed_end_horizontal.lerp(&speed_end_vertical, &angle_ratio);
 
     // exit if speed is too slow
     let speed = factor.get_f32();
@@ -891,7 +893,7 @@ unsafe extern "C" fn fighterstatusdamage_init_damage_speed_up_by_speed(
 
     // calculate speed_up_mul
     let min_mul = 1.25;
-    let max_mul = 1.6;
+    let max_mul = 1.65;
     let power = 1.0;
     let ratio = ((speed - speed_start) / (speed_end - speed_start));
     let speed_up_mul = if speed <= speed_end {
@@ -906,15 +908,56 @@ unsafe extern "C" fn fighterstatusdamage_init_damage_speed_up_by_speed(
     WorkModule::set_float(fighter.module_accessor, speed_up_mul, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DAMAGE_SPEED_UP_MAX_MAG);
 }
 
+unsafe extern "C" fn fighterstatusdamage_init_damage_camera_tracking(
+    fighter: &mut L2CFighterCommon,
+    factor: L2CValue, // Labeled this way because if shot out of a tornado, the game will pass in your hitstun frames instead of speed.
+    angle: L2CValue
+) {
+    if fighter.kind() == *FIGHTER_KIND_NANA {
+        return;
+    }
+
+    let angle = angle.get_f32();
+    let angle_threshold = 45.0;
+    let speed_start_horizontal = 3.0; // the start of camera tracking speed reduction at angles below the angle_threshold
+    let gravity_factor = get_gravity_factor(fighter);
+    let speed_start_vertical = 6.0 * gravity_factor; // the start of camera tracking speed reduction at completely vertical angles
+    let speed_end_horizontal = 6.25; // the end of camera tracking speed reduction at angles below the angle_threshold
+    let speed_end_vertical = speed_start_vertical + 7.0; // the end of camera tracking speed reduction at completely vertical angles
+
+    let angle_ratio = get_angle_ratio(angle_threshold, angle);
+
+    let speed_start = speed_start_horizontal.lerp(&speed_start_vertical, &angle_ratio);
+    let speed_end = speed_end_horizontal.lerp(&speed_end_vertical, &angle_ratio);
+
+    // exit if speed is too slow
+    let speed = factor.get_f32();
+    if check_damage_speed_up_fail(fighter) || speed <= speed_start {
+        return;
+    }
+
+    // calculate target_interpolation_rate
+    let base = 0.69;
+    let reduced = 0.125;
+    let ratio = ((speed - speed_start) / (speed_end - speed_start));
+    let target_interpolation_rate: f32 = if speed <= speed_end {
+        base.lerp(&reduced, &ratio)
+    } else {
+        reduced
+    };
+
+    //println!("speed: {} rate: {}", speed, target_interpolation_rate);
+
+    let id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let reaction_frame_mul_speed_up = fighter.reaction_frame_mul_speed_up().get_f32();
+    let dif = DEFAULT_TARGET_INTERPOLATION_RATE - target_interpolation_rate;
+    REDUCED_CAMERA_TRACKING_SPEED[id] = ReducedCameraTrackingSpeed{target_interpolation_rate: target_interpolation_rate, normalize_increment: (dif / reaction_frame_mul_speed_up) * 0.5};
+}
+
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_FighterStatusDamage__correctDamageVector)]
 pub unsafe fn FighterStatusDamage__correctDamageVector(fighter: &mut L2CFighterCommon) -> L2CValue {
-    match utils::game_modes::get_custom_mode() {
-        Some(modes) => {
-            if modes.contains(&CustomMode::Smash64Mode) {
-                return 0.into();
-            }
-        },
-        _ => {}
+    if utils::game_modes::check_custom_mode(CustomMode::Smash64Mode) {
+        return 0.into();
     }
     let ret = call_original!(fighter);
 
@@ -930,18 +973,15 @@ pub unsafe fn FighterStatusDamage__correctDamageVector(fighter: &mut L2CFighterC
 
     fighterstatusdamage_init_damage_speed_up_by_speed(fighter, speed_vector.into(), angle.into(), false.into());
 
+    fighterstatusdamage_init_damage_camera_tracking(fighter, speed_vector.into(), angle.into());
+
     ret
 }
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_FighterStatusDamage__correctDamageVectorEffect)]
 pub unsafe fn FighterStatusDamage__correctDamageVectorEffect(fighter: &mut L2CFighterCommon, param_1: L2CValue) -> L2CValue {
-    match utils::game_modes::get_custom_mode() {
-        Some(modes) => {
-            if modes.contains(&CustomMode::Smash64Mode) {
-                return 0.into();
-            }
-        },
-        _ => {}
+    if utils::game_modes::check_custom_mode(game_modes::CustomMode::Smash64Mode) {
+        return 0.into();
     }
     if fighter.global_table[STATUS_KIND_INTERRUPT] != FIGHTER_STATUS_KIND_DAMAGE_AIR {
         return call_original!(fighter, param_1);
@@ -1048,7 +1088,7 @@ pub unsafe fn sub_is_dive(fighter: &mut L2CFighterCommon) -> L2CValue {
         fighter.clear_lua_stack();
         lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
         app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
-        
+
         fighter.clear_lua_stack();
         lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
         app::sv_kinetic_energy::enable(fighter.lua_state_agent);
@@ -1070,151 +1110,10 @@ unsafe fn sub_calc_landing_motion_rate(_fighter: &mut L2CFighterCommon, end_fram
     ratio.into()
 }
 
-// This runs within FIGHTER_STATUS_KIND_LANDING's end status
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_landing_cancel_damage_face)]
-pub unsafe fn sub_landing_cancel_damage_face(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_landing_uniq_process_exit)]
+pub unsafe fn sub_landing_uniq_process_exit(fighter: &mut L2CFighterCommon) -> L2CValue {
     VarModule::off_flag(fighter.battle_object, vars::common::instance::IS_CC_NON_TUMBLE);
-    ControlModule::set_command_life_extend(fighter.module_accessor, 0);
-    
-    original!()(fighter)
-}
-
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_air_check_fall_common)]
-pub unsafe fn sub_air_check_fall_common(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let frame_in_air = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_FRAME_IN_AIR);
-
-    if fighter.global_table[STATUS_KIND] == FIGHTER_STATUS_KIND_FALL
-    && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_AIR
-    && frame_in_air <= 2 {
-        // Input lag forgiveness mechanic:
-        // Allow teching during your first 2 airborne frames
-        // after slipping off an edge within the first 2 frames of knockdown
-        let prev_status_transition_frame = VarModule::get_int(fighter.battle_object, vars::common::instance::PREV_STATUS_TRANSITION_FRAME);
-
-        if fighter.global_table[PREV_STATUS_KIND] == FIGHTER_STATUS_KIND_DOWN
-        && prev_status_transition_frame + fighter.global_table[CURRENT_FRAME].get_i32() <= 2 {
-            let trigger_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("passive_trigger_frame"));
-
-            if fighter.sub_check_passive_button_for_damage(L2CValue::I32(trigger_frame)).get_bool() {
-                let passive_fb_cont_value = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("passive_fb_cont_value"));
-
-                if fighter.global_table[STICK_X].get_f32().abs() >= passive_fb_cont_value {
-                    // Re-ground your fighter at their last grounded position
-                    // and enter tech roll
-                    let last_grounded_pos = VarModule::get_vec3(fighter.battle_object, vars::common::instance::LAST_GROUNDED_POS);
-
-                    PostureModule::set_pos(fighter.module_accessor, &last_grounded_pos);
-                    GroundModule::attach_ground(fighter.module_accessor, false);
-
-                    StatusModule::set_situation_kind(fighter.module_accessor, SituationKind(*SITUATION_KIND_GROUND), false);
-                    fighter.global_table[PREV_SITUATION_KIND].assign(&L2CValue::I32((*SITUATION_KIND_GROUND)));
-                    fighter.global_table[SITUATION_KIND].assign(&L2CValue::I32(*SITUATION_KIND_GROUND));
-
-                    fighter.change_status(FIGHTER_STATUS_KIND_PASSIVE_FB.into(), true.into());
-
-                    return true.into();
-                }
-            }
-        }
-
-        // Input lag forgiveness mechanic:
-        // Prevent unintended inputs after slipping off an edge near the end of grounded knockback speed
-        // during first 2 airborne frames
-        let mut damage_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_DAMAGE) as *mut app::KineticEnergy;
-        let damage_speed_x = app::lua_bind::KineticEnergy::get_speed_x(damage_energy);
-
-        if damage_speed_x != 0.0
-        && damage_speed_x.abs() < 0.75 {
-            // If your last grounded state was actionable
-            if fighter.global_table[PREV_STATUS_KIND] == FIGHTER_STATUS_KIND_WAIT
-            || VarModule::is_flag(fighter.battle_object, vars::common::instance::WAS_PREV_STATUS_CANCELABLE) {
-                fighter.sub_wait_ground_check_common_pre();
-
-                fighter.global_table[SITUATION_KIND].assign(&L2CValue::I32(*SITUATION_KIND_GROUND));
-                if fighter.sub_wait_ground_check_common(L2CValue::Bool(false)).get_bool() {
-                    // Re-ground your fighter at their last grounded position
-                    // and enter the action you would have triggered had you been grounded
-                    let last_grounded_pos = VarModule::get_vec3(fighter.battle_object, vars::common::instance::LAST_GROUNDED_POS);
-
-                    PostureModule::set_pos(fighter.module_accessor, &last_grounded_pos);
-                    GroundModule::attach_ground(fighter.module_accessor, false);
-
-                    StatusModule::set_situation_kind(fighter.module_accessor, SituationKind(*SITUATION_KIND_GROUND), false);
-                    fighter.global_table[PREV_SITUATION_KIND].assign(&L2CValue::I32((*SITUATION_KIND_GROUND)));
-
-                    return true.into();
-                }
-                fighter.global_table[SITUATION_KIND].assign(&L2CValue::I32(*SITUATION_KIND_AIR));
-            }
-            else if [
-                *FIGHTER_STATUS_KIND_SQUAT,
-                *FIGHTER_STATUS_KIND_SQUAT_WAIT,
-                *FIGHTER_STATUS_KIND_SQUAT_F,
-                *FIGHTER_STATUS_KIND_SQUAT_B,
-                *FIGHTER_STATUS_KIND_SQUAT_RV
-            ].contains(&fighter.global_table[PREV_STATUS_KIND].get_i32()) {
-                WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_SPECIAL);
-                WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_ITEM);
-                WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_ATTACK);
-                WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_CATCH);
-                WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_GUARD);
-                WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_JUMP);
-                WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND);
-                WorkModule::unable_transition_term_group_ex(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN);
-                WorkModule::unable_transition_term_group_ex(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_DASH);
-                WorkModule::unable_transition_term_group_ex(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT);
-                
-                fighter.global_table[SITUATION_KIND].assign(&L2CValue::I32(*SITUATION_KIND_GROUND));
-                if fighter.sub_squat_common_Main().get_bool() {
-                    let last_grounded_pos = VarModule::get_vec3(fighter.battle_object, vars::common::instance::LAST_GROUNDED_POS);
-
-                    PostureModule::set_pos(fighter.module_accessor, &last_grounded_pos);
-                    GroundModule::attach_ground(fighter.module_accessor, false);
-
-                    StatusModule::set_situation_kind(fighter.module_accessor, SituationKind(*SITUATION_KIND_GROUND), false);
-                    fighter.global_table[PREV_SITUATION_KIND].assign(&L2CValue::I32((*SITUATION_KIND_GROUND)));
-
-                    return true.into();
-                }
-                fighter.global_table[SITUATION_KIND].assign(&L2CValue::I32(*SITUATION_KIND_AIR));
-            }
-            else {
-                // If your last grounded state was was not actionable (e.g. in hitstun)
-                if fighter.sub_transition_group_check_air_landing().get_bool()
-                || fighter.sub_transition_group_check_air_cliff().get_bool() {
-                    return true.into();
-                }
-
-                // Ignore inputs during first 2 airborne frames
-                ControlModule::clear_command(fighter.module_accessor, false);
-
-                return false.into();
-            }
-        }
-    }
-    
-    original!()(fighter)
-}
-
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_check_damage_fall_transition)]
-pub unsafe fn check_damage_fall_transition(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let frame_in_air = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_FRAME_IN_AIR);
-
-    // Input lag forgiveness mechanic:
-    // Ignore inputs during the first 2 frames of tumble
-    // after slipping off an edge near the end of shieldstun
-    if fighter.global_table[SITUATION_KIND] == SITUATION_KIND_AIR
-    && frame_in_air <= 2 {
-        let mut damage_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_DAMAGE) as *mut app::KineticEnergy;
-        let damage_speed_x = app::lua_bind::KineticEnergy::get_speed_x(damage_energy);
-
-        if damage_speed_x != 0.0
-        && damage_speed_x.abs() < 0.75 {
-            ControlModule::clear_command(fighter.module_accessor, false);
-
-            return false.into();
-        }
-    }
+    InputModule::reset_command_life_count_max(fighter.battle_object);
 
     original!()(fighter)
 }
@@ -1247,6 +1146,9 @@ pub fn install() {
     itemthrow::install();
     fallspecial::install();
     squat::install();
+    cliffrobbed::install();
+    mewtwo_thrown::install();
+    dived::install();
 
     skyline::nro::add_hook(nro_hook);
 }

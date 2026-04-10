@@ -48,12 +48,12 @@
       <float hash="special_air_hi_start_x_mul">1.0</float>
       <float hash="special_hi_pass_mul">1.0</float>
       <float hash="special_air_hi_pass_mul">1.1</float>
-      <float hash="special_air_hi_accel_y">0.25</float>
+      <float hash="special_air_hi_accel_y">0.5</float>
       <float hash="special_hi_lr_stick_x">0.25</float>
       <float hash="special_hi_dir_stick_x">0.625</float>
-      <float hash="special_hi_dir_mul">16</float>
-      <float hash="special_hi_fall_x_mul">0.8</float>
-      <int hash="special_hi_landing_frame">20</int>
+      <float hash="special_hi_dir_mul">13</float>
+      <float hash="special_hi_fall_x_mul">0.6</float>
+      <int hash="special_hi_landing_frame">22</int>
       <int hash="hi2_hit_fall_frame">50</int>
       <float hash="hi2_hit_accel_y">0.07</float>
       <float hash="hi2_hit_fall_speed_y">-4.2</float>
@@ -70,11 +70,11 @@
       <float hash="special_air_hi_accel_y">0.25</float>
       <float hash="special_hi_lr_stick_x">0.25</float>
       <float hash="special_hi_dir_stick_x">0.625</float>
-      <float hash="special_hi_dir_mul">16</float>
+      <float hash="special_hi_dir_mul">13</float>
       <float hash="special_hi_fall_x_mul">0.8</float>
-      <int hash="special_hi_landing_frame">20</int>
+      <int hash="special_hi_landing_frame">22</int>
       <int hash="hi2_hit_fall_frame">50</int>
-      <int hash="lb_landing_frame">20</int>
+      <int hash="lb_landing_frame">22</int>
     </struct>
     <hash40 index="2">dummy</hash40>
     <hash40 index="3">dummy</hash40>
@@ -83,7 +83,6 @@
     <struct index="0">
       <int hash="critical_frame">36</int>
       <int hash="critical_slow_rate">8</int>
-      <int hash="limit_gauge_frame">45</int>
       <int hash="critical_zoom_in_frame">999</int>
       <float hash="limit_gauge_add">0.23</float>
       <int hash="limit_break_clear_frame">1200</int>

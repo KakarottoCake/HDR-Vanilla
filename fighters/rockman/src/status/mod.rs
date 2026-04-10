@@ -6,10 +6,12 @@ pub mod helper;
 mod rebirth;
 mod walk;
 mod attack;
+mod attack_hi3;
 mod attack_s3;
 mod attack_s4;
 mod attack_air;
 mod ladder_attack;
+mod landing;
 
 mod special_n;
 mod rockbuster;
@@ -68,8 +70,8 @@ pub fn install(agent: &mut Agent) {
     rebirth::install(agent);
     walk::install(agent);
     attack::install(agent);
+    attack_hi3::install(agent);
     attack_s3::install(agent);
-    attack_s4::install(agent);
     attack_s4::install(agent);
     attack_air::install(agent);
     ladder_attack::install(agent);
@@ -78,4 +80,5 @@ pub fn install(agent: &mut Agent) {
     special_s::install(agent);
     special_lw::install(agent);
     special_hi::install(agent);
+    landing::install(agent);
 }

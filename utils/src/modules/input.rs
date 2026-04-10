@@ -140,6 +140,7 @@ pub struct InputModule {
     hold_all_frame_max: i32,
     trigger_count: [usize; 32],
     release_count: [usize; 32],
+    command_life_count_max: i32,
 }
 
 impl InputModule {
@@ -164,7 +165,8 @@ impl InputModule {
             hold_all: false,
             hold_all_frame_max: -1,
             trigger_count: [usize::MAX; 32],
-            release_count: [usize::MAX; 32]
+            release_count: [usize::MAX; 32],
+            command_life_count_max: -1
         }
     }
 
@@ -414,6 +416,36 @@ impl InputModule {
         };
         return cats[category as usize].lifetimes_mut()[flag.trailing_zeros() as usize];
     }
+
+    #[export_name = "InputModule__set_command_life"]
+    pub fn set_command_life(object: *mut BattleObject, category: i32, flag: i32, life: u8) {
+        if category == 4 {
+            require_input_module!(object).hdr_cat.valid_frames[(flag.trailing_zeros() as usize)] = life;
+            return;
+        }
+
+        let cats = unsafe {
+            let control_module = *((*object).module_accessor as *const u64).add(0x48 / 8);
+            std::slice::from_raw_parts_mut((control_module + 0x568) as *mut CommandFlagCat, 4)
+        };
+        cats[category as usize].lifetimes_mut()[flag.trailing_zeros() as usize] = life;
+        return
+    }
+
+    /// Sets the global tap buffer lifetime
+    /// # Arguments
+    /// * `object` - Owning `BattleObject` instance
+    /// * `lifetime` - The maximum number of frames tap buffer is enabled for
+    #[export_name = "InputModule__set_command_life_count_max"]
+    pub fn set_command_life_count_max(object: *mut BattleObject, lifetime: u32) {
+        require_input_module!(object).command_life_count_max = lifetime as i32;
+    }
+
+    /// Resets the global tap buffer lifetime to its default value (`precede` param defined in common.prc)
+    #[export_name = "InputModule__reset_command_life_count_max"]
+    pub fn reset_command_life_count_max(object: *mut BattleObject) {
+        require_input_module!(object).command_life_count_max = -1;
+    }
 }
 
 #[repr(C)]
@@ -516,6 +548,21 @@ fn exec_internal(input_module: &mut InputModule, control_module: u64, call_origi
         ))
     };
 
+    // Allows us to control the length of tap buffer situationally
+    let control_module =
+        unsafe { *((*input_module.owner).module_accessor as *const u64).add(0x48 / 8) };
+    let inner_object = unsafe { *(control_module as *const u64).add(0x140 / 8) };
+    let command_life_max = unsafe { &mut *(inner_object as *mut u32).add(2) };
+    let tap_buffer = input_module.command_life_count_max;
+    let precede = unsafe {
+        if tap_buffer == -1 {
+            ParamModule::get_int(&mut (*input_module.owner), ParamType::Common, "precede")
+        } else {
+            tap_buffer
+        }
+    };
+    *command_life_max = precede as u32;
+
     unsafe {
         // Allow Aidou with only A button held
         // Also extends directional inputs for Tilt Stick Aidou
@@ -615,8 +662,20 @@ fn exec_internal(input_module: &mut InputModule, control_module: u64, call_origi
 
     // Parry cat flag
     let parry_input = unsafe {
-        ControlModule::check_button_on((*input_module.owner).module_accessor, 0x3) // CONTROL_PAD_BUTTON_GUARD
-        && (triggered_buttons.intersects(Buttons::Parry) || triggered_buttons.intersects(Buttons::ParryManual))
+        let mut parry_input = ControlModule::check_button_on((*input_module.owner).module_accessor, 0x3) // CONTROL_PAD_BUTTON_GUARD
+        && triggered_buttons.intersects(Buttons::Parry);
+
+        // guard always triggers parry for RoA mode
+        match super::super::game_modes::get_custom_mode() {
+            Some(modes) => {
+                if modes.contains(&utils_dyn::game_modes::CustomMode::RivalsOfAetherMode) {
+                    parry_input = parry_input || triggered_buttons.intersects(Buttons::Guard);
+                }
+            },
+            _ => {}
+        }
+
+        parry_input
     };
 
     let parry_offset = CatHdr::Parry.bits().trailing_zeros() as usize;
@@ -627,6 +686,22 @@ fn exec_internal(input_module: &mut InputModule, control_module: u64, call_origi
     if input_module.hdr_cat.valid_frames[parry_offset] != 0
     && !(parry_input && input_module.hdr_cat.valid_frames[parry_offset] == 1) {
         input_module.hdr_cat.valid_frames[parry_offset] -= 1;
+    }
+
+    // Footstool cat flag
+    let footstool_input = unsafe {
+        (*input_module.owner).is_situation(*SITUATION_KIND_AIR)
+        && triggered_buttons.intersects(Buttons::TreadJump) 
+    };
+
+    let footstool_offset = CatHdr::TreadJump.bits().trailing_zeros() as usize;
+    if footstool_input 
+    && input_module.hdr_cat.valid_frames[footstool_offset] == 0 {
+        input_module.hdr_cat.valid_frames[footstool_offset] = unsafe { ControlModule::get_command_life_count_max((*input_module.owner).module_accessor) as u8 };
+    }
+    if input_module.hdr_cat.valid_frames[footstool_offset] != 0
+    && !(footstool_input && input_module.hdr_cat.valid_frames[footstool_offset] == 1) {
+        input_module.hdr_cat.valid_frames[footstool_offset] -= 1;
     }
 
     call_original();

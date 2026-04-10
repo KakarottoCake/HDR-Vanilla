@@ -37,13 +37,9 @@
   </list>
   <list hash="param_special_s">
     <struct index="0">
-	  <!-->
-	    attack_num is set to 3.5 due to how we force the game to allow Sonic Blade to be angleable.
-	    We simply pretend that Sora is already on the second Sonic Blade.
-	  </!-->
       <float hash="end_brake_x">0.23</float>
-      <int hash="attack_num">4</int>
-      <float hash="attack_speed_x">4.5</float>
+      <int hash="attack_num">1</int>
+      <float hash="attack_speed_x">3.7</float>
       <float hash="0x15530d2d10">0.82</float>
     </struct>
     <hash40 index="1">dummy</hash40>
@@ -56,6 +52,7 @@
       <float hash="jump_accel_y">0.035</float>
       <float hash="fall_max_speed_x">0.6</float>
       <float hash="fall_special_max_speed_x_mul">0.6</float>
+      <int hash="landing_frame">28</int>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>

@@ -32,6 +32,7 @@ use smash_script::{
     *,
     macros::*
 };
+use smash_script::macros::ATTACK_ABS;
 use utils::{
     *,
     util::*,
@@ -46,6 +47,5 @@ pub fn install() {
     acmd::install(agent);
     opff::install(agent);
     status::install(agent);
-    vtable_hook::install(agent);
     agent.install();
 }
