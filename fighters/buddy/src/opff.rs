@@ -358,6 +358,7 @@ unsafe fn up_special_freefall(fighter: &mut L2CFighterCommon) {
     if fighter.is_prev_status(*FIGHTER_BUDDY_STATUS_KIND_SPECIAL_HI_JUMP) {
         if StatusModule::is_changing(fighter.module_accessor) {
             VarModule::on_flag(fighter.battle_object, vars::buddy::instance::SPECIAL_HI_ENABLE_FREEFALL);
+            VarModule::on_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_LAG);
         }
     }
     if fighter.is_status(*FIGHTER_BUDDY_STATUS_KIND_SPECIAL_HI_JUMP) {

@@ -19,6 +19,7 @@ mod ptrainer;
 mod reflet;
 mod rockman;
 mod shotos;
+mod shulk;
 
 mod miigunner_grenadelauncher;
 mod ryu_shinkuhadoken;
@@ -46,6 +47,7 @@ pub fn install() {
     reflet::install();
     rockman::install();
     shotos::install();
+    shulk::install();
 
     miigunner_grenadelauncher::install();
     ryu_shinkuhadoken::install();
