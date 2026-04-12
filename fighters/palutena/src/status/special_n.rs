@@ -347,7 +347,7 @@ unsafe extern "C" fn special_n_p_main_loop(fighter: &mut L2CFighterCommon) -> L2
     }
     fighter.sub_air_check_dive();
     if fighter.motion_frame() >= 18.0 {
-        fighter.check_land_cancel(Some(10.0));
+        fighter.check_land_cancel(Some(14.0));
     }
     if !StatusModule::is_changing(fighter.module_accessor)
     && StatusModule::is_situation_changed(fighter.module_accessor) {
