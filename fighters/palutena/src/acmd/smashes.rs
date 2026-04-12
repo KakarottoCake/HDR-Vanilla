@@ -97,7 +97,8 @@ unsafe extern "C" fn effect_attackhi4(agent: &mut L2CAgentBase) {
     frame(lua_state, 14.0);
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, -3, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, true);
-        EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light2_grey"), Hash40::new("stick"), 0, 8.65, 0, 0, 0, 0, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light4_grey"), Hash40::new("stick"), 0, 8.65, 0, 0, 0, 0, 1.4, true);
+        LAST_EFFECT_SET_RATE(agent, 6.0/11.0);
         LAST_EFFECT_SET_COLOR(agent, 0.025, 0.15, 0.95);
     }
     frame(lua_state, 16.0);
@@ -109,9 +110,15 @@ unsafe extern "C" fn effect_attackhi4(agent: &mut L2CAgentBase) {
         LAST_EFFECT_SET_RATE(agent, 1.1);
         LAST_EFFECT_SET_COLOR(agent, 0.025, 0.15, 0.95);
     }
-    frame(lua_state, 50.0);
+    frame(lua_state, 24.0);
     if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("palutena_wand_light2_grey"), false, false);
+        EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light4_grey"), Hash40::new("stick"), 0, 8.65, 0, 0, 0, 0, 1.4, true);
+        LAST_EFFECT_SET_RATE(agent, 6.0/11.0);
+        LAST_EFFECT_SET_COLOR(agent, 0.025, 0.15, 0.95);
+    }
+    frame(lua_state, 40.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("palutena_wand_light4_grey"), false, false);
     }
 }
 

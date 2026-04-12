@@ -52,7 +52,7 @@ unsafe extern "C" fn effect_specialn(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 11.0);
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("palutena_wand_finish_grey"), Hash40::new("top"), 0.0, 12.0, 10.0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, true);
+        EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_finish_grey"), Hash40::new("top"), 0.0, 12.5, 10.5, 0, 0, 0, 0.7, true);
         LAST_EFFECT_SET_COLOR(agent, 0.9, 0.9, 0.9);
         LAST_EFFECT_SET_RATE(agent, 1.1);
     }

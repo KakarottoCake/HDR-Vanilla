@@ -4,7 +4,9 @@ unsafe extern "C" fn game_attacks3(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    FT_MOTION_RATE_RANGE(agent, 1.0, 16.0, 13.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 9.0, 11.0);
+    frame(lua_state, 9.0);
+    FT_MOTION_RATE_RANGE(agent, 9.0, 16.0, 2.0);
     frame(lua_state, 16.0); // 14
     FT_MOTION_RATE_RANGE(agent, 16.0, 44.0, 20.0);
     if is_excute(agent) {

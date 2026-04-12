@@ -211,13 +211,16 @@ unsafe extern "C" fn effect_attackairhi(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light_trace_grey"), Hash40::new("stick"), 0, 8.65, 0, 0, 0, 0, 1, true);
         LAST_EFFECT_SET_COLOR(agent, 0.025, 0.15, 0.95);
-        EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light4_grey"), Hash40::new("stick"), 0, 8.65, 0, 0, 0, 0, 1.2, true);
-        LAST_EFFECT_SET_RATE(agent, 6.0/11.0);
-        LAST_EFFECT_SET_COLOR(agent, 0.025, 0.15, 0.95);
     }
     frame(lua_state, 7.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("palutena_backlight2_grey"), Hash40::new("top"), 0, 23, 0, 0, -90, 0, 1, true);
+        LAST_EFFECT_SET_COLOR(agent, 0.025, 0.15, 0.95);
+    }
+    frame(lua_state, 9.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("palutena_wand_light4_grey"), Hash40::new("stick"), 0, 8.65, 0, 0, 0, 0, 1.2, true);
+        LAST_EFFECT_SET_RATE(agent, 6.0/11.0);
         LAST_EFFECT_SET_COLOR(agent, 0.025, 0.15, 0.95);
     }
     frame(lua_state, 40.0);
