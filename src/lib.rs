@@ -629,7 +629,11 @@ pub fn quick_validate_install() {
 fn unlock_menu_music() {
     if std::path::Path::new("sd:/ultimate/hdr-config/unlock_menu_music").exists() {
         println!("WARNING: potentially bannable operation in effect!");
+        // Patch the My Music UI to always show menu music as selectable
         skyline::patching::Patch::in_text(0x184de0c).nop().unwrap();
         skyline::patching::Patch::in_text(0x184de10).data(0x390bbb9fu32).unwrap();
+        // Patch the BGM playback function to always use the player's My Music selection
+        // instead of defaulting to the standard menu theme.
+        skyline::patching::Patch::in_text(0x3311f94).data(0x320003e8u32).unwrap();
     }
 }
