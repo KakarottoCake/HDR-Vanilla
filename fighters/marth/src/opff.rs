@@ -51,20 +51,6 @@ pub unsafe fn dancing_blade_during_hitlag(fighter: &mut L2CFighterCommon) {
     }
 }
 
-unsafe fn dancing_blade_ledge_fix(fighter: &mut L2CFighterCommon) {
-    if StatusModule::is_changing(fighter.module_accessor)
-    && fighter.is_status_one_of(&[
-        *FIGHTER_STATUS_KIND_SPECIAL_S,
-        *FIGHTER_MARTH_STATUS_KIND_SPECIAL_S2,
-        *FIGHTER_MARTH_STATUS_KIND_SPECIAL_S3,
-        *FIGHTER_MARTH_STATUS_KIND_SPECIAL_S4
-    ]) {
-        // prevents marth from grabbing the ledge behind him for the *entire status*
-        let back_cliff_hangdata = fighter.get_back_cliff_hangdata();
-        fighter.set_back_cliff_hangdata(0.0, back_cliff_hangdata.y);
-    }
-}
-
 // Fixes weird vanilla behavior where touching ground during upB puts you into special fall for 1f before landing
 unsafe fn up_special_proper_landing(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_HI)
@@ -95,7 +81,6 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {
     dancing_blade_vertical_momentum(boma);
     dancing_blade_during_hitlag(fighter);
-    dancing_blade_ledge_fix(fighter);
     up_special_proper_landing(fighter);
     fastfall_specials(fighter);
 }
