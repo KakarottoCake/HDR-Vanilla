@@ -12,6 +12,7 @@ unsafe extern "C" fn game_attacks3(agent: &mut L2CAgentBase) {
     frame(lua_state, 15.0);
     FT_MOTION_RATE_RANGE(agent, 15.0, 16.0, 2.0);
     frame(lua_state, 15.5);
+    FT_MOTION_RATE(agent, 2.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("armr"), 13.0, 41, 90, 0, 35, 2.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         ATTACK(agent, 1, 0, Hash40::new("sword2"), 13.0, 41, 90, 0, 35, 3.5, 0.0, 0.0, -2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
@@ -20,8 +21,10 @@ unsafe extern "C" fn game_attacks3(agent: &mut L2CAgentBase) {
         AttackModule::set_attack_height_all(boma, app::AttackHeight(*ATTACK_HEIGHT_HIGH), false);
     }
     frame(lua_state, 16.0);
+    FT_MOTION_RATE(agent, 0.5);
+    frame(lua_state, 18.0);
     FT_MOTION_RATE(agent, 1.0);
-    frame(lua_state, 17.5);
+    frame(lua_state, 19.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }

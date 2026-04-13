@@ -127,7 +127,7 @@ attack_dash:
     cancel_frame: 42
 attack_s3_s:
   extra:
-    cancel_frame: 38
+    cancel_frame: 39
 appeal_hi_r:
   extra:
     cancel_frame: 90
