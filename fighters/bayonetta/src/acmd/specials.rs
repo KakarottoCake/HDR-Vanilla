@@ -400,10 +400,6 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     FT_MOTION_RATE_RANGE(agent, 1.0, 14.0, 7.0);
-    frame(lua_state, 6.0); // 4
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
-    }
     frame(lua_state, 14.0); // 8
     FT_MOTION_RATE_RANGE(agent, 14.0, 18.0, 6.0);
     if is_excute(agent) {
@@ -421,7 +417,6 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     frame(lua_state, 16.0); // 11
     if is_excute(agent) {
         AttackModule::clear_all(boma);
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
     }
     frame(lua_state, 18.0); // 14
     FT_MOTION_RATE(agent, 1.0);
@@ -461,7 +456,6 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     frame(lua_state, 30.46); // 27
     frame(lua_state, 31.15); // 28
     if is_excute(agent) {
-        KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         let prev_inflict_status = VarModule::get_int(agent.battle_object, vars::common::instance::PREV_STATUS_INFLICT_STATUS);
         if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT)
         || prev_inflict_status & *COLLISION_KIND_MASK_HIT != 0 {
@@ -470,7 +464,7 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 31.5); // 29
     if is_excute(agent) {
-        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_STOP);
     }
     frame(lua_state, 32.53); // 30
     if is_excute(agent) {
@@ -478,6 +472,9 @@ unsafe extern "C" fn game_specialhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 36.0); // 35
     FT_MOTION_RATE(agent, 1.0);
+    if is_excute(agent) {
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+    }
 }
 
 unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
@@ -485,13 +482,15 @@ unsafe extern "C" fn effect_specialhi(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 14.0);
     if is_excute(agent) {
-        FOOT_EFFECT(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, -0.5, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
+        if agent.is_situation(*SITUATION_KIND_GROUND) {
+            FOOT_EFFECT(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, -0.5, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
+        }
+    }
+    frame(lua_state, 15.0);
+    if is_excute(agent) {
         if agent.is_situation(*SITUATION_KIND_GROUND) {
             LANDING_EFFECT(agent, Hash40::new("sys_v_smoke_a"), Hash40::new("top"), 0, 0, -0.5, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
         }
-    }
-    frame(lua_state, 19.0);
-    if is_excute(agent) {
         EFFECT_FOLLOW_WORK(agent, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_EFFECT_KIND_BAYONETTA_WITCHTWIST_WIND, Hash40::new("top"), 0, 25.1, 0, 0, 0, 0, 0.84, true);
         LAST_EFFECT_SET_RATE(agent, 0.8);
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("bayonetta_afterburner_line2"), Hash40::new("top"), 0, 24.7, 0, -90, 0, 0, 0.82, true);
@@ -602,14 +601,13 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 22.0); // 37, stall for a bit
     if is_excute(agent) {
-        KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY); // fall 2f before drift
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_STOP);
     }
     frame(lua_state, 24.0); // 40
     if is_excute(agent) {
         agent.off_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_KEEP);
         agent.on_flag(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_CHECK_END);
         agent.set_int(*FIGHTER_BAYONETTA_SHOOTING_STEP_WAIT_END, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SHOOTING_STEP);
-        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
     }
     frame(lua_state, 24.66); // 41
     if is_excute(agent) {
@@ -621,6 +619,7 @@ unsafe extern "C" fn game_specialairhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 26.0); // 43
     if is_excute(agent) {
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES); //  (12 after)
     }
     frame(lua_state, 28.0); // 49 FAF

@@ -121,7 +121,7 @@ attack_dash:
     cancel_frame: 40
 attack_s4_s:
   extra:
-    cancel_frame: 48
+    cancel_frame: 49
 attack_s3_s:
 attack_air_b:
   extra:

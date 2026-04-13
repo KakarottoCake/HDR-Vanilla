@@ -139,6 +139,12 @@ unsafe extern "C" fn special_hi_h_main_loop(fighter: &mut L2CFighterCommon) -> L
         return 1.into();
     }
 
+    // Reduce speed on shield
+    if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD | *COLLISION_KIND_MASK_PARRY) {
+        let shield_hit_speed_x_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.shield_hit_speed_x_mul");
+        sv_kinetic_energy!(set_speed_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, shield_hit_speed_x_mul);
+    }
+
     let frame = MotionModule::frame(fighter.module_accessor);
 
     if MotionModule::is_end(fighter.module_accessor) {

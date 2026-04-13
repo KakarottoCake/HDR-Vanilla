@@ -211,6 +211,7 @@ unsafe extern "C" fn special_hi_air_pre(fighter: &mut L2CFighterCommon) -> L2CVa
     }
     else {
         VarModule::on_flag(fighter.battle_object, vars::tantan::instance::SPECIAL_HI_ENABLE_FREEFALL);
+        VarModule::on_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_LAG);
     }
     StatusModule::init_settings(
         fighter.module_accessor,

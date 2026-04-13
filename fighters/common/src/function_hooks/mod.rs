@@ -97,7 +97,7 @@ const EXCEPTION_WEAPON_KINDS: [smash::lib::LuaConst ; 15] = [
     WEAPON_KIND_SZEROSUIT_WHIP2,
     WEAPON_KIND_SAMUS_GBEAM,
     WEAPON_KIND_SAMUSD_GBEAM,
-    WEAPON_KIND_SHIZUE_FISHINGLINE,
+    WEAPON_KIND_SHIZUE_FISHINGROD,
     WEAPON_KIND_TOONLINK_HOOKSHOT,
     WEAPON_KIND_YOUNGLINK_HOOKSHOT,
     WEAPON_KIND_JACK_DOYLE,
@@ -146,7 +146,9 @@ unsafe fn skip_early_main_status(boma: *mut BattleObjectModuleAccessor, status_k
         || ((*boma).kind() == *FIGHTER_KIND_GEKKOUGA
             && [*FIGHTER_GEKKOUGA_STATUS_KIND_SPECIAL_S_ATTACK].contains(&status_kind))
         || ((*boma).kind() == *FIGHTER_KIND_LITTLEMAC
-            && [*FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_N_START].contains(&status_kind)) )
+            && [*FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_N_START].contains(&status_kind))
+        || ((*boma).kind() == *FIGHTER_KIND_SHIZUE
+            && [*FIGHTER_SHIZUE_STATUS_KIND_SPECIAL_S_HIT, *FIGHTER_SHIZUE_STATUS_KIND_SPECIAL_S_THROW].contains(&status_kind)) )
     {
         return true;
     }
@@ -719,6 +721,13 @@ unsafe fn status_module__change_status(status_module: *const u64, status_kind_ne
 
     if (*boma).is_fighter() {
         JostleModule::set_overlap_rate_mul(boma, 1.0);
+
+        let inflict_status = AttackModule::get_inflict_status(boma);
+        VarModule::set_int(
+            (*boma).object(),
+            vars::common::instance::PREV_STATUS_INFLICT_STATUS,
+            inflict_status
+        );
     }
 
     if (*boma).is_fighter()
