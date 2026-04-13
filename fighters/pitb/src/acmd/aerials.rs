@@ -273,13 +273,13 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     frame(lua_state, 9.0);
     FT_MOTION_RATE_RANGE(agent, 9.0, 10.0, 2.0);
     if is_excute(agent) {
-        hitbox!(agent, { extends: PITB_SWORD_HITBOX_M, id: 0, bone: "arml", dmg: 9.0, angle: 54, kbg: 88, bkb: 45, size: 3.5, x: 2.0, y:  0.0, z:  0.0, });
+        hitbox!(agent, { extends: PITB_SWORD_HITBOX_M, id: 0, bone: "arml", dmg: 9.0, angle: 54, kbg: 88, bkb: 45, size: 3.0, x: 2.0, y:  0.0, z:  0.0, });
         hitbox!(agent, { extends: PITB_SWORD_HITBOX_M, id: 1, bone: "bowl", dmg: 9.0, angle: 54, kbg: 88, bkb: 45, size: 3.5, x: 0.0, y: -2.0, z: -2.0, });
         hitbox!(agent, { extends: PITB_SWORD_HITBOX_M, id: 2, bone: "bowl", dmg: 9.0, angle: 54, kbg: 88, bkb: 45, size: 3.5, x: 0.0, y: -6.0, z: -2.0, });
     }
     frame(lua_state, 9.5);
     if is_excute(agent) {
-        hitbox!(agent, { extends: PITB_SWORD_HITBOX_L, id: 0, bone: "arml", dmg: 10.0, angle: 270, kbg: 56, bkb: 22, size: 3.5, x: 2.0, y:  0.0, z:  0.0, });
+        hitbox!(agent, { extends: PITB_SWORD_HITBOX_M, id: 0, bone: "arml", dmg:  9.0, angle:  54, kbg: 88, bkb: 45, size: 3.0, x: 2.0, y:  0.0, z:  0.0, });
         hitbox!(agent, { extends: PITB_SWORD_HITBOX_L, id: 1, bone: "bowl", dmg: 10.0, angle: 270, kbg: 56, bkb: 22, size: 3.5, x: 0.0, y: -2.0, z: -2.0, });
         hitbox!(agent, { extends: PITB_SWORD_HITBOX_L, id: 2, bone: "bowl", dmg: 10.0, angle: 270, kbg: 56, bkb: 22, size: 3.5, x: 0.0, y: -6.0, z: -2.0, });
     }
@@ -287,7 +287,7 @@ unsafe extern "C" fn game_attackairlw(agent: &mut L2CAgentBase) {
     FT_MOTION_RATE(agent, 1.0);
     frame(lua_state, 11.0);
     if is_excute(agent) {
-        hitbox!(agent, { extends: PITB_SWORD_HITBOX_M, id: 0, bone: "arml", dmg: 9.0, angle: 54, kbg: 76, bkb: 39, size: 3.5, x: 2.0, y:  0.0, z:  0.0, });
+        hitbox!(agent, { extends: PITB_SWORD_HITBOX_M, id: 0, bone: "arml", dmg: 9.0, angle: 54, kbg: 76, bkb: 39, size: 3.0, x: 2.0, y:  0.0, z:  0.0, });
         hitbox!(agent, { extends: PITB_SWORD_HITBOX_M, id: 1, bone: "bowl", dmg: 9.0, angle: 54, kbg: 76, bkb: 39, size: 3.5, x: 0.0, y: -2.0, z: -2.0, });
         hitbox!(agent, { extends: PITB_SWORD_HITBOX_M, id: 2, bone: "bowl", dmg: 9.0, angle: 54, kbg: 76, bkb: 39, size: 3.5, x: 0.0, y: -6.0, z: -2.0, });
     }

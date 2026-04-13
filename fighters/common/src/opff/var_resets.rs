@@ -75,7 +75,7 @@ unsafe fn var_resets(boma: &mut BattleObjectModuleAccessor) {
         *FIGHTER_STATUS_KIND_LANDING_LIGHT,
         *FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR,
         *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL])
-        {
+    {
         if !boma.is_situation(*SITUATION_KIND_AIR)
         || boma.is_status_one_of(damage_statuses)
         || boma.is_status_one_of(death_statuses)
@@ -111,6 +111,15 @@ unsafe fn var_resets(boma: &mut BattleObjectModuleAccessor) {
     // Reset total damage dealt this stock
     if boma.is_status_one_of(death_statuses) {
         VarModule::set_float(boma.object(), vars::common::instance::DAMAGE_DEALT_THIS_STOCK, 0.0);
+    }
+
+    // Zair once-per-airtime reset
+    if VarModule::is_flag(boma.object(), vars::common::instance::DISABLE_AIR_LASSO)
+    && (!boma.is_situation(*SITUATION_KIND_AIR)
+    || boma.is_status_one_of(death_statuses))
+    || boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_GIMMICK_SPRING_JUMP])
+    {
+        VarModule::off_flag(boma.object(), vars::common::instance::DISABLE_AIR_LASSO);
     }
 }
 

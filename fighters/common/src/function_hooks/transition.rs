@@ -76,11 +76,8 @@ unsafe fn is_enable_transition_term_hook(boma: &mut BattleObjectModuleAccessor, 
             return false;
         }
 
-        // Disable Mii Swordfighter nspecial if the Tornado projectile is still active
-        if fighter_kind == *FIGHTER_KIND_MIISWORDSMAN {
-            if VarModule::get_int(boma.object(), vars::common::instance::GIMMICK_TIMER) > 0 && flag == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N {
-                return false;
-            }
+        if flag == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_AIR_LASSO && VarModule::is_flag(boma.object(), vars::common::instance::DISABLE_AIR_LASSO) {
+            return false;
         }
 
         if fighter_kind == *FIGHTER_KIND_NANA {

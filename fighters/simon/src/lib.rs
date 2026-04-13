@@ -10,6 +10,7 @@ pub mod status;
 // articles
 
 mod axe;
+mod cross;
 mod whip;
 
 use smash::{
@@ -35,6 +36,7 @@ use smash_script::{
     *,
     macros::*
 };
+use smash_script::macros::ATTACK_ABS;
 use utils::{
     *,
     util::*,
@@ -52,5 +54,6 @@ pub fn install() {
     agent.install();
 
     axe::install();
+    cross::install();
     whip::install();
 }

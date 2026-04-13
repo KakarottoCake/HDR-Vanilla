@@ -156,6 +156,9 @@ catch_attack:
 throw_f:
   extra:
     cancel_frame: 33
+throw_b:
+  extra:
+    cancel_frame: 38
 throw_lw:
   extra:
     cancel_frame: 56

@@ -142,7 +142,8 @@ unsafe extern "C" fn effect_specials3lw(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 4.5);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("chrom_mc_3lw_hdr"), Hash40::new("top"), -0.0, 0, 0, 0, 0, 0, 1, true);        EffectModule::set_disable_render_offset_last(boma);
+        EFFECT_FOLLOW(agent, Hash40::new("chrom_mc_3lw_hdr"), Hash40::new("top"), -0.0, 0, 0, 0, 0, 0, 1, true);
+        EffectModule::set_disable_render_offset_last(boma);
         LAST_EFFECT_SET_RATE(agent, 0.8);
     }
     frame(lua_state, 5.0);

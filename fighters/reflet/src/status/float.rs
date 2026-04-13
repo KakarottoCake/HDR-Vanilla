@@ -37,7 +37,7 @@ unsafe extern "C" fn float_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     VarModule::set_int(fighter.battle_object, vars::common::status::FLOAT_FRAME, 30);
     VarModule::set_int(fighter.battle_object, vars::common::status::FLOAT_ENABLE_UNIQ, 1);
-    VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_FLOAT);
+    VarModule::on_flag(fighter.battle_object, vars::common::instance::IS_FLOATING);
 
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("fuwafuwa_start"), 0.0, 1.0, false, 0.0, false, false);
 

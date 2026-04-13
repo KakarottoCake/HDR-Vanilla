@@ -8,8 +8,9 @@ unsafe extern "C" fn special_hi_main(fighter: &mut L2CFighterCommon) -> L2CValue
     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x20cbc92683), 1, FIGHTER_LOG_DATA_INT_ATTACK_NUM_KIND, (*FIGHTER_LOG_ATTACK_KIND_ADDITIONS_ATTACK_01) + -1);
 
     // dj leniency window
+    let teleport_jump_aerial_refresh_frame = ParamModule::get_int(fighter.battle_object, ParamType::Common, "teleport_jump_aerial_refresh_frame");
     let jump_max = fighter.get_jump_count_max();
-    if fighter.get_num_used_jumps() == jump_max && fighter.is_prev_status(*FIGHTER_STATUS_KIND_JUMP_AERIAL) && fighter.global_table[PREV_STATUS_FRAME].get_i32() <= 3 {
+    if fighter.get_num_used_jumps() == jump_max && fighter.is_prev_status(*FIGHTER_STATUS_KIND_JUMP_AERIAL) && fighter.global_table[PREV_STATUS_FRAME].get_i32() <= teleport_jump_aerial_refresh_frame {
         fighter.set_int(jump_max - 1, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
         fighter.clear_lua_stack();
         lua_args!(fighter, Hash40::new("sys_jump_aerial"), true, true);
@@ -86,11 +87,10 @@ unsafe extern "C" fn special_hi2_pre(fighter: &mut L2CFighterCommon) -> L2CValue
     return 0.into();
 }
 
-// Wuboy translated this at WuBoytH/vanilla_status
 unsafe extern "C" fn angler(fighter: &mut L2CFighterCommon) -> L2CValue {
     let stick_x = fighter.left_stick_x();
     let stick_y = fighter.left_stick_y();
-    let mut length = sv_math::vec2_length(stick_x, stick_y);//.min(1.0);
+    let mut length = sv_math::vec2_length(stick_x, stick_y);
     let wrap_stick = fighter.get_param_float("param_special_hi", "special_hi_wrap_stick");
 
     PostureModule::set_stick_lr(fighter.module_accessor, 0.0);
@@ -121,7 +121,8 @@ unsafe extern "C" fn angler(fighter: &mut L2CFighterCommon) -> L2CValue {
         let sin = angle.sin();
         speed_y = speed * sin;
     }
-    // force into air if non-horizontal angle or already not on floor
+    // If teleport angle is upwards or you are already in air
+    // force airborne state
     if detach || fighter.global_table[SITUATION_KIND] != SITUATION_KIND_GROUND {
         fighter.set_situation(SITUATION_KIND_AIR.into());
         GroundModule::set_attach_ground(fighter.module_accessor, false);
@@ -148,7 +149,7 @@ unsafe extern "C" fn special_hi2_main(fighter: &mut L2CFighterCommon) -> L2CValu
     if !StopModule::is_stop(fighter.module_accessor) {
         sub_special_hi2(fighter, false.into());
     }
-    angler(fighter); // zelda init, run here to override vanilla angling?
+    angler(fighter);
 
     fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(sub_special_hi2 as *const () as _));
     fighter.main_shift(special_hi2_main_loop)
@@ -205,33 +206,41 @@ unsafe extern "C" fn special_hi2_main_loop(fighter: &mut L2CFighterCommon) -> L2
     return 0.into();
 }
 
-// copy nasty vanilla math and add checks
+// Copies nasty vanilla math
+// with adjusted logic to control wall-ride/floor-ride behavior
 unsafe extern "C" fn special_hi_2_check_ground(fighter: &mut L2CFighterCommon) {
-    // reset momentum (try to bypass hidden wallride code?)
     let init_speed_x = VarModule::get_float(fighter.battle_object, vars::common::status::TELEPORT_INITIAL_SPEED_X);
     let init_speed_y = VarModule::get_float(fighter.battle_object, vars::common::status::TELEPORT_INITIAL_SPEED_Y);
     let floor_speed_x = VarModule::get_float(fighter.battle_object, vars::common::status::TELEPORT_FLOOR_SPEED_X);
     if floor_speed_x.abs() > 0.0 && init_speed_y < 0.0 && init_speed_x.abs() > 0.0 
     && (GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) && !GroundModule::is_passable_ground(fighter.module_accessor)) {
+        // Travel speed for diagonally-down floor-rides
         sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, floor_speed_x, 0.0, 0.0);
     } else {
+        // Travel speed for all other scenarios
         sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, init_speed_x, init_speed_y, 0.0);
     }
-    // make it not mess up platform teleports
+    // If on a platform,
+    // skip floor-ride speed redirection
     if GroundModule::is_passable_check(fighter.module_accessor) && GroundModule::is_passable_ground(fighter.module_accessor) {
         return;
     }
     let stop_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP) as *mut app::KineticEnergy;
     let speed = Vector2f {x: lua_bind::KineticEnergy::get_speed_x(stop_energy), y: lua_bind::KineticEnergy::get_speed_y(stop_energy)};
-    // only apply to diagonal landing teleport floorrides (fix grounded angling / a2g straight down tele)
+    // If not a diagonally-down teleport,
+    // or if already grounded,
+    // skip floor-ride speed redirection
     if !GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32)
     || (speed.x.abs() < 0.001 || speed.y > -0.001)
     || fighter.global_table[PREV_SITUATION_KIND] != SITUATION_KIND_AIR {
         return;
     }
-    // if moving at all (when wld this be relevant?)
+    // Compute a new ground-aligned velocity vector
+    // for intended floor-ride speed redirection
+    // 
+    // Only intended to run on the first frame you land during the travel
     let mut length = sv_math::vec3_length(speed.x, speed.y, 0.0);
-    if 0.0 < length {
+    if length > 0.0 {
         let touch_x = GroundModule::get_touch_normal_x(fighter.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32);
         let touch_y = GroundModule::get_touch_normal_y(fighter.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32);
 
@@ -289,7 +298,6 @@ unsafe extern "C" fn special_hi2_end(fighter: &mut L2CFighterCommon) -> L2CValue
         }
         //}
     } else {
-        // vanilla disable invisibility on interrupt
         VisibilityModule::set_whole(fighter.module_accessor, true);
     }
     return 0.into();
@@ -344,8 +352,8 @@ unsafe extern "C" fn special_hi3_init(fighter: &mut L2CFighterCommon) -> L2CValu
         KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
         KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
         let special_hi_fall_y_max = fighter.get_param_float("param_special_hi", "special_hi_fall_y_max");        
-        let air_speed_x_stable: f32 = fighter.get_param_float("air_speed_x_stable", "");
-        let special_hi_fall_x_mull_value: f32 = fighter.get_param_float("param_special_hi", "special_hi_fall_x_mull_value");
+        let air_speed_x_stable = fighter.get_param_float("air_speed_x_stable", "");
+        let special_hi_fall_x_mull_value = fighter.get_param_float("param_special_hi", "special_hi_fall_x_mull_value");
         let mut x_cap = air_speed_x_stable * special_hi_fall_x_mull_value;
         sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, x_cap, special_hi_fall_y_max);
     }
@@ -444,8 +452,8 @@ unsafe extern "C" fn reappearance_decel_drift(fighter: &mut L2CFighterCommon) ->
                 let speed_y = lua_bind::KineticEnergy::get_speed_y(stop_energy);
                 sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y);
                 KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-                let air_speed_x_stable: f32 = fighter.get_param_float("air_speed_x_stable", "");
-                let special_hi_fall_x_mull_value: f32 = fighter.get_param_float("param_special_hi", "special_hi_fall_x_mull_value");
+                let air_speed_x_stable = fighter.get_param_float("air_speed_x_stable", "");
+                let special_hi_fall_x_mull_value = fighter.get_param_float("param_special_hi", "special_hi_fall_x_mull_value");
                 let mut x_cap = air_speed_x_stable * special_hi_fall_x_mull_value;
                 sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, x_cap, 0.0);
             } // only set limits and enable gravity once

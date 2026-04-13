@@ -2,6 +2,7 @@ use super::*;
 
 mod bayonetta;
 mod brave;
+mod demon;
 mod donkey;
 mod duckhunt;
 mod edge;
@@ -17,6 +18,8 @@ mod pickel;
 mod ptrainer;
 mod reflet;
 mod rockman;
+mod shotos;
+mod shulk;
 
 mod miigunner_grenadelauncher;
 mod ryu_shinkuhadoken;
@@ -27,6 +30,7 @@ mod weapon;
 pub fn install() {
     bayonetta::install();
     brave::install();
+    demon::install();
     donkey::install();
     duckhunt::install();
     edge::install();
@@ -42,6 +46,8 @@ pub fn install() {
     ptrainer::install();
     reflet::install();
     rockman::install();
+    shotos::install();
+    shulk::install();
 
     miigunner_grenadelauncher::install();
     ryu_shinkuhadoken::install();
