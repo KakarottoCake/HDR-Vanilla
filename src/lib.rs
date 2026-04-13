@@ -49,7 +49,6 @@ use std::{fs, path::Path};
 use utils::STAGE_MANAGER;
 use std::sync::atomic::Ordering;
 use dynamic::util::MATCH_EXITING;
-use utils::one_player::SPAWN_POS_CAPTURED;
 
 #[cfg(not(feature = "main_nro"))]
 #[no_mangle]
@@ -242,45 +241,35 @@ unsafe fn push_hash(game_state: u64, hash: u64) {
     *game_state.add(0xe8 / 8) += 1;
 }
 
-// let this code stay dormant but this is an example of how to abuse the game state,
-// this will exit the game without going to results at the end.
+// game_end handles the normal end of game flow
 #[skyline::hook(offset = 0x14d6590)]
 unsafe fn game_end(game_state: u64) {
-    let one =
-        *(skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as *mut u8).add(0x52c41b2);
-    let mode = (skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as u64 + 0x53040f0)
-        as *const u64;
-    if one == 0 && *mode != 0x4040000 {
-        push_something(game_state, 2);
-        // push_hash(game_state, smash::hash40("statewaitforruletofinish"));
-        // push_hash(game_state, smash::hash40("statewaitendproduction"));
-        push_hash(game_state, smash::hash40("stateapplyparameters"));
-        // push_hash(game_state, smash::hash40("statewaitforsyncwhenending"));
-        push_hash(game_state, smash::hash40("statefadeoutwhenending"));
-        push_hash(game_state, smash::hash40("stateexit"));
+    if utils::one_player::one_player_entry() {
+        skip_results(game_state);
         return;
     }
     call_original!(game_state);
 }
 
+// game_exit handles player-initiated end of game flow
 #[skyline::hook(offset = 0x14d7ef0)]
 unsafe fn game_exit(game_state: u64, arg: u64) {
-    let one =
-        *(skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as *mut u8).add(0x52c41b2);
-    let mode = (skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as u64 + 0x53040f0)
-        as *const u64;
-    if one == 0 && *mode != 0x4040000 {
-        push_something(game_state, 2);
-        // push_hash(game_state, smash::hash40("statewaitforruletofinish"));
-        // push_hash(game_state, smash::hash40("statewaitendproduction"));
-        push_hash(game_state, smash::hash40("stateapplyparameters"));
-        // push_hash(game_state, smash::hash40("statewaitforsyncwhenending"));
-        push_hash(game_state, smash::hash40("statefadeoutwhenending"));
-        push_hash(game_state, smash::hash40("stateexit"));
+    if utils::one_player::one_player_entry() {
+        skip_results(game_state);
         return;
     }
-
     call_original!(game_state, arg);
+}
+
+// Skips the results screen at the end of a game
+unsafe fn skip_results(game_state: u64) {
+    push_something(game_state, 2);
+    // push_hash(game_state, smash::hash40("statewaitforruletofinish"));
+    // push_hash(game_state, smash::hash40("statewaitendproduction"));
+    push_hash(game_state, smash::hash40("stateapplyparameters"));
+    // push_hash(game_state, smash::hash40("statewaitforsyncwhenending"));
+    push_hash(game_state, smash::hash40("statefadeoutwhenending"));
+    push_hash(game_state, smash::hash40("stateexit"));
 }
 
 impl HashedString {
@@ -413,7 +402,6 @@ unsafe fn scene_transition(
     }
 
     MATCH_EXITING.store(false, Ordering::Relaxed);
-    SPAWN_POS_CAPTURED.store(false, Ordering::Relaxed);
 
     call_original!(list_ptr, key_struct, context_struct, factory);
 }
@@ -453,8 +441,8 @@ pub fn main() {
             //copy_fighter_info,
             //load_ingame_call_sequence_scene,
             //load_melee_scene,
-            //game_end,
-            //game_exit
+            game_end,
+            game_exit
         );
     }
 
