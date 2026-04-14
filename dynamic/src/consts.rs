@@ -1433,6 +1433,10 @@ pub mod vars {
             pub const SPECIAL_N_PRIMARY_POWERED: i32 = 0x1101;
             pub const POWER_BOARD_FLUSHED: i32 = 0x1150;
 
+            // ints
+            pub const SPECIAL_N_GREEN_BUTTON_TIMER: i32 = 0x1100;
+            pub const SPECIAL_N_GREEN_LOOP: i32 = 0x1101;
+
             // floats
             pub const SPECIAL_LW_STORED_DAMAGE: i32 = 0x1100;
         }
@@ -2218,8 +2222,6 @@ pub mod statuses {
     }
 
     pub mod palutena_explosiveflame {
-        pub const CHECK_KIRBY: i32 = 0x4;
-        pub const EXPLODE_KIRBY: i32 = 0x5;
     }
 
     pub mod palutena_meteor {
