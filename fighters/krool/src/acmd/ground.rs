@@ -70,6 +70,7 @@ unsafe extern "C" fn effect_attack12(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_attack13(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 1.25);
     frame(lua_state, 4.0);
     if is_excute(agent) {
         FighterAreaModuleImpl::enable_fix_jostle_area_xy(boma, 2.0, 7.0, 10.0, 10.0);
@@ -81,6 +82,7 @@ unsafe extern "C" fn game_attack13(agent: &mut L2CAgentBase) {
         ATTACK(agent, 2, 0, Hash40::new("top"), 6.0, 361, 80, 0, 59, 6.0, 0.0, 11.0, 12.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
     }   
     frame(lua_state, 9.0);
+    sv_kinetic_energy!(set_speed_mul, agent, FIGHTER_KINETIC_ENERGY_ID_MOTION, 1.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
     }

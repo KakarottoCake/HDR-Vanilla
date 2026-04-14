@@ -40,13 +40,13 @@ unsafe fn reel_in(boma: &mut BattleObjectModuleAccessor) {
     }
 
     // disable the opponent's collision with platforms when reeling them in
-    if boma.is_status(*FIGHTER_SHIZUE_STATUS_KIND_SPECIAL_S_HIT) {
-        let caught_id = boma.get_int(*FIGHTER_SHIZUE_STATUS_WORK_ID_SPECIAL_S_INT_TARGET_OBJECT_ID);
-        if sv_battle_object::category(caught_id as u32) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-            let caught_boma = sv_battle_object::module_accessor(caught_id as u32);
-            GroundModule::set_passable_check(caught_boma, true);
-        }
-    }
+    // if boma.is_status(*FIGHTER_SHIZUE_STATUS_KIND_SPECIAL_S_HIT) {
+    //     let caught_id = boma.get_int(*FIGHTER_SHIZUE_STATUS_WORK_ID_SPECIAL_S_INT_TARGET_OBJECT_ID);
+    //     if sv_battle_object::category(caught_id as u32) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+    //         let caught_boma = sv_battle_object::module_accessor(caught_id as u32);
+    //         GroundModule::set_passable_check(caught_boma, true);
+    //     }
+    // }
 }
 
 //Lloid Trap Fire Jump Cancel

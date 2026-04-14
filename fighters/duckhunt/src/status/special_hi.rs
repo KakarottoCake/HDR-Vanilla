@@ -185,6 +185,10 @@ unsafe extern "C" fn special_hi_exit(fighter: &mut L2CFighterCommon) -> L2CValue
     let effect_handle = VarModule::get_int64(fighter.battle_object, vars::duckhunt::status::SPECIAL_HI_RETICLE_EFFECT_HANDLE);
     EffectModule::set_scale(fighter.module_accessor, effect_handle as u32, &Vector3f::zero());
     EffectModule::kill_kind(fighter.module_accessor, Hash40::new("duckhunt_target"), true, true);
+
+    if fighter.is_motion(Hash40::new("special_hi")) {
+        VarModule::on_flag(fighter.battle_object, vars::common::instance::UP_SPECIAL_LAG);
+    }
     
     return 0.into();
 }
