@@ -7,11 +7,9 @@ unsafe extern "C" fn game_shot(agent: &mut L2CAgentBase) {
         AttackModule::set_power_mul_5th(boma, 1.0);
         let owner_module_accessor = boma.get_owner_boma();
         if owner_module_accessor.kind() == *FIGHTER_KIND_PALUTENA {
-            let size = if VarModule::is_flag(owner_module_accessor.object(), vars::palutena::status::SPECIAL_N_PRIMARY_POWERED) {2.4} else {2.1};
-            let damage = if VarModule::is_flag(owner_module_accessor.object(), vars::palutena::status::SPECIAL_N_PRIMARY_POWERED) {7.0} else {4.0};
-            let paralyze = if VarModule::is_flag(owner_module_accessor.object(), vars::palutena::status::SPECIAL_N_PRIMARY_POWERED) {0.5} else {0.25}; // para cap of 90, stun is kb * hitlag mul + 1
-            AttackModule::set_power_mul_5th(boma, damage / 4.0); // evens out stun frame adv at 100%
-            ATTACK(agent, 0, 0, Hash40::new("top"), 4.0, 65, 60, 0, 60, size, 0.0, 0.0, 0.0, None, None, None, paralyze, 0.6, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_paralyze"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_ENERGY);
+            let (damage, bkb, kbg, hitlag, size) = if VarModule::is_flag(owner_module_accessor.object(), vars::palutena::status::SPECIAL_N_PRIMARY_POWERED)
+                { (7.0, 63, 40, 0.5, 2.4) } else { (4.0, 60, 60, 0.25, 2.1) }; // para cap of 90, stun is kb * hitlag mul + 1
+            ATTACK(agent, 0, 0, Hash40::new("top"), damage, 65, kbg, 0, bkb, size, 0.0, 0.0, 0.0, None, None, None, hitlag, 0.6, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_paralyze"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_ENERGY);
         }
         else {
             ATTACK(agent, 0, 0, Hash40::new("top"), 2.5, 36, 53, 0, 61, 2.3, 0.0, 0.0, 0.0, None, None, None, 1.15, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_paralyze"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_ENERGY);
