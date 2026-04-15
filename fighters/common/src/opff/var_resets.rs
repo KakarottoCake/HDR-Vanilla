@@ -113,6 +113,14 @@ unsafe fn var_resets(boma: &mut BattleObjectModuleAccessor) {
         VarModule::set_float(boma.object(), vars::common::instance::DAMAGE_DEALT_THIS_STOCK, 0.0);
     }
 
+    // Clear last attacker when grounded (used by War mode)
+    if !boma.is_situation(*SITUATION_KIND_AIR)
+    && !boma.is_status_one_of(damage_statuses)
+    && !boma.is_status_one_of(death_statuses)
+    {
+        VarModule::set_int(boma.object(), vars::common::instance::LAST_ATTACKER_ENTRY_ID, -1);
+    }
+
     // Zair once-per-airtime reset
     if VarModule::is_flag(boma.object(), vars::common::instance::DISABLE_AIR_LASSO)
     && (!boma.is_situation(*SITUATION_KIND_AIR)
