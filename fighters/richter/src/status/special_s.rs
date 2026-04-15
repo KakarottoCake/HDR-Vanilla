@@ -49,7 +49,7 @@ unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
         else {
             GroundModule::correct(fighter.module_accessor, app::GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
             if VarModule::is_flag(fighter.battle_object, vars::richter::status::SPECIAL_S_ENABLE_GRAVITY) {
-                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
             }
             else {
                 KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
@@ -64,8 +64,7 @@ unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
     if VarModule::is_flag(fighter.battle_object, vars::richter::status::SPECIAL_S_CHANGE_KINETIC) {
         VarModule::off_flag(fighter.battle_object, vars::richter::status::SPECIAL_S_CHANGE_KINETIC);
         if fighter.is_situation(*SITUATION_KIND_AIR) {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-            KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
         }
     }
 
