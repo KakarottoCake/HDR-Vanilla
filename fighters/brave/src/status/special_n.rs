@@ -39,9 +39,9 @@ unsafe extern "C" fn special_n_hold_main_loop(fighter: &mut L2CFighterCommon) ->
                 fighter.change_status(FIGHTER_BRAVE_STATUS_KIND_SPECIAL_N_CANCEL.into(), false.into());
                 return 1.into();
             }
-            if fighter.sub_check_jump_in_charging().get_bool() {
+            if fighter.sub_check_jump_in_charging().get_bool() || fighter.is_pad_flag(PadFlag::JumpTrigger) {
                 fighter.set_int(*FIGHTER_STATUS_KIND_JUMP_SQUAT, *FIGHTER_BRAVE_STATUS_SPECIAL_N_HOLD_INT_NEXT_STATUS);
-                fighter.change_status(FIGHTER_BRAVE_STATUS_KIND_SPECIAL_N_CANCEL.into(), false.into());
+                fighter.change_status(FIGHTER_BRAVE_STATUS_KIND_SPECIAL_N_CANCEL.into(), true.into());
                 return 1.into();
             }
         }
