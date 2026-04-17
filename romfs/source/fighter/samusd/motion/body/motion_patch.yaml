@@ -102,7 +102,7 @@ special_lw:
     cancel_frame: 47
 attack_hi3:
   extra:
-    cancel_frame: 48
+    cancel_frame: 49
 special_n_c:
   extra:
     cancel_frame: 9
@@ -287,7 +287,7 @@ special_hi_landing_f:
   extra:
     xlu_start: 0
     xlu_end: 0
-    cancel_frame: 26
+    cancel_frame: 31
     no_stop_intp: false
 special_hi_landing_lw:
   game_script: game_specialhilandinglw
