@@ -427,10 +427,10 @@ donkey_special_n_cancel:
     cancel_frame: 9
 down_attack_d:
   extra:
-    cancel_frame: 50
+    cancel_frame: 52
 down_attack_u:
   extra:
-    cancel_frame: 50
+    cancel_frame: 52
 down_back_d:
   extra:
     cancel_frame: 36
