@@ -162,6 +162,10 @@ unsafe extern "C" fn effect_attacklw4(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_AURA(agent);
     }
+    frame(lua_state, 10.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("armr"), 4.289, -0.272, -0.135, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+    }
     frame(lua_state, 14.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 3, 0, -1, 0, 0, 0, 1.2, true);
