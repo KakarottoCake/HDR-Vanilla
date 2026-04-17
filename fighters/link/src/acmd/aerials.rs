@@ -157,6 +157,10 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         VarModule::on_flag(agent.battle_object, vars::link::status::ENABLE_SPECIAL_LW_CANCEL);
     }
+    frame(lua_state, 24.0);
+    if is_excute(agent) {
+        VarModule::on_flag(agent.battle_object, vars::link::status::ENABLE_SPECIAL_LW_CANCEL);
+    }
     frame(lua_state, 25.0);
     if is_excute(agent) {
         WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
