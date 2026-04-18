@@ -184,7 +184,12 @@ unsafe extern "C" fn effect_speciallw1mordschlag(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     if is_excute(agent) {
         let lr = PostureModule::lr(boma);
-        EFFECT(agent, Hash40::new("sys_sp_flash"), Hash40::new("top"), 5.0 * lr, 12, 5, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, true);
+        if agent.is_situation(*SITUATION_KIND_GROUND) {
+            EFFECT(agent, Hash40::new("sys_unblockable_flash"), Hash40::new("top"), 5.0 * lr, 12, 5, 0, 0, 0, 0.65, 0, 0, 0, 0, 0, 0, true);
+        }
+        else {
+            EFFECT_FOLLOW(agent, Hash40::new("sys_unblockable_flash"), Hash40::new("top"), 5.0 * lr, 12, 8.5, 0, 0, 0, 0.65, true);
+        }
     }
     frame(lua_state, 17.0);
     if is_excute(agent) {

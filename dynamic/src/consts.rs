@@ -181,7 +181,7 @@ pub mod vars {
 
             pub const IS_INIT: i32 = 0x0065;
 
-            pub const IS_FLOAT: i32 = 0x0066;
+            pub const IS_FLOATING: i32 = 0x0066;
 
             pub const WEIRD_ASS_TURN_RUN_ANIMATION: i32 = 0x0067;
 
@@ -200,6 +200,10 @@ pub mod vars {
             pub const IS_DITCIT: i32 = 0x006E;
 
             pub const IGNORE_REDUCED_SCREENSHAKE: i32 = 0x006F;
+
+            pub const DISABLE_AIR_LASSO: i32 = 0x0070;
+            
+            pub const DISABLE_FLOAT: i32 = 0x0071;
 
             // ints
 
@@ -233,7 +237,7 @@ pub mod vars {
             pub const LEFT_STICK_FLICK_X: i32 = 0x000E;
             pub const LEFT_STICK_FLICK_Y: i32 = 0x000F;
 
-            pub const LEDGE_ID: i32 = 0x0010;
+            pub const OCCUPIED_LEDGE_ID: i32 = 0x0010;
 
             pub const RIGHT_STICK_FLICK_X: i32 = 0x0011;
             pub const RIGHT_STICK_FLICK_Y: i32 = 0x0012;
@@ -244,7 +248,7 @@ pub mod vars {
 
             pub const ATTACK_LR_CHECK: i32 = 0x0015;
 
-            // pub const PREVIOUS_FRAME_FRAMES_IN_AIR: i32 = 0x0016;
+            pub const OCCUPIED_LEDGE_ID_FOR_TETHERS: i32 = 0x0016;
 
 
             // floats
@@ -1409,14 +1413,16 @@ pub mod vars {
     pub mod pacman {
         pub mod instance {
             // flags
-            pub const DISABLE_SPECIAL_HI: i32 = 0x0100;
-            pub const SPECIAL_HI_GROUND_START: i32 = 0x0101;
-            pub const SPECIAL_HI_AERIAL_USED: i32 = 0x0102;
-            pub const SPECIAL_S_GROUND_START: i32 = 0x0103;
+            pub const SPECIAL_S_GROUND_START: i32 = 0x0100;
+            pub const DISABLE_SPECIAL_HI: i32 = 0x0101;
+            pub const SPECIAL_HI_GROUND_START: i32 = 0x0102;
+            pub const SPECIAL_HI_AERIAL_USED: i32 = 0x0103;
+            pub const SPECIAL_HI_DISABLE_AERIAL: i32 = 0x0104;
         }
         pub mod status {
             // flags
-            pub const SPECIAL_HI_AERIAL: i32 = 0x1100;
+            pub const SPECIAL_S_HIT: i32 = 0x1100;
+            pub const SPECIAL_HI_AERIAL: i32 = 0x1101;
         }
     }
 
@@ -1426,6 +1432,10 @@ pub mod vars {
             pub const ENABLE_COLOR_INCREMENT: i32 = 0x1100;
             pub const SPECIAL_N_PRIMARY_POWERED: i32 = 0x1101;
             pub const POWER_BOARD_FLUSHED: i32 = 0x1150;
+
+            // ints
+            pub const SPECIAL_N_GREEN_BUTTON_TIMER: i32 = 0x1100;
+            pub const SPECIAL_N_GREEN_LOOP: i32 = 0x1101;
 
             // floats
             pub const SPECIAL_LW_STORED_DAMAGE: i32 = 0x1100;
@@ -1946,6 +1956,7 @@ pub mod vars {
             pub const SPECIAL_S_HOP: i32 = 0x1100;
             pub const SPECIAL_S_ENABLE_JUMP: i32 = 0x1101;
             pub const SPECIAL_S_ENABLE_CONTROL: i32 = 0x1102;
+            pub const SPECIAL_S_HIT_SHIELD: i32 = 0x1103;
 
             // ints
             pub const SPECIAL_S_STEP: i32 = 0x1100;
@@ -2004,7 +2015,6 @@ pub mod vars {
             // flags
             pub const SPECIAL_S_HIT: i32 = 0x1100;
             pub const SPECIAL_S_INPUT_CHECK: i32 = 0x1101;
-            pub const SPECIAL_S_STOP: i32 = 0x1102;
 
             pub const SPECIAL_LW_AIR_FALL: i32 = 0x1100;
             pub const SPECIAL_LW_ENABLE_CONTROL: i32 = 0x1100;
@@ -2212,8 +2222,6 @@ pub mod statuses {
     }
 
     pub mod palutena_explosiveflame {
-        pub const CHECK_KIRBY: i32 = 0x4;
-        pub const EXPLODE_KIRBY: i32 = 0x5;
     }
 
     pub mod palutena_meteor {

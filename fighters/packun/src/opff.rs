@@ -75,24 +75,15 @@ unsafe fn game_start_switch(fighter: &mut L2CFighterCommon) {
         }
         if VarModule::is_flag(fighter.battle_object, vars::packun::status::STANCE_INIT) {
             if fighter.is_button_on(Buttons::AppealSL) {
-                EFFECT(fighter, Hash40::new("sys_level_up"), Hash40::new("top"), -2, 10, 0, 0, 0, 0, 0.4, 0, 0, 0, 0, 0, 0, true);
-                PLAY_SE(fighter, Hash40::new("se_packun_special_s02"));
-                EFFECT_FOLLOW(fighter, Hash40::new("sys_grass_landing"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.5, false);
-                VarModule::set_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE, 0);
+                SET_STANCE(fighter, 0, false);
                 VarModule::off_flag(fighter.battle_object, vars::packun::status::STANCE_INIT);
             }
             else if fighter.is_button_on(Buttons::AppealSR) {
-                EFFECT(fighter, Hash40::new("sys_level_up"), Hash40::new("top"), -2, 10, 0, 0, 0, 0, 0.4, 0, 0, 0, 0, 0, 0, true);
-                PLAY_SE(fighter, Hash40::new("se_packun_special_s02"));
-                EFFECT_FOLLOW(fighter, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.9, false);
-                VarModule::set_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE, 2);
+                SET_STANCE(fighter, 1, false);
                 VarModule::off_flag(fighter.battle_object, vars::packun::status::STANCE_INIT);
             }
             else if fighter.is_button_on(Buttons::AppealLw) {
-                EFFECT(fighter, Hash40::new("sys_level_up"), Hash40::new("top"), -2, 10, 0, 0, 0, 0, 0.4, 0, 0, 0, 0, 0, 0, true);
-                PLAY_SE(fighter, Hash40::new("se_packun_special_s02"));
-                EFFECT_FOLLOW(fighter, Hash40::new("packun_poison_max"), Hash40::new("top"), 0, 15.5, 0, 0, 0, 0, 1.2, false);
-                VarModule::set_int(fighter.battle_object, vars::packun::instance::CURRENT_STANCE, 1);
+                SET_STANCE(fighter, 2, false);
                 VarModule::off_flag(fighter.battle_object, vars::packun::status::STANCE_INIT);
             }
         }
