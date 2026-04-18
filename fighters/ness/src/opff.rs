@@ -17,16 +17,16 @@ unsafe fn psi_magnet_jump_cancel(fighter: &mut L2CFighterCommon) {
     }
 }
 
-// Ness PK Fire drift
-unsafe fn pk_fire_drift(boma: &mut BattleObjectModuleAccessor, stick_y: f32) {
-    if boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_S) {
-        if boma.is_situation(*SITUATION_KIND_AIR) {
-            if KineticModule::get_kinetic_type(boma) != *FIGHTER_KINETIC_TYPE_FALL {
-                KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
-            }
-        }
-    }
-}
+// // Ness PK Fire drift
+// unsafe fn pk_fire_drift(boma: &mut BattleObjectModuleAccessor, stick_y: f32) {
+//     if boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_S) {
+//         if boma.is_situation(*SITUATION_KIND_AIR) {
+//             if KineticModule::get_kinetic_type(boma) != *FIGHTER_KINETIC_TYPE_FALL {
+//                 KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+//             }
+//         }
+//     }
+// }
 
 unsafe fn magnet_stall_prevention(boma: &mut BattleObjectModuleAccessor, id: usize, status_kind: i32, situation_kind: i32) {
     if StatusModule::prev_status_kind(boma, 0) == *FIGHTER_NESS_STATUS_KIND_SPECIAL_LW_END
@@ -164,7 +164,7 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     pk_thunder_wall_ride(boma, id, status_kind, situation_kind);
     //pk_fire_ff(boma, stick_y);
     upspecialend_cliff(fighter);
-    pk_fire_drift(boma, stick_y);
+    // pk_fire_drift(boma, stick_y);
     uair_scaling(boma);
     fastfall_specials(fighter);
     pkt2_edgeslipoff(fighter);
