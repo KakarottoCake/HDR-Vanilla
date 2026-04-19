@@ -285,7 +285,7 @@ unsafe extern "C" fn effect_speciallw2(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_thunder"), Hash40::new("arml"), 4, 0, 0, 0, 0, 0, 0.4, true);
         if VarModule::is_flag(agent.object(), vars::miiswordsman::status::SPECIAL_LW2_HOLD) {
-            EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 15.0, 8.0, 0, 0, 0, 0.75, 0, 0, 0, 0, 0, 0, true);
+            EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 15.0, 8.0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, true);
         }
     }
     frame(lua_state, 10.5);
