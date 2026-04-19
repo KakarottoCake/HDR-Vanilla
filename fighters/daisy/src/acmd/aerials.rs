@@ -66,9 +66,9 @@ unsafe extern "C" fn game_attackairf(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn effect_attackairf(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
-    frame(lua_state, 14.0);
+    frame(lua_state, 10.0);
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 12, -4, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, true);
+        EFFECT(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 12, -4, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, true);
         LAST_EFFECT_SET_RATE(agent, 1.5);
     }
     frame(lua_state, 18.0);
