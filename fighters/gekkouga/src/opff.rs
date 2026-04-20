@@ -74,7 +74,7 @@ pub unsafe fn substitute_teleport_check(fighter: &mut L2CFighterCommon) {
                 fighter.module_accessor,
                 Hash40::new("sys_direction"),
                 &Vector3f{x: doll_top_pos_x, y: doll_top_pos_y + 5.0, z: 0.0},
-                &Vector3f::new(180.0, 0.0, 0.0),
+                &Vector3f::new(135.0, 0.0, 0.0),
                 0.7,
                 0,
                 -1,
