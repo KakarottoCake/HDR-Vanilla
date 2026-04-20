@@ -1433,6 +1433,10 @@ pub mod vars {
             pub const SPECIAL_N_PRIMARY_POWERED: i32 = 0x1101;
             pub const POWER_BOARD_FLUSHED: i32 = 0x1150;
 
+            // ints
+            pub const SPECIAL_N_GREEN_BUTTON_TIMER: i32 = 0x1100;
+            pub const SPECIAL_N_GREEN_LOOP: i32 = 0x1101;
+
             // floats
             pub const SPECIAL_LW_STORED_DAMAGE: i32 = 0x1100;
         }
@@ -1952,6 +1956,7 @@ pub mod vars {
             pub const SPECIAL_S_HOP: i32 = 0x1100;
             pub const SPECIAL_S_ENABLE_JUMP: i32 = 0x1101;
             pub const SPECIAL_S_ENABLE_CONTROL: i32 = 0x1102;
+            pub const SPECIAL_S_HIT_SHIELD: i32 = 0x1103;
 
             // ints
             pub const SPECIAL_S_STEP: i32 = 0x1100;
@@ -2010,7 +2015,6 @@ pub mod vars {
             // flags
             pub const SPECIAL_S_HIT: i32 = 0x1100;
             pub const SPECIAL_S_INPUT_CHECK: i32 = 0x1101;
-            pub const SPECIAL_S_STOP: i32 = 0x1102;
 
             pub const SPECIAL_LW_AIR_FALL: i32 = 0x1100;
             pub const SPECIAL_LW_ENABLE_CONTROL: i32 = 0x1100;
@@ -2218,8 +2222,6 @@ pub mod statuses {
     }
 
     pub mod palutena_explosiveflame {
-        pub const CHECK_KIRBY: i32 = 0x4;
-        pub const EXPLODE_KIRBY: i32 = 0x5;
     }
 
     pub mod palutena_meteor {

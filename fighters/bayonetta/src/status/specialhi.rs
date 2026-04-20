@@ -60,7 +60,8 @@ unsafe extern "C" fn special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2C
         }
         fighter.off_flag(*FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_HI_FLAG_JUMP);
         KineticModule::clear_speed_energy_id(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY); // make distance not based on current speed
-        fighter.change_status(FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_HI_JUMP.into(), false.into())
+        fighter.change_status(FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_HI_JUMP.into(), false.into());
+        return 1.into();
     }
     0.into()
 }
@@ -89,15 +90,19 @@ unsafe extern "C" fn special_hi_jump_main_loop(fighter: &mut L2CFighterCommon) -
     }
     if MotionModule::is_end(fighter.module_accessor) {
         if fighter.global_table[globals::SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
-            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into())
+            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+            return 1.into();
         }
     }
     fighter.sub_air_check_dive();
     // vanilla land before move ends during fall portion
-    let motion_y: f32 = MotionModule::trans_move_speed(fighter.module_accessor).x();
-    if motion_y < 0.0 
-    && fighter.global_table[globals::SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
-        fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into())
+    if fighter.global_table[globals::SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+        let motion_y: f32 = MotionModule::trans_move_speed(fighter.module_accessor).x();
+        if !KineticModule::is_enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_MOTION)
+        || motion_y < 0.0 {
+            fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
+            return 1.into();
+        }
     }
     // vanilla cancel mechanic on tap up b
     if fighter.get_int(*FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SHOOTING_STEP) == *FIGHTER_BAYONETTA_SHOOTING_STEP_SHOOTING {

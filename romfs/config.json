@@ -193,6 +193,12 @@
 		"fighter/metaknight/cmn": [
 			"fighter/metaknight/param/hdr.xml"
 		],
+		"fighter/buddy/cmn": [
+			"fighter/buddy/param/hdr.xml"
+		],
+		"fighter/trail/cmn": [
+			"fighter/trail/param/hdr.xml"
+		],
 		"fighter/palutena/cmn": [
 			"fighter/palutena/param/hdr.xml"
 		],

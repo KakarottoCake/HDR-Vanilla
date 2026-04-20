@@ -85,7 +85,7 @@ guard_off:
     cancel_frame: 12
 throw_f:
   extra:
-    cancel_frame: 38
+    cancel_frame: 47
 throw_b:
   extra:
     cancel_frame: 50
@@ -97,7 +97,7 @@ throw_hi:
     cancel_frame: 44
 special_s:
   extra:
-    cancel_frame: 63
+    cancel_frame: 64
 attack_lw3:
   flags:
     move: false
@@ -123,16 +123,16 @@ attack_air_n:
     cancel_frame: 48
 special_air_s:
   extra:
-    cancel_frame: 63
+    cancel_frame: 64
 attack_air_lw:
   extra:
     cancel_frame: 43
 special_n:
   extra:
-    cancel_frame: 26
+    cancel_frame: 54
 special_air_n:
   extra:
-    cancel_frame: 26
+    cancel_frame: 54
 special_air_hi_cancel:
   game_script: game_specialairhi
   flags:
@@ -315,7 +315,7 @@ special_n_y:
   extra:
     xlu_start: 0
     xlu_end: 0
-    cancel_frame: 43
+    cancel_frame: 54
     no_stop_intp: false
 special_air_n_y:
   game_script: game_specialairny
@@ -342,7 +342,7 @@ special_air_n_y:
   extra:
     xlu_start: 0
     xlu_end: 0
-    cancel_frame: 43
+    cancel_frame: 54
     no_stop_intp: false
 special_n_p:
   game_script: game_specialnp
@@ -452,8 +452,8 @@ special_air_n_o:
     xlu_end: 0
     cancel_frame: 43
     no_stop_intp: false
-special_n_g:
-  game_script: game_specialng
+special_n_g_start:
+  game_script: game_specialngstart
   flags:
     turn: false
     loop: false
@@ -468,19 +468,19 @@ special_n_g:
     unk_400: false
   blend_frames: 0
   animations:
-    - name: d00specialng.nuanmb
+    - name: d00specialngstart.nuanmb
       unk: 0
   scripts:
-    - expression_specialng
-    - sound_specialng
-    - effect_specialng
+    - expression_specialngstart
+    - sound_specialngstart
+    - effect_specialngstart
   extra:
     xlu_start: 0
     xlu_end: 0
-    cancel_frame: 65
+    cancel_frame: 0
     no_stop_intp: false
-special_air_n_g:
-  game_script: game_specialairng
+special_n_g_loop:
+  game_script: game_specialngloop
   flags:
     turn: false
     loop: false
@@ -495,16 +495,70 @@ special_air_n_g:
     unk_400: false
   blend_frames: 0
   animations:
-    - name: d00specialairng.nuanmb
+    - name: d00specialngloop.nuanmb
       unk: 0
   scripts:
-    - expression_specialairng
-    - sound_specialairng
-    - effect_specialairng
+    - expression_specialngloop
+    - sound_specialngloop
+    - effect_specialngloop
   extra:
     xlu_start: 0
     xlu_end: 0
-    cancel_frame: 65
+    cancel_frame: 0
+    no_stop_intp: false
+special_n_g_end:
+  game_script: game_specialngend
+  flags:
+    turn: false
+    loop: false
+    move: true
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+  blend_frames: 0
+  animations:
+    - name: d00specialngend.nuanmb
+      unk: 0
+  scripts:
+    - expression_specialngend
+    - sound_specialngend
+    - effect_specialngend
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 45
+    no_stop_intp: false
+special_air_n_g_end:
+  game_script: game_specialairngend
+  flags:
+    turn: false
+    loop: false
+    move: true
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+  blend_frames: 0
+  animations:
+    - name: d00specialairngend.nuanmb
+      unk: 0
+  scripts:
+    - expression_specialairngend
+    - sound_specialairngend
+    - effect_specialairngend
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 45
     no_stop_intp: false
 catch:
   extra:
