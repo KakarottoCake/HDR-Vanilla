@@ -17,7 +17,7 @@ unsafe fn bouncing_fish_transitions(fighter: &mut L2CFighterCommon) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_DISABLE_AIR_SPECIAL_LW);
         VarModule::on_flag(fighter.object(), vars::sheik::instance::SPECIAL_LW_HIT);
         if fighter.status_frame() > 14 {
-            fighter.check_jump_cancel(false, false);
+            fighter.check_jump_cancel(false, false, false);
             fighter.check_airdodge_cancel();
         }
     }
