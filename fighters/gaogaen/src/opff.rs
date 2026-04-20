@@ -3,18 +3,12 @@ utils::import_noreturn!(common::opff::fighter_common_opff);
 use super::*;
 use globals::*;
 
-// Handles double jump reset, cancel at the apex, and early activation of the dive
+// Handles cancel at the apex
 unsafe fn cross_chop_techniques(fighter: &mut L2CFighterCommon) {
     if (fighter.is_motion_one_of(&[Hash40::new("special_hi"), Hash40::new("special_air_hi_start")]) && MotionModule::frame(fighter.module_accessor) > 21.0)
     || (fighter.is_motion(Hash40::new("special_air_hi_turn"))) {
         if fighter.is_button_on(Buttons::Special) {
             VarModule::off_flag(fighter.object(), vars::gaogaen::status::SPECIAL_HI_RISE_END);
-        }
-    }
-    if fighter.is_status(*FIGHTER_GAOGAEN_STATUS_KIND_SPECIAL_HI_FALL)
-    && StatusModule::is_changing(fighter.module_accessor) {
-        if fighter.get_num_used_jumps() == fighter.get_jump_count_max() {
-            WorkModule::set_int(fighter.module_accessor, fighter.get_jump_count_max() - 1, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
         }
     }
 }
