@@ -1216,10 +1216,10 @@ impl BomaExt for BattleObjectModuleAccessor {
 
     /// If update_lr is true, we set your facing direction based on your stick position
     /// If skip_usmash_check is true, we do not check for USmash
-    /// If skip_parry_checkis true, we do not disable jump cancel on parry
-    unsafe fn check_jump_cancel(&mut self, update_lr: bool, skip_usmash_check: bool, skip_parry_check: bool) -> bool {
+    /// If skip_disable_parry_check is true, we do not disable jump cancel on parry
+    unsafe fn check_jump_cancel(&mut self, update_lr: bool, skip_usmash_check: bool, skip_disable_parry_check: bool) -> bool {
 
-        if !skip_parry_check
+        if !skip_disable_parry_check
         && AttackModule::is_infliction_status(self, *crate::consts::COLLISION_KIND_MASK_PARRY) {
             return false;
         }
