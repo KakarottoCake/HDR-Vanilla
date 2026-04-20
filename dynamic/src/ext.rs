@@ -8,7 +8,15 @@ use smash::lib::{lua_const::*, *};
 use smash::lua2cpp::*;
 use smash::phx::*;
 use crate::{InputModule, VarModule};
+pub trait I32Ext {
+    fn mul_f32(self, f: f32) -> i32;
+}
 
+impl I32Ext for i32 {
+    fn mul_f32(self, f: f32) -> i32 {
+        (self as f32 * f).round() as i32
+    }
+}
 pub trait Vec2Ext {
     fn new(x: f32, y: f32) -> Self
     where
@@ -319,7 +327,7 @@ bitflags! {
         const Parry = 0x100000;
         const CStickOverride = 0x200000;
         const RivalsWallJump = 0x400000;
-        const ParryManual = 0x800000;
+        const TreadJump = 0x800000;
 
         const SpecialAll  = 0x20802;
         const AttackAll   = 0x201;
@@ -402,6 +410,7 @@ pub trait BomaExt {
     // INPUTS
     unsafe fn clear_commands<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T);
     unsafe fn get_command_life<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T) -> u8;
+    unsafe fn set_command_life<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T, life: u8);
     unsafe fn is_cat_flag<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T) -> bool;
     unsafe fn is_cat_flag_all<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T) -> bool;
     unsafe fn is_pad_flag(&mut self, pad_flag: PadFlag) -> bool;
@@ -413,6 +422,7 @@ pub trait BomaExt {
     unsafe fn was_prev_button_off(&mut self, buttons: Buttons) -> bool;
     unsafe fn stick_x(&mut self) -> f32;
     unsafe fn stick_y(&mut self) -> f32;
+    unsafe fn stick_polar(&mut self) -> (f32, f32);
     unsafe fn prev_stick_x(&mut self) -> f32;
     unsafe fn prev_stick_y(&mut self) -> f32;
     unsafe fn is_input_jump(&mut self) -> bool;
@@ -433,6 +443,7 @@ pub trait BomaExt {
     unsafe fn prev_right_stick_x(&mut self) -> f32;
     unsafe fn right_stick_y(&mut self) -> f32;
     unsafe fn prev_right_stick_y(&mut self) -> f32;
+    unsafe fn check_hold_input(&mut self, start_frame: i32, end_frame: i32, input: Buttons) -> bool;
 
     // STATE
     unsafe fn is_status(&mut self, kind: i32) -> bool;
@@ -480,6 +491,7 @@ pub trait BomaExt {
     // gets the boma of the player who is grabbing you
     unsafe fn get_grabber_boma(&mut self) -> &mut BattleObjectModuleAccessor;
     unsafe fn get_owner_boma(&mut self) -> &mut BattleObjectModuleAccessor;
+    unsafe fn get_team_owner_boma(&mut self) -> &mut BattleObjectModuleAccessor;
 
     // WORK
     unsafe fn get_int(&mut self, what: i32) -> i32;
@@ -565,6 +577,10 @@ pub trait BomaExt {
 
     unsafe fn clone_command_input(&mut self, command: usize, replace_command: usize);
 
+    unsafe fn get_escape_air_cliff_catch_frame(&mut self) -> i32;
+
+    unsafe fn get_escape_air_cancel_frame(&mut self) -> i32;
+
 }
 
 impl BomaExt for BattleObjectModuleAccessor {
@@ -592,6 +608,19 @@ impl BomaExt for BattleObjectModuleAccessor {
         };
 
         return crate::modules::InputModule::get_command_life(self.object(), cat, bits);
+    }
+
+    unsafe fn set_command_life<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T, life: u8) {
+        let cat = fighter_pad_cmd_flag.into();
+        let (cat, bits) = match cat {
+            CommandCat::Cat1(cat) => (0, cat.bits()),
+            CommandCat::Cat2(cat) => (1, cat.bits()),
+            CommandCat::Cat3(cat) => (2, cat.bits()),
+            CommandCat::Cat4(cat) => (3, cat.bits()),
+            CommandCat::CatHdr(cat) => (4, cat.bits()),
+        };
+
+        crate::modules::InputModule::set_command_life(self.object(), cat, bits, life);
     }
 
     unsafe fn is_cat_flag<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T) -> bool {
@@ -650,6 +679,14 @@ impl BomaExt for BattleObjectModuleAccessor {
 
     unsafe fn stick_y(&mut self) -> f32 {
         return ControlModule::get_stick_y(self);
+    }
+
+    unsafe fn stick_polar(&mut self) -> (f32, f32) {
+        let stick_x = self.stick_x();
+        let stick_y = self.stick_y();
+        let mag = (stick_x.powi(2) + stick_y.powi(2)).sqrt();
+        let rad = stick_y.atan2(stick_x);
+        (mag, rad)
     }
 
     unsafe fn prev_stick_x(&mut self) -> f32 {
@@ -759,6 +796,42 @@ impl BomaExt for BattleObjectModuleAccessor {
         } else {
             return ControlModule::get_sub_stick_prev_y(self);
         }
+    }
+
+    /// Checks if a given input is held and turns off the check if released
+    /// 
+    /// # Arguments
+    /// * `start_frame` - the status frame to start checking for the held input
+    /// * `end_frame` - the status frame which to stop checking
+    /// * `input` - a Button input (ie Buttons::Special)
+    /// 
+    /// Returns true if the end of the hold check has completed, if the end frame has been specified
+    unsafe fn check_hold_input(&mut self, start_frame: i32, end_frame: i32, input: Buttons) -> bool {
+        // if out of range, return early
+        if !(start_frame..=end_frame).contains(&self.status_frame()) {
+            return false;
+        }
+
+        // start the check once we have reached the starting frame
+        if self.status_frame() == start_frame && !self.is_button_off(input) {
+            VarModule::on_flag(self.object(), vars::common::status::CHECK_HOLD_INPUT);
+        }
+
+        if VarModule::is_flag(self.object(), vars::common::status::CHECK_HOLD_INPUT) {
+            // if we are still checking for the hold and we are ready to end the check
+            if self.status_frame() == end_frame {
+                VarModule::off_flag(self.object(), vars::common::status::CHECK_HOLD_INPUT);
+                return true;
+            }
+
+            // check for the input being released, in which case we disable the check
+            if self.is_button_release(input) {
+                VarModule::off_flag(self.object(), vars::common::status::CHECK_HOLD_INPUT);
+                return false;
+            }
+        }
+
+        return false;
     }
 
     unsafe fn get_aerial(&mut self) -> Option<AerialKind> {
@@ -921,6 +994,12 @@ impl BomaExt for BattleObjectModuleAccessor {
 
     unsafe fn get_owner_boma(&mut self) -> &mut BattleObjectModuleAccessor {
         return &mut *sv_battle_object::module_accessor((WorkModule::get_int(self, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID)) as u32);
+    }
+
+    unsafe fn get_team_owner_boma(&mut self) -> &mut BattleObjectModuleAccessor {
+        let team_owner_id = TeamModule::team_owner_id(self) as u32;
+        let owner_object = super::util::get_battle_object_from_id(team_owner_id);
+        &mut *(*owner_object).module_accessor
     }
 
     unsafe fn get_num_used_jumps(&mut self) -> i32 {
@@ -1107,7 +1186,8 @@ impl BomaExt for BattleObjectModuleAccessor {
         let upper_bound_y = pos.y + upper_bound_offset_y;
         let snap_leniency = if WorkModule::get_float(self, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_FLOAT_DIR_Y) <= 0.0 {
                 // For a downwards/horizontal airdodge, waveland snap threshold = the distance from your ECB center to your base position
-                upper_bound_offset_y
+                // plus 0.01 so an ECB perfectly parallel with ground can still snap
+                upper_bound_offset_y + 0.01
             } else {
                 // For an upwards airdodge, waveland snap threshold = 6 units below ECB center, if the distance from your ECB center to your base position is less than 6 units long
                 (upper_bound_offset_y).max(crate::ParamModule::get_float(self.object(), crate::ParamType::Common, "waveland_distance_threshold"))
@@ -1536,6 +1616,13 @@ impl BomaExt for BattleObjectModuleAccessor {
                 StatusModule::change_status_request_from_script(self, *FIGHTER_STATUS_KIND_SPECIAL_LW,false);
             }
         }
+
+        // Airdodge cancels
+        if [
+            *FIGHTER_STATUS_KIND_ATTACK_AIR
+        ].contains(&status_kind) {
+            self.check_airdodge_cancel();
+        }
     }
 
     unsafe fn try_pickup_item(&mut self, range: f32, bone: Option<Hash40>, offset: Option<&Vector2f>) -> Option<&mut BattleObjectModuleAccessor> {
@@ -1616,6 +1703,44 @@ impl BomaExt for BattleObjectModuleAccessor {
         let original = *control_module.add((0x7f0 + (command * 8)) / 8) as *mut CommandInputState;
         let replace = *control_module.add((0x7f0 + (replace_command * 8)) / 8) as *mut CommandInputState;
         *replace = *original.clone();
+    }
+
+    unsafe fn get_escape_air_cliff_catch_frame(&mut self) -> i32 {
+        let escape_air_slide_fall_frame = crate::ParamModule::get_int(self.object(), crate::ParamType::Common, "escape_air_slide_fall_frame");
+        let escape_air_enable_cliff_catch_fall_distance = crate::ParamModule::get_float(self.object(), crate::ParamType::Common, "escape_air_enable_cliff_catch_fall_distance");
+        let escape_air_slide_speed_mul = crate::ParamModule::get_float(self.object(), crate::ParamType::Common, "escape_air_slide_speed_mul");
+        let air_accel_y = WorkModule::get_param_float(self, Hash40::new("air_accel_y").hash, 0);
+        let air_speed_y_stable = WorkModule::get_param_float(self, Hash40::new("air_speed_y_stable").hash, 0);
+        let escape_air_slide_speed = WorkModule::get_param_float(self, Hash40::new("param_motion").hash, Hash40::new("escape_air_slide_speed").hash);
+        let escape_air_stick_vec_y = 0.707;  // Simulate a 45º airdodge
+        let adjusted_escape_air_slide_speed = escape_air_slide_speed * escape_air_stick_vec_y;
+        let remaining_y_speed_on_escape_air_fall_frame = adjusted_escape_air_slide_speed * escape_air_slide_speed_mul.powi(escape_air_slide_fall_frame + 1);
+        let fall_time_to_enable_cliff_catch = super::util::get_time_to_fall_distance(
+            escape_air_enable_cliff_catch_fall_distance,
+            air_accel_y,
+            air_speed_y_stable,
+            remaining_y_speed_on_escape_air_fall_frame
+        );
+        (escape_air_slide_fall_frame + 1) + fall_time_to_enable_cliff_catch.ceil() as i32
+    }
+
+    unsafe fn get_escape_air_cancel_frame(&mut self) -> i32 {
+        let escape_air_slide_fall_frame = crate::ParamModule::get_int(self.object(), crate::ParamType::Common, "escape_air_slide_fall_frame");
+        let escape_air_enable_cancel_fall_distance = crate::ParamModule::get_float(self.object(), crate::ParamType::Common, "escape_air_enable_cancel_fall_distance");
+        let escape_air_slide_speed_mul = crate::ParamModule::get_float(self.object(), crate::ParamType::Common, "escape_air_slide_speed_mul");
+        let air_accel_y = WorkModule::get_param_float(self, Hash40::new("air_accel_y").hash, 0);
+        let air_speed_y_stable = WorkModule::get_param_float(self, Hash40::new("air_speed_y_stable").hash, 0);
+        let escape_air_slide_speed = WorkModule::get_param_float(self, Hash40::new("param_motion").hash, Hash40::new("escape_air_slide_speed").hash);
+        let escape_air_stick_vec_y = 0.707;  // Simulate a 45º airdodge
+        let adjusted_escape_air_slide_speed = escape_air_slide_speed * escape_air_stick_vec_y;
+        let remaining_y_speed_on_escape_air_fall_frame = adjusted_escape_air_slide_speed * escape_air_slide_speed_mul.powi(escape_air_slide_fall_frame + 1);
+        let fall_time_to_enable_cancel = super::util::get_time_to_fall_distance(
+            escape_air_enable_cancel_fall_distance,
+            air_accel_y,
+            air_speed_y_stable,
+            remaining_y_speed_on_escape_air_fall_frame
+        );
+        (escape_air_slide_fall_frame + 1) + fall_time_to_enable_cancel.ceil() as i32
     }
 }
 

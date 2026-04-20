@@ -76,6 +76,8 @@ unsafe extern "C" fn game_attackhi4(agent: &mut L2CAgentBase) {
         ATTACK(agent, 1, 0, Hash40::new("shoulderr"), 14.0, 84, 94, 0, 40, 4.25, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_MAGIC);
         ATTACK(agent, 2, 0, Hash40::new("top"), 4.0, 135, 100, 90, 0, 3.6, 0.0, 8.0, 6.0, None, None, None, 0.75, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_SLAP, *ATTACK_REGION_MAGIC);
         ATTACK(agent, 3, 0, Hash40::new("top"), 4.0, 135, 100, 90, 0, 3.6, 0.0, 8.0, -6.0, None, None, None, 0.75, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_SLAP, *ATTACK_REGION_MAGIC);
+        AttackModule::set_optional_hit_effect(boma, 0, Hash40::new("peach_attack_heart"));
+        AttackModule::set_optional_hit_effect(boma, 1, Hash40::new("peach_attack_heart"));
     }
     frame(lua_state, 17.0);
     if is_excute(agent) {
@@ -83,6 +85,8 @@ unsafe extern "C" fn game_attackhi4(agent: &mut L2CAgentBase) {
         ATTACK(agent, 1, 0, Hash40::new("shoulderr"), 10.0, 75, 125, 0, 20, 4.25, -0.5, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_MAGIC);
         AttackModule::clear(boma, 2, false);
         AttackModule::clear(boma, 3, false);
+        AttackModule::set_optional_hit_effect(boma, 0, Hash40::new("peach_attack_heart"));
+        AttackModule::set_optional_hit_effect(boma, 1, Hash40::new("peach_attack_heart"));
     }
     frame(lua_state, 23.0);
     if is_excute(agent) {

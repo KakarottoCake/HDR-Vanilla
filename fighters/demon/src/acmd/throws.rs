@@ -30,7 +30,7 @@ unsafe extern "C" fn game_catchdash(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 9.0);
     if is_excute(agent) {
-        CATCH(agent, 0, Hash40::new("top"), 4.0, 0.0, 6.6, 5.0, Some(0.0), Some(6.6), Some(10.2), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        CATCH(agent, 0, Hash40::new("top"), 4.0, 0.0, 6.6, 6.0, Some(0.0), Some(6.6), Some(10.2), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     game_CaptureCutCommon(agent);
     wait(lua_state, 2.0);
@@ -50,7 +50,7 @@ unsafe extern "C" fn game_catchturn(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {
-        CATCH(agent, 0, Hash40::new("top"), 4.0, 0.0, 6.6, -5.0, Some(0.0), Some(6.6), Some(-12.1), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        CATCH(agent, 0, Hash40::new("top"), 4.0, 0.0, 6.6, -6.0, Some(0.0), Some(6.6), Some(-12.1), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     game_CaptureCutCommon(agent);
     wait(lua_state, 2.0);
@@ -135,7 +135,7 @@ unsafe extern "C" fn game_throwb(agent: &mut L2CAgentBase) {
         let target_no = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
         let opponent_boma = agent.get_grabbed_opponent_boma();
-        VarModule::on_flag(opponent_boma.object(), vars::common::instance::IS_KNOCKDOWN_THROW);
+        VarModule::on_flag(opponent_boma.object(), vars::common::instance::FORCE_TUMBLE_NO_BOUNCE);
         CAM_ZOOM_OUT(agent);
     }
     frame(lua_state, 48.0);

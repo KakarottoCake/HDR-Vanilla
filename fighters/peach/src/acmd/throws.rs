@@ -11,7 +11,7 @@ unsafe extern "C" fn game_catch(agent: &mut L2CAgentBase) {
     frame(lua_state, 6.0);
     FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
-        CATCH(agent, 0, Hash40::new("top"), 4.3, 0.0, 8.5, 0.0, Some(0.0), Some(8.5), Some(9.2), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        CATCH(agent, 0, Hash40::new("top"), 4.3, 0.0, 8.5, 4.3, Some(0.0), Some(8.5), Some(9.2), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     game_CaptureCutCommon(agent);
     wait(lua_state, 2.0);
@@ -31,7 +31,7 @@ unsafe extern "C" fn game_catchdash(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 9.0);
     if is_excute(agent) {
-        CATCH(agent, 0, Hash40::new("top"), 4.3, 0.0, 8.5, 4.0, Some(0.0), Some(8.5), Some(10.4), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        CATCH(agent, 0, Hash40::new("top"), 4.3, 0.0, 8.5, 4.3, Some(0.0), Some(8.5), Some(10.4), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     game_CaptureCutCommon(agent);
     wait(lua_state, 2.0);
@@ -51,7 +51,7 @@ unsafe extern "C" fn game_catchturn(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {
-        CATCH(agent, 0, Hash40::new("top"), 4.3, 0.0, 8.5, -4.0, Some(0.0), Some(8.5), Some(-13.7), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        CATCH(agent, 0, Hash40::new("top"), 4.3, 0.0, 8.5, -4.3, Some(0.0), Some(8.5), Some(-13.7), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     game_CaptureCutCommon(agent);
     wait(lua_state, 2.0);
@@ -172,6 +172,7 @@ unsafe extern "C" fn game_throwhi(agent: &mut L2CAgentBase) {
         let target_group = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
         let target_no = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
+        AttackModule::set_optional_hit_effect(boma, 0, Hash40::new("peach_attack_heart"));
     }
     frame(lua_state, 40.0);
     if is_excute(agent) {
@@ -188,7 +189,7 @@ unsafe extern "C" fn effect_throwhi(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("peach_attack_heart"), Hash40::new("handr"), 0, 23.5, 0, 0, 90, 0, 0.5, true);
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("peach_attack_heart"), Hash40::new("handr"), 0, 0.0, 0, 0, 90, 0, 0.5, true);
         EFFECT_FOLLOW(agent, Hash40::new("peach_attack_hi3"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 0.83, true);
         LAST_EFFECT_SET_RATE(agent, 1.33);
     }

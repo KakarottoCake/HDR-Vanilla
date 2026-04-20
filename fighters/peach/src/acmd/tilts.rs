@@ -52,6 +52,8 @@ unsafe extern "C" fn game_attackhi3(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 11.0, 83, 71, 0, 50, 8.1, 0.0, 23.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
         ATTACK(agent, 1, 0, Hash40::new("top"), 11.0, 83, 71, 0, 50, 4.2, 0.0, 12.5, 0.4, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
+        AttackModule::set_optional_hit_effect(boma, 0, Hash40::new("peach_attack_heart"));
+        AttackModule::set_optional_hit_effect(boma, 1, Hash40::new("peach_attack_heart"));
     }
     frame(lua_state, 15.0);
     if is_excute(agent) {

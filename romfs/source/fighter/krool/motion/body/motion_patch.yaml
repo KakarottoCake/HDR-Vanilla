@@ -1,68 +1,68 @@
 passive:
   extra:
     xlu_end: 21
-    cancel_frame: 29
+    cancel_frame: 27
 passive_stand_f:
   extra:
     xlu_end: 21
-    cancel_frame: 43
+    cancel_frame: 41
 passive_stand_b:
   extra:
     xlu_end: 21
-    cancel_frame: 43
+    cancel_frame: 41
 down_stand_u:
   extra:
     xlu_end: 23
-    cancel_frame: 33
+    cancel_frame: 31
 down_stand_d:
   extra:
     xlu_end: 23
-    cancel_frame: 33
+    cancel_frame: 31
 down_attack_u:
   extra:
-    cancel_frame: 52
+    cancel_frame: 50
 down_attack_d:
   extra:
-    cancel_frame: 52
+    cancel_frame: 50
 down_forward_u:
   extra:
-    cancel_frame: 38
+    cancel_frame: 36
 down_forward_d:
   extra:
-    cancel_frame: 38
+    cancel_frame: 36
 down_back_u:
   extra:
-    cancel_frame: 38
+    cancel_frame: 36
 down_back_d:
   extra:
-    cancel_frame: 38
+    cancel_frame: 36
 cliff_climb_quick:
   extra:
-    xlu_end: 35
-    cancel_frame: 37
+    xlu_end: 33
+    cancel_frame: 35
 cliff_attack_quick:
   extra:
-    cancel_frame: 58
+    cancel_frame: 56
 cliff_escape_quick:
   extra:
     xlu_end: 31
-    cancel_frame: 52
+    cancel_frame: 50
 cliff_jump_quick1:
   extra:
     xlu_end: 17
 slip_stand:
   extra:
     xlu_end: 18
-    cancel_frame: 24
+    cancel_frame: 22
 slip_attack:
   extra:
-    cancel_frame: 52
+    cancel_frame: 50
 slip_escape_f:
   extra:
-    cancel_frame: 31
+    cancel_frame: 29
 slip_escape_b:
   extra:
-    cancel_frame: 31
+    cancel_frame: 29
 jump_squat:
   blend_frames: 0
   animations:
@@ -150,7 +150,7 @@ special_n_fire_hi:
     unk_2000: false
   blend_frames: 0
   animations:
-    - name: d00specialnspitf.nuanmb
+    - name: d00specialnspithi.nuanmb
       unk: 0
   scripts:
     - expression_specialnfirehi
@@ -180,7 +180,7 @@ special_air_n_fire_hi:
     unk_2000: false
   blend_frames: 0
   animations:
-    - name: d00specialairnspitf.nuanmb
+    - name: d00specialairnspithi.nuanmb
       unk: 0
   scripts:
     - expression_specialairnfirehi
@@ -189,7 +189,67 @@ special_air_n_fire_hi:
   extra:
     xlu_start: 0
     xlu_end: 0
-    cancel_frame: 70
+    cancel_frame: 45
+    no_stop_intp: false
+special_n_fire_b:
+  game_script: game_specialnfireb
+  flags:
+    turn: true
+    loop: false
+    move: false
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+    - name: d00specialnspitb.nuanmb
+      unk: 0
+  scripts:
+    - expression_specialnfireb
+    - sound_specialnfireb
+    - effect_specialnfireb
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 50
+    no_stop_intp: false
+special_air_n_fire_b:
+  game_script: game_specialairnfireb
+  flags:
+    turn: true
+    loop: false
+    move: false
+    fix_trans: false
+    fix_rot: false
+    fix_scale: false
+    unk_40: false
+    unk_80: true
+    unk_100: false
+    unk_200: false
+    unk_400: false
+    unk_800: false
+    unk_1000: false
+    unk_2000: false
+  blend_frames: 0
+  animations:
+    - name: d00specialairnspitb.nuanmb
+      unk: 0
+  scripts:
+    - expression_specialairnfireb
+    - sound_specialairnfireb
+    - effect_specialairnfireb
+  extra:
+    xlu_start: 0
+    xlu_end: 0
+    cancel_frame: 50
     no_stop_intp: false
 special_s_throw:
   extra:
@@ -272,7 +332,7 @@ throw_hi:
     cancel_frame: 75
 throw_lw:
   extra:
-    cancel_frame: 54
+    cancel_frame: 56
 item_light_throw_f:
   flags:
     move: false

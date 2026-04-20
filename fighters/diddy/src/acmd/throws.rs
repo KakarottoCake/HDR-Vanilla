@@ -9,7 +9,7 @@ unsafe extern "C" fn game_catch(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 7.0);
     if is_excute(agent) {
-        CATCH(agent, 0, Hash40::new("top"), 4.3, 0.0, 7.0, 0.0, Some(0.0), Some(7.0), Some(8.3), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        CATCH(agent, 0, Hash40::new("top"), 4.3, 0.0, 7.0, 4.3, Some(0.0), Some(7.0), Some(8.3), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     game_CaptureCutCommon(agent);
     wait(lua_state, 2.0);
@@ -29,7 +29,7 @@ unsafe extern "C" fn game_catchdash(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {
-        CATCH(agent, 0, Hash40::new("top"), 4.3, 0.0, 6.0, 4.0, Some(0.0), Some(6.0), Some(9.0), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        CATCH(agent, 0, Hash40::new("top"), 4.3, 0.0, 6.0, 4.3, Some(0.0), Some(6.0), Some(9.0), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     game_CaptureCutCommon(agent);
     wait(lua_state, 2.0);
@@ -49,7 +49,7 @@ unsafe extern "C" fn game_catchturn(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 11.0);
     if is_excute(agent) {
-        CATCH(agent, 0, Hash40::new("top"), 4.3, 0.0, 6.0, -4.0, Some(0.0), Some(6.0), Some(-13.3), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        CATCH(agent, 0, Hash40::new("top"), 4.3, 0.0, 6.0, -4.3, Some(0.0), Some(6.0), Some(-13.3), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     game_CaptureCutCommon(agent);
     wait(lua_state, 2.0);

@@ -68,68 +68,68 @@ guard_off:
 passive:
   extra:
     xlu_end: 21
-    cancel_frame: 29
+    cancel_frame: 27
 passive_stand_f:
   extra:
     xlu_end: 21
-    cancel_frame: 43
+    cancel_frame: 41
 passive_stand_b:
   extra:
     xlu_end: 21
-    cancel_frame: 43
+    cancel_frame: 41
 down_stand_u:
   extra:
     xlu_end: 23
-    cancel_frame: 33
+    cancel_frame: 31
 down_stand_d:
   extra:
     xlu_end: 23
-    cancel_frame: 33
+    cancel_frame: 31
 down_attack_u:
   extra:
-    cancel_frame: 52
+    cancel_frame: 50
 down_attack_d:
   extra:
-    cancel_frame: 52
+    cancel_frame: 50
 down_forward_u:
   extra:
-    cancel_frame: 38
+    cancel_frame: 36
 down_forward_d:
   extra:
-    cancel_frame: 38
+    cancel_frame: 36
 down_back_u:
   extra:
-    cancel_frame: 38
+    cancel_frame: 36
 down_back_d:
   extra:
-    cancel_frame: 38
+    cancel_frame: 36
 cliff_climb_quick:
   extra:
-    xlu_end: 35
-    cancel_frame: 37
+    xlu_end: 33
+    cancel_frame: 35
 cliff_attack_quick:
   extra:
-    cancel_frame: 58
+    cancel_frame: 56
 cliff_escape_quick:
   extra:
     xlu_end: 31
-    cancel_frame: 52
+    cancel_frame: 50
 cliff_jump_quick1:
   extra:
     xlu_end: 17
 slip_stand:
   extra:
     xlu_end: 18
-    cancel_frame: 24
+    cancel_frame: 22
 slip_attack:
   extra:
-    cancel_frame: 52
+    cancel_frame: 50
 slip_escape_f:
   extra:
-    cancel_frame: 31
+    cancel_frame: 29
 slip_escape_b:
   extra:
-    cancel_frame: 31
+    cancel_frame: 29
 jump_squat:
   blend_frames: 0
   animations:
@@ -174,7 +174,7 @@ special_n_dash_turn:
   extra:
     cancel_frame: 54
 special_n_min:
-  game_script: game_specialn2
+  game_script: game_specialn
   flags:
     turn: false
     loop: false
@@ -194,16 +194,16 @@ special_n_min:
   animations:
   - name: d00specialn2.nuanmb
   scripts:
-  - expression_specialn2
-  - sound_specialn2
-  - effect_specialn2
+  - expression_specialn
+  - sound_specialn
+  - effect_specialn
   extra:
     intangible_start_frame: 0
     intangible_end_frame: 0
     cancel_frame: 60
     freeze_during_hitstop: false
 special_n_med:
-  game_script: game_specialn2
+  game_script: game_specialn
   flags:
     turn: false
     loop: false
@@ -223,16 +223,16 @@ special_n_med:
   animations:
   - name: d00specialn2.nuanmb
   scripts:
-  - expression_specialn2
-  - sound_specialn2
-  - effect_specialn2
+  - expression_specialn
+  - sound_specialn
+  - effect_specialn
   extra:
     intangible_start_frame: 0
     intangible_end_frame: 0
     cancel_frame: 60
     freeze_during_hitstop: false
 special_n_max:
-  game_script: game_specialn2
+  game_script: game_specialn
   flags:
     turn: false
     loop: false
@@ -252,16 +252,16 @@ special_n_max:
   animations:
   - name: d00specialn2.nuanmb
   scripts:
-  - expression_specialn2
-  - sound_specialn2
-  - effect_specialn2
+  - expression_specialn
+  - sound_specialn
+  - effect_specialn
   extra:
     intangible_start_frame: 0
     intangible_end_frame: 0
     cancel_frame: 60
     freeze_during_hitstop: false
 special_air_n_min:
-  game_script: game_specialairn2
+  game_script: game_specialairn
   flags:
     turn: false
     loop: false
@@ -281,16 +281,16 @@ special_air_n_min:
   animations:
   - name: d00specialairn2.nuanmb
   scripts:
-  - expression_specialairn2
-  - sound_specialairn2
-  - effect_specialairn2
+  - expression_specialairn
+  - sound_specialairn
+  - effect_specialairn
   extra:
     intangible_start_frame: 0
     intangible_end_frame: 0
     cancel_frame: 60
     freeze_during_hitstop: false
 special_air_n_med:
-  game_script: game_specialairn2
+  game_script: game_specialairn
   flags:
     turn: false
     loop: false
@@ -310,16 +310,16 @@ special_air_n_med:
   animations:
   - name: d00specialairn2.nuanmb
   scripts:
-  - expression_specialairn2
-  - sound_specialairn2
-  - effect_specialairn2
+  - expression_specialairn
+  - sound_specialairn
+  - effect_specialairn
   extra:
     intangible_start_frame: 0
     intangible_end_frame: 0
     cancel_frame: 60
     freeze_during_hitstop: false
 special_air_n_max:
-  game_script: game_specialairn2
+  game_script: game_specialairn
   flags:
     turn: false
     loop: false
@@ -339,9 +339,9 @@ special_air_n_max:
   animations:
   - name: d00specialairn2.nuanmb
   scripts:
-  - expression_specialairn2
-  - sound_specialairn2
-  - effect_specialairn2
+  - expression_specialairn
+  - sound_specialairn
+  - effect_specialairn
   extra:
     intangible_start_frame: 0
     intangible_end_frame: 0

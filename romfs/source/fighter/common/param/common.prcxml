@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <struct>
+  <!-- THIS 'precede' PARAM IS NOW IGNORED BY THE GAME -->
+  <!-- To change global tap buffer length, use the one defined in hdr/param/common.xml instead -->
   <int hash="precede">5</int>
   <int hash="precede_extension">0</int>
   <float hash="ground_speed_limit">4</float>
@@ -30,10 +32,10 @@
   <float hash="dive_cont_value">-0.6415</float>
   <int hash="tread_jump_after_xlu_frame">0</int>
   <int hash="tread_jump_disable_frame_after_attack">8</int>
-  <float hash="shield_max">72</float>
+  <float hash="shield_max">64</float>
   <int hash="shield_min_frame">4</int>
-  <float hash="shield_dec1">0.375</float> <!-- 3.2 seconds to empty shield -->
-  <float hash="shield_recovery1">0.09</float> <!-- 13.33 seconds to full shield -->
+  <float hash="shield_dec1">0.333</float> <!-- 3.2 seconds to empty shield -->
+  <float hash="shield_recovery1">0.08</float> <!-- 13.33 seconds to full shield -->
   <float hash="shield_damage_mul">1.0</float>
   <float hash="shield_setoff_mul">0.55</float>
   <float hash="shield_setoff_mul_fighter_shot">0.5156</float>
@@ -44,10 +46,10 @@
   <float hash="shield_rebound_ground_brake">1</float>
   <int hash="guard_off_cancel_frame">14</int>
   <int hash="guard_off_disable_shield_recovery">14</int>
-  <int hash="shield_just_frame">6</int>
+  <int hash="shield_just_frame">5</int>
   <float hash="0x2cacbf2a63">8</float>
   <float hash="just_shield_speed_rate">0.00</float>
-  <float hash="shield_reset">30</float>
+  <float hash="shield_reset">24</float>
   <int hash="shield_setoff_escape">10</int>
   <float hash="0x20d241cd64">0.85</float>
   <int hash="guard_damage_just_shield_disable_frame">1</int>
@@ -68,17 +70,25 @@
   <float hash="hit_stop_delay_auto_mul">2.5</float>
   <float hash="damage_reaction_mul_max">1</float>
   <list hash="pattern_power_mul">
-    <hash40 index="0">dummy</hash40>
-    <hash40 index="1">dummy</hash40>
-    <float index="2">0.075</float>
-    <float index="3">0.060</float>
-    <float index="4">0.045</float>
-    <float index="5">0.030</float>
-    <float index="6">0.015</float>
-    <float index="7">0.00</float>
-    <float index="8">0.00</float>
-    <float index="9">0.00</float>
+    <!-- the mul at index 0 is the freshness bonus multiplier minus one -->
+    <!-- for example, <float index="0">0.05</float> denotes a 1.05x freshness bonus -->
+    <!-- set to zero to disable the freshness bonus -->
+    <float index="0">0.05</float>
+    <!-- these are the stale move reduction factors -->
+    <!-- all slots in total = 0.54, meaning a move in all 9 slots has its damage reduced by 54% -->
+    <float index="1">0.10</float>
+    <float index="2">0.09</float>
+    <float index="3">0.08</float>
+    <float index="4">0.07</float>
+    <float index="5">0.06</float>
+    <float index="6">0.05</float>
+    <float index="7">0.04</float>
+    <float index="8">0.03</float>
+    <float index="9">0.02</float>
   </list>
+  <!-- shield_pattern_power_mul is an additional scalar to the stale queue position when a move is used on shield -->
+  <!-- we set it to 1.0x so that hitting a shield is no less punishing than hitting a fighter, for parity -->
+  <float hash="shield_pattern_power_mul">1.0</float> 
   <float hash="attack_s3_stick_x">0.2</float>
   <float hash="attack_s3_stick_dir_hi">0.2</float>
   <float hash="attack_s3_stick_dir_lw">-0.2</float>
@@ -151,7 +161,7 @@
   <float hash="damage_speed_no_cliff_stop">999</float>
   <float hash="damage_fly_speed_y_mul_base_accel">0</float>
   <float hash="damage_fly_speed_y_mul">0</float>
-  <float hash="damage_fly_correction_max">15</float>
+  <float hash="damage_fly_correction_max">18</float>
   <float hash="damage_fly_length_mul_max">1</float>
   <float hash="damage_fly_length_mul_min">1</float>
   <int hash="damage_fly_attack_frame">999</int>
@@ -164,6 +174,11 @@
   <float hash="furafura_frame">150</float>
   <float hash="furafura_clatter_frame">0</float>
   <float hash="damage_song_frame_bonus_damage">0.5</float>
+  <float hash="damage_bind_frame">60</float>
+  <float hash="damage_bind_frame_bonus_rank">0</float>
+  <float hash="damage_bind_frame_bonus_handi">0</float>
+  <float hash="damage_bind_clatter_frame">3</float>
+  <int hash="invalid_bind_frame">45</int>
   <float hash="bury_jump_y_speed_mul">1.15</float>
   <float hash="kirby_swallowedthrown_clatter_recover">1.8</float>
   <float hash="mewtwo_thrown_reaction_frame_mul">1</float>

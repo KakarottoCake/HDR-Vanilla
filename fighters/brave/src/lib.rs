@@ -13,6 +13,7 @@ mod crash;
 mod deathball;
 mod explosion;
 mod fireball;
+mod flash;
 mod lightning;
 mod spark;
 mod tornado;
@@ -43,6 +44,7 @@ use smash_script::{
     *,
     macros::*
 };
+use smash_script::macros::ATTACK_ABS;
 use utils::{
     *,
     consts::*,
@@ -85,6 +87,7 @@ pub fn install() {
     deathball::install();
     explosion::install();
     fireball::install();
+    flash::install();
     lightning::install();
     spark::install();
     tornado::install();

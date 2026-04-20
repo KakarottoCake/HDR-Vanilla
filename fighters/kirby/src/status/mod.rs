@@ -16,6 +16,14 @@ unsafe extern "C" fn should_use_special_hi_callback(fighter: &mut L2CFighterComm
     }
 }
 
+unsafe extern "C" fn should_use_special_lw_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if VarModule::is_flag(fighter.battle_object, vars::kirby::instance::DISABLE_SPECIAL_LW) {
+        false.into()
+    } else {
+        true.into()
+    }
+}
+
 unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
     /// Ganon: Re-enables the ability to use aerial specials when connecting to ground or cliff
     if fighter.is_situation(*SITUATION_KIND_GROUND) || fighter.is_situation(*SITUATION_KIND_CLIFF) 
@@ -29,6 +37,12 @@ unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L
         EFFECT_OFF_KIND(fighter, Hash40::new("koopa_breath_m_fire"), false, false);
         VarModule::set_int(fighter.battle_object, vars::koopa::instance::SPECIAL_N_FIREBALL_EFFECT_ID, 0);
         VarModule::set_int(fighter.battle_object, vars::koopa::instance::SPECIAL_N_FIREBALL_COOLDOWN, KOOPA_MAX_COOLDOWN);
+    }
+
+    /// Re-enables Stone
+    if fighter.is_situation(*SITUATION_KIND_GROUND) || fighter.is_situation(*SITUATION_KIND_CLIFF) 
+    || fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_GIMMICK_SPRING_JUMP]) {
+        VarModule::off_flag(fighter.battle_object, vars::kirby::instance::DISABLE_SPECIAL_LW);
     }
 
     return true.into();
@@ -191,19 +205,20 @@ unsafe extern "C" fn should_use_special_n_callback(fighter: &mut L2CFighterCommo
                 return 1.into();
             }
         }
-        if copy_kind != *FIGHTER_KIND_PIT {
-            if copy_kind != *FIGHTER_KIND_PITB {
-                if copy_kind == *FIGHTER_KIND_INKLING {
-                    let inkling_ink = WorkModule::get_float(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_INKLING_SPECIAL_N_INK);
-                    if inkling_ink > 0.0 {
-                        return 1.into();
-                    }
-                    else {
-                        return 0.into();
-                    }
-                }
+        if copy_kind == *FIGHTER_KIND_INKLING {
+            let inkling_ink = WorkModule::get_float(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_INKLING_SPECIAL_N_INK);
+            if inkling_ink > 0.0 {
                 return 1.into();
             }
+            else {
+                return 0.into();
+            }
+        }
+        if copy_kind == *FIGHTER_KIND_PFUSHIGISOU {
+            if VarModule::is_flag(fighter.battle_object, vars::kirby::instance::SPECIAL_N_PFUSHIGISOU_SEED_FIRED) {
+                return 0.into();
+            }
+            return 1.into();
         }
         if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_COPY_STRANS_OFF) {
             return 1.into();
@@ -250,6 +265,7 @@ unsafe extern "C" fn special_n_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
 unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     // set the callbacks on fighter init
     fighter.global_table[globals::USE_SPECIAL_HI_CALLBACK].assign(&L2CValue::Ptr(should_use_special_hi_callback as *const () as _));
+    fighter.global_table[globals::USE_SPECIAL_LW_CALLBACK].assign(&L2CValue::Ptr(should_use_special_lw_callback as *const () as _));
     fighter.global_table[globals::STATUS_CHANGE_CALLBACK].assign(&L2CValue::Ptr(change_status_callback as *const () as _));
     fighter.global_table[globals::USE_SPECIAL_N_CALLBACK].assign(&L2CValue::Ptr(should_use_special_n_callback as *const () as _));
     fighter.global_table[globals::CHECK_SPECIAL_COMMAND].assign(&L2CValue::Ptr(shoto_check_special_command as *const () as _));
@@ -267,6 +283,7 @@ unsafe extern "C" fn on_start(fighter: &mut L2CFighterCommon) {
     VarModule::off_flag(fighter.object(), vars::lucas::instance::SPECIAL_N_OFFENSE_UP_ACTIVE);
     VarModule::off_flag(fighter.object(), vars::lucas::instance::SPECIAL_N_OFFENSE_UP_INIT);
     VarModule::off_flag(fighter.object(), vars::lucas::instance::SPECIAL_N_OFFENSE_UP_RELEASE_AFTER_WHIFF);
+    VarModule::off_flag(fighter.battle_object, vars::kirby::instance::SPECIAL_N_PFUSHIGISOU_SEED_FIRED);
 }
 
 unsafe extern "C" fn entry_main(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -279,6 +296,7 @@ unsafe extern "C" fn dead_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     VarModule::set_int(fighter.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 0);
     VarModule::set_int(fighter.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
     VarModule::off_flag(fighter.battle_object, vars::ganon::instance::DISABLE_SPECIAL_N);
+    VarModule::off_flag(fighter.battle_object, vars::kirby::instance::DISABLE_SPECIAL_LW);
 
     utils::ui::UiManager::set_ptrainer_meter_enable(fighter.get_int(*FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32, false);
 
@@ -289,6 +307,8 @@ unsafe extern "C" fn rebirth_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     VarModule::set_int(fighter.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_STATE, 0);
     VarModule::set_int(fighter.battle_object, vars::ptrainer::instance::SPECIAL_N_PLEDGE_TIMER, 0);
     VarModule::off_flag(fighter.battle_object, vars::ganon::instance::DISABLE_SPECIAL_N);
+    VarModule::off_flag(fighter.battle_object, vars::kirby::instance::DISABLE_SPECIAL_LW);
+    
     smashline::original_status(Main, fighter, *FIGHTER_STATUS_KIND_REBIRTH)(fighter)
 }
 

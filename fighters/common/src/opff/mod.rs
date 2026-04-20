@@ -2,6 +2,7 @@ use super::*;
 use smash::lib::{lua_const::*, L2CValue, L2CAgent};
 use smash::lua2cpp::L2CFighterCommon;
 use smash::lua2cpp::L2CFighterBase;
+use std::sync::atomic::Ordering;
 
 pub mod ledges;
 pub mod physics;
@@ -51,6 +52,8 @@ pub unsafe fn fighter_common_opff(fighter: &mut L2CFighterCommon) {
     }
 }
 
+use utils::util::MATCH_EXITING;
+
 static mut IS_SALTY_INPUT: bool = false;
 
 /// Performs salty runback check based off of the button input
@@ -67,6 +70,7 @@ unsafe fn salty_check(fighter: &mut L2CFighterCommon) -> bool {
             utils::game_modes::signal_new_game();
             true
         } else if fighter.is_button_on(Buttons::SpecialRaw) && !fighter.is_button_on(!(Buttons::SpecialRaw | Buttons::StockShare)) {
+            MATCH_EXITING.store(true, Ordering::Relaxed);
             app::FighterUtil::flash_eye_info(fighter.module_accessor);
             if !fighter.is_status_one_of(&[*FIGHTER_STATUS_KIND_DEAD, *FIGHTER_STATUS_KIND_STANDBY]) {
                 StatusModule::change_status_force(fighter.module_accessor, *FIGHTER_STATUS_KIND_DEAD, false);
@@ -127,6 +131,8 @@ pub unsafe fn moveset_edits(fighter: &mut L2CFighterCommon, info: &FrameInfo) {
 pub unsafe fn sys_line_system_control_fighter_hook(fighter: &mut L2CFighterCommon) -> L2CValue {
     // Reserved for common OPFF to be placed on exec status
     // rather than main status (default behavior)
+    // other::fighter_frame_in_air_inc_ensure(fighter); // fighter_common_opff runs multiple times per frame when
+    //                                                  // transitioning between states, so this is placed here instead.
     decrease_knockdown_bounce_heights(fighter);
     left_stick_flick_counter(fighter);
     right_stick_flick_counter(fighter);

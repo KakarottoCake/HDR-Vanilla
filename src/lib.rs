@@ -39,10 +39,16 @@ mod online;
 #[cfg(feature = "main_nro")]
 mod matchup;
 
+pub mod vsync;
+
 use skyline::libc::c_char;
+use std::os::raw::c_void;
 #[cfg(feature = "main_nro")]
 use skyline_web::*;
 use std::{fs, path::Path};
+use utils::STAGE_MANAGER;
+use std::sync::atomic::Ordering;
+use dynamic::util::MATCH_EXITING;
 
 #[cfg(not(feature = "main_nro"))]
 #[no_mangle]
@@ -160,7 +166,7 @@ unsafe fn training_reset_music1(ctx: &skyline::hooks::InlineCtx) {
 
 #[skyline::hook(offset = 0x235cad0, inline)]
 unsafe fn main_menu_quick(ctx: &skyline::hooks::InlineCtx) {
-    let sp = (ctx as *const skyline::hooks::InlineCtx as *mut u8).add(0x300);
+    let sp = ctx.sp.x() as *mut u8;
     *(sp.add(0x60) as *mut u64) = 0x1100000000;
     let mut slice = std::slice::from_raw_parts_mut(sp.add(0x68), 18);
     slice.copy_from_slice(b"MenuSequenceScene\0");
@@ -235,72 +241,93 @@ unsafe fn push_hash(game_state: u64, hash: u64) {
     *game_state.add(0xe8 / 8) += 1;
 }
 
-// let this code stay dormant but this is an example of how to abuse the game state,
-// this will exit the game without going to results at the end.
+// game_end handles the normal end of game flow
 #[skyline::hook(offset = 0x14d6590)]
 unsafe fn game_end(game_state: u64) {
-    let one =
-        *(skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as *mut u8).add(0x52c41b2);
-    let mode = (skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as u64 + 0x53040f0)
-        as *const u64;
-    if one == 0 && *mode != 0x4040000 {
-        push_something(game_state, 2);
-        // push_hash(game_state, smash::hash40("statewaitforruletofinish"));
-        // push_hash(game_state, smash::hash40("statewaitendproduction"));
-        push_hash(game_state, smash::hash40("stateapplyparameters"));
-        // push_hash(game_state, smash::hash40("statewaitforsyncwhenending"));
-        push_hash(game_state, smash::hash40("statefadeoutwhenending"));
-        push_hash(game_state, smash::hash40("stateexit"));
+    if utils::one_player::one_player_entry() {
+        skip_results(game_state);
         return;
     }
     call_original!(game_state);
 }
 
+// game_exit handles player-initiated end of game flow
 #[skyline::hook(offset = 0x14d7ef0)]
 unsafe fn game_exit(game_state: u64, arg: u64) {
-    let one =
-        *(skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as *mut u8).add(0x52c41b2);
-    let mode = (skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as u64 + 0x53040f0)
-        as *const u64;
-    if one == 0 && *mode != 0x4040000 {
-        push_something(game_state, 2);
-        // push_hash(game_state, smash::hash40("statewaitforruletofinish"));
-        // push_hash(game_state, smash::hash40("statewaitendproduction"));
-        push_hash(game_state, smash::hash40("stateapplyparameters"));
-        // push_hash(game_state, smash::hash40("statewaitforsyncwhenending"));
-        push_hash(game_state, smash::hash40("statefadeoutwhenending"));
-        push_hash(game_state, smash::hash40("stateexit"));
+    if utils::one_player::one_player_entry() {
+        skip_results(game_state);
         return;
     }
-
     call_original!(game_state, arg);
 }
 
-#[repr(C)]
-pub struct FuckingAssStringStructureShit {
-    pub fuck_if_i_know: u32,
-    pub len: u32,
-    pub shit_ass_string: [u8; 40],
+// Skips the results screen at the end of a game
+unsafe fn skip_results(game_state: u64) {
+    push_something(game_state, 2);
+    // push_hash(game_state, smash::hash40("statewaitforruletofinish"));
+    // push_hash(game_state, smash::hash40("statewaitendproduction"));
+    push_hash(game_state, smash::hash40("stateapplyparameters"));
+    // push_hash(game_state, smash::hash40("statewaitforsyncwhenending"));
+    push_hash(game_state, smash::hash40("statefadeoutwhenending"));
+    push_hash(game_state, smash::hash40("stateexit"));
 }
 
-impl FuckingAssStringStructureShit {
+impl HashedString {
     pub fn set(&mut self, replacement: &str) {
-        self.len = replacement.len() as u32;
-        self.shit_ass_string[..replacement.len()].copy_from_slice(replacement.as_bytes());
-        self.shit_ass_string[replacement.len()] = b'\0';
+        self.length = replacement.len() as u32;
+        self.string[..replacement.len()].copy_from_slice(replacement.as_bytes());
+        self.string[replacement.len()] = b'\0';
+    }
+
+    pub fn as_str(&self) -> &str {
+        let len = self.string.iter().position(|&c| c == 0).unwrap_or(self.string.len());
+        std::str::from_utf8(&self.string[..len]).unwrap_or("")
     }
 }
 
+pub static mut NEW_CSS_SFX: bool = false;
+
 #[skyline::hook(offset = 0x23357f8, inline)]
 unsafe fn sss_to_css(ctx: &InlineCtx) {
-    let thing = ctx.registers[1].x() as *mut FuckingAssStringStructureShit;
-    (*thing).set("CharaSelectScene");
+    let hashed_string = ctx.registers[1].x() as *mut HashedString;
+    let current_scene = (*hashed_string).as_str();
+
+    if current_scene == "StageSelectScene" {
+        NEW_CSS_SFX = true;
+        (*hashed_string).set("CharaSelectScene");
+    }
 }
 
 #[skyline::hook(offset = 0x2335184, inline)]
 unsafe fn css_to_sss(ctx: &InlineCtx) {
-    let thing = ctx.registers[1].x() as *mut FuckingAssStringStructureShit;
-    (*thing).set("StageSelectScene");
+    let hashed_string = ctx.registers[1].x() as *mut HashedString;
+    let current_scene = (*hashed_string).as_str();
+
+    if current_scene == "CharaSelectScene" {
+        let text = skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as u64;
+        let flag_ptr = (text + 0x530996c) as *const u8;
+        
+        let flag = *flag_ptr.add(3);
+
+        // This is something to pay attention to when this goes to prerelease
+        // flag == 0 is the standard mode and flag == 4 is random stage select
+        // Unsure if there are more modes, but I'm checking for standard mode just
+        // to be safe. If there are more modes we need to apply this to, we can
+        // add them as they're found.
+        if flag == 0 {
+            (*hashed_string).set("StageSelectScene");
+        }
+        else {
+            NEW_CSS_SFX = false;
+        }
+    }
+}
+
+#[repr(C)]
+pub struct HashedString {
+    pub length: u32,
+    pub hash: u32,
+    pub string: [u8; 64],
 }
 
 #[repr(C)]
@@ -346,10 +373,52 @@ unsafe fn copy_fighter_info(
     call_original!(dst, src);
 }
 
+// This is a hook on the main scene transition function
+// key_str is the scene name
+// Add anything requiring a scene transition check here
+#[skyline::hook(offset = 0x3726120)]
+unsafe fn scene_transition(
+    list_ptr: *mut c_void,
+    key_struct: *const HashedString, 
+    context_struct: *const HashedString, 
+    factory: *mut c_void
+) {
+    if !key_struct.is_null() {
+        let len = (*key_struct).length;
+        let hash = (*key_struct).hash;
+        
+        let str_ptr = (key_struct as *const u8).add(8) as *const c_char;
+        let key_str = skyline::from_c_str(str_ptr);
+        println!("Transitioning to scene: '{}'", key_str);
+
+        if key_str == "MeleeRuleScene" || key_str == "MainMenuScene" {
+            // Clear perma-strikes when going to main menu or the rules screen
+            let mut mgr = STAGE_MANAGER.lock().unwrap();
+            mgr.perma_striked_stages.clear();
+
+            // Make sure new CSS SFX don't carry over to other modes unintentionally
+            NEW_CSS_SFX = false;
+        }
+    }
+
+    MATCH_EXITING.store(false, Ordering::Relaxed);
+
+    call_original!(list_ptr, key_struct, context_struct, factory);
+}
+
+extern "C" {
+    #[link_name = "_ZN2nn5prepo10PlayReport4SaveERKNS_7account3UidE"]
+    fn save_report(uid: *mut u8);
+}
+
+#[skyline::hook(replace = save_report)]
+fn save_report_stub(uid: *mut u8) { }
+
 #[skyline::main(name = "hdr")]
 pub fn main() {
     #[cfg(feature = "main_nro")]
     {
+        // vsync::setup_ssbu_sync();
         quick_validate_install();
         skyline::install_hooks!(change_version_string_hook);
         chara_select::install();
@@ -359,18 +428,21 @@ pub fn main() {
         matchup::install();
         skyline::patching::Patch::in_text(0x14f99cc).nop().unwrap();
         skyline::patching::Patch::in_text(0x1509fd4).nop().unwrap();
+        unlock_menu_music();
         skyline::install_hooks!(
             training_reset_music1,
             training_reset_music2,
             main_menu_quick,
             title_screen_play,
-            //sss_to_css,
-            //css_to_sss,
+            sss_to_css,
+            css_to_sss,
+            scene_transition,
+            save_report_stub,
             //copy_fighter_info,
             //load_ingame_call_sequence_scene,
             //load_melee_scene,
-            //game_end,
-            //game_exit
+            game_end,
+            game_exit
         );
     }
 
@@ -540,4 +612,16 @@ pub fn quick_validate_install() {
     }
 
     println!("simple validation complete.");
+}
+
+fn unlock_menu_music() {
+    if std::path::Path::new("sd:/ultimate/hdr-config/unlock_menu_music").exists() {
+        println!("WARNING: potentially bannable operation in effect!");
+        // Patch the My Music UI to always show menu music as selectable
+        skyline::patching::Patch::in_text(0x184de0c).nop().unwrap();
+        skyline::patching::Patch::in_text(0x184de10).data(0x390bbb9fu32).unwrap();
+        // Patch the BGM playback function to always use the player's My Music selection
+        // instead of defaulting to the standard menu theme.
+        skyline::patching::Patch::in_text(0x3311f94).data(0x320003e8u32).unwrap();
+    }
 }
