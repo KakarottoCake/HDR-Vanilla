@@ -158,22 +158,6 @@ pub unsafe fn peach_float_main_loop_common(fighter: &mut L2CFighterCommon) -> L2
         return 0.into();
     }
 
-    //let mut daikon = *ITEM_KIND_PEACHDAIKON;
-    //if fighter.global_table[0x2].get_i32() == *FIGHTER_KIND_DAISY {
-    //    daikon = *ITEM_KIND_DAISYDAIKON;
-    //}
-    //if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_PEACH_STATUS_TRANS_ID_SPECIAL_LW_ITEM_THROW) {
-    //    if fighter.global_table[PAD_FLAG].get_i32() & *FIGHTER_PAD_FLAG_SPECIAL_TRIGGER != 0 {
-    //        let stick_y = fighter.left_stick_y();
-    //        let special_stick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("special_stick_y"));
-    //        if stick_y <= -special_stick_y
-    //        && ItemModule::get_have_item_kind(fighter.module_accessor, 0) == daikon {
-    //            fighter.change_status(FIGHTER_STATUS_KIND_ITEM_THROW.into(), true.into());
-    //            return 0.into();
-    //        }
-    //    }
-    //}
-
     if WorkModule::get_int(fighter.module_accessor, *FIGHTER_PEACH_STATUS_UNIQ_FLOAT_WORK_INT_ENABLE_UNIQ) == 1 {
         if WorkModule::get_int(fighter.module_accessor, *FIGHTER_PEACH_STATUS_UNIQ_FLOAT_WORK_INT_FLOAT_FRAME) > 0 {
             WorkModule::dec_int(fighter.module_accessor, *FIGHTER_PEACH_STATUS_UNIQ_FLOAT_WORK_INT_FLOAT_FRAME);

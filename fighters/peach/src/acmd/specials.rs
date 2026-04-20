@@ -182,14 +182,9 @@ unsafe extern "C" fn game_specialsjump(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    frame(lua_state, 1.0); // starts f1 instead of 0
-    //FT_MOTION_RATE_RANGE(agent, 1.0, 30.0, 29.0);
-    frame(lua_state, 30.0); // 32 -> 29
-    //FT_MOTION_RATE(agent, 1.0);
-}
+//unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
+    // starts f1 instead of 0
+//}
 
 unsafe extern "C" fn effect_specialsend(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
@@ -209,7 +204,9 @@ unsafe extern "C" fn game_specialairsend(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     if is_excute(agent) {
         // hit shield
-        if VarModule::get_int(agent.battle_object, vars::common::instance::PREV_STATUS_INFLICT_STATUS) & *COLLISION_KIND_MASK_SHIELD != 0 {
+        let hit_status = VarModule::get_int(agent.battle_object, vars::common::instance::PREV_STATUS_INFLICT_STATUS);
+        if hit_status & *COLLISION_KIND_MASK_SHIELD != 0
+        && hit_status & *COLLISION_KIND_MASK_PARRY != 1 {
             ATTACK(agent, 0, 0, Hash40::new("hip"), 4.0, 361, 20, 0, 20, 2.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 6, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HIP);
         }
     }
@@ -525,7 +522,7 @@ pub fn install(agent: &mut Agent) {
 
     agent.acmd("game_specialsjump", game_specialsjump, Priority::Low);
 
-    agent.acmd("game_specialsend", game_specialsend, Priority::Low);
+    agent.acmd("game_specialsend", acmd_stub, Priority::Low);
     agent.acmd("game_specialairsend", game_specialairsend, Priority::Low);
     agent.acmd("expression_specialairsend", expression_specialairsend, Priority::Low);
 

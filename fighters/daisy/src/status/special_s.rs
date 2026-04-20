@@ -45,7 +45,6 @@ unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
         return 1.into();
     }
     if MotionModule::is_end(fighter.module_accessor) {
-        //special_s_check_flick(fighter);
         fighter.change_status(FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_JUMP.into(), false.into());
     }
 
@@ -64,21 +63,6 @@ unsafe extern "C" fn special_s_start_momentum(fighter: &mut L2CFighterCommon) ->
     sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.0);
     sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, stable_y);
     sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, (speed_y+start_y).clamp(-max_y, max_y));
-    0.into()
-}
-
-unsafe extern "C" fn special_s_check_flick(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let buffer = ControlModule::get_command_life_count_max(fighter.module_accessor) as usize;
-    let hold_frames = InputModule::get_trigger_count(fighter.battle_object, Buttons::Special);
-    if fighter.is_button_on(Buttons::Special) && hold_frames > buffer {
-        fighter.on_flag(*FIGHTER_PEACH_STATUS_SPECIAL_S_FLAG_FLICK_START);
-        fighter.clear_lua_stack();
-        fighter.push_lua_stack(&mut L2CValue::new_int(0x20cbc92683));
-        fighter.push_lua_stack(&mut L2CValue::I32(1));
-        fighter.push_lua_stack(&mut L2CValue::I32(*FIGHTER_LOG_DATA_INT_HAJIKI_NUM));
-        app::sv_battle_object::notify_event_msc_cmd(fighter.lua_state_agent);
-        fighter.set_int(0, *FIGHTER_PEACH_STATUS_SPECIAL_S_WORK_INT_ENABLE_UNIQ);
-    }
     0.into()
 }
 
