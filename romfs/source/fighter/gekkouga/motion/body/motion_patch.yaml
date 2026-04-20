@@ -98,6 +98,9 @@ attack_dash:
 attack_hi3:
   extra:
     cancel_frame: 31
+attack_lw3:
+  extra:
+    cancel_frame: 25
 fall_aerial:
   blend_frames: 3
 attack_s4_s:

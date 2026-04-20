@@ -28,4 +28,7 @@
     <struct hash="param_attack_hi4">
         <float hash="jump_stable_speed_x_mul">0.5</float>
     </struct>
+    <struct hash="param_special_hi">
+        <int hash="start_stop_y_frame">12</int>
+    </struct>
 </struct>

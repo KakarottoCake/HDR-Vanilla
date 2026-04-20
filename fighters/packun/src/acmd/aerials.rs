@@ -132,8 +132,8 @@ unsafe extern "C" fn game_attackairb(agent: &mut L2CAgentBase) {
             ATTACK(agent, 1, 0, Hash40::new("top"), 6.0, 50, 108, 0, 25, 4.5, 0.0, 8.35, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_poison"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BOMB);
             ATTACK(agent, 2, 1, Hash40::new("top"), 0.0, 0, 0, 0, 0, 9.0, 0.0, 4.0, -8.5, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, true, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_BOMB);
             ATTACK(agent, 3, 1, Hash40::new("top"), 0.0, 0, 0, 0, 0, 4.5, 0.0, 8.35, 0.0, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, true, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_BOMB);
-            AttackModule::set_poison_param(boma, 0, 241, 60, 1.0, false);
-            AttackModule::set_poison_param(boma, 1, 241, 60, 1.0, false);
+            AttackModule::set_poison_param(boma, 0, 241, 60, 0.5, false);
+            AttackModule::set_poison_param(boma, 1, 241, 60, 0.5, false);
         }
         wait(lua_state, 4.0);
         if is_excute(agent) {
