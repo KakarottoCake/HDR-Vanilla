@@ -161,7 +161,7 @@ unsafe extern "C" fn special_lw1_air_main_loop(fighter: &mut L2CFighterCommon) -
     if fighter.is_motion(Hash40::new("special_lw1_loop")) {
         // Allows EQF to be cancelled into freefall with second B press
         if (ControlModule::check_button_on_trriger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) || fighter.status_frame() >= 40) {
-            EffectModule::req_on_joint(fighter.module_accessor, Hash40::new("sys_smash_flash"), Hash40::new("top"), &Vector3f::new(1.0, 7.0, 5.0), &Vector3f::zero(), 0.5, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
+            EffectModule::req_on_joint(fighter.module_accessor, Hash40::new("sys_smash_flash"), Hash40::new("top"), &Vector3f::new(1.0, 7.0, 5.0), &Vector3f::zero(), 0.7, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
             SoundModule::stop_se(fighter.module_accessor, Hash40::new("se_miifighter_final06"), 0);
             let handle = SoundModule::play_se(fighter.module_accessor, Hash40::new("se_miifighter_appeal_h01"), true, false, false, false, enSEType(0));
             SoundModule::set_se_vol(fighter.module_accessor, handle as i32, 1.5, 0);

@@ -291,7 +291,7 @@ unsafe extern "C" fn effect_specialsend(agent: &mut L2CAgentBase) {
         }
         match stance {
             STANCE_PIRANHA => {
-                EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("mouth"), 2, -2, 0, 0, 0, 0, 0.9, false);
+                EFFECT(agent, Hash40::new("sys_flash"), Hash40::new("mouth"), 2, -2, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
                 EFFECT_FOLLOW(agent, Hash40::new("sys_hit_fire"), Hash40::new("mouth"), 3, -1, 0, 0, 0, 0, 0.7, true);
             },
             STANCE_PUTRID => {
