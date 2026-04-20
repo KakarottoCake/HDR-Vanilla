@@ -83,6 +83,12 @@ attack_12:
 special_n:
   extra:
     cancel_frame: 60
+special_lw:
+  extra:
+    cancel_frame: 40 
+special_air_lw:
+  extra:
+    cancel_frame: 40
 attack_11:
   extra:
     cancel_frame: 19

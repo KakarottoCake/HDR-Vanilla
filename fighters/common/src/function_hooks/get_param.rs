@@ -258,11 +258,17 @@ pub unsafe fn get_param_float_hook(x0 /*boma*/: u64, x1 /*param_type*/: u64, x2 
                 }
             } 
         }
-        
-        else if fighter_kind == *FIGHTER_KIND_MIIGUNNER {
-            // not found within the special_hi status scripts
-            if x1 == hash40("param_special_hi") && x2 == hash40("hi1_first_jump_y_speed") {
-                return 3.5 + (2.7 * VarModule::get_float(boma_reference.object(), vars::miigunner::status::ATTACK_CHARGE)) / 29.0;
+
+        // Ironball uses a custom kinetic type and I can't find the offset where these values are set
+        else if fighter_kind == *FIGHTER_KIND_MIIFIGHTER
+        || (fighter_kind == *FIGHTER_KIND_KIRBY && WorkModule::get_int(boma, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_COPY_CHARA) == 0x48) {
+            if x1 == hash40("param_special_n") {
+                if x2 == hash40("n1_throw_angle") {
+                    return VarModule::get_float(boma_reference.object(), vars::miifighter::status::SPECIAL_N1_ANGLE);
+                }
+                if x2 == hash40("n1_start_speed_x") {
+                    return VarModule::get_float(boma_reference.object(), vars::miifighter::status::SPECIAL_N1_SPEED);
+                }
             }
         }
         
@@ -276,6 +282,17 @@ pub unsafe fn get_param_float_hook(x0 /*boma*/: u64, x1 /*param_type*/: u64, x2 
                 }
             }
         }
+
+        else if fighter_kind == *FIGHTER_KIND_MIIGUNNER {
+            // not found within the special_hi status scripts
+            if x1 == hash40("param_special_hi") && x2 == hash40("hi1_first_jump_y_speed") {
+                let charge = VarModule::get_float(boma_reference.object(), vars::miigunner::status::ATTACK_CHARGE);
+                let base_y_speed = ParamModule::get_float(boma_reference.object(), ParamType::Agent, "param_special_hi1.base_y_speed");
+                let charge_y_speed_mul = ParamModule::get_float(boma_reference.object(), ParamType::Agent, "param_special_hi1.charge_y_speed_mul");
+                let charge_y_speed_div = ParamModule::get_float(boma_reference.object(), ParamType::Agent, "param_special_hi1.charge_y_speed_div");
+                return base_y_speed + (charge_y_speed_mul * charge) / charge_y_speed_div;
+            }
+        }
         	
         else if fighter_kind == *FIGHTER_KIND_PFUSHIGISOU {
             //println!("Ivysaur");
@@ -284,6 +301,7 @@ pub unsafe fn get_param_float_hook(x0 /*boma*/: u64, x1 /*param_type*/: u64, x2 
                 return ControlModule::get_stick_y(boma) * 25.0;
             }
         }
+        
     }
 
     // For articles

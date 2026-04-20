@@ -54,8 +54,8 @@ else:
 
 if hdr_version == "devrelease":
     os.chdir('switch-package/ultimate/mods/')
-    os.rename('hdr-assets', 'hdr-assets-private')
-    os.rename('hdr-stages', 'hdr-stages-private')
+    # os.rename('hdr-assets', 'hdr-assets-private')
+    # os.rename('hdr-stages', 'hdr-stages-private')
     # move hdr files into correct dir
     source_dir = '../../../build/hdr-switch/ultimate/mods/hdr-private/'
     target_dir = 'hdr-private/'
@@ -82,7 +82,7 @@ urllib.request.urlretrieve("https://github.com/techyCoder81/hdr-launcher-react/r
 shutil.move("hdr-launcher.nro", "switch-package/atmosphere/contents/01006A800016E000/romfs/skyline/plugins/")
 
 print("getting libstage_alts.nro")
-urllib.request.urlretrieve("https://github.com/blu-dev/stage-alts-2/releases/latest/download/libstage_alts.nro", "libstage_alts.nro")
+urllib.request.urlretrieve("https://github.com/HDR-Development/stage-alts-2/releases/latest/download/libstage_alts.nro", "libstage_alts.nro")
 shutil.move("libstage_alts.nro", "switch-package/atmosphere/contents/01006A800016E000/romfs/skyline/plugins/")
 os.makedirs("switch-package/ultimate/stage-alts")
 
