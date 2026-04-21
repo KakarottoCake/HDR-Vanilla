@@ -10,7 +10,7 @@ unsafe extern "C" fn effect_chromspecialnend(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 3.0);
     if is_excute(agent) {
-        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_chrom_stormsword1"), Hash40::new("tex_chrom_stormsword2"), 8, Hash40::new("havel"), 0.0, 0.0, 1.65, Hash40::new("havel"), -0.0, -0.0, 12.4, false, Hash40::new("chrom_sword"), Hash40::new("havel"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.2, 0.2);
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_chrom_stormsword1"), Hash40::new("tex_chrom_stormsword2"), 8, Hash40::new("havel"), 0.0, 1.65, 0.0, Hash40::new("havel"), 0.0, 12.4, 0.0, false, Hash40::new("null"), Hash40::new("havel"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.2, 0.2);
     }
     frame(lua_state, 12.0);
     if is_excute(agent) {
@@ -27,6 +27,15 @@ unsafe extern "C" fn effect_chromspecialnend(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         COL_NORMAL(agent);
         EFFECT_OFF_KIND(agent, Hash40::new("chrom_sword_purple"), false, false);
+    }
+}
+
+unsafe extern "C" fn sound_chromspecialnend(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 6.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_chrom_special_n02"));
     }
 }
 
@@ -210,6 +219,8 @@ unsafe extern "C" fn effect_chromspecialnendmax(agent: &mut L2CAgentBase) {
 pub fn install(agent: &mut Agent) {
     agent.acmd("effect_chromspecialnend", effect_chromspecialnend, Priority::Low);
     agent.acmd("effect_chromspecialairnend", effect_chromspecialnend, Priority::Low);
+    agent.acmd("sound_chromspecialnend", sound_chromspecialnend, Priority::Low);
+    agent.acmd("sound_chromspecialairnend", sound_chromspecialnend, Priority::Low);
     agent.acmd("expression_chromspecialnend", expression_chromspecialnend, Priority::Low);
     agent.acmd("expression_chromspecialairnend", expression_chromspecialairnend, Priority::Low);
 

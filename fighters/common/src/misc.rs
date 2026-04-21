@@ -403,7 +403,7 @@ unsafe fn rivals_landing_lag_jc(fighter: &mut L2CFighterCommon) {
         let status_frame = fighter.status_frame() as f32;
         if status_frame + jump_squat > landing_lag {
             WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_JUMP);
-            fighter.check_jump_cancel(false, false);
+            fighter.check_jump_cancel(false, false, false);
         }
     }
 }

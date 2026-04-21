@@ -76,7 +76,7 @@ unsafe extern "C" fn special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2C
     if fighter.motion_frame() > 30.0  // Allows for jump cancel on frame 8 (30 in animation) if not charged
     && !VarModule::is_flag(fighter.battle_object, vars::krool::status::SPECIAL_LW_GUT_CHARGED)
     && !fighter.is_in_hitlag() {
-        fighter.check_jump_cancel(false, false);
+        fighter.check_jump_cancel(false, false, false);
     }
     if VarModule::is_flag(fighter.battle_object, vars::krool::status::SPECIAL_LW_GUT_CHARGED)    // restore armor on full charge hit
         && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT)
