@@ -118,10 +118,10 @@ throw_f:
     cancel_frame: 29
 throw_b:
   extra:
-    cancel_frame: 40
+    cancel_frame: 33
 throw_lw:
   extra:
-    cancel_frame: 35
+    cancel_frame: 37
 throw_hi:
   extra:
     cancel_frame: 40
@@ -167,7 +167,7 @@ attack_hi4:
     cancel_frame: 66
 attack_lw4:
   extra:
-    cancel_frame: 66
+    cancel_frame: 60
 attack_hi3:
   extra:
     cancel_frame: 38
