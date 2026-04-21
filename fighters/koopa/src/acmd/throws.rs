@@ -5,7 +5,6 @@ unsafe extern "C" fn game_catch(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     FT_MOTION_RATE(agent, 0.875);
-    frame(lua_state, 7.0);
     if is_excute(agent) {
         GrabModule::set_rebound(boma, true);
     }

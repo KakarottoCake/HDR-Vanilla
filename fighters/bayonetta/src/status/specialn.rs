@@ -258,7 +258,7 @@ unsafe extern "C" fn cancel_check(fighter: &mut L2CFighterCommon) -> L2CValue {
         }
         return true.into()
     } else {
-        fighter.check_jump_cancel(false, false);
+        fighter.check_jump_cancel(false, false, false);
         if fighter.is_cat_flag(Cat1::AirEscape) {
             VarModule::set_int(fighter.battle_object, vars::bayonetta::instance::SPECIAL_N_CANCEL_TYPE, 0);
             return true.into()

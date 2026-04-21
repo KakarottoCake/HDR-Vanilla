@@ -824,7 +824,7 @@ unsafe fn trail_magic_handling(fighter: &mut L2CFighterCommon) {
     // blizzaga jump cancel
     if (fighter.is_status(*FIGHTER_KIRBY_STATUS_KIND_TRAIL_SPECIAL_N2)
     && fighter.motion_frame() > 12.0) {
-        fighter.check_jump_cancel(false, false);
+        fighter.check_jump_cancel(false, false, false);
     }
 
     // handles the cooldown timer between casting spells

@@ -50,19 +50,44 @@ unsafe fn special_waza_charge_handle(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
-unsafe fn reflector_jc(boma: &mut BattleObjectModuleAccessor) {
+unsafe fn reflector_jc(fighter: &mut smash::lua2cpp::L2CFighterCommon) {
+    let boma = fighter.boma();
     if boma.is_motion_one_of(&[Hash40::new("special_lw1_start"), Hash40::new("special_air_lw1_start")]) && WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FRAME_IN_AIR) <= 1 {
         GroundModule::correct(boma, app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
     }
+
+    // resets the disable jump cancel flag
+    if boma.is_status_one_of(&[
+        *FIGHTER_STATUS_KIND_SPECIAL_LW,
+    ])
+    && StatusModule::is_changing(boma) {
+        VarModule::off_flag(boma.object(), vars::miigunner::instance::SPECIAL_LW_DISABLE_JC);
+    }
+
+    // disables jump cancels when parried between statuses
+    if boma.is_status_one_of(&[
+        *FIGHTER_STATUS_KIND_SPECIAL_LW,
+        *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW1_HIT,
+        *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW1_LOOP,
+        *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW1_END
+    ])
+    && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_PARRY) {
+        VarModule::on_flag(boma.object(), vars::miigunner::instance::SPECIAL_LW_DISABLE_JC);
+        if !fighter.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW1_END)
+        && !fighter.is_in_hitlag() {
+            fighter.change_status(FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW1_END.into(), false.into());
+        }
+    }
+
     if boma.is_status_one_of(&[
         *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW1_HIT,
-        *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW1_END,
-        *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW1_LOOP]) {
-        if !boma.is_in_hitlag() {
-            if (boma.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW1_LOOP) && boma.status_frame() > 1) {
-                boma.check_jump_cancel(false, false);
-            }
-        }
+        *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW1_LOOP,
+        *FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW1_END
+    ])
+    && (boma.is_status(*FIGHTER_MIIGUNNER_STATUS_KIND_SPECIAL_LW1_LOOP) && boma.status_frame() > 1) // TODO: this looks like a bug?
+    && !boma.is_in_hitlag()
+    && !VarModule::is_flag(boma.object(), vars::miigunner::instance::SPECIAL_LW_DISABLE_JC) {
+        boma.check_jump_cancel(false, false, false);
     }
 }
 
@@ -103,7 +128,7 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
 
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
     special_waza_charge_handle(boma);
-    reflector_jc(boma);
+    reflector_jc(fighter);
     vortex_item_grab_ac(fighter);
     fastfall_specials(fighter);
 }
