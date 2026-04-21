@@ -5,15 +5,30 @@ use globals::*;
 
  // Magnet Jump Cancel
 unsafe fn psi_magnet_jump_cancel(fighter: &mut L2CFighterCommon) {
-    if fighter.is_status_one_of(&[ 
-        *FIGHTER_NESS_STATUS_KIND_SPECIAL_LW_HIT,
+    // disables jump cancels when parried between statuses
+    if fighter.is_status_one_of(&[
+        *FIGHTER_STATUS_KIND_SPECIAL_LW,
         *FIGHTER_NESS_STATUS_KIND_SPECIAL_LW_HOLD,
-        *FIGHTER_NESS_STATUS_KIND_SPECIAL_LW_END]) {
-        if fighter.status_frame() > 0 { // Allows for jump cancel on frame 6 in game (this is dictated by how long game_speciallw_start takes)
-            if !fighter.is_in_hitlag() {
-                fighter.check_jump_cancel(false, false);
-            }
+        *FIGHTER_NESS_STATUS_KIND_SPECIAL_LW_END,
+        *FIGHTER_NESS_STATUS_KIND_SPECIAL_LW_HIT,
+    ])
+    && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_PARRY) {
+        VarModule::on_flag(fighter.battle_object, vars::ness::instance::SPECIAL_LW_DISABLE_JC);
+        if !fighter.is_status(*FIGHTER_NESS_STATUS_KIND_SPECIAL_LW_END)
+        && !fighter.is_in_hitlag() {
+            fighter.change_status(FIGHTER_NESS_STATUS_KIND_SPECIAL_LW_END.into(), false.into());
         }
+    }
+
+    if fighter.is_status_one_of(&[
+        *FIGHTER_NESS_STATUS_KIND_SPECIAL_LW_HOLD,
+        *FIGHTER_NESS_STATUS_KIND_SPECIAL_LW_END,
+        *FIGHTER_NESS_STATUS_KIND_SPECIAL_LW_HIT,
+    ])
+    && fighter.status_frame() > 0 // Allows for jump cancel on frame 6 in game (this is dictated by how long game_speciallw_start takes)
+    && !fighter.is_in_hitlag()
+    && !VarModule::is_flag(fighter.battle_object, vars::ness::instance::SPECIAL_LW_DISABLE_JC){
+        fighter.check_jump_cancel(false, false, false);
     }
 }
 

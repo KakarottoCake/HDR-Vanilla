@@ -25,6 +25,9 @@ attack_lw3:
 attack_s3_s:
   flags:
     move: false
+attack_s4_s:
+  extra:
+    cancel_frame: 50
 catch:
   flags:
     move: false

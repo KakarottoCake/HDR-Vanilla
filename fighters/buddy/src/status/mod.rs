@@ -6,6 +6,7 @@ mod run;
 mod special_n;
 mod special_s;
 mod special_hi;
+mod landing;
 
 /// Re-enables the ability to use aerial specials when connecting to ground or cliff
 unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -49,4 +50,5 @@ pub fn install(agent: &mut Agent) {
     special_n::install(agent);
     special_s::install(agent);
     special_hi::install(agent);
+    landing::install(agent);
 }

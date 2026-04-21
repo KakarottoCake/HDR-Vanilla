@@ -1206,10 +1206,10 @@ pacman_special_n_shoot:
     cancel_frame: 42
 palutena_special_air_n:
   extra:
-    cancel_frame: 63
+    cancel_frame: 64
 palutena_special_n:
   extra:
-    cancel_frame: 63
+    cancel_frame: 64
 passive:
   extra:
     xlu_end: 21
@@ -1579,7 +1579,7 @@ special_air_hi_h:
     unk_800: false
     unk_1000: false
     unk_2000: false
-  blend_frames: 0
+  blend_frames: 5
   animations:
   - name: d02specialairhih.nuanmb
   scripts:
@@ -1611,7 +1611,7 @@ special_hi_h:
     unk_800: false
     unk_1000: false
     unk_2000: false
-  blend_frames: 0
+  blend_frames: 5
   animations:
   - name: d02specialhih.nuanmb
   scripts:

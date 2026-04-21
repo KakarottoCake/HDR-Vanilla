@@ -84,7 +84,7 @@ unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
     && !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_PARRY)
     && !fighter.global_table[IS_STOPPING].get_bool()
     && !StatusModule::is_changing(fighter.module_accessor) {
-        fighter.check_jump_cancel(false, false);
+        fighter.check_jump_cancel(false, false, false);
     }
     if StatusModule::is_situation_changed(fighter.module_accessor) {
         let mut special_momentum_handle = false;
@@ -241,38 +241,7 @@ unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
             VarModule::set_int(fighter.battle_object, vars::sonic::status::SPECIAL_S_STEP, vars::sonic::SPECIAL_S_STEP_DASH);
         }
         else if step == vars::sonic::SPECIAL_S_STEP_DASH {
-            let mot = if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
-                VarModule::off_flag(fighter.battle_object, vars::sonic::instance::SPECIAL_AIR_ACTION_USED);
-                hash40("special_s_boost_end")
-            }
-            else {
-                hash40("special_air_s_boost_end")
-            };
-            MotionModule::change_motion(
-                fighter.module_accessor,
-                Hash40::new_raw(mot),
-                0.0,
-                1.0,
-                false,
-                0.0,
-                false,
-                false
-            );
-            VarModule::set_int(fighter.battle_object, vars::sonic::status::SPECIAL_S_STEP, vars::sonic::SPECIAL_S_STEP_END);
-            let dash_end_brake_x = if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
-                ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.dash_ground_end_brake_x")
-            } else {
-                ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.dash_air_end_brake_x")
-            };
-            if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
-                sv_kinetic_energy!(
-                    set_brake,
-                    fighter,
-                    FIGHTER_KINETIC_ENERGY_ID_STOP,
-                    dash_end_brake_x,
-                    0.0
-                );
-            }
+            special_s_transition_to_end(fighter);
         }
         else {
             if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
@@ -280,6 +249,27 @@ unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
             }
             else {
                 fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
+            }
+        }
+    }
+    else {
+        if step == vars::sonic::SPECIAL_S_STEP_DASH {
+            // Reduce speed on shield
+            if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD | *COLLISION_KIND_MASK_PARRY)
+            && !VarModule::is_flag(fighter.battle_object, vars::sonic::status::SPECIAL_S_HIT_SHIELD) {
+                VarModule::on_flag(fighter.battle_object, vars::sonic::status::SPECIAL_S_HIT_SHIELD);
+
+                let shield_hit_end_speed_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.shield_hit_end_speed_x");
+                let lr = PostureModule::lr(fighter.module_accessor);
+                sv_kinetic_energy!(
+                    set_speed,
+                    fighter,
+                    FIGHTER_KINETIC_ENERGY_ID_STOP,
+                    shield_hit_end_speed_x * lr,
+                    0.0
+                );
+
+                special_s_transition_to_end(fighter);
             }
         }
     }
@@ -329,6 +319,41 @@ unsafe fn sonic_special_s_ledge_cancel_helper(fighter: &mut L2CFighterCommon) {
         );
     }
     VarModule::set_int(fighter.battle_object, vars::sonic::status::SPECIAL_S_STEP, vars::sonic::SPECIAL_S_STEP_END);
+}
+
+unsafe fn special_s_transition_to_end(fighter: &mut L2CFighterCommon) {
+    let mot = if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+        VarModule::off_flag(fighter.battle_object, vars::sonic::instance::SPECIAL_AIR_ACTION_USED);
+        hash40("special_s_boost_end")
+    }
+    else {
+        hash40("special_air_s_boost_end")
+    };
+    MotionModule::change_motion(
+        fighter.module_accessor,
+        Hash40::new_raw(mot),
+        0.0,
+        1.0,
+        false,
+        0.0,
+        false,
+        false
+    );
+    VarModule::set_int(fighter.battle_object, vars::sonic::status::SPECIAL_S_STEP, vars::sonic::SPECIAL_S_STEP_END);
+    let dash_end_brake_x = if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+        ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.dash_ground_end_brake_x")
+    } else {
+        ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.dash_air_end_brake_x")
+    };
+    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
+        sv_kinetic_energy!(
+            set_brake,
+            fighter,
+            FIGHTER_KINETIC_ENERGY_ID_STOP,
+            dash_end_brake_x,
+            0.0
+        );
+    }
 }
 
 pub fn install(agent: &mut Agent) {

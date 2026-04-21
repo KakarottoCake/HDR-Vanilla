@@ -5,6 +5,45 @@ unsafe extern "C" fn game_speciallwstart(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
 }
 
+unsafe extern "C" fn effect_speciallwstart(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("ryu_savingattack_aura"), Hash40::new("hip"), -2, 0, 0, 0, 0, 0, 1.4, true);
+        EFFECT_FOLLOW(agent, Hash40::new("ryu_savingattack_aura"), Hash40::new("neck"), 0, 0, 0, 0, 0, 0, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("ryu_savingattack_aura"), Hash40::new("handl"), 0, 0, 0, 0, 0, 0, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("ryu_savingattack_aura"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("ryu_savingattack_aura"), Hash40::new("kneel"), 4, 0, 0, 0, 0, 0, 1.1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("ryu_savingattack_aura"), Hash40::new("kneer"), 4, 0, 0, 0, 0, 0, 1.1, true);
+    }
+    frame(lua_state, 10.0);
+    if is_excute(agent) {
+        if agent.is_situation(*SITUATION_KIND_GROUND) {
+            FOOT_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), -2, 0, 0, 0, 0, 0, 0.85, 0, 0, 0, 0, 0, 0, false);
+        }
+    }
+    frame(lua_state, 30.0);
+    if is_excute(agent) {
+        FLASH(agent, 1, 1, 0.392, 0.392);
+    }
+    wait(lua_state, 2.0);
+    if is_excute(agent) {
+        FLASH(agent, 0.706, 0.706, 0.706, 0.294);
+    }
+    wait(lua_state, 1.0);
+    if is_excute(agent) {
+        FLASH(agent, 1, 1, 0, 0.157);
+    }
+    wait(lua_state, 2.0);
+    if is_excute(agent) {
+        COL_NORMAL(agent);
+    }
+    frame(lua_state, 59.0);
+    if is_excute(agent) {
+        EFFECT_FLIP(agent, Hash40::new("sys_unblockable_flash"), Hash40::new("sys_unblockable_flash"), Hash40::new("top"), 3, 13, -1, 0, 0, 0, 0.85, 0, 0, 0, 0, 0, 0, true, *EF_FLIP_YZ);
+    }
+}
+
 unsafe extern "C" fn game_speciallwinstall(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -155,6 +194,9 @@ unsafe extern "C" fn game_speciallwturn(agent: &mut L2CAgentBase) {
 pub fn install(agent: &mut Agent) {
     agent.acmd("game_speciallwstart", game_speciallwstart, Priority::Low);
     agent.acmd("game_specialairlwstart", game_speciallwstart, Priority::Low);
+    agent.acmd("effect_speciallwstart", effect_speciallwstart, Priority::Low);
+    agent.acmd("effect_specialairlwstart", effect_speciallwstart, Priority::Low);
+
     agent.acmd("game_speciallwinstall", game_speciallwinstall, Priority::Low);
     agent.acmd("effect_speciallwinstall", effect_speciallwinstall, Priority::Low);
     agent.acmd("sound_speciallwinstall", sound_speciallwinstall, Priority::Low);

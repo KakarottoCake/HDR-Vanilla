@@ -8,7 +8,15 @@ use smash::lib::{lua_const::*, *};
 use smash::lua2cpp::*;
 use smash::phx::*;
 use crate::{InputModule, VarModule};
+pub trait I32Ext {
+    fn mul_f32(self, f: f32) -> i32;
+}
 
+impl I32Ext for i32 {
+    fn mul_f32(self, f: f32) -> i32 {
+        (self as f32 * f).round() as i32
+    }
+}
 pub trait Vec2Ext {
     fn new(x: f32, y: f32) -> Self
     where
@@ -542,7 +550,7 @@ pub trait BomaExt {
 
 
     // Checks for status and enables transition to jump
-    unsafe fn check_jump_cancel(&mut self, update_lr: bool, skip_other_checks: bool) -> bool;
+    unsafe fn check_jump_cancel(&mut self, update_lr: bool, skip_usmash_check: bool, skip_parry_check: bool) -> bool;
     // Checks for status and enables transition to airdodge
     unsafe fn check_airdodge_cancel(&mut self) -> bool;
     unsafe fn check_aerial_cancel(&mut self) -> bool;
@@ -1215,8 +1223,15 @@ impl BomaExt for BattleObjectModuleAccessor {
     }
 
     /// If update_lr is true, we set your facing direction based on your stick position
-    /// If skip_other_checks is true, we do not check for USmash
-    unsafe fn check_jump_cancel(&mut self, update_lr: bool, skip_other_checks: bool) -> bool {
+    /// If skip_usmash_check is true, we do not check for USmash
+    /// If skip_disable_parry_check is true, we do not disable jump cancel on parry
+    unsafe fn check_jump_cancel(&mut self, update_lr: bool, skip_usmash_check: bool, skip_disable_parry_check: bool) -> bool {
+
+        if !skip_disable_parry_check
+        && AttackModule::is_infliction_status(self, *crate::consts::COLLISION_KIND_MASK_PARRY) {
+            return false;
+        }
+
         let fighter = crate::util::get_fighter_common_from_accessor(self);
         if fighter.is_situation(*SITUATION_KIND_GROUND) {
             WorkModule::enable_transition_term(
@@ -1227,14 +1242,14 @@ impl BomaExt for BattleObjectModuleAccessor {
                 fighter.module_accessor,
                 *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON,
             );
-            if !skip_other_checks {
+            if !skip_usmash_check {
                 WorkModule::enable_transition_term(
                     fighter.module_accessor,
                     *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START,
                 );
             }
             if fighter.sub_transition_group_check_ground_jump_mini_attack().get_bool() // buffered aerials
-            || (!skip_other_checks && fighter.sub_transition_group_check_ground_attack().get_bool()) // up smash
+            || (!skip_usmash_check && fighter.sub_transition_group_check_ground_attack().get_bool()) // up smash
             || fighter.sub_transition_group_check_ground_jump().get_bool() // regular jumps
             {
                 if update_lr {
