@@ -96,23 +96,21 @@ pub unsafe fn check_burnout(agent: &mut L2CAgentBase) {
     if meter <= 0.0
     && !VarModule::is_flag(agent.battle_object, vars::lucario::instance::METER_BURNOUT) {
         VarModule::on_flag(agent.battle_object, vars::lucario::instance::METER_BURNOUT);
-        EffectModule::req_follow(
+        let bust_pos = &mut Vector3f{ x: 0.0, y: 0.0, z: 0.0 };
+        let lr = PostureModule::lr(agent.module_accessor);
+        ModelModule::joint_global_position(agent.module_accessor, Hash40::new("bust"), bust_pos, false);
+        EffectModule::req(
             agent.module_accessor,
-            Hash40::new("sys_flash"),
-            Hash40::new("bust"),
-            &Vector3f::zero(),
-            &Vector3f::zero(),
-            2.0,
-            true,
+            Hash40::new("sys_ground_shockwave"),
+            &Vector3f::new(bust_pos.x + (2.0 * lr), bust_pos.y, bust_pos.z),
+            &Vector3f::new(1.57, 0.0, 0.0),
+            0.9,
             0,
-            0,
-            0,
-            0,
-            0,
+            -1,
             false,
-            false
+            0
         );
-        LAST_EFFECT_SET_COLOR(agent, 0.0, 0.37, 0.9);
+        LAST_EFFECT_SET_RATE(agent, 0.65);
         MeterModule::drain_direct(agent.battle_object, meter);
     }
 }
