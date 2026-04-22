@@ -161,7 +161,7 @@ unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
     frame(lua_state, 37.0);
     FT_MOTION_RATE(agent, 17.0/(49.0 - 37.0));
     if is_excute(agent) {
-        ModelModule::set_joint_translate(boma, Hash40::new("throw"), &Vector3f{ x: 0.0, y: 2.0, z: 13.0 }, false, false);
+        ModelModule::set_joint_translate(boma, Hash40::new("throw"), &Vector3f{ x: 0.0, y: 4.0, z: 15.0 }, false, false);
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
     }
 }
@@ -245,7 +245,7 @@ unsafe extern "C" fn game_throwf(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 25.0);
     if is_excute(agent) {
-        ModelModule::set_joint_translate(boma, Hash40::new("throw"), &Vector3f{ x: 0.0, y: 9.0, z: 19.0 }, false, false);
+        ModelModule::set_joint_translate(boma, Hash40::new("throw"), &Vector3f{ x: 0.0, y: 10.0, z: 20.0 }, false, false);
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
         AttackModule::clear_all(boma);
     }
@@ -397,7 +397,7 @@ unsafe extern "C" fn game_throwb(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 18.0);
     if is_excute(agent) {
-        ModelModule::set_joint_translate(boma, Hash40::new("throw"), &Vector3f{ x: 0.0, y: 1.0, z: -22.0 }, false, false);
+        ModelModule::set_joint_translate(boma, Hash40::new("throw"), &Vector3f{ x: 0.0, y: 4.0, z: -24.0 }, false, false);
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
     }
 }
