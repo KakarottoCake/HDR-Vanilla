@@ -319,13 +319,6 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
         }
 
         if boma.kind() == *FIGHTER_KIND_TRAIL {
-            if StatusModule::status_kind(boma) == *FIGHTER_TRAIL_STATUS_KIND_SPECIAL_S_SEARCH
-            && next_status == *FIGHTER_TRAIL_STATUS_KIND_SPECIAL_S_TURN
-            && ((!VarModule::is_flag(boma.object(), vars::trail::status::SPECIAL_S_INPUT_CHECK)
-            && !(ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) || ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL_RAW)))
-                || VarModule::is_flag(boma.object(), vars::trail::status::SPECIAL_S_STOP)) { 
-                next_status = *FIGHTER_TRAIL_STATUS_KIND_SPECIAL_S_END;
-            }
             // prevent sora from immediately acting out of the down smash bounce 
             if boma.is_status(*FIGHTER_STATUS_KIND_CLIFF_JUMP2)
             && !boma.is_prev_status(*FIGHTER_STATUS_KIND_CLIFF_JUMP1)
@@ -416,13 +409,6 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
             boma.object(),
             vars::common::instance::PREV_STATUS_TRANSITION_FRAME,
             util::get_fighter_common_from_accessor(boma).global_table[CURRENT_FRAME].get_i32()
-        );
-
-        let inflict_status = AttackModule::get_inflict_status(boma);
-        VarModule::set_int(
-            boma.object(),
-            vars::common::instance::PREV_STATUS_INFLICT_STATUS,
-            inflict_status
         );
 
         VarModule::set_flag(

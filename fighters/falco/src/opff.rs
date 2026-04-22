@@ -3,7 +3,6 @@ utils::import_noreturn!(common::opff::fighter_common_opff);
 use super::*;
 use globals::*;
 
- 
 unsafe fn laser_land_cancel(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_N) {
         fighter.check_land_cancel(None);
@@ -21,6 +20,22 @@ unsafe fn check_special_lw_hit(fighter: &mut L2CFighterCommon) {
     if fighter.is_flag(0x200000e0) // FIGHTER_FALCO_INSTANCE_WORK_ID_FLAG_REFLECTOR
     && (!fighter.is_status(statuses::falco::SPECIAL_LW_HIT) || fighter.motion_frame() > 10.0) {
         fighter.change_status(statuses::falco::SPECIAL_LW_HIT.into(), false.into());
+    }
+}
+
+unsafe fn check_special_lw_parried(fighter: &mut L2CFighterCommon) {
+    if fighter.is_status_one_of(&[
+        *FIGHTER_STATUS_KIND_SPECIAL_LW,
+        statuses::falco::SPECIAL_LW_LOOP,
+        statuses::falco::SPECIAL_LW_END,
+        statuses::falco::SPECIAL_LW_HIT
+    ]) 
+    && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_PARRY) {
+        VarModule::on_flag(fighter.battle_object, vars::falco::instance::SPECIAL_LW_DISABLE_JC);
+        if !fighter.is_status(statuses::falco::SPECIAL_LW_END)
+        && !fighter.is_in_hitlag() {
+            fighter.change_status(statuses::falco::SPECIAL_LW_END.into(), false.into());
+        }
     }
 }
 
@@ -43,6 +58,7 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     laser_land_cancel(fighter);
     firebird_startup_ledgegrab(fighter);
     check_special_lw_hit(fighter);
+    check_special_lw_parried(fighter);
     fastfall_specials(fighter);
 }
 
