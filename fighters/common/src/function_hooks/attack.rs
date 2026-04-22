@@ -495,8 +495,15 @@ unsafe fn calc_non_knockback_damage_mul(attacker_boma: &mut BattleObjectModuleAc
     };
     // dbg!(pikmin_mul);
 
+    // damage multiplier for nana
+    let nana_mul = if attacker_boma.is_fighter() && attacker_boma.kind() == *FIGHTER_KIND_NANA {
+        0.75
+    } else {
+        1.0
+    };
+
     // final multiplier
-    return pattern_mul * aura_mul * pikmin_mul;
+    return pattern_mul * aura_mul * pikmin_mul * nana_mul;
 }
 
 pub fn install() {
