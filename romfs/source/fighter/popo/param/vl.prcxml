@@ -10,7 +10,7 @@
   <struct hash="param_private">
     <float hash="nana_damage_mul">1</float>
     <float hash="nana_damage_reaction_mul">1</float>
-    <float hash="nana_opt_dst">30</float>
+    <float hash="nana_opt_dst">45</float>
     <float hash="nana_partner_comp_rate_x">0.05</float>
     <float hash="nana_opt_near_dst">5</float>
     <float hash="nana_partner_near_comp_rate_x">0.0025</float>
