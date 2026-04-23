@@ -73,6 +73,8 @@ unsafe fn cheer_cancel(ctx: &mut skyline::hooks::InlineCtx) {
 
 pub fn install() {
     unsafe {
+        skyline::patching::Patch::in_text(0xfba284).nop(); // fixes nana being inactionable during popo's grab
+        skyline::patching::Patch::in_text(0x2f81cc).data(0x1400000D_u32); // fixes nana not inputting grab when popo is actionable
         // skyline::patching::Patch::in_text(0xfb63e8).data(0x17FFFF8B); // cheer cancel
         skyline::install_hooks!(
             // enable_partner_catch_transition,
