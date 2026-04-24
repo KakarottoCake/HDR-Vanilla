@@ -34,7 +34,9 @@ unsafe extern "C" fn special_s_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
 }
 
 unsafe extern "C" fn special_s_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    special_s_start_momentum(fighter);
+    fighter.set_situation(L2CValue::I32(*SITUATION_KIND_AIR));
+    fighter.change_motion_by_situation("special_s_start", "special_air_s_start", 0.0, 1.0, false, 0.0, false, false);
+    special_s_start_momentum(fighter, 1.0);
     fighter.set_int(1, *FIGHTER_PEACH_STATUS_SPECIAL_S_WORK_INT_ENABLE_UNIQ);
 
     fighter.main_shift(special_s_main_loop)
@@ -45,26 +47,27 @@ unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
         return 1.into();
     }
     if MotionModule::is_end(fighter.module_accessor) {
-        //special_s_check_flick(fighter);
         fighter.change_status(FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_JUMP.into(), false.into());
+    }
+    if StatusModule::is_situation_changed(fighter.module_accessor) {
+        if fighter.is_situation(*SITUATION_KIND_GROUND) {
+            special_s_start_momentum(fighter, 0.4);
+        }
     }
 
     return 0.into();
 }
 
-unsafe extern "C" fn special_s_start_momentum(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe fn special_s_start_momentum(fighter: &mut L2CFighterCommon, mul: f32) {
     let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let start_y = fighter.get_param_float("param_special_s", "special_s_start_speed_y");
     let stable_y = fighter.get_param_float("param_special_s", "special_s_jump_stable_y");
     let max_y = fighter.get_param_float("air_speed_y_stable", "");
-    fighter.change_motion_by_situation("special_s_start", "special_air_s_start", 0.0, 1.0, false, 0.0, false, false);
-    fighter.set_situation_keep(L2CValue::I32(*SITUATION_KIND_AIR), 1.into());
     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
     GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
     sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.0);
     sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, stable_y);
-    sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, (speed_y+start_y).clamp(-max_y, max_y));
-    0.into()
+    sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, (speed_y+start_y).clamp(-max_y, max_y * mul));
 }
 
 unsafe extern "C" fn special_s_check_flick(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -188,9 +191,7 @@ unsafe extern "C" fn hit_check(fighter: &mut L2CFighterCommon) -> L2CValue {
     }
     // end on-shield
     if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
-        let hit_shield_x_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.hit_shield_x_mul");
-        sv_kinetic_energy!(mul_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, hit_shield_x_mul, 0.0);
-        fighter.change_status(FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_AWAY_END.into(), false.into());
+        fighter.change_status(FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_HIT_END.into(), false.into());
         return 1.into();
     }
     // kill hitbox if minimum speed
@@ -315,7 +316,7 @@ unsafe extern "C" fn special_s_away_end_main_loop(fighter: &mut L2CFighterCommon
 }
 
 // prevent excessive speed transfer? drift limits
-unsafe extern "C" fn special_s_end_momentum(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe fn special_s_end_momentum(fighter: &mut L2CFighterCommon) {
     let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let lr = fighter.lr();
     let mut end_landing_x_min = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.end_landing_x_min");
@@ -328,14 +329,31 @@ unsafe extern "C" fn special_s_end_momentum(fighter: &mut L2CFighterCommon) -> L
         let mut new_speed = if lr > 0.0 {speed_x.clamp(end_landing_x_min, end_landing_x_max)} else {speed_x.clamp(-end_landing_x_max, -end_landing_x_min)};
         sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.0, 0.0);
         sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, new_speed);
-        return 1.into();
+        return;
     }
     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
     sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, end_x_stable, 0.0);
     sv_kinetic_energy!(set_accel_x_add, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0);
     sv_kinetic_energy!(set_accel_x_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0);
     sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, end_y_stable);
-    0.into()
+}
+
+unsafe extern "C" fn special_s_hit_end_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let ret = smashline::original_status(Main, fighter, *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_HIT_END)(fighter);
+    let prev_inflict_status = VarModule::get_int(fighter.battle_object, vars::common::instance::PREV_STATUS_INFLICT_STATUS);
+    if prev_inflict_status & *COLLISION_KIND_MASK_SHIELD | *COLLISION_KIND_MASK_PARRY != 0 {
+        let air_speed_x_stable = WorkModule::get_param_float(fighter.module_accessor, hash40("air_speed_x_stable"), 0);
+        let air_accel_x_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_x_mul"), 0);
+        let air_accel_x_add = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_x_add"), 0);
+        let speed_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.shield_hit_end_speed_x_mul");
+        let accel_mul = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_s.shield_hit_end_accel_mul");
+        
+        sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, air_speed_x_stable * speed_mul, 0.0);
+        sv_kinetic_energy!(controller_set_accel_x_mul, fighter, air_accel_x_mul * accel_mul);
+        sv_kinetic_energy!(controller_set_accel_x_add, fighter, air_accel_x_add * accel_mul);
+    }
+
+    return ret;
 }
 
 pub fn install(agent: &mut Agent) {
