@@ -127,6 +127,11 @@ unsafe extern "C" fn special_air_lw_pre(fighter: &mut L2CFighterCommon) -> L2CVa
 }
 
 unsafe extern "C" fn special_air_lw_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let air_speed_y_stable = WorkModule::get_param_float(fighter.module_accessor, hash40("air_speed_y_stable"), 0);
+    let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
+    if speed_y < -air_speed_y_stable {
+        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0, -air_speed_y_stable);
+    }
     // should work as both ledge cancel and standalone?
     if !ItemModule::is_have_item(fighter.module_accessor, 0) {
         let start_x = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_lw.air_start_x_mul");

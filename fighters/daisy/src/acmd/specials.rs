@@ -612,6 +612,16 @@ unsafe extern "C" fn game_specialairlw(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn effect_specialairlw(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    frame(lua_state, 2.0);
+    if is_excute(agent) {
+        let facing = agent.lr();
+        EffectModule::req_follow(boma, Hash40::new("sys_item_get"), Hash40::new("top"), &Vector3f::new(-3.0 * facing, 3.0, 3.0), &Vector3f::zero(), 0.5, false, 0, 0, 0, 0, 0, false, false);   
+    }
+}
+
 unsafe extern "C" fn game_speciallwthrow(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -699,7 +709,7 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("sound_speciallw", sound_speciallw, Priority::Low);
 
     agent.acmd("game_specialairlw", game_specialairlw, Priority::Low);
-    agent.acmd("effect_specialairlw", acmd_stub, Priority::Low);
+    agent.acmd("effect_specialairlw", effect_specialairlw, Priority::Low);
     agent.acmd("sound_specialairlw", acmd_stub, Priority::Low);
     agent.acmd("expression_specialairlw", expression_speciallwthrow, Priority::Low);
 
