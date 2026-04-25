@@ -250,6 +250,8 @@ pub mod vars {
 
             pub const OCCUPIED_LEDGE_ID_FOR_TETHERS: i32 = 0x0016;
 
+            pub const JUMP_AERIAL_EFFECT_HANDLE: i32 = 0x0017;
+
 
             // floats
 

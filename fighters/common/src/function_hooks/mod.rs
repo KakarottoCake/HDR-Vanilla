@@ -831,6 +831,35 @@ unsafe fn get_escape_air_slide_cancel_frame(ctx: &mut skyline::hooks::InlineCtx)
     *(ctx.registers[8].x() as *mut f32).add(0x94 / 4) = cancel_frame as f32;
 }
 
+// This runs where the out-of-jumps smoke effect is called
+#[skyline::hook(offset = 0x6188ec, inline)]
+unsafe fn req_sys_falling_smoke(ctx: &mut skyline::hooks::InlineCtx) {
+    let fighter = ctx.registers[19].x() as *mut Fighter;
+    let object = &mut (*fighter).battle_object as *mut BattleObject;
+    let entry_stand_scale = WorkModule::get_param_float((*object).module_accessor, hash40("entry_stand_scale"), 0);
+    let smoke_scale: f32 = entry_stand_scale * 1.5;
+
+    // Increase the scale of the original sys_falling_smoke
+    ctx.registers_f[0].set_s(smoke_scale);
+    
+    // Generate an additional sys_falling_smoke
+    // for increased visibility
+    let handle = EffectModule::req_follow((*object).module_accessor, Hash40::new("sys_falling_smoke"), Hash40::new("virtualcenter"), &Vector3f::zero(), &Vector3f::zero(), smoke_scale, true, 0x8000000, 0, -1, 0, 0, false, false) as u32;
+    VarModule::set_int(object, vars::common::instance::JUMP_AERIAL_EFFECT_HANDLE, handle as _);
+}
+
+// This runs where the out-of-jumps smoke effect is removed
+// on ledgegrab or landing
+#[skyline::hook(offset = 0x618804, inline)]
+unsafe fn kill_sys_falling_smoke(ctx: &mut skyline::hooks::InlineCtx) {
+    let fighter = ctx.registers[19].x() as *mut Fighter;
+    let object = &mut (*fighter).battle_object as *mut BattleObject;
+    let handle = VarModule::get_int(object, vars::common::instance::JUMP_AERIAL_EFFECT_HANDLE);
+    
+    // Kill the additional sys_falling_smoke we call
+    EffectModule::kill((*object).module_accessor, handle as u32, true, true);
+}
+
 pub fn install() {
     energy::install();
     effect::install();
@@ -897,6 +926,8 @@ pub fn install() {
         set_uniform_buffer,
         phantom_hit_check,
         get_escape_air_cancel_frame,
-        get_escape_air_slide_cancel_frame
+        get_escape_air_slide_cancel_frame,
+        req_sys_falling_smoke,
+        kill_sys_falling_smoke
     );
 }
