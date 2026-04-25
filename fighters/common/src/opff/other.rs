@@ -438,6 +438,28 @@ unsafe extern "C" fn kill_screen_handler(fighter: &mut L2CFighterCommon) {
     // }
 }
 
+// Generates an effect on the fighter if they have burned their airdodge
+// and are still airborne
+pub unsafe fn burned_airdodge_effect_handler(fighter: &mut L2CFighterCommon) {
+    if !fighter.is_status(*FIGHTER_STATUS_KIND_ESCAPE_AIR) {
+        let curr_handle = VarModule::get_int(fighter.battle_object, vars::common::instance::DISABLE_ESCAPE_AIR_EFFECT_HANDLE);
+
+        if fighter.is_situation(*SITUATION_KIND_AIR)
+        && fighter.is_flag(*FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_ESCAPE_AIR)
+        && !StopModule::is_stop(fighter.module_accessor) {
+            if !EffectModule::is_exist_effect(fighter.module_accessor, curr_handle as u32) {
+                let new_handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_bomber_sweat"), Hash40::new("head"), &Vector3f::new(0.0, 3.0, 0.0), &Vector3f::zero(), 1.0, true, 0x8000000, 0, -1, 0, 0, false, false) as u32;
+                VarModule::set_int(fighter.battle_object, vars::common::instance::DISABLE_ESCAPE_AIR_EFFECT_HANDLE, new_handle as _);
+            }
+        }
+        else {
+            if EffectModule::is_exist_effect(fighter.module_accessor, curr_handle as u32) {
+                EffectModule::kill(fighter.module_accessor, curr_handle as u32, true, true);
+            }
+        }
+    }
+}
+
 pub unsafe fn run(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, fighter_kind: i32, stick_x: f32, stick_y: f32, facing: f32) {
     suicide_throw_mashout(fighter, boma);
     cliff_xlu_frame_counter(fighter);
@@ -446,5 +468,6 @@ pub unsafe fn run(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleA
     // taunt_parry_forgiveness(fighter);
     custom_dash_anim_support(fighter);
     kill_screen_handler(fighter);
+    burned_airdodge_effect_handler(fighter);
 }
 
