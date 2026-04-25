@@ -832,6 +832,7 @@ unsafe fn get_escape_air_slide_cancel_frame(ctx: &mut skyline::hooks::InlineCtx)
 }
 
 // This runs where the out-of-jumps smoke effect is called
+// AKA sys_falling_smoke
 #[skyline::hook(offset = 0x6188ec, inline)]
 unsafe fn req_sys_falling_smoke(ctx: &mut skyline::hooks::InlineCtx) {
     let fighter = ctx.registers[19].x() as *mut Fighter;
