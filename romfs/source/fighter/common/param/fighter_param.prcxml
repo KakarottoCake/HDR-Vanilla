@@ -1454,7 +1454,7 @@
       <float hash="weight">80</float>
       <float hash="landing_attack_air_frame_n">9</float>
       <float hash="landing_attack_air_frame_b">10</float>
-      <float hash="landing_attack_air_frame_lw">11</float>
+      <float hash="landing_attack_air_frame_lw">10</float>
       <float hash="landing_frame">4</float>
       <float hash="scale">1.055</float>
       <float hash="shield_radius">9.1</float>
