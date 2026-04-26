@@ -450,7 +450,7 @@ pub unsafe fn burned_airdodge_effect_handler(fighter: &mut L2CFighterCommon) {
             if !EffectModule::is_exist_effect(fighter.module_accessor, curr_handle as u32) {
                 let new_handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_bomber_sweat"), Hash40::new("head"), &Vector3f::new(0.0, 3.0, 0.0), &Vector3f::zero(), 1.0, true, 0x8000000, 0, -1, 0, 0, false, false) as u32;
                 EffectModule::set_rate(fighter.module_accessor, new_handle, 0.8);
-                EffectModule::set_alpha(fighter.module_accessor, new_handle, 0.8);
+                EffectModule::set_alpha(fighter.module_accessor, new_handle, 0.7);
                 VarModule::set_int(fighter.battle_object, vars::common::instance::DISABLE_ESCAPE_AIR_EFFECT_HANDLE, new_handle as _);
             }
         }
