@@ -110,6 +110,22 @@ unsafe fn set_last_attacker_entry_id(defender_boma: &mut BattleObjectModuleAcces
         }
     }
 
+    // Check items
+    if attacker_boma.is_item() {
+        let owner_id = if LinkModule::is_link(attacker_boma, *ITEM_LINK_NO_HAVE) {
+            LinkModule::get_parent_id(attacker_boma, *ITEM_LINK_NO_HAVE, true) as u32
+        } else if LinkModule::is_link(attacker_boma, *ITEM_LINK_NO_CREATEOWNER) {
+            LinkModule::get_parent_id(attacker_boma, *ITEM_LINK_NO_CREATEOWNER, true) as u32
+        } else if LinkModule::is_link(attacker_boma, *ITEM_LINK_NO_TEAMOWNER) {
+            LinkModule::get_parent_id(attacker_boma, *ITEM_LINK_NO_TEAMOWNER, true) as u32
+        } else {
+            return;
+        };
+        let owner = utils::util::get_battle_object_from_id(owner_id);
+        if owner.is_null() { return; }
+        attacker_boma = &mut *(*owner).module_accessor;
+    }
+
     if !attacker_boma.is_fighter() { return; }
 
     let attacker_entry_id = WorkModule::get_int(attacker_boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
