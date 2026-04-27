@@ -35,6 +35,8 @@ unsafe extern "C" fn special_s_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
 
 unsafe extern "C" fn special_s_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.set_situation(L2CValue::I32(*SITUATION_KIND_AIR));
+    fighter.set_situation_keep(L2CValue::I32(*SITUATION_KIND_AIR), 1.into());
+    VarModule::on_flag(fighter.battle_object, vars::common::status::DISABLE_ECB_SHIFT);
     fighter.change_motion_by_situation("special_s_start", "special_air_s_start", 0.0, 1.0, false, 0.0, false, false);
     special_s_start_momentum(fighter, 1.0);
     fighter.set_int(1, *FIGHTER_PEACH_STATUS_SPECIAL_S_WORK_INT_ENABLE_UNIQ);
@@ -49,10 +51,11 @@ unsafe extern "C" fn special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CV
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status(FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_JUMP.into(), false.into());
     }
-    if StatusModule::is_situation_changed(fighter.module_accessor) {
-        if fighter.is_situation(*SITUATION_KIND_GROUND) {
-            special_s_start_momentum(fighter, 0.4);
-        }
+    if KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN) < 0.0
+    && GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) {
+        KineticModule::clear_speed_all(fighter.module_accessor);
+        KineticModule::suspend_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+        KineticModule::suspend_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
     }
 
     return 0.into();
@@ -72,6 +75,9 @@ unsafe fn special_s_start_momentum(fighter: &mut L2CFighterCommon, mul: f32) {
 
 unsafe extern "C" fn special_s_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.set_situation_keep(L2CValue::I32(*SITUATION_KIND_AIR), 0.into());
+    KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+    KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+
     0.into()
 }
 
