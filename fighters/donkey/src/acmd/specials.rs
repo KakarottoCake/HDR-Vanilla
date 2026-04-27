@@ -404,7 +404,7 @@ unsafe extern "C" fn effect_specialairlw(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 3.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 5, 16, 9, 0, 0, 0, 0.9, true);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 5, 16, 9, 0, 0, 0, 0.8, true);
     }
     frame(lua_state, 18.0);
     if is_excute(agent) {
@@ -456,7 +456,7 @@ unsafe extern "C" fn effect_specialairlwlanding(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 3.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 5, 16, 9, 0, 0, 0, 0.9, true);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 5, 16, 9, 0, 0, 0, 0.8, true);
     }
     frame(lua_state, 18.0);
     if is_excute(agent) {

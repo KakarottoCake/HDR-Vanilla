@@ -54,7 +54,7 @@ unsafe extern "C" fn miifighter_special_n_main_loop(fighter: &mut L2CFighterComm
             VarModule::inc_int(fighter.battle_object, vars::miifighter::status::SPECIAL_N1_CHARGE);
             if charge == 1.0 {
                 MotionModule::set_rate(fighter.module_accessor, 0.5);
-                EFFECT_FOLLOW_FLIP(fighter, Hash40::new("sys_smash_flash"), Hash40::new("sys_smash_flash"), Hash40::new("top"), 2, 12, -3, 0, 0, 0, 0.7, false, *EF_FLIP_AXIS_YZ);
+                EFFECT_FOLLOW_FLIP(fighter, Hash40::new("sys_smash_flash"), Hash40::new("sys_smash_flash"), Hash40::new("top"), 2, 12, -3, 0, 0, 0, 0.3, false, *EF_FLIP_AXIS_YZ);
             }
             if charge == 10.0 {
                 fighter.change_motion_inherit_frame_keep_rate_by_situation("special_n1_bowl", "special_air_n1_bowl", -1.0, 1.0, 0.0);
