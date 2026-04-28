@@ -123,7 +123,7 @@ fall_aerial_b:
   blend_frames: 5
 jump_aerial_f2:
   animations:
-  - name: a03jumpaerialf1.nuanmb
+  - name: a03jumpaerialf.nuanmb
 jump_aerial_f3:
   game_script: game_jumpaerialf2
   flags:
