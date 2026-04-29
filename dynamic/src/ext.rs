@@ -1719,7 +1719,7 @@ impl BomaExt for BattleObjectModuleAccessor {
         let air_accel_y = WorkModule::get_param_float(self, Hash40::new("air_accel_y").hash, 0);
         let air_speed_y_stable = WorkModule::get_param_float(self, Hash40::new("air_speed_y_stable").hash, 0);
         let escape_air_slide_speed = WorkModule::get_param_float(self, Hash40::new("param_motion").hash, Hash40::new("escape_air_slide_speed").hash);
-        let escape_air_stick_vec_y = 0.707;  // Simulate a 45º airdodge
+        let escape_air_stick_vec_y = 1.0;  // Simulate a straight vertically-up airdodge
         let adjusted_escape_air_slide_speed = escape_air_slide_speed * escape_air_stick_vec_y;
         let remaining_y_speed_on_escape_air_fall_frame = adjusted_escape_air_slide_speed * escape_air_slide_speed_mul.powi(escape_air_slide_fall_frame + 1);
         let fall_time_to_enable_cliff_catch = super::util::get_time_to_fall_distance(

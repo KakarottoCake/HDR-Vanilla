@@ -810,6 +810,7 @@ pub mod vars {
             pub const SPECIAL_S_ALTERNATE_GRAB: i32 = 0x0100;
             pub const SPECIAL_S_LOW_GRAB: i32 = 0x0101;
             pub const SPECIAL_S_HIGH_GRAB: i32 = 0x0102;
+            pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0103;
         }
         pub mod status {
             // flags
