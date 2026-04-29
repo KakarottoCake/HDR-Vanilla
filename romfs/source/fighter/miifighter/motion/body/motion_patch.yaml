@@ -662,7 +662,7 @@ throw_b:
     cancel_frame: 30
 throw_lw:
   extra:
-    cancel_frame: 45
+    cancel_frame: 43
 furafura_end:
   extra:
     cancel_frame: 34
