@@ -30,17 +30,14 @@ unsafe extern "C" fn sound_specialn(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_purin_disarmingvoice_echo"));
         PLAY_STATUS(agent, Hash40::new("se_purin_appeal_l01"));
         let rand = sv_math::rand(hash40("fighter"), 2);
         if rand == 0 {
-            PLAY_STATUS(agent, Hash40::new("vc_purin_003"));
-            SoundModule::set_se_pitch_ratio(boma, Hash40::new("vc_purin_003"), 1.6);
-        }
-        else {
             let handle = SoundModule::play_se(boma, Hash40::new("vc_purin_heavyget"), true, false, false, false, app::enSEType(0));
-            SoundModule::set_se_vol(boma, handle as i32, 1.4, 0);
+            SoundModule::set_se_vol(boma, handle as i32, 1.8, 0);
         }
-       STOP_SE(agent, Hash40::new("se_purin_special_n03"));
+        STOP_SE(agent, Hash40::new("se_purin_special_n03"));
     }
 }
 
