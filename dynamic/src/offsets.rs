@@ -53,9 +53,6 @@ extern "C" {
     #[link_name = "offsets_global_frame_counter"]
     fn offsets_global_frame_counter() -> usize;
 
-    #[link_name = "offsets_get_match_mode"]
-    fn offsets_get_match_mode() -> usize;
-
     #[link_name = "offsets_kill_zoom_regular"]
     fn offsets_kill_zoom_regular() -> usize;
 
@@ -174,12 +171,6 @@ pub fn on_rule_select() -> usize {
 pub fn global_frame_counter() -> usize {
     unsafe {
         offsets_global_frame_counter()
-    }
-}
-
-pub fn get_match_mode() -> usize {
-    unsafe {
-        offsets_get_match_mode()
     }
 }
 
