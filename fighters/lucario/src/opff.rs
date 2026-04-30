@@ -104,7 +104,7 @@ pub unsafe fn check_burnout(agent: &mut L2CAgentBase) {
             Hash40::new("sys_ground_shockwave"),
             &Vector3f::new(bust_pos.x + (2.0 * lr), bust_pos.y, bust_pos.z),
             &Vector3f::new(1.57, 0.0, 0.0),
-            0.85,
+            0.77,
             0,
             -1,
             false,
