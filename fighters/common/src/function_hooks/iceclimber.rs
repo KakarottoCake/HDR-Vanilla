@@ -16,6 +16,5 @@ pub fn install() {
 
         // fixes nana not inputting grab when popo is actionable
         skyline::patching::Patch::in_text(0x2f7dcc).data(0x140000E1_u32);
-        skyline::patching::Patch::in_text(0x2f81cc).data(0x1400000D_u32); 
     }
 }
