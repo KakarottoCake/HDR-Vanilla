@@ -145,8 +145,6 @@ unsafe extern "C" fn special_hi_h_main_loop(fighter: &mut L2CFighterCommon) -> L
         sv_kinetic_energy!(set_speed_mul, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, shield_hit_speed_x_mul);
     }
 
-    let frame = MotionModule::frame(fighter.module_accessor);
-
     if MotionModule::is_end(fighter.module_accessor) {
         if fighter.is_situation(*SITUATION_KIND_GROUND) {
             StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_WAIT, false);
@@ -164,16 +162,19 @@ unsafe extern "C" fn special_hi_h_main_loop(fighter: &mut L2CFighterCommon) -> L
             }
         }
     }
-    else {
-        if fighter.is_situation(*SITUATION_KIND_GROUND) && fighter.is_prev_situation(*SITUATION_KIND_AIR) {
+
+    if StatusModule::is_situation_changed(fighter.module_accessor) {
+        if fighter.is_situation(*SITUATION_KIND_GROUND) {
+            let frame = MotionModule::frame(fighter.module_accessor);
             if frame <= 13.0 {
-                MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_h"), frame + 15.0, 1.0, false, 0.0, false, false);
+                MotionModule::change_motion_inherit_frame_keep_rate(fighter.module_accessor, Hash40::new("special_hi_h"), -1.0, 1.0, 0.0);
             }
-            else {
-                if frame >= 53.0 {
-                    StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, false);
-                }
+            else if frame >= 53.0 {
+                StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, false);
             }
+        }
+        else {
+            MotionModule::change_motion_inherit_frame_keep_rate(fighter.module_accessor, Hash40::new("special_air_hi_h"), -1.0, 1.0, 0.0);
         }
     }
 

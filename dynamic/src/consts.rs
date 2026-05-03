@@ -250,6 +250,8 @@ pub mod vars {
 
             pub const OCCUPIED_LEDGE_ID_FOR_TETHERS: i32 = 0x0016;
 
+            pub const DISABLE_ESCAPE_AIR_EFFECT_HANDLE: i32 = 0x0017;
+
 
             // floats
 
@@ -756,6 +758,7 @@ pub mod vars {
         pub mod instance {
             // flags
             pub const SPECIAL_LW_DISABLE_STALL: i32 = 0x0100;
+            pub const SPECIAL_LW_DISABLE_JC: i32 = 0x0101;
         }
         pub mod status {
             // flags
@@ -769,7 +772,10 @@ pub mod vars {
     }
 
     pub mod fox {
-
+        pub mod instance {
+            // flags
+            pub const SPECIAL_LW_DISABLE_JC: i32 = 0x0100;
+        }
     }
 
     pub mod gamewatch {
@@ -806,6 +812,7 @@ pub mod vars {
             pub const SPECIAL_S_ALTERNATE_GRAB: i32 = 0x0100;
             pub const SPECIAL_S_LOW_GRAB: i32 = 0x0101;
             pub const SPECIAL_S_HIGH_GRAB: i32 = 0x0102;
+            pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0103;
         }
         pub mod status {
             // flags
@@ -997,7 +1004,10 @@ pub mod vars {
     }
 
     pub mod link {
-
+        pub mod status {
+            // flags
+            pub const ENABLE_SPECIAL_LW_CANCEL: i32 = 0x1000;
+        }
     }
 
     pub mod littlemac {
@@ -1072,6 +1082,7 @@ pub mod vars {
             pub const ATTACK_S4_ANGLE_DOWN: i32 = 0x0103;
             pub const ATTACK_S4_ANGLE_UP: i32 = 0x0104;
             pub const ATTACK_AIR_N_LANDING_HITBOX: i32 = 0x0105;
+            pub const SPECIAL_LW_DISABLE_JC: i32 = 0x0106;
 
             // int
             pub const SPECIAL_N_OFFENSE_UP_EFFECT_HANDLE1: i32 = 0x01DF;
@@ -1283,6 +1294,7 @@ pub mod vars {
             pub const BOOSTED_AERIAL_LANDING: i32 = 0x0100;
             pub const BOOSTED_ATTACK_AIR_LW_AIRTIME: i32 = 0x0101;
             pub const SPECIAL_HI1_AIR_USED: i32 = 0x0102;
+            pub const SPECIAL_LW_DISABLE_JC: i32 = 0x0103;
             
             // ints
             pub const SPECIAL_S2_STEALTHBOMB_EFFECT_HANDLE: i32 = 0x0100;
@@ -1374,6 +1386,7 @@ pub mod vars {
             //flags
             pub const DISABLE_SPECIAL_HI: i32 = 0x0100;
             pub const SPECIAL_LW_DISABLE_STALL: i32 = 0x0101;
+            pub const SPECIAL_LW_DISABLE_JC: i32 = 0x0102;
         }
         pub mod status {
             // flags
@@ -1568,6 +1581,7 @@ pub mod vars {
 
             // flags
             pub const ATTACK_AIR_LANDING_HIT: i32 = 0x0100;
+            pub const DISABLE_SPECIAL_S: i32 = 0x0101;
         }
         pub mod status {
             // ints
@@ -1598,7 +1612,10 @@ pub mod vars {
     }
 
     pub mod pitb {
-
+        pub mod instance {
+            // flags
+            pub const SPECIAL_LW_DISABLE_JC: i32 = 0x0100;
+        }
     }
 
     pub mod plizardon {
@@ -2045,6 +2062,10 @@ pub mod vars {
     }
 
     pub mod wolf {
+        pub mod instance {
+            // flags
+            pub const SPECIAL_LW_DISABLE_JC: i32 = 0x0100;
+        }
         pub mod status {
             // flags
             pub const SPECIAL_S_RESERVE_FALL: i32 = 0x1100;

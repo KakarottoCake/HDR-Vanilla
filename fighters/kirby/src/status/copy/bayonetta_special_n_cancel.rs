@@ -232,7 +232,7 @@ unsafe extern "C" fn cancel_check(fighter: &mut L2CFighterCommon) -> L2CValue {
             StatusModule::change_status_force(fighter.module_accessor, statuses::kirby::BAYONETTA_SPECIAL_N_CANCEL, false);
         }
     } else {
-        fighter.check_jump_cancel(false, false);
+        fighter.check_jump_cancel(false, false, false);
         if fighter.is_cat_flag(Cat1::AirEscape) {
             VarModule::set_int(fighter.battle_object, vars::bayonetta::instance::SPECIAL_N_CANCEL_TYPE, *FIGHTER_STATUS_KIND_FALL);
             StatusModule::change_status_force(fighter.module_accessor, statuses::kirby::BAYONETTA_SPECIAL_N_CANCEL, false);

@@ -30,7 +30,7 @@ mod catch;
 mod damage;
 mod escape;
 mod dead;
-// mod damageflyreflect;
+mod damageflyreflect;
 mod down;
 mod float;
 mod slip;
@@ -1139,7 +1139,7 @@ pub fn install() {
     damage::install();
     escape::install();
     dead::install();
-    // damageflyreflect::install();
+    damageflyreflect::install();
     down::install();
     slip::install();
     lasso::install();

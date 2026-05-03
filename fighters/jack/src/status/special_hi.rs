@@ -1,5 +1,14 @@
 use super::*;
 
+pub unsafe extern "C" fn special_hi_check_attack(fighter: &mut L2CFighterCommon, param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
+    // Aerial Grappling Hook cancel
+    if fighter.is_situation(*SITUATION_KIND_AIR) && !fighter.is_in_hitlag() {
+        MotionModule::set_rate(fighter.module_accessor, 2.0);
+    }
+
+    return 0.into();
+}
+
 // FIGHTER_JACK_STATUS_KIND_SPECIAL_HI2_RUSH
 
 unsafe extern "C" fn special_hi2_rush_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -33,6 +42,7 @@ unsafe extern "C" fn special_hi2_end_pre(fighter: &mut L2CFighterCommon) -> L2CV
 }
 
 pub fn install(agent: &mut Agent) {
+    agent.status(CheckAttack, *FIGHTER_STATUS_KIND_SPECIAL_HI, special_hi_check_attack);
     agent.status(Exec, *FIGHTER_JACK_STATUS_KIND_SPECIAL_HI2_RUSH, special_hi2_rush_exec);
     agent.status(Pre, *FIGHTER_JACK_STATUS_KIND_SPECIAL_HI2_END, special_hi2_end_pre);
 }

@@ -59,12 +59,11 @@ unsafe extern "C" fn sound_attacks3(agent: &mut L2CAgentBase) {
     frame(lua_state, 5.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_buddy_attackhard_s02"));
-        let play_vc = app::sv_math::rand(hash40("fighter"), 3);
-        if play_vc == 0 {PLAY_SE(agent, Hash40::new("vc_buddy_attackhard_s01"));}
     }
     frame(lua_state, 6.0);
     if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("vc_buddy_attackhard_s02"));
+        let play_vc = app::sv_math::rand(hash40("fighter"), 3);
+        if play_vc == 0 {PLAY_SE(agent, Hash40::new("vc_buddy_attackhard_s02"));}
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {

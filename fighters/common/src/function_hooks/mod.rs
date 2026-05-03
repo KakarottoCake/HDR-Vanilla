@@ -831,6 +831,19 @@ unsafe fn get_escape_air_slide_cancel_frame(ctx: &mut skyline::hooks::InlineCtx)
     *(ctx.registers[8].x() as *mut f32).add(0x94 / 4) = cancel_frame as f32;
 }
 
+// This runs where the out-of-jumps smoke effect is called
+// AKA sys_falling_smoke
+#[skyline::hook(offset = 0x6188ec, inline)]
+unsafe fn req_sys_falling_smoke(ctx: &mut skyline::hooks::InlineCtx) {
+    let fighter = ctx.registers[19].x() as *mut Fighter;
+    let object = &mut (*fighter).battle_object as *mut BattleObject;
+    let entry_stand_scale = WorkModule::get_param_float((*object).module_accessor, hash40("entry_stand_scale"), 0);
+    let smoke_scale: f32 = entry_stand_scale * 1.5;
+
+    // Increase the scale of sys_falling_smoke
+    ctx.registers_f[0].set_s(smoke_scale);
+}
+
 pub fn install() {
     energy::install();
     effect::install();
@@ -897,6 +910,7 @@ pub fn install() {
         set_uniform_buffer,
         phantom_hit_check,
         get_escape_air_cancel_frame,
-        get_escape_air_slide_cancel_frame
+        get_escape_air_slide_cancel_frame,
+        req_sys_falling_smoke
     );
 }

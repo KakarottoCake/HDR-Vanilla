@@ -222,7 +222,7 @@ zelda = { workspace = true, optional = true }
 
 dynamic.workspace = true
 locks = { git = "https://github.com/HDR-Development/smashline" }
-hid-hdr = { git = "https://github.com/HDR-Development/hid-hdr", features = ["warnings"] }
+# hid-hdr = { git = "https://github.com/HDR-Development/hid-hdr", features = ["warnings"] }
 once_cell = "1"
 ninput = { git = "https://github.com/HDR-Development/ninput" }
 rand = { git = "https://github.com/skyline-rs/rand" }

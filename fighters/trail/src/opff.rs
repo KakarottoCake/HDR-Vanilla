@@ -94,7 +94,7 @@ unsafe fn magic_handling(fighter: &mut L2CFighterCommon, boma: &mut BattleObject
     // blizzaga jump cancel
     if (boma.is_status(*FIGHTER_TRAIL_STATUS_KIND_SPECIAL_N2)
     && boma.motion_frame() > 12.0) {
-        boma.check_jump_cancel(false, false);
+        boma.check_jump_cancel(false, false, false);
     }
 
     // handles the cooldown timer between casting spells
