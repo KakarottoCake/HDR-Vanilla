@@ -61,6 +61,7 @@ unsafe extern "C" fn game_specialnbomb(agent: &mut L2CAgentBase) {
     frame(lua_state, 37.0);
     if is_excute(agent) {
         ArticleModule::shoot(boma, *FIGHTER_LUCARIO_GENERATE_ARTICLE_AURABALL, ArticleOperationTarget(*ARTICLE_OPE_TARGET_LAST), false);
+        VarModule::off_flag(agent.battle_object, vars::lucario::instance::IS_POWERED_UP);
     }
 }
 

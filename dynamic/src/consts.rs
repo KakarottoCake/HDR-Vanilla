@@ -250,6 +250,8 @@ pub mod vars {
 
             pub const OCCUPIED_LEDGE_ID_FOR_TETHERS: i32 = 0x0016;
 
+            pub const DISABLE_ESCAPE_AIR_EFFECT_HANDLE: i32 = 0x0017;
+
 
             // floats
 
@@ -1579,6 +1581,7 @@ pub mod vars {
 
             // flags
             pub const ATTACK_AIR_LANDING_HIT: i32 = 0x0100;
+            pub const DISABLE_SPECIAL_S: i32 = 0x0101;
         }
         pub mod status {
             // ints
