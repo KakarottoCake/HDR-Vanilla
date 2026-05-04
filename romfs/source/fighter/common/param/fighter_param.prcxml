@@ -88,7 +88,7 @@
       <float hash="jump_speed_x">1</float>
       <float hash="jump_speed_x_max">1.3</float>
       <float hash="jump_initial_y">9.9385</float>
-      <float hash="mini_jump_y">12.58</float>
+      <float hash="mini_jump_y">11.7</float>
       <float hash="jump_aerial_y">25</float>
       <float hash="air_accel_x_add">0.02</float>
       <float hash="air_speed_x_stable">1</float>
@@ -2581,13 +2581,13 @@
       <float hash="ground_brake">0.08</float>
       <float hash="dash_speed">1.6</float>
       <float hash="run_accel_mul">0.05571</float>
-      <float hash="run_speed_max">1.45</float>
+      <float hash="run_speed_max">1.43</float>
       <int hash="jump_squat_frame">5</int>
-      <float hash="jump_speed_x">0.96</float>
+      <float hash="jump_speed_x">0.98</float>
       <float hash="jump_speed_x_mul">0.8</float>
       <float hash="jump_speed_x_max">1.45</float>
       <float hash="jump_initial_y">11.297</float>
-      <float hash="jump_y">31.6</float>
+      <float hash="jump_y">32.3</float>
       <float hash="mini_jump_y">11</float>
       <float hash="jump_aerial_y">32.8</float>
       <float hash="air_accel_x_mul">0.05</float>
@@ -2597,7 +2597,7 @@
       <float hash="air_speed_y_stable">2.2</float>
       <float hash="dive_speed_y">2.953</float>
       <float hash="weight">112</float>
-      <float hash="landing_attack_air_frame_n">9</float>
+      <float hash="landing_attack_air_frame_n">8</float>
       <float hash="landing_attack_air_frame_f">11</float>
       <float hash="landing_attack_air_frame_b">13</float>
       <float hash="landing_attack_air_frame_hi">10</float>
@@ -3046,7 +3046,7 @@
       <float hash="weight">78</float>
       <float hash="landing_attack_air_frame_n">9</float>
       <float hash="landing_attack_air_frame_f">9</float>
-      <float hash="landing_attack_air_frame_hi">9</float>
+      <float hash="landing_attack_air_frame_hi">8</float>
       <float hash="landing_attack_air_frame_lw">11</float>
       <float hash="landing_frame">4</float>
       <int hash="attack_100_enable_cnt">2</int>

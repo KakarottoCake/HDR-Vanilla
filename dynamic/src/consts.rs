@@ -250,6 +250,8 @@ pub mod vars {
 
             pub const OCCUPIED_LEDGE_ID_FOR_TETHERS: i32 = 0x0016;
 
+            pub const DISABLE_ESCAPE_AIR_EFFECT_HANDLE: i32 = 0x0017;
+
 
             // floats
 
@@ -810,6 +812,7 @@ pub mod vars {
             pub const SPECIAL_S_ALTERNATE_GRAB: i32 = 0x0100;
             pub const SPECIAL_S_LOW_GRAB: i32 = 0x0101;
             pub const SPECIAL_S_HIGH_GRAB: i32 = 0x0102;
+            pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0103;
         }
         pub mod status {
             // flags
@@ -1001,7 +1004,10 @@ pub mod vars {
     }
 
     pub mod link {
-
+        pub mod status {
+            // flags
+            pub const ENABLE_SPECIAL_LW_CANCEL: i32 = 0x1000;
+        }
     }
 
     pub mod littlemac {
@@ -1575,6 +1581,7 @@ pub mod vars {
 
             // flags
             pub const ATTACK_AIR_LANDING_HIT: i32 = 0x0100;
+            pub const DISABLE_SPECIAL_S: i32 = 0x0101;
         }
         pub mod status {
             // ints
