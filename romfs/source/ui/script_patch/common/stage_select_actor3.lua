@@ -1357,7 +1357,23 @@ local setup_from_environment = function()
     end
 
     UiScriptPlayer.invoke("setup_bgm")
-    change_sub_page(0)
+    
+    local selected_panel_id = HDR.get_selected_panel()
+    local selected_preview_id = HDR.get_selected_preview()
+
+    local page = 0
+    local panel = 0
+    local preview = 0
+
+    if selected_panel_id ~= UI_INVALID_INDEX then
+        page = selected_panel_id // PANELS_PER_PAGE
+        panel = selected_panel_id
+        preview = selected_preview_id
+    end
+
+    change_sub_page(page)
+    set_stage_preview_from_stage_panel(preview, panel)
+    set_alt_panel_textures(nil)
 end
 
 -- Cancels, presumably a part of the exit sequence
@@ -1708,6 +1724,8 @@ local decide_normal_stage = function()
         UiSoundManager.play_se(UI_SE_ID_ERROR)
         return false
     end
+
+    HDR.set_selected_panel_and_preview(current_selected_panel, current_selected_preview)
 
     UiScriptPlayer.invoke("set_medal_visible", current_selected_preview, true)
     UiScriptPlayer.invoke("set_medal_collect_range_from_panel", current_selected_preview, current_selected_panel)
