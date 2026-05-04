@@ -89,6 +89,15 @@ unsafe extern "C" fn game_escapeairslide(agent: &mut L2CAgentBase) {
 
 }
 
+unsafe extern "C" fn game_jumpaerialfront(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    let start_motion_rate = ParamModule::get_float(agent.object(), ParamType::Agent, "param_jump_aerial.start_motion_rate");
+    FT_MOTION_RATE(agent, 1.0 / start_motion_rate);
+    frame(lua_state, 15.0);
+    FT_MOTION_RATE(agent, 1.0);
+}
+
 unsafe extern "C" fn effect_jumpaerialfront(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
@@ -99,6 +108,15 @@ unsafe extern "C" fn effect_jumpaerialfront(agent: &mut L2CAgentBase) {
         }
         wait(lua_state, 6.0);
     }
+}
+
+unsafe extern "C" fn game_jumpaerialback(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.boma();
+    let start_motion_rate = ParamModule::get_float(agent.object(), ParamType::Agent, "param_jump_aerial.start_motion_rate");
+    FT_MOTION_RATE(agent, 1.0 / start_motion_rate);
+    frame(lua_state, 15.0);
+    FT_MOTION_RATE(agent, 1.0);
 }
 
 unsafe extern "C" fn effect_jumpaerialback(agent: &mut L2CAgentBase) {
@@ -136,6 +154,8 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_escapeair", game_escapeair, Priority::Low);
     agent.acmd("game_escapeairslide", game_escapeairslide, Priority::Low);
 
+    agent.acmd("game_jumpaerialfront", game_jumpaerialfront, Priority::Low);
+    agent.acmd("game_jumpaerialback", game_jumpaerialback, Priority::Low);
     agent.acmd("effect_jumpaerialfront", effect_jumpaerialfront, Priority::Low);
     agent.acmd("effect_jumpaerialback", effect_jumpaerialback, Priority::Low);
 
