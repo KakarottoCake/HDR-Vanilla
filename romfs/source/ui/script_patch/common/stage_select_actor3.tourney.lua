@@ -2916,6 +2916,7 @@ main = function()
     root_view:play_animation("in", 1.0)
     IS_SIMPLE_CANCEL = IS_SIMPLE_CANCEL or HDR.is_css_first()
     if IS_SIMPLE_CANCEL == true then
+        BACK_POPUP_ID = nil
         local parts = root_view:get_parts("set_parts_txt_head_00")
         if IS_RETURN_MENU == false then
             parts:play_animation("in", 1.0)
