@@ -267,7 +267,7 @@ unsafe fn register_panel_button(
     arg7: u64,
     arg8: u64,
 ) {
-    if CSS_FIRST && !name.is_null() && skyline::from_c_str(name) == "set_btn_03_rule" {
+    if CSS_FIRST && !name.is_null() && skyline::from_c_str(name as *const u8) == "set_btn_03_rule" {
         return;
     }
     call_original!(panel, event_code, name, arg4, arg5, arg6, arg7, arg8);
