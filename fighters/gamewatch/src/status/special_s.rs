@@ -88,7 +88,7 @@ unsafe extern "C" fn special_s_init(fighter: &mut L2CFighterCommon) -> L2CValue 
 unsafe extern "C" fn special_s_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.is_motion_one_of(&[Hash40::new("special_s_4"), Hash40::new("special_air_s_4")]) {
         if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) && !fighter.is_in_hitlag() {
-            fighter.check_jump_cancel(false, false);
+            fighter.check_jump_cancel(false, false, false);
         }
     }
 

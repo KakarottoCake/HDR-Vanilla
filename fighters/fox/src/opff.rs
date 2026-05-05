@@ -11,13 +11,29 @@ unsafe fn laser_land_cancel(fighter: &mut L2CFighterCommon) {
 
 // Fox Shine Jump Cancels
 unsafe fn shine_jump_cancel(fighter: &mut L2CFighterCommon) {
+    // disables jump cancels when parried between statuses
+    if fighter.is_status_one_of(&[
+        *FIGHTER_STATUS_KIND_SPECIAL_LW,
+        *FIGHTER_FOX_STATUS_KIND_SPECIAL_LW_LOOP,
+        *FIGHTER_FOX_STATUS_KIND_SPECIAL_LW_END,
+        *FIGHTER_FOX_STATUS_KIND_SPECIAL_LW_HIT
+    ])
+    && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_PARRY) {
+        VarModule::on_flag(fighter.battle_object, vars::fox::instance::SPECIAL_LW_DISABLE_JC);
+        if !fighter.is_status(*FIGHTER_FOX_STATUS_KIND_SPECIAL_LW_END)
+        && !fighter.is_in_hitlag() {
+            fighter.change_status(FIGHTER_FOX_STATUS_KIND_SPECIAL_LW_END.into(), false.into());
+        }
+    }
+
     if fighter.is_status_one_of(&[
         *FIGHTER_FOX_STATUS_KIND_SPECIAL_LW_LOOP,
-        *FIGHTER_FOX_STATUS_KIND_SPECIAL_LW_END])
+        *FIGHTER_FOX_STATUS_KIND_SPECIAL_LW_END
+    ])
     && !fighter.is_in_hitlag()
-        {
-            fighter.check_jump_cancel(false, false);
-        }
+    && !VarModule::is_flag(fighter.battle_object, vars::fox::instance::SPECIAL_LW_DISABLE_JC) {
+        fighter.check_jump_cancel(false, false, false);
+    }
 }   
 
 // Utaunt cancel into Fire Fox
@@ -33,13 +49,6 @@ unsafe fn firefox_startup_ledgegrab(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_HI) {
         // allows ledgegrab during Firefox startup
         fighter.sub_transition_group_check_air_cliff();
-    }
-}
-
-unsafe fn frame_data(boma: &mut BattleObjectModuleAccessor, motion_kind: u64, frame: f32) {
-    if motion_kind == hash40("throw_hi")
-    && frame >= 10.0 {
-        MotionModule::set_rate(boma, 1.8);
     }
 }
 
@@ -61,7 +70,6 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     shine_jump_cancel(fighter);
     utaunt_cancel_fire_fox(boma, frame);
     firefox_startup_ledgegrab(fighter);
-    frame_data(boma, motion_kind, frame);
     fastfall_specials(fighter);
 }
 

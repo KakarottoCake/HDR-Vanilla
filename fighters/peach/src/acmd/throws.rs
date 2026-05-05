@@ -5,7 +5,6 @@ unsafe extern "C" fn game_catch(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     FT_MOTION_RATE(agent, 1.2);
-    frame(lua_state, 5.0);
     if is_excute(agent) {
         GrabModule::set_rebound(boma, true);
     }
@@ -226,6 +225,7 @@ unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
     }
     frame(lua_state, 43.0);
+    FT_MOTION_RATE_RANGE(agent, 43.0, 67.0, 19.0);
     if is_excute(agent) {
         let target = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
         let target_group = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
@@ -236,6 +236,8 @@ unsafe extern "C" fn game_throwlw(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         ArticleModule::remove_exist(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KINOPIO, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     }
+    frame(lua_state, 67.0);
+    FT_MOTION_RATE(agent, 1.0);
 }
 
 pub fn install(agent: &mut Agent) {
