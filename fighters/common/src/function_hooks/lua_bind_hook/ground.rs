@@ -184,12 +184,6 @@ unsafe fn check_fighter_edge_slipoffs(boma: &mut BattleObjectModuleAccessor) -> 
     if (fighter_kind == *FIGHTER_KIND_LUIGI && status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N) { return true.into(); }
     if (fighter_kind == *FIGHTER_KIND_KIRBY && status_kind == *FIGHTER_KIRBY_STATUS_KIND_LUIGI_SPECIAL_N) { return true.into(); }
 
-    // PEACH
-    if (fighter_kind == *FIGHTER_KIND_PEACH && status_kind == *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_AWAY_END) { return true.into(); }
-
-    // DAISY
-    if (fighter_kind == *FIGHTER_KIND_DAISY && status_kind == *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_AWAY_END) { return true.into(); }
-
     // SEPHIROTH
     if (fighter_kind == *FIGHTER_KIND_EDGE && status_kind == *FIGHTER_EDGE_STATUS_KIND_SPECIAL_HI_RUSH) { return true.into(); }
     

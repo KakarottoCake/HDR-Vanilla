@@ -52,7 +52,7 @@ unsafe extern "C" fn game_specialairlw2kick(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 7.0);
     if is_excute(agent) {
-        SET_SPEED_EX(agent, -2.5, -1.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+        SET_SPEED_EX(agent, -2.15, -1.1, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {

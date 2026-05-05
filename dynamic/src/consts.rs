@@ -518,7 +518,9 @@ pub mod vars {
         pub mod instance {   
             // flag
             pub const DISABLE_SPECIAL_S: i32 = 0x0100;
-            pub const SPECIAL_S_GROUND_START: i32 = 0x0101;
+
+            //floats
+            pub const SPECIAL_HI_ANGLE: i32 = 0x0100;
         }
         pub mod status {
             // flags
@@ -2130,6 +2132,11 @@ pub mod statuses {
         pub const SPECIAL_N_BAYONET: i32 = 0x1FB;
     }
 
+    pub mod daisy {
+        pub const SPECIAL_LW_THROW: i32 = 0x1EB;
+        pub const SPECIAL_AIR_LW: i32 = 0x1EC;
+    }
+
     pub mod daisy_kinopio {
         pub const YAP: i32 = 0x1;
     }
@@ -2247,6 +2254,11 @@ pub mod statuses {
 
     pub mod palutena_meteor {
         pub const MOVE: i32 = 0x0;
+    }
+
+    pub mod peach {
+        pub const SPECIAL_LW_THROW: i32 = 0x1EB;
+        pub const SPECIAL_AIR_LW: i32 = 0x1EC;
     }
 
     pub mod pickel {
