@@ -1,5 +1,6 @@
 use std::{
     collections::HashMap,
+    ffi::c_char,
     fs::*,
     path::{ Path, PathBuf },
     sync::{ LazyLock, RwLock }
@@ -252,12 +253,32 @@ unsafe fn echo_swap_hook(
     1
 }
 
+// Kills the "Rules" button on the CSS when the CSS is first because it
+// actually goes all the way to the main menu
+#[skyline::hook(offset = 0x3771220)]
+unsafe fn register_panel_button(
+    panel: *mut u64,
+    event_code: i32,
+    name: *const c_char,
+    arg4: u64,
+    arg5: u64,
+    arg6: u64,
+    arg7: u64,
+    arg8: u64,
+) {
+    if CSS_FIRST && !name.is_null() && skyline::from_c_str(name) == "set_btn_03_rule" {
+        return;
+    }
+    call_original!(panel, event_code, name, arg4, arg5, arg6, arg7, arg8);
+}
+
 pub fn install() {
     skyline::install_hooks!(
         update_player_tag,
         css_advance_sfx_hook,
         css_advance_sfx2_hook,
         echo_swap_hook,
+        register_panel_button,
     );
 
     // Prevent the game from playing any CSS advance sound effects by default
