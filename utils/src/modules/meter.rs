@@ -445,6 +445,12 @@ unsafe fn fighter_handle_damage_hook(fighter: *mut smash::app::BattleObject, arg
                 VarModule::set_float(object, vars::common::instance::LAST_ATTACK_DAMAGE_DEALT, damage_received);
                 VarModule::set_int(object, vars::common::instance::LAST_ATTACK_RECEIVER_ENTRY_ID, (*fighter).battle_object_id as i32);
                 MeterModule::signal_hit(object);
+
+                // vampirism mode healing
+                if utils_dyn::game_modes::check_custom_mode(utils_dyn::game_modes::CustomMode::VampirismMode) {
+                    let attacker_boma = (&mut *(*object).module_accessor);
+                    DamageModule::heal(attacker_boma, damage_received * -0.25, 0);
+                }
             }
         }
     }

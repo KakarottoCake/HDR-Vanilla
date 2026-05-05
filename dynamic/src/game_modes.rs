@@ -14,6 +14,7 @@ pub enum CustomMode {
     RivalsOfAetherMode = 7,
     RampageMode = 8,
     WarMode = 9,
+    VampirismMode = 10,
 }
 
 impl fmt::Display for CustomMode {
@@ -29,6 +30,7 @@ impl fmt::Display for CustomMode {
             CustomMode::RivalsOfAetherMode => write!(f, "RivalsOfAether"),
             CustomMode::RampageMode => write!(f, "Rampage"),
             CustomMode::WarMode => write!(f, "War"),
+            CustomMode::VampirismMode => write!(f, "Vampirism"),
         }
     }
 }
@@ -49,6 +51,7 @@ impl FromStr for CustomMode {
             "rivalsofaether" => Ok(CustomMode::RivalsOfAetherMode),
             "rampage" => Ok(CustomMode::RampageMode),
             "war" => Ok(CustomMode::WarMode),
+            "vampirism" => Ok(CustomMode::VampirismMode),
             _      => Err(()),
         }
     }
