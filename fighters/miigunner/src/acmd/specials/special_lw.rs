@@ -65,7 +65,7 @@ unsafe extern "C" fn game_speciallw3start(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
 	frame(lua_state, 1.0);
-	FT_MOTION_RATE_RANGE(agent, 1.0, 7.0, 5.0);
+	FT_MOTION_RATE_RANGE(agent, 1.0, 7.0, 6.0);
     frame(lua_state, 7.0);
     FT_MOTION_RATE(agent, 1.0);
 }
