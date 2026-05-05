@@ -285,7 +285,7 @@ impl HashedString {
     }
 }
 
-pub static mut NEW_CSS_SFX: bool = false;
+pub static mut CSS_FIRST: bool = false;
 pub static mut SSS_CANCEL_TO_CSS: bool = false;
 pub static mut CSS_CANCEL_TO_LOCAL: bool = false;
 pub static mut IN_LOCAL_WIRELESS: bool = false;
@@ -296,7 +296,7 @@ unsafe fn sss_to_css(ctx: &InlineCtx) {
     let current_scene = (*hashed_string).as_str();
 
     if current_scene == "StageSelectScene" {
-        NEW_CSS_SFX = true;
+        CSS_FIRST = true;
         (*hashed_string).set("CharaSelectScene");
         CSS_CANCEL_TO_LOCAL = IN_LOCAL_WIRELESS;
     }
@@ -323,7 +323,7 @@ unsafe fn css_to_sss(ctx: &InlineCtx) {
             SSS_CANCEL_TO_CSS = IN_LOCAL_WIRELESS;
         }
         else {
-            NEW_CSS_SFX = false;
+            CSS_FIRST = false;
         }
     }
 }
@@ -409,8 +409,8 @@ unsafe fn scene_transition(
             let mut mgr = STAGE_MANAGER.lock().unwrap();
             mgr.perma_striked_stages.clear();
 
-            // Make sure new CSS SFX don't carry over to other modes unintentionally
-            NEW_CSS_SFX = false;
+            // Make sure CSS-first state doesn't carry over to other modes unintentionally
+            CSS_FIRST = false;
         }
 
         // Set Local Wireless (because get_match_mode doesn't always work in some scenes)
