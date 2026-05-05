@@ -3,7 +3,7 @@ use std::{
     ffi::c_char,
     fs::*,
     path::{ Path, PathBuf },
-    sync::{ LazyLock, RwLock }
+    sync::{ LazyLock, RwLock, atomic::Ordering }
 };
 use skyline::hooks::InlineCtx;
 use smash2::{
@@ -12,6 +12,7 @@ use smash2::{
 };
 use serde::Deserialize;
 use utils::modules::TourneyConfig;
+use utils::consts::{melee_mode, smash_mode};
 use crate::CSS_FIRST;
 
 mod layout;
@@ -272,6 +273,21 @@ unsafe fn register_panel_button(
     call_original!(panel, event_code, name, arg4, arg5, arg6, arg7, arg8);
 }
 
+#[skyline::hook(offset = 0x1a2fecc, inline)]
+fn override_min_players(ctx: &mut InlineCtx) {
+    let param_1 = ctx.registers[24].x() as *const u8;
+    let game_mode = unsafe { *(param_1.add(0x16c) as *const u32) } as i32;
+    let ruleset = unsafe { *(param_1.add(0x158) as *const u8) } as i32;
+
+    // Set rule type for 1P mode
+    utils::one_player::IS_RULE_TIME.store(ruleset == smash_mode::TIME, Ordering::Relaxed);
+
+    // set minimum required "ready" players to 1
+    if game_mode == melee_mode::SMASH {
+        ctx.registers[11].set_w(1);
+    }
+}
+
 pub fn install() {
     skyline::install_hooks!(
         update_player_tag,
@@ -279,6 +295,7 @@ pub fn install() {
         css_advance_sfx2_hook,
         echo_swap_hook,
         register_panel_button,
+        override_min_players,
     );
 
     // Prevent the game from playing any CSS advance sound effects by default
