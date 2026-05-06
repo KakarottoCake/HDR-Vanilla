@@ -213,16 +213,6 @@ pub unsafe fn get_param_float_hook(x0 /*boma*/: u64, x1 /*param_type*/: u64, x2 
             return original!()(x0, hash40("landing_frame"), 0) + 2.0;
         }
 
-        if fighter_kind == *FIGHTER_KIND_DAISY {
-            // uses a custom kinetic type
-            if x1 == hash40("param_special_s") {
-                if x2 == hash40("special_s_jump_dec_accel_y")
-                && VarModule::is_flag(boma_reference.object(), vars::daisy::instance::SPECIAL_S_GROUND_START) {
-                    return 0.05;
-                }
-            }
-        }
-
         else if fighter_kind == *FIGHTER_KIND_DIDDY {
             if x1 == hash40("param_special_hi") {
                 if x2 == hash40("special_hi_jet_ang_f_max") {
