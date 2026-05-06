@@ -15,6 +15,7 @@ pub enum CustomMode {
     RampageMode = 8,
     WarMode = 9,
     VampirismMode = 10,
+    RandomAngleMode = 11,
 }
 
 impl fmt::Display for CustomMode {
@@ -31,6 +32,7 @@ impl fmt::Display for CustomMode {
             CustomMode::RampageMode => write!(f, "Rampage"),
             CustomMode::WarMode => write!(f, "War"),
             CustomMode::VampirismMode => write!(f, "Vampirism"),
+            CustomMode::RandomAngleMode => write!(f, "RandomAngle"),
         }
     }
 }
@@ -52,6 +54,7 @@ impl FromStr for CustomMode {
             "rampage" => Ok(CustomMode::RampageMode),
             "war" => Ok(CustomMode::WarMode),
             "vampirism" => Ok(CustomMode::VampirismMode),
+            "randomangle" => Ok(CustomMode::RandomAngleMode),
             _      => Err(()),
         }
     }
