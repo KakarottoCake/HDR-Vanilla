@@ -47,6 +47,8 @@
   <list hash="param_kaminari">
     <struct index="0">
       <float hash="speed_">-6.48</float>
+      <float hash="flying_dist_">48.6</float>
+      <float hash="pass_fall_dist">12.96</float>
     </struct>
     <hash40 index="1">dummy</hash40>
     <hash40 index="2">dummy</hash40>
