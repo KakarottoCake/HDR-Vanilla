@@ -55,6 +55,10 @@ unsafe extern "C" fn special_hi_init(fighter: &mut L2CFighterCommon) -> L2CValue
         // lua_bind::KineticEnergy::reset_energy(gravity_energy, *ENERGY_GRAVITY_RESET_TYPE_GRAVITY, &reset_speed_2f, &reset_speed_3f, fighter.module_accessor);
         // lua_bind::KineticEnergy::enable(gravity_energy);
 
+        let mut gravity_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY) as *mut app::FighterKineticEnergyGravity;
+        let start_air_accel_y = ParamModule::get_float(fighter.battle_object, ParamType::Agent, "param_special_hi.start_air_accel_y");
+        smash::app::lua_bind::FighterKineticEnergyGravity::set_accel(gravity_energy, -start_air_accel_y);
+
         let reset_speed_2f = Vector2f { x: 0.0, y: 0.0 };
         let reset_speed_3f = Vector3f { x: 0.0, y: 0.0, z: 0.0 };
         lua_bind::KineticEnergy::reset_energy(motion_energy, *ENERGY_MOTION_RESET_TYPE_AIR_TRANS_ANGLE, &reset_speed_2f, &reset_speed_3f, fighter.module_accessor);
