@@ -35,6 +35,11 @@ unsafe extern "C" fn effect_tame(agent: &mut L2CAgentBase) {
                 };
                 // Apply color blend
                 EffectModule::set_rgb(boma, flash_handle as u32, blend_vector.x, blend_vector.y, blend_vector.z);
+                if h == 5 {
+                    EFFECT_FOLLOW(agent, Hash40::new("miigunner_sb_tama"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.75, true);
+                    LAST_EFFECT_SET_RATE(agent, 0.05);
+                    LAST_EFFECT_SET_COLOR(agent, 1.5, 0.75, 0.75);
+                }
 			}
 		}
 		wait(lua_state, 1.0);
@@ -53,6 +58,11 @@ unsafe extern "C" fn effect_turn(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("miigunner_sb_tama"), false, false);
+        EFFECT_FOLLOW(agent, Hash40::new("miigunner_sb_tama"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.5, true);
+        LAST_EFFECT_SET_RATE(agent, 0.5);
+        LAST_EFFECT_SET_COLOR(agent, 1.5, 0.75, 0.75);
+        LAST_EFFECT_SET_ALPHA(agent, 2.0);
         EFFECT_FOLLOW(agent, Hash40::new("miigunner_sb_tama"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.75, true);
         LAST_EFFECT_SET_RATE(agent, 0.25);
         LAST_EFFECT_SET_COLOR(agent, 1.5, 0.75, 0.75);

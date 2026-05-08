@@ -41,7 +41,7 @@
       <int hash="hi1_fall_special_landing_frame">25</int>
     </struct>
     <struct index="1">
-      <float hash="hi2_air_start_spd_y">2.22</float>
+      <float hash="hi2_air_start_spd_y">2.02</float>
       <float hash="hi2_air_gravity_y_mul">0.4</float>
     </struct>
     <struct index="2">

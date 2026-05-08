@@ -29,7 +29,7 @@
   <int hash="jump_initial_frame">5</int>
   <int hash="jump_no_aerial_frame">2</int>
   <float hash="jump_run_stick_y">0.635</float>
-  <float hash="dive_cont_value">-0.6415</float>
+  <float hash="dive_cont_value">-0.665</float>
   <int hash="tread_jump_after_xlu_frame">0</int>
   <int hash="tread_jump_disable_frame_after_attack">8</int>
   <float hash="shield_max">64</float>
@@ -108,7 +108,7 @@
   <byte hash="super_special_command_life_max">14</byte>
   <float hash="catch_dash_brake_mul">1</float>
   <int hash="shield_setoff_catch_frame">0</int>
-  <int hash="invalid_capture_frame">1</int>
+  <int hash="invalid_capture_frame">6</int>
   <float hash="cliff_catch_cancel_stick_y">-0.66</float>
   <int hash="cliff_catch_move_frame">0</int>
   <float hash="cliff_next_stick">0.2</float>
@@ -126,7 +126,7 @@
   <int hash="0x189f0b0c96">999</int>
   <int hash="air_lasso_cliff_wait_frame">7</int>
   <int hash="air_lasso_landing_frame">25</int>
-  <float hash="cliff_dive_cont_value">-0.8786</float>
+  <float hash="cliff_dive_cont_value">-0.872665</float>
   <float hash="stand_stick_y">0.2</float>
   <float hash="stand_fb_stick_x">0.2</float>
   <list hash="cliff_catch_motion_rate">
@@ -184,7 +184,7 @@
   <float hash="mewtwo_thrown_reaction_frame_mul">1</float>
   <int hash="mewtwo_thrown_reaction_frame_max">15</int>
   <float hash="bury_damage_reaction_mul">0.7</float>
-  <float hash="squat_b_stick_x_min">-0.3</float>
+  <float hash="squat_b_stick_x_min">-0.31</float>
   <float hash="squat_b_stick_x_max">-0.65</float>
   <float hash="fall_stick_x">0.18</float>
   <float hash="cliff_climb_stick">0.872665</float>

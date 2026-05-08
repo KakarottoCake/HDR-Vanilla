@@ -52,13 +52,6 @@ unsafe fn firefox_startup_ledgegrab(fighter: &mut L2CFighterCommon) {
     }
 }
 
-unsafe fn frame_data(boma: &mut BattleObjectModuleAccessor, motion_kind: u64, frame: f32) {
-    if motion_kind == hash40("throw_hi")
-    && frame >= 10.0 {
-        MotionModule::set_rate(boma, 1.8);
-    }
-}
-
 unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
     if !fighter.is_in_hitlag()
     && !StatusModule::is_changing(fighter.module_accessor)
@@ -77,7 +70,6 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     shine_jump_cancel(fighter);
     utaunt_cancel_fire_fox(boma, frame);
     firefox_startup_ledgegrab(fighter);
-    frame_data(boma, motion_kind, frame);
     fastfall_specials(fighter);
 }
 

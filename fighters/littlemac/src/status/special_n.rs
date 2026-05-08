@@ -2,6 +2,11 @@ use super::*;
 
 // FIGHTER_STATUS_KIND_SPECIAL_N
 
+unsafe extern "C" fn special_n_old_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.set_status_kind_interrupt(*FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_N2);
+    return 1.into();
+}
+
 unsafe extern "C" fn special_n_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_status_pre_SpecialNCommon();
     StatusModule::init_settings(fighter.module_accessor,
@@ -157,7 +162,9 @@ unsafe extern "C" fn special_n_end(fighter: &mut L2CFighterCommon) -> L2CValue {
 }
 
 pub fn install(agent: &mut Agent) {
-    agent.status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_N, special_n_pre);
-    agent.status(Main, *FIGHTER_STATUS_KIND_SPECIAL_N, special_n_main);
-    agent.status(End, *FIGHTER_STATUS_KIND_SPECIAL_N, special_n_end);
+    agent.status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_N, special_n_old_pre);
+
+    agent.status(Pre, *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_N2, special_n_pre);
+    agent.status(Main, *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_N2, special_n_main);
+    agent.status(End, *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_N2, special_n_end);
 }

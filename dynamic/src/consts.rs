@@ -250,6 +250,8 @@ pub mod vars {
 
             pub const OCCUPIED_LEDGE_ID_FOR_TETHERS: i32 = 0x0016;
 
+            pub const DISABLE_ESCAPE_AIR_EFFECT_HANDLE: i32 = 0x0017;
+
 
             // floats
 
@@ -516,7 +518,9 @@ pub mod vars {
         pub mod instance {   
             // flag
             pub const DISABLE_SPECIAL_S: i32 = 0x0100;
-            pub const SPECIAL_S_GROUND_START: i32 = 0x0101;
+
+            //floats
+            pub const SPECIAL_HI_ANGLE: i32 = 0x0100;
         }
         pub mod status {
             // flags
@@ -810,6 +814,7 @@ pub mod vars {
             pub const SPECIAL_S_ALTERNATE_GRAB: i32 = 0x0100;
             pub const SPECIAL_S_LOW_GRAB: i32 = 0x0101;
             pub const SPECIAL_S_HIGH_GRAB: i32 = 0x0102;
+            pub const SPECIAL_HI_ENABLE_FREEFALL: i32 = 0x0103;
         }
         pub mod status {
             // flags
@@ -1001,7 +1006,10 @@ pub mod vars {
     }
 
     pub mod link {
-
+        pub mod status {
+            // flags
+            pub const ENABLE_SPECIAL_LW_CANCEL: i32 = 0x1000;
+        }
     }
 
     pub mod littlemac {
@@ -1575,6 +1583,7 @@ pub mod vars {
 
             // flags
             pub const ATTACK_AIR_LANDING_HIT: i32 = 0x0100;
+            pub const DISABLE_SPECIAL_S: i32 = 0x0101;
         }
         pub mod status {
             // ints
@@ -2123,6 +2132,11 @@ pub mod statuses {
         pub const SPECIAL_N_BAYONET: i32 = 0x1FB;
     }
 
+    pub mod daisy {
+        pub const SPECIAL_LW_THROW: i32 = 0x1EB;
+        pub const SPECIAL_AIR_LW: i32 = 0x1EC;
+    }
+
     pub mod daisy_kinopio {
         pub const YAP: i32 = 0x1;
     }
@@ -2240,6 +2254,11 @@ pub mod statuses {
 
     pub mod palutena_meteor {
         pub const MOVE: i32 = 0x0;
+    }
+
+    pub mod peach {
+        pub const SPECIAL_LW_THROW: i32 = 0x1EB;
+        pub const SPECIAL_AIR_LW: i32 = 0x1EC;
     }
 
     pub mod pickel {
