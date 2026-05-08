@@ -9,7 +9,7 @@ unsafe extern "C" fn game_specialsstart(agent: &mut L2CAgentBase) {
     frame(lua_state, 11.0);
     if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_PIT_STATUS_SPECIAL_S_WORK_ID_FLAG_MOVE_FRONT);
-        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_ALWAYS, 0);
+        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 15);
     }
     frame(lua_state, 16.0);
     if is_excute(agent) {
@@ -44,7 +44,7 @@ unsafe extern "C" fn game_specialsend(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 2.0);
     if is_excute(agent) {
-        hitbox!(agent, { extends: BASE_HITBOX, id: 0, bone: "top", dmg: 16.0, angle: 40, kbg: 80, bkb: 57, size: 6.0, x: 0.0, y: 4.0, z: 9.0, x2: 0.0, y2: 10.0, z2: 9.0, hitlag: 1.15, clank:SetOff::Thru, facing: LrCheck::F, shield_dmg: ShieldDamage::Add(20.0), effect: "collision_attr_elec", sound_level: SoundLevel::L, hit_sound: CollisionSound::Elec, region: AttackRegion::Punch, });
+        hitbox!(agent, { extends: BASE_HITBOX, id: 0, bone: "top", dmg: 16.0, angle: 40, kbg: 80, bkb: 57, size: 6.0, x: 0.0, y: 4.0, z: 9.0, x2: 0.0, y2: 10.0, z2: 9.0, hitlag: 1.15, clank:SetOff::Thru, facing: LrCheck::F, shield_dmg: ShieldDamage::Add(16.0), effect: "collision_attr_elec", sound_level: SoundLevel::L, hit_sound: CollisionSound::Elec, region: AttackRegion::Punch, });
     }
     frame(lua_state, 5.0);
     if is_excute(agent) {

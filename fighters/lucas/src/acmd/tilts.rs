@@ -75,18 +75,18 @@ unsafe extern "C" fn game_attackhi3(agent: &mut L2CAgentBase) {
         ATTACK(agent, 2, 0, Hash40::new("kneer"), 10.0, 95, 85, 0, 60, 4.0, 4.5, 1.0, 0.0, None, None, None, 1.0, 0.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PSI);
     }
     frame(lua_state, 11.0);
+    FT_MOTION_RATE_RANGE(agent, 11.0, 11.75, 1.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("hip"), 7.0, 85, 110, 0, 50, 3.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 0.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PSI);
         ATTACK(agent, 1, 0, Hash40::new("kneer"), 7.0, 85, 110, 0, 50, 2.5, -0.5, 0.0, 0.0, None, None, None, 1.0, 0.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PSI);
         ATTACK(agent, 2, 0, Hash40::new("kneer"), 9.0, 85, 100, 0, 50, 4.0, 4.5, 1.0, 0.0, None, None, None, 1.0, 0.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PSI);
     }
+    frame(lua_state, 11.75);
+    FT_MOTION_RATE_RANGE(agent, 11.75, 13.0, 1.0);
     frame(lua_state, 13.0);
+    FT_MOTION_RATE(agent, 1.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
-    }
-    frame(lua_state, 37.0);
-    if is_excute(agent) {
-        //StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_WAIT, false);
     }
 }
 
@@ -99,15 +99,22 @@ unsafe extern "C" fn effect_attackhi3(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 13.5, 2.0, 0, 45, 90, 0.85, true);
-        // LAST_EFFECT_SET_COLOR(agent, 1.0, 0.8, 0.1);
-        LAST_EFFECT_SET_RATE(agent, 1.0);
         EFFECT_FOLLOW(agent, Hash40::new("lucas_psi_atk"), Hash40::new("kneer"), 4.5, 0.2, 0, 0, 0, 0, 0.5, true);
-        LAST_EFFECT_SET_RATE(agent, 2.0);
+        LAST_EFFECT_SET_RATE(agent, 1.8);
+    }
+    frame(lua_state, 9.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 12.5, 2.0, 0, 45, 90, 0.8, true);
+        LAST_EFFECT_SET_SCALE_W(agent, 0.75, 0.75, 1.0);
+        LAST_EFFECT_SET_RATE(agent, 1.7);
     }
     frame(lua_state, 13.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("lucas_psi_atk"), false, false);
+    }
+    frame(lua_state, 14.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("sys_attack_arc_d"), false, false);
     }
     frame(lua_state, 28.0);
     if is_excute(agent) {

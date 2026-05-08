@@ -59,12 +59,9 @@ unsafe extern "C" fn effect_attacks4(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FLIP(agent, Hash40::new("sys_smash_flash"), Hash40::new("sys_smash_flash"), Hash40::new("top"), 12, 15, 5, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_YZ);
     }
-    frame(lua_state, 7.0);
-    if is_excute(agent) {
-        LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), -8, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
-    }
     frame(lua_state, 20.0);
     if is_excute(agent) {
+        LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), -8, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("koopa_smash_line"), Hash40::new("koopa_smash_line"), Hash40::new("top"), 0, 13, -20, 0, 0, 0, 2.3, true, *EF_FLIP_YZ);
         let eff_handle = VarModule::get_int64(agent.battle_object, vars::koopa::instance::ATTACK_S4_EFFECT_HANDLE);
         EffectModule::set_scale(boma, eff_handle as u32, &Vector3f::zero());

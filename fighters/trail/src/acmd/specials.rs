@@ -617,9 +617,9 @@ unsafe extern "C" fn game_specialairlwstart(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 41.0);
     if is_excute(agent) {
+        AttackModule::clear(boma, 2, false);
         ATTACK(agent, 0, 0, Hash40::new("haver"), 9.0, 65, 75, 0, 75, 4.6, 0.0, 0.0, -1.8, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TRAIL_SLASH, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 1, 0, Hash40::new("haver"), 9.0, 65, 75, 0, 75, 4.6, 0.0, 6.2, -1.8, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TRAIL_SLASH, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 2, 0, Hash40::new("haver"), 9.0, 65, 75, 0, 75, 4.6, 0.0, 10.6, -1.8, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TRAIL_SLASH, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 9.0, 65, 75, 0, 75, 4.6, 0.0, 2.0, 7.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TRAIL_SLASH, *ATTACK_REGION_SWORD);
     }
     frame(lua_state, 60.0);
     if is_excute(agent) {
@@ -644,6 +644,11 @@ unsafe extern "C" fn effect_specialairlwstart(agent: &mut L2CAgentBase) {
         LAST_EFFECT_SET_COLOR(agent, 5.0, 0.0, 3.0);
         EFFECT_FOLLOW(agent, Hash40::new("trail_flow_spiral"), Hash40::new("top"), 0, 9, 0, 0, 0, 0, 1, true);
         EFFECT_FOLLOW(agent, Hash40::new("trail_flow_spiral2"), Hash40::new("top"), 0, 9, 0, 0, 0, 0, 0.5, true);
+    }
+    frame(lua_state, 20.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("haver"), 0, 5, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, true);
+        LAST_EFFECT_SET_RATE(agent, 10.0/13.0);
     }
     frame(lua_state, 36.0);
     if is_excute(agent) {
