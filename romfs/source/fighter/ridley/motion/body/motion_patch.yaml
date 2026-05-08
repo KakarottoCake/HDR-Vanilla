@@ -76,6 +76,9 @@ fall_b:
 throw_f:
   extra:
     cancel_frame: 36
+throw_hi:
+  extra:
+    cancel_frame: 48
 attack_12:
   extra:
     cancel_frame: 20

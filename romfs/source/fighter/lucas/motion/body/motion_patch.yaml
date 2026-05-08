@@ -181,6 +181,9 @@ air_catch_landing:
 throw_f:
   extra:
     cancel_frame: 43
+throw_lw:
+  extra:
+    cancel_frame: 60
 furafura_end:
   extra:
     cancel_frame: 34
