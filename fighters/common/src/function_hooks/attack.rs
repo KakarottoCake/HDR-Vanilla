@@ -62,7 +62,6 @@ unsafe fn attack_module_set_attack(module: u64, id: i32, group: i32, data: &mut 
         let input_angle = data.vector as u32;
         let battle_object_id = (*boma).battle_object_id;
         let status_kind = (*boma).status() as u32;
-        let match_number = utils::util::MATCH_NUMBER.load(std::sync::atomic::Ordering::SeqCst) as u32;
 
         // seed generation
         let angle_seed = {
@@ -70,7 +69,7 @@ unsafe fn attack_module_set_attack(module: u64, id: i32, group: i32, data: &mut 
             let mut h = input_angle;
             h ^= battle_object_id.wrapping_add(0x9e3779b9).wrapping_add(h << 6).wrapping_add(h >> 2);
             h ^= status_kind.wrapping_add(0x9e3779b9).wrapping_add(h << 6).wrapping_add(h >> 2);
-            h ^= match_number.wrapping_add(0x9e3779b9).wrapping_add(h << 6).wrapping_add(h >> 2);
+            h ^= MATCH_SCOPED_RANDOM_U32.wrapping_add(0x9e3779b9).wrapping_add(h << 6).wrapping_add(h >> 2);
             h
         };
 

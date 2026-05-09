@@ -49,7 +49,6 @@ use std::{fs, path::Path};
 use utils::STAGE_MANAGER;
 use std::sync::atomic::Ordering;
 use dynamic::util::MATCH_EXITING;
-use dynamic::util::MATCH_NUMBER;
 
 #[cfg(not(feature = "main_nro"))]
 #[no_mangle]
@@ -403,7 +402,6 @@ unsafe fn scene_transition(
     }
 
     MATCH_EXITING.store(false, Ordering::Relaxed);
-    MATCH_NUMBER.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
 
     call_original!(list_ptr, key_struct, context_struct, factory);
 }
