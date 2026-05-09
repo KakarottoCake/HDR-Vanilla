@@ -90,6 +90,11 @@ mod offsets_impl {
     pub const fn global_frame_counter() -> usize {
         0x52e7b44
     }
+
+    #[export_name = "offsets_get_match_mode"]
+    pub const fn get_match_mode() -> usize {
+        0x1743870
+    }
   
     #[export_name = "offsets_kill_zoom_regular"]
     pub const fn kill_zoom_regular() -> usize {
@@ -136,6 +141,7 @@ mod offsets_impl {
         pub once_per_game_frame: usize,
         pub on_rule_select: usize,
         pub global_frame_counter: usize,
+        pub get_match_mode: usize,
         pub kill_zoom_regular: usize,
         pub kill_zoom_throw: usize,
         pub analog_trigger_l: usize,
@@ -293,6 +299,16 @@ mod offsets_impl {
         0x7f, 0x03, 0x11, 0x6b, // cmp w27, w17
     ];
 
+    // TODO: Define search code to find global frame counter, current offset is hard coded for 13.0.1: 0x52e6b44
+
+    static GET_MATCH_MODE_SEARCH_CODE: &[u8] = &[
+        0xa8, 0x03, 0x51, 0xf8, // ldur x8, [x29, #-0xf0]
+        0x08, 0x01, 0x40, 0xf9, // ldr x8, [x8]
+        0xa2, 0x83, 0x94, 0xb8, // ldursw x2, [x29, #-0xb8]
+        0x00, 0x01, 0x14, 0x8b, // add x0, x8, x20
+    ];
+    
+    const GET_MATCH_MODE_OFFSET_TO_START: usize = 0x4;
     static KILL_ZOOM_REGULAR_SEARCH_CODE: &[u8] = &[
         0xd4, 0x62, 0x42, 0xf9, // ldr x20, [x22, #0x4c0]
         0x88, 0x02, 0x40, 0xf9, // ldr x8, [x20]
@@ -376,6 +392,7 @@ mod offsets_impl {
                 once_per_game_frame: 0,
                 on_rule_select: 0,
                 global_frame_counter: 0,
+                get_match_mode: 0,
                 kill_zoom_regular: 0,
                 kill_zoom_throw: 0,
                 analog_trigger_l: 0,
@@ -403,6 +420,11 @@ mod offsets_impl {
             offsets.once_per_game_frame = byte_search(ONCE_PER_GAME_FRAME_SEARCH_CODE).expect("Unable to find once-per-game-frame function!");
             offsets.on_rule_select = byte_search(ON_RULE_SELECT_SEARCH_CODE).expect("Unable to find on-rule-select instructions!");
             offsets.global_frame_counter = 0x52e7b44;
+            offsets.get_match_mode = {
+                let offset = byte_search(GET_MATCH_MODE_SEARCH_CODE).expect("Unable to find get_match_mode!") - GET_MATCH_MODE_OFFSET_TO_START;
+                let bl_offset = offset_from_bl(offset);
+                offset + bl_offset
+            };
             offsets.kill_zoom_regular = byte_search(KILL_ZOOM_REGULAR_SEARCH_CODE).expect("Unable to find the regular kill zoom function!") - KILL_ZOOM_REGULAR_OFFSET_TO_START;
             offsets.kill_zoom_throw = byte_search(KILL_ZOOM_THROW_SEARCH_CODE).expect("Unable to find the throw kill zoom function!") + KILL_ZOOM_THROW_OFFSET_FROM_START;
             offsets.analog_trigger_l = byte_search(ANALOG_TRIGGER_L_SEARCH_CODE).expect("Unable to find the analog trigger l");
@@ -489,6 +511,11 @@ mod offsets_impl {
     #[export_name = "offsets_global_frame_counter"]
     pub fn global_frame_counter() -> usize {
         CORE_OFFSETS.global_frame_counter
+    }
+
+    #[export_name = "offsets_get_match_mode"]
+    pub fn get_match_mode() -> usize {
+        CORE_OFFSETS.get_match_mode
     }
 
     #[export_name = "offsets_kill_zoom_regular"]

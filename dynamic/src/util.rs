@@ -80,15 +80,14 @@ pub fn offset_to_addr<T>(offset: usize) -> *const T {
     }
 }
 
-extern "C" {
-    fn get_match_mode_extern(main: &mut u32, submode: &mut u32);
-}
-
 pub fn get_match_mode() -> (u32, u32) {
+    #[skyline::from_offset(offsets::get_match_mode())]
+    fn get_mode_internal(main: &mut u32, sub: &mut u32);
+
     let mut main = 0u32;
     let mut sub = 0u32;
     unsafe {
-        get_match_mode_extern(&mut main, &mut sub);
+        get_mode_internal(&mut main, &mut sub);
     }
     (main, sub)
 }
