@@ -47,6 +47,6 @@ unsafe extern "C" fn model_thing(fighter: &mut L2CFighterCommon) {
 pub fn install() {
     skyline::install_hooks!(update_tag_for_player);
     smashline::Agent::new("fighter")
-        .on_line(Main, model_thing)
+        // .on_line(Main, model_thing)
         .install();
 }
