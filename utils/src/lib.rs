@@ -10,7 +10,7 @@ extern crate smash2;
 pub mod offsets;
 pub mod modules;
 
-mod game_modes;
+pub mod game_modes;
 mod ui;
 pub mod one_player;
 
