@@ -36,8 +36,6 @@ unsafe extern "C" fn effect_tame(agent: &mut L2CAgentBase) {
                 // Apply color blend
                 EffectModule::set_rgb(boma, flash_handle as u32, blend_vector.x, blend_vector.y, blend_vector.z);
                 if h == 5 {
-                    let owner = agent.get_owner_boma();
-                    DamageModule::add_damage(owner, 1.0, 0);
                     EFFECT_FOLLOW(agent, Hash40::new("miigunner_sb_tama"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.75, true);
                     LAST_EFFECT_SET_RATE(agent, 0.05);
                     LAST_EFFECT_SET_COLOR(agent, 1.5, 0.75, 0.75);

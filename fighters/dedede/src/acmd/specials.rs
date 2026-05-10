@@ -203,9 +203,6 @@ unsafe extern "C" fn game_specialhistart(agent: &mut L2CAgentBase) {
         KineticModule::add_speed(agent.module_accessor, &Vector3f{x: 0.0, y:-0.8, z:0.0});
     }
     frame(lua_state, 3.0);
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
-    }
     FT_MOTION_RATE(agent, 0.809);
     frame(lua_state, 21.0);
     FT_MOTION_RATE(agent, 1.0);
