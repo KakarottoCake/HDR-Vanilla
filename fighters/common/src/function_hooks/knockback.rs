@@ -87,6 +87,8 @@ pub unsafe extern "C" fn set_attacker_team_color(attacker:u32) {
     // if LAST_ATTACK_TEAM_COLOR == 9 { LAST_ATTACK_TEAM_COLOR = 0 };
 }
 
+/// When a defending fighter is hit by an attack, get the attacker's entry ID and store it in the defender's var module
+/// This code is currently only used for tracking the kill reward for War Mode
 unsafe fn set_last_attacker_entry_id(defender_boma: &mut BattleObjectModuleAccessor, attacker: u32) {
     if !defender_boma.is_fighter() || !VarModule::has_var_module(defender_boma.object()) {
         return;

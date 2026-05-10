@@ -168,8 +168,6 @@ unsafe fn get_hitstop_mul(ctx: &mut skyline::hooks::InlineCtx) {
     }
 }
 
-pub static mut ELEMENT_MODE_ANGLE_SEED: u32 = 0;
-
 static mut IS_KB_CALC_EARLY: bool = false;
 static mut KB: f32 = 0.0;
 
