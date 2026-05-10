@@ -423,6 +423,9 @@ unsafe fn scene_transition(
         if key_str != "StageSelectScene" && key_str != "CharaSelectScene" && key_str != "MeleeRuleScene" {
             SSS_CANCEL_TO_CSS = false;
             CSS_CANCEL_TO_LOCAL = false;
+
+            // Clear custom game modes so they don't carry over accidentally
+            utils::game_modes::reset_custom_mode();
         }
     }
 
