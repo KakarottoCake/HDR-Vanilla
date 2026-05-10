@@ -67,6 +67,9 @@ extern "Rust" {
     #[link_name = "hdr__game_modes__get_custom_mode"]
     fn _get_custom_mode() -> Option<HashSet<CustomMode>>;
 
+    #[link_name = "hdr__game_modes__reset_custom_mode"]
+    fn _reset_custom_mode();
+
     #[link_name = "hdr__game_modes__signal_new_game"]
     fn _signal_new_game();
 
@@ -92,6 +95,12 @@ pub fn check_custom_mode(mode: CustomMode) -> bool {
 pub fn get_custom_mode() -> Option<HashSet<CustomMode>> {
     unsafe {
         _get_custom_mode()
+    }
+}
+
+pub fn reset_custom_mode() {
+    unsafe {
+        _reset_custom_mode()
     }
 }
 

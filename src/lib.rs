@@ -398,6 +398,9 @@ unsafe fn scene_transition(
 
             // Make sure new CSS SFX don't carry over to other modes unintentionally
             NEW_CSS_SFX = false;
+
+            // Clear custom game modes so they don't carry over accidentally
+            utils::game_modes::reset_custom_mode();
         }
     }
 
