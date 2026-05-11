@@ -290,9 +290,10 @@ unsafe extern "C" fn game_specialhistart(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
         AttackModule::set_attack_reference_joint_id(boma, Hash40::new("havel"), app::AttackDirectionAxis(*ATTACK_DIRECTION_Y), app::AttackDirectionAxis(*ATTACK_DIRECTION_Y), app::AttackDirectionAxis(*ATTACK_DIRECTION_Y));
         let angle = VarModule::get_float(agent.battle_object, vars::peach::instance::SPECIAL_HI_ANGLE);
-        let angle_add = angle/20.0 * 5.5;
-        ATTACK(agent, 0, 0, Hash40::new("havel"), 1.0, 368, 100, 20, 0, 3.8, 0.0, 3.5, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 5, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PARASOL);
-        let hit1 = Vector2f { x: 4.5 + angle_add, y: 20.0};
+        let angle_max = agent.get_param_float("param_special_hi", "special_hi_start_dir_mul");;
+        let angle_add = angle/angle_max * 5.5;
+        ATTACK(agent, 0, 0, Hash40::new("havel"), 1.0, 90, 100, 50, 0, 3.8, 0.0, 3.5, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 5, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PARASOL);
+        let hit1 = Vector2f { x: 4.5 + angle_add, y: 20.5};
         AttackModule::set_vec_target_pos(boma, 0, Hash40::new("top"), &hit1, 6, false);
         AttackModule::set_no_damage_fly_smoke_all(boma, true, false);
         AttackModule::set_force_reaction(boma, 0, true, false);
