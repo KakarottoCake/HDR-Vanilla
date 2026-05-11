@@ -2,18 +2,21 @@
 <struct>
     <struct hash="param_special_s">
       <float hash="jump_start_x">2.65</float>
-      <float hash="jump_max_y">0.85</float>
+      <float hash="jump_max_y">0.88</float>
       <float hash="jump_min_x">0.4</float>
       <float hash="jump_brake_x">0.1</float>
-      <float hash="jump_accel_x">0.02</float>
+      <float hash="jump_accel_x">0.0188</float>
       <float hash="end_landing_x_min">0.5</float>
       <float hash="end_landing_x_max">1.5</float>
-      <float hash="end_x_stable">0.3</float>
-      <float hash="end_y_stable">1.2</float>
+      <float hash="end_x_stable">0.25</float>
+      <float hash="end_y_stable">1.25</float>
       <int hash="end_wall_frame">4</int>
       <float hash="end_landing_frame">28.0</float>
       <float hash="shield_hit_end_speed_x_mul">0.5</float>
       <float hash="shield_hit_end_accel_x_mul">0.8</float>
+    </struct>
+    <struct hash="param_special_hi">
+      <float hash="start_y_max">0.75</float>
     </struct>
     <struct hash="param_special_lw">
       <float hash="air_start_x_mul">0.5</float>
