@@ -50,6 +50,50 @@ unsafe fn attack_module_set_attack(module: u64, id: i32, group: i32, data: &mut 
         }
     }
 
+    if utils::game_modes::check_custom_mode(CustomMode::RandomAngleMode)
+    && data.vector >= 0
+    && data.vector <= 361 {
+        // replace sakurai angle, so that we can randomize it
+        if (data.vector == 361) {
+            data.vector = 45;
+        }
+
+        // seed inputs
+        let input_angle = data.vector as u32;
+        let battle_object_id = (*boma).battle_object_id;
+        let status_kind = (*boma).status() as u32;
+
+        // seed generation
+        let angle_seed = {
+            // magic bullshit go
+            let mut h = input_angle;
+            h ^= battle_object_id.wrapping_add(0x9e3779b9).wrapping_add(h << 6).wrapping_add(h >> 2);
+            h ^= status_kind.wrapping_add(0x9e3779b9).wrapping_add(h << 6).wrapping_add(h >> 2);
+            h ^= MATCH_SCOPED_RANDOM_U32.wrapping_add(0x9e3779b9).wrapping_add(h << 6).wrapping_add(h >> 2);
+            h
+        };
+
+        // psuedorandom angle offset from -90 to 90
+        // when applied, results in a random angle in the same hemisphere as the original
+        // and the result persists for the same attack of the same fighter throught a match
+        let offset = ((angle_seed).wrapping_mul(2654435761) % 181) as i32 - 90;
+        data.vector = (data.vector + offset).rem_euclid(361);
+
+        let spike_kb_mul = 1.5;
+        let was_spike_before = input_angle < 30 || input_angle > 150;
+        let is_spike_after = data.vector < 30 || data.vector > 150;
+        // reduce the knockback of moves that have become spikes but were not previously
+        if !was_spike_before && is_spike_after {
+            data.r_eff = (data.r_eff as f32 / spike_kb_mul).round() as i32;
+            data.r_add = (data.r_add as f32 / spike_kb_mul).round() as i32;
+        }
+        // increase the knockback of moves that are no longer spikes but were previously
+        else if was_spike_before && !is_spike_after {
+            data.r_eff = (data.r_eff as f32 * spike_kb_mul).round() as i32;
+            data.r_add = (data.r_add as f32 * spike_kb_mul).round() as i32;
+        }
+    }
+
     if utils::game_modes::check_custom_mode(CustomMode::ElementMode) {
         let rand = sv_math::rand(hash40("fighter"), 21);
         match rand { 

@@ -34,6 +34,13 @@ pub extern "Rust" fn get_custom_mode() -> Option<HashSet<CustomMode>> {
     }
 }
 
+#[export_name = "hdr__game_modes__reset_custom_mode"]
+pub extern "Rust" fn reset_custom_mode() {
+    unsafe {
+        CURRENT_CUSTOM_MODES = None;
+    }
+}
+
 #[export_name = "hdr__game_modes__signal_new_game"]
 pub extern "Rust" fn signal_new_game() {
     unsafe {

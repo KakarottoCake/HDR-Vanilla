@@ -66,3 +66,4 @@ fighter/murabito/param/hdr.xml
 fighter/shizue/param/hdr.xml
 fighter/buddy/param/hdr.xml
 fighter/trail/param/hdr.xml
+fighter/roy/param/hdr.xml
