@@ -1473,6 +1473,9 @@ pub mod vars {
             // flag
             pub const DISABLE_SPECIAL_S: i32 = 0x0100;
             pub const SPECIAL_N_AUTOFIRE: i32 = 0x0101;
+            
+            //floats
+            pub const SPECIAL_HI_ANGLE: i32 = 0x0100;
         }
     }
 
