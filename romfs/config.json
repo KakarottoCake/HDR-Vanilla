@@ -213,6 +213,9 @@
 		],
 		"fighter/shizue/cmn": [
 			"fighter/shizue/param/hdr.xml"
+		],
+		"fighter/roy/cmn": [
+			"fighter/roy/param/hdr.xml"
 		]
 	}
 }
