@@ -122,7 +122,7 @@ jobs:
 
     # upload asset
     - name: Upload binaries to release
-      uses: svenstaro/upload-release-action@v2.11.5
+      uses: svenstaro/upload-release-action@2.11.5
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: distributions/*
@@ -195,7 +195,7 @@ jobs:
 
     # upload the upgrade data to the previous release for auto updater
     - name: Upload upgrade data to previous release
-      uses: svenstaro/upload-release-action@v2.11.5
+      uses: svenstaro/upload-release-action@2.11.5
       with:
         repo_token: ${{ secrets.RELEASE_TOKEN }}
         file: upgrade_artifacts/upgrade.zip
@@ -208,7 +208,7 @@ jobs:
 
     # upload the upgrade data to the previous release for auto updater
     - name: Upload upgrade deletions to previous release
-      uses: svenstaro/upload-release-action@v2.11.5
+      uses: svenstaro/upload-release-action@2.11.5
       with:
         repo_token: ${{ secrets.RELEASE_TOKEN }}
         file: upgrade_artifacts/deletions.json
@@ -265,7 +265,7 @@ jobs:
     #    destination_branch: 'gh-pages'
 
     - name: Upload full package to betas
-      uses: svenstaro/upload-release-action@v2.11.5
+      uses: svenstaro/upload-release-action@2.11.5
       with:
         repo_token: ${{ secrets.RELEASE_TOKEN }}
         file: artifacts/*
@@ -318,7 +318,7 @@ jobs:
 
     # upload the to-prerelease.zip to the beta for the launcher
     - name: Upload to-prerelease.zip to beta
-      uses: svenstaro/upload-release-action@v2.11.5
+      uses: svenstaro/upload-release-action@2.11.5
       with:
         repo_token: ${{ secrets.RELEASE_TOKEN }}
         file: to-prerelease.zip
@@ -331,7 +331,7 @@ jobs:
 
     # upload the to_prerelease_deletions.json to the beta for the launcher
     - name: Upload to_prerelease_deletions.json to beta
-      uses: svenstaro/upload-release-action@v2.11.5
+      uses: svenstaro/upload-release-action@2.11.5
       with:
         repo_token: ${{ secrets.RELEASE_TOKEN }}
         file: to_prerelease_deletions.json
