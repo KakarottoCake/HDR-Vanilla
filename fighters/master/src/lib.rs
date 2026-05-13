@@ -37,6 +37,7 @@ use smash_script::{
     *,
     macros::*
 };
+use smash_script::macros::ATTACK_ABS;
 use utils::{
     *,
     util::*,
@@ -50,8 +51,8 @@ use smashline::*;
 unsafe extern "C" fn master_link_event_inner(
     vtable: u64,
     fighter: &mut Fighter,
-    event: &mut smash_rs::app::LinkEvent,
-    original: extern "C" fn(u64, &mut Fighter, &mut smash_rs::app::LinkEvent) -> bool
+    event: &mut smash2::app::LinkEvent,
+    original: extern "C" fn(u64, &mut Fighter, &mut smash2::app::LinkEvent) -> bool
 ) -> bool {
     let kind = event.link_event_kind.0;
     let (enable_flag, early_return) = match kind {
