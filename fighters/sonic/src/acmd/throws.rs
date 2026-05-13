@@ -88,6 +88,10 @@ unsafe extern "C" fn game_throwb(agent: &mut L2CAgentBase) {
         let target_no = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
     }
+    frame(lua_state, 57.0);
+    FT_MOTION_RATE_RANGE(agent, 57.0, 67.0, 14.0);
+    frame(lua_state, 67.0);
+    FT_MOTION_RATE(agent, 1.0);
 }
 
 unsafe extern "C" fn game_throwhi(agent: &mut L2CAgentBase) {
