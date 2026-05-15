@@ -264,7 +264,7 @@ unsafe extern "C" fn game_specialhistart(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    FT_MOTION_RATE_RANGE(agent, 1.0, 6.0, 6.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 6.0, 7.0);
     if is_excute(agent) {
         ArticleModule::generate_article(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KASSAR, false, 0);
         ArticleModule::change_motion(boma, *FIGHTER_PEACH_GENERATE_ARTICLE_KASSAR, Hash40::new("special_hi_start"), false, 1.0);
@@ -274,8 +274,8 @@ unsafe extern "C" fn game_specialhistart(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         agent.on_flag(*FIGHTER_PEACH_STATUS_SPECIAL_HI_FLAG_MOVE_TRANS);
         AttackModule::set_attack_reference_joint_id(boma, Hash40::new("haver"), app::AttackDirectionAxis(*ATTACK_DIRECTION_Y), app::AttackDirectionAxis(*ATTACK_DIRECTION_Y), app::AttackDirectionAxis(*ATTACK_DIRECTION_Y));
-        ATTACK(agent, 0, 0, Hash40::new("head"), 3.0, 99, 100, 150, 0, 5.0, -1.0, 1.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PARASOL);
-        ATTACK(agent, 1, 0, Hash40::new("havel"), 3.0, 118, 100, 150, 0, 3.6, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PARASOL);
+        ATTACK(agent, 0, 0, Hash40::new("head"), 3.0, 97, 100, 0, 50, 5.0, -1.0, 1.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PARASOL);
+        ATTACK(agent, 1, 0, Hash40::new("havel"), 3.0, 80, 100, 0, 50, 3.6, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PARASOL);
         AttackModule::set_no_damage_fly_smoke_all(boma, true, false);
     }
     frame(lua_state, 7.0);
@@ -283,42 +283,33 @@ unsafe extern "C" fn game_specialhistart(agent: &mut L2CAgentBase) {
         AttackModule::set_vector(boma, 0, 90, false);
         AttackModule::set_offset(boma, 0, &Vector3f{ x: 0.0, y: 0.0, z: 0.0});
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
+        agent.on_flag(*FIGHTER_PEACH_STATUS_SPECIAL_HI_FLAG_MOVE_TRANS);
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {
-        AttackModule::set_vector(boma, 1, 90, false);
-        AttackModule::set_offset(boma, 1, &Vector3f{ x: 0.0, y: 3.95, z: 0.0});
-    }
-    frame(lua_state, 10.0);
-    if is_excute(agent) {
         AttackModule::clear_all(boma);
         AttackModule::set_attack_reference_joint_id(boma, Hash40::new("havel"), app::AttackDirectionAxis(*ATTACK_DIRECTION_Y), app::AttackDirectionAxis(*ATTACK_DIRECTION_Y), app::AttackDirectionAxis(*ATTACK_DIRECTION_Y));
-        ATTACK(agent, 0, 0, Hash40::new("havel"), 1.0, 367, 100, 70, 0, 3.6, 0.0, 3.75, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 5, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PARASOL);
-        ATTACK(agent, 1, 0, Hash40::new("hip"), 1.0, 97, 100, 125, 0, 4.0, 0.0, 0.0, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 5, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PARASOL);
+        let angle = VarModule::get_float(agent.battle_object, vars::peach::instance::SPECIAL_HI_ANGLE);
+        let angle_max = agent.get_param_float("param_special_hi", "special_hi_start_dir_mul");;
+        let angle_add = angle/angle_max * 5.5;
+        ATTACK(agent, 0, 0, Hash40::new("havel"), 1.0, 90, 100, 50, 0, 3.8, 0.0, 3.5, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 5, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PARASOL);
+        let hit1 = Vector2f { x: 4.5 + angle_add, y: 20.5};
+        AttackModule::set_vec_target_pos(boma, 0, Hash40::new("top"), &hit1, 6, false);
         AttackModule::set_no_damage_fly_smoke_all(boma, true, false);
-    }
-    frame(lua_state, 22.0);
-    if is_excute(agent) {
-        let speed = KineticModule::get_sum_speed(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        let pos_diff = speed*1.75; // see if angled links
-        ATTACK(agent, 0, 0, Hash40::new("havel"), 1.0, 368, 100, 70, 0, 3.6, 0.0, 3.75, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 5, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PARASOL);
-        AttackModule::set_vector(boma, 1, 90, false);
-        let hit1 = Vector2f { x: 2.0 + pos_diff, y: 16.5 };
-        AttackModule::set_vec_target_pos(boma, 0, Hash40::new("top"), &hit1, 9, false);
-        AttackModule::set_no_damage_fly_smoke_all(boma, true, false);
+        AttackModule::set_force_reaction(boma, 0, true, false);
     }
     frame(lua_state, 28.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
-        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-        KineticModule::suspend_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+        //KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+        //KineticModule::suspend_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP);
     }
     frame(lua_state, 30.0);
     if is_excute(agent) {
         AttackModule::set_attack_reference_joint_id(boma, Hash40::new("havel"), app::AttackDirectionAxis(*ATTACK_DIRECTION_Y), app::AttackDirectionAxis(*ATTACK_DIRECTION_Y), app::AttackDirectionAxis(*ATTACK_DIRECTION_Y));
-        ATTACK(agent, 0, 0, Hash40::new("havel"), 4.0, 74, 120, 0, 60, 5.0, 0.0, 4.0, -2.1, Some(0.0), Some(4.0), Some(2.1), 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PARASOL);
-        ATTACK(agent, 1, 0, Hash40::new("arml"), 4.0, 74, 120, 0, 60, 3.0, 0.0, -1.0, 0.0, Some(0.0), Some(1.0), Some(0.0), 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PARASOL);
+        ATTACK(agent, 0, 0, Hash40::new("havel"), 4.0, 70, 130, 0, 60, 5.0, 0.0, 3.5, -2.1, Some(0.0), Some(3.5), Some(2.1), 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PARASOL);
+        ATTACK(agent, 1, 0, Hash40::new("arml"), 4.0, 70, 130, 0, 60, 3.0, 0.0, -1.0, 0.0, Some(0.0), Some(1.0), Some(0.0), 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PARASOL);
     }
     frame(lua_state, 33.0);
     if is_excute(agent) {
@@ -365,7 +356,7 @@ unsafe extern "C" fn game_specialhiopen(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("havel"), 3.0, 80, 40, 0, 30, 2.0, -3.1, 6.0, 0.0, Some(3.1), Some(6.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 18, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PEACH_PARASOL, *ATTACK_REGION_PARASOL);
+        ATTACK(agent, 0, 0, Hash40::new("havel"), 3.0, 80, 50, 0, 30, 2.2, -2.9, 5.2, 0.0, Some(2.9), Some(5.2), Some(0.0), 1.0, 1.5, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 18, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PEACH_PARASOL, *ATTACK_REGION_PARASOL);
         AttackModule::set_no_damage_fly_smoke_all(boma, true, false);
     }
 }
