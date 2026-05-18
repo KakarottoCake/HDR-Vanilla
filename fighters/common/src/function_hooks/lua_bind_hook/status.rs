@@ -228,7 +228,8 @@ unsafe fn change_status_request_from_script_hook(boma: &mut BattleObjectModuleAc
     let mut clear_buffer = arg3;
 
     if boma.is_fighter() {
-        if utils::game_modes::check_custom_mode(CustomMode::Smash64Mode) {
+        if utils::game_modes::check_custom_mode(CustomMode::Smash64Mode)
+        && !utils::game_modes::check_custom_mode(CustomMode::AirdashMode) {
             if [
                 *FIGHTER_STATUS_KIND_ESCAPE_AIR,
                 *FIGHTER_STATUS_KIND_PASSIVE_CEIL,
