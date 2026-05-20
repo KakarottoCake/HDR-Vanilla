@@ -9,9 +9,10 @@ pub unsafe extern "C" fn demon_on_attack(vtable: u64, fighter: &mut Fighter, log
     let status = StatusModule::status_kind(module_accessor);
     if [
         *FIGHTER_DEMON_STATUS_KIND_ATTACK_STEP_2S,
+        *FIGHTER_DEMON_STATUS_KIND_ATTACK_SQUAT_1,
     ].contains(&status)
     && VarModule::is_flag(battle_object, vars::demon::status::CHECK_STEP_CANCEL) {
-        let collision_log: &mut CollisionLog = std::mem::transmute(log);
+        let collision_log: &mut CollisionLog = std::mem::transmute(log as *mut u64);
         if [
             *COLLISION_KIND_ATTACK as u8,
             *COLLISION_KIND_HIT as u8,

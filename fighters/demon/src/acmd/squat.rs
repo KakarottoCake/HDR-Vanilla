@@ -69,6 +69,10 @@ unsafe extern "C" fn game_attacksquat1(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(boma);
         HitModule::set_status_all(boma, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
+    wait(lua_state, 3.0);
+    if is_excute(agent) {
+        VarModule::off_flag(agent.battle_object, vars::demon::status::ENABLE_STEP_CANCEL);
+    }
 }
 
 // Crouch Spin Kick
