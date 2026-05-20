@@ -42,6 +42,7 @@ unsafe extern "C" fn game_attacksquat1(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 13.0);
     if is_excute(agent) {
+        VarModule::on_flag(agent.battle_object, vars::demon::status::CHECK_STEP_CANCEL);
         HIT_NODE(agent, Hash40::new("shoulderr"), *HIT_STATUS_XLU);
         HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_XLU);
         HIT_NODE(agent, Hash40::new("legr"), *HIT_STATUS_XLU);
