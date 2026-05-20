@@ -5,7 +5,7 @@ unsafe extern "C" fn cancel_step_pre(fighter: &mut L2CFighterCommon) -> L2CValue
         fighter.module_accessor,
         SituationKind(*SITUATION_KIND_NONE),
         *FIGHTER_KINETIC_TYPE_MOTION,
-        *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP as u32,
+        *GROUND_CORRECT_KIND_GROUND as u32,
         GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE),
         true,
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG,
