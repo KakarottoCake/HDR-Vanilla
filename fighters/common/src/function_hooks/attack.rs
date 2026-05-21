@@ -283,26 +283,14 @@ unsafe fn post_calc_reaction(ctx: &mut skyline::hooks::InlineCtx) {
 // }
 
 // This runs immediately before hitlag is set for attacking articles
-#[skyline::hook(offset = 0x33a9b40, inline)]
+#[skyline::hook(offset = 0x33a9924, inline)]
 unsafe fn set_weapon_hitlag(ctx: &mut skyline::hooks::InlineCtx) {
     let receiver_boma = &mut *(ctx.registers[24].x() as *mut BattleObjectModuleAccessor);
-    if !receiver_boma.is_item() {
-        let hitlag = ctx.registers[21].w();
+    if receiver_boma.is_fighter() {
         let kb = DamageModule::reaction(receiver_boma, 0);
+        assert_ne!(kb, 0.0);
         IS_KB_CALC_EARLY = true;
         KB = kb;
-
-        let attack_data = (ctx.registers[20].x() as *mut smash_rs::app::AttackData);
-        let weapon = ctx.registers[19].x() as *mut app::Weapon;
-        let attacker_boma = (*weapon).battle_object.module_accessor;
-        let power = AttackModule::get_power(attacker_boma, 0, false, 1.0, false);
-        println!("dmg {}", power);
-        let func_addr = (skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as *mut u8).add(0x4067a0);
-        let calc_hitlag: extern "C" fn(f32, f32, f32, u8, &mut smash_rs::app::AttackData, u64, u32, u32) -> i32 = std::mem::transmute(func_addr);
-        let hitlag = calc_hitlag(power, 1.0, 1.0, 1, &mut *attack_data, 0, 1, 0);
-
-        // Set hitlag for attacking article
-        ctx.registers[21].set_w(hitlag as u32);
     }
 }
 
