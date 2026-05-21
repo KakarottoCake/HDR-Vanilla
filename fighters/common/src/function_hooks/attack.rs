@@ -148,6 +148,30 @@ unsafe fn get_damage_frame_mul(ctx: &mut skyline::hooks::InlineCtx) {
     ctx.registers_f[0].set_s(damage_frame_mul)
 }
 
+unsafe extern "C" fn calc_hitstop_frame_mul(kb: f32) -> f32 {
+    let min = 0.45;
+    let max = 0.65;
+    let power = 1.4;
+    let kb_start = 100.0;
+    let kb_end = 200.0;
+
+    let ratio = ((kb - kb_start) / (kb_end - kb_start));
+    let hitlag_mul = util::nlerp(min, max, power, ratio);
+    return hitlag_mul;
+}
+
+unsafe extern "C" fn calc_hitstop_frame_add(kb: f32) -> f32 {
+    let min = 4.0;
+    let max = 6.0;
+    let power = 1.4;
+    let kb_start = 100.0;
+    let kb_end = 200.0;
+
+    let ratio = ((kb - kb_start) / (kb_end - kb_start));
+    let hitlag_mul = util::nlerp(min, max, power, ratio);
+    return hitlag_mul;
+}
+
 // This runs within the internal function used to calculate hitlag
 // Used for both attacker hitlag and receiver hitlag (articles/items included)
 #[skyline::hook(offset = 0x406bf4, inline)]
@@ -180,6 +204,35 @@ unsafe fn get_hitstop_params(ctx: &mut skyline::hooks::InlineCtx) {
     ctx.registers_f[0].set_s(hitstop_frame_add)
 }
 
+// This runs within the internal function used to calculate hitlag
+// for electric moves
+// Used for both attacker hitlag and receiver hitlag (articles/items included)
+#[skyline::hook(offset = 0x406b6c, inline)]
+unsafe fn get_hitstop_params_elec(ctx: &mut skyline::hooks::InlineCtx) {
+    let hitstop_frame_mul: f32 = if IS_KB_CALC_EARLY {
+        calc_hitstop_frame_mul(KB)
+    }
+    else {
+        0.45 // TODO: find a way to parameterize this or otherwise notify that it's hardcoded
+    };
+    // Set hitstop_frame_mul
+    ctx.registers_f[13].set_s(hitstop_frame_mul);
+
+    let hitstop_frame_add: f32 = if utils::game_modes::check_custom_mode(CustomMode::Smash64Mode) {
+        5.0
+    }
+    else {
+        if IS_KB_CALC_EARLY {
+            calc_hitstop_frame_add(KB)
+        }
+        else {
+            4.0 // TODO: find a way to parameterize this or otherwise notify that it's hardcoded
+        }
+    };
+    // Set hitstop_frame_add
+    ctx.registers_f[14].set_s(hitstop_frame_add)
+}
+
 // Only applies 0.67 crouch cancel hitlag multiplier to receiver
 #[skyline::hook(offset = 0x46b648, inline)]
 unsafe fn get_hitstop_mul(ctx: &mut skyline::hooks::InlineCtx) {
@@ -191,30 +244,6 @@ unsafe fn get_hitstop_mul(ctx: &mut skyline::hooks::InlineCtx) {
 
 static mut IS_KB_CALC_EARLY: bool = false;
 static mut KB: f32 = 0.0;
-
-unsafe extern "C" fn calc_hitstop_frame_mul(kb: f32) -> f32 {
-    let min = 0.45;
-    let max = 0.65;
-    let power = 1.4;
-    let kb_start = 100.0;
-    let kb_end = 200.0;
-
-    let ratio = ((kb - kb_start) / (kb_end - kb_start));
-    let hitlag_mul = util::nlerp(min, max, power, ratio);
-    return hitlag_mul;
-}
-
-unsafe extern "C" fn calc_hitstop_frame_add(kb: f32) -> f32 {
-    let min = 4.0;
-    let max = 6.0;
-    let power = 1.4;
-    let kb_start = 100.0;
-    let kb_end = 200.0;
-
-    let ratio = ((kb - kb_start) / (kb_end - kb_start));
-    let hitlag_mul = util::nlerp(min, max, power, ratio);
-    return hitlag_mul;
-}
 
 // This runs directly after knockback is calculated
 #[skyline::hook(offset = 0x402f04, inline)]
@@ -577,6 +606,7 @@ pub fn install() {
         attack_module_set_attack,
         get_damage_frame_mul,
         get_hitstop_params,
+        get_hitstop_params_elec,
         get_hitstop_mul,
         post_calc_reaction,
         set_weapon_hitlag,
