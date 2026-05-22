@@ -144,9 +144,6 @@ unsafe extern "C" fn game_speciallwstart(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     FT_MOTION_RATE_RANGE(agent, 1.0, 6.0, 3.0);
-    if is_excute(agent) {
-        VarModule::on_flag(agent.battle_object, vars::common::status::DISABLE_ECB_SHIFT);
-    }
     frame(lua_state, 6.0);
     FT_MOTION_RATE_RANGE(agent, 6.0, 6.9, 1.0);
     if is_excute(agent) {
