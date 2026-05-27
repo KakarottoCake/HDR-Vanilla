@@ -12,6 +12,10 @@ pub enum CustomMode {
     MagicSeriesMode = 5,
     ElementMode = 6,
     RivalsOfAetherMode = 7,
+    RampageMode = 8,
+    WarMode = 9,
+    VampirismMode = 10,
+    RandomAngleMode = 11,
 }
 
 impl fmt::Display for CustomMode {
@@ -25,6 +29,10 @@ impl fmt::Display for CustomMode {
             CustomMode::MagicSeriesMode => write!(f, "MagicSeries"),
             CustomMode::ElementMode => write!(f, "Element"),
             CustomMode::RivalsOfAetherMode => write!(f, "RivalsOfAether"),
+            CustomMode::RampageMode => write!(f, "Rampage"),
+            CustomMode::WarMode => write!(f, "War"),
+            CustomMode::VampirismMode => write!(f, "Vampirism"),
+            CustomMode::RandomAngleMode => write!(f, "RandomAngle"),
         }
     }
 }
@@ -43,6 +51,10 @@ impl FromStr for CustomMode {
             "magicseries" => Ok(CustomMode::MagicSeriesMode),
             "element" => Ok(CustomMode::ElementMode),
             "rivalsofaether" => Ok(CustomMode::RivalsOfAetherMode),
+            "rampage" => Ok(CustomMode::RampageMode),
+            "war" => Ok(CustomMode::WarMode),
+            "vampirism" => Ok(CustomMode::VampirismMode),
+            "randomangle" => Ok(CustomMode::RandomAngleMode),
             _      => Err(()),
         }
     }
@@ -54,6 +66,9 @@ extern "Rust" {
 
     #[link_name = "hdr__game_modes__get_custom_mode"]
     fn _get_custom_mode() -> Option<HashSet<CustomMode>>;
+
+    #[link_name = "hdr__game_modes__reset_custom_mode"]
+    fn _reset_custom_mode();
 
     #[link_name = "hdr__game_modes__signal_new_game"]
     fn _signal_new_game();
@@ -80,6 +95,12 @@ pub fn check_custom_mode(mode: CustomMode) -> bool {
 pub fn get_custom_mode() -> Option<HashSet<CustomMode>> {
     unsafe {
         _get_custom_mode()
+    }
+}
+
+pub fn reset_custom_mode() {
+    unsafe {
+        _reset_custom_mode()
     }
 }
 

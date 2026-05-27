@@ -156,7 +156,7 @@ attack_s3_hi:
     cancel_frame: 29
 attack_air_lw:
   extra:
-    cancel_frame: 67
+    cancel_frame: 62
 attack_air_hi:
   extra:
     cancel_frame: 31

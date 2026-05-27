@@ -1,6 +1,7 @@
 use super::*;
 use super::knockback_util::*;
 use utils::ext::*;
+use utils::game_modes::*;
 
 pub fn install() {
     skyline::install_hooks!(
@@ -40,6 +41,11 @@ unsafe fn calculate_knockback(ctx: &skyline::hooks::InlineCtx) {
         // stores the attacker's team color here, since this runs before the spark effects are called
         // process_knockback occurs after the sparks, so we can't put it there
         set_attacker_team_color(attacker);
+
+        // Track last attacker entry ID on the defender for War Mode stock steal
+        if check_custom_mode(CustomMode::WarMode) {
+            set_last_attacker_entry_id(&mut *our_boma, attacker);
+        }
     }
 }
 
@@ -79,6 +85,53 @@ pub unsafe extern "C" fn set_attacker_team_color(attacker:u32) {
     // optional replacement logic for cycling teams, good for testing colors
     // LAST_ATTACK_TEAM_COLOR += 1;
     // if LAST_ATTACK_TEAM_COLOR == 9 { LAST_ATTACK_TEAM_COLOR = 0 };
+}
+
+/// When a defending fighter is hit by an attack, get the attacker's entry ID and store it in the defender's var module
+/// This code is currently only used for tracking the kill reward for War Mode
+unsafe fn set_last_attacker_entry_id(defender_boma: &mut BattleObjectModuleAccessor, attacker: u32) {
+    if !defender_boma.is_fighter() || !VarModule::has_var_module(defender_boma.object()) {
+        return;
+    }
+
+    let attacker_obj = util::get_battle_object_from_id(attacker);
+    if attacker_obj.is_null() { return; }
+    let mut attacker_boma = &mut *(*attacker_obj).module_accessor;
+
+    // Check weapons
+    if attacker_boma.is_weapon() {
+        let owner_id = WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
+        let owner = util::get_battle_object_from_id(owner_id);
+        if owner.is_null() { return; }
+        attacker_boma = &mut *(*owner).module_accessor;
+        if attacker_boma.is_weapon() {
+            let owner_id = WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
+            let owner = util::get_battle_object_from_id(owner_id);
+            if owner.is_null() { return; }
+            attacker_boma = &mut *(*owner).module_accessor;
+        }
+    }
+
+    // Check items
+    if attacker_boma.is_item() {
+        let owner_id = if LinkModule::is_link(attacker_boma, *ITEM_LINK_NO_HAVE) {
+            LinkModule::get_parent_id(attacker_boma, *ITEM_LINK_NO_HAVE, true) as u32
+        } else if LinkModule::is_link(attacker_boma, *ITEM_LINK_NO_CREATEOWNER) {
+            LinkModule::get_parent_id(attacker_boma, *ITEM_LINK_NO_CREATEOWNER, true) as u32
+        } else if LinkModule::is_link(attacker_boma, *ITEM_LINK_NO_TEAMOWNER) {
+            LinkModule::get_parent_id(attacker_boma, *ITEM_LINK_NO_TEAMOWNER, true) as u32
+        } else {
+            return;
+        };
+        let owner = utils::util::get_battle_object_from_id(owner_id);
+        if owner.is_null() { return; }
+        attacker_boma = &mut *(*owner).module_accessor;
+    }
+
+    if !attacker_boma.is_fighter() { return; }
+
+    let attacker_entry_id = WorkModule::get_int(attacker_boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
+    VarModule::set_int(defender_boma.object(), vars::common::instance::LAST_ATTACKER_ENTRY_ID, attacker_entry_id);
 }
 
 pub unsafe extern "C" fn process_item_on_collision(defender: u32, attacker: u32, knockback_info: *const f32) {

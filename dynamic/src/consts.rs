@@ -296,6 +296,8 @@ pub mod vars {
             pub const LAST_RECEIVED_ATTACK_HIT_LOCATION_Z: i32 = 0x0025;
             pub const LAND_CANCEL_LAG: i32 = 0x0026;
             pub const LANDING_LAG_FOR_RIVALS_MODE: i32 = 0x0027;
+            pub const DAMAGE_DEALT_THIS_STOCK: i32 = 0x0028;
+            pub const LAST_ATTACKER_ENTRY_ID: i32 = 0x0029;
         }
         pub mod status {
             // flags
@@ -1135,20 +1137,10 @@ pub mod vars {
     pub mod luigi {
         pub mod instance {
             // flag
-            pub const SPECIAL_S_MISFIRE_STORED: i32 = 0x0100;
             pub const SPECIAL_S_TRAINING_MISFIRE: i32 = 0x0101;
             pub const SPECIAL_S_MISFIRE_INIT: i32 = 0x0102;
             // int
-            /// This int stores the handle of the charge smoke effect for killing it if we store misfire
-            pub const SPECIAL_S_SMOKE_EFFECT_HANDLE: i32 = 0x0101;
-            /// This int stores the handle of the pulsing effect for killing it if we store misfire
-            pub const SPECIAL_S_PULSE_EFFECT_HANDLE: i32 = 0x0102;
             pub const SPECIAL_S_MISFIRE_COUNT: i32 = 0x0103;
-            pub const SPECIAL_S_MISFIRE_BITFLAG: i32 = 0x0104;
-
-            // float
-            /// This float holds the current multiplier on damage for misfire
-            pub const SPECIAL_S_MISFIRE_DAMAGE_MUL: i32 = 0x0100;
         }
         pub mod status {
             // flag
