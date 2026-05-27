@@ -1073,6 +1073,9 @@ unsafe extern "C" fn game_specialhistart(agent: &mut L2CAgentBase) {
     let boma = agent.boma();
     frame(lua_state, 1.0);
     FT_MOTION_RATE(agent, 0.5);
+    if is_excute(agent) {
+        GroundModule::select_cliff_hangdata(boma, 2);
+    }
     frame(lua_state, 8.0); // f5
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
@@ -1119,6 +1122,7 @@ unsafe extern "C" fn game_specialairhijump(agent: &mut L2CAgentBase) {
 	let boma = agent.boma();
     frame(lua_state, 1.0);
     if is_excute(agent) {
+        GroundModule::select_cliff_hangdata(boma, 0);
         notify_event_msc_cmd!(agent, 0x2127e37c07u64, GROUND_CLIFF_CHECK_KIND_NONE);
         let mut angle = app::lua_bind::FighterKineticEnergyMotion::get_angle(KineticModule::get_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_MOTION) as _);
         if PostureModule::lr(boma) > 0.0 {
