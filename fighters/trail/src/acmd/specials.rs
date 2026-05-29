@@ -654,6 +654,7 @@ unsafe extern "C" fn effect_specialairlwstart(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("haver"), 0, 5, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, true);
         LAST_EFFECT_SET_RATE(agent, 10.0/13.0);
+        LAST_EFFECT_SET_COLOR(agent, 1.0, 0.45, 1.0);
     }
     frame(lua_state, 36.0);
     if is_excute(agent) {
