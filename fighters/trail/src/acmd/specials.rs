@@ -492,8 +492,8 @@ unsafe extern "C" fn game_speciallwstart(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
     frame(lua_state, 1.0);
-    FT_MOTION_RATE_RANGE(agent, 1.0, 21.0, 13.0);
-    frame(lua_state, 19.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 21.0, 8.0);
+    frame(lua_state, 20.0);
     if is_excute(agent) {
          ATTACK(agent, 0, 0, Hash40::new("top"), 9.0, 75, 110, 150, 0, 3.2, 0.0, 2.6, -7.2, Some(0.0), Some(2.6), Some(4.5), 0.6, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
          }
