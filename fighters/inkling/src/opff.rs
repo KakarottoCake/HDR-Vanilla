@@ -76,14 +76,6 @@ unsafe fn ink_charge_cancel(boma: &mut BattleObjectModuleAccessor) {
     }
 }
 
-unsafe fn splattershot_endlag_land_cancel(boma: &mut BattleObjectModuleAccessor) {
-    if boma.is_status(*FIGHTER_INKLING_STATUS_KIND_SPECIAL_N_END)
-    && !StatusModule::is_changing(boma)
-    && boma.motion_frame() > 6.0 {
-        boma.check_land_cancel(None);
-    }
-}
-
 unsafe fn up_special_startup_ledgegrab(fighter: &mut L2CFighterCommon) {
     if fighter.is_status(*FIGHTER_STATUS_KIND_SPECIAL_HI) {
         // allows ledgegrab during upB startup
@@ -115,7 +107,6 @@ pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectMod
     splatter_vfx(boma);
     roller_jump_cancel(boma);
     ink_charge_cancel(boma);
-    splattershot_endlag_land_cancel(boma);
     up_special_startup_ledgegrab(fighter);
     fastfall_specials(fighter);
 }
