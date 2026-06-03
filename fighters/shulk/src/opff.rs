@@ -51,6 +51,12 @@ unsafe fn arts_cancelling(fighter: &mut L2CFighterCommon, status_kind: i32) {
             VarModule::on_flag(fighter.object(), vars::shulk::status::MONADO_BEAT);
         }
     }
+
+    if VarModule::is_flag(fighter.object(), vars::shulk::status::MONADO_BEAT) {
+        if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+            VarModule::on_flag(fighter.object(), vars::shulk::status::MONADO_BEAT_TRIGGER);
+        }
+    }
 }
 
 pub unsafe fn moveset(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, id: usize, cat: [i32 ; 4], status_kind: i32, situation_kind: i32, motion_kind: u64, stick_x: f32, stick_y: f32, facing: f32, frame: f32) {

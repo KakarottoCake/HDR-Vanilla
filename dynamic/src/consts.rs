@@ -1922,6 +1922,7 @@ pub mod vars {
         pub mod status {
             // flags
             pub const MONADO_BEAT: i32 = 0x1100;
+            pub const MONADO_BEAT_TRIGGER: i32 = 0x1101;
         }
     }
 
