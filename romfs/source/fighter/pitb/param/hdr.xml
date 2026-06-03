@@ -21,7 +21,7 @@
         </struct>
     </struct>
     <struct hash="param_special_hi">
-        <int hash="start_frame">21</int>
+        <int hash="start_frame">23</int>
         <int hash="rush_frame">23</int>
     </struct>
 </struct>
