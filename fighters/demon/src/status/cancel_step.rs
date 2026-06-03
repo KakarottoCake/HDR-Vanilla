@@ -90,7 +90,14 @@ unsafe extern "C" fn cancel_step_main_loop(fighter: &mut L2CFighterCommon) -> L2
     0.into()
 }
 
+unsafe extern "C" fn cancel_step_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+    JostleModule::set_overlap_rate_mul(fighter.module_accessor, 1.0);
+
+    0.into()
+}
+
 pub fn install(agent: &mut Agent) {
     agent.status(Pre, statuses::demon::CANCEL_STEP, cancel_step_pre);
     agent.status(Main, statuses::demon::CANCEL_STEP, cancel_step_main);
+    agent.status(End, statuses::demon::CANCEL_STEP, cancel_step_end);
 }
