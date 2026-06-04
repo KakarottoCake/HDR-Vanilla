@@ -91,8 +91,9 @@ unsafe extern "C" fn game_specialairsstart(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn game_specialhistart(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.boma();
+    let start_frame = ParamModule::get_int(agent.battle_object, ParamType::Agent, "param_special_hi.start_frame") as f32;
     frame(lua_state, 1.0);
-    FT_MOTION_RATE_RANGE(agent, 1.0, 15.0, 23.0);
+    FT_MOTION_RATE_RANGE(agent, 1.0, 15.0, start_frame);
     if is_excute(agent) {
         boma.select_cliff_hangdata_from_name("special_hi_start");
     }
