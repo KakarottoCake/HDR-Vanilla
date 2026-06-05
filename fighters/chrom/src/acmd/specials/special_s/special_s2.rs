@@ -44,8 +44,7 @@ unsafe extern "C" fn game_specials2lw(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 17.0);
     if is_excute(agent) {
-        if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
-        && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_PARRY) {
+        if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
             WorkModule::on_flag(boma, *FIGHTER_MARTH_STATUS_SPECIAL_S_FLAG_MOTION_CHANGE_ENABLE);
         }
     }
