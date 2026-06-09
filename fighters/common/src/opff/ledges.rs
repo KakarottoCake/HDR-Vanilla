@@ -39,14 +39,18 @@ unsafe fn occupy_ledge(boma: &mut BattleObjectModuleAccessor, status_kind: i32, 
         if cancel_frame > 0.0 {
             if MotionModule::frame(boma) > (cancel_frame * 0.9) {
                 VarModule::set_int(boma.object(), vars::common::instance::OCCUPIED_LEDGE_ID, -1);
-                VarModule::set_int(boma.object(), vars::common::instance::OCCUPIED_LEDGE_ID_FOR_TETHERS, -1);
             }
         }
         else {
             if MotionModule::frame(boma) > (MotionModule::end_frame(boma) * 0.9) {
                 VarModule::set_int(boma.object(), vars::common::instance::OCCUPIED_LEDGE_ID, -1);
-                VarModule::set_int(boma.object(), vars::common::instance::OCCUPIED_LEDGE_ID_FOR_TETHERS, -1);
             }
+        }
+
+        // For tether-specific ledge occupancy
+        let ledge_option_tether_hog_frame = ParamModule::get_int(boma.object(), ParamType::Common, "ledge_option_tether_hog_frame");
+        if boma.status_frame() + 1 >= ledge_option_tether_hog_frame {
+            VarModule::set_int(boma.object(), vars::common::instance::OCCUPIED_LEDGE_ID_FOR_TETHERS, -1);
         }
     }
 }
