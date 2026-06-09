@@ -39,11 +39,13 @@ unsafe fn occupy_ledge(boma: &mut BattleObjectModuleAccessor, status_kind: i32, 
         if cancel_frame > 0.0 {
             if MotionModule::frame(boma) > (cancel_frame * 0.9) {
                 VarModule::set_int(boma.object(), vars::common::instance::OCCUPIED_LEDGE_ID, -1);
+                VarModule::set_int(boma.object(), vars::common::instance::OCCUPIED_LEDGE_ID_FOR_TETHERS, -1);
             }
         }
         else {
             if MotionModule::frame(boma) > (MotionModule::end_frame(boma) * 0.9) {
                 VarModule::set_int(boma.object(), vars::common::instance::OCCUPIED_LEDGE_ID, -1);
+                VarModule::set_int(boma.object(), vars::common::instance::OCCUPIED_LEDGE_ID_FOR_TETHERS, -1);
             }
         }
     }

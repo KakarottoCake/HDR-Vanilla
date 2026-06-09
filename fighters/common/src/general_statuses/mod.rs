@@ -750,6 +750,7 @@ pub unsafe fn sub_cliff_uniq_process_exec_fix_pos(fighter: &mut L2CFighterCommon
             GroundModule::set_shape_flag(fighter.module_accessor, *GROUND_CORRECT_SHAPE_RHOMBUS_MODIFY_FLAG_FRONT_FIX as u16, false);
             GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_CLIFF_FLAG_TO_GROUND);
+            VarModule::set_int(fighter.object(), vars::common::instance::OCCUPIED_LEDGE_ID_FOR_TETHERS, -1);
         }
         else {
             fighter.clear_lua_stack();
@@ -777,6 +778,7 @@ pub unsafe fn sub_cliff_uniq_process_exec_fix_pos(fighter: &mut L2CFighterCommon
             GroundModule::set_status_ground(fighter.module_accessor);
             GroundModule::leave_cliff(fighter.module_accessor);
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_CLIFF_FLAG_TO_GROUND);
+            VarModule::set_int(fighter.object(), vars::common::instance::OCCUPIED_LEDGE_ID_FOR_TETHERS, -1);
         }
     }
     else {
