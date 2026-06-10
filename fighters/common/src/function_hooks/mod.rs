@@ -89,7 +89,7 @@ pub struct ModuleAccessor {
 }
 
 // Articles that should bypass running their MAIN status before KineticModule::UpdateEnergy and GroundCollision::process
-const EXCEPTION_WEAPON_KINDS: [smash::lib::LuaConst ; 15] = [
+const EXCEPTION_WEAPON_KINDS: [smash::lib::LuaConst ; 16] = [
     WEAPON_KIND_PICKEL_PLATE,
     WEAPON_KIND_MASTER_SWORD,
     WEAPON_KIND_LUCAS_HIMOHEBI,
@@ -98,6 +98,7 @@ const EXCEPTION_WEAPON_KINDS: [smash::lib::LuaConst ; 15] = [
     WEAPON_KIND_SAMUS_GBEAM,
     WEAPON_KIND_SAMUSD_GBEAM,
     WEAPON_KIND_SHIZUE_FISHINGROD,
+    WEAPON_KIND_SHIZUE_FISHINGLINE,
     WEAPON_KIND_TOONLINK_HOOKSHOT,
     WEAPON_KIND_YOUNGLINK_HOOKSHOT,
     WEAPON_KIND_JACK_DOYLE,
