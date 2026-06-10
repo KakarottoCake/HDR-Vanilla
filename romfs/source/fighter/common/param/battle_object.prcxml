@@ -30,9 +30,9 @@
   <float hash="rebound_reaction_mul">0.3</float>
   <float hash="rebound_reaction_add">2.0</float>
   <float hash="rebound_power_diff">6.0</float>
-  <float hash="0x117e9b3582">0.023</float> <!-- Non-elemental hit effect damage-based size scaling factor -->
-  <float hash="0x112a8367c4">0.33</float> <!-- Non-elemental hit effect base size multiplier -->
-  <float hash="0x1176e209f3">0.31</float> <!-- Non-elemental hit effect minimum size multiplier -->
+  <float hash="0x117e9b3582">0.022</float> <!-- Non-elemental hit effect damage-based size scaling factor -->
+  <float hash="0x112a8367c4">0.34</float> <!-- Non-elemental hit effect base size multiplier -->
+  <float hash="0x1176e209f3">0.32</float> <!-- Non-elemental hit effect minimum size multiplier -->
   <float hash="0x114aef36aa">1.0</float> <!-- Non-elemental hit effect maximum size multiplier -->
   <float hash="0x16a568e4a4">0.025</float> <!-- Elemental hit effect damage-based size scaling factor -->
   <float hash="0x16f170b6e2">0.37</float> <!-- Elemental hit effect base size multiplier -->
