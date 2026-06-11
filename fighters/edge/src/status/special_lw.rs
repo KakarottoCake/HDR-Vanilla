@@ -6,10 +6,6 @@ unsafe extern "C" fn special_lw_main(fighter: &mut L2CFighterCommon) -> L2CValue
     fighter.sub_set_special_start_common_kinetic_setting(hash40("param_special_lw").into());
     special_lw_set_kinetic(fighter, true.into());
 
-    // The Load-Bearing Scintilla Placement
-    let shield_max = fighter.get_param_float("param_special_lw", "shield_max");
-    fighter.set_float(shield_max, *FIGHTER_EDGE_STATUS_SPECIAL_LW_FLOAT_SHIELD);
-    
     fighter.main_shift(special_lw_main_loop)
 }
 
