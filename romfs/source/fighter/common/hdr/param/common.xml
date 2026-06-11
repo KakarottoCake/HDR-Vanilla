@@ -71,4 +71,5 @@
     <int hash="teleport_jump_aerial_refresh_frame">3</int>
     <int hash="float_jump_aerial_refresh_frame">3</int>
     <int hash="ledge_option_tether_hog_frame">15</int>
+    <int hash="float_hold_minimum_frame">5</int>
 </struct>
