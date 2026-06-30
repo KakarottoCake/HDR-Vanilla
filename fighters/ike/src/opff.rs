@@ -3,18 +3,6 @@ utils::import_noreturn!(common::opff::fighter_common_opff);
 use super::*;
 use globals::*;
 
-unsafe fn aether_drift(boma: &mut BattleObjectModuleAccessor) {
-    if [*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_IKE_STATUS_KIND_SPECIAL_HI_2].contains(&boma.status()) {
-        if !boma.is_situation(*SITUATION_KIND_AIR) || boma.is_in_hitlag() {
-            return;
-        }
-        if boma.stick_x() != 0.0 {
-            let motion_vec = x_motion_vec(0.3, boma.stick_x());
-            KineticModule::add_speed_outside(boma, *KINETIC_OUTSIDE_ENERGY_TYPE_WIND_NO_ADDITION, &motion_vec);
-        }
-    }
-}
-
 unsafe fn quickdraw_walljump_leniency(boma: &mut BattleObjectModuleAccessor) {
     if [*FIGHTER_IKE_STATUS_KIND_SPECIAL_S_END].contains(&boma.status())
     && boma.status_frame() < ParamModule::get_int(boma.object(), ParamType::Agent, "param_special_s.end_walljump_valid_frame") {
@@ -85,7 +73,7 @@ unsafe fn quickdraw_attack_arm_bend(boma: &mut BattleObjectModuleAccessor) {
             ModelModule::set_joint_rotate(boma, Hash40::new("armr"), &rotation, MotionNodeRotateCompose{_address: *MOTION_NODE_ROTATE_COMPOSE_AFTER as u8}, MotionNodeRotateOrder{_address: *MOTION_NODE_ROTATE_ORDER_XYZ as u8});
             ModelModule::set_joint_rotate(boma, Hash40::new("handr"), &rotation, MotionNodeRotateCompose{_address: *MOTION_NODE_ROTATE_COMPOSE_AFTER as u8}, MotionNodeRotateOrder{_address: *MOTION_NODE_ROTATE_ORDER_XYZ as u8});
         }
-    } 
+    }
 }
 
 // boma: its a boma
@@ -419,14 +407,13 @@ unsafe fn fastfall_specials(fighter: &mut L2CFighterCommon) {
         *FIGHTER_IKE_STATUS_KIND_SPECIAL_S_ATTACK,
         *FIGHTER_IKE_STATUS_KIND_SPECIAL_S_END,
         *FIGHTER_IKE_STATUS_KIND_SPECIAL_LW_HIT
-        ]) 
+        ])
     && fighter.is_situation(*SITUATION_KIND_AIR) {
         fighter.sub_air_check_dive();
     }
 }
 
 pub unsafe fn moveset(fighter: &mut smash::lua2cpp::L2CFighterCommon, boma: &mut BattleObjectModuleAccessor) {
-    aether_drift(boma);
     quickdraw_walljump_leniency(boma);
     quickdraw_instakill(fighter, boma);
     quickdraw_attack_arm_bend(boma);
