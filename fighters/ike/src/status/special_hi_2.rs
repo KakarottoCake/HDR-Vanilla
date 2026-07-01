@@ -22,13 +22,13 @@ unsafe extern "C" fn special_hi_2_exec(fighter: &mut L2CFighterCommon) -> L2CVal
             mul_x_accel_add,
             fighter,
             FIGHTER_KINETIC_ENERGY_ID_CONTROL,
-            1.5
+            2.0
         );
         sv_kinetic_energy!(
             mul_x_accel_mul,
             fighter,
             FIGHTER_KINETIC_ENERGY_ID_CONTROL,
-            1.5
+            2.0
         );
     }
     0.into()
