@@ -1818,10 +1818,7 @@ local decide_normal_stage = function()
     end
 
     HDR.set_selected_panel_and_preview_and_alt(current_selected_panel, current_selected_preview, stage_previews[current_selected_preview + 1].selected_alt_)
-    
-    local first_panel = stage_previews[1].panel_id_
-    local first_alt = stage_previews[1].selected_alt_
-    HDR.set_matchup_stage_texture(Alts.get_alt_texture_index(first_panel, 0, first_alt))
+    HDR.set_matchup_stage_texture(Alts.get_alt_texture_index(stage_previews[1].panel_id_, 0, stage_previews[1].selected_alt_))
 
     UiScriptPlayer.invoke("set_medal_visible", current_selected_preview, true)
     UiScriptPlayer.invoke("set_medal_collect_range_from_panel", current_selected_preview, current_selected_panel)
