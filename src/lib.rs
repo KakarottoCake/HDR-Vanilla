@@ -402,6 +402,10 @@ unsafe fn scene_transition(
 
         let key_str = skyline::from_c_str((key_struct as *const u8).add(8) as *const c_char);
 
+        if key_str == "StageSelectScene" {
+            STAGE_MANAGER.lock().unwrap().matchup_texture_index = None;
+        }
+
         if key_str == "MeleeRuleScene" || key_str == "MainMenuScene" {
             // Clear perma-strikes when going to main menu or the rules screen
             let mut mgr = STAGE_MANAGER.lock().unwrap();
