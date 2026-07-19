@@ -77,8 +77,5 @@
         <int hash="catch_start_frame">3</int>
         <int hash="catchdash_start_frame">7</int>
         <int hash="catchturn_start_frame">8</int>
-        <int hash="catch_end_frame">15</int>
-        <int hash="catchdash_end_frame">19</int>
-        <int hash="catchturn_end_frame">20</int>
     </struct>
 </struct>
