@@ -7,7 +7,7 @@ unsafe extern "C" fn game_catch(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         FighterAreaModuleImpl::enable_fix_jostle_area(boma, 4.5, 3.5);
     }
-    frame(lua_state, 1.0);
+    frame(lua_state, 6.0);
     if is_excute(agent) {
         GrabModule::set_rebound(boma, true);
     }
