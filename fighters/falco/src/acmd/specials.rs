@@ -90,12 +90,12 @@ unsafe extern "C" fn game_specialairnloop(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn game_specialsstart(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.boma();
-    frame(lua_state, 1.0);
-    FT_MOTION_RATE(agent, 1.0);
-}
+// unsafe extern "C" fn game_specialsstart(agent: &mut L2CAgentBase) {
+//     let lua_state = agent.lua_state_agent;
+//     let boma = agent.boma();
+//     frame(lua_state, 1.0);
+//     FT_MOTION_RATE(agent, 1.0);
+// }
 
 unsafe extern "C" fn sound_specialsstart(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
@@ -396,7 +396,7 @@ pub fn install(agent: &mut Agent) {
     agent.acmd("game_specialairnstart", game_specialairnstart, Priority::Low);
     agent.acmd("game_specialairnloop", game_specialairnloop, Priority::Low);
 
-    agent.acmd("game_specialsstart", game_specialsstart, Priority::Low);
+    // agent.acmd("game_specialsstart", game_specialsstart, Priority::Low);
     agent.acmd("sound_specialsstart", sound_specialsstart, Priority::Low);
     agent.acmd("game_specials", game_specials, Priority::Low);
     agent.acmd("sound_specials", sound_specials, Priority::Low);
