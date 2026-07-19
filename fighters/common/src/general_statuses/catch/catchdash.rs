@@ -27,15 +27,19 @@ unsafe fn status_pre_CatchDash_common(fighter: &mut L2CFighterCommon) -> L2CValu
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_CatchDash_Main)]
 unsafe fn status_CatchDash_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
 
-    // grab clanks are universally enabled on F8 of the dash grab status
-    let frame = fighter.global_table[CURRENT_FRAME].get_i32();
-    if frame == 7 {
-        GrabModule::set_rebound(fighter.module_accessor, true);
-    }
-    // and are disabled when the grab ends (but not later than F20)
-    if GrabModule::is_rebound(fighter.module_accessor) 
-    && (frame >= 19 || fighter.is_flag(*FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT)) {
-        GrabModule::set_rebound(fighter.module_accessor, false);
+    if ParamModule::has_param_module(fighter.battle_object) {
+        let frame = fighter.global_table[CURRENT_FRAME].get_i32();
+        // grab clanks are universally enabled on start_frame
+        let start_frame = ParamModule::get_int(fighter.battle_object, ParamType::Common, "grab_rebound.catchdash_start_frame");
+        if frame == start_frame {
+            GrabModule::set_rebound(fighter.module_accessor, true);
+        }
+        // and are disabled when the grab ends (but not later than end_frame)
+        let end_frame = ParamModule::get_int(fighter.battle_object, ParamType::Common, "grab_rebound.catchdash_end_frame");
+        if GrabModule::is_rebound(fighter.module_accessor) 
+        && (frame >= end_frame || fighter.is_flag(*FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT)) {
+            GrabModule::set_rebound(fighter.module_accessor, false);
+        }
     }
 
     call_original!(fighter)
