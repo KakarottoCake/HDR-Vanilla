@@ -203,9 +203,7 @@ unsafe extern "C" fn game_speciallwhold(agent: &mut L2CAgentBase) {
         shield!(agent, *MA_MSC_CMD_SHIELD_ON, *COLLISION_KIND_REFLECTOR, 1, *FIGHTER_PIT_REFLECTOR_GROUP_SPECIAL_LW);
         VarModule::on_flag(agent.battle_object, vars::common::status::DISABLE_ECB_SHIFT);
         // enables slideoff
-        if agent.is_situation(*SITUATION_KIND_GROUND) {
-            CORRECT(agent, *GROUND_CORRECT_KIND_GROUND);
-        }
+        agent.ground_correct_by_situation(*GROUND_CORRECT_KIND_GROUND, *GROUND_CORRECT_KIND_AIR);
     }
 }
 
