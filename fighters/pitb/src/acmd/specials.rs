@@ -152,8 +152,7 @@ unsafe extern "C" fn game_speciallwstart(agent: &mut L2CAgentBase) {
     frame(lua_state, 6.9);
     FT_MOTION_RATE_RANGE(agent, 6.9, 7.0, 3.0);
     if is_excute(agent) {
-        hitbox!(agent, { extends: BASE_HITBOX, id: 0, bone: "top", dmg: 5.0, angle: 24, kbg: 100, fkb: 60, bkb: 0, set_weight: true, size: 7.5, x: 0.0, y: 7.0, z: -1.5, x2: 0.0, y2: 7.0, z2: 1.5, hitlag: 1.0, sdi: 1.15, clank: SetOff::Off, situation: CollisionSituation::G, effect: "collision_attr_magic", sound_level: SoundLevel::M, hit_sound: CollisionSound::Magic, region: AttackRegion::None, });
-        hitbox!(agent, { extends: BASE_HITBOX, id: 1, bone: "top", dmg: 5.0, angle: 44, kbg: 100, fkb: 60, bkb: 0, set_weight: true, size: 7.5, x: 0.0, y: 7.0, z: -1.5, x2: 0.0, y2: 7.0, z2: 1.5, hitlag: 1.0, sdi: 1.15, clank: SetOff::Off, situation: CollisionSituation::A, effect: "collision_attr_magic", sound_level: SoundLevel::M, hit_sound: CollisionSound::Magic, region: AttackRegion::None, });
+        hitbox!(agent, { extends: BASE_HITBOX, id: 0, bone: "top", dmg: 5.0, angle: 361, kbg: 100, fkb: 80, bkb: 0, set_weight: true, size: 7.5, x: 0.0, y: 7.0, z: -1.5, x2: 0.0, y2: 7.0, z2: 1.5, hitlag: 1.0, sdi: 1.15, clank: SetOff::Off, effect: "collision_attr_magic", sound_level: SoundLevel::M, hit_sound: CollisionSound::Magic, region: AttackRegion::None, });
     }
     frame(lua_state, 6.933);
     if is_excute(agent) {
