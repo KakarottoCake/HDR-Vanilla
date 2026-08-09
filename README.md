@@ -1,16 +1,34 @@
+# HDR Vanilla Assets
 
-# HewDraw Remix
+An offline-focused, asset-only fork of HewDraw Remix that keeps HDR's stages and a cleaned subset of its interface while preserving vanilla Super Smash Bros. Ultimate gameplay.
 
-## If you are here to install the latest stable release, please download from https://github.com/HDR-Development/HDR-Releases/.
+This project does **not** include movesets, fighter balance, custom mechanics, input or latency changes, online changes, or an HDR gameplay plugin. It includes only the two executable stage-support dependencies needed for alternate stages and configurable hazards.
 
-Welcome to the open source HDR repository! If you're wanting to contribute to the game, pull requests are greatly appreciated and welcomed. Please refer to our pages for [setting up the code environment](https://github.com/HDR-Development/HewDraw-Remix/wiki/The-Environment) as well as our [contributor guide](https://github.com/HDR-Development/HewDraw-Remix/wiki/Contributor-Guide). For more information on learning how to contribute, consult our [Discord](https://discord.gg/hdr) and feel free to ask questions in the dedicated developer channels for the time being.
+## Pinned upstream release
 
-HewDraw Remix is a free to play fan-made modification of Super Smash Bros. Ultimate. HDR is the largest and most ambitious overhaul for Super Smash Bros. Ultimate yet. Various techniques from previous Smash games are added to create a fresh experience that blends the design of the older games with the new, along with plenty of new moves and balance changes to keep the experience unique.
+- HewDraw Remix source tag: `v0.49.11`
+- HDR release package: `v0.49.11`
+- Release package SHA-256: `b7ca9333b0309f0f0893051d68b456a1bb3a8792a0eb1a16df9856d010ac7232`
 
-## Redistribution Disclaimer
-HewDraw Remix has explicit permission from numerous independent mod creators who create incredible works to include and modify their work to best fit HDR. Anything that is not inside of this repository but is (re)distributed with HDR is redistributed in accordance with original author's license, whether that be a GameBanana license or a software license. If you wish to redistribute anything that is not **entirely** sourced in this repository (such as UI, Stages, or fighter animations), you **must** reach out to the HDR dev team via our [Discord server](https://discord.gg/hdr) or by some other appropriate means so we can point you to the original author of the work which we have permission for. At that point, the modifications that we made to the work will only be redistributed in accordance with their license and permissions.
+## Build the local package
 
-We make no modifications to the plugins which we redistribute, and if we do, our modifications to the source code is open source.
+Download `switch-package.zip` from the official HDR `v0.49.11` release, then run:
 
-### Legal Disclaimer 
-The HewDraw Remix Dev Team does not support piracy or any illegal actions that may harm Nintendo or other copyright holders involved in the base game, and their intellectual properties. HewDraw Remix is not endorsed by or associated with Nintendo or any of the companies involved with the Super Smash Bros. series in any way. This repository does not contain copyrighted executable code.
+```powershell
+.\tools\Import-HdrAssets.ps1 -ArchivePath .\switch-package.zip
+.\tools\Test-AssetOnlyPackage.ps1
+```
+
+The generated package is written to `package/`. Rebuild with `-Replace` when the generated folders already exist.
+
+## Installation expectations
+
+Copy the contents of `package/` to the SD-card root used by your existing Smash modding setup. ARCropolis is required. Compatible `stage_alts` and `stage_config` plugins are bundled from the pinned HDR release so alternate stages and configurable hazards work as intended.
+
+See [ASSET_SCOPE.md](ASSET_SCOPE.md) for the inclusion policy, [OMITTED_INVENTORY.md](OMITTED_INVENTORY.md) for the complete omission list, and [TESTING.md](TESTING.md) for the offline verification matrix.
+
+## Redistribution
+
+The import script generates a local package from the official HDR release so this repository does not need to republish third-party UI and stage binaries. Before publishing generated assets, obtain permission from the HDR team and the original authors identified by them. Preserve `stage_credits.txt` and all required author/license notices.
+
+This project is not affiliated with Nintendo, Sora Ltd., Bandai Namco, or the HDR development team. It does not provide game files and does not support piracy.

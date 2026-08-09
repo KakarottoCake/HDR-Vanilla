@@ -1,0 +1,7 @@
+display_name = "HDR Vanilla Stages"
+authors = "HDR Dev Team and original stage contributors"
+description = """
+The HDR v0.49.11 stage collection packaged without HDR fighter or gameplay code.
+"""
+category = "Stage"
+

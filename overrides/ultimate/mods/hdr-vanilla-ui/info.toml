@@ -1,0 +1,7 @@
+display_name = "HDR Vanilla UI"
+authors = "HDR Dev Team and original UI contributors"
+description = """
+Neutral HDR interface assets cleaned of HDR mechanics, moves, game modes, online UI, and branding.
+"""
+category = "UI"
+
